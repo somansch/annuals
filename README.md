@@ -190,7 +190,3 @@ rm annuals.zip
 ## Help and Contribution
 
 If you find a problem, feel free to open an issue and I will do my best to help. If you have something to contribute, your help is greatly appreciated! If you want to add a new feature, please open a pull request first so we can discuss the details.
-
-## Credits
-
-The idea of a "days until / which occurrence" sensor per yearly-recurring event was inspired by [calebgab/ha-life-events](https://github.com/calebgab/ha-life-events) (MIT licensed). Annuals is an independent implementation with its own architecture (one config entry per event, native date picker, per-type aggregate calendars) and no shared code.
