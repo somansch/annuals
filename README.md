@@ -93,6 +93,7 @@ Attributes on each per-type calendar (standard Home Assistant calendar entity at
 
 | Attribute | Description |
 |---|---|
+| `state` | `on` when today falls within one of this type's events (an all-day event, so this is `on` for the whole day), `off` otherwise. |
 | `message` | The event summary shown in the calendar, e.g. "Anna - Birthday (26)" (just "Anna" for Custom events, since restating "Custom" would be redundant). |
 | `all_day` | Always `true` - events are stored as whole days, not specific times. |
 | `start_time`, `end_time` | The event's date, formatted as `YYYY-MM-DD HH:MM:SS` (start at midnight, end the next midnight). |
@@ -192,7 +193,7 @@ Or, more simply, add a **Calendar card** pointed at one or more of the `calendar
 
 <img src="docs/calendars.png" alt="The eight per-type calendars" width="50%">
 
-<img src="docs/calendars-2.png" alt="Calendar event detail view" width="50%">
+<img src="docs/calendars-2.png" alt="Calendar event detail view" width="25%">
 
 ## Installation
 
