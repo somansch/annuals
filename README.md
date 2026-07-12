@@ -43,6 +43,18 @@ The first time you go to **Settings → Devices & Services → Add Integration �
 
 To edit or remove an event afterwards, find its entry under **Settings → Devices & Services → Annuals**, and use **Configure** (edit) or the "⋮" menu (delete).
 
+### Leap years
+
+The integration accounts for leap years (February 29) when calculating the number of days until the next anniversary.
+
+If your birthday is on February 29th it is calculated correctly, and it does not fall back to March 1st — instead, in non-leap years it falls back to February 28th.
+
+Concretely:
+- Leap year (e.g. 2028): the event falls exactly on February 29th.
+- Non-leap year (2025, 2026, 2027, 2029, …): the event falls on February 28th.
+
+This is a deliberate design choice: it guarantees an occurrence every year (not just once every four years), and `occurrence_number` (e.g. "turning 30") still counts correctly, since it's simply computed as target year - birth year, independent of the exact day.
+
 ## Importing events from a CSV file
 
 Find the **"Annuals Settings" hub entry** under **Settings → Devices & Services → Annuals** and click **Configure** - this opens a menu with "Import events from CSV" and "Delete all Annuals data". Import is useful for bringing in a whole contact list at once instead of adding events one by one.
