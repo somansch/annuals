@@ -154,6 +154,29 @@ For German phrasing (example: "Hans hat in 3 Tagen Geburtstag und wird 40 Jahre 
 
 ![Next event card](docs/markdown-card-example-2.png)
 
+### Today's birthday only
+
+Each `calendar.annuals_<type>` entity's `state` is simply `on` whenever one of its events falls today (`off` otherwise) - a **Conditional card** wrapping the Markdown card uses that directly, so the card only appears on the day itself instead of always showing (and being empty or irrelevant) the rest of the year:
+
+```yaml
+type: conditional
+conditions:
+  - condition: state
+    entity: calendar.annuals_birthday
+    state: "on"
+card:
+  type: markdown
+  content: >
+    {%- set msg = states.calendar.annuals_birthday.attributes.message -%}
+    {%- set name = msg.split(' - ')[0] -%}
+    {%- set age = msg.split('(')[1].split(')')[0] if '(' in msg else '' -%}
+    🎉 {{ name }} is getting {{ age }} today!
+```
+
+This parses the calendar event's `message` attribute (e.g. "Anna - Birthday (26)") since the calendar entity itself doesn't carry a separate age/name attribute the way the sensor does. If two birthdays land on the same day, only one shows - the calendar only ever reports its single next/current event, same limitation as the "next event" card above.
+
+The same `on`/`off` state is just as useful for automations - for example, a state trigger on `calendar.annuals_birthday` (`to: "on"`) to fire a notification the moment a birthday starts, without any template or scheduling logic of your own.
+
 Or, more simply, add a **Calendar card** pointed at one or more of the `calendar.annuals_<type>` entities for a native calendar view:
 
 ![The eight per-type calendars](docs/calendars.png)
