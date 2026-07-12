@@ -1,0 +1,177 @@
+{
+    "title": "Annuals",
+    "selector": {
+        "event_type": {
+            "options": {
+                "birthday": "Bursdag",
+                "anniversary": "Jubileum",
+                "name_day": "Navnedag",
+                "wedding_anniversary": "Bryllupsdag",
+                "memorial": "Minnedag",
+                "pet_birthday": "Kjæledyrs bursdag",
+                "work_anniversary": "Arbeidsjubileum",
+                "custom": "Egendefinert"
+            }
+        },
+        "month": {
+            "options": {
+                "1": "januar",
+                "2": "februar",
+                "3": "mars",
+                "4": "april",
+                "5": "mai",
+                "6": "juni",
+                "7": "juli",
+                "8": "august",
+                "9": "september",
+                "10": "oktober",
+                "11": "november",
+                "12": "desember"
+            }
+        }
+    },
+    "config": {
+        "step": {
+            "user": {
+                "title": "Legg til hendelse",
+                "description": "Hver hendelse får sin egen oppføring, som du senere kan finne og redigere under Innstillinger → Enheter og tjenester ved å søke på navnet.",
+                "data": {
+                    "name": "Navn",
+                    "type": "Hendelsestype",
+                    "day": "Dag",
+                    "month": "Måned",
+                    "year": "År (la stå tomt hvis ukjent)",
+                    "icon": "Overstyr ikon (valgfritt)"
+                }
+            },
+            "reconfigure": {
+                "title": "Rediger hendelse",
+                "description": "Endre et hvilket som helst felt under og send inn for å oppdatere denne hendelsen.",
+                "data": {
+                    "name": "Navn",
+                    "type": "Hendelsestype",
+                    "day": "Dag",
+                    "month": "Måned",
+                    "year": "År (la stå tomt hvis ukjent)",
+                    "icon": "Overstyr ikon (valgfritt)"
+                }
+            }
+        },
+        "error": {
+            "name_required": "Skriv inn et navn.",
+            "invalid_date": "Denne kombinasjonen av dag/måned/år er ikke en gyldig dato."
+        },
+        "abort": {
+            "hub_not_configurable": "Annuals-huben har ingen egne innstillinger - den inneholder bare de delte kalendrene.",
+            "already_configured": "Annuals-huben finnes allerede.",
+            "invalid_import_row": "Denne raden kunne ikke importeres."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Rediger hendelse",
+                "description": "Endre et hvilket som helst felt under og send inn for å oppdatere denne hendelsen.",
+                "data": {
+                    "name": "Navn",
+                    "type": "Hendelsestype",
+                    "day": "Dag",
+                    "month": "Måned",
+                    "year": "År (la stå tomt hvis ukjent)",
+                    "icon": "Overstyr ikon (valgfritt)"
+                }
+            },
+            "import_csv": {
+                "title": "Importer hendelser fra CSV",
+                "description": "Kolonner: name, type, day, month, year (valgfritt), icon (valgfritt). «type» må være en av disse engelske nøklene: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (alltid på engelsk, uansett språkinnstilling). Behold alle kolonner selv når en verdi er tom - en rad uten avsluttende komma forskyver de neste verdiene ett hakk til venstre. Ugyldige rader hoppes over og logges.\n\nEksempel:\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "data": {
+                    "csv_file": "CSV-fil"
+                }
+            },
+            "hub_menu": {
+                "title": "Annuals Innstillinger",
+                "menu_options": {
+                    "import_csv": "Importer hendelser fra CSV",
+                    "delete_all": "Slett all Annuals-data"
+                }
+            },
+            "delete_all": {
+                "title": "Slett all Annuals-data",
+                "description": "Dette sletter permanent alle {count} hendelse(r), de delte kalendrene og selve Annuals-huben - hele integrasjonen og alt den har opprettet. Dette kan ikke angres. Klikk «OK» for å bekrefte."
+            }
+        },
+        "error": {
+            "name_required": "Skriv inn et navn.",
+            "invalid_date": "Denne kombinasjonen av dag/måned/år er ikke en gyldig dato.",
+            "invalid_csv": "Kunne ikke lese denne filen som CSV. Sjekk koding og format.",
+            "no_valid_rows": "Fant ingen gyldige rader i denne filen. Se loggen for detaljer om hoppede rader."
+        },
+        "abort": {
+            "hub_not_configurable": "Annuals-huben har ingen egne innstillinger - den inneholder bare de delte kalendrene.",
+            "import_started": "Import startet: {created} hendelse(r) i kø, {skipped} rad(er) hoppet over (se loggen for detaljer).",
+            "deleted_all": "Alle Annuals-hendelser, kalendere og huben er fjernet."
+        }
+    },
+    "entity": {
+        "sensor": {
+            "birthday": {
+                "name": "{name}s bursdag",
+                "unit_of_measurement": "dager"
+            },
+            "anniversary": {
+                "name": "{name}s jubileum",
+                "unit_of_measurement": "dager"
+            },
+            "name_day": {
+                "name": "{name}s navnedag",
+                "unit_of_measurement": "dager"
+            },
+            "wedding_anniversary": {
+                "name": "{name}s bryllupsdag",
+                "unit_of_measurement": "dager"
+            },
+            "memorial": {
+                "name": "{name}s minnedag",
+                "unit_of_measurement": "dager"
+            },
+            "pet_birthday": {
+                "name": "{name}s bursdag",
+                "unit_of_measurement": "dager"
+            },
+            "work_anniversary": {
+                "name": "{name}s arbeidsjubileum",
+                "unit_of_measurement": "dager"
+            },
+            "custom": {
+                "name": "{name}",
+                "unit_of_measurement": "dager"
+            }
+        },
+        "calendar": {
+            "birthday": {
+                "name": "Bursdager"
+            },
+            "anniversary": {
+                "name": "Jubileer"
+            },
+            "name_day": {
+                "name": "Navnedager"
+            },
+            "wedding_anniversary": {
+                "name": "Bryllupsdager"
+            },
+            "memorial": {
+                "name": "Minnedager"
+            },
+            "pet_birthday": {
+                "name": "Kjæledyrs bursdager"
+            },
+            "work_anniversary": {
+                "name": "Arbeidsjubileer"
+            },
+            "custom": {
+                "name": "Egendefinerte hendelser"
+            }
+        }
+    }
+}

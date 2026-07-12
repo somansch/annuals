@@ -1,0 +1,177 @@
+{
+    "title": "Annuals",
+    "selector": {
+        "event_type": {
+            "options": {
+                "birthday": "Urodziny",
+                "anniversary": "Rocznica",
+                "name_day": "Imieniny",
+                "wedding_anniversary": "Rocznica ślubu",
+                "memorial": "Rocznica śmierci",
+                "pet_birthday": "Urodziny zwierzaka",
+                "work_anniversary": "Jubileusz pracy",
+                "custom": "Inne"
+            }
+        },
+        "month": {
+            "options": {
+                "1": "styczeń",
+                "2": "luty",
+                "3": "marzec",
+                "4": "kwiecień",
+                "5": "maj",
+                "6": "czerwiec",
+                "7": "lipiec",
+                "8": "sierpień",
+                "9": "wrzesień",
+                "10": "październik",
+                "11": "listopad",
+                "12": "grudzień"
+            }
+        }
+    },
+    "config": {
+        "step": {
+            "user": {
+                "title": "Dodaj wydarzenie",
+                "description": "Każde wydarzenie otrzymuje własny wpis, który później znajdziesz i edytujesz w Ustawienia → Urządzenia i usługi, wyszukując po nazwie.",
+                "data": {
+                    "name": "Nazwa",
+                    "type": "Typ wydarzenia",
+                    "day": "Dzień",
+                    "month": "Miesiąc",
+                    "year": "Rok (pozostaw puste, jeśli nieznany)",
+                    "icon": "Zastąp ikonę (opcjonalnie)"
+                }
+            },
+            "reconfigure": {
+                "title": "Edytuj wydarzenie",
+                "description": "Zmień dowolne pole poniżej i zatwierdź, aby zaktualizować to wydarzenie.",
+                "data": {
+                    "name": "Nazwa",
+                    "type": "Typ wydarzenia",
+                    "day": "Dzień",
+                    "month": "Miesiąc",
+                    "year": "Rok (pozostaw puste, jeśli nieznany)",
+                    "icon": "Zastąp ikonę (opcjonalnie)"
+                }
+            }
+        },
+        "error": {
+            "name_required": "Podaj nazwę.",
+            "invalid_date": "Ta kombinacja dzień/miesiąc/rok nie jest prawidłową datą."
+        },
+        "abort": {
+            "hub_not_configurable": "Centrum Annuals nie ma własnych ustawień – zawiera tylko wspólne kalendarze.",
+            "already_configured": "Centrum Annuals już istnieje.",
+            "invalid_import_row": "Tego wiersza nie udało się zaimportować."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Edytuj wydarzenie",
+                "description": "Zmień dowolne pole poniżej i zatwierdź, aby zaktualizować to wydarzenie.",
+                "data": {
+                    "name": "Nazwa",
+                    "type": "Typ wydarzenia",
+                    "day": "Dzień",
+                    "month": "Miesiąc",
+                    "year": "Rok (pozostaw puste, jeśli nieznany)",
+                    "icon": "Zastąp ikonę (opcjonalnie)"
+                }
+            },
+            "import_csv": {
+                "title": "Importuj wydarzenia z pliku CSV",
+                "description": "Kolumny: name, type, day, month, year (opcjonalnie), icon (opcjonalnie). „type” musi być jednym z następujących angielskich kluczy: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (zawsze po angielsku, niezależnie od ustawień języka). Zachowaj każdą kolumnę, nawet jeśli wartość jest pusta – wiersz bez przecinka na końcu przesuwa kolejne wartości w lewo. Nieprawidłowe wiersze są pomijane i zapisywane w dzienniku.\n\nPrzykład:\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "data": {
+                    "csv_file": "Plik CSV"
+                }
+            },
+            "hub_menu": {
+                "title": "Annuals Ustawienia",
+                "menu_options": {
+                    "import_csv": "Importuj wydarzenia z CSV",
+                    "delete_all": "Usuń wszystkie dane Annuals"
+                }
+            },
+            "delete_all": {
+                "title": "Usuń wszystkie dane Annuals",
+                "description": "To trwale usuwa wszystkie {count} wydarzenie(a), wspólne kalendarze i samo centrum Annuals – całą integrację i wszystko, co utworzyła. Tej operacji nie można cofnąć. Kliknij „OK”, aby potwierdzić."
+            }
+        },
+        "error": {
+            "name_required": "Podaj nazwę.",
+            "invalid_date": "Ta kombinacja dzień/miesiąc/rok nie jest prawidłową datą.",
+            "invalid_csv": "Nie udało się odczytać tego pliku jako CSV. Sprawdź kodowanie i format.",
+            "no_valid_rows": "Nie znaleziono prawidłowych wierszy w tym pliku. Sprawdź dziennik, aby zobaczyć szczegóły pominiętych wierszy."
+        },
+        "abort": {
+            "hub_not_configurable": "Centrum Annuals nie ma własnych ustawień – zawiera tylko wspólne kalendarze.",
+            "import_started": "Import rozpoczęty: {created} wydarzenie(a) w kolejce, {skipped} wiersz(y) pominięto (szczegóły w dzienniku).",
+            "deleted_all": "Wszystkie wydarzenia, kalendarze i centrum Annuals zostały usunięte."
+        }
+    },
+    "entity": {
+        "sensor": {
+            "birthday": {
+                "name": "Urodziny {name}",
+                "unit_of_measurement": "dni"
+            },
+            "anniversary": {
+                "name": "Rocznica {name}",
+                "unit_of_measurement": "dni"
+            },
+            "name_day": {
+                "name": "Imieniny {name}",
+                "unit_of_measurement": "dni"
+            },
+            "wedding_anniversary": {
+                "name": "Rocznica ślubu {name}",
+                "unit_of_measurement": "dni"
+            },
+            "memorial": {
+                "name": "Rocznica śmierci {name}",
+                "unit_of_measurement": "dni"
+            },
+            "pet_birthday": {
+                "name": "Urodziny zwierzaka {name}",
+                "unit_of_measurement": "dni"
+            },
+            "work_anniversary": {
+                "name": "Jubileusz pracy {name}",
+                "unit_of_measurement": "dni"
+            },
+            "custom": {
+                "name": "{name}",
+                "unit_of_measurement": "dni"
+            }
+        },
+        "calendar": {
+            "birthday": {
+                "name": "Urodziny"
+            },
+            "anniversary": {
+                "name": "Rocznice"
+            },
+            "name_day": {
+                "name": "Imieniny"
+            },
+            "wedding_anniversary": {
+                "name": "Rocznice ślubu"
+            },
+            "memorial": {
+                "name": "Rocznice śmierci"
+            },
+            "pet_birthday": {
+                "name": "Urodziny zwierzaków"
+            },
+            "work_anniversary": {
+                "name": "Jubileusze pracy"
+            },
+            "custom": {
+                "name": "Wydarzenia niestandardowe"
+            }
+        }
+    }
+}

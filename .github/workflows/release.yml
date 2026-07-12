@@ -1,0 +1,33 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set version number in manifest.json
+        run: |
+          version="${{ github.event.release.tag_name }}"
+          version="${version#v}"
+          jq --arg version "$version" '.version = $version' \
+            custom_components/annuals/manifest.json > manifest.tmp.json
+          mv manifest.tmp.json custom_components/annuals/manifest.json
+
+      - name: Zip the integration directory
+        run: |
+          cd custom_components/annuals
+          zip -r ../../annuals.zip .
+
+      - name: Upload zip to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: annuals.zip

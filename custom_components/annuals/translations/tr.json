@@ -1,0 +1,177 @@
+{
+    "title": "Annuals",
+    "selector": {
+        "event_type": {
+            "options": {
+                "birthday": "Doğum günü",
+                "anniversary": "Yıl dönümü",
+                "name_day": "İsim günü",
+                "wedding_anniversary": "Evlilik yıl dönümü",
+                "memorial": "Ölüm yıl dönümü",
+                "pet_birthday": "Evcil hayvan doğum günü",
+                "work_anniversary": "İş yıl dönümü",
+                "custom": "Özel"
+            }
+        },
+        "month": {
+            "options": {
+                "1": "Ocak",
+                "2": "Şubat",
+                "3": "Mart",
+                "4": "Nisan",
+                "5": "Mayıs",
+                "6": "Haziran",
+                "7": "Temmuz",
+                "8": "Ağustos",
+                "9": "Eylül",
+                "10": "Ekim",
+                "11": "Kasım",
+                "12": "Aralık"
+            }
+        }
+    },
+    "config": {
+        "step": {
+            "user": {
+                "title": "Etkinlik ekle",
+                "description": "Her etkinlik kendi girişini alır; daha sonra Ayarlar → Cihazlar ve hizmetler bölümünden adını arayarak bulup düzenleyebilirsiniz.",
+                "data": {
+                    "name": "Ad",
+                    "type": "Etkinlik türü",
+                    "day": "Gün",
+                    "month": "Ay",
+                    "year": "Yıl (bilinmiyorsa boş bırakın)",
+                    "icon": "Simgeyi geçersiz kıl (isteğe bağlı)"
+                }
+            },
+            "reconfigure": {
+                "title": "Etkinliği düzenle",
+                "description": "Aşağıdaki herhangi bir alanı değiştirin ve bu etkinliği güncellemek için gönderin.",
+                "data": {
+                    "name": "Ad",
+                    "type": "Etkinlik türü",
+                    "day": "Gün",
+                    "month": "Ay",
+                    "year": "Yıl (bilinmiyorsa boş bırakın)",
+                    "icon": "Simgeyi geçersiz kıl (isteğe bağlı)"
+                }
+            }
+        },
+        "error": {
+            "name_required": "Lütfen bir ad girin.",
+            "invalid_date": "Bu gün/ay/yıl kombinasyonu geçerli bir tarih değil."
+        },
+        "abort": {
+            "hub_not_configurable": "Annuals merkezinin kendine ait ayarları yoktur - yalnızca paylaşılan takvimleri içerir.",
+            "already_configured": "Annuals merkezi zaten mevcut.",
+            "invalid_import_row": "Bu satır içe aktarılamadı."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Etkinliği düzenle",
+                "description": "Aşağıdaki herhangi bir alanı değiştirin ve bu etkinliği güncellemek için gönderin.",
+                "data": {
+                    "name": "Ad",
+                    "type": "Etkinlik türü",
+                    "day": "Gün",
+                    "month": "Ay",
+                    "year": "Yıl (bilinmiyorsa boş bırakın)",
+                    "icon": "Simgeyi geçersiz kıl (isteğe bağlı)"
+                }
+            },
+            "import_csv": {
+                "title": "CSV'den etkinlik içe aktar",
+                "description": "Sütunlar: name, type, day, month, year (isteğe bağlı), icon (isteğe bağlı). \"type\" şu İngilizce anahtarlardan biri olmalıdır: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (dil ayarınızdan bağımsız olarak her zaman İngilizce). Bir değer boş olsa bile her sütunu koruyun - sonundaki virgülü eksik bir satır, sonraki değerleri sola kaydırır. Geçersiz satırlar atlanır ve günlüğe kaydedilir.\n\nÖrnek:\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "data": {
+                    "csv_file": "CSV dosyası"
+                }
+            },
+            "hub_menu": {
+                "title": "Annuals Ayarları",
+                "menu_options": {
+                    "import_csv": "CSV'den etkinlik içe aktar",
+                    "delete_all": "Tüm Annuals verilerini sil"
+                }
+            },
+            "delete_all": {
+                "title": "Tüm Annuals verilerini sil",
+                "description": "Bu işlem, {count} etkinliği, paylaşılan takvimleri ve Annuals merkezinin kendisini - yani tüm entegrasyonu ve oluşturduğu her şeyi - kalıcı olarak siler. Bu işlem geri alınamaz. Onaylamak için \"OK\"a tıklayın."
+            }
+        },
+        "error": {
+            "name_required": "Lütfen bir ad girin.",
+            "invalid_date": "Bu gün/ay/yıl kombinasyonu geçerli bir tarih değil.",
+            "invalid_csv": "Bu dosya CSV olarak okunamadı. Kodlamayı ve biçimi kontrol edin.",
+            "no_valid_rows": "Bu dosyada geçerli satır bulunamadı. Atlanan satırların ayrıntıları için günlüğe bakın."
+        },
+        "abort": {
+            "hub_not_configurable": "Annuals merkezinin kendine ait ayarları yoktur - yalnızca paylaşılan takvimleri içerir.",
+            "import_started": "İçe aktarma başladı: {created} etkinlik kuyruğa alındı, {skipped} satır atlandı (ayrıntılar için günlüğe bakın).",
+            "deleted_all": "Tüm Annuals etkinlikleri, takvimleri ve merkezi kaldırıldı."
+        }
+    },
+    "entity": {
+        "sensor": {
+            "birthday": {
+                "name": "{name} doğum günü",
+                "unit_of_measurement": "gün"
+            },
+            "anniversary": {
+                "name": "{name} yıl dönümü",
+                "unit_of_measurement": "gün"
+            },
+            "name_day": {
+                "name": "{name} isim günü",
+                "unit_of_measurement": "gün"
+            },
+            "wedding_anniversary": {
+                "name": "{name} evlilik yıl dönümü",
+                "unit_of_measurement": "gün"
+            },
+            "memorial": {
+                "name": "{name} ölüm yıl dönümü",
+                "unit_of_measurement": "gün"
+            },
+            "pet_birthday": {
+                "name": "{name} doğum günü",
+                "unit_of_measurement": "gün"
+            },
+            "work_anniversary": {
+                "name": "{name} iş yıl dönümü",
+                "unit_of_measurement": "gün"
+            },
+            "custom": {
+                "name": "{name}",
+                "unit_of_measurement": "gün"
+            }
+        },
+        "calendar": {
+            "birthday": {
+                "name": "Doğum günleri"
+            },
+            "anniversary": {
+                "name": "Yıl dönümleri"
+            },
+            "name_day": {
+                "name": "İsim günleri"
+            },
+            "wedding_anniversary": {
+                "name": "Evlilik yıl dönümleri"
+            },
+            "memorial": {
+                "name": "Ölüm yıl dönümleri"
+            },
+            "pet_birthday": {
+                "name": "Evcil hayvan doğum günleri"
+            },
+            "work_anniversary": {
+                "name": "İş yıl dönümleri"
+            },
+            "custom": {
+                "name": "Özel etkinlikler"
+            }
+        }
+    }
+}

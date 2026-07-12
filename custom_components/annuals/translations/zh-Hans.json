@@ -1,0 +1,177 @@
+{
+    "title": "Annuals",
+    "selector": {
+        "event_type": {
+            "options": {
+                "birthday": "生日",
+                "anniversary": "纪念日",
+                "name_day": "命名日",
+                "wedding_anniversary": "结婚纪念日",
+                "memorial": "忌日",
+                "pet_birthday": "宠物生日",
+                "work_anniversary": "工作纪念日",
+                "custom": "自定义"
+            }
+        },
+        "month": {
+            "options": {
+                "1": "一月",
+                "2": "二月",
+                "3": "三月",
+                "4": "四月",
+                "5": "五月",
+                "6": "六月",
+                "7": "七月",
+                "8": "八月",
+                "9": "九月",
+                "10": "十月",
+                "11": "十一月",
+                "12": "十二月"
+            }
+        }
+    },
+    "config": {
+        "step": {
+            "user": {
+                "title": "添加事件",
+                "description": "每个事件都会创建独立的条目，之后可以在“设置 → 设备与服务”中通过搜索名称找到并编辑。",
+                "data": {
+                    "name": "姓名",
+                    "type": "事件类型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年份（未知可留空）",
+                    "icon": "自定义图标（可选）"
+                }
+            },
+            "reconfigure": {
+                "title": "编辑事件",
+                "description": "修改下方任意字段并提交以更新此事件。",
+                "data": {
+                    "name": "姓名",
+                    "type": "事件类型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年份（未知可留空）",
+                    "icon": "自定义图标（可选）"
+                }
+            }
+        },
+        "error": {
+            "name_required": "请输入姓名。",
+            "invalid_date": "此日/月/年组合不是有效日期。"
+        },
+        "abort": {
+            "hub_not_configurable": "Annuals 中心没有自身设置 —— 它只保存共享日历。",
+            "already_configured": "Annuals 中心已存在。",
+            "invalid_import_row": "此行无法导入。"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "编辑事件",
+                "description": "修改下方任意字段并提交以更新此事件。",
+                "data": {
+                    "name": "姓名",
+                    "type": "事件类型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年份（未知可留空）",
+                    "icon": "自定义图标（可选）"
+                }
+            },
+            "import_csv": {
+                "title": "从 CSV 导入事件",
+                "description": "列：name、type、day、month、year（可选）、icon（可选）。“type”必须是以下英文键之一：birthday、anniversary、name_day、wedding_anniversary、memorial、pet_birthday、work_anniversary、custom（始终使用英文，与语言设置无关）。即使某个值为空，也要保留该列 —— 缺少末尾逗号会导致后面的值向左移位。无效行会被跳过并记录到日志中。\n\n示例：\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "data": {
+                    "csv_file": "CSV 文件"
+                }
+            },
+            "hub_menu": {
+                "title": "Annuals 设置",
+                "menu_options": {
+                    "import_csv": "从 CSV 导入事件",
+                    "delete_all": "删除所有 Annuals 数据"
+                }
+            },
+            "delete_all": {
+                "title": "删除所有 Annuals 数据",
+                "description": "此操作将永久删除全部 {count} 个事件、共享日历以及 Annuals 中心本身 —— 整个集成及其创建的所有内容。此操作无法撤销。点击“确定”确认。"
+            }
+        },
+        "error": {
+            "name_required": "请输入姓名。",
+            "invalid_date": "此日/月/年组合不是有效日期。",
+            "invalid_csv": "无法将此文件读取为 CSV。请检查编码和格式。",
+            "no_valid_rows": "此文件中未找到有效行。请查看日志了解被跳过行的详情。"
+        },
+        "abort": {
+            "hub_not_configurable": "Annuals 中心没有自身设置 —— 它只保存共享日历。",
+            "import_started": "导入已开始：{created} 个事件已加入队列，{skipped} 行被跳过（详情见日志）。",
+            "deleted_all": "所有 Annuals 事件、日历及中心均已删除。"
+        }
+    },
+    "entity": {
+        "sensor": {
+            "birthday": {
+                "name": "{name}的生日",
+                "unit_of_measurement": "天"
+            },
+            "anniversary": {
+                "name": "{name}的纪念日",
+                "unit_of_measurement": "天"
+            },
+            "name_day": {
+                "name": "{name}的命名日",
+                "unit_of_measurement": "天"
+            },
+            "wedding_anniversary": {
+                "name": "{name}的结婚纪念日",
+                "unit_of_measurement": "天"
+            },
+            "memorial": {
+                "name": "{name}的忌日",
+                "unit_of_measurement": "天"
+            },
+            "pet_birthday": {
+                "name": "{name}的生日",
+                "unit_of_measurement": "天"
+            },
+            "work_anniversary": {
+                "name": "{name}的工作纪念日",
+                "unit_of_measurement": "天"
+            },
+            "custom": {
+                "name": "{name}",
+                "unit_of_measurement": "天"
+            }
+        },
+        "calendar": {
+            "birthday": {
+                "name": "生日"
+            },
+            "anniversary": {
+                "name": "纪念日"
+            },
+            "name_day": {
+                "name": "命名日"
+            },
+            "wedding_anniversary": {
+                "name": "结婚纪念日"
+            },
+            "memorial": {
+                "name": "忌日"
+            },
+            "pet_birthday": {
+                "name": "宠物生日"
+            },
+            "work_anniversary": {
+                "name": "工作纪念日"
+            },
+            "custom": {
+                "name": "自定义事件"
+            }
+        }
+    }
+}

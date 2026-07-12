@@ -1,0 +1,177 @@
+{
+    "title": "Annuals",
+    "selector": {
+        "event_type": {
+            "options": {
+                "birthday": "Narozeniny",
+                "anniversary": "Výročí",
+                "name_day": "Svátek",
+                "wedding_anniversary": "Výročí svatby",
+                "memorial": "Výročí úmrtí",
+                "pet_birthday": "Narozeniny mazlíčka",
+                "work_anniversary": "Pracovní výročí",
+                "custom": "Vlastní"
+            }
+        },
+        "month": {
+            "options": {
+                "1": "leden",
+                "2": "únor",
+                "3": "březen",
+                "4": "duben",
+                "5": "květen",
+                "6": "červen",
+                "7": "červenec",
+                "8": "srpen",
+                "9": "září",
+                "10": "říjen",
+                "11": "listopad",
+                "12": "prosinec"
+            }
+        }
+    },
+    "config": {
+        "step": {
+            "user": {
+                "title": "Přidat událost",
+                "description": "Každá událost má vlastní záznam, který později najdeš a upravíš v Nastavení → Zařízení a služby vyhledáním podle jména.",
+                "data": {
+                    "name": "Jméno",
+                    "type": "Typ události",
+                    "day": "Den",
+                    "month": "Měsíc",
+                    "year": "Rok (ponechte prázdné, pokud není znám)",
+                    "icon": "Vlastní ikona (volitelné)"
+                }
+            },
+            "reconfigure": {
+                "title": "Upravit událost",
+                "description": "Změňte libovolné pole níže a odešlete pro aktualizaci této události.",
+                "data": {
+                    "name": "Jméno",
+                    "type": "Typ události",
+                    "day": "Den",
+                    "month": "Měsíc",
+                    "year": "Rok (ponechte prázdné, pokud není znám)",
+                    "icon": "Vlastní ikona (volitelné)"
+                }
+            }
+        },
+        "error": {
+            "name_required": "Zadejte jméno.",
+            "invalid_date": "Tato kombinace den/měsíc/rok není platné datum."
+        },
+        "abort": {
+            "hub_not_configurable": "Hub Annuals nemá vlastní nastavení – obsahuje pouze sdílené kalendáře.",
+            "already_configured": "Hub Annuals již existuje.",
+            "invalid_import_row": "Tento řádek se nepodařilo importovat."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Upravit událost",
+                "description": "Změňte libovolné pole níže a odešlete pro aktualizaci této události.",
+                "data": {
+                    "name": "Jméno",
+                    "type": "Typ události",
+                    "day": "Den",
+                    "month": "Měsíc",
+                    "year": "Rok (ponechte prázdné, pokud není znám)",
+                    "icon": "Vlastní ikona (volitelné)"
+                }
+            },
+            "import_csv": {
+                "title": "Import událostí z CSV",
+                "description": "Sloupce: name, type, day, month, year (volitelné), icon (volitelné). „type“ musí být jeden z těchto anglických klíčů: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (vždy anglicky, bez ohledu na nastavení jazyka). Zachovejte všechny sloupce i při prázdné hodnotě – řádek bez koncové čárky posune následující hodnoty o jednu doleva. Neplatné řádky se přeskočí a zaznamenají do protokolu.\n\nPříklad:\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "data": {
+                    "csv_file": "Soubor CSV"
+                }
+            },
+            "hub_menu": {
+                "title": "Annuals Nastavení",
+                "menu_options": {
+                    "import_csv": "Import událostí z CSV",
+                    "delete_all": "Smazat všechna data Annuals"
+                }
+            },
+            "delete_all": {
+                "title": "Smazat všechna data Annuals",
+                "description": "Tímto trvale smažete všech {count} událostí, sdílené kalendáře a samotný hub Annuals – celou integraci a vše, co vytvořila. Tuto akci nelze vrátit zpět. Potvrďte kliknutím na „OK“."
+            }
+        },
+        "error": {
+            "name_required": "Zadejte jméno.",
+            "invalid_date": "Tato kombinace den/měsíc/rok není platné datum.",
+            "invalid_csv": "Tento soubor se nepodařilo přečíst jako CSV. Zkontrolujte kódování a formát.",
+            "no_valid_rows": "V tomto souboru nebyly nalezeny žádné platné řádky. Podrobnosti o přeskočených řádcích najdete v protokolu."
+        },
+        "abort": {
+            "hub_not_configurable": "Hub Annuals nemá vlastní nastavení – obsahuje pouze sdílené kalendáře.",
+            "import_started": "Import zahájen: {created} událostí zařazeno do fronty, {skipped} řádků přeskočeno (podrobnosti v protokolu).",
+            "deleted_all": "Všechny události, kalendáře a hub Annuals byly odstraněny."
+        }
+    },
+    "entity": {
+        "sensor": {
+            "birthday": {
+                "name": "Narozeniny {name}",
+                "unit_of_measurement": "dní"
+            },
+            "anniversary": {
+                "name": "Výročí {name}",
+                "unit_of_measurement": "dní"
+            },
+            "name_day": {
+                "name": "Svátek {name}",
+                "unit_of_measurement": "dní"
+            },
+            "wedding_anniversary": {
+                "name": "Výročí svatby {name}",
+                "unit_of_measurement": "dní"
+            },
+            "memorial": {
+                "name": "Výročí úmrtí {name}",
+                "unit_of_measurement": "dní"
+            },
+            "pet_birthday": {
+                "name": "Narozeniny mazlíčka {name}",
+                "unit_of_measurement": "dní"
+            },
+            "work_anniversary": {
+                "name": "Pracovní výročí {name}",
+                "unit_of_measurement": "dní"
+            },
+            "custom": {
+                "name": "{name}",
+                "unit_of_measurement": "dní"
+            }
+        },
+        "calendar": {
+            "birthday": {
+                "name": "Narozeniny"
+            },
+            "anniversary": {
+                "name": "Výročí"
+            },
+            "name_day": {
+                "name": "Svátky"
+            },
+            "wedding_anniversary": {
+                "name": "Výročí svatby"
+            },
+            "memorial": {
+                "name": "Výročí úmrtí"
+            },
+            "pet_birthday": {
+                "name": "Narozeniny mazlíčků"
+            },
+            "work_anniversary": {
+                "name": "Pracovní výročí"
+            },
+            "custom": {
+                "name": "Vlastní události"
+            }
+        }
+    }
+}

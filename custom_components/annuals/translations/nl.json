@@ -1,0 +1,177 @@
+{
+    "title": "Annuals",
+    "selector": {
+        "event_type": {
+            "options": {
+                "birthday": "Verjaardag",
+                "anniversary": "Jaardag",
+                "name_day": "Naamdag",
+                "wedding_anniversary": "Trouwdag",
+                "memorial": "Sterfdag",
+                "pet_birthday": "Verjaardag huisdier",
+                "work_anniversary": "Werkjubileum",
+                "custom": "Aangepast"
+            }
+        },
+        "month": {
+            "options": {
+                "1": "januari",
+                "2": "februari",
+                "3": "maart",
+                "4": "april",
+                "5": "mei",
+                "6": "juni",
+                "7": "juli",
+                "8": "augustus",
+                "9": "september",
+                "10": "oktober",
+                "11": "november",
+                "12": "december"
+            }
+        }
+    },
+    "config": {
+        "step": {
+            "user": {
+                "title": "Evenement toevoegen",
+                "description": "Elk evenement krijgt een eigen item, dat je later kunt terugvinden en bewerken via Instellingen → Apparaten en diensten door op de naam te zoeken.",
+                "data": {
+                    "name": "Naam",
+                    "type": "Type evenement",
+                    "day": "Dag",
+                    "month": "Maand",
+                    "year": "Jaar (leeg laten indien onbekend)",
+                    "icon": "Icoon overschrijven (optioneel)"
+                }
+            },
+            "reconfigure": {
+                "title": "Evenement bewerken",
+                "description": "Wijzig een willekeurig veld hieronder en verzend om dit evenement bij te werken.",
+                "data": {
+                    "name": "Naam",
+                    "type": "Type evenement",
+                    "day": "Dag",
+                    "month": "Maand",
+                    "year": "Jaar (leeg laten indien onbekend)",
+                    "icon": "Icoon overschrijven (optioneel)"
+                }
+            }
+        },
+        "error": {
+            "name_required": "Voer een naam in.",
+            "invalid_date": "Deze combinatie van dag/maand/jaar is geen geldige datum."
+        },
+        "abort": {
+            "hub_not_configurable": "De Annuals-hub heeft geen eigen instellingen - hij bevat alleen de gedeelde kalenders.",
+            "already_configured": "De Annuals-hub bestaat al.",
+            "invalid_import_row": "Deze rij kon niet worden geïmporteerd."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Evenement bewerken",
+                "description": "Wijzig een willekeurig veld hieronder en verzend om dit evenement bij te werken.",
+                "data": {
+                    "name": "Naam",
+                    "type": "Type evenement",
+                    "day": "Dag",
+                    "month": "Maand",
+                    "year": "Jaar (leeg laten indien onbekend)",
+                    "icon": "Icoon overschrijven (optioneel)"
+                }
+            },
+            "import_csv": {
+                "title": "Evenementen importeren vanuit CSV",
+                "description": "Kolommen: name, type, day, month, year (optioneel), icon (optioneel). „type” moet een van de volgende Engelse sleutels zijn: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (altijd in het Engels, ongeacht je taalinstelling). Houd elke kolom aan, ook als een waarde leeg is - een rij zonder komma aan het einde schuift de volgende waarden naar links. Ongeldige rijen worden overgeslagen en gelogd.\n\nVoorbeeld:\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "data": {
+                    "csv_file": "CSV-bestand"
+                }
+            },
+            "hub_menu": {
+                "title": "Annuals Instellingen",
+                "menu_options": {
+                    "import_csv": "Evenementen importeren vanuit CSV",
+                    "delete_all": "Alle Annuals-gegevens verwijderen"
+                }
+            },
+            "delete_all": {
+                "title": "Alle Annuals-gegevens verwijderen",
+                "description": "Dit verwijdert definitief alle {count} evenement(en), de gedeelde kalenders en de Annuals-hub zelf - de volledige integratie en alles wat hij heeft aangemaakt. Dit kan niet ongedaan worden gemaakt. Klik op „OK” om te bevestigen."
+            }
+        },
+        "error": {
+            "name_required": "Voer een naam in.",
+            "invalid_date": "Deze combinatie van dag/maand/jaar is geen geldige datum.",
+            "invalid_csv": "Dit bestand kon niet als CSV worden gelezen. Controleer de codering en indeling.",
+            "no_valid_rows": "Geen geldige rijen gevonden in dit bestand. Bekijk het logboek voor details over overgeslagen rijen."
+        },
+        "abort": {
+            "hub_not_configurable": "De Annuals-hub heeft geen eigen instellingen - hij bevat alleen de gedeelde kalenders.",
+            "import_started": "Import gestart: {created} evenement(en) in de wachtrij, {skipped} rij(en) overgeslagen (zie het logboek voor details).",
+            "deleted_all": "Alle Annuals-evenementen, kalenders en de hub zijn verwijderd."
+        }
+    },
+    "entity": {
+        "sensor": {
+            "birthday": {
+                "name": "Verjaardag van {name}",
+                "unit_of_measurement": "dagen"
+            },
+            "anniversary": {
+                "name": "Jaardag van {name}",
+                "unit_of_measurement": "dagen"
+            },
+            "name_day": {
+                "name": "Naamdag van {name}",
+                "unit_of_measurement": "dagen"
+            },
+            "wedding_anniversary": {
+                "name": "Trouwdag van {name}",
+                "unit_of_measurement": "dagen"
+            },
+            "memorial": {
+                "name": "Sterfdag van {name}",
+                "unit_of_measurement": "dagen"
+            },
+            "pet_birthday": {
+                "name": "Verjaardag van {name}",
+                "unit_of_measurement": "dagen"
+            },
+            "work_anniversary": {
+                "name": "Werkjubileum van {name}",
+                "unit_of_measurement": "dagen"
+            },
+            "custom": {
+                "name": "{name}",
+                "unit_of_measurement": "dagen"
+            }
+        },
+        "calendar": {
+            "birthday": {
+                "name": "Verjaardagen"
+            },
+            "anniversary": {
+                "name": "Jaardagen"
+            },
+            "name_day": {
+                "name": "Naamdagen"
+            },
+            "wedding_anniversary": {
+                "name": "Trouwdagen"
+            },
+            "memorial": {
+                "name": "Sterfdagen"
+            },
+            "pet_birthday": {
+                "name": "Verjaardagen huisdieren"
+            },
+            "work_anniversary": {
+                "name": "Werkjubilea"
+            },
+            "custom": {
+                "name": "Aangepaste evenementen"
+            }
+        }
+    }
+}

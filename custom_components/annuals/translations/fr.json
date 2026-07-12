@@ -1,0 +1,177 @@
+{
+    "title": "Annuals",
+    "selector": {
+        "event_type": {
+            "options": {
+                "birthday": "Anniversaire",
+                "anniversary": "Date commémorative",
+                "name_day": "Fête",
+                "wedding_anniversary": "Anniversaire de mariage",
+                "memorial": "Commémoration",
+                "pet_birthday": "Anniversaire d'animal",
+                "work_anniversary": "Anniversaire professionnel",
+                "custom": "Personnalisé"
+            }
+        },
+        "month": {
+            "options": {
+                "1": "janvier",
+                "2": "février",
+                "3": "mars",
+                "4": "avril",
+                "5": "mai",
+                "6": "juin",
+                "7": "juillet",
+                "8": "août",
+                "9": "septembre",
+                "10": "octobre",
+                "11": "novembre",
+                "12": "décembre"
+            }
+        }
+    },
+    "config": {
+        "step": {
+            "user": {
+                "title": "Ajouter un événement",
+                "description": "Chaque événement obtient sa propre entrée, que vous pouvez retrouver et modifier plus tard depuis Paramètres → Appareils et services en recherchant son nom.",
+                "data": {
+                    "name": "Nom",
+                    "type": "Type d'événement",
+                    "day": "Jour",
+                    "month": "Mois",
+                    "year": "Année (laisser vide si inconnue)",
+                    "icon": "Icône personnalisée (optionnel)"
+                }
+            },
+            "reconfigure": {
+                "title": "Modifier l'événement",
+                "description": "Modifiez n'importe quel champ ci-dessous et validez pour mettre à jour cet événement.",
+                "data": {
+                    "name": "Nom",
+                    "type": "Type d'événement",
+                    "day": "Jour",
+                    "month": "Mois",
+                    "year": "Année (laisser vide si inconnue)",
+                    "icon": "Icône personnalisée (optionnel)"
+                }
+            }
+        },
+        "error": {
+            "name_required": "Veuillez saisir un nom.",
+            "invalid_date": "Cette combinaison jour/mois/année n'est pas une date valide."
+        },
+        "abort": {
+            "hub_not_configurable": "Le hub Annuals n'a pas de paramètres propres - il contient uniquement les calendriers partagés.",
+            "already_configured": "Le hub Annuals existe déjà.",
+            "invalid_import_row": "Cette ligne n'a pas pu être importée."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Modifier l'événement",
+                "description": "Modifiez n'importe quel champ ci-dessous et validez pour mettre à jour cet événement.",
+                "data": {
+                    "name": "Nom",
+                    "type": "Type d'événement",
+                    "day": "Jour",
+                    "month": "Mois",
+                    "year": "Année (laisser vide si inconnue)",
+                    "icon": "Icône personnalisée (optionnel)"
+                }
+            },
+            "import_csv": {
+                "title": "Importer des événements depuis un CSV",
+                "description": "Colonnes : name, type, day, month, year (optionnel), icon (optionnel). « type » doit être l'une des clés anglaises suivantes : birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (toujours en anglais, quel que soit votre paramètre de langue). Conservez toutes les colonnes même si une valeur est vide - une ligne sans virgule finale décale les valeurs suivantes vers la gauche. Les lignes invalides sont ignorées et journalisées.\n\nExemple :\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "data": {
+                    "csv_file": "Fichier CSV"
+                }
+            },
+            "hub_menu": {
+                "title": "Annuals Paramètres",
+                "menu_options": {
+                    "import_csv": "Importer des événements depuis un CSV",
+                    "delete_all": "Supprimer toutes les données Annuals"
+                }
+            },
+            "delete_all": {
+                "title": "Supprimer toutes les données Annuals",
+                "description": "Cette action supprime définitivement les {count} événement(s), les calendriers partagés et le hub Annuals lui-même - toute l'intégration et tout ce qu'elle a créé. Cette action est irréversible. Cliquez sur « OK » pour confirmer."
+            }
+        },
+        "error": {
+            "name_required": "Veuillez saisir un nom.",
+            "invalid_date": "Cette combinaison jour/mois/année n'est pas une date valide.",
+            "invalid_csv": "Impossible de lire ce fichier en tant que CSV. Vérifiez l'encodage et le format.",
+            "no_valid_rows": "Aucune ligne valide trouvée dans ce fichier. Consultez le journal pour le détail des lignes ignorées."
+        },
+        "abort": {
+            "hub_not_configurable": "Le hub Annuals n'a pas de paramètres propres - il contient uniquement les calendriers partagés.",
+            "import_started": "Import démarré : {created} événement(s) en cours d'ajout, {skipped} ligne(s) ignorée(s) (voir le journal pour le détail).",
+            "deleted_all": "Tous les événements, calendriers et le hub Annuals ont été supprimés."
+        }
+    },
+    "entity": {
+        "sensor": {
+            "birthday": {
+                "name": "Anniversaire de {name}",
+                "unit_of_measurement": "jours"
+            },
+            "anniversary": {
+                "name": "Date commémorative de {name}",
+                "unit_of_measurement": "jours"
+            },
+            "name_day": {
+                "name": "Fête de {name}",
+                "unit_of_measurement": "jours"
+            },
+            "wedding_anniversary": {
+                "name": "Anniversaire de mariage de {name}",
+                "unit_of_measurement": "jours"
+            },
+            "memorial": {
+                "name": "Commémoration de {name}",
+                "unit_of_measurement": "jours"
+            },
+            "pet_birthday": {
+                "name": "Anniversaire de {name}",
+                "unit_of_measurement": "jours"
+            },
+            "work_anniversary": {
+                "name": "Anniversaire professionnel de {name}",
+                "unit_of_measurement": "jours"
+            },
+            "custom": {
+                "name": "{name}",
+                "unit_of_measurement": "jours"
+            }
+        },
+        "calendar": {
+            "birthday": {
+                "name": "Anniversaires"
+            },
+            "anniversary": {
+                "name": "Dates commémoratives"
+            },
+            "name_day": {
+                "name": "Fêtes"
+            },
+            "wedding_anniversary": {
+                "name": "Anniversaires de mariage"
+            },
+            "memorial": {
+                "name": "Commémorations"
+            },
+            "pet_birthday": {
+                "name": "Anniversaires d'animaux"
+            },
+            "work_anniversary": {
+                "name": "Anniversaires professionnels"
+            },
+            "custom": {
+                "name": "Événements personnalisés"
+            }
+        }
+    }
+}

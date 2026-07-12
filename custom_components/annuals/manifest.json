@@ -1,0 +1,12 @@
+{
+  "domain": "annuals",
+  "name": "Annuals",
+  "codeowners": ["@somansch"],
+  "config_flow": true,
+  "dependencies": ["file_upload"],
+  "documentation": "https://github.com/somansch/annuals",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/somansch/annuals/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}

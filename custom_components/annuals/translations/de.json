@@ -1,0 +1,177 @@
+{
+    "title": "Annuals",
+    "selector": {
+        "event_type": {
+            "options": {
+                "birthday": "Geburtstag",
+                "anniversary": "Jahrestag",
+                "name_day": "Namenstag",
+                "wedding_anniversary": "Hochzeitstag",
+                "memorial": "Todestag",
+                "pet_birthday": "Tiergeburtstag",
+                "work_anniversary": "Firmenjubiläum",
+                "custom": "Frei wählbar"
+            }
+        },
+        "month": {
+            "options": {
+                "1": "Januar",
+                "2": "Februar",
+                "3": "März",
+                "4": "April",
+                "5": "Mai",
+                "6": "Juni",
+                "7": "Juli",
+                "8": "August",
+                "9": "September",
+                "10": "Oktober",
+                "11": "November",
+                "12": "Dezember"
+            }
+        }
+    },
+    "config": {
+        "step": {
+            "user": {
+                "title": "Ereignis hinzufügen",
+                "description": "Jedes Ereignis bekommt einen eigenen Eintrag, den du später unter Einstellungen → Geräte & Dienste über die Suche nach seinem Namen findest und bearbeiten kannst.",
+                "data": {
+                    "name": "Name",
+                    "type": "Ereignistyp",
+                    "day": "Tag",
+                    "month": "Monat",
+                    "year": "Jahr (leer lassen, wenn unbekannt)",
+                    "icon": "Icon überschreiben (optional)"
+                }
+            },
+            "reconfigure": {
+                "title": "Ereignis bearbeiten",
+                "description": "Ändere ein beliebiges Feld unten und speichere, um dieses Ereignis zu aktualisieren.",
+                "data": {
+                    "name": "Name",
+                    "type": "Ereignistyp",
+                    "day": "Tag",
+                    "month": "Monat",
+                    "year": "Jahr (leer lassen, wenn unbekannt)",
+                    "icon": "Icon überschreiben (optional)"
+                }
+            }
+        },
+        "error": {
+            "name_required": "Bitte einen Namen eingeben.",
+            "invalid_date": "Diese Tag/Monat/Jahr-Kombination ist kein gültiges Datum."
+        },
+        "abort": {
+            "hub_not_configurable": "Der Annuals-Hub hat keine eigenen Einstellungen – er hält nur die gemeinsamen Kalender.",
+            "already_configured": "Der Annuals-Hub existiert bereits.",
+            "invalid_import_row": "Diese Zeile konnte nicht importiert werden."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Ereignis bearbeiten",
+                "description": "Ändere ein beliebiges Feld unten und speichere, um dieses Ereignis zu aktualisieren.",
+                "data": {
+                    "name": "Name",
+                    "type": "Ereignistyp",
+                    "day": "Tag",
+                    "month": "Monat",
+                    "year": "Jahr (leer lassen, wenn unbekannt)",
+                    "icon": "Icon überschreiben (optional)"
+                }
+            },
+            "import_csv": {
+                "title": "Ereignisse aus CSV importieren",
+                "description": "Spalten: name, type, day, month, year (optional), icon (optional). Bei „type“ ist ausschließlich einer der folgenden englischen Schlüssel gültig: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (unabhängig von deiner Spracheinstellung). Jede Spalte muss auch bei einem leeren Wert erhalten bleiben - fehlt ein Komma am Zeilenende, rutschen die folgenden Werte nach links. Ungültige Zeilen werden übersprungen und protokolliert.\n\nBeispiel:\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "data": {
+                    "csv_file": "CSV-Datei"
+                }
+            },
+            "hub_menu": {
+                "title": "Annuals Einstellungen",
+                "menu_options": {
+                    "import_csv": "Ereignisse aus CSV importieren",
+                    "delete_all": "Alle Annuals-Daten löschen"
+                }
+            },
+            "delete_all": {
+                "title": "Alle Annuals-Daten löschen",
+                "description": "Dies löscht dauerhaft alle {count} Ereignis(se), die gemeinsamen Kalender und den Annuals-Hub selbst – die komplette Integration inklusive aller angelegten Entitäten. Das kann nicht rückgängig gemacht werden. Zum Bestätigen auf „OK“ klicken."
+            }
+        },
+        "error": {
+            "name_required": "Bitte einen Namen eingeben.",
+            "invalid_date": "Diese Tag/Monat/Jahr-Kombination ist kein gültiges Datum.",
+            "invalid_csv": "Diese Datei konnte nicht als CSV gelesen werden. Prüfe Kodierung und Format.",
+            "no_valid_rows": "Keine gültigen Zeilen in dieser Datei gefunden. Details zu übersprungenen Zeilen stehen im Log."
+        },
+        "abort": {
+            "hub_not_configurable": "Der Annuals-Hub hat keine eigenen Einstellungen – er hält nur die gemeinsamen Kalender.",
+            "import_started": "Import gestartet: {created} Ereignis(se) werden angelegt, {skipped} Zeile(n) übersprungen (Details im Log).",
+            "deleted_all": "Alle Annuals-Ereignisse, Kalender und der Hub wurden entfernt."
+        }
+    },
+    "entity": {
+        "sensor": {
+            "birthday": {
+                "name": "Geburtstag {name}",
+                "unit_of_measurement": "Tage"
+            },
+            "anniversary": {
+                "name": "Jahrestag {name}",
+                "unit_of_measurement": "Tage"
+            },
+            "name_day": {
+                "name": "Namenstag {name}",
+                "unit_of_measurement": "Tage"
+            },
+            "wedding_anniversary": {
+                "name": "Hochzeitstag {name}",
+                "unit_of_measurement": "Tage"
+            },
+            "memorial": {
+                "name": "Todestag {name}",
+                "unit_of_measurement": "Tage"
+            },
+            "pet_birthday": {
+                "name": "Tiergeburtstag {name}",
+                "unit_of_measurement": "Tage"
+            },
+            "work_anniversary": {
+                "name": "Firmenjubiläum {name}",
+                "unit_of_measurement": "Tage"
+            },
+            "custom": {
+                "name": "{name}",
+                "unit_of_measurement": "Tage"
+            }
+        },
+        "calendar": {
+            "birthday": {
+                "name": "Geburtstage"
+            },
+            "anniversary": {
+                "name": "Jahrestage"
+            },
+            "name_day": {
+                "name": "Namenstage"
+            },
+            "wedding_anniversary": {
+                "name": "Hochzeitstage"
+            },
+            "memorial": {
+                "name": "Todestage"
+            },
+            "pet_birthday": {
+                "name": "Tiergeburtstage"
+            },
+            "work_anniversary": {
+                "name": "Firmenjubiläen"
+            },
+            "custom": {
+                "name": "Frei wählbare Ereignisse"
+            }
+        }
+    }
+}

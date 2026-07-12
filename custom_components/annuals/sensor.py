@@ -1,0 +1,90 @@
+from __future__ import annotations
+
+from datetime import date, timedelta
+import logging
+from typing import Any
+
+from homeassistant.components.sensor import SensorEntity
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.util import slugify
+
+from .const import (
+    CONF_DAY,
+    CONF_EVENT_NAME,
+    CONF_EVENT_TYPE,
+    CONF_ICON,
+    CONF_MONTH,
+    CONF_YEAR,
+    DOMAIN,
+    SCAN_INTERVAL_HOURS,
+    TYPE_ICONS,
+)
+from .dates import days_until, next_occurrence, occurrence_number
+
+_LOGGER = logging.getLogger(__name__)
+
+SCAN_INTERVAL = timedelta(hours=SCAN_INTERVAL_HOURS)
+
+
+async def async_setup_entry(
+    hass: HomeAssistant,
+    config_entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+) -> None:
+    async_add_entities([AnnualEventSensor(config_entry)])
+
+
+class AnnualEventSensor(SensorEntity):
+    """One yearly-recurring event. State is days until its next occurrence."""
+
+    _attr_should_poll = True
+    _attr_has_entity_name = True
+
+    def __init__(self, config_entry: ConfigEntry) -> None:
+        self._config_entry = config_entry
+        data = config_entry.data
+        event_type: str = data[CONF_EVENT_TYPE]
+        name: str = data[CONF_EVENT_NAME]
+        self._name = name
+
+        self._attr_unique_id = f"{DOMAIN}-{config_entry.entry_id}"
+        # translation_key per type gives the entity a type-prefixed, translated
+        # name ("Geburtstag {name}") and a translated unit ("Tage"/"days"),
+        # both in the server's language.
+        self._attr_translation_key = event_type
+        self._attr_translation_placeholders = {"name": name}
+        # Explicit, language-independent entity_id (the translated name would
+        # otherwise drive it and change with the server language, and two
+        # events sharing a name would collide without the type prefix).
+        # Setting entity_id directly - unlike a "suggested_object_id"
+        # attribute, this is actually honoured by the entity platform when
+        # the entity is first registered.
+        self.entity_id = f"sensor.annuals_{event_type}_{slugify(name)}"
+        self._attr_icon = data.get(CONF_ICON) or TYPE_ICONS.get(event_type, "mdi:calendar-star")
+        self._update_state()
+
+    def _update_state(self) -> None:
+        data = self._config_entry.data
+        day: int = data[CONF_DAY]
+        month: int = data[CONF_MONTH]
+        year: int | None = data.get(CONF_YEAR)
+        event_type: str = data[CONF_EVENT_TYPE]
+        today = date.today()
+
+        occurrence = next_occurrence(month, day, today)
+
+        self._attr_native_value = days_until(occurrence, today)
+        self._attr_extra_state_attributes: dict[str, Any] = {
+            "type": event_type,
+            "name": self._name,
+            "next_date": occurrence.isoformat(),
+            "occurrence_number": occurrence_number(year, occurrence),
+            "day": day,
+            "month": month,
+            "year": year,
+        }
+
+    async def async_update(self) -> None:
+        self._update_state()
