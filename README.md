@@ -89,6 +89,15 @@ Attributes on each event's sensor:
 | `occurrence_number` | Which occurrence the next date will be (e.g. `30` for a 30th birthday) - `null` when no year was entered. |
 | `day`, `month`, `year` | The event's date as entered (`year` is `null` when unknown). |
 
+Attributes on each per-type calendar (standard Home Assistant calendar entity attributes, reflecting whichever event is current or comes up next for that type):
+
+| Attribute | Description |
+|---|---|
+| `message` | The event summary shown in the calendar, e.g. "Anna - Birthday (26)" (just "Anna" for Custom events, since restating "Custom" would be redundant). |
+| `all_day` | Always `true` - events are stored as whole days, not specific times. |
+| `start_time`, `end_time` | The event's date, formatted as `YYYY-MM-DD HH:MM:SS` (start at midnight, end the next midnight). |
+| `location`, `description` | Always empty - not currently populated. |
+
 ## Dashboard examples
 
 There are already countless dashboard cards out there for this kind of thing, many of them prettier than what follows. The two examples below just show what's achievable with Home Assistant's own built-in **Markdown card** and no extra frontend cards to install - ready to paste into a dashboard's YAML editor as-is. If there's demand for a nicer, dedicated card, that's something that could go on the roadmap.
