@@ -114,7 +114,7 @@ content: |
   {% endfor %}
 ```
 
-![Next 10 events card](docs/markdown-card-example-1.png)
+<img src="docs/markdown-card-example-1.png" alt="Next 10 events card" width="50%">
 
 ### Next event only
 
@@ -152,7 +152,7 @@ content: >
 
 For German phrasing (example: "Hans hat in 3 Tagen Geburtstag und wird 40 Jahre alt"), swap the birthday line for `{{ name }} hat {{ when }} Geburtstag und wird {{ n }} Jahre alt.` and translate `No events yet.`/`Keine Ereignisse.` accordingly.
 
-![Next event card](docs/markdown-card-example-2.png)
+<img src="docs/markdown-card-example-2.png" alt="Next event card" width="50%">
 
 ### Today's birthday only
 
@@ -173,15 +173,17 @@ card:
     🎉 {{ name }} is getting {{ age }} today!
 ```
 
+<img src="docs/markdown-card-example-3.png" alt="Today's birthday only card" width="50%">
+
 This parses the calendar event's `message` attribute (e.g. "Anna - Birthday (26)") since the calendar entity itself doesn't carry a separate age/name attribute the way the sensor does. If two birthdays land on the same day, only one shows - the calendar only ever reports its single next/current event, same limitation as the "next event" card above.
 
 The same `on`/`off` state is just as useful for automations - for example, a state trigger on `calendar.annuals_birthday` (`to: "on"`) to fire a notification the moment a birthday starts, without any template or scheduling logic of your own.
 
 Or, more simply, add a **Calendar card** pointed at one or more of the `calendar.annuals_<type>` entities for a native calendar view:
 
-![The eight per-type calendars](docs/calendars.png)
+<img src="docs/calendars.png" alt="The eight per-type calendars" width="50%">
 
-![Calendar event detail view](docs/calendars-2.png)
+<img src="docs/calendars-2.png" alt="Calendar event detail view" width="50%">
 
 ## Installation
 
