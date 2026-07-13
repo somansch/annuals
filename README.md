@@ -111,36 +111,9 @@ Attributes on each per-type calendar (standard Home Assistant calendar entity at
 | `start_time`, `end_time` | The event's date, formatted as `YYYY-MM-DD HH:MM:SS` (start at midnight, end the next midnight). |
 | `location`, `description` | Always empty - not currently populated. |
 
-## Custom dashboard card
-
-Annuals bundles its own Lovelace card - no HACS frontend package or manual "Add resource" step needed, it's just there once the integration is installed. Add it the normal way: **Edit Dashboard → Add Card → search "Annuals Card"**.
-
-Everything is configurable through the visual editor: title, how many upcoming events to show, an optional days-ahead cutoff, which event types to include, whether to highlight today's events, and colors/font sizes. Clicking an event opens its sensor's more-info dialog.
-
-The card's own text (not the entity names) follows your Home Assistant profile language - English and German are supported so far.
-
-For dashboard YAML, or to define colors once for every Annuals card via a theme instead of per-card:
-
-```yaml
-type: custom:annuals-card
-title: Upcoming Events
-count: 10
-days_ahead: 0
-types: []
-show_hero: true
-colors:
-  today: ""
-  soon: ""
-  accent: ""
-font_size_title: ""
-font_size_list: ""
-```
-
-`types` filters to specific event types (e.g. `[birthday, pet_birthday]`); leave it `[]` for all eight. Leave any color or font size empty to fall back to a theme-level CSS variable (`--annuals-today-color`, `--annuals-soon-color`, `--annuals-accent-color`, `--annuals-title-size`, `--annuals-list-size`) or, failing that, a sane Home Assistant default - set those variables once in a theme to restyle every Annuals card on your dashboards at once, without touching individual card configs.
-
 ## Dashboard examples
 
-The two Markdown-card examples below predate the bundled custom card above and remain here as a build-it-yourself alternative that needs no frontend card at all - ready to paste into a dashboard's YAML editor as-is.
+There are already countless dashboard cards out there for this kind of thing, many of them prettier than what follows. The two examples below just show what's achievable with Home Assistant's own built-in **Markdown card** and no extra frontend cards to install - ready to paste into a dashboard's YAML editor as-is. If there's demand for a nicer, dedicated card, that's something that could go on the roadmap.
 
 Both sort events by days remaining numerically (a plain string sort would put "10" before "2").
 
