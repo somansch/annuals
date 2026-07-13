@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 
+from homeassistant.components import frontend
+from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.typing import ConfigType
 
 from .const import CONF_HUB, DOMAIN
 from .helpers import hub_title
@@ -19,9 +23,27 @@ HUB_PLATFORMS: list[Platform] = [Platform.CALENDAR]
 
 _HUB_FLOW_STARTED = "hub_flow_started"
 
+# The bundled Lovelace card (custom_components/annuals/frontend/annuals-card.js)
+# is served from this URL and auto-loaded on every dashboard via
+# frontend.add_extra_js_url - no manual "Add resource" step required.
+FRONTEND_JS_URL = "/annuals-frontend/annuals-card.js"
+
 
 def _platforms_for(config_entry: ConfigEntry) -> list[Platform]:
     return HUB_PLATFORMS if config_entry.data.get(CONF_HUB) else EVENT_PLATFORMS
+
+
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    """Register the bundled Lovelace card once at startup."""
+    frontend_path = Path(__file__).parent / "frontend" / "annuals-card.js"
+    await hass.http.async_register_static_paths(
+        [StaticPathConfig(FRONTEND_JS_URL, str(frontend_path), False)]
+    )
+    # cache_headers=False above and no es5 fallback: this is a plain modern
+    # JS module, and we don't want browsers holding onto a stale cached copy
+    # across integration updates.
+    frontend.add_extra_js_url(hass, FRONTEND_JS_URL)
+    return True
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
