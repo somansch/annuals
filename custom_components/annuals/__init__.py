@@ -8,12 +8,18 @@ from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
 
 from .const import CONF_HUB, DOMAIN
 from .helpers import hub_title
 
 _LOGGER = logging.getLogger(__name__)
+
+# This integration is config-entry only - it has no YAML configuration
+# options of its own, even though async_setup() below exists (to register
+# the bundled Lovelace card at startup).
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 # Per-event entries own one sensor each; the single auto-created hub entry
 # owns the shared cross-event entities (the per-type calendars, plus any
