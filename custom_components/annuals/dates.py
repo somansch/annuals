@@ -42,3 +42,23 @@ def occurrence_number(year: int | None, occurrence: date) -> int | None:
     if year is None:
         return None
     return occurrence.year - year
+
+
+def parse_thresholds(text: str) -> set[int]:
+    """Parse a comma-separated "18,21,30" milestone list into a set of ints.
+
+    Blank/whitespace-only entries and non-numeric junk are silently dropped
+    rather than raising - this feeds a free-text options-flow field, so a
+    stray trailing comma or extra space shouldn't break the whole list.
+    """
+    result: set[int] = set()
+    for part in text.split(","):
+        part = part.strip()
+        if part.isdigit():
+            result.add(int(part))
+    return result
+
+
+def is_important(occurrence_num: int | None, thresholds: set[int]) -> bool:
+    """Whether this occurrence number is one of the configured milestones."""
+    return occurrence_num is not None and occurrence_num in thresholds

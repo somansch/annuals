@@ -41,7 +41,8 @@
                     "day": "Dag",
                     "month": "Månad",
                     "year": "År (lämna tomt om okänt)",
-                    "icon": "Åsidosätt ikon (valfritt)"
+                    "icon": "Åsidosätt ikon (valfritt)",
+                    "vip": "VIP Annual"
                 }
             },
             "reconfigure": {
@@ -53,7 +54,8 @@
                     "day": "Dag",
                     "month": "Månad",
                     "year": "År (lämna tomt om okänt)",
-                    "icon": "Åsidosätt ikon (valfritt)"
+                    "icon": "Åsidosätt ikon (valfritt)",
+                    "vip": "VIP Annual"
                 }
             }
         },
@@ -78,12 +80,13 @@
                     "day": "Dag",
                     "month": "Månad",
                     "year": "År (lämna tomt om okänt)",
-                    "icon": "Åsidosätt ikon (valfritt)"
+                    "icon": "Åsidosätt ikon (valfritt)",
+                    "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "Importera händelser från CSV",
-                "description": "Kolumner: name, type, day, month, year (valfritt), icon (valfritt). \"type\" måste vara en av dessa engelska nycklar: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (alltid på engelska, oavsett språkinställning). Behåll alla kolumner även när ett värde är tomt - en rad utan avslutande kommatecken förskjuter efterföljande värden ett steg åt vänster. Ogiltiga rader hoppas över och loggas.\n\nExempel:\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "description": "Kolumner: name, type, day, month, year (valfritt), icon (valfritt), vip (valfritt). \"type\" måste vara en av dessa engelska nycklar: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (alltid på engelska, oavsett språkinställning). \"vip\" accepterar 1/true/yes/y/x (skiftlägesokänsligt); lämna tomt eller utelämna kolumnen för en icke-VIP-händelse. Behåll alla kolumner även när ett värde är tomt - en rad utan avslutande kommatecken förskjuter efterföljande värden ett steg åt vänster. Ogiltiga rader hoppas över och loggas.\n\nExempel:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
                 "data": {
                     "csv_file": "CSV-fil"
                 }
@@ -91,8 +94,23 @@
             "hub_menu": {
                 "title": "Annuals Inställningar",
                 "menu_options": {
+                    "annual_settings": "Annual Inställningar",
                     "import_csv": "Importera händelser från CSV",
                     "delete_all": "Ta bort all Annuals-data"
+                }
+            },
+            "annual_settings": {
+                "title": "Annual Inställningar",
+                "description": "Kommaseparerade jubileumsnummer som automatiskt markerar en händelse av den typen som \"Important\", t.ex. \"18,21,30,40,50\". Lämna ett fält tomt för att inaktivera detta för den typen.",
+                "data": {
+                    "important_thresholds_birthday": "Födelsedag",
+                    "important_thresholds_anniversary": "Årsdag",
+                    "important_thresholds_name_day": "Namnsdag",
+                    "important_thresholds_wedding_anniversary": "Bröllopsdag",
+                    "important_thresholds_memorial": "Dödsdag",
+                    "important_thresholds_pet_birthday": "Husdjurets födelsedag",
+                    "important_thresholds_work_anniversary": "Arbetsjubileum",
+                    "important_thresholds_custom": "Anpassad"
                 }
             },
             "delete_all": {

@@ -41,7 +41,8 @@
                     "day": "Dag",
                     "month": "Måned",
                     "year": "År (la stå tomt hvis ukjent)",
-                    "icon": "Overstyr ikon (valgfritt)"
+                    "icon": "Overstyr ikon (valgfritt)",
+                    "vip": "VIP Annual"
                 }
             },
             "reconfigure": {
@@ -53,7 +54,8 @@
                     "day": "Dag",
                     "month": "Måned",
                     "year": "År (la stå tomt hvis ukjent)",
-                    "icon": "Overstyr ikon (valgfritt)"
+                    "icon": "Overstyr ikon (valgfritt)",
+                    "vip": "VIP Annual"
                 }
             }
         },
@@ -78,12 +80,13 @@
                     "day": "Dag",
                     "month": "Måned",
                     "year": "År (la stå tomt hvis ukjent)",
-                    "icon": "Overstyr ikon (valgfritt)"
+                    "icon": "Overstyr ikon (valgfritt)",
+                    "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "Importer hendelser fra CSV",
-                "description": "Kolonner: name, type, day, month, year (valgfritt), icon (valgfritt). «type» må være en av disse engelske nøklene: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (alltid på engelsk, uansett språkinnstilling). Behold alle kolonner selv når en verdi er tom - en rad uten avsluttende komma forskyver de neste verdiene ett hakk til venstre. Ugyldige rader hoppes over og logges.\n\nEksempel:\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "description": "Kolonner: name, type, day, month, year (valgfritt), icon (valgfritt), vip (valgfritt). «type» må være en av disse engelske nøklene: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (alltid på engelsk, uansett språkinnstilling). «vip» godtar 1/true/yes/y/x (ikke versalfølsomt); la stå tomt eller utelat kolonnen for en ikke-VIP-hendelse. Behold alle kolonner selv når en verdi er tom - en rad uten avsluttende komma forskyver de neste verdiene ett hakk til venstre. Ugyldige rader hoppes over og logges.\n\nEksempel:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
                 "data": {
                     "csv_file": "CSV-fil"
                 }
@@ -91,8 +94,23 @@
             "hub_menu": {
                 "title": "Annuals Innstillinger",
                 "menu_options": {
+                    "annual_settings": "Annual Innstillinger",
                     "import_csv": "Importer hendelser fra CSV",
                     "delete_all": "Slett all Annuals-data"
+                }
+            },
+            "annual_settings": {
+                "title": "Annual Innstillinger",
+                "description": "Kommaseparerte jubileumstall som automatisk markerer en hendelse av den typen som «Important», f.eks. «18,21,30,40,50». La et felt stå tomt for å slå dette av for den typen.",
+                "data": {
+                    "important_thresholds_birthday": "Bursdag",
+                    "important_thresholds_anniversary": "Jubileum",
+                    "important_thresholds_name_day": "Navnedag",
+                    "important_thresholds_wedding_anniversary": "Bryllupsdag",
+                    "important_thresholds_memorial": "Minnedag",
+                    "important_thresholds_pet_birthday": "Kjæledyrs bursdag",
+                    "important_thresholds_work_anniversary": "Arbeidsjubileum",
+                    "important_thresholds_custom": "Egendefinert"
                 }
             },
             "delete_all": {

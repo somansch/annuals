@@ -41,7 +41,8 @@
                     "day": "Dzień",
                     "month": "Miesiąc",
                     "year": "Rok (pozostaw puste, jeśli nieznany)",
-                    "icon": "Zastąp ikonę (opcjonalnie)"
+                    "icon": "Zastąp ikonę (opcjonalnie)",
+                    "vip": "VIP Annual"
                 }
             },
             "reconfigure": {
@@ -53,7 +54,8 @@
                     "day": "Dzień",
                     "month": "Miesiąc",
                     "year": "Rok (pozostaw puste, jeśli nieznany)",
-                    "icon": "Zastąp ikonę (opcjonalnie)"
+                    "icon": "Zastąp ikonę (opcjonalnie)",
+                    "vip": "VIP Annual"
                 }
             }
         },
@@ -78,12 +80,13 @@
                     "day": "Dzień",
                     "month": "Miesiąc",
                     "year": "Rok (pozostaw puste, jeśli nieznany)",
-                    "icon": "Zastąp ikonę (opcjonalnie)"
+                    "icon": "Zastąp ikonę (opcjonalnie)",
+                    "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "Importuj wydarzenia z pliku CSV",
-                "description": "Kolumny: name, type, day, month, year (opcjonalnie), icon (opcjonalnie). „type” musi być jednym z następujących angielskich kluczy: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (zawsze po angielsku, niezależnie od ustawień języka). Zachowaj każdą kolumnę, nawet jeśli wartość jest pusta – wiersz bez przecinka na końcu przesuwa kolejne wartości w lewo. Nieprawidłowe wiersze są pomijane i zapisywane w dzienniku.\n\nPrzykład:\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "description": "Kolumny: name, type, day, month, year (opcjonalnie), icon (opcjonalnie), vip (opcjonalnie). „type” musi być jednym z następujących angielskich kluczy: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (zawsze po angielsku, niezależnie od ustawień języka). „vip” akceptuje 1/true/yes/y/x (wielkość liter nie ma znaczenia); pozostaw puste lub pomiń kolumnę dla wydarzenia bez statusu VIP. Zachowaj każdą kolumnę, nawet jeśli wartość jest pusta – wiersz bez przecinka na końcu przesuwa kolejne wartości w lewo. Nieprawidłowe wiersze są pomijane i zapisywane w dzienniku.\n\nPrzykład:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
                 "data": {
                     "csv_file": "Plik CSV"
                 }
@@ -91,8 +94,23 @@
             "hub_menu": {
                 "title": "Annuals Ustawienia",
                 "menu_options": {
+                    "annual_settings": "Annual Ustawienia",
                     "import_csv": "Importuj wydarzenia z CSV",
                     "delete_all": "Usuń wszystkie dane Annuals"
+                }
+            },
+            "annual_settings": {
+                "title": "Annual Ustawienia",
+                "description": "Rozdzielone przecinkami numery rocznic, przy których wydarzenie tego typu zostanie automatycznie oznaczone jako „Important”, np. „18,21,30,40,50”. Pozostaw pole puste, aby wyłączyć to dla danego typu.",
+                "data": {
+                    "important_thresholds_birthday": "Urodziny",
+                    "important_thresholds_anniversary": "Rocznica",
+                    "important_thresholds_name_day": "Imieniny",
+                    "important_thresholds_wedding_anniversary": "Rocznica ślubu",
+                    "important_thresholds_memorial": "Rocznica śmierci",
+                    "important_thresholds_pet_birthday": "Urodziny zwierzaka",
+                    "important_thresholds_work_anniversary": "Jubileusz pracy",
+                    "important_thresholds_custom": "Inne"
                 }
             },
             "delete_all": {

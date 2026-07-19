@@ -12,6 +12,7 @@ CONF_DAY = "day"
 CONF_MONTH = "month"
 CONF_YEAR = "year"
 CONF_ICON = "icon"
+CONF_VIP = "vip"
 
 TYPE_BIRTHDAY = "birthday"
 TYPE_ANNIVERSARY = "anniversary"
@@ -49,3 +50,26 @@ TYPE_ICONS = {
 # without needing an external trigger - these are pure local date calculations,
 # no API involved.
 SCAN_INTERVAL_HOURS = 1
+
+# Hub-entry options key prefix for the per-type "important" occurrence-number
+# thresholds ("Annual Settings"), e.g. "important_thresholds_birthday". Kept
+# per-type since a milestone like "25" means something different for a
+# birthday than for a work anniversary.
+CONF_IMPORTANT_THRESHOLDS = "important_thresholds"
+
+# Sensible starting milestones per event type, shown pre-filled in the
+# "Annual Settings" options step and fully user-editable from there. Round
+# numbers plus the traditional "special" birthdays (65/75/85/95); work
+# anniversaries in 5-year steps; wedding/memorial anniversaries at the
+# customary milestone years. Types with no cultural convention for a
+# milestone (name day, custom) default to empty.
+DEFAULT_IMPORTANT_THRESHOLDS = {
+    TYPE_BIRTHDAY: "18,21,30,40,50,60,65,70,75,80,85,90,95,100",
+    TYPE_ANNIVERSARY: "10,20,25,30,40,50,60,70,75,80,90,100",
+    TYPE_NAME_DAY: "",
+    TYPE_WEDDING_ANNIVERSARY: "1,5,10,15,20,25,30,40,50,60,65,70",
+    TYPE_MEMORIAL: "1,5,10,15,20,25,30,40,50",
+    TYPE_PET_BIRTHDAY: "1,5,10,15,20",
+    TYPE_WORK_ANNIVERSARY: "5,10,15,20,25,30,35,40,45,50",
+    TYPE_CUSTOM: "",
+}

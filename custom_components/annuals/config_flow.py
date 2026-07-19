@@ -18,8 +18,11 @@ from .const import (
     CONF_EVENT_TYPE,
     CONF_HUB,
     CONF_ICON,
+    CONF_IMPORTANT_THRESHOLDS,
     CONF_MONTH,
+    CONF_VIP,
     CONF_YEAR,
+    DEFAULT_IMPORTANT_THRESHOLDS,
     DOMAIN,
     EVENT_TYPES,
     HUB_UNIQUE_ID,
@@ -92,6 +95,9 @@ def _event_schema(defaults: dict | None = None) -> vol.Schema:
             vol.Optional(
                 CONF_ICON, default=defaults.get(CONF_ICON, "")
             ): selector({"icon": {}}),
+            vol.Optional(
+                CONF_VIP, default=defaults.get(CONF_VIP, False)
+            ): selector({"boolean": {}}),
         }
     )
 
@@ -126,6 +132,7 @@ def _validate_and_normalise(user_input: dict) -> tuple[dict | None, dict[str, st
         CONF_MONTH: month,
         CONF_YEAR: year,
         CONF_ICON: user_input.get(CONF_ICON, "").strip(),
+        CONF_VIP: bool(user_input.get(CONF_VIP, False)),
     }
     return data, errors
 
@@ -137,13 +144,18 @@ def _csv_schema() -> vol.Schema:
     return vol.Schema({vol.Required("csv_file"): selector({"file": {"accept": ".csv"}})})
 
 
+_CSV_TRUE_VALUES = {"1", "true", "yes", "y", "x"}
+
+
 def _parse_csv_rows(text: str) -> tuple[list[dict], list[str]]:
     """Parse CSV text into validated event data dicts, plus per-line errors.
 
-    Columns: name, type, day, month, year (optional), icon (optional).
-    `type` must be one of the internal English keys (e.g. "birthday"),
-    case-insensitively - translated labels are deliberately not accepted, so
-    the same file works regardless of the server's language.
+    Columns: name, type, day, month, year (optional), icon (optional),
+    vip (optional). `type` must be one of the internal English keys (e.g.
+    "birthday"), case-insensitively - translated labels are deliberately
+    not accepted, so the same file works regardless of the server's
+    language. `vip` accepts 1/true/yes/y/x (case-insensitive); anything
+    else (including a missing column) means not VIP.
     """
     reader = csv.DictReader(io.StringIO(text))
     if not reader.fieldnames:
@@ -193,6 +205,7 @@ def _parse_csv_rows(text: str) -> tuple[list[dict], list[str]]:
                 CONF_MONTH: month,
                 CONF_YEAR: year,
                 CONF_ICON: icon_raw,
+                CONF_VIP: row.get("vip", "").lower() in _CSV_TRUE_VALUES,
             }
         )
     return rows, errors
@@ -354,7 +367,61 @@ class AnnualsOptionsFlow(OptionsFlow):
         )
 
     async def async_step_hub_menu(self, user_input=None):
-        return self.async_show_menu(step_id="hub_menu", menu_options=["import_csv", "delete_all"])
+        return self.async_show_menu(
+            step_id="hub_menu", menu_options=["annual_settings", "import_csv", "delete_all"]
+        )
+
+    async def async_step_annual_settings(self, user_input=None):
+        """Per-type "important" occurrence-number milestones (e.g. round
+        birthdays, work anniversaries) - hub-level, so they apply to every
+        event of that type at once rather than being set per event.
+        """
+        if user_input is not None:
+            # Every field is always rendered (never conditionally hidden), so
+            # a key missing from user_input means the user cleared that text
+            # box - the frontend omits emptied optional string fields from
+            # the payload rather than submitting "". Treating "missing" as
+            # "" here (instead of falling back to the old stored value) is
+            # what lets a field actually be cleared to disable that type.
+            new_options = {
+                **self.config_entry.options,
+                **{
+                    f"{CONF_IMPORTANT_THRESHOLDS}_{event_type}": user_input.get(
+                        f"{CONF_IMPORTANT_THRESHOLDS}_{event_type}", ""
+                    )
+                    for event_type in EVENT_TYPES
+                },
+            }
+            # Commit the new options ourselves *before* scheduling reloads -
+            # returning CREATE_ENTRY only applies "data" to config_entry.options
+            # after this function returns, so scheduling the reloads first (as
+            # this used to) would reload every event entry against the *old*
+            # thresholds, leaving "important" unchanged until the next hourly
+            # poll happened to run after the real options had landed.
+            self.hass.config_entries.async_update_entry(self.config_entry, options=new_options)
+            for entry in self.hass.config_entries.async_entries(DOMAIN):
+                if not entry.data.get(CONF_HUB):
+                    self.hass.config_entries.async_schedule_reload(entry.entry_id)
+            # Still return the same data so the framework's own
+            # options-overwrite (see above) is a no-op rather than reverting
+            # anything - belt and suspenders, not required for correctness.
+            return self.async_create_entry(title="", data=new_options)
+
+        schema = vol.Schema(
+            {
+                vol.Optional(
+                    f"{CONF_IMPORTANT_THRESHOLDS}_{event_type}",
+                    description={
+                        "suggested_value": self.config_entry.options.get(
+                            f"{CONF_IMPORTANT_THRESHOLDS}_{event_type}",
+                            DEFAULT_IMPORTANT_THRESHOLDS.get(event_type, ""),
+                        )
+                    },
+                ): str
+                for event_type in EVENT_TYPES
+            }
+        )
+        return self.async_show_form(step_id="annual_settings", data_schema=schema)
 
     async def async_step_delete_all(self, user_input=None):
         """Remove every Annuals config entry (all events plus the hub itself).

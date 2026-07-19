@@ -41,7 +41,8 @@
                     "day": "日",
                     "month": "月",
                     "year": "年份（未知可留空）",
-                    "icon": "自定义图标（可选）"
+                    "icon": "自定义图标（可选）",
+                    "vip": "VIP Annual"
                 }
             },
             "reconfigure": {
@@ -53,7 +54,8 @@
                     "day": "日",
                     "month": "月",
                     "year": "年份（未知可留空）",
-                    "icon": "自定义图标（可选）"
+                    "icon": "自定义图标（可选）",
+                    "vip": "VIP Annual"
                 }
             }
         },
@@ -78,12 +80,13 @@
                     "day": "日",
                     "month": "月",
                     "year": "年份（未知可留空）",
-                    "icon": "自定义图标（可选）"
+                    "icon": "自定义图标（可选）",
+                    "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "从 CSV 导入事件",
-                "description": "列：name、type、day、month、year（可选）、icon（可选）。“type”必须是以下英文键之一：birthday、anniversary、name_day、wedding_anniversary、memorial、pet_birthday、work_anniversary、custom（始终使用英文，与语言设置无关）。即使某个值为空，也要保留该列 —— 缺少末尾逗号会导致后面的值向左移位。无效行会被跳过并记录到日志中。\n\n示例：\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "description": "列：name、type、day、month、year（可选）、icon（可选）、vip（可选）。“type”必须是以下英文键之一：birthday、anniversary、name_day、wedding_anniversary、memorial、pet_birthday、work_anniversary、custom（始终使用英文，与语言设置无关）。“vip”接受 1/true/yes/y/x（不区分大小写）；留空或省略该列表示非 VIP 事件。即使某个值为空，也要保留该列 —— 缺少末尾逗号会导致后面的值向左移位。无效行会被跳过并记录到日志中。\n\n示例：\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
                 "data": {
                     "csv_file": "CSV 文件"
                 }
@@ -91,8 +94,23 @@
             "hub_menu": {
                 "title": "Annuals 设置",
                 "menu_options": {
+                    "annual_settings": "Annual 设置",
                     "import_csv": "从 CSV 导入事件",
                     "delete_all": "删除所有 Annuals 数据"
+                }
+            },
+            "annual_settings": {
+                "title": "Annual 设置",
+                "description": "用逗号分隔的周年数字，事件达到该周年数时会自动被标记为“Important”，例如“18,21,30,40,50”。留空该类型的字段可禁用此功能。",
+                "data": {
+                    "important_thresholds_birthday": "生日",
+                    "important_thresholds_anniversary": "纪念日",
+                    "important_thresholds_name_day": "命名日",
+                    "important_thresholds_wedding_anniversary": "结婚纪念日",
+                    "important_thresholds_memorial": "忌日",
+                    "important_thresholds_pet_birthday": "宠物生日",
+                    "important_thresholds_work_anniversary": "工作纪念日",
+                    "important_thresholds_custom": "自定义"
                 }
             },
             "delete_all": {

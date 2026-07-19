@@ -41,7 +41,8 @@
                     "day": "Den",
                     "month": "Měsíc",
                     "year": "Rok (ponechte prázdné, pokud není znám)",
-                    "icon": "Vlastní ikona (volitelné)"
+                    "icon": "Vlastní ikona (volitelné)",
+                    "vip": "VIP Annual"
                 }
             },
             "reconfigure": {
@@ -53,7 +54,8 @@
                     "day": "Den",
                     "month": "Měsíc",
                     "year": "Rok (ponechte prázdné, pokud není znám)",
-                    "icon": "Vlastní ikona (volitelné)"
+                    "icon": "Vlastní ikona (volitelné)",
+                    "vip": "VIP Annual"
                 }
             }
         },
@@ -78,12 +80,13 @@
                     "day": "Den",
                     "month": "Měsíc",
                     "year": "Rok (ponechte prázdné, pokud není znám)",
-                    "icon": "Vlastní ikona (volitelné)"
+                    "icon": "Vlastní ikona (volitelné)",
+                    "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "Import událostí z CSV",
-                "description": "Sloupce: name, type, day, month, year (volitelné), icon (volitelné). „type“ musí být jeden z těchto anglických klíčů: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (vždy anglicky, bez ohledu na nastavení jazyka). Zachovejte všechny sloupce i při prázdné hodnotě – řádek bez koncové čárky posune následující hodnoty o jednu doleva. Neplatné řádky se přeskočí a zaznamenají do protokolu.\n\nPříklad:\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "description": "Sloupce: name, type, day, month, year (volitelné), icon (volitelné), vip (volitelné). „type“ musí být jeden z těchto anglických klíčů: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (vždy anglicky, bez ohledu na nastavení jazyka). „vip“ přijímá 1/true/yes/y/x (nezáleží na velikosti písmen); ponechte prázdné nebo sloupec vynechte pro událost bez VIP statusu. Zachovejte všechny sloupce i při prázdné hodnotě – řádek bez koncové čárky posune následující hodnoty o jednu doleva. Neplatné řádky se přeskočí a zaznamenají do protokolu.\n\nPříklad:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
                 "data": {
                     "csv_file": "Soubor CSV"
                 }
@@ -91,8 +94,23 @@
             "hub_menu": {
                 "title": "Annuals Nastavení",
                 "menu_options": {
+                    "annual_settings": "Annual Nastavení",
                     "import_csv": "Import událostí z CSV",
                     "delete_all": "Smazat všechna data Annuals"
+                }
+            },
+            "annual_settings": {
+                "title": "Annual Nastavení",
+                "description": "Čárkami oddělená čísla výročí, při kterých se událost daného typu automaticky označí jako „Important“, např. „18,21,30,40,50“. Ponechte pole prázdné, chcete-li to pro daný typ vypnout.",
+                "data": {
+                    "important_thresholds_birthday": "Narozeniny",
+                    "important_thresholds_anniversary": "Výročí",
+                    "important_thresholds_name_day": "Svátek",
+                    "important_thresholds_wedding_anniversary": "Výročí svatby",
+                    "important_thresholds_memorial": "Výročí úmrtí",
+                    "important_thresholds_pet_birthday": "Narozeniny mazlíčka",
+                    "important_thresholds_work_anniversary": "Pracovní výročí",
+                    "important_thresholds_custom": "Vlastní"
                 }
             },
             "delete_all": {

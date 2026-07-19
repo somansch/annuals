@@ -39,10 +39,13 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     await hass.http.async_register_static_paths(
         [StaticPathConfig(FRONTEND_JS_URL, str(frontend_path), False)]
     )
-    # cache_headers=False above and no es5 fallback: this is a plain modern
-    # JS module, and we don't want browsers holding onto a stale cached copy
-    # across integration updates.
-    frontend.add_extra_js_url(hass, FRONTEND_JS_URL)
+    # cache_headers=False above only omits an explicit Cache-Control header -
+    # browsers still apply heuristic caching from Last-Modified/ETag, so a
+    # stale copy can survive a reload after the card is updated. Busting the
+    # URL with the file's own mtime forces a fresh fetch whenever it changes
+    # (i.e. on every restart after an update).
+    version = int(frontend_path.stat().st_mtime)
+    frontend.add_extra_js_url(hass, f"{FRONTEND_JS_URL}?v={version}")
     return True
 
 

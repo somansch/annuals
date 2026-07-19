@@ -41,7 +41,8 @@
                     "day": "Jour",
                     "month": "Mois",
                     "year": "Année (laisser vide si inconnue)",
-                    "icon": "Icône personnalisée (optionnel)"
+                    "icon": "Icône personnalisée (optionnel)",
+                    "vip": "VIP Annual"
                 }
             },
             "reconfigure": {
@@ -53,7 +54,8 @@
                     "day": "Jour",
                     "month": "Mois",
                     "year": "Année (laisser vide si inconnue)",
-                    "icon": "Icône personnalisée (optionnel)"
+                    "icon": "Icône personnalisée (optionnel)",
+                    "vip": "VIP Annual"
                 }
             }
         },
@@ -78,12 +80,13 @@
                     "day": "Jour",
                     "month": "Mois",
                     "year": "Année (laisser vide si inconnue)",
-                    "icon": "Icône personnalisée (optionnel)"
+                    "icon": "Icône personnalisée (optionnel)",
+                    "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "Importer des événements depuis un CSV",
-                "description": "Colonnes : name, type, day, month, year (optionnel), icon (optionnel). « type » doit être l'une des clés anglaises suivantes : birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (toujours en anglais, quel que soit votre paramètre de langue). Conservez toutes les colonnes même si une valeur est vide - une ligne sans virgule finale décale les valeurs suivantes vers la gauche. Les lignes invalides sont ignorées et journalisées.\n\nExemple :\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "description": "Colonnes : name, type, day, month, year (optionnel), icon (optionnel), vip (optionnel). « type » doit être l'une des clés anglaises suivantes : birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (toujours en anglais, quel que soit votre paramètre de langue). « vip » accepte 1/true/yes/y/x (peu importe la casse) ; laissez vide ou omettez la colonne pour un événement non-VIP. Conservez toutes les colonnes même si une valeur est vide - une ligne sans virgule finale décale les valeurs suivantes vers la gauche. Les lignes invalides sont ignorées et journalisées.\n\nExemple :\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
                 "data": {
                     "csv_file": "Fichier CSV"
                 }
@@ -91,8 +94,23 @@
             "hub_menu": {
                 "title": "Annuals Paramètres",
                 "menu_options": {
+                    "annual_settings": "Annual Paramètres",
                     "import_csv": "Importer des événements depuis un CSV",
                     "delete_all": "Supprimer toutes les données Annuals"
+                }
+            },
+            "annual_settings": {
+                "title": "Annual Paramètres",
+                "description": "Numéros d'occurrence séparés par des virgules qui marquent automatiquement un événement comme « Important » pour ce type, par ex. « 18,21,30,40,50 ». Laissez un champ vide pour désactiver cela pour ce type.",
+                "data": {
+                    "important_thresholds_birthday": "Anniversaire",
+                    "important_thresholds_anniversary": "Date commémorative",
+                    "important_thresholds_name_day": "Fête",
+                    "important_thresholds_wedding_anniversary": "Anniversaire de mariage",
+                    "important_thresholds_memorial": "Commémoration",
+                    "important_thresholds_pet_birthday": "Anniversaire d'animal",
+                    "important_thresholds_work_anniversary": "Anniversaire professionnel",
+                    "important_thresholds_custom": "Personnalisé"
                 }
             },
             "delete_all": {

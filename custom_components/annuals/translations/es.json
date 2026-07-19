@@ -41,7 +41,8 @@
                     "day": "Día",
                     "month": "Mes",
                     "year": "Año (dejar vacío si se desconoce)",
-                    "icon": "Sobrescribir icono (opcional)"
+                    "icon": "Sobrescribir icono (opcional)",
+                    "vip": "VIP Annual"
                 }
             },
             "reconfigure": {
@@ -53,7 +54,8 @@
                     "day": "Día",
                     "month": "Mes",
                     "year": "Año (dejar vacío si se desconoce)",
-                    "icon": "Sobrescribir icono (opcional)"
+                    "icon": "Sobrescribir icono (opcional)",
+                    "vip": "VIP Annual"
                 }
             }
         },
@@ -78,12 +80,13 @@
                     "day": "Día",
                     "month": "Mes",
                     "year": "Año (dejar vacío si se desconoce)",
-                    "icon": "Sobrescribir icono (opcional)"
+                    "icon": "Sobrescribir icono (opcional)",
+                    "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "Importar eventos desde CSV",
-                "description": "Columnas: name, type, day, month, year (opcional), icon (opcional). «type» debe ser una de estas claves en inglés: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (siempre en inglés, sin importar tu idioma). Mantén todas las columnas aunque un valor esté vacío: una fila sin la coma final desplaza los valores siguientes hacia la izquierda. Las filas no válidas se omiten y quedan registradas.\n\nEjemplo:\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "description": "Columnas: name, type, day, month, year (opcional), icon (opcional), vip (opcional). «type» debe ser una de estas claves en inglés: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (siempre en inglés, sin importar tu idioma). «vip» acepta 1/true/yes/y/x (sin distinguir mayúsculas/minúsculas); déjalo vacío u omite la columna para un evento que no sea VIP. Mantén todas las columnas aunque un valor esté vacío: una fila sin la coma final desplaza los valores siguientes hacia la izquierda. Las filas no válidas se omiten y quedan registradas.\n\nEjemplo:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
                 "data": {
                     "csv_file": "Archivo CSV"
                 }
@@ -91,8 +94,23 @@
             "hub_menu": {
                 "title": "Annuals Ajustes",
                 "menu_options": {
+                    "annual_settings": "Annual Ajustes",
                     "import_csv": "Importar eventos desde CSV",
                     "delete_all": "Eliminar todos los datos de Annuals"
+                }
+            },
+            "annual_settings": {
+                "title": "Annual Ajustes",
+                "description": "Números de aniversario separados por comas que marcan automáticamente un evento de ese tipo como «Important», por ejemplo «18,21,30,40,50». Deja un campo vacío para desactivar esto en ese tipo.",
+                "data": {
+                    "important_thresholds_birthday": "Cumpleaños",
+                    "important_thresholds_anniversary": "Aniversario",
+                    "important_thresholds_name_day": "Onomástica",
+                    "important_thresholds_wedding_anniversary": "Aniversario de boda",
+                    "important_thresholds_memorial": "Aniversario de fallecimiento",
+                    "important_thresholds_pet_birthday": "Cumpleaños de mascota",
+                    "important_thresholds_work_anniversary": "Aniversario laboral",
+                    "important_thresholds_custom": "Personalizado"
                 }
             },
             "delete_all": {

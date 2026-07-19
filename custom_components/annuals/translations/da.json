@@ -41,7 +41,8 @@
                     "day": "Dag",
                     "month": "Måned",
                     "year": "År (lad stå tomt hvis ukendt)",
-                    "icon": "Tilsidesæt ikon (valgfrit)"
+                    "icon": "Tilsidesæt ikon (valgfrit)",
+                    "vip": "VIP Annual"
                 }
             },
             "reconfigure": {
@@ -53,7 +54,8 @@
                     "day": "Dag",
                     "month": "Måned",
                     "year": "År (lad stå tomt hvis ukendt)",
-                    "icon": "Tilsidesæt ikon (valgfrit)"
+                    "icon": "Tilsidesæt ikon (valgfrit)",
+                    "vip": "VIP Annual"
                 }
             }
         },
@@ -78,12 +80,13 @@
                     "day": "Dag",
                     "month": "Måned",
                     "year": "År (lad stå tomt hvis ukendt)",
-                    "icon": "Tilsidesæt ikon (valgfrit)"
+                    "icon": "Tilsidesæt ikon (valgfrit)",
+                    "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "Importer begivenheder fra CSV",
-                "description": "Kolonner: name, type, day, month, year (valgfrit), icon (valgfrit). \"type\" skal være en af følgende engelske nøgler: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (altid på engelsk, uanset dit sprogvalg). Behold alle kolonner, selv når en værdi er tom - en række uden afsluttende komma rykker de følgende værdier et trin til venstre. Ugyldige rækker springes over og logges.\n\nEksempel:\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "description": "Kolonner: name, type, day, month, year (valgfrit), icon (valgfrit), vip (valgfrit). \"type\" skal være en af følgende engelske nøgler: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (altid på engelsk, uanset dit sprogvalg). \"vip\" accepterer 1/true/yes/y/x (der skelnes ikke mellem store/små bogstaver); lad stå tomt eller undlad kolonnen for en ikke-VIP-begivenhed. Behold alle kolonner, selv når en værdi er tom - en række uden afsluttende komma rykker de følgende værdier et trin til venstre. Ugyldige rækker springes over og logges.\n\nEksempel:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
                 "data": {
                     "csv_file": "CSV-fil"
                 }
@@ -91,8 +94,23 @@
             "hub_menu": {
                 "title": "Annuals Indstillinger",
                 "menu_options": {
+                    "annual_settings": "Annual Indstillinger",
                     "import_csv": "Importer begivenheder fra CSV",
                     "delete_all": "Slet alle Annuals-data"
+                }
+            },
+            "annual_settings": {
+                "title": "Annual Indstillinger",
+                "description": "Kommaseparerede jubilæumstal, som automatisk markerer en begivenhed af den type som \"Important\", f.eks. \"18,21,30,40,50\". Lad et felt stå tomt for at deaktivere dette for den type.",
+                "data": {
+                    "important_thresholds_birthday": "Fødselsdag",
+                    "important_thresholds_anniversary": "Mærkedag",
+                    "important_thresholds_name_day": "Navnedag",
+                    "important_thresholds_wedding_anniversary": "Bryllupsdag",
+                    "important_thresholds_memorial": "Mindedag",
+                    "important_thresholds_pet_birthday": "Kæledyrs fødselsdag",
+                    "important_thresholds_work_anniversary": "Jubilæum på arbejdet",
+                    "important_thresholds_custom": "Tilpasset"
                 }
             },
             "delete_all": {

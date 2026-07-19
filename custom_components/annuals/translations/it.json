@@ -41,7 +41,8 @@
                     "day": "Giorno",
                     "month": "Mese",
                     "year": "Anno (lasciare vuoto se sconosciuto)",
-                    "icon": "Sovrascrivi icona (opzionale)"
+                    "icon": "Sovrascrivi icona (opzionale)",
+                    "vip": "VIP Annual"
                 }
             },
             "reconfigure": {
@@ -53,7 +54,8 @@
                     "day": "Giorno",
                     "month": "Mese",
                     "year": "Anno (lasciare vuoto se sconosciuto)",
-                    "icon": "Sovrascrivi icona (opzionale)"
+                    "icon": "Sovrascrivi icona (opzionale)",
+                    "vip": "VIP Annual"
                 }
             }
         },
@@ -78,12 +80,13 @@
                     "day": "Giorno",
                     "month": "Mese",
                     "year": "Anno (lasciare vuoto se sconosciuto)",
-                    "icon": "Sovrascrivi icona (opzionale)"
+                    "icon": "Sovrascrivi icona (opzionale)",
+                    "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "Importa eventi da CSV",
-                "description": "Colonne: name, type, day, month, year (opzionale), icon (opzionale). «type» deve essere una di queste chiavi inglesi: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (sempre in inglese, indipendentemente dalla lingua impostata). Mantieni ogni colonna anche se un valore è vuoto - una riga senza virgola finale sposta a sinistra i valori successivi. Le righe non valide vengono ignorate e registrate.\n\nEsempio:\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "description": "Colonne: name, type, day, month, year (opzionale), icon (opzionale), vip (opzionale). «type» deve essere una di queste chiavi inglesi: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (sempre in inglese, indipendentemente dalla lingua impostata). «vip» accetta 1/true/yes/y/x (senza distinzione tra maiuscole e minuscole); lascia vuoto oppure ometti la colonna per un evento non VIP. Mantieni ogni colonna anche se un valore è vuoto - una riga senza virgola finale sposta a sinistra i valori successivi. Le righe non valide vengono ignorate e registrate.\n\nEsempio:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
                 "data": {
                     "csv_file": "File CSV"
                 }
@@ -91,8 +94,23 @@
             "hub_menu": {
                 "title": "Annuals Impostazioni",
                 "menu_options": {
+                    "annual_settings": "Annual Impostazioni",
                     "import_csv": "Importa eventi da CSV",
                     "delete_all": "Elimina tutti i dati di Annuals"
+                }
+            },
+            "annual_settings": {
+                "title": "Annual Impostazioni",
+                "description": "Numeri di occorrenza separati da virgole che contrassegnano automaticamente un evento come «Important» per quel tipo, ad es. «18,21,30,40,50». Lascia un campo vuoto per disattivare questa funzione per quel tipo.",
+                "data": {
+                    "important_thresholds_birthday": "Compleanno",
+                    "important_thresholds_anniversary": "Anniversario",
+                    "important_thresholds_name_day": "Onomastico",
+                    "important_thresholds_wedding_anniversary": "Anniversario di matrimonio",
+                    "important_thresholds_memorial": "Anniversario della morte",
+                    "important_thresholds_pet_birthday": "Compleanno animale",
+                    "important_thresholds_work_anniversary": "Anniversario lavorativo",
+                    "important_thresholds_custom": "Personalizzato"
                 }
             },
             "delete_all": {

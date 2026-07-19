@@ -1,0 +1,93 @@
+title: 🎉
+show_title: true
+count: 12
+days_ahead: 10
+days_past: 2
+soon_days: 3
+types:
+  - birthday
+  - name_day
+  - wedding_anniversary
+  - memorial
+  - pet_birthday
+  - work_anniversary
+  - custom
+show_past: true
+show_today: true
+show_soon: true
+highlight_past: true
+highlight_today: true
+highlight_soon: true
+font_size_title: ""
+show_icon: true
+show_name: true
+show_subtitle: false
+show_badge: true
+show_when: true
+show_vip_only: false
+show_important_only: false
+show_vip_badge: true
+show_important_badge: true
+vip_badge_icon: mdi:account-star
+important_badge_icon: mdi:account-alert
+type: custom:annuals-card
+colors:
+  today: "#e91e63"
+  soon: "#ffeb3b"
+  accent: "#607d8b"
+  title: "#607d8b"
+  subtitle: ""
+  badge: "#2196f3"
+  when: "#9e9e9e"
+  match_accent: false
+  match_today: true
+  match_soon: false
+  badge_background: false
+  badge_background_color: ""
+  highlight_past: "#9c27b0"
+  highlight_today: "#4caf50"
+  highlight_soon: "#ffeb3b"
+  vip_badge: var(--primary-color)
+  important_badge: "#795548"
+font_sizes:
+  title: 24px
+  subtitle: ""
+  badge: 24px
+  when: 20px
+font_style:
+  font_size_title:
+    bold: false
+    italic: false
+    uppercase: false
+    underline: false
+    letter_spacing: ""
+  title:
+    bold: true
+    italic: false
+    uppercase: true
+    underline: false
+    letter_spacing: 2px
+  subtitle:
+    bold: false
+    italic: true
+    uppercase: false
+    underline: false
+    letter_spacing: ""
+  badge:
+    bold: false
+    italic: true
+    uppercase: false
+    underline: true
+    letter_spacing: ""
+  when:
+    bold: true
+    italic: true
+    uppercase: false
+    underline: false
+    letter_spacing: 1px
+background:
+  enabled: true
+  color: "#03a9f4"
+  image: /api/image/serve/ab7a48af2b453b9f479d5334f6a7710a/original
+  size: contain
+  opacity: 13

@@ -41,7 +41,8 @@
                     "day": "День",
                     "month": "Месяц",
                     "year": "Год (оставьте пустым, если неизвестен)",
-                    "icon": "Переопределить значок (необязательно)"
+                    "icon": "Переопределить значок (необязательно)",
+                    "vip": "VIP Annual"
                 }
             },
             "reconfigure": {
@@ -53,7 +54,8 @@
                     "day": "День",
                     "month": "Месяц",
                     "year": "Год (оставьте пустым, если неизвестен)",
-                    "icon": "Переопределить значок (необязательно)"
+                    "icon": "Переопределить значок (необязательно)",
+                    "vip": "VIP Annual"
                 }
             }
         },
@@ -78,12 +80,13 @@
                     "day": "День",
                     "month": "Месяц",
                     "year": "Год (оставьте пустым, если неизвестен)",
-                    "icon": "Переопределить значок (необязательно)"
+                    "icon": "Переопределить значок (необязательно)",
+                    "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "Импорт событий из CSV",
-                "description": "Столбцы: name, type, day, month, year (необязательно), icon (необязательно). «type» должен быть одним из следующих английских ключей: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (всегда на английском, независимо от языка интерфейса). Сохраняйте все столбцы, даже если значение пустое — строка без завершающей запятой сдвигает следующие значения влево. Некорректные строки пропускаются и записываются в журнал.\n\nПример:\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "description": "Столбцы: name, type, day, month, year (необязательно), icon (необязательно), vip (необязательно). «type» должен быть одним из следующих английских ключей: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (всегда на английском, независимо от языка интерфейса). «vip» принимает значения 1/true/yes/y/x (регистр не важен); оставьте пустым или не указывайте столбец для события без статуса VIP. Сохраняйте все столбцы, даже если значение пустое — строка без завершающей запятой сдвигает следующие значения влево. Некорректные строки пропускаются и записываются в журнал.\n\nПример:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
                 "data": {
                     "csv_file": "CSV-файл"
                 }
@@ -91,8 +94,23 @@
             "hub_menu": {
                 "title": "Annuals Настройки",
                 "menu_options": {
+                    "annual_settings": "Annual Настройки",
                     "import_csv": "Импорт событий из CSV",
                     "delete_all": "Удалить все данные Annuals"
+                }
+            },
+            "annual_settings": {
+                "title": "Annual Настройки",
+                "description": "Разделённые запятыми номера годовщин, при которых событие этого типа автоматически помечается как «Important», например «18,21,30,40,50». Оставьте поле пустым, чтобы отключить это для данного типа.",
+                "data": {
+                    "important_thresholds_birthday": "День рождения",
+                    "important_thresholds_anniversary": "Годовщина",
+                    "important_thresholds_name_day": "Именины",
+                    "important_thresholds_wedding_anniversary": "Годовщина свадьбы",
+                    "important_thresholds_memorial": "День памяти",
+                    "important_thresholds_pet_birthday": "День рождения питомца",
+                    "important_thresholds_work_anniversary": "Трудовой юбилей",
+                    "important_thresholds_custom": "Другое"
                 }
             },
             "delete_all": {

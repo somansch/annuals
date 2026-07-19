@@ -41,7 +41,8 @@
                     "day": "Dag",
                     "month": "Maand",
                     "year": "Jaar (leeg laten indien onbekend)",
-                    "icon": "Icoon overschrijven (optioneel)"
+                    "icon": "Icoon overschrijven (optioneel)",
+                    "vip": "VIP Annual"
                 }
             },
             "reconfigure": {
@@ -53,7 +54,8 @@
                     "day": "Dag",
                     "month": "Maand",
                     "year": "Jaar (leeg laten indien onbekend)",
-                    "icon": "Icoon overschrijven (optioneel)"
+                    "icon": "Icoon overschrijven (optioneel)",
+                    "vip": "VIP Annual"
                 }
             }
         },
@@ -78,12 +80,13 @@
                     "day": "Dag",
                     "month": "Maand",
                     "year": "Jaar (leeg laten indien onbekend)",
-                    "icon": "Icoon overschrijven (optioneel)"
+                    "icon": "Icoon overschrijven (optioneel)",
+                    "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "Evenementen importeren vanuit CSV",
-                "description": "Kolommen: name, type, day, month, year (optioneel), icon (optioneel). „type” moet een van de volgende Engelse sleutels zijn: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (altijd in het Engels, ongeacht je taalinstelling). Houd elke kolom aan, ook als een waarde leeg is - een rij zonder komma aan het einde schuift de volgende waarden naar links. Ongeldige rijen worden overgeslagen en gelogd.\n\nVoorbeeld:\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "description": "Kolommen: name, type, day, month, year (optioneel), icon (optioneel), vip (optioneel). „type” moet een van de volgende Engelse sleutels zijn: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (altijd in het Engels, ongeacht je taalinstelling). „vip” accepteert 1/true/yes/y/x (hoofdlettergevoeligheid maakt niet uit); laat leeg of laat de kolom weg voor een niet-VIP-evenement. Houd elke kolom aan, ook als een waarde leeg is - een rij zonder komma aan het einde schuift de volgende waarden naar links. Ongeldige rijen worden overgeslagen en gelogd.\n\nVoorbeeld:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
                 "data": {
                     "csv_file": "CSV-bestand"
                 }
@@ -91,8 +94,23 @@
             "hub_menu": {
                 "title": "Annuals Instellingen",
                 "menu_options": {
+                    "annual_settings": "Annual Instellingen",
                     "import_csv": "Evenementen importeren vanuit CSV",
                     "delete_all": "Alle Annuals-gegevens verwijderen"
+                }
+            },
+            "annual_settings": {
+                "title": "Annual Instellingen",
+                "description": "Kommagescheiden lijst van jubileumgetallen waarbij een evenement van dat type automatisch als „Important” wordt gemarkeerd, bijv. „18,21,30,40,50”. Laat een veld leeg om dit voor dat type uit te schakelen.",
+                "data": {
+                    "important_thresholds_birthday": "Verjaardag",
+                    "important_thresholds_anniversary": "Jaardag",
+                    "important_thresholds_name_day": "Naamdag",
+                    "important_thresholds_wedding_anniversary": "Trouwdag",
+                    "important_thresholds_memorial": "Sterfdag",
+                    "important_thresholds_pet_birthday": "Verjaardag huisdier",
+                    "important_thresholds_work_anniversary": "Werkjubileum",
+                    "important_thresholds_custom": "Aangepast"
                 }
             },
             "delete_all": {

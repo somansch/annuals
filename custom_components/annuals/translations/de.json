@@ -41,7 +41,8 @@
                     "day": "Tag",
                     "month": "Monat",
                     "year": "Jahr (leer lassen, wenn unbekannt)",
-                    "icon": "Icon überschreiben (optional)"
+                    "icon": "Icon überschreiben (optional)",
+                    "vip": "VIP Annual"
                 }
             },
             "reconfigure": {
@@ -53,7 +54,8 @@
                     "day": "Tag",
                     "month": "Monat",
                     "year": "Jahr (leer lassen, wenn unbekannt)",
-                    "icon": "Icon überschreiben (optional)"
+                    "icon": "Icon überschreiben (optional)",
+                    "vip": "VIP Annual"
                 }
             }
         },
@@ -78,12 +80,13 @@
                     "day": "Tag",
                     "month": "Monat",
                     "year": "Jahr (leer lassen, wenn unbekannt)",
-                    "icon": "Icon überschreiben (optional)"
+                    "icon": "Icon überschreiben (optional)",
+                    "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "Ereignisse aus CSV importieren",
-                "description": "Spalten: name, type, day, month, year (optional), icon (optional). Bei „type“ ist ausschließlich einer der folgenden englischen Schlüssel gültig: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (unabhängig von deiner Spracheinstellung). Jede Spalte muss auch bei einem leeren Wert erhalten bleiben - fehlt ein Komma am Zeilenende, rutschen die folgenden Werte nach links. Ungültige Zeilen werden übersprungen und protokolliert.\n\nBeispiel:\n```\nname,type,day,month,year,icon\nAnna,birthday,12,4,1988,\nMax,pet_birthday,3,9,2020,mdi:dog\nTest Custom,custom,1,1,,mdi:test-tube\n```",
+                "description": "Spalten: name, type, day, month, year (optional), icon (optional), vip (optional). Bei „type“ ist ausschließlich einer der folgenden englischen Schlüssel gültig: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (unabhängig von deiner Spracheinstellung). „vip“ akzeptiert 1/true/yes/y/x (Groß-/Kleinschreibung egal); leer lassen oder Spalte weglassen für ein nicht-VIP-Ereignis. Jede Spalte muss auch bei einem leeren Wert erhalten bleiben - fehlt ein Komma am Zeilenende, rutschen die folgenden Werte nach links. Ungültige Zeilen werden übersprungen und protokolliert.\n\nBeispiel:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
                 "data": {
                     "csv_file": "CSV-Datei"
                 }
@@ -91,8 +94,23 @@
             "hub_menu": {
                 "title": "Annuals Einstellungen",
                 "menu_options": {
+                    "annual_settings": "Annual Einstellung",
                     "import_csv": "Ereignisse aus CSV importieren",
                     "delete_all": "Alle Annuals-Daten löschen"
+                }
+            },
+            "annual_settings": {
+                "title": "Annual Einstellung",
+                "description": "Kommagetrennte Jubiläumszahlen, bei denen ein Ereignis dieses Typs automatisch als „Important“ markiert wird, z. B. „18,21,30,40,50“. Ein Feld leer lassen, um dies für diesen Typ zu deaktivieren.",
+                "data": {
+                    "important_thresholds_birthday": "Geburtstag",
+                    "important_thresholds_anniversary": "Jahrestag",
+                    "important_thresholds_name_day": "Namenstag",
+                    "important_thresholds_wedding_anniversary": "Hochzeitstag",
+                    "important_thresholds_memorial": "Todestag",
+                    "important_thresholds_pet_birthday": "Tiergeburtstag",
+                    "important_thresholds_work_anniversary": "Firmenjubiläum",
+                    "important_thresholds_custom": "Frei wählbar"
                 }
             },
             "delete_all": {

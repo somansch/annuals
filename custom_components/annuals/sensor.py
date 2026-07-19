@@ -14,14 +14,18 @@ from .const import (
     CONF_DAY,
     CONF_EVENT_NAME,
     CONF_EVENT_TYPE,
+    CONF_HUB,
     CONF_ICON,
+    CONF_IMPORTANT_THRESHOLDS,
     CONF_MONTH,
+    CONF_VIP,
     CONF_YEAR,
+    DEFAULT_IMPORTANT_THRESHOLDS,
     DOMAIN,
     SCAN_INTERVAL_HOURS,
     TYPE_ICONS,
 )
-from .dates import days_until, next_occurrence, occurrence_number
+from .dates import days_until, is_important, next_occurrence, occurrence_number, parse_thresholds
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -33,7 +37,7 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    async_add_entities([AnnualEventSensor(config_entry)])
+    async_add_entities([AnnualEventSensor(hass, config_entry)])
 
 
 class AnnualEventSensor(SensorEntity):
@@ -42,7 +46,8 @@ class AnnualEventSensor(SensorEntity):
     _attr_should_poll = True
     _attr_has_entity_name = True
 
-    def __init__(self, config_entry: ConfigEntry) -> None:
+    def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
+        self._hass_ref = hass
         self._config_entry = config_entry
         data = config_entry.data
         event_type: str = data[CONF_EVENT_TYPE]
@@ -74,17 +79,34 @@ class AnnualEventSensor(SensorEntity):
         today = date.today()
 
         occurrence = next_occurrence(month, day, today)
+        occurrence_num = occurrence_number(year, occurrence)
 
         self._attr_native_value = days_until(occurrence, today)
         self._attr_extra_state_attributes: dict[str, Any] = {
             "type": event_type,
             "name": self._name,
             "next_date": occurrence.isoformat(),
-            "occurrence_number": occurrence_number(year, occurrence),
+            "occurrence_number": occurrence_num,
             "day": day,
             "month": month,
             "year": year,
+            "vip": bool(data.get(CONF_VIP, False)),
+            "important": is_important(occurrence_num, self._important_thresholds(event_type)),
         }
+
+    def _important_thresholds(self, event_type: str) -> set[int]:
+        """The "Annual Settings" milestone list for this event's type, read
+        from the shared hub entry's options (falling back to the built-in
+        defaults if the hub hasn't been configured yet).
+        """
+        for entry in self._hass_ref.config_entries.async_entries(DOMAIN):
+            if entry.data.get(CONF_HUB):
+                text = entry.options.get(
+                    f"{CONF_IMPORTANT_THRESHOLDS}_{event_type}",
+                    DEFAULT_IMPORTANT_THRESHOLDS.get(event_type, ""),
+                )
+                return parse_thresholds(text)
+        return parse_thresholds(DEFAULT_IMPORTANT_THRESHOLDS.get(event_type, ""))
 
     async def async_update(self) -> None:
         self._update_state()
