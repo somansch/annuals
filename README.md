@@ -88,6 +88,28 @@ The file needs a header row with these columns:
 
 Keep every column even when a value is empty - a row with a missing trailing comma shifts the following values left.
 
+Re-importing the same CSV later - e.g. a centrally maintained file synced on a schedule - does not create duplicate events. Each row is matched against existing entries by type + day/month + name (not year, so correcting a wrong birth year still matches the same person); a match updates that event's data in place instead of adding a second one. This only applies to CSV-imported events - manually added events are never touched or matched by a later import.
+
+### Importing via the `annuals.import_csv` action
+
+For scheduled or automated imports (instead of clicking through the UI each time), call the **`annuals.import_csv`** action from an automation, script, or Developer Tools → Actions. Same columns, same file-based dedup behavior as above. Provide the CSV either as inline text or as a path on the HA host:
+
+```yaml
+action: annuals.import_csv
+data:
+  file_path: /config/annuals/contacts.csv
+```
+
+```yaml
+action: annuals.import_csv
+data:
+  content: |
+    name,type,day,month,year,icon,vip
+    Anna,birthday,12,4,1988,,
+```
+
+`file_path` must be inside a directory listed under `homeassistant: allowlist_external_dirs` in `configuration.yaml`. Combine this with a **time trigger** to keep a centrally maintained CSV in sync on a schedule, without any manual re-upload.
+
 ```csv
 name,type,day,month,year,icon,vip
 Anna,birthday,12,4,1988,,

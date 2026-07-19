@@ -217,6 +217,19 @@ def _parse_uploaded_csv(hass: HomeAssistant, uploaded_file_id: str) -> tuple[lis
     return _parse_csv_rows(text)
 
 
+def _import_unique_id(data: dict) -> str:
+    """Stable identity for a CSV-imported event.
+
+    Keyed on type + day/month + name, deliberately excluding year, so
+    re-importing the same row later - e.g. a centrally maintained CSV
+    synced on a schedule - matches the existing entry (see
+    AnnualsConfigFlow.async_step_import) instead of creating a duplicate,
+    even if that later import corrects a wrong birth year.
+    """
+    name_key = data[CONF_EVENT_NAME].strip().casefold()
+    return f"{data[CONF_EVENT_TYPE]}:{data[CONF_DAY]:02d}{data[CONF_MONTH]:02d}:{name_key}"
+
+
 async def _entry_title(hass: HomeAssistant, data: dict) -> str:
     """Type-prefixed entry title, e.g. "Geburtstag: Anna" - the prefix makes
     the alphabetically-sorted entry list on the integration page group by
@@ -260,11 +273,22 @@ class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 
     async def async_step_import(self, import_data: dict):
-        """Create one entry from a validated CSV row (see AnnualsOptionsFlow.async_step_import_csv)."""
+        """Create one entry from a validated CSV row (see AnnualsOptionsFlow.async_step_import_csv).
+
+        Sets a unique_id so re-importing the same row - e.g. a centrally
+        maintained CSV synced on a schedule - updates the existing entry's
+        data in place (icon/year/vip changes included) instead of creating
+        a duplicate. Manually added events never get a unique_id, so this
+        only affects entries that came from CSV import.
+        """
         data, errors = _validate_and_normalise(import_data)
         if data is None:
             _LOGGER.warning("Annuals CSV import: skipped invalid row (%s)", errors)
             return self.async_abort(reason="invalid_import_row")
+
+        await self.async_set_unique_id(_import_unique_id(data))
+        self._abort_if_unique_id_configured(updates=data, reload_on_update=True)
+
         title = await _entry_title(self.hass, data)
         return self.async_create_entry(title=title, data=data)
 

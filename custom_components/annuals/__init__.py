@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import functools
 import logging
 from pathlib import Path
 
@@ -9,10 +10,12 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers.event import async_track_time_change
 from homeassistant.helpers.typing import ConfigType
 
-from .const import CONF_HUB, DOMAIN
+from .const import CONF_HUB, DATA_SENSORS, DOMAIN
 from .helpers import hub_title
+from .services import async_register_services
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -39,8 +42,29 @@ def _platforms_for(config_entry: ConfigEntry) -> list[Platform]:
     return HUB_PLATFORMS if config_entry.data.get(CONF_HUB) else EVENT_PLATFORMS
 
 
+async def _async_refresh_all_sensors(hass: HomeAssistant, _now) -> None:
+    """Force every AnnualEventSensor to recompute "days until" right after
+    local midnight, instead of leaving yesterday's count showing until each
+    sensor's next hourly poll happens to land (up to nearly an hour late).
+    """
+    sensors = list(hass.data.get(DOMAIN, {}).get(DATA_SENSORS, ()))
+    _LOGGER.debug("Annuals: midnight refresh of %d sensor(s)", len(sensors))
+    for sensor in sensors:
+        sensor.async_schedule_update_ha_state(force_refresh=True)
+
+
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Register the bundled Lovelace card once at startup."""
+    hass.data.setdefault(DOMAIN, {})
+
+    # A few seconds of slack after midnight, not exactly on it, so this
+    # doesn't race the moment the date actually rolls over. functools.partial
+    # (not a lambda) so HA's event helper still recognises this as a
+    # coroutine function and awaits it, instead of firing-and-forgetting it.
+    async_track_time_change(
+        hass, functools.partial(_async_refresh_all_sensors, hass), hour=0, minute=0, second=5
+    )
+
     frontend_path = Path(__file__).parent / "frontend" / "annuals-card.js"
     await hass.http.async_register_static_paths(
         [StaticPathConfig(FRONTEND_JS_URL, str(frontend_path), False)]
@@ -52,6 +76,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     # (i.e. on every restart after an update).
     version = int(frontend_path.stat().st_mtime)
     frontend.add_extra_js_url(hass, f"{FRONTEND_JS_URL}?v={version}")
+
+    async_register_services(hass)
     return True
 
 

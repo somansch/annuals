@@ -46,10 +46,16 @@ TYPE_ICONS = {
     TYPE_CUSTOM: "mdi:calendar-heart",
 }
 
-# Recomputed hourly so the "days until" countdown rolls over at local midnight
-# without needing an external trigger - these are pure local date calculations,
-# no API involved.
+# Recomputed hourly regardless, but a poll landing e.g. 23:50 would otherwise
+# leave a stale "days until" count showing for up to an hour past local
+# midnight - see the dedicated midnight refresh in __init__.py instead.
 SCAN_INTERVAL_HOURS = 1
+
+# hass.data[DOMAIN][DATA_SENSORS] - the set of currently-added AnnualEventSensor
+# instances, so the midnight refresh (__init__.py) can force them all to
+# recompute "days until" right after local midnight instead of waiting for
+# their next hourly poll.
+DATA_SENSORS = "sensors"
 
 # Hub-entry options key prefix for the per-type "important" occurrence-number
 # thresholds ("Annual Settings"), e.g. "important_thresholds_birthday". Kept

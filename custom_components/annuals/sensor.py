@@ -20,6 +20,7 @@ from .const import (
     CONF_MONTH,
     CONF_VIP,
     CONF_YEAR,
+    DATA_SENSORS,
     DEFAULT_IMPORTANT_THRESHOLDS,
     DOMAIN,
     SCAN_INTERVAL_HOURS,
@@ -110,3 +111,12 @@ class AnnualEventSensor(SensorEntity):
 
     async def async_update(self) -> None:
         self._update_state()
+
+    async def async_added_to_hass(self) -> None:
+        """Register with the domain-wide midnight refresh (see __init__.py)."""
+        self._hass_ref.data.setdefault(DOMAIN, {}).setdefault(DATA_SENSORS, set()).add(self)
+
+    async def async_will_remove_from_hass(self) -> None:
+        sensors = self._hass_ref.data.get(DOMAIN, {}).get(DATA_SENSORS)
+        if sensors is not None:
+            sensors.discard(self)
