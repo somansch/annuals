@@ -10,7 +10,8 @@
                 "memorial": "Rocznica śmierci",
                 "pet_birthday": "Urodziny zwierzaka",
                 "work_anniversary": "Jubileusz pracy",
-                "custom": "Inne"
+                "custom": "Inne",
+                "holiday": "Święto"
             }
         },
         "month": {
@@ -27,6 +28,26 @@
                 "10": "październik",
                 "11": "listopad",
                 "12": "grudzień"
+            }
+        },
+        "holiday_category": {
+            "options": {
+                "public": "Państwowe",
+                "bank": "Bankowe",
+                "government": "Urzędowe",
+                "school": "Ferie szkolne",
+                "optional": "Opcjonalne",
+                "unofficial": "Nieoficjalne",
+                "half_day": "Pół dnia",
+                "armed_forces": "Siły zbrojne",
+                "workday": "Dzień roboczy",
+                "catholic": "Katolickie",
+                "christian": "Chrześcijańskie",
+                "orthodox": "Prawosławne",
+                "hebrew": "Żydowskie",
+                "islamic": "Islamskie",
+                "hindu": "Hinduskie",
+                "buddhist": "Buddyjskie"
             }
         }
     },
@@ -96,7 +117,33 @@
                 "menu_options": {
                     "annual_settings": "Annual Ustawienia",
                     "import_csv": "Importuj wydarzenia z CSV",
+                    "import_holidays": "Importuj święta",
+                    "remove_holidays": "Usuń zaimportowane święta",
                     "delete_all": "Usuń wszystkie dane Annuals"
+                }
+            },
+            "import_holidays": {
+                "title": "Importuj święta",
+                "description": "Wybierz kraj, aby zaimportować jego święta jako wydarzenia. Ponowne uruchomienie tego później dla tego samego kraju (i regionu) aktualizuje istniejące wpisy zamiast je duplikować - można bezpiecznie powtórzyć, jeśli kraj doda nowe święto.",
+                "data": {
+                    "country": "Kraj"
+                }
+            },
+            "import_holidays_options": {
+                "title": "Importuj święta - {country}",
+                "description": "Pozostaw region pusty, aby uwzględnić tylko święta ogólnokrajowe - region dodaje własne święta regionalne. Kategorie i język zależą od tego, co udostępniają dane o świętach danego kraju. Kategorie wielodniowe, takie jak ferie szkolne, są reprezentowane jako jedno wydarzenie w pierwszym dniu.",
+                "data": {
+                    "subdivision": "Region (województwo/prowincja, opcjonalnie)",
+                    "categories": "Kategorie",
+                    "language": "Język nazw świąt"
+                }
+            },
+            "remove_holidays": {
+                "title": "Usuń zaimportowane święta",
+                "description": "Obecnie zaimportowano {total} święto(a). Zaznacz pole poniżej, aby usunąć wszystkie, lub pozostaw je odznaczone i wybierz zamiast tego jedną partię. Ręcznie dodane wydarzenia nigdy nie są tym objęte.",
+                "data": {
+                    "remove_all": "Usuń wszystkie zaimportowane święta",
+                    "batch": "Partia do usunięcia"
                 }
             },
             "annual_settings": {
@@ -122,12 +169,16 @@
             "name_required": "Podaj nazwę.",
             "invalid_date": "Ta kombinacja dzień/miesiąc/rok nie jest prawidłową datą.",
             "invalid_csv": "Nie udało się odczytać tego pliku jako CSV. Sprawdź kodowanie i format.",
-            "no_valid_rows": "Nie znaleziono prawidłowych wierszy w tym pliku. Sprawdź dziennik, aby zobaczyć szczegóły pominiętych wierszy."
+            "no_valid_rows": "Nie znaleziono prawidłowych wierszy w tym pliku. Sprawdź dziennik, aby zobaczyć szczegóły pominiętych wierszy.",
+            "no_batch_selected": "Zaznacz „Usuń wszystkie zaimportowane święta” lub wybierz partię."
         },
         "abort": {
             "hub_not_configurable": "Centrum Annuals nie ma własnych ustawień – zawiera tylko wspólne kalendarze.",
             "import_started": "Import rozpoczęty: {created} wydarzenie(a) w kolejce, {skipped} wiersz(y) pominięto (szczegóły w dzienniku).",
-            "deleted_all": "Wszystkie wydarzenia, kalendarze i centrum Annuals zostały usunięte."
+            "deleted_all": "Wszystkie wydarzenia, kalendarze i centrum Annuals zostały usunięte.",
+            "holiday_import_started": "Import rozpoczęty: {count} święto(a) w kolejce dla {country}.",
+            "no_holidays_imported": "Nie zaimportowano jeszcze żadnych świąt.",
+            "holidays_removed": "{count} święto(a) usunięto."
         }
     },
     "entity": {
@@ -163,6 +214,10 @@
             "custom": {
                 "name": "{name}",
                 "unit_of_measurement": "dni"
+            },
+            "holiday": {
+                "name": "{name}",
+                "unit_of_measurement": "dni"
             }
         },
         "calendar": {
@@ -189,6 +244,9 @@
             },
             "custom": {
                 "name": "Wydarzenia niestandardowe"
+            },
+            "holiday": {
+                "name": "Święta"
             }
         }
     }

@@ -14,7 +14,15 @@
     "pet_birthday",
     "work_anniversary",
     "custom",
+    "holiday",
   ];
+
+  // Stored in `types`/`categories` when the user has explicitly unchecked
+  // every box (e.g. via "Hide All") - a real empty array already means "no
+  // restriction, show everything" throughout this file (see defaultConfig
+  // and _filteredEvents), so an actual "show nothing" selection needs a
+  // value that isn't a real type/category name to stay distinguishable.
+  const NONE_SELECTED = "__none__";
 
   const STRINGS = {
     en: {
@@ -34,6 +42,40 @@
         pet_birthday: "Pet birthday",
         work_anniversary: "Work anniversary",
         custom: "Custom",
+        holiday: "Holiday",
+      },
+      // Plural forms for the editor's "Event types" checkbox grid, which is
+      // a filter over a whole category of events (English adjectives like
+      // the ones in `categories` below don't inflect for plural, so no
+      // `categoriesPlural` counterpart is needed for this language).
+      typesPlural: {
+        birthday: "Birthdays",
+        anniversary: "Anniversaries",
+        name_day: "Name days",
+        wedding_anniversary: "Wedding anniversaries",
+        memorial: "Memorials",
+        pet_birthday: "Pet birthdays",
+        work_anniversary: "Work anniversaries",
+        custom: "Custom",
+        holiday: "Holidays",
+      },
+      categories: {
+        public: "Public",
+        bank: "Bank",
+        government: "Government",
+        school: "School",
+        optional: "Optional",
+        unofficial: "Unofficial",
+        half_day: "Half day",
+        armed_forces: "Armed forces",
+        workday: "Workday",
+        catholic: "Catholic",
+        christian: "Christian",
+        orthodox: "Orthodox",
+        hebrew: "Jewish",
+        islamic: "Islamic",
+        hindu: "Hindu",
+        buddhist: "Buddhist",
       },
       editor: {
         title: "Card title",
@@ -49,6 +91,10 @@
         soonDaysDesc: "Events within this many days count as “soon”",
         types: "Event types",
         typesDesc: "Only show the checked event types",
+        categories: "Holiday categories",
+        categoriesDesc: "Only show holidays in the checked categories (other event types are unaffected)",
+        showAll: "Show All",
+        hideAll: "Hide All",
         visibilityHeading: "Show / Hide",
         visibilityPast: "Past events",
         visibilityPastDesc: "Show events whose anniversary already passed within the configured past window",
@@ -61,6 +107,8 @@
         visibilityIconDesc: "Show the type icon in front of each row",
         visibilityTitleDesc: "Show the event name",
         visibilitySubtitleDesc: "Show the event type",
+        visibilityCountrySuffix: "Holiday suffix",
+        visibilityCountrySuffixDesc: "Append the country (and subdivision, if any) after the holiday's name/type, e.g. “Independence Day · US (UT)”",
         visibilityBadgeDesc: "Show the occurrence number badge",
         visibilityWhenDesc: "Show the countdown (e.g. “in 3 days”)",
         visibilityVipOnly: "VIP only",
@@ -203,6 +251,59 @@
         pet_birthday: "Tiergeburtstag",
         work_anniversary: "Firmenjubiläum",
         custom: "Frei wählbar",
+        holiday: "Feiertag",
+      },
+      // Plural forms for the editor's "Ereignistypen"/"Feiertagskategorien"
+      // checkbox grids, which are filters over a whole category of events
+      // rather than a label for one single event - "Geburtstage" reads
+      // correctly there, whereas the singular `types`/`categories` above is
+      // still correct for a single row's own type/category text.
+      typesPlural: {
+        birthday: "Geburtstage",
+        anniversary: "Jahrestage",
+        name_day: "Namenstage",
+        wedding_anniversary: "Hochzeitstage",
+        memorial: "Todestage",
+        pet_birthday: "Tiergeburtstage",
+        work_anniversary: "Firmenjubiläen",
+        custom: "Frei wählbar",
+        holiday: "Feiertage",
+      },
+      categories: {
+        public: "Gesetzlich",
+        bank: "Bankfeiertag",
+        government: "Behörden",
+        school: "Schulferien",
+        optional: "Optional",
+        unofficial: "Inoffiziell",
+        half_day: "Halber Tag",
+        armed_forces: "Streitkräfte",
+        workday: "Arbeitstag",
+        catholic: "Katholisch",
+        christian: "Christlich",
+        orthodox: "Orthodox",
+        hebrew: "Jüdisch",
+        islamic: "Islamisch",
+        hindu: "Hinduistisch",
+        buddhist: "Buddhistisch",
+      },
+      categoriesPlural: {
+        public: "Gesetzliche",
+        bank: "Bankfeiertage",
+        government: "Behörden",
+        school: "Schulferien",
+        optional: "Optionale",
+        unofficial: "Inoffizielle",
+        half_day: "Halbe Tage",
+        armed_forces: "Streitkräfte",
+        workday: "Arbeitstage",
+        catholic: "Katholische",
+        christian: "Christliche",
+        orthodox: "Orthodoxe",
+        hebrew: "Jüdische",
+        islamic: "Islamische",
+        hindu: "Hinduistische",
+        buddhist: "Buddhistische",
       },
       editor: {
         title: "Kartentitel",
@@ -218,6 +319,10 @@
         soonDaysDesc: "Ereignisse innerhalb dieser Anzahl Tage gelten als „bald“",
         types: "Ereignistypen",
         typesDesc: "Nur die angehakten Ereignistypen anzeigen",
+        categories: "Feiertagskategorien",
+        categoriesDesc: "Nur Feiertage der angehakten Kategorien anzeigen (andere Ereignistypen sind davon nicht betroffen)",
+        showAll: "Alle anzeigen",
+        hideAll: "Alle ausblenden",
         visibilityHeading: "Ein- und ausblenden",
         visibilityPast: "Vergangene Ereignisse",
         visibilityPastDesc: "Vergangene Ereignisse innerhalb des eingestellten Zeitraums in der Liste anzeigen",
@@ -230,6 +335,8 @@
         visibilityIconDesc: "Symbol vor jeder Zeile anzeigen",
         visibilityTitleDesc: "Namen des Ereignisses anzeigen",
         visibilitySubtitleDesc: "Ereignistyp anzeigen",
+        visibilityCountrySuffix: "Feiertagssuffix",
+        visibilityCountrySuffixDesc: "Land (und ggf. Bundesland/Provinz) hinter dem Namen/Typ des Feiertags anhängen, z. B. „Tag der Deutschen Einheit · DE (BY)“",
         visibilityBadgeDesc: "Jubiläums-Badge anzeigen",
         visibilityWhenDesc: "Zeitangabe (Countdown) anzeigen",
         visibilityVipOnly: "Nur VIP",
@@ -373,6 +480,54 @@
         pet_birthday: "Anniversaire d'animal",
         work_anniversary: "Anniversaire professionnel",
         custom: "Personnalisé",
+        holiday: "Jour férié",
+      },
+      typesPlural: {
+        birthday: "Anniversaires",
+        anniversary: "Dates commémoratives",
+        name_day: "Fêtes",
+        wedding_anniversary: "Anniversaires de mariage",
+        memorial: "Commémorations",
+        pet_birthday: "Anniversaires d'animaux",
+        work_anniversary: "Anniversaires professionnels",
+        custom: "Personnalisé",
+        holiday: "Jours fériés",
+      },
+      categories: {
+        public: "Public",
+        bank: "Bancaire",
+        government: "Administratif",
+        school: "Vacances scolaires",
+        optional: "Optionnel",
+        unofficial: "Officieux",
+        half_day: "Demi-journée",
+        armed_forces: "Forces armées",
+        workday: "Jour travaillé",
+        catholic: "Catholique",
+        christian: "Chrétien",
+        orthodox: "Orthodoxe",
+        hebrew: "Juif",
+        islamic: "Islamique",
+        hindu: "Hindou",
+        buddhist: "Bouddhiste",
+      },
+      categoriesPlural: {
+        public: "Publics",
+        bank: "Bancaires",
+        government: "Administratifs",
+        school: "Vacances scolaires",
+        optional: "Optionnels",
+        unofficial: "Officieux",
+        half_day: "Demi-journées",
+        armed_forces: "Forces armées",
+        workday: "Jours travaillés",
+        catholic: "Catholiques",
+        christian: "Chrétiens",
+        orthodox: "Orthodoxes",
+        hebrew: "Juifs",
+        islamic: "Islamiques",
+        hindu: "Hindous",
+        buddhist: "Bouddhistes",
       },
       editor: {
         title: "Titre de la carte",
@@ -388,6 +543,10 @@
         soonDaysDesc: "Les événements dans ce nombre de jours comptent comme « bientôt »",
         types: "Types d'événements",
         typesDesc: "N'afficher que les types cochés",
+        categories: "Catégories de jours fériés",
+        categoriesDesc: "N'afficher que les jours fériés des catégories cochées (les autres types d'événements ne sont pas concernés)",
+        showAll: "Tout afficher",
+        hideAll: "Tout masquer",
         visibilityHeading: "Afficher / Masquer",
         visibilityPast: "Événements passés",
         visibilityPastDesc: "Afficher les événements dont l'anniversaire est déjà passé dans la période configurée",
@@ -400,6 +559,8 @@
         visibilityIconDesc: "Afficher l'icône du type devant chaque ligne",
         visibilityTitleDesc: "Afficher le nom de l'événement",
         visibilitySubtitleDesc: "Afficher le type d'événement",
+        visibilityCountrySuffix: "Suffixe du jour férié",
+        visibilityCountrySuffixDesc: "Ajouter le pays (et la subdivision, le cas échéant) après le nom/type du jour férié, par ex. « Fête nationale · FR (75) »",
         visibilityBadgeDesc: "Afficher le badge du numéro d'occurrence",
         visibilityWhenDesc: "Afficher le compte à rebours (par ex. « dans 3 jours »)",
         visibilityVipOnly: "VIP uniquement",
@@ -542,6 +703,54 @@
         pet_birthday: "Verjaardag huisdier",
         work_anniversary: "Werkjubileum",
         custom: "Aangepast",
+        holiday: "Feestdag",
+      },
+      typesPlural: {
+        birthday: "Verjaardagen",
+        anniversary: "Jaardagen",
+        name_day: "Naamdagen",
+        wedding_anniversary: "Trouwdagen",
+        memorial: "Sterfdagen",
+        pet_birthday: "Verjaardagen huisdier",
+        work_anniversary: "Werkjubilea",
+        custom: "Aangepast",
+        holiday: "Feestdagen",
+      },
+      categories: {
+        public: "Nationaal",
+        bank: "Bank",
+        government: "Overheid",
+        school: "Schoolvakantie",
+        optional: "Optioneel",
+        unofficial: "Onofficieel",
+        half_day: "Halve dag",
+        armed_forces: "Krijgsmacht",
+        workday: "Werkdag",
+        catholic: "Katholiek",
+        christian: "Christelijk",
+        orthodox: "Orthodox",
+        hebrew: "Joods",
+        islamic: "Islamitisch",
+        hindu: "Hindoeïstisch",
+        buddhist: "Boeddhistisch",
+      },
+      categoriesPlural: {
+        public: "Nationale",
+        bank: "Bank",
+        government: "Overheid",
+        school: "Schoolvakanties",
+        optional: "Optionele",
+        unofficial: "Onofficiële",
+        half_day: "Halve dagen",
+        armed_forces: "Krijgsmacht",
+        workday: "Werkdagen",
+        catholic: "Katholieke",
+        christian: "Christelijke",
+        orthodox: "Orthodoxe",
+        hebrew: "Joodse",
+        islamic: "Islamitische",
+        hindu: "Hindoeïstische",
+        buddhist: "Boeddhistische",
       },
       editor: {
         title: "Kaarttitel",
@@ -557,6 +766,10 @@
         soonDaysDesc: "Evenementen binnen dit aantal dagen tellen als „binnenkort”",
         types: "Evenementtypes",
         typesDesc: "Toon alleen de aangevinkte evenementtypes",
+        categories: "Feestdagcategorieën",
+        categoriesDesc: "Toon alleen feestdagen uit de aangevinkte categorieën (andere evenementtypes blijven onaangetast)",
+        showAll: "Alles tonen",
+        hideAll: "Alles verbergen",
         visibilityHeading: "Tonen / Verbergen",
         visibilityPast: "Vergane evenementen",
         visibilityPastDesc: "Toon evenementen waarvan de jaardag al is geweest binnen het ingestelde verleden-venster",
@@ -569,6 +782,8 @@
         visibilityIconDesc: "Toon het type-icoon vóór elke rij",
         visibilityTitleDesc: "Toon de naam van het evenement",
         visibilitySubtitleDesc: "Toon het evenementtype",
+        visibilityCountrySuffix: "Feestdagsuffix",
+        visibilityCountrySuffixDesc: "Voeg het land (en eventueel de deelstaat/provincie) toe na de naam/type van de feestdag, bijv. „Bevrijdingsdag · NL (NH)”",
         visibilityBadgeDesc: "Toon het badge met het jubileumnummer",
         visibilityWhenDesc: "Toon het aftellen (bijv. „over 3 dagen”)",
         visibilityVipOnly: "Alleen VIP",
@@ -711,6 +926,54 @@
         pet_birthday: "Urodziny zwierzaka",
         work_anniversary: "Jubileusz pracy",
         custom: "Inne",
+        holiday: "Święto",
+      },
+      typesPlural: {
+        birthday: "Urodziny",
+        anniversary: "Rocznice",
+        name_day: "Imieniny",
+        wedding_anniversary: "Rocznice ślubu",
+        memorial: "Rocznice śmierci",
+        pet_birthday: "Urodziny zwierzaków",
+        work_anniversary: "Jubileusze pracy",
+        custom: "Inne",
+        holiday: "Święta",
+      },
+      categories: {
+        public: "Państwowe",
+        bank: "Bankowe",
+        government: "Urzędowe",
+        school: "Szkolne",
+        optional: "Opcjonalne",
+        unofficial: "Nieoficjalne",
+        half_day: "Pół dnia",
+        armed_forces: "Wojskowe",
+        workday: "Dzień roboczy",
+        catholic: "Katolickie",
+        christian: "Chrześcijańskie",
+        orthodox: "Prawosławne",
+        hebrew: "Żydowskie",
+        islamic: "Islamskie",
+        hindu: "Hinduskie",
+        buddhist: "Buddyjskie",
+      },
+      categoriesPlural: {
+        public: "Święta państwowe",
+        bank: "Święta bankowe",
+        government: "Dni urzędowe",
+        school: "Ferie szkolne",
+        optional: "Święta opcjonalne",
+        unofficial: "Święta nieoficjalne",
+        half_day: "Dni skrócone",
+        armed_forces: "Święta wojskowe",
+        workday: "Dni robocze",
+        catholic: "Święta katolickie",
+        christian: "Święta chrześcijańskie",
+        orthodox: "Święta prawosławne",
+        hebrew: "Święta żydowskie",
+        islamic: "Święta islamskie",
+        hindu: "Święta hinduskie",
+        buddhist: "Święta buddyjskie",
       },
       editor: {
         title: "Tytuł karty",
@@ -726,6 +989,10 @@
         soonDaysDesc: "Wydarzenia w ciągu tylu dni liczą się jako „wkrótce”",
         types: "Typy wydarzeń",
         typesDesc: "Pokazuj tylko zaznaczone typy wydarzeń",
+        categories: "Kategorie świąt",
+        categoriesDesc: "Pokazuj tylko święta z zaznaczonych kategorii (inne typy wydarzeń pozostają bez zmian)",
+        showAll: "Pokaż wszystko",
+        hideAll: "Ukryj wszystko",
         visibilityHeading: "Pokaż / Ukryj",
         visibilityPast: "Minione wydarzenia",
         visibilityPastDesc: "Pokaż wydarzenia, których rocznica już minęła w skonfigurowanym oknie przeszłości",
@@ -738,6 +1005,8 @@
         visibilityIconDesc: "Pokaż ikonę typu przed każdym wierszem",
         visibilityTitleDesc: "Pokaż nazwę wydarzenia",
         visibilitySubtitleDesc: "Pokaż typ wydarzenia",
+        visibilityCountrySuffix: "Sufiks święta",
+        visibilityCountrySuffixDesc: "Dodaj kraj (i ewentualnie region) po nazwie/typie święta, np. „Święto Niepodległości · PL (MAZ)”",
         visibilityBadgeDesc: "Pokaż odznakę numeru wystąpienia",
         visibilityWhenDesc: "Pokaż odliczanie (np. „za 3 dni”)",
         visibilityVipOnly: "Tylko VIP",
@@ -880,6 +1149,54 @@
         pet_birthday: "Cumpleaños de mascota",
         work_anniversary: "Aniversario laboral",
         custom: "Personalizado",
+        holiday: "Festivo",
+      },
+      typesPlural: {
+        birthday: "Cumpleaños",
+        anniversary: "Aniversarios",
+        name_day: "Onomásticas",
+        wedding_anniversary: "Aniversarios de boda",
+        memorial: "Aniversarios de fallecimiento",
+        pet_birthday: "Cumpleaños de mascota",
+        work_anniversary: "Aniversarios laborales",
+        custom: "Personalizado",
+        holiday: "Festivos",
+      },
+      categories: {
+        public: "Público",
+        bank: "Bancario",
+        government: "Administrativo",
+        school: "Vacaciones escolares",
+        optional: "Opcional",
+        unofficial: "Extraoficial",
+        half_day: "Media jornada",
+        armed_forces: "Fuerzas armadas",
+        workday: "Día laborable",
+        catholic: "Católico",
+        christian: "Cristiano",
+        orthodox: "Ortodoxo",
+        hebrew: "Judío",
+        islamic: "Islámico",
+        hindu: "Hindú",
+        buddhist: "Budista",
+      },
+      categoriesPlural: {
+        public: "Públicos",
+        bank: "Bancarios",
+        government: "Administrativos",
+        school: "Vacaciones escolares",
+        optional: "Opcionales",
+        unofficial: "Extraoficiales",
+        half_day: "Medias jornadas",
+        armed_forces: "Fuerzas armadas",
+        workday: "Días laborables",
+        catholic: "Católicos",
+        christian: "Cristianos",
+        orthodox: "Ortodoxos",
+        hebrew: "Judíos",
+        islamic: "Islámicos",
+        hindu: "Hindúes",
+        buddhist: "Budistas",
       },
       editor: {
         title: "Título de la tarjeta",
@@ -895,6 +1212,10 @@
         soonDaysDesc: "Los eventos dentro de este número de días cuentan como «pronto»",
         types: "Tipos de evento",
         typesDesc: "Mostrar solo los tipos de evento marcados",
+        categories: "Categorías de festivos",
+        categoriesDesc: "Mostrar solo los festivos de las categorías marcadas (los demás tipos de evento no se ven afectados)",
+        showAll: "Mostrar todo",
+        hideAll: "Ocultar todo",
         visibilityHeading: "Mostrar / Ocultar",
         visibilityPast: "Eventos pasados",
         visibilityPastDesc: "Mostrar eventos cuyo aniversario ya pasó dentro de la ventana pasada configurada",
@@ -907,6 +1228,8 @@
         visibilityIconDesc: "Mostrar el icono de tipo delante de cada fila",
         visibilityTitleDesc: "Mostrar el nombre del evento",
         visibilitySubtitleDesc: "Mostrar el tipo de evento",
+        visibilityCountrySuffix: "Sufijo del festivo",
+        visibilityCountrySuffixDesc: "Añadir el país (y la subdivisión, si la hay) tras el nombre/tipo del festivo, p. ej. «Día de la Hispanidad · ES (MD)»",
         visibilityBadgeDesc: "Mostrar la insignia del número de ocurrencia",
         visibilityWhenDesc: "Mostrar la cuenta atrás (p. ej. «en 3 días»)",
         visibilityVipOnly: "Solo VIP",
@@ -1049,6 +1372,54 @@
         pet_birthday: "Compleanno animale",
         work_anniversary: "Anniversario lavorativo",
         custom: "Personalizzato",
+        holiday: "Festività",
+      },
+      typesPlural: {
+        birthday: "Compleanni",
+        anniversary: "Anniversari",
+        name_day: "Onomastici",
+        wedding_anniversary: "Anniversari di matrimonio",
+        memorial: "Anniversari della morte",
+        pet_birthday: "Compleanni degli animali",
+        work_anniversary: "Anniversari lavorativi",
+        custom: "Personalizzato",
+        holiday: "Festività",
+      },
+      categories: {
+        public: "Pubblico",
+        bank: "Bancario",
+        government: "Amministrativo",
+        school: "Vacanze scolastiche",
+        optional: "Facoltativo",
+        unofficial: "Non ufficiale",
+        half_day: "Mezza giornata",
+        armed_forces: "Forze armate",
+        workday: "Giorno lavorativo",
+        catholic: "Cattolico",
+        christian: "Cristiano",
+        orthodox: "Ortodosso",
+        hebrew: "Ebraico",
+        islamic: "Islamico",
+        hindu: "Indù",
+        buddhist: "Buddista",
+      },
+      categoriesPlural: {
+        public: "Pubbliche",
+        bank: "Bancarie",
+        government: "Amministrative",
+        school: "Vacanze scolastiche",
+        optional: "Facoltative",
+        unofficial: "Non ufficiali",
+        half_day: "Mezze giornate",
+        armed_forces: "Forze armate",
+        workday: "Giorni lavorativi",
+        catholic: "Cattoliche",
+        christian: "Cristiane",
+        orthodox: "Ortodosse",
+        hebrew: "Ebraiche",
+        islamic: "Islamiche",
+        hindu: "Indù",
+        buddhist: "Buddiste",
       },
       editor: {
         title: "Titolo della scheda",
@@ -1064,6 +1435,10 @@
         soonDaysDesc: "Gli eventi entro questo numero di giorni contano come «a breve»",
         types: "Tipi di evento",
         typesDesc: "Mostra solo i tipi di evento selezionati",
+        categories: "Categorie di festività",
+        categoriesDesc: "Mostra solo le festività delle categorie selezionate (gli altri tipi di evento non sono interessati)",
+        showAll: "Mostra tutto",
+        hideAll: "Nascondi tutto",
         visibilityHeading: "Mostra / Nascondi",
         visibilityPast: "Eventi passati",
         visibilityPastDesc: "Mostra eventi il cui anniversario è già trascorso entro la finestra passata configurata",
@@ -1076,6 +1451,8 @@
         visibilityIconDesc: "Mostra l'icona del tipo davanti a ogni riga",
         visibilityTitleDesc: "Mostra il nome dell'evento",
         visibilitySubtitleDesc: "Mostra il tipo di evento",
+        visibilityCountrySuffix: "Suffisso festività",
+        visibilityCountrySuffixDesc: "Aggiunge il paese (ed eventualmente la suddivisione) dopo il nome/tipo della festività, ad es. «Festa della Repubblica · IT (RM)»",
         visibilityBadgeDesc: "Mostra il badge del numero di occorrenza",
         visibilityWhenDesc: "Mostra il conto alla rovescia (ad es. «tra 3 giorni»)",
         visibilityVipOnly: "Solo VIP",
@@ -1218,6 +1595,54 @@
         pet_birthday: "Aniversário de animal de estimação",
         work_anniversary: "Aniversário de trabalho",
         custom: "Personalizado",
+        holiday: "Feriado",
+      },
+      typesPlural: {
+        birthday: "Aniversários",
+        anniversary: "Datas comemorativas",
+        name_day: "Dias do nome",
+        wedding_anniversary: "Aniversários de casamento",
+        memorial: "Aniversários de falecimento",
+        pet_birthday: "Aniversários de animais de estimação",
+        work_anniversary: "Aniversários de trabalho",
+        custom: "Personalizado",
+        holiday: "Feriados",
+      },
+      categories: {
+        public: "Público",
+        bank: "Bancário",
+        government: "Governamental",
+        school: "Férias escolares",
+        optional: "Opcional",
+        unofficial: "Não oficial",
+        half_day: "Meio período",
+        armed_forces: "Forças armadas",
+        workday: "Dia útil",
+        catholic: "Católico",
+        christian: "Cristão",
+        orthodox: "Ortodoxo",
+        hebrew: "Judaico",
+        islamic: "Islâmico",
+        hindu: "Hindu",
+        buddhist: "Budista",
+      },
+      categoriesPlural: {
+        public: "Públicos",
+        bank: "Bancários",
+        government: "Governamentais",
+        school: "Férias escolares",
+        optional: "Opcionais",
+        unofficial: "Não oficiais",
+        half_day: "Meios períodos",
+        armed_forces: "Forças armadas",
+        workday: "Dias úteis",
+        catholic: "Católicos",
+        christian: "Cristãos",
+        orthodox: "Ortodoxos",
+        hebrew: "Judaicos",
+        islamic: "Islâmicos",
+        hindu: "Hindus",
+        buddhist: "Budistas",
       },
       editor: {
         title: "Título do cartão",
@@ -1233,6 +1658,10 @@
         soonDaysDesc: "Eventos dentro desse número de dias contam como \"em breve\"",
         types: "Tipos de evento",
         typesDesc: "Mostrar apenas os tipos de evento marcados",
+        categories: "Categorias de feriados",
+        categoriesDesc: "Mostrar apenas feriados das categorias marcadas (os outros tipos de evento não são afetados)",
+        showAll: "Mostrar tudo",
+        hideAll: "Ocultar tudo",
         visibilityHeading: "Mostrar / Ocultar",
         visibilityPast: "Eventos passados",
         visibilityPastDesc: "Mostrar eventos cujo aniversário já passou dentro da janela passada configurada",
@@ -1245,6 +1674,8 @@
         visibilityIconDesc: "Mostrar o ícone do tipo antes de cada linha",
         visibilityTitleDesc: "Mostrar o nome do evento",
         visibilitySubtitleDesc: "Mostrar o tipo de evento",
+        visibilityCountrySuffix: "Sufixo do feriado",
+        visibilityCountrySuffixDesc: "Acrescenta o país (e a subdivisão, se houver) após o nome/tipo do feriado, por ex. \"Independência do Brasil · BR (SP)\"",
         visibilityBadgeDesc: "Mostrar o selo do número de ocorrência",
         visibilityWhenDesc: "Mostrar a contagem regressiva (por ex. \"em 3 dias\")",
         visibilityVipOnly: "Apenas VIP",
@@ -1387,6 +1818,54 @@
         pet_birthday: "День рождения питомца",
         work_anniversary: "Трудовой юбилей",
         custom: "Другое",
+        holiday: "Праздник",
+      },
+      typesPlural: {
+        birthday: "Дни рождения",
+        anniversary: "Годовщины",
+        name_day: "Именины",
+        wedding_anniversary: "Годовщины свадьбы",
+        memorial: "Дни памяти",
+        pet_birthday: "Дни рождения питомцев",
+        work_anniversary: "Трудовые юбилеи",
+        custom: "Другое",
+        holiday: "Праздники",
+      },
+      categories: {
+        public: "Государственный",
+        bank: "Банковский",
+        government: "Административный",
+        school: "Школьные каникулы",
+        optional: "Необязательный",
+        unofficial: "Неофициальный",
+        half_day: "Сокращённый день",
+        armed_forces: "Вооружённые силы",
+        workday: "Рабочий день",
+        catholic: "Католический",
+        christian: "Христианский",
+        orthodox: "Православный",
+        hebrew: "Иудейский",
+        islamic: "Исламский",
+        hindu: "Индуистский",
+        buddhist: "Буддийский",
+      },
+      categoriesPlural: {
+        public: "Государственные",
+        bank: "Банковские",
+        government: "Административные",
+        school: "Школьные каникулы",
+        optional: "Необязательные",
+        unofficial: "Неофициальные",
+        half_day: "Сокращённые дни",
+        armed_forces: "Вооружённые силы",
+        workday: "Рабочие дни",
+        catholic: "Католические",
+        christian: "Христианские",
+        orthodox: "Православные",
+        hebrew: "Иудейские",
+        islamic: "Исламские",
+        hindu: "Индуистские",
+        buddhist: "Буддийские",
       },
       editor: {
         title: "Заголовок карточки",
@@ -1402,6 +1881,10 @@
         soonDaysDesc: "События в пределах этого количества дней считаются «скоро»",
         types: "Типы событий",
         typesDesc: "Показывать только отмеченные типы событий",
+        categories: "Категории праздников",
+        categoriesDesc: "Показывать только праздники отмеченных категорий (остальные типы событий не затрагиваются)",
+        showAll: "Показать все",
+        hideAll: "Скрыть все",
         visibilityHeading: "Показать / Скрыть",
         visibilityPast: "Прошедшие события",
         visibilityPastDesc: "Показывать события, годовщина которых уже прошла в настроенном окне прошлого",
@@ -1414,6 +1897,8 @@
         visibilityIconDesc: "Показывать значок типа перед каждой строкой",
         visibilityTitleDesc: "Показывать имя события",
         visibilitySubtitleDesc: "Показывать тип события",
+        visibilityCountrySuffix: "Суффикс праздника",
+        visibilityCountrySuffixDesc: "Добавлять страну (и регион, если есть) после названия/типа праздника, напр. «День России · RU (MOW)»",
         visibilityBadgeDesc: "Показывать значок номера события",
         visibilityWhenDesc: "Показывать обратный отсчёт (напр. «через 3 дня»)",
         visibilityVipOnly: "Только VIP",
@@ -1556,6 +2041,54 @@
         pet_birthday: "Husdjurets födelsedag",
         work_anniversary: "Arbetsjubileum",
         custom: "Anpassad",
+        holiday: "Helgdag",
+      },
+      typesPlural: {
+        birthday: "Födelsedagar",
+        anniversary: "Årsdagar",
+        name_day: "Namnsdagar",
+        wedding_anniversary: "Bröllopsdagar",
+        memorial: "Dödsdagar",
+        pet_birthday: "Husdjurens födelsedagar",
+        work_anniversary: "Arbetsjubileer",
+        custom: "Anpassad",
+        holiday: "Helgdagar",
+      },
+      categories: {
+        public: "Allmän",
+        bank: "Bank",
+        government: "Myndighet",
+        school: "Skollov",
+        optional: "Valfri",
+        unofficial: "Inofficiell",
+        half_day: "Halvdag",
+        armed_forces: "Försvarsmakten",
+        workday: "Arbetsdag",
+        catholic: "Katolsk",
+        christian: "Kristen",
+        orthodox: "Ortodox",
+        hebrew: "Judisk",
+        islamic: "Islamisk",
+        hindu: "Hinduisk",
+        buddhist: "Buddhistisk",
+      },
+      categoriesPlural: {
+        public: "Allmänna",
+        bank: "Bank",
+        government: "Myndighet",
+        school: "Skollov",
+        optional: "Valfria",
+        unofficial: "Inofficiella",
+        half_day: "Halvdagar",
+        armed_forces: "Försvarsmakten",
+        workday: "Arbetsdagar",
+        catholic: "Katolska",
+        christian: "Kristna",
+        orthodox: "Ortodoxa",
+        hebrew: "Judiska",
+        islamic: "Islamiska",
+        hindu: "Hinduiska",
+        buddhist: "Buddhistiska",
       },
       editor: {
         title: "Kortets titel",
@@ -1571,6 +2104,10 @@
         soonDaysDesc: "Händelser inom detta antal dagar räknas som \"snart\"",
         types: "Händelsetyper",
         typesDesc: "Visa endast markerade händelsetyper",
+        categories: "Helgdagskategorier",
+        categoriesDesc: "Visa endast helgdagar i de markerade kategorierna (övriga händelsetyper påverkas inte)",
+        showAll: "Visa alla",
+        hideAll: "Dölj alla",
         visibilityHeading: "Visa / Dölj",
         visibilityPast: "Tidigare händelser",
         visibilityPastDesc: "Visa händelser vars årsdag redan passerat inom det inställda tidigare-fönstret",
@@ -1583,6 +2120,8 @@
         visibilityIconDesc: "Visa typikonen framför varje rad",
         visibilityTitleDesc: "Visa händelsens namn",
         visibilitySubtitleDesc: "Visa händelsetypen",
+        visibilityCountrySuffix: "Helgdagssuffix",
+        visibilityCountrySuffixDesc: "Lägg till landet (och ev. delstat/region) efter helgdagens namn/typ, t.ex. \"Nationaldagen · SE (AB)\"",
         visibilityBadgeDesc: "Visa märket för händelsenumret",
         visibilityWhenDesc: "Visa nedräkningen (t.ex. \"om 3 dagar\")",
         visibilityVipOnly: "Endast VIP",
@@ -1725,6 +2264,56 @@
         pet_birthday: "宠物生日",
         work_anniversary: "工作纪念日",
         custom: "自定义",
+        holiday: "假日",
+      },
+      // Chinese nouns don't inflect for plural, so typesPlural/categoriesPlural
+      // simply reuse the same singular labels as types/categories below.
+      typesPlural: {
+        birthday: "生日",
+        anniversary: "纪念日",
+        name_day: "命名日",
+        wedding_anniversary: "结婚纪念日",
+        memorial: "忌日",
+        pet_birthday: "宠物生日",
+        work_anniversary: "工作纪念日",
+        custom: "自定义",
+        holiday: "假日",
+      },
+      categories: {
+        public: "公共",
+        bank: "银行",
+        government: "政府",
+        school: "学校假期",
+        optional: "可选",
+        unofficial: "非官方",
+        half_day: "半天",
+        armed_forces: "军队",
+        workday: "工作日",
+        catholic: "天主教",
+        christian: "基督教",
+        orthodox: "东正教",
+        hebrew: "犹太教",
+        islamic: "伊斯兰教",
+        hindu: "印度教",
+        buddhist: "佛教",
+      },
+      categoriesPlural: {
+        public: "公共",
+        bank: "银行",
+        government: "政府",
+        school: "学校假期",
+        optional: "可选",
+        unofficial: "非官方",
+        half_day: "半天",
+        armed_forces: "军队",
+        workday: "工作日",
+        catholic: "天主教",
+        christian: "基督教",
+        orthodox: "东正教",
+        hebrew: "犹太教",
+        islamic: "伊斯兰教",
+        hindu: "印度教",
+        buddhist: "佛教",
       },
       editor: {
         title: "卡片标题",
@@ -1740,6 +2329,10 @@
         soonDaysDesc: "在此天数内的事件算作“即将到来”",
         types: "事件类型",
         typesDesc: "仅显示已勾选的事件类型",
+        categories: "节假日类别",
+        categoriesDesc: "仅显示已勾选类别的节假日（其他事件类型不受影响）",
+        showAll: "全部显示",
+        hideAll: "全部隐藏",
         visibilityHeading: "显示 / 隐藏",
         visibilityPast: "过去的事件",
         visibilityPastDesc: "显示在设定的过去时间范围内已经过去的周年纪念事件",
@@ -1752,6 +2345,8 @@
         visibilityIconDesc: "在每行前显示类型图标",
         visibilityTitleDesc: "显示事件名称",
         visibilitySubtitleDesc: "显示事件类型",
+        visibilityCountrySuffix: "节假日后缀",
+        visibilityCountrySuffixDesc: "在节假日名称/类型后附加国家（及地区，如有），例如“国庆节 · CN (BJ)”",
         visibilityBadgeDesc: "显示周年数徽章",
         visibilityWhenDesc: "显示倒计时（例如“3 天后”）",
         visibilityVipOnly: "仅 VIP",
@@ -1894,6 +2489,54 @@
         pet_birthday: "Narozeniny mazlíčka",
         work_anniversary: "Pracovní výročí",
         custom: "Vlastní",
+        holiday: "Státní svátek",
+      },
+      typesPlural: {
+        birthday: "Narozeniny",
+        anniversary: "Výročí",
+        name_day: "Svátky",
+        wedding_anniversary: "Výročí svatby",
+        memorial: "Výročí úmrtí",
+        pet_birthday: "Narozeniny mazlíčků",
+        work_anniversary: "Pracovní výročí",
+        custom: "Vlastní",
+        holiday: "Státní svátky",
+      },
+      categories: {
+        public: "Veřejný",
+        bank: "Bankovní",
+        government: "Úřední",
+        school: "Školní prázdniny",
+        optional: "Volitelný",
+        unofficial: "Neoficiální",
+        half_day: "Půlden",
+        armed_forces: "Ozbrojené síly",
+        workday: "Pracovní den",
+        catholic: "Katolický",
+        christian: "Křesťanský",
+        orthodox: "Pravoslavný",
+        hebrew: "Židovský",
+        islamic: "Islámský",
+        hindu: "Hinduistický",
+        buddhist: "Buddhistický",
+      },
+      categoriesPlural: {
+        public: "Veřejné",
+        bank: "Bankovní",
+        government: "Úřední",
+        school: "Školní prázdniny",
+        optional: "Volitelné",
+        unofficial: "Neoficiální",
+        half_day: "Půldny",
+        armed_forces: "Ozbrojené síly",
+        workday: "Pracovní dny",
+        catholic: "Katolické",
+        christian: "Křesťanské",
+        orthodox: "Pravoslavné",
+        hebrew: "Židovské",
+        islamic: "Islámské",
+        hindu: "Hinduistické",
+        buddhist: "Buddhistické",
       },
       editor: {
         title: "Název karty",
@@ -1909,6 +2552,10 @@
         soonDaysDesc: "Události v tomto počtu dní se počítají jako „brzy“",
         types: "Typy událostí",
         typesDesc: "Zobrazit pouze zaškrtnuté typy událostí",
+        categories: "Kategorie svátků",
+        categoriesDesc: "Zobrazit pouze svátky ze zaškrtnutých kategorií (ostatní typy událostí nejsou ovlivněny)",
+        showAll: "Zobrazit vše",
+        hideAll: "Skrýt vše",
         visibilityHeading: "Zobrazit / Skrýt",
         visibilityPast: "Minulé události",
         visibilityPastDesc: "Zobrazit události, jejichž výročí již proběhlo v nastaveném minulém okně",
@@ -1921,6 +2568,8 @@
         visibilityIconDesc: "Zobrazit ikonu typu před každým řádkem",
         visibilityTitleDesc: "Zobrazit jméno události",
         visibilitySubtitleDesc: "Zobrazit typ události",
+        visibilityCountrySuffix: "Přípona svátku",
+        visibilityCountrySuffixDesc: "Připojit zemi (a případně kraj) za název/typ svátku, např. „Den české státnosti · CZ (PR)“",
         visibilityBadgeDesc: "Zobrazit odznak čísla výročí",
         visibilityWhenDesc: "Zobrazit odpočet (např. „za 3 dny“)",
         visibilityVipOnly: "Pouze VIP",
@@ -2063,6 +2712,54 @@
         pet_birthday: "Kjæledyrs bursdag",
         work_anniversary: "Arbeidsjubileum",
         custom: "Egendefinert",
+        holiday: "Helligdag",
+      },
+      typesPlural: {
+        birthday: "Bursdager",
+        anniversary: "Jubileer",
+        name_day: "Navnedager",
+        wedding_anniversary: "Bryllupsdager",
+        memorial: "Minnedager",
+        pet_birthday: "Kjæledyrs bursdager",
+        work_anniversary: "Arbeidsjubileer",
+        custom: "Egendefinert",
+        holiday: "Helligdager",
+      },
+      categories: {
+        public: "Offentlig",
+        bank: "Bank",
+        government: "Myndighet",
+        school: "Skoleferie",
+        optional: "Valgfri",
+        unofficial: "Uoffisiell",
+        half_day: "Halv dag",
+        armed_forces: "Forsvaret",
+        workday: "Arbeidsdag",
+        catholic: "Katolsk",
+        christian: "Kristen",
+        orthodox: "Ortodoks",
+        hebrew: "Jødisk",
+        islamic: "Islamsk",
+        hindu: "Hinduistisk",
+        buddhist: "Buddhistisk",
+      },
+      categoriesPlural: {
+        public: "Offentlige",
+        bank: "Bank",
+        government: "Myndighet",
+        school: "Skoleferie",
+        optional: "Valgfrie",
+        unofficial: "Uoffisielle",
+        half_day: "Halve dager",
+        armed_forces: "Forsvaret",
+        workday: "Arbeidsdager",
+        catholic: "Katolske",
+        christian: "Kristne",
+        orthodox: "Ortodokse",
+        hebrew: "Jødiske",
+        islamic: "Islamske",
+        hindu: "Hinduistiske",
+        buddhist: "Buddhistiske",
       },
       editor: {
         title: "Korttittel",
@@ -2078,6 +2775,10 @@
         soonDaysDesc: "Hendelser innen dette antallet dager telles som «snart»",
         types: "Hendelsestyper",
         typesDesc: "Vis bare de avkryssede hendelsestypene",
+        categories: "Helligdagskategorier",
+        categoriesDesc: "Vis bare helligdager i de avkryssede kategoriene (andre hendelsestyper påvirkes ikke)",
+        showAll: "Vis alle",
+        hideAll: "Skjul alle",
         visibilityHeading: "Vis / Skjul",
         visibilityPast: "Tidligere hendelser",
         visibilityPastDesc: "Vis hendelser hvis jubileum allerede har passert innenfor det konfigurerte tidligere-vinduet",
@@ -2090,6 +2791,8 @@
         visibilityIconDesc: "Vis typeikonet foran hver rad",
         visibilityTitleDesc: "Vis hendelsens navn",
         visibilitySubtitleDesc: "Vis hendelsestypen",
+        visibilityCountrySuffix: "Helligdagssuffiks",
+        visibilityCountrySuffixDesc: "Legg til landet (og eventuelt fylket) etter helligdagens navn/type, f.eks. «Grunnlovsdagen · NO (OSL)»",
         visibilityBadgeDesc: "Vis merket for jubileumsnummeret",
         visibilityWhenDesc: "Vis nedtellingen (f.eks. «om 3 dager»)",
         visibilityVipOnly: "Kun VIP",
@@ -2232,6 +2935,54 @@
         pet_birthday: "Kæledyrs fødselsdag",
         work_anniversary: "Jubilæum på arbejdet",
         custom: "Tilpasset",
+        holiday: "Helligdag",
+      },
+      typesPlural: {
+        birthday: "Fødselsdage",
+        anniversary: "Mærkedage",
+        name_day: "Navnedage",
+        wedding_anniversary: "Bryllupsdage",
+        memorial: "Mindedage",
+        pet_birthday: "Kæledyrs fødselsdage",
+        work_anniversary: "Jubilæer på arbejdet",
+        custom: "Tilpasset",
+        holiday: "Helligdage",
+      },
+      categories: {
+        public: "Offentlig",
+        bank: "Bank",
+        government: "Myndighed",
+        school: "Skoleferie",
+        optional: "Valgfri",
+        unofficial: "Uofficiel",
+        half_day: "Halv dag",
+        armed_forces: "Forsvaret",
+        workday: "Arbejdsdag",
+        catholic: "Katolsk",
+        christian: "Kristen",
+        orthodox: "Ortodoks",
+        hebrew: "Jødisk",
+        islamic: "Islamisk",
+        hindu: "Hinduistisk",
+        buddhist: "Buddhistisk",
+      },
+      categoriesPlural: {
+        public: "Offentlige",
+        bank: "Bank",
+        government: "Myndighed",
+        school: "Skoleferie",
+        optional: "Valgfrie",
+        unofficial: "Uofficielle",
+        half_day: "Halve dage",
+        armed_forces: "Forsvaret",
+        workday: "Arbejdsdage",
+        catholic: "Katolske",
+        christian: "Kristne",
+        orthodox: "Ortodokse",
+        hebrew: "Jødiske",
+        islamic: "Islamiske",
+        hindu: "Hinduistiske",
+        buddhist: "Buddhistiske",
       },
       editor: {
         title: "Korttitel",
@@ -2247,6 +2998,10 @@
         soonDaysDesc: "Begivenheder inden for dette antal dage tæller som \"snart\"",
         types: "Begivenhedstyper",
         typesDesc: "Vis kun de afkrydsede begivenhedstyper",
+        categories: "Helligdagskategorier",
+        categoriesDesc: "Vis kun helligdage i de afkrydsede kategorier (andre begivenhedstyper påvirkes ikke)",
+        showAll: "Vis alle",
+        hideAll: "Skjul alle",
         visibilityHeading: "Vis / Skjul",
         visibilityPast: "Tidligere begivenheder",
         visibilityPastDesc: "Vis begivenheder, hvis mærkedag allerede er passeret inden for det konfigurerede tidligere-vindue",
@@ -2259,6 +3014,8 @@
         visibilityIconDesc: "Vis typeikonet foran hver række",
         visibilityTitleDesc: "Vis begivenhedens navn",
         visibilitySubtitleDesc: "Vis begivenhedstypen",
+        visibilityCountrySuffix: "Helligdagssuffiks",
+        visibilityCountrySuffixDesc: "Tilføj landet (og evt. regionen) efter helligdagens navn/type, f.eks. \"Grundlovsdag · DK (84)\"",
         visibilityBadgeDesc: "Vis mærket for jubilæumsnummeret",
         visibilityWhenDesc: "Vis nedtællingen (f.eks. \"om 3 dage\")",
         visibilityVipOnly: "Kun VIP",
@@ -2401,6 +3158,54 @@
         pet_birthday: "Evcil hayvan doğum günü",
         work_anniversary: "İş yıl dönümü",
         custom: "Özel",
+        holiday: "Resmi tatil",
+      },
+      typesPlural: {
+        birthday: "Doğum günleri",
+        anniversary: "Yıl dönümleri",
+        name_day: "İsim günleri",
+        wedding_anniversary: "Evlilik yıl dönümleri",
+        memorial: "Ölüm yıl dönümleri",
+        pet_birthday: "Evcil hayvan doğum günleri",
+        work_anniversary: "İş yıl dönümleri",
+        custom: "Özel",
+        holiday: "Resmi tatiller",
+      },
+      categories: {
+        public: "Resmi",
+        bank: "Banka",
+        government: "Devlet dairesi",
+        school: "Okul tatili",
+        optional: "İsteğe bağlı",
+        unofficial: "Gayriresmi",
+        half_day: "Yarım gün",
+        armed_forces: "Silahlı kuvvetler",
+        workday: "İş günü",
+        catholic: "Katolik",
+        christian: "Hristiyan",
+        orthodox: "Ortodoks",
+        hebrew: "Yahudi",
+        islamic: "İslami",
+        hindu: "Hindu",
+        buddhist: "Budist",
+      },
+      categoriesPlural: {
+        public: "Resmi tatiller",
+        bank: "Banka tatilleri",
+        government: "Devlet tatilleri",
+        school: "Okul tatilleri",
+        optional: "İsteğe bağlı tatiller",
+        unofficial: "Gayriresmi tatiller",
+        half_day: "Yarım günler",
+        armed_forces: "Silahlı kuvvetler tatilleri",
+        workday: "İş günleri",
+        catholic: "Katolik tatiller",
+        christian: "Hristiyan tatiller",
+        orthodox: "Ortodoks tatiller",
+        hebrew: "Yahudi tatiller",
+        islamic: "İslami tatiller",
+        hindu: "Hindu tatiller",
+        buddhist: "Budist tatiller",
       },
       editor: {
         title: "Kart başlığı",
@@ -2416,6 +3221,10 @@
         soonDaysDesc: "Bu gün sayısı içindeki etkinlikler \"yakında\" sayılır",
         types: "Etkinlik türleri",
         typesDesc: "Yalnızca işaretli etkinlik türlerini göster",
+        categories: "Tatil kategorileri",
+        categoriesDesc: "Yalnızca işaretli kategorilerdeki tatilleri göster (diğer etkinlik türleri etkilenmez)",
+        showAll: "Tümünü göster",
+        hideAll: "Tümünü gizle",
         visibilityHeading: "Göster / Gizle",
         visibilityPast: "Geçmiş etkinlikler",
         visibilityPastDesc: "Yıl dönümü, ayarlanan geçmiş penceresi içinde zaten geçmiş olan etkinlikleri göster",
@@ -2428,6 +3237,8 @@
         visibilityIconDesc: "Her satırın önünde tür simgesini göster",
         visibilityTitleDesc: "Etkinlik adını göster",
         visibilitySubtitleDesc: "Etkinlik türünü göster",
+        visibilityCountrySuffix: "Tatil eki",
+        visibilityCountrySuffixDesc: "Tatilin adının/türünün ardına ülkeyi (ve varsa bölgeyi) ekler, örn. \"Cumhuriyet Bayramı · TR (34)\"",
         visibilityBadgeDesc: "Tekrar numarası rozetini göster",
         visibilityWhenDesc: "Geri sayımı göster (örn. \"3 gün sonra\")",
         visibilityVipOnly: "Yalnızca VIP",
@@ -2574,6 +3385,11 @@
       days_past: 0,
       soon_days: 7,
       types: [],
+      // Only meaningful for holiday-type events (see CATEGORY_ICONS in
+      // const.py) - empty means "show every category", same semantics as
+      // `types` above. Non-holiday events have no category and are never
+      // filtered by this.
+      categories: [],
       show_past: true,
       show_today: true,
       show_soon: true,
@@ -2592,6 +3408,10 @@
       show_important_badge: true,
       vip_badge_icon: "mdi:star",
       important_badge_icon: "mdi:exclamation-thick",
+      // Holidays only - appends the imported country (+ subdivision) to the
+      // name/type text instead of the old hover-only tooltip.
+      show_name_country: false,
+      show_subtitle_country: false,
       ...config,
       colors: {
         today: "",
@@ -2692,6 +3512,9 @@
           state.attributes.occurrence_number == null ? null : state.attributes.occurrence_number,
         vip: state.attributes.vip === true,
         important: state.attributes.important === true,
+        category: state.attributes.category,
+        country: state.attributes.country,
+        subdivision: state.attributes.subdivision,
       });
     }
     events.sort((a, b) => a.days - b.days || a.entityId.localeCompare(b.entityId));
@@ -2958,6 +3781,16 @@
       const all = getEvents(this._hass);
       const filtered = all.filter((e) => {
         if (config.types && config.types.length && !config.types.includes(e.type)) return false;
+        // Only holiday-type events carry a category at all (see getEvents) -
+        // this never filters anything else out, same as `types` being
+        // empty meaning "no restriction" above.
+        if (
+          e.type === "holiday" &&
+          config.categories &&
+          config.categories.length &&
+          !config.categories.includes(e.category)
+        )
+          return false;
         if (config.days_ahead && config.days_ahead > 0 && e.days > config.days_ahead) return false;
         // When both filters are on, they combine as OR (VIP or Important),
         // not AND - otherwise enabling both would only show events that are
@@ -3024,7 +3857,25 @@
       const colorCategory = iconClass || "accent";
       const matchClass = config.colors[`match_${colorCategory}`] ? ` match-${colorCategory}-text` : "";
       div.className = "row" + (highlightClass ? ` ${highlightClass}` : "") + matchClass;
-      const typeLabel = strings.types[e.type] || e.type;
+      let typeLabel = strings.types[e.type] || e.type;
+      // Holidays share one generic "Holiday" subtitle otherwise, which
+      // doesn't distinguish a public holiday from a school break - the
+      // category (already driving the row's icon - see CATEGORY_ICONS in
+      // const.py) is appended so it's visible as text too.
+      if (e.type === "holiday" && e.category) {
+        typeLabel = `${typeLabel} (${(strings.categories || {})[e.category] || e.category})`;
+      }
+      // Country (+ subdivision), useful once more than one country/region is
+      // imported at once - opt-in per show_name_country/show_subtitle_country
+      // (see the "Show country/subdivision" sub-options under Title/Subtitle
+      // in the editor) rather than always-on, since most setups only ever
+      // import a single country and don't need it repeated on every row.
+      const countrySuffix =
+        e.type === "holiday" && e.country
+          ? e.subdivision
+            ? `${e.country} (${e.subdivision})`
+            : e.country
+          : "";
 
       let when;
       if (isRecent && e.daysSince > 0) {
@@ -3057,11 +3908,12 @@
       if (config.show_icon === false) iconWrapEl.style.display = "none";
 
       const nameEl = div.querySelector(".name");
-      nameEl.textContent = e.name;
+      nameEl.textContent = countrySuffix && config.show_name_country ? `${e.name} · ${countrySuffix}` : e.name;
       if (config.show_name === false) nameEl.style.display = "none";
 
       const typeEl = div.querySelector(".type");
-      typeEl.textContent = typeLabel;
+      typeEl.textContent =
+        countrySuffix && config.show_subtitle_country ? `${typeLabel} · ${countrySuffix}` : typeLabel;
       if (config.show_subtitle === false) typeEl.style.display = "none";
 
       const whenEl = div.querySelector(".when");
@@ -3321,6 +4173,14 @@
       margin-bottom: 16px;
     }
     .field-row-split .field-col { flex: 1; min-width: 0; }
+    /* A flex item's children never collapse their margins with anything
+       outside it (flex establishes a new block-formatting context), so the
+       last row's own margin-bottom would sit *in addition to*
+       .field-row-split's margin-bottom below - stacking to 32px instead of
+       collapsing down to 16px the way two plain block siblings would.
+       Zeroing it here leaves only the container's own margin, matching the
+       single-row .toggle-row case exactly. */
+    .field-row-split .toggle-row:last-child { margin-bottom: 0; }
     /* Marks a row as a dependent sub-option of the one above it (e.g. the
        background color for a "show background" toggle) - indented, smaller,
        with a left border so it visually reads as nested rather than a peer
@@ -3483,18 +4343,38 @@
       cursor: pointer;
     }
     .bg-image-clear ha-icon { --mdc-icon-size: 14px; }
-    .type-grid {
-      flex: 1;
+    .type-toggle-actions {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px 20px;
+      justify-content: flex-end;
+      gap: 16px;
+      margin-bottom: 10px;
     }
-    .type-checkbox {
+    .link-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--primary-color);
+      font: inherit;
+      font-size: 0.85em;
+      cursor: pointer;
+    }
+    .link-btn:hover { text-decoration: underline; }
+    .type-toggle-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 24px;
+    }
+    .type-toggle-row {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 10px;
+      min-width: 0;
+    }
+    .type-toggle-row .type-toggle-label {
       font-size: 0.9em;
-      cursor: pointer;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .field-input-row input[type="color"] {
       width: 36px;
@@ -3520,13 +4400,16 @@
       margin-bottom: 16px;
     }
     .toggle-row .field-label { margin-bottom: 0; }
-    /* Used on the row right before .toggle-divider - see comment there for
-       why this needs to be smaller than the usual 16px. */
-    .toggle-row-tight { margin-bottom: 8px; }
+    /* Margin matches the 16px bottom-margin every row/column-group around it
+       already uses, and every row's own top margin is 0 (only bottom is
+       ever set) - so on both sides, margin-collapsing resolves to the same
+       16px (max(16,16) above, max(16,0) below), landing the line exactly
+       centered in the gap instead of drifting toward whichever neighbor has
+       the bigger margin. */
     .toggle-divider {
       border: none;
       border-top: 1px dashed var(--divider-color, #444);
-      margin: 8px 0;
+      margin: 16px 0;
     }
     .toggle-label {
       font-size: 0.85em;
@@ -3536,8 +4419,8 @@
     .toggle {
       position: relative;
       display: inline-block;
-      width: 36px;
-      height: 20px;
+      width: 30px;
+      height: 16px;
       flex-shrink: 0;
       cursor: pointer;
     }
@@ -3552,8 +4435,8 @@
     .toggle .track::before {
       content: "";
       position: absolute;
-      width: 16px;
-      height: 16px;
+      width: 12px;
+      height: 12px;
       left: 2px;
       top: 2px;
       background: #fff;
@@ -3561,7 +4444,7 @@
       transition: 0.2s;
     }
     .toggle input:checked + .track { background: var(--primary-color); }
-    .toggle input:checked + .track::before { transform: translateX(16px); }
+    .toggle input:checked + .track::before { transform: translateX(14px); }
     .preset-select { position: relative; flex-shrink: 0; }
     .preset-btn {
       display: flex;
@@ -3764,42 +4647,180 @@
         Math.max(1, Number(v) || 1)
       );
 
-      const typesRow = document.createElement("div");
-      typesRow.className = "field-row";
-      typesRow.innerHTML = `
+      body.appendChild(
+        this._buildToggleGridRow({
+          labelText: strings.editor.types,
+          tooltipText: strings.editor.typesDesc,
+          values: EVENT_TYPES,
+          dataAttr: "type",
+          valueLabel: (value) => (strings.typesPlural || {})[value] || strings.types[value] || value,
+          showAllText: strings.editor.showAll || "Show All",
+          hideAllText: strings.editor.hideAll || "Hide All",
+          onChange: (checked) => {
+            const wasHolidayOn = this._holidayTypeEnabled();
+            this._config = defaultConfig({ ...this._config, types: checked });
+            const isHolidayOn = this._holidayTypeEnabled();
+            // The holiday categories row only makes sense while "Holiday" is
+            // itself among the shown types - toggling it off (individually
+            // or via "Hide All") clears every category too, rather than
+            // leaving a stale selection that silently does nothing while the
+            // row is hidden; toggling it back on resets to "show every
+            // category" since the previous subset was already discarded.
+            if (wasHolidayOn && !isHolidayOn) {
+              this._config = defaultConfig({ ...this._config, categories: [NONE_SELECTED] });
+            } else if (!wasHolidayOn && isHolidayOn) {
+              this._config = defaultConfig({ ...this._config, categories: [] });
+            }
+            this._emit();
+            this._syncEventsInputs();
+          },
+        })
+      );
+
+      // Only shown once at least one holiday event is actually present -
+      // which categories exist depends entirely on what's been imported
+      // (see config_flow.py's "Import public holidays" step), so there's no
+      // fixed list to always offer the way there is for `types` above.
+      const categories = this._availableCategories();
+      if (categories.length) {
+        this._categoriesRowEl = this._buildToggleGridRow({
+          labelText: strings.editor.categories,
+          tooltipText: strings.editor.categoriesDesc,
+          values: categories,
+          dataAttr: "category",
+          valueLabel: (value) =>
+            (strings.categoriesPlural || {})[value] || (strings.categories || {})[value] || value,
+          showAllText: strings.editor.showAll || "Show All",
+          hideAllText: strings.editor.hideAll || "Hide All",
+          onChange: (checked) => {
+            this._config = defaultConfig({ ...this._config, categories: checked });
+            this._emit();
+            // Unchecking every category (individually or via "Hide All")
+            // means "no holidays" just as much as unchecking "Holiday"
+            // itself does - fold it back into the same type, which also
+            // hides this row again via _syncEventsInputs below.
+            if (checked.length === 1 && checked[0] === NONE_SELECTED) {
+              this._disableHolidayType();
+            }
+          },
+        });
+        body.appendChild(this._categoriesRowEl);
+        this._updateCategoriesRowVisibility();
+      } else {
+        this._categoriesRowEl = null;
+      }
+
+      return body;
+    }
+
+    // "Holiday" counts as shown whenever `types` doesn't explicitly exclude
+    // it - either the empty-array "all types" default, or an explicit list
+    // that includes "holiday" (see the "empty means all" convention noted
+    // throughout this file).
+    _holidayTypeEnabled() {
+      const types = this._config.types || [];
+      if (types.length === 1 && types[0] === NONE_SELECTED) return false;
+      return types.length === 0 || types.includes("holiday");
+    }
+
+    // Mirror image of the types-onChange cascade above (types -> categories)
+    // - unchecking every category folds back into unchecking "Holiday"
+    // itself, since "no categories shown" and "no holidays shown" mean the
+    // same thing from the user's point of view.
+    _disableHolidayType() {
+      if (!this._holidayTypeEnabled()) return;
+      const types = this._config.types || [];
+      const withoutHoliday =
+        types.length === 0 ? EVENT_TYPES.filter((t) => t !== "holiday") : types.filter((t) => t !== "holiday");
+      this._config = defaultConfig({
+        ...this._config,
+        types: withoutHoliday.length ? withoutHoliday : [NONE_SELECTED],
+      });
+      this._emit();
+      this._syncEventsInputs();
+    }
+
+    _updateCategoriesRowVisibility() {
+      if (this._categoriesRowEl) {
+        this._categoriesRowEl.hidden = !this._holidayTypeEnabled();
+      }
+    }
+
+    // Shared builder for the "Event types" / "Holiday categories" rows: a
+    // two-column grid of toggle switches with "Show All" / "Hide All"
+    // shortcuts above it, instead of one-checkbox-per-line - used by both
+    // since they only differ in which values/labels/config-key they drive.
+    _buildToggleGridRow({ labelText, tooltipText, values, dataAttr, valueLabel, showAllText, hideAllText, onChange }) {
+      const row = document.createElement("div");
+      row.className = "field-row";
+      row.innerHTML = `
         <div class="field-label">
           <span class="label-text"></span>
           <span class="tooltip-anchor" data-tooltip="">
             <ha-icon icon="mdi:information-outline"></ha-icon>
           </span>
         </div>
-        <div class="type-grid">
-          ${EVENT_TYPES.map(
-            (value) => `
-              <label class="type-checkbox">
-                <input type="checkbox" data-type="${value}">
-                <span></span>
-              </label>
-            `
-          ).join("")}
+        <div class="type-toggle-actions">
+          <button type="button" class="link-btn" data-action="show-all"></button>
+          <button type="button" class="link-btn" data-action="hide-all"></button>
+        </div>
+        <div class="type-toggle-grid">
+          ${values
+            .map(
+              (value) => `
+                <div class="type-toggle-row">
+                  <label class="toggle">
+                    <input type="checkbox" data-${dataAttr}="${value}">
+                    <span class="track"></span>
+                  </label>
+                  <span class="type-toggle-label"></span>
+                </div>
+              `
+            )
+            .join("")}
         </div>
       `;
-      typesRow.querySelector(".label-text").textContent = strings.editor.types;
-      typesRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.typesDesc;
-      typesRow.querySelectorAll(".type-checkbox").forEach((label) => {
-        const value = label.querySelector("input").dataset.type;
-        label.querySelector("span").textContent = strings.types[value] || value;
-        label.querySelector("input").addEventListener("change", () => {
-          const checked = Array.from(typesRow.querySelectorAll("input[data-type]"))
-            .filter((el) => el.checked)
-            .map((el) => el.dataset.type);
-          this._config = defaultConfig({ ...this._config, types: checked });
-          this._emit();
-        });
-      });
-      body.appendChild(typesRow);
+      row.querySelector(".label-text").textContent = labelText;
+      row.querySelector(".tooltip-anchor").dataset.tooltip = tooltipText;
+      row.querySelector('[data-action="show-all"]').textContent = showAllText;
+      row.querySelector('[data-action="hide-all"]').textContent = hideAllText;
 
-      return body;
+      const inputs = Array.from(row.querySelectorAll(`input[data-${dataAttr}]`));
+      const emitChange = () => {
+        const checked = inputs.filter((el) => el.checked).map((el) => el.dataset[dataAttr]);
+        onChange(checked.length ? checked : [NONE_SELECTED]);
+      };
+      row.querySelectorAll(".type-toggle-row").forEach((toggleRow) => {
+        const input = toggleRow.querySelector("input");
+        const value = input.dataset[dataAttr];
+        toggleRow.querySelector(".type-toggle-label").textContent = valueLabel(value);
+        input.addEventListener("change", emitChange);
+      });
+      row.querySelector('[data-action="show-all"]').addEventListener("click", () => {
+        inputs.forEach((el) => (el.checked = true));
+        emitChange();
+      });
+      row.querySelector('[data-action="hide-all"]').addEventListener("click", () => {
+        inputs.forEach((el) => (el.checked = false));
+        emitChange();
+      });
+
+      return row;
+    }
+
+    // Every distinct `category` attribute seen among currently-existing
+    // holiday sensors - there's no fixed enum (see const.py's CATEGORY_ICONS
+    // comment: countries define their own categories), so the checkbox list
+    // above can only ever offer what's actually been imported.
+    _availableCategories() {
+      if (!this._hass) return [];
+      const found = new Set();
+      for (const entityId in this._hass.states) {
+        if (!entityId.startsWith("sensor.annuals_holiday_")) continue;
+        const category = this._hass.states[entityId].attributes.category;
+        if (category) found.add(category);
+      }
+      return Array.from(found).sort();
     }
 
     _syncEventsInputs() {
@@ -3813,6 +4834,13 @@
       this.shadowRoot.querySelectorAll(".events-body input[data-type]").forEach((el) => {
         el.checked = allChecked || types.includes(el.dataset.type);
       });
+
+      const categories = this._config.categories || [];
+      const allCategoriesChecked = categories.length === 0;
+      this.shadowRoot.querySelectorAll(".events-body input[data-category]").forEach((el) => {
+        el.checked = allCategoriesChecked || categories.includes(el.dataset.category);
+      });
+      this._updateCategoriesRowVisibility();
     }
 
     _buildPeriodBody(strings) {
@@ -4484,6 +5512,8 @@
         when: config.show_when !== false,
         vip_only: config.show_vip_only === true,
         important_only: config.show_important_only === true,
+        title_country: config.show_name_country === true,
+        subtitle_country: config.show_subtitle_country === true,
       };
       for (const key of Object.keys(visMap)) {
         const toggle = this.shadowRoot.querySelector(`input[data-visibility="${key}"]`);
@@ -4510,6 +5540,29 @@
       `;
     }
 
+    // Two independent vertical columns (not a CSS grid) so a sub-row nested
+    // under one entry - e.g. the country-suffix toggle under "Title" - only
+    // ever affects its own column's flow, never the other column's pairing.
+    // `entries` is a mix of plain keys and [key, subKey] tuples.
+    _visibilityColumnHtml(entries) {
+      return entries
+        .map((entry) =>
+          typeof entry === "string"
+            ? this._visibilityRowHtml(entry)
+            : this._visibilityRowHtml(entry[0]) + this._visibilityRowHtml(entry[1], "sub-field-row")
+        )
+        .join("");
+    }
+
+    _visibilityTwoColHtml(leftEntries, rightEntries) {
+      return `
+        <div class="field-row-split">
+          <div class="field-col">${this._visibilityColumnHtml(leftEntries)}</div>
+          <div class="field-col">${this._visibilityColumnHtml(rightEntries)}</div>
+        </div>
+      `;
+    }
+
     _buildDisplayBody(strings) {
       const body = document.createElement("div");
       body.className = "display-body";
@@ -4519,37 +5572,20 @@
       visHeading.textContent = strings.editor.visibilityHeading;
       body.appendChild(visHeading);
 
-      const visKeys = [
-        "past",
-        "today",
-        "soon",
-        "vip_only",
-        "important_only",
-        "font_size_title",
-        "icon",
-        "title",
-        "subtitle",
-        "badge",
-        "when",
-      ];
       const visRows = document.createElement("div");
-      // A subtle dashed divider between "important_only" and "font_size_title"
-      // marks the boundary between the two conceptually different groups
-      // here: which events appear at all (past/today/soon, VIP/Important
-      // filters) vs. which fields are shown per row (card title onward).
-      // The row right before the divider gets a tighter bottom margin so
-      // the line sits exactly centered between the two rows (equal gap
-      // above and below) rather than hugging one side - sibling margins
-      // collapse to the larger of the two, so leaving that row's margin at
-      // the normal 16px would always win over the divider's own margin and
-      // push the line to the bottom.
-      visRows.innerHTML = visKeys
-        .map(
-          (key) =>
-            (key === "font_size_title" ? '<hr class="toggle-divider">' : "") +
-            this._visibilityRowHtml(key, key === "important_only" ? "toggle-row-tight" : "")
-        )
-        .join("");
+      // Three groups, separated by dashed dividers: which events appear at
+      // all (past/today/soon | VIP/Important filters), the card's own
+      // title (alone, not paired with anything), then which fields are
+      // shown per row (icon/title/subtitle | occurrence/countdown).
+      visRows.innerHTML =
+        this._visibilityTwoColHtml(["past", "today", "soon"], ["vip_only", "important_only"]) +
+        '<hr class="toggle-divider">' +
+        this._visibilityRowHtml("font_size_title") +
+        '<hr class="toggle-divider">' +
+        this._visibilityTwoColHtml(["icon", ["title", "title_country"], ["subtitle", "subtitle_country"]], [
+          "badge",
+          "when",
+        ]);
       body.appendChild(visRows);
 
       const visLabels = {
@@ -4564,6 +5600,14 @@
         when: [strings.editor.colorWhen, strings.editor.visibilityWhenDesc],
         vip_only: [strings.editor.visibilityVipOnly, strings.editor.visibilityVipOnlyDesc],
         important_only: [strings.editor.visibilityImportantOnly, strings.editor.visibilityImportantOnlyDesc],
+        title_country: [
+          strings.editor.visibilityCountrySuffix || "Holiday suffix",
+          strings.editor.visibilityCountrySuffixDesc || "",
+        ],
+        subtitle_country: [
+          strings.editor.visibilityCountrySuffix || "Holiday suffix",
+          strings.editor.visibilityCountrySuffixDesc || "",
+        ],
       };
       const visConfigKeys = {
         past: "show_past",
@@ -4577,12 +5621,15 @@
         when: "show_when",
         vip_only: "show_vip_only",
         important_only: "show_important_only",
+        title_country: "show_name_country",
+        subtitle_country: "show_subtitle_country",
       };
-      for (const key of visKeys) {
+      for (const key of Object.keys(visConfigKeys)) {
         const row = body.querySelector(`input[data-visibility="${key}"]`).closest(".toggle-row");
         const [label, desc] = visLabels[key];
         row.querySelector(".label-text").textContent = label;
-        row.querySelector(".tooltip-anchor").dataset.tooltip = desc;
+        const tooltipEl = row.querySelector(".tooltip-anchor");
+        if (tooltipEl) tooltipEl.dataset.tooltip = desc;
 
         const toggle = row.querySelector(`input[data-visibility="${key}"]`);
         const configKey = visConfigKeys[key];

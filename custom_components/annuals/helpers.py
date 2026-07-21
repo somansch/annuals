@@ -13,11 +13,17 @@ from __future__ import annotations
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import translation
 
-from .const import DOMAIN, EVENT_TYPES
+from .const import ALL_EVENT_TYPES, DOMAIN
 
 
 async def async_event_type_labels(hass: HomeAssistant) -> dict[str, str]:
-    """Map each event type to its label in the server's language."""
+    """Map each event type to its label in the server's language.
+
+    ALL_EVENT_TYPES (not EVENT_TYPES) so this also covers "holiday" - it
+    isn't in the manual add-event selector, but still needs a label for its
+    calendar.annuals_holiday translation_key. Falls back to a title-cased
+    version of the type's own key when no translation exists yet.
+    """
     translations = await translation.async_get_translations(
         hass, hass.config.language, "selector", {DOMAIN}
     )
@@ -26,7 +32,7 @@ async def async_event_type_labels(hass: HomeAssistant) -> dict[str, str]:
             f"component.{DOMAIN}.selector.event_type.options.{event_type}",
             event_type.replace("_", " ").title(),
         )
-        for event_type in EVENT_TYPES
+        for event_type in ALL_EVENT_TYPES
     }
 
 

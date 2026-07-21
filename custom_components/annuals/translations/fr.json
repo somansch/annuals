@@ -10,7 +10,8 @@
                 "memorial": "Commémoration",
                 "pet_birthday": "Anniversaire d'animal",
                 "work_anniversary": "Anniversaire professionnel",
-                "custom": "Personnalisé"
+                "custom": "Personnalisé",
+                "holiday": "Jour férié"
             }
         },
         "month": {
@@ -27,6 +28,26 @@
                 "10": "octobre",
                 "11": "novembre",
                 "12": "décembre"
+            }
+        },
+        "holiday_category": {
+            "options": {
+                "public": "Officiel",
+                "bank": "Bancaire",
+                "government": "Administration",
+                "school": "Vacances scolaires",
+                "optional": "Optionnel",
+                "unofficial": "Non officiel",
+                "half_day": "Demi-journée",
+                "armed_forces": "Forces armées",
+                "workday": "Jour ouvré",
+                "catholic": "Catholique",
+                "christian": "Chrétien",
+                "orthodox": "Orthodoxe",
+                "hebrew": "Juif",
+                "islamic": "Islamique",
+                "hindu": "Hindou",
+                "buddhist": "Bouddhiste"
             }
         }
     },
@@ -96,7 +117,33 @@
                 "menu_options": {
                     "annual_settings": "Annual Paramètres",
                     "import_csv": "Importer des événements depuis un CSV",
+                    "import_holidays": "Importer des jours fériés",
+                    "remove_holidays": "Supprimer les jours fériés importés",
                     "delete_all": "Supprimer toutes les données Annuals"
+                }
+            },
+            "import_holidays": {
+                "title": "Importer des jours fériés",
+                "description": "Choisissez un pays pour importer ses jours fériés en tant qu'événements. Relancer cette opération plus tard pour le même pays (et la même subdivision) met à jour les entrées existantes au lieu de les dupliquer - sans risque à répéter si un pays ajoute un nouveau jour férié.",
+                "data": {
+                    "country": "Pays"
+                }
+            },
+            "import_holidays_options": {
+                "title": "Importer des jours fériés - {country}",
+                "description": "Laissez la subdivision vide pour les jours fériés nationaux uniquement - une région/province ajoute ses propres jours fériés régionaux. Les catégories et la langue dépendent de ce que fournissent les données de ce pays. Les catégories sur plusieurs jours, comme les vacances scolaires, sont représentées par un seul événement le premier jour.",
+                "data": {
+                    "subdivision": "Subdivision (région/province, optionnel)",
+                    "categories": "Catégories",
+                    "language": "Langue des noms de jours fériés"
+                }
+            },
+            "remove_holidays": {
+                "title": "Supprimer les jours fériés importés",
+                "description": "{total} jour(s) férié(s) actuellement importé(s). Cochez la case ci-dessous pour tous les supprimer, ou laissez-la décochée et choisissez plutôt un lot. Les événements ajoutés manuellement ne sont jamais concernés.",
+                "data": {
+                    "remove_all": "Supprimer tous les jours fériés importés",
+                    "batch": "Lot à supprimer"
                 }
             },
             "annual_settings": {
@@ -122,12 +169,16 @@
             "name_required": "Veuillez saisir un nom.",
             "invalid_date": "Cette combinaison jour/mois/année n'est pas une date valide.",
             "invalid_csv": "Impossible de lire ce fichier en tant que CSV. Vérifiez l'encodage et le format.",
-            "no_valid_rows": "Aucune ligne valide trouvée dans ce fichier. Consultez le journal pour le détail des lignes ignorées."
+            "no_valid_rows": "Aucune ligne valide trouvée dans ce fichier. Consultez le journal pour le détail des lignes ignorées.",
+            "no_batch_selected": "Cochez « Supprimer tous les jours fériés importés », ou choisissez un lot."
         },
         "abort": {
             "hub_not_configurable": "Le hub Annuals n'a pas de paramètres propres - il contient uniquement les calendriers partagés.",
             "import_started": "Import démarré : {created} événement(s) en cours d'ajout, {skipped} ligne(s) ignorée(s) (voir le journal pour le détail).",
-            "deleted_all": "Tous les événements, calendriers et le hub Annuals ont été supprimés."
+            "deleted_all": "Tous les événements, calendriers et le hub Annuals ont été supprimés.",
+            "holiday_import_started": "Import démarré : {count} jour(s) férié(s) en cours d'ajout pour {country}.",
+            "no_holidays_imported": "Aucun jour férié n'a encore été importé.",
+            "holidays_removed": "{count} jour(s) férié(s) supprimé(s)."
         }
     },
     "entity": {
@@ -163,6 +214,10 @@
             "custom": {
                 "name": "{name}",
                 "unit_of_measurement": "jours"
+            },
+            "holiday": {
+                "name": "{name}",
+                "unit_of_measurement": "jours"
             }
         },
         "calendar": {
@@ -189,6 +244,9 @@
             },
             "custom": {
                 "name": "Événements personnalisés"
+            },
+            "holiday": {
+                "name": "Jours fériés"
             }
         }
     }

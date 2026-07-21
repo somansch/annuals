@@ -10,7 +10,8 @@
                 "memorial": "Memorial",
                 "pet_birthday": "Pet birthday",
                 "work_anniversary": "Work anniversary",
-                "custom": "Custom"
+                "custom": "Custom",
+                "holiday": "Holiday"
             }
         },
         "month": {
@@ -27,6 +28,26 @@
                 "10": "October",
                 "11": "November",
                 "12": "December"
+            }
+        },
+        "holiday_category": {
+            "options": {
+                "public": "Public",
+                "bank": "Bank",
+                "government": "Government",
+                "school": "School",
+                "optional": "Optional",
+                "unofficial": "Unofficial",
+                "half_day": "Half day",
+                "armed_forces": "Armed forces",
+                "workday": "Workday",
+                "catholic": "Catholic",
+                "christian": "Christian",
+                "orthodox": "Orthodox",
+                "hebrew": "Jewish",
+                "islamic": "Islamic",
+                "hindu": "Hindu",
+                "buddhist": "Buddhist"
             }
         }
     },
@@ -96,7 +117,33 @@
                 "menu_options": {
                     "annual_settings": "Annual Settings",
                     "import_csv": "Import events from CSV",
+                    "import_holidays": "Import holidays",
+                    "remove_holidays": "Remove imported holidays",
                     "delete_all": "Delete all Annuals data"
+                }
+            },
+            "import_holidays": {
+                "title": "Import holidays",
+                "description": "Pick a country to import its holidays as events. Re-running this later for the same country (and subdivision) updates the existing entries instead of creating duplicates - safe to repeat if a country adds a new holiday.",
+                "data": {
+                    "country": "Country"
+                }
+            },
+            "import_holidays_options": {
+                "title": "Import holidays - {country}",
+                "description": "Leave the subdivision empty for national holidays only - a state/province adds its own regional holidays on top. Categories and language depend on what this country's holiday data provides. Multi-day categories like school holidays are represented as one event on their first day.",
+                "data": {
+                    "subdivision": "Subdivision (state/province, optional)",
+                    "categories": "Categories",
+                    "language": "Language for holiday names"
+                }
+            },
+            "remove_holidays": {
+                "title": "Remove imported holidays",
+                "description": "{total} holiday event(s) currently imported. Check the box below to remove all of them, or leave it unchecked and pick one batch instead. Manually added events are never affected.",
+                "data": {
+                    "remove_all": "Remove all imported holidays",
+                    "batch": "Batch to remove"
                 }
             },
             "annual_settings": {
@@ -122,12 +169,16 @@
             "name_required": "Please enter a name.",
             "invalid_date": "This day/month/year combination is not a valid date.",
             "invalid_csv": "Could not read this file as CSV. Check the encoding and format.",
-            "no_valid_rows": "No valid rows found in this file. Check the log for details on skipped rows."
+            "no_valid_rows": "No valid rows found in this file. Check the log for details on skipped rows.",
+            "no_batch_selected": "Check \"Remove all imported holidays\", or pick a batch to remove."
         },
         "abort": {
             "hub_not_configurable": "The Annuals hub has no settings of its own - it just holds the shared calendars.",
             "import_started": "Import started: {created} event(s) queued, {skipped} row(s) skipped (see the log for details).",
-            "deleted_all": "All Annuals events, calendars, and the hub have been removed."
+            "deleted_all": "All Annuals events, calendars, and the hub have been removed.",
+            "holiday_import_started": "Import started: {count} holiday event(s) queued for {country}.",
+            "no_holidays_imported": "No holidays have been imported yet.",
+            "holidays_removed": "{count} holiday event(s) removed."
         }
     },
     "entity": {
@@ -163,6 +214,10 @@
             "custom": {
                 "name": "{name}",
                 "unit_of_measurement": "days"
+            },
+            "holiday": {
+                "name": "{name}",
+                "unit_of_measurement": "days"
             }
         },
         "calendar": {
@@ -189,6 +244,9 @@
             },
             "custom": {
                 "name": "Custom events"
+            },
+            "holiday": {
+                "name": "Holidays"
             }
         }
     }

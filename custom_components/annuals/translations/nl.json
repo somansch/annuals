@@ -10,7 +10,8 @@
                 "memorial": "Sterfdag",
                 "pet_birthday": "Verjaardag huisdier",
                 "work_anniversary": "Werkjubileum",
-                "custom": "Aangepast"
+                "custom": "Aangepast",
+                "holiday": "Feestdag"
             }
         },
         "month": {
@@ -27,6 +28,26 @@
                 "10": "oktober",
                 "11": "november",
                 "12": "december"
+            }
+        },
+        "holiday_category": {
+            "options": {
+                "public": "Officieel",
+                "bank": "Bankfeestdag",
+                "government": "Overheid",
+                "school": "Schoolvakantie",
+                "optional": "Optioneel",
+                "unofficial": "Niet-officieel",
+                "half_day": "Halve dag",
+                "armed_forces": "Krijgsmacht",
+                "workday": "Werkdag",
+                "catholic": "Katholiek",
+                "christian": "Christelijk",
+                "orthodox": "Orthodox",
+                "hebrew": "Joods",
+                "islamic": "Islamitisch",
+                "hindu": "Hindoeïstisch",
+                "buddhist": "Boeddhistisch"
             }
         }
     },
@@ -96,7 +117,33 @@
                 "menu_options": {
                     "annual_settings": "Annual Instellingen",
                     "import_csv": "Evenementen importeren vanuit CSV",
+                    "import_holidays": "Feestdagen importeren",
+                    "remove_holidays": "Geïmporteerde feestdagen verwijderen",
                     "delete_all": "Alle Annuals-gegevens verwijderen"
+                }
+            },
+            "import_holidays": {
+                "title": "Feestdagen importeren",
+                "description": "Kies een land om de feestdagen ervan als evenementen te importeren. Dit later opnieuw uitvoeren voor hetzelfde land (en dezelfde subdivisie) werkt bestaande items bij in plaats van ze te dupliceren - veilig om te herhalen als een land een nieuwe feestdag toevoegt.",
+                "data": {
+                    "country": "Land"
+                }
+            },
+            "import_holidays_options": {
+                "title": "Feestdagen importeren - {country}",
+                "description": "Laat de subdivisie leeg voor alleen landelijke feestdagen - een provincie voegt eigen regionale feestdagen toe. Categorieën en taal hangen af van wat de feestdaggegevens van dit land bieden. Meerdaagse categorieën zoals schoolvakanties worden weergegeven als één evenement op de eerste dag.",
+                "data": {
+                    "subdivision": "Subdivisie (provincie, optioneel)",
+                    "categories": "Categorieën",
+                    "language": "Taal voor feestdagnamen"
+                }
+            },
+            "remove_holidays": {
+                "title": "Geïmporteerde feestdagen verwijderen",
+                "description": "{total} feestdag(en) momenteel geïmporteerd. Vink het vakje hieronder aan om ze allemaal te verwijderen, of laat het uitgevinkt en kies in plaats daarvan een batch. Handmatig toegevoegde evenementen worden nooit beïnvloed.",
+                "data": {
+                    "remove_all": "Alle geïmporteerde feestdagen verwijderen",
+                    "batch": "Batch om te verwijderen"
                 }
             },
             "annual_settings": {
@@ -122,12 +169,16 @@
             "name_required": "Voer een naam in.",
             "invalid_date": "Deze combinatie van dag/maand/jaar is geen geldige datum.",
             "invalid_csv": "Dit bestand kon niet als CSV worden gelezen. Controleer de codering en indeling.",
-            "no_valid_rows": "Geen geldige rijen gevonden in dit bestand. Bekijk het logboek voor details over overgeslagen rijen."
+            "no_valid_rows": "Geen geldige rijen gevonden in dit bestand. Bekijk het logboek voor details over overgeslagen rijen.",
+            "no_batch_selected": "Vink „Alle geïmporteerde feestdagen verwijderen” aan, of kies een batch."
         },
         "abort": {
             "hub_not_configurable": "De Annuals-hub heeft geen eigen instellingen - hij bevat alleen de gedeelde kalenders.",
             "import_started": "Import gestart: {created} evenement(en) in de wachtrij, {skipped} rij(en) overgeslagen (zie het logboek voor details).",
-            "deleted_all": "Alle Annuals-evenementen, kalenders en de hub zijn verwijderd."
+            "deleted_all": "Alle Annuals-evenementen, kalenders en de hub zijn verwijderd.",
+            "holiday_import_started": "Import gestart: {count} feestdag(en) in de wachtrij voor {country}.",
+            "no_holidays_imported": "Er zijn nog geen feestdagen geïmporteerd.",
+            "holidays_removed": "{count} feestdag(en) verwijderd."
         }
     },
     "entity": {
@@ -163,6 +214,10 @@
             "custom": {
                 "name": "{name}",
                 "unit_of_measurement": "dagen"
+            },
+            "holiday": {
+                "name": "{name}",
+                "unit_of_measurement": "dagen"
             }
         },
         "calendar": {
@@ -189,6 +244,9 @@
             },
             "custom": {
                 "name": "Aangepaste evenementen"
+            },
+            "holiday": {
+                "name": "Feestdagen"
             }
         }
     }

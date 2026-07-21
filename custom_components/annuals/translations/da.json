@@ -10,7 +10,8 @@
                 "memorial": "Mindedag",
                 "pet_birthday": "Kæledyrs fødselsdag",
                 "work_anniversary": "Jubilæum på arbejdet",
-                "custom": "Tilpasset"
+                "custom": "Tilpasset",
+                "holiday": "Helligdag"
             }
         },
         "month": {
@@ -27,6 +28,26 @@
                 "10": "oktober",
                 "11": "november",
                 "12": "december"
+            }
+        },
+        "holiday_category": {
+            "options": {
+                "public": "Offentlig",
+                "bank": "Bankfridag",
+                "government": "Myndigheder",
+                "school": "Skoleferie",
+                "optional": "Valgfri",
+                "unofficial": "Uofficiel",
+                "half_day": "Halv dag",
+                "armed_forces": "Forsvaret",
+                "workday": "Hverdag",
+                "catholic": "Katolsk",
+                "christian": "Kristen",
+                "orthodox": "Ortodoks",
+                "hebrew": "Jødisk",
+                "islamic": "Islamisk",
+                "hindu": "Hinduistisk",
+                "buddhist": "Buddhistisk"
             }
         }
     },
@@ -96,7 +117,33 @@
                 "menu_options": {
                     "annual_settings": "Annual Indstillinger",
                     "import_csv": "Importer begivenheder fra CSV",
+                    "import_holidays": "Importer helligdage",
+                    "remove_holidays": "Fjern importerede helligdage",
                     "delete_all": "Slet alle Annuals-data"
+                }
+            },
+            "import_holidays": {
+                "title": "Importer helligdage",
+                "description": "Vælg et land for at importere dets helligdage som begivenheder. At køre dette igen senere for samme land (og delregion) opdaterer eksisterende poster i stedet for at duplikere dem - trygt at gentage, hvis et land tilføjer en ny helligdag.",
+                "data": {
+                    "country": "Land"
+                }
+            },
+            "import_holidays_options": {
+                "title": "Importer helligdage - {country}",
+                "description": "Lad delregionen stå tom for kun landsdækkende helligdage - en region/provins tilføjer sine egne regionale helligdage. Kategorier og sprog afhænger af, hvad dette lands helligdagsdata tilbyder. Flerdagskategorier som skoleferie repræsenteres som én begivenhed på den første dag.",
+                "data": {
+                    "subdivision": "Delregion (region/provins, valgfrit)",
+                    "categories": "Kategorier",
+                    "language": "Sprog for helligdagsnavne"
+                }
+            },
+            "remove_holidays": {
+                "title": "Fjern importerede helligdage",
+                "description": "{total} helligdag(e) er i øjeblikket importeret. Markér feltet nedenfor for at fjerne dem alle, eller lad det stå umarkeret og vælg i stedet en gruppe. Manuelt tilføjede begivenheder påvirkes aldrig.",
+                "data": {
+                    "remove_all": "Fjern alle importerede helligdage",
+                    "batch": "Gruppe der skal fjernes"
                 }
             },
             "annual_settings": {
@@ -122,12 +169,16 @@
             "name_required": "Angiv et navn.",
             "invalid_date": "Denne kombination af dag/måned/år er ikke en gyldig dato.",
             "invalid_csv": "Kunne ikke læse denne fil som CSV. Tjek kodning og format.",
-            "no_valid_rows": "Ingen gyldige rækker fundet i denne fil. Se loggen for detaljer om sprungede rækker."
+            "no_valid_rows": "Ingen gyldige rækker fundet i denne fil. Se loggen for detaljer om sprungede rækker.",
+            "no_batch_selected": "Markér \"Fjern alle importerede helligdage\", eller vælg en gruppe."
         },
         "abort": {
             "hub_not_configurable": "Annuals-hubben har ingen egne indstillinger - den indeholder kun de delte kalendere.",
             "import_started": "Import startet: {created} begivenhed(er) i kø, {skipped} række(r) sprunget over (se loggen for detaljer).",
-            "deleted_all": "Alle Annuals-begivenheder, kalendere og hubben er fjernet."
+            "deleted_all": "Alle Annuals-begivenheder, kalendere og hubben er fjernet.",
+            "holiday_import_started": "Import startet: {count} helligdag(e) sat i kø for {country}.",
+            "no_holidays_imported": "Der er endnu ikke importeret nogen helligdage.",
+            "holidays_removed": "{count} helligdag(e) fjernet."
         }
     },
     "entity": {
@@ -163,6 +214,10 @@
             "custom": {
                 "name": "{name}",
                 "unit_of_measurement": "dage"
+            },
+            "holiday": {
+                "name": "{name}",
+                "unit_of_measurement": "dage"
             }
         },
         "calendar": {
@@ -189,6 +244,9 @@
             },
             "custom": {
                 "name": "Tilpassede begivenheder"
+            },
+            "holiday": {
+                "name": "Helligdage"
             }
         }
     }

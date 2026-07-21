@@ -10,7 +10,8 @@
                 "memorial": "Dödsdag",
                 "pet_birthday": "Husdjurets födelsedag",
                 "work_anniversary": "Arbetsjubileum",
-                "custom": "Anpassad"
+                "custom": "Anpassad",
+                "holiday": "Helgdag"
             }
         },
         "month": {
@@ -27,6 +28,26 @@
                 "10": "oktober",
                 "11": "november",
                 "12": "december"
+            }
+        },
+        "holiday_category": {
+            "options": {
+                "public": "Allmän",
+                "bank": "Bankfridag",
+                "government": "Myndighet",
+                "school": "Skollov",
+                "optional": "Valfri",
+                "unofficial": "Inofficiell",
+                "half_day": "Halvdag",
+                "armed_forces": "Försvarsmakten",
+                "workday": "Arbetsdag",
+                "catholic": "Katolsk",
+                "christian": "Kristen",
+                "orthodox": "Ortodox",
+                "hebrew": "Judisk",
+                "islamic": "Islamisk",
+                "hindu": "Hinduisk",
+                "buddhist": "Buddhistisk"
             }
         }
     },
@@ -96,7 +117,33 @@
                 "menu_options": {
                     "annual_settings": "Annual Inställningar",
                     "import_csv": "Importera händelser från CSV",
+                    "import_holidays": "Importera helgdagar",
+                    "remove_holidays": "Ta bort importerade helgdagar",
                     "delete_all": "Ta bort all Annuals-data"
+                }
+            },
+            "import_holidays": {
+                "title": "Importera helgdagar",
+                "description": "Välj ett land för att importera dess helgdagar som händelser. Att köra detta igen senare för samma land (och delregion) uppdaterar befintliga poster i stället för att duplicera dem - säkert att upprepa om ett land lägger till en ny helgdag.",
+                "data": {
+                    "country": "Land"
+                }
+            },
+            "import_holidays_options": {
+                "title": "Importera helgdagar - {country}",
+                "description": "Lämna delregionen tom för endast nationella helgdagar - ett län/provins lägger till sina egna regionala helgdagar. Kategorier och språk beror på vad detta lands helgdagsdata tillhandahåller. Flerdagskategorier som skollov representeras som en händelse på den första dagen.",
+                "data": {
+                    "subdivision": "Delregion (län/provins, valfritt)",
+                    "categories": "Kategorier",
+                    "language": "Språk för helgdagsnamn"
+                }
+            },
+            "remove_holidays": {
+                "title": "Ta bort importerade helgdagar",
+                "description": "{total} helgdag(ar) för närvarande importerade. Markera kryssrutan nedan för att ta bort alla, eller lämna den omarkerad och välj en grupp i stället. Manuellt tillagda händelser påverkas aldrig.",
+                "data": {
+                    "remove_all": "Ta bort alla importerade helgdagar",
+                    "batch": "Grupp att ta bort"
                 }
             },
             "annual_settings": {
@@ -122,12 +169,16 @@
             "name_required": "Ange ett namn.",
             "invalid_date": "Den här kombinationen av dag/månad/år är inte ett giltigt datum.",
             "invalid_csv": "Kunde inte läsa den här filen som CSV. Kontrollera kodning och format.",
-            "no_valid_rows": "Inga giltiga rader hittades i den här filen. Se loggen för detaljer om överhoppade rader."
+            "no_valid_rows": "Inga giltiga rader hittades i den här filen. Se loggen för detaljer om överhoppade rader.",
+            "no_batch_selected": "Markera \"Ta bort alla importerade helgdagar\", eller välj en grupp."
         },
         "abort": {
             "hub_not_configurable": "Annuals-huben har inga egna inställningar - den innehåller bara de delade kalendrarna.",
             "import_started": "Import startad: {created} händelse(r) i kö, {skipped} rad(er) överhoppade (se loggen för detaljer).",
-            "deleted_all": "Alla Annuals-händelser, kalendrar och huben har tagits bort."
+            "deleted_all": "Alla Annuals-händelser, kalendrar och huben har tagits bort.",
+            "holiday_import_started": "Import startad: {count} helgdag(ar) i kö för {country}.",
+            "no_holidays_imported": "Inga helgdagar har importerats än.",
+            "holidays_removed": "{count} helgdag(ar) borttagna."
         }
     },
     "entity": {
@@ -163,6 +214,10 @@
             "custom": {
                 "name": "{name}",
                 "unit_of_measurement": "dagar"
+            },
+            "holiday": {
+                "name": "{name}",
+                "unit_of_measurement": "dagar"
             }
         },
         "calendar": {
@@ -189,6 +244,9 @@
             },
             "custom": {
                 "name": "Anpassade händelser"
+            },
+            "holiday": {
+                "name": "Helgdagar"
             }
         }
     }

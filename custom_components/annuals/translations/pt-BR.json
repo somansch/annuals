@@ -10,7 +10,8 @@
                 "memorial": "Aniversário de falecimento",
                 "pet_birthday": "Aniversário de animal de estimação",
                 "work_anniversary": "Aniversário de trabalho",
-                "custom": "Personalizado"
+                "custom": "Personalizado",
+                "holiday": "Feriado"
             }
         },
         "month": {
@@ -27,6 +28,26 @@
                 "10": "outubro",
                 "11": "novembro",
                 "12": "dezembro"
+            }
+        },
+        "holiday_category": {
+            "options": {
+                "public": "Oficial",
+                "bank": "Bancário",
+                "government": "Administração pública",
+                "school": "Férias escolares",
+                "optional": "Opcional",
+                "unofficial": "Não oficial",
+                "half_day": "Meio período",
+                "armed_forces": "Forças armadas",
+                "workday": "Dia útil",
+                "catholic": "Católico",
+                "christian": "Cristão",
+                "orthodox": "Ortodoxo",
+                "hebrew": "Judaico",
+                "islamic": "Islâmico",
+                "hindu": "Hindu",
+                "buddhist": "Budista"
             }
         }
     },
@@ -96,7 +117,33 @@
                 "menu_options": {
                     "annual_settings": "Annual Configurações",
                     "import_csv": "Importar eventos de um CSV",
+                    "import_holidays": "Importar feriados",
+                    "remove_holidays": "Remover feriados importados",
                     "delete_all": "Excluir todos os dados do Annuals"
+                }
+            },
+            "import_holidays": {
+                "title": "Importar feriados",
+                "description": "Escolha um país para importar seus feriados como eventos. Executar isso novamente depois para o mesmo país (e subdivisão) atualiza as entradas existentes em vez de duplicá-las - seguro de repetir se um país adicionar um novo feriado.",
+                "data": {
+                    "country": "País"
+                }
+            },
+            "import_holidays_options": {
+                "title": "Importar feriados - {country}",
+                "description": "Deixe a subdivisão vazia para apenas feriados nacionais - um estado/província adiciona seus próprios feriados regionais. Categorias e idioma dependem do que os dados de feriados desse país fornecem. Categorias de vários dias, como férias escolares, são representadas como um evento no primeiro dia.",
+                "data": {
+                    "subdivision": "Subdivisão (estado/província, opcional)",
+                    "categories": "Categorias",
+                    "language": "Idioma dos nomes dos feriados"
+                }
+            },
+            "remove_holidays": {
+                "title": "Remover feriados importados",
+                "description": "{total} feriado(s) atualmente importado(s). Marque a caixa abaixo para removê-los todos, ou deixe-a desmarcada e escolha um lote em vez disso. Eventos adicionados manualmente nunca são afetados.",
+                "data": {
+                    "remove_all": "Remover todos os feriados importados",
+                    "batch": "Lote a remover"
                 }
             },
             "annual_settings": {
@@ -122,12 +169,16 @@
             "name_required": "Informe um nome.",
             "invalid_date": "Essa combinação de dia/mês/ano não é uma data válida.",
             "invalid_csv": "Não foi possível ler este arquivo como CSV. Verifique a codificação e o formato.",
-            "no_valid_rows": "Nenhuma linha válida encontrada neste arquivo. Consulte o log para detalhes das linhas ignoradas."
+            "no_valid_rows": "Nenhuma linha válida encontrada neste arquivo. Consulte o log para detalhes das linhas ignoradas.",
+            "no_batch_selected": "Marque \"Remover todos os feriados importados\" ou escolha um lote."
         },
         "abort": {
             "hub_not_configurable": "O hub do Annuals não tem configurações próprias - ele apenas mantém os calendários compartilhados.",
             "import_started": "Importação iniciada: {created} evento(s) na fila, {skipped} linha(s) ignorada(s) (veja o log para detalhes).",
-            "deleted_all": "Todos os eventos, calendários e o hub do Annuals foram removidos."
+            "deleted_all": "Todos os eventos, calendários e o hub do Annuals foram removidos.",
+            "holiday_import_started": "Importação iniciada: {count} feriado(s) na fila para {country}.",
+            "no_holidays_imported": "Nenhum feriado foi importado ainda.",
+            "holidays_removed": "{count} feriado(s) removido(s)."
         }
     },
     "entity": {
@@ -163,6 +214,10 @@
             "custom": {
                 "name": "{name}",
                 "unit_of_measurement": "dias"
+            },
+            "holiday": {
+                "name": "{name}",
+                "unit_of_measurement": "dias"
             }
         },
         "calendar": {
@@ -189,6 +244,9 @@
             },
             "custom": {
                 "name": "Eventos personalizados"
+            },
+            "holiday": {
+                "name": "Feriados"
             }
         }
     }

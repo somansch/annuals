@@ -13,11 +13,12 @@ Keeping track of birthdays, anniversaries, and other yearly dates usually means 
 Typical reasons to use it:
 - **Never miss a birthday or anniversary again** - get a notification the morning of, or a heads-up a week before a milestone, using your existing notification setup (mobile app, Alexa, TTS, whatever you already have).
 - **Know at a glance which occurrence it is** - "Anna turns 30" instead of just "Anna's birthday", computed automatically from the year you entered once.
-- **Track more than birthdays** - name days, wedding anniversaries, memorials, pet birthdays, work anniversaries, or anything custom, each with its own icon and aggregate calendar.
+- **Track more than birthdays** - holidays, name days, wedding anniversaries, memorials, pet birthdays, work anniversaries, or anything custom, each with its own icon and aggregate calendar.
+- **Import a whole country's public holidays** in a few clicks, categorized (public, bank, school breaks, religious, ...) and kept up to date on re-import.
 - **Highlight the ones that matter most** - flag close family as **VIP** so they always stand out, and let round-number milestones (18th, 30th, 50th, ...) mark themselves as **Important** automatically, both on the bundled dashboard card and in your own automations.
 - **Bring in a whole contact list at once** via CSV import, instead of adding entries one by one.
 
-Annuals tracks yearly-recurring events - birthdays, anniversaries, name days, wedding anniversaries, memorials, or anything custom - and reports, for each one, how many days until its next occurrence and which occurrence number that will be (e.g. someone's 30th birthday).
+Annuals tracks yearly-recurring events - birthdays, holidays, anniversaries, name days, wedding anniversaries, memorials, or anything custom - and reports, for each one, how many days until its next occurrence and which occurrence number that will be (e.g. someone's 30th birthday).
 
 **Architecture note:** each event is its own config entry, the same pattern Home Assistant uses for "helper"-style integrations (Generic Thermostat, Threshold, Derivative, ...). This means finding and editing a specific event later doesn't need a custom picker inside this integration - **Settings → Devices & Services** already has a search box, and clicking an entry's **Configure** opens that one event's form pre-filled, ready to edit.
 
@@ -49,6 +50,8 @@ The first time you go to **Settings → Devices & Services → Add Integration �
 | Work anniversary | `mdi:briefcase` |
 | Custom | `mdi:calendar-heart` |
 
+There's a 9th type, **Holiday**, but it isn't offered in this form - it has no single day/month/year of its own (a public holiday's date shifts by country and year), so it's only ever created via [Importing public holidays](#importing-public-holidays) below.
+
 To edit or remove an event afterwards, find its entry under **Settings → Devices & Services → Annuals**, and use **Configure** (edit) or the "⋮" menu (delete).
 
 ### Leap years
@@ -63,7 +66,7 @@ Concretely:
 
 This is a deliberate design choice: it guarantees an occurrence every year (not just once every four years), and `occurrence_number` (e.g. "turning 30") still counts correctly, since it's simply computed as target year - birth year, independent of the exact day.
 
-## Important annual (automatic milestones)
+### Important annual (automatic milestones)
 
 Beyond the manual VIP flag, Annuals can automatically mark an event as **Important** based on its upcoming occurrence number - e.g. a 18th, 30th, or 50th birthday, or a 25th wedding anniversary. This is computed per event type from a list of milestone occurrence numbers, editable under **Settings → Devices & Services → Annuals → "Annuals Settings" hub entry → Configure → Annual Settings**.
 
@@ -118,6 +121,34 @@ Acme Corp,work_anniversary,1,7,2015,,
 Test Custom,custom,1,1,,mdi:test-tube,1
 ```
 
+## Importing public holidays
+
+Find the **"Annuals Settings" hub entry** under **Settings → Devices & Services → Annuals** and click **Configure** - this opens a menu with "Import holidays". Annuals uses the [`holidays`](https://pypi.org/project/holidays/) Python library - already a dependency of this integration, not a separate download - which covers **250+ countries and territories and 150+ languages** for holiday names, so most countries' holidays are available out of the box.
+
+The wizard is two steps:
+
+1. **Country** - pick from the full list the `holidays` library supports.
+2. For that country: an optional **state/province** (leave empty for national holidays only; picking one adds that region's own holidays on top), **categories** (which ones are offered depends entirely on what that country's holiday data provides - e.g. `public`, `bank`, `school`, `catholic` - see the table below), and **language** for the holiday names (also country-dependent).
+
+| Category | Meaning |
+|---|---|
+| Public | Statutory/legal national holidays |
+| Bank | Bank holidays specifically |
+| Government | Government/administrative offices closed |
+| School | School holidays/breaks (often multi-day, e.g. summer break) |
+| Optional | Optional/discretionary holidays |
+| Unofficial | Observed but not legally mandated |
+| Half day | Half-day holiday |
+| Armed forces | Military-specific observances |
+| Workday | A working day despite falling near a holiday (make-up day) |
+| Catholic / Christian / Orthodox / Jewish / Islamic / Hindu / Buddhist | Religious observances |
+
+A multi-day category like school holidays (e.g. a 6-week summer break) is imported as a single event on its first day, not one event per day.
+
+Re-running the wizard later for the same country (and subdivision) updates the existing imported events instead of creating duplicates - safe to repeat if a country adds a new holiday or you want to refresh the list for a new year.
+
+To remove imported holidays again, use **"Annuals Settings" hub entry → Configure → Remove imported holidays** - pick one previously-imported batch (grouped by country/subdivision) to remove, or check the box to remove all of them at once. Manually added events (and events of any other type) are never touched by this.
+
 ### Deleting everything
 
 **"Annuals Settings" hub entry → Configure → Delete all Annuals data.** Permanently removes every event entry, the shared calendars, and the hub itself - the entire integration and everything it created. Requires confirming a warning screen before anything is deleted; this cannot be undone.
@@ -129,20 +160,21 @@ Each event you add is its own config entry, titled `<Type>: <Name>` (e.g. "Birth
 | Entity | Description |
 |---|---|
 | `sensor.annuals_<type>_<name>` | One per event. State is the number of days until its next occurrence; the display name is the translated, type-prefixed event name (e.g. "Birthday Anna"). The `<type>` in the entity_id keeps two events sharing a name (e.g. a birthday and a wedding anniversary) from colliding, and applies to every type including "Custom". |
-| `calendar.annuals_<type>` | One per event *type* (eight total), named in the plural (e.g. "Birthdays"), aggregating every event of that type across all your entries - open it from the built-in Calendar dashboard. |
+| `calendar.annuals_<type>` | One per event *type* (nine total, including Holiday), named in the plural (e.g. "Birthdays"), aggregating every event of that type across all your entries - open it from the built-in Calendar dashboard. |
 
 Attributes on each event's sensor:
 
 | Attribute | Description |
 |---|---|
 | `state` | Days until the next occurrence. |
-| `type` | One of `birthday`, `anniversary`, `name_day`, `wedding_anniversary`, `memorial`, `pet_birthday`, `work_anniversary`, `custom`. |
+| `type` | One of `birthday`, `anniversary`, `name_day`, `wedding_anniversary`, `memorial`, `pet_birthday`, `work_anniversary`, `custom`, `holiday`. |
 | `name` | The plain name as entered (e.g. "Anna"), without the type prefix baked into the entity's display name - handy for building sentences on a dashboard. |
 | `next_date` | Date (ISO format) of the next occurrence. |
-| `occurrence_number` | Which occurrence the next date will be (e.g. `30` for a 30th birthday) - `null` when no year was entered. |
-| `day`, `month`, `year` | The event's date as entered (`year` is `null` when unknown). |
+| `occurrence_number` | Which occurrence the next date will be (e.g. `30` for a 30th birthday) - `null` when no year was entered. Always `null` for `holiday` events. |
+| `day`, `month`, `year` | The event's date as entered (`year` is `null` when unknown). Not applicable to `holiday` events - see `next_date` instead, since a public holiday's date shifts by year. |
 | `vip` | `true` if the **VIP annual** flag is set on this event, `false` otherwise. |
 | `important` | `true` if the upcoming occurrence number matches one of that type's milestones in [Annual Settings](#important-annual-automatic-milestones), `false` otherwise (always `false` when no year was entered, since there's no occurrence number to check). |
+| `category`, `country`, `subdivision` | `holiday` events only - the imported holiday's category (see [Importing public holidays](#importing-public-holidays)), country code, and subdivision code (empty if none was chosen). `null`/absent on every other type. |
 
 Attributes on each per-type calendar (standard Home Assistant calendar entity attributes, reflecting whichever event is current or comes up next for that type):
 
@@ -309,6 +341,7 @@ days_ahead: 0
 days_past: 0
 soon_days: 7
 types: []
+categories: []
 show_past: true
 show_today: true
 show_soon: true
@@ -317,7 +350,9 @@ highlight_today: true
 highlight_soon: false
 show_icon: true
 show_name: true
+show_name_country: false
 show_subtitle: true
+show_subtitle_country: false
 show_badge: true
 show_when: true
 show_vip_badge: true
@@ -346,6 +381,7 @@ types:
   - pet_birthday
   - work_anniversary
   - custom
+categories: []
 show_past: true
 show_today: true
 show_soon: true

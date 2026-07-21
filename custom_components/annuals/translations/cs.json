@@ -10,7 +10,8 @@
                 "memorial": "Výročí úmrtí",
                 "pet_birthday": "Narozeniny mazlíčka",
                 "work_anniversary": "Pracovní výročí",
-                "custom": "Vlastní"
+                "custom": "Vlastní",
+                "holiday": "Svátek"
             }
         },
         "month": {
@@ -27,6 +28,26 @@
                 "10": "říjen",
                 "11": "listopad",
                 "12": "prosinec"
+            }
+        },
+        "holiday_category": {
+            "options": {
+                "public": "Státní svátek",
+                "bank": "Bankovní",
+                "government": "Úřady",
+                "school": "Školní prázdniny",
+                "optional": "Volitelný",
+                "unofficial": "Neoficiální",
+                "half_day": "Půlden",
+                "armed_forces": "Ozbrojené síly",
+                "workday": "Pracovní den",
+                "catholic": "Katolický",
+                "christian": "Křesťanský",
+                "orthodox": "Pravoslavný",
+                "hebrew": "Židovský",
+                "islamic": "Islámský",
+                "hindu": "Hinduistický",
+                "buddhist": "Buddhistický"
             }
         }
     },
@@ -96,7 +117,33 @@
                 "menu_options": {
                     "annual_settings": "Annual Nastavení",
                     "import_csv": "Import událostí z CSV",
+                    "import_holidays": "Import svátků",
+                    "remove_holidays": "Odstranit importované svátky",
                     "delete_all": "Smazat všechna data Annuals"
+                }
+            },
+            "import_holidays": {
+                "title": "Import svátků",
+                "description": "Vyberte zemi pro import jejích svátků jako událostí. Opětovné spuštění později pro stejnou zemi (a oblast) aktualizuje existující záznamy místo vytváření duplicit - lze bezpečně opakovat, pokud země přidá nový svátek.",
+                "data": {
+                    "country": "Země"
+                }
+            },
+            "import_holidays_options": {
+                "title": "Import svátků - {country}",
+                "description": "Ponechte oblast prázdnou pro pouze celostátní svátky - kraj/provincie přidá své vlastní regionální svátky. Kategorie a jazyk závisí na tom, co poskytují data o svátcích dané země. Vícedenní kategorie, jako jsou školní prázdniny, jsou reprezentovány jako jedna událost v jejich první den.",
+                "data": {
+                    "subdivision": "Oblast (kraj/provincie, volitelné)",
+                    "categories": "Kategorie",
+                    "language": "Jazyk názvů svátků"
+                }
+            },
+            "remove_holidays": {
+                "title": "Odstranit importované svátky",
+                "description": "Aktuálně importováno svátků: {total}. Zaškrtnutím pole níže odstraníte všechny, nebo jej ponechte nezaškrtnuté a vyberte místo toho dávku. Ručně přidané události nejsou nikdy ovlivněny.",
+                "data": {
+                    "remove_all": "Odstranit všechny importované svátky",
+                    "batch": "Dávka k odstranění"
                 }
             },
             "annual_settings": {
@@ -122,12 +169,16 @@
             "name_required": "Zadejte jméno.",
             "invalid_date": "Tato kombinace den/měsíc/rok není platné datum.",
             "invalid_csv": "Tento soubor se nepodařilo přečíst jako CSV. Zkontrolujte kódování a formát.",
-            "no_valid_rows": "V tomto souboru nebyly nalezeny žádné platné řádky. Podrobnosti o přeskočených řádcích najdete v protokolu."
+            "no_valid_rows": "V tomto souboru nebyly nalezeny žádné platné řádky. Podrobnosti o přeskočených řádcích najdete v protokolu.",
+            "no_batch_selected": "Zaškrtněte „Odstranit všechny importované svátky“, nebo vyberte dávku."
         },
         "abort": {
             "hub_not_configurable": "Hub Annuals nemá vlastní nastavení – obsahuje pouze sdílené kalendáře.",
             "import_started": "Import zahájen: {created} událostí zařazeno do fronty, {skipped} řádků přeskočeno (podrobnosti v protokolu).",
-            "deleted_all": "Všechny události, kalendáře a hub Annuals byly odstraněny."
+            "deleted_all": "Všechny události, kalendáře a hub Annuals byly odstraněny.",
+            "holiday_import_started": "Import zahájen: {count} svátků zařazeno do fronty pro {country}.",
+            "no_holidays_imported": "Zatím nebyly importovány žádné svátky.",
+            "holidays_removed": "Odstraněno {count} svátků."
         }
     },
     "entity": {
@@ -163,6 +214,10 @@
             "custom": {
                 "name": "{name}",
                 "unit_of_measurement": "dní"
+            },
+            "holiday": {
+                "name": "{name}",
+                "unit_of_measurement": "dní"
             }
         },
         "calendar": {
@@ -189,6 +244,9 @@
             },
             "custom": {
                 "name": "Vlastní události"
+            },
+            "holiday": {
+                "name": "Svátky"
             }
         }
     }

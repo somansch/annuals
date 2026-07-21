@@ -10,7 +10,8 @@
                 "memorial": "Ölüm yıl dönümü",
                 "pet_birthday": "Evcil hayvan doğum günü",
                 "work_anniversary": "İş yıl dönümü",
-                "custom": "Özel"
+                "custom": "Özel",
+                "holiday": "Tatil"
             }
         },
         "month": {
@@ -27,6 +28,26 @@
                 "10": "Ekim",
                 "11": "Kasım",
                 "12": "Aralık"
+            }
+        },
+        "holiday_category": {
+            "options": {
+                "public": "Resmi tatil",
+                "bank": "Banka tatili",
+                "government": "Kamu kurumları",
+                "school": "Okul tatili",
+                "optional": "İsteğe bağlı",
+                "unofficial": "Gayri resmi",
+                "half_day": "Yarım gün",
+                "armed_forces": "Silahlı kuvvetler",
+                "workday": "İş günü",
+                "catholic": "Katolik",
+                "christian": "Hristiyan",
+                "orthodox": "Ortodoks",
+                "hebrew": "Yahudi",
+                "islamic": "İslami",
+                "hindu": "Hindu",
+                "buddhist": "Budist"
             }
         }
     },
@@ -96,7 +117,33 @@
                 "menu_options": {
                     "annual_settings": "Annual Ayarları",
                     "import_csv": "CSV'den etkinlik içe aktar",
+                    "import_holidays": "Tatilleri içe aktar",
+                    "remove_holidays": "İçe aktarılan tatilleri kaldır",
                     "delete_all": "Tüm Annuals verilerini sil"
+                }
+            },
+            "import_holidays": {
+                "title": "Tatilleri içe aktar",
+                "description": "Tatillerini etkinlik olarak içe aktarmak için bir ülke seçin. Bunu daha sonra aynı ülke (ve alt bölge) için tekrar çalıştırmak, kopya oluşturmak yerine mevcut girişleri günceller - bir ülke yeni bir tatil eklerse tekrarlamak güvenlidir.",
+                "data": {
+                    "country": "Ülke"
+                }
+            },
+            "import_holidays_options": {
+                "title": "Tatilleri içe aktar - {country}",
+                "description": "Yalnızca ulusal tatiller için alt bölgeyi boş bırakın - bir eyalet/il kendi bölgesel tatillerini ekler. Kategoriler ve dil, bu ülkenin tatil verilerinin sağladığı şeye bağlıdır. Okul tatili gibi çok günlü kategoriler, ilk günlerinde tek bir etkinlik olarak temsil edilir.",
+                "data": {
+                    "subdivision": "Alt bölge (eyalet/il, isteğe bağlı)",
+                    "categories": "Kategoriler",
+                    "language": "Tatil adları için dil"
+                }
+            },
+            "remove_holidays": {
+                "title": "İçe aktarılan tatilleri kaldır",
+                "description": "Şu anda {total} tatil içe aktarılmış durumda. Hepsini kaldırmak için aşağıdaki kutuyu işaretleyin veya işaretlemeyip bunun yerine bir grup seçin. Manuel olarak eklenen etkinlikler asla etkilenmez.",
+                "data": {
+                    "remove_all": "Tüm içe aktarılan tatilleri kaldır",
+                    "batch": "Kaldırılacak grup"
                 }
             },
             "annual_settings": {
@@ -122,12 +169,16 @@
             "name_required": "Lütfen bir ad girin.",
             "invalid_date": "Bu gün/ay/yıl kombinasyonu geçerli bir tarih değil.",
             "invalid_csv": "Bu dosya CSV olarak okunamadı. Kodlamayı ve biçimi kontrol edin.",
-            "no_valid_rows": "Bu dosyada geçerli satır bulunamadı. Atlanan satırların ayrıntıları için günlüğe bakın."
+            "no_valid_rows": "Bu dosyada geçerli satır bulunamadı. Atlanan satırların ayrıntıları için günlüğe bakın.",
+            "no_batch_selected": "\"Tüm içe aktarılan tatilleri kaldır\" seçeneğini işaretleyin veya bir grup seçin."
         },
         "abort": {
             "hub_not_configurable": "Annuals merkezinin kendine ait ayarları yoktur - yalnızca paylaşılan takvimleri içerir.",
             "import_started": "İçe aktarma başladı: {created} etkinlik kuyruğa alındı, {skipped} satır atlandı (ayrıntılar için günlüğe bakın).",
-            "deleted_all": "Tüm Annuals etkinlikleri, takvimleri ve merkezi kaldırıldı."
+            "deleted_all": "Tüm Annuals etkinlikleri, takvimleri ve merkezi kaldırıldı.",
+            "holiday_import_started": "İçe aktarma başladı: {country} için {count} tatil kuyruğa alındı.",
+            "no_holidays_imported": "Henüz hiç tatil içe aktarılmadı.",
+            "holidays_removed": "{count} tatil kaldırıldı."
         }
     },
     "entity": {
@@ -163,6 +214,10 @@
             "custom": {
                 "name": "{name}",
                 "unit_of_measurement": "gün"
+            },
+            "holiday": {
+                "name": "{name}",
+                "unit_of_measurement": "gün"
             }
         },
         "calendar": {
@@ -189,6 +244,9 @@
             },
             "custom": {
                 "name": "Özel etkinlikler"
+            },
+            "holiday": {
+                "name": "Tatiller"
             }
         }
     }

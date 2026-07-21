@@ -11,22 +11,37 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import slugify
 
 from .const import (
+    CATEGORY_ICONS,
+    CONF_CATEGORY,
+    CONF_COUNTRY,
     CONF_DAY,
     CONF_EVENT_NAME,
     CONF_EVENT_TYPE,
+    CONF_HOLIDAY_KEY,
     CONF_HUB,
     CONF_ICON,
     CONF_IMPORTANT_THRESHOLDS,
+    CONF_LANGUAGE,
     CONF_MONTH,
+    CONF_SUBDIVISION,
     CONF_VIP,
     CONF_YEAR,
     DATA_SENSORS,
     DEFAULT_IMPORTANT_THRESHOLDS,
     DOMAIN,
     SCAN_INTERVAL_HOURS,
+    TYPE_HOLIDAY,
     TYPE_ICONS,
 )
-from .dates import days_until, is_important, next_occurrence, occurrence_number, parse_thresholds
+from .dates import (
+    days_until,
+    holiday_display_name,
+    is_important,
+    next_holiday_occurrence,
+    next_occurrence,
+    occurrence_number,
+    parse_thresholds,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -68,16 +83,30 @@ class AnnualEventSensor(SensorEntity):
         # attribute, this is actually honoured by the entity platform when
         # the entity is first registered.
         self.entity_id = f"sensor.annuals_{event_type}_{slugify(name)}"
-        self._attr_icon = data.get(CONF_ICON) or TYPE_ICONS.get(event_type, "mdi:calendar-star")
-        self._update_state()
+        self._attr_icon = data.get(CONF_ICON) or (
+            CATEGORY_ICONS.get(data.get(CONF_CATEGORY), TYPE_ICONS.get(event_type, "mdi:calendar-star"))
+            if event_type == TYPE_HOLIDAY
+            else TYPE_ICONS.get(event_type, "mdi:calendar-star")
+        )
+        # Holiday state is computed in async_added_to_hass/async_update instead
+        # (see there) - the `holidays` library does blocking file I/O the
+        # first time a given language's translations are loaded, which must
+        # never happen synchronously here in __init__, on the event loop.
+        if event_type != TYPE_HOLIDAY:
+            self._update_state()
 
     def _update_state(self) -> None:
         data = self._config_entry.data
+        event_type: str = data[CONF_EVENT_TYPE]
+        today = date.today()
+
+        if event_type == TYPE_HOLIDAY:
+            self._update_holiday_state(data, today)
+            return
+
         day: int = data[CONF_DAY]
         month: int = data[CONF_MONTH]
         year: int | None = data.get(CONF_YEAR)
-        event_type: str = data[CONF_EVENT_TYPE]
-        today = date.today()
 
         occurrence = next_occurrence(month, day, today)
         occurrence_num = occurrence_number(year, occurrence)
@@ -95,6 +124,39 @@ class AnnualEventSensor(SensorEntity):
             "important": is_important(occurrence_num, self._important_thresholds(event_type)),
         }
 
+    def _update_holiday_state(self, data: dict, today: date) -> None:
+        """Holiday events have no stored day/month/year (see dates.py) - the
+        occurrence, and even the display name (some names carry a year-
+        specific "(observed)"/"(estimated)" suffix), are resolved live here
+        instead, every update, so there's nothing that can go stale.
+        """
+        country: str = data[CONF_COUNTRY]
+        subdivision: str | None = data.get(CONF_SUBDIVISION)
+        category: str = data[CONF_CATEGORY]
+        holiday_key: str = data[CONF_HOLIDAY_KEY]
+        language: str | None = data.get(CONF_LANGUAGE)
+
+        occurrence = next_holiday_occurrence(country, subdivision, category, holiday_key, today)
+        name = self._name
+        if occurrence is not None:
+            name = (
+                holiday_display_name(country, subdivision, category, language, occurrence.year, occurrence)
+                or self._name
+            )
+
+        self._attr_native_value = days_until(occurrence, today) if occurrence is not None else None
+        self._attr_extra_state_attributes: dict[str, Any] = {
+            "type": TYPE_HOLIDAY,
+            "name": name,
+            "next_date": occurrence.isoformat() if occurrence is not None else None,
+            "occurrence_number": None,
+            "country": country,
+            "subdivision": subdivision,
+            "category": category,
+            "vip": bool(data.get(CONF_VIP, False)),
+            "important": False,
+        }
+
     def _important_thresholds(self, event_type: str) -> set[int]:
         """The "Annual Settings" milestone list for this event's type, read
         from the shared hub entry's options (falling back to the built-in
@@ -110,11 +172,20 @@ class AnnualEventSensor(SensorEntity):
         return parse_thresholds(DEFAULT_IMPORTANT_THRESHOLDS.get(event_type, ""))
 
     async def async_update(self) -> None:
-        self._update_state()
+        if self._config_entry.data[CONF_EVENT_TYPE] == TYPE_HOLIDAY:
+            # Off the event loop - see the comment in __init__ on why.
+            await self._hass_ref.async_add_executor_job(self._update_state)
+        else:
+            self._update_state()
 
     async def async_added_to_hass(self) -> None:
-        """Register with the domain-wide midnight refresh (see __init__.py)."""
+        """Register with the domain-wide midnight refresh (see __init__.py),
+        and compute the initial state for holiday events (skipped in
+        __init__ - see the comment there).
+        """
         self._hass_ref.data.setdefault(DOMAIN, {}).setdefault(DATA_SENSORS, set()).add(self)
+        if self._config_entry.data[CONF_EVENT_TYPE] == TYPE_HOLIDAY:
+            await self._hass_ref.async_add_executor_job(self._update_state)
 
     async def async_will_remove_from_hass(self) -> None:
         sensors = self._hass_ref.data.get(DOMAIN, {}).get(DATA_SENSORS)

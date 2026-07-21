@@ -10,17 +10,28 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import dt as dt_util
 
 from .const import (
+    ALL_EVENT_TYPES,
+    CONF_CATEGORY,
+    CONF_COUNTRY,
     CONF_DAY,
     CONF_EVENT_NAME,
     CONF_EVENT_TYPE,
+    CONF_HOLIDAY_KEY,
     CONF_MONTH,
+    CONF_SUBDIVISION,
     CONF_YEAR,
     DOMAIN,
-    EVENT_TYPES,
     TYPE_CUSTOM,
+    TYPE_HOLIDAY,
     TYPE_ICONS,
 )
-from .dates import next_occurrence, occurrence_in_year, occurrence_number
+from .dates import (
+    holiday_occurrence_in_year,
+    next_holiday_occurrence,
+    next_occurrence,
+    occurrence_in_year,
+    occurrence_number,
+)
 from .helpers import async_event_type_labels
 
 _LOGGER = logging.getLogger(__name__)
@@ -40,7 +51,7 @@ async def async_setup_entry(
     labels = await async_event_type_labels(hass)
     async_add_entities(
         AnnualsTypeCalendar(hass, event_type, labels[event_type])
-        for event_type in EVENT_TYPES
+        for event_type in ALL_EVENT_TYPES
     )
 
 
@@ -72,16 +83,20 @@ class AnnualsTypeCalendar(CalendarEntity):
         # attribute, this is actually honoured by the entity platform when
         # the entity is first registered.
         self.entity_id = f"calendar.annuals_{event_type}"
+        # Only populated (and only needed) for the holiday calendar - see
+        # async_update/event below.
+        self._cached_event: CalendarEvent | None = None
 
     def _summary(self, entry: ConfigEntry, occurrence: date) -> str:
-        number = occurrence_number(entry.data.get(CONF_YEAR), occurrence)
         name = entry.data[CONF_EVENT_NAME]
+        # Holidays (like Custom) have no type label worth stating - "New
+        # Year's Day - Holiday" would just repeat what the calendar itself
+        # (its plural type name) already says, and they have no occurrence
+        # number (see dates.py). Every other type still gets "name - type".
+        if self._event_type in (TYPE_CUSTOM, TYPE_HOLIDAY):
+            return name
+        number = occurrence_number(entry.data.get(CONF_YEAR), occurrence)
         suffix = f" ({number})" if number is not None else ""
-        # Custom events have no type label worth stating - "name - Custom"
-        # would just repeat what the calendar itself (its plural type name)
-        # already says. Every other type still gets the "name - type" form.
-        if self._event_type == TYPE_CUSTOM:
-            return f"{name}{suffix}"
         return f"{name} - {self._type_label}{suffix}"
 
     def _calendar_event(self, entry: ConfigEntry, occurrence: date) -> CalendarEvent:
@@ -92,30 +107,79 @@ class AnnualsTypeCalendar(CalendarEntity):
             uid=f"{DOMAIN}-{entry.entry_id}-{occurrence.isoformat()}",
         )
 
-    @property
-    def event(self) -> CalendarEvent | None:
-        """The soonest upcoming occurrence across all events of this type."""
+    @staticmethod
+    def _next_occurrence_for_entry(entry: ConfigEntry, today: date) -> date | None:
+        data = entry.data
+        if data[CONF_EVENT_TYPE] == TYPE_HOLIDAY:
+            return next_holiday_occurrence(
+                data[CONF_COUNTRY],
+                data.get(CONF_SUBDIVISION),
+                data[CONF_CATEGORY],
+                data[CONF_HOLIDAY_KEY],
+                today,
+            )
+        return next_occurrence(data[CONF_MONTH], data[CONF_DAY], today)
+
+    @staticmethod
+    def _occurrence_in_year_for_entry(entry: ConfigEntry, year: int) -> date | None:
+        data = entry.data
+        if data[CONF_EVENT_TYPE] == TYPE_HOLIDAY:
+            return holiday_occurrence_in_year(
+                data[CONF_COUNTRY],
+                data.get(CONF_SUBDIVISION),
+                data[CONF_CATEGORY],
+                data[CONF_HOLIDAY_KEY],
+                year,
+            )
+        return occurrence_in_year(data[CONF_MONTH], data[CONF_DAY], year)
+
+    def _compute_event(self) -> CalendarEvent | None:
+        """The soonest upcoming occurrence across all events of this type -
+        the actual (potentially blocking, for holidays) computation, always
+        called off the event loop - see async_update/event below.
+        """
         today = dt_util.now().date()
         upcoming = [
-            self._calendar_event(
-                entry, next_occurrence(entry.data[CONF_MONTH], entry.data[CONF_DAY], today)
-            )
+            self._calendar_event(entry, occurrence)
             for entry in _entries_for_type(self.hass, self._event_type)
+            for occurrence in [self._next_occurrence_for_entry(entry, today)]
+            if occurrence is not None
         ]
         if not upcoming:
             return None
         return min(upcoming, key=lambda e: e.start)
 
+    @property
+    def event(self) -> CalendarEvent | None:
+        # For every type except holiday this is pure date arithmetic (no I/O)
+        # and cheap enough to just compute on read. Holidays go through
+        # async_update instead (see there) - the `holidays` library can do
+        # blocking file I/O the first time a language's translations load,
+        # which must never happen synchronously here, on the event loop.
+        if self._event_type == TYPE_HOLIDAY:
+            return self._cached_event
+        return self._compute_event()
+
+    async def async_update(self) -> None:
+        if self._event_type == TYPE_HOLIDAY:
+            self._cached_event = await self.hass.async_add_executor_job(self._compute_event)
+
     async def async_get_events(
         self, hass: HomeAssistant, start_date: datetime, end_date: datetime
     ) -> list[CalendarEvent]:
         """Every occurrence of this type's events within the given range."""
-        events: list[CalendarEvent] = []
-        start = start_date.date()
-        end = end_date.date()
-        for entry in _entries_for_type(hass, self._event_type):
-            for year in range(start.year, end.year + 1):
-                occurrence = occurrence_in_year(entry.data[CONF_MONTH], entry.data[CONF_DAY], year)
-                if start <= occurrence <= end:
-                    events.append(self._calendar_event(entry, occurrence))
-        return sorted(events, key=lambda e: e.start)
+
+        def _collect() -> list[CalendarEvent]:
+            events: list[CalendarEvent] = []
+            start = start_date.date()
+            end = end_date.date()
+            for entry in _entries_for_type(hass, self._event_type):
+                for year in range(start.year, end.year + 1):
+                    occurrence = self._occurrence_in_year_for_entry(entry, year)
+                    if occurrence is not None and start <= occurrence <= end:
+                        events.append(self._calendar_event(entry, occurrence))
+            return sorted(events, key=lambda e: e.start)
+
+        # Same blocking-I/O concern as event/async_update above for holidays;
+        # negligible overhead either way for the other types.
+        return await hass.async_add_executor_job(_collect)

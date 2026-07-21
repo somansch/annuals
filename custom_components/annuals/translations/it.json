@@ -10,7 +10,8 @@
                 "memorial": "Anniversario della morte",
                 "pet_birthday": "Compleanno animale",
                 "work_anniversary": "Anniversario lavorativo",
-                "custom": "Personalizzato"
+                "custom": "Personalizzato",
+                "holiday": "Festività"
             }
         },
         "month": {
@@ -27,6 +28,26 @@
                 "10": "ottobre",
                 "11": "novembre",
                 "12": "dicembre"
+            }
+        },
+        "holiday_category": {
+            "options": {
+                "public": "Festività nazionale",
+                "bank": "Bancaria",
+                "government": "Amministrazione pubblica",
+                "school": "Vacanze scolastiche",
+                "optional": "Facoltativa",
+                "unofficial": "Non ufficiale",
+                "half_day": "Mezza giornata",
+                "armed_forces": "Forze armate",
+                "workday": "Giorno lavorativo",
+                "catholic": "Cattolica",
+                "christian": "Cristiana",
+                "orthodox": "Ortodossa",
+                "hebrew": "Ebraica",
+                "islamic": "Islamica",
+                "hindu": "Induista",
+                "buddhist": "Buddista"
             }
         }
     },
@@ -96,7 +117,33 @@
                 "menu_options": {
                     "annual_settings": "Annual Impostazioni",
                     "import_csv": "Importa eventi da CSV",
+                    "import_holidays": "Importa festività",
+                    "remove_holidays": "Rimuovi festività importate",
                     "delete_all": "Elimina tutti i dati di Annuals"
+                }
+            },
+            "import_holidays": {
+                "title": "Importa festività",
+                "description": "Scegli un paese per importare le sue festività come eventi. Ripetere l'operazione in seguito per lo stesso paese (e la stessa suddivisione) aggiorna le voci esistenti invece di duplicarle - puoi ripeterla senza problemi se un paese aggiunge una nuova festività.",
+                "data": {
+                    "country": "Paese"
+                }
+            },
+            "import_holidays_options": {
+                "title": "Importa festività - {country}",
+                "description": "Lascia vuota la suddivisione per le sole festività nazionali - una regione/provincia aggiunge le proprie festività regionali. Categorie e lingua dipendono da ciò che i dati di questo paese forniscono. Le categorie pluri-giornaliere, come le vacanze scolastiche, sono rappresentate come un singolo evento nel loro primo giorno.",
+                "data": {
+                    "subdivision": "Suddivisione (regione/provincia, opzionale)",
+                    "categories": "Categorie",
+                    "language": "Lingua dei nomi delle festività"
+                }
+            },
+            "remove_holidays": {
+                "title": "Rimuovi festività importate",
+                "description": "{total} festività attualmente importate. Seleziona la casella qui sotto per rimuoverle tutte, oppure lasciala deselezionata e scegli invece un lotto. Gli eventi aggiunti manualmente non vengono mai interessati.",
+                "data": {
+                    "remove_all": "Rimuovi tutte le festività importate",
+                    "batch": "Lotto da rimuovere"
                 }
             },
             "annual_settings": {
@@ -122,12 +169,16 @@
             "name_required": "Inserisci un nome.",
             "invalid_date": "Questa combinazione di giorno/mese/anno non è una data valida.",
             "invalid_csv": "Impossibile leggere questo file come CSV. Controlla la codifica e il formato.",
-            "no_valid_rows": "Nessuna riga valida trovata in questo file. Controlla il registro per i dettagli sulle righe ignorate."
+            "no_valid_rows": "Nessuna riga valida trovata in questo file. Controlla il registro per i dettagli sulle righe ignorate.",
+            "no_batch_selected": "Seleziona «Rimuovi tutte le festività importate» oppure scegli un lotto."
         },
         "abort": {
             "hub_not_configurable": "L'hub Annuals non ha impostazioni proprie: contiene solo i calendari condivisi.",
             "import_started": "Importazione avviata: {created} evento/i in coda, {skipped} riga/righe ignorate (vedi il registro per i dettagli).",
-            "deleted_all": "Tutti gli eventi, i calendari e l'hub di Annuals sono stati rimossi."
+            "deleted_all": "Tutti gli eventi, i calendari e l'hub di Annuals sono stati rimossi.",
+            "holiday_import_started": "Importazione avviata: {count} festività in coda per {country}.",
+            "no_holidays_imported": "Non è stata ancora importata alcuna festività.",
+            "holidays_removed": "{count} festività rimosse."
         }
     },
     "entity": {
@@ -163,6 +214,10 @@
             "custom": {
                 "name": "{name}",
                 "unit_of_measurement": "giorni"
+            },
+            "holiday": {
+                "name": "{name}",
+                "unit_of_measurement": "giorni"
             }
         },
         "calendar": {
@@ -189,6 +244,9 @@
             },
             "custom": {
                 "name": "Eventi personalizzati"
+            },
+            "holiday": {
+                "name": "Festività"
             }
         }
     }

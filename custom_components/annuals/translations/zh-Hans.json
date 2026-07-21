@@ -10,7 +10,8 @@
                 "memorial": "忌日",
                 "pet_birthday": "宠物生日",
                 "work_anniversary": "工作纪念日",
-                "custom": "自定义"
+                "custom": "自定义",
+                "holiday": "节假日"
             }
         },
         "month": {
@@ -27,6 +28,26 @@
                 "10": "十月",
                 "11": "十一月",
                 "12": "十二月"
+            }
+        },
+        "holiday_category": {
+            "options": {
+                "public": "法定节假日",
+                "bank": "银行假日",
+                "government": "政府机构假日",
+                "school": "学校假期",
+                "optional": "可选假日",
+                "unofficial": "非正式假日",
+                "half_day": "半天假",
+                "armed_forces": "军队假日",
+                "workday": "工作日",
+                "catholic": "天主教",
+                "christian": "基督教",
+                "orthodox": "东正教",
+                "hebrew": "犹太教",
+                "islamic": "伊斯兰教",
+                "hindu": "印度教",
+                "buddhist": "佛教"
             }
         }
     },
@@ -96,7 +117,33 @@
                 "menu_options": {
                     "annual_settings": "Annual 设置",
                     "import_csv": "从 CSV 导入事件",
+                    "import_holidays": "导入节假日",
+                    "remove_holidays": "删除已导入的节假日",
                     "delete_all": "删除所有 Annuals 数据"
+                }
+            },
+            "import_holidays": {
+                "title": "导入节假日",
+                "description": "选择一个国家/地区，将其节假日导入为事件。之后为同一国家/地区（和细分地区）重新运行此操作会更新现有条目，而不是重复创建 —— 如果该国家/地区新增节假日，可以放心重复导入。",
+                "data": {
+                    "country": "国家/地区"
+                }
+            },
+            "import_holidays_options": {
+                "title": "导入节假日 - {country}",
+                "description": "细分地区留空则仅导入全国性节假日 —— 选择州/省会额外添加其地区性节假日。类别和语言取决于该国家/地区的节假日数据提供的内容。像学校假期这样的多日类别会在第一天表示为一个事件。",
+                "data": {
+                    "subdivision": "细分地区（州/省，可选）",
+                    "categories": "类别",
+                    "language": "节假日名称的语言"
+                }
+            },
+            "remove_holidays": {
+                "title": "删除已导入的节假日",
+                "description": "当前已导入 {total} 个节假日事件。勾选下方复选框可删除全部，或不勾选并改为选择一个批次。手动添加的事件不会受到影响。",
+                "data": {
+                    "remove_all": "删除所有已导入的节假日",
+                    "batch": "要删除的批次"
                 }
             },
             "annual_settings": {
@@ -122,12 +169,16 @@
             "name_required": "请输入姓名。",
             "invalid_date": "此日/月/年组合不是有效日期。",
             "invalid_csv": "无法将此文件读取为 CSV。请检查编码和格式。",
-            "no_valid_rows": "此文件中未找到有效行。请查看日志了解被跳过行的详情。"
+            "no_valid_rows": "此文件中未找到有效行。请查看日志了解被跳过行的详情。",
+            "no_batch_selected": "请勾选“删除所有已导入的节假日”，或选择一个批次。"
         },
         "abort": {
             "hub_not_configurable": "Annuals 中心没有自身设置 —— 它只保存共享日历。",
             "import_started": "导入已开始：{created} 个事件已加入队列，{skipped} 行被跳过（详情见日志）。",
-            "deleted_all": "所有 Annuals 事件、日历及中心均已删除。"
+            "deleted_all": "所有 Annuals 事件、日历及中心均已删除。",
+            "holiday_import_started": "导入已开始：{country} 的 {count} 个节假日事件已加入队列。",
+            "no_holidays_imported": "尚未导入任何节假日。",
+            "holidays_removed": "已删除 {count} 个节假日事件。"
         }
     },
     "entity": {
@@ -163,6 +214,10 @@
             "custom": {
                 "name": "{name}",
                 "unit_of_measurement": "天"
+            },
+            "holiday": {
+                "name": "{name}",
+                "unit_of_measurement": "天"
             }
         },
         "calendar": {
@@ -189,6 +244,9 @@
             },
             "custom": {
                 "name": "自定义事件"
+            },
+            "holiday": {
+                "name": "节假日"
             }
         }
     }

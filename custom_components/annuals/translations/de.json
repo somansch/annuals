@@ -10,7 +10,8 @@
                 "memorial": "Todestag",
                 "pet_birthday": "Tiergeburtstag",
                 "work_anniversary": "Firmenjubiläum",
-                "custom": "Frei wählbar"
+                "custom": "Frei wählbar",
+                "holiday": "Feiertag"
             }
         },
         "month": {
@@ -27,6 +28,26 @@
                 "10": "Oktober",
                 "11": "November",
                 "12": "Dezember"
+            }
+        },
+        "holiday_category": {
+            "options": {
+                "public": "Gesetzlich",
+                "bank": "Bankfeiertag",
+                "government": "Behörden",
+                "school": "Schulferien",
+                "optional": "Optional",
+                "unofficial": "Inoffiziell",
+                "half_day": "Halber Tag",
+                "armed_forces": "Streitkräfte",
+                "workday": "Arbeitstag",
+                "catholic": "Katholisch",
+                "christian": "Christlich",
+                "orthodox": "Orthodox",
+                "hebrew": "Jüdisch",
+                "islamic": "Islamisch",
+                "hindu": "Hinduistisch",
+                "buddhist": "Buddhistisch"
             }
         }
     },
@@ -96,7 +117,33 @@
                 "menu_options": {
                     "annual_settings": "Annual Einstellung",
                     "import_csv": "Ereignisse aus CSV importieren",
+                    "import_holidays": "Feiertage importieren",
+                    "remove_holidays": "Importierte Feiertage entfernen",
                     "delete_all": "Alle Annuals-Daten löschen"
+                }
+            },
+            "import_holidays": {
+                "title": "Feiertage importieren",
+                "description": "Wähle ein Land, um dessen Feiertage als Ereignisse zu importieren. Ein erneuter Import für dasselbe Land (und dieselbe Subdivision) aktualisiert bestehende Einträge, statt sie zu duplizieren - unbedenklich, falls ein Land einen neuen Feiertag einführt.",
+                "data": {
+                    "country": "Land"
+                }
+            },
+            "import_holidays_options": {
+                "title": "Feiertage importieren - {country}",
+                "description": "Bundesland/Provinz leer lassen für nur landesweite Feiertage - eine Auswahl fügt eigene regionale Feiertage hinzu. Kategorien und Sprache hängen davon ab, was für dieses Land verfügbar ist. Mehrtägige Kategorien wie Schulferien werden als ein Ereignis am ersten Tag dargestellt.",
+                "data": {
+                    "subdivision": "Bundesland/Provinz (optional)",
+                    "categories": "Kategorien",
+                    "language": "Sprache der Feiertagsnamen"
+                }
+            },
+            "remove_holidays": {
+                "title": "Importierte Feiertage entfernen",
+                "description": "Aktuell importiert: {total} Feiertags-Ereignis(se). Aktiviere die Checkbox unten, um alle zu entfernen, oder lasse sie deaktiviert und wähle stattdessen einen bestimmten Import aus. Manuell angelegte Ereignisse sind davon nie betroffen.",
+                "data": {
+                    "remove_all": "Alle importierten Feiertage entfernen",
+                    "batch": "Zu entfernender Import"
                 }
             },
             "annual_settings": {
@@ -122,12 +169,16 @@
             "name_required": "Bitte einen Namen eingeben.",
             "invalid_date": "Diese Tag/Monat/Jahr-Kombination ist kein gültiges Datum.",
             "invalid_csv": "Diese Datei konnte nicht als CSV gelesen werden. Prüfe Kodierung und Format.",
-            "no_valid_rows": "Keine gültigen Zeilen in dieser Datei gefunden. Details zu übersprungenen Zeilen stehen im Log."
+            "no_valid_rows": "Keine gültigen Zeilen in dieser Datei gefunden. Details zu übersprungenen Zeilen stehen im Log.",
+            "no_batch_selected": "Aktiviere \"Alle importierten Feiertage entfernen\" oder wähle einen Import aus."
         },
         "abort": {
             "hub_not_configurable": "Der Annuals-Hub hat keine eigenen Einstellungen – er hält nur die gemeinsamen Kalender.",
             "import_started": "Import gestartet: {created} Ereignis(se) werden angelegt, {skipped} Zeile(n) übersprungen (Details im Log).",
-            "deleted_all": "Alle Annuals-Ereignisse, Kalender und der Hub wurden entfernt."
+            "deleted_all": "Alle Annuals-Ereignisse, Kalender und der Hub wurden entfernt.",
+            "holiday_import_started": "Import gestartet: {count} Feiertags-Ereignis(se) für {country} werden angelegt.",
+            "no_holidays_imported": "Es wurden noch keine Feiertage importiert.",
+            "holidays_removed": "{count} Feiertags-Ereignis(se) entfernt."
         }
     },
     "entity": {
@@ -163,6 +214,10 @@
             "custom": {
                 "name": "{name}",
                 "unit_of_measurement": "Tage"
+            },
+            "holiday": {
+                "name": "{name}",
+                "unit_of_measurement": "Tage"
             }
         },
         "calendar": {
@@ -189,6 +244,9 @@
             },
             "custom": {
                 "name": "Frei wählbare Ereignisse"
+            },
+            "holiday": {
+                "name": "Feiertage"
             }
         }
     }
