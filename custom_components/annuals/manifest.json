@@ -3,10 +3,10 @@
   "name": "Annuals",
   "codeowners": ["@somansch"],
   "config_flow": true,
-  "dependencies": ["file_upload", "http"],
+  "dependencies": ["file_upload", "frontend", "http"],
   "documentation": "https://github.com/somansch/annuals",
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/somansch/annuals/issues",
   "requirements": ["holidays>=0.50"],
-  "version": "2.1.0"
+  "version": "2.2.0"
 }

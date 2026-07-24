@@ -240,72 +240,7 @@ automation:
 
 Adjust the `"7"` in the second example to match however far ahead you want the reminder, and add a second `repeat` block (or duplicate the automation) if you want more than one lead time.
 
-## Dashboard examples with HA built-in cards
-
-### Next event only
-
-<img src="docs/markdown-card-example-2.png" alt="Next event card" width="50%">
-
-A one-line, type-aware sentence using the sensor's `name` attribute (see the attribute table above) - adjust the wording to your language:
-
-```yaml
-type: markdown
-content: >
-  {%- set ns = namespace(items=[]) -%}
-  {%- for e in states.sensor | selectattr('entity_id', 'match', '^sensor\.annuals_') -%}
-    {%- set ns.items = ns.items + [(e.state | int(9999), e.entity_id, e)] -%}
-  {%- endfor -%}
-  {%- if ns.items -%}
-  {%- set days, id, e = (ns.items | sort)[0] -%}
-  {%- set n = e.attributes.occurrence_number -%}
-  {%- set name = e.attributes.name -%}
-  {%- set when = 'today' if days == 0 else ('tomorrow' if days == 1 else (days ~ ' days')) -%}
-  ## <ha-icon icon="{{ e.attributes.icon }}"></ha-icon> Next up
-
-  {%- if e.attributes.type in ['birthday', 'pet_birthday'] and n %}
-  {{ name }} has their birthday {{ when }} and turns {{ n }}.
-  {%- elif e.attributes.type == 'wedding_anniversary' and n %}
-  {{ name }}'s {{ n }}. wedding anniversary is {{ when }}.
-  {%- elif e.attributes.type == 'work_anniversary' and n %}
-  {{ name }} celebrates their {{ n }}. work anniversary {{ when }}.
-  {%- elif n %}
-  {{ name }}'s event is {{ when }} ({{ n }}. time).
-  {%- else %}
-  {{ name }}'s event is {{ when }}.
-  {%- endif %}
-  {%- else -%}
-  No events yet.
-  {%- endif -%}
-```
-
-For German phrasing (example: "Hans hat in 3 Tagen Geburtstag und wird 40 Jahre alt"), swap the birthday line for `{{ name }} hat {{ when }} Geburtstag und wird {{ n }} Jahre alt.` and translate `No events yet.`/`Keine Ereignisse.` accordingly.
-
-### Today's birthday only
-
-<img src="docs/markdown-card-example-3.png" alt="Today's birthday only card" width="50%">
-
-Each `calendar.annuals_<type>` entity's `state` is simply `on` whenever one of its events falls today (`off` otherwise) - a **Conditional card** wrapping the Markdown card uses that directly, so the card only appears on the day itself instead of always showing (and being empty or irrelevant) the rest of the year:
-
-```yaml
-type: conditional
-conditions:
-  - condition: state
-    entity: calendar.annuals_birthday
-    state: "on"
-card:
-  type: markdown
-  content: >
-    {%- set msg = states.calendar.annuals_birthday.attributes.message -%}
-    {%- set name = msg.split(' - ')[0] -%}
-    {%- set age = msg.split('(')[1].split(')')[0] if '(' in msg else '' -%}
-    🎉 {{ name }} is getting {{ age }} today!
-```
-
-This parses the calendar event's `message` attribute (e.g. "Anna - Birthday (26)") since the calendar entity itself doesn't carry a separate age/name attribute the way the sensor does. If two birthdays land on the same day, only one shows - the calendar only ever reports its single next/current event, same limitation as the "next event" card above.
-
-The same `on`/`off` state is just as useful for automations - for example, a state trigger on `calendar.annuals_birthday` (`to: "on"`) to fire a notification the moment a birthday starts, without any template or scheduling logic of your own.
-
-### Native Calendar card
+## Native Calendar card
 
 <img src="docs/calendars.png" alt="The eight per-type calendars" width="50%">
 
@@ -324,7 +259,25 @@ The card's own UI text (not the integration's entities/config-flow, which follow
 
 <img src="docs/annuals-card-editor.png" alt="Annuals card visual editor" width="45%">
 
-The editor is split into two tabs - **Settings** (general settings, which event types to include, and the days-ahead/days-past/soon-threshold time window) and **Layout** (show/hide individual row elements, apply the VIP-only/Important-only filters, fonts, colors, highlight tinting, and card background) - each further grouped into collapsible sections so the form stays manageable even with this many options.
+The editor is split into two tabs - **Settings** (general settings, which event types to include, and the days-ahead/days-past/soon-threshold time window) and **Layout** (display/row columns, fonts, colors, icons, highlight tinting, and card background) - each further grouped into collapsible sections so the form stays manageable even with this many options.
+
+### Row columns
+
+Each row's layout is fully configurable from Layout → Display → **Row columns**: add, remove, and reorder as many columns as you like, choosing from Icon, Name, Type, Name + Type, Occurrence, Countdown, or free-form **Custom text**. A custom text column mixes any text you like with placeholders - `{name}`, `{type}`, `{occurrence}`, `{when}`, `{country}` - so a row can read as one continuous sentence instead of a fixed table layout, e.g. turning "Anna · Birthday · 30 · Today" into "🎉 Anna turns 30 today! 🎉".
+
+Turning on **Compact** mode removes the spacing between columns, centers the row, and equalizes the weight/opacity of every field - meant for exactly that sentence-style layout. This is also how to build a small "today only" card: duplicate the card, turn on the **Today only** filter (Settings), reduce the columns to a single custom-text one, and enable Compact:
+
+<img src="docs/birthday_small_animated.gif" alt="Compact today-only birthday card" width="40%">
+
+### Icon animations
+
+An **Icons** tab in Layout lets you give each of the three icon colors - Default, Today, Soon - a looping animation: Pulse, Bounce, Shake, Spin, or Flash. Handy for making today's or upcoming events stand out at a glance:
+
+<img src="docs/holiday_small_animated.gif" alt="Pulsing icon animation on an upcoming holiday" width="40%">
+
+### Row click/tap behavior
+
+Clicking or tapping a row used to always open its more-info dialog - that's still the default, but it's now configurable. **Settings → General** has **Tap** and **Hold** action fields: More info, Navigate, URL, Perform action, Toggle, Assist, or Nothing.
 
 ### Example configurations
 
@@ -452,20 +405,22 @@ To theme every Annuals card at once, add these under a theme's `styles` (or set 
 | `--annuals-accent-color` | Icon color for events with no special status | `--primary-text-color` |
 | `--annuals-today-color` | Icon color for today's events | `--error-color` |
 | `--annuals-soon-color` | Icon color for events within the "soon" threshold | `--warning-color` |
+| `--annuals-card-title-color` | Card's own title text color | inherit |
 | `--annuals-title-color` | Event name text color | inherit |
 | `--annuals-subtitle-color` | Event type text color | inherit |
 | `--annuals-badge-color` | Occurrence number badge text color | inherit |
 | `--annuals-badge-bg-color` | Occurrence number badge background color | `rgba(128, 128, 128, 0.25)` |
 | `--annuals-when-color` | Countdown text color | inherit |
+| `--annuals-text-color` | Custom text column text color | inherit |
 | `--annuals-highlight-past-color` | Row tint for past events | `--secondary-text-color` |
 | `--annuals-highlight-today-color` | Row tint for today's events | `--annuals-today-color` |
 | `--annuals-highlight-soon-color` | Row tint for "soon" events | `--annuals-soon-color` |
 | `--annuals-vip-badge-color` | VIP badge background color | `--error-color` |
 | `--annuals-important-badge-color` | Important badge background color | `--annuals-soon-color` |
 | `--annuals-title-size` | Card title font size | `1.2em` |
-| `--annuals-row-title-size` / `-row-subtitle-size` / `-row-badge-size` / `-row-when-size` | Per-field row font sizes | inherit |
+| `--annuals-row-title-size` / `-row-subtitle-size` / `-row-badge-size` / `-row-when-size` / `-row-text-size` | Per-field row font sizes (`-row-text-size` is for custom text columns) | inherit |
 | `--annuals-title-weight` / `-style` / `-transform` / `-decoration` / `-spacing` | Card title bold/italic/uppercase/underline/letter-spacing | normal |
-| `--annuals-row-title-weight` / `-row-subtitle-weight` / `-row-badge-weight` / `-row-when-weight` (+ matching `-style`/`-transform`/`-decoration`/`-spacing`) | Same style options per row field | normal |
+| `--annuals-row-title-weight` / `-row-subtitle-weight` / `-row-badge-weight` / `-row-when-weight` / `-row-text-weight` (+ matching `-style`/`-transform`/`-decoration`/`-spacing`) | Same style options per row field, including custom text columns | normal |
 | `--annuals-bg-color` / `-bg-image` / `-bg-size` / `-bg-repeat` / `-bg-opacity` | Card background color/image/behavior/opacity | transparent / none |
 
 

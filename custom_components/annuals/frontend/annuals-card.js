@@ -83,6 +83,11 @@
         titlePlaceholder: "e.g. Upcoming Events",
         count: "Number of events",
         countDesc: "The total number of events shown on the card",
+        todayOnly: "Today only",
+        todayOnlyDesc: "Ignore every other filter below and show only events happening today",
+        nextEventDayOnly: "Only next event day",
+        nextEventDayOnlyDesc:
+          "Show only the events on the single soonest day - today's, if any, otherwise the next day with events (possibly more than one)",
         daysAhead: "Days ahead (0 = unlimited)",
         daysAheadDesc: "Only show events happening within this many days (0 = no limit)",
         daysPast: "Days in the past (0 = today only)",
@@ -103,12 +108,33 @@
         visibilitySoon: "Upcoming soon",
         visibilitySoonDesc: "Show events within the “soon” threshold",
         visibilityCardTitleDesc: "Show the card's own title",
+        hideCardTitle: "Hide",
+        hideCardTitleDesc: "Hide the card's own title, even when set above",
+        tapAction: "Tap action",
+        tapActionDesc: "What happens when a row is tapped or clicked",
+        holdAction: "Hold action",
+        holdActionDesc: "What happens when a row is pressed and held",
         visibilityIcon: "Icon",
         visibilityIconDesc: "Show the type icon in front of each row",
         visibilityTitleDesc: "Show the event name",
         visibilitySubtitleDesc: "Show the event type",
         visibilityCountrySuffix: "Holiday suffix",
         visibilityCountrySuffixDesc: "Append the country (and subdivision, if any) after the holiday's name/type, e.g. “Independence Day · US (UT)”",
+        columnsHeading: "Row columns",
+        columnsDesc: "Add, remove, and reorder what each row shows. Custom text columns can mix free text with placeholders: {name}, {type}, {occurrence}, {when}, {country}.",
+        columnTypeIcon: "Icon",
+        columnTypeInfo: "Name + type",
+        columnTypeName: "Name",
+        columnTypeSubtitle: "Type",
+        columnTypeText: "Custom text",
+        columnAdd: "Add",
+        columnMoveUp: "Move up",
+        columnMoveDown: "Move down",
+        columnRemove: "Remove",
+        columnTemplatePlaceholder: "e.g. {name} turns {occurrence} today",
+        columnColor: "Color",
+        columnsCompact: "Compact (no gaps, centered)",
+        columnsCompactDesc: "Remove the spacing between columns, center the row, and make every field match in weight and opacity - useful when the columns form one continuous sentence.",
         visibilityBadgeDesc: "Show the occurrence number badge",
         visibilityWhenDesc: "Show the countdown (e.g. “in 3 days”)",
         visibilityVipOnly: "VIP only",
@@ -168,16 +194,27 @@
         colorTodayDesc: "Icon color for today's events",
         colorSoonDesc: "Icon color for events within the “soon” threshold",
         colorAccentDesc: "Icon color for events with no special status",
+        animationLabel: "Animation",
+        animationDesc: "Add a looping animation to this icon",
+        animationNone: "None",
+        animationPulse: "Pulse",
+        animationBounce: "Bounce",
+        animationShake: "Shake",
+        animationSpin: "Spin",
+        animationFlash: "Flash",
         matchTextLabel: "Also color the text",
         matchTextDesc: "Also color the whole row's text with this icon color",
-        colorTitle: "Title",
-        colorSubtitle: "Subtitle",
+        colorTitle: "Name",
+        colorSubtitle: "Type",
         colorBadge: "Occurrence",
         colorWhen: "Countdown",
+        colorText: "Custom text",
+        cardTitleColorDesc: "Text color for the card's own title",
         colorTitleDesc: "Text color for the event name",
         colorSubtitleDesc: "Text color for the event type",
         colorBadgeDesc: "Text color for the occurrence number badge",
         colorWhenDesc: "Text color for the countdown (e.g. “in 3 days”)",
+        colorTextDesc: "Text color for custom text columns (see Row columns in Layout -> Display)",
         backgroundLabel: "Show background",
         backgroundDesc: "Show a rounded background behind the occurrence number",
         colorBadgeBackground: "Background color",
@@ -213,6 +250,7 @@
         fontSubtitleDesc: "Font size for the event type",
         fontBadgeDesc: "Font size for the occurrence number badge",
         fontWhenDesc: "Font size for the countdown (e.g. “in 3 days”)",
+        fontTextDesc: "Font size for custom text columns (see Row columns in Layout -> Display)",
         fontPlaceholder: "e.g. 1.2em or 20px",
         fontBold: "Bold",
         fontItalic: "Italic",
@@ -223,7 +261,7 @@
         panelSettings: "Settings",
         panelSettingsDesc: "General, events, and time period",
         panelLayout: "Layout",
-        panelLayoutDesc: "Display, fonts, colors, and backgrounds",
+        panelLayoutDesc: "Display, fonts, colors, icons, and backgrounds",
         groupGeneral: "General",
         groupGeneralDesc: "",
         groupEvents: "Events",
@@ -311,6 +349,11 @@
         titlePlaceholder: "z. B. Anstehende Ereignisse",
         count: "Anzahl der Ereignisse",
         countDesc: "Legt die Gesamtanzahl der auf der Karte angezeigten Ereignisse fest",
+        todayOnly: "Nur heute",
+        todayOnlyDesc: "Alle anderen Filter unten ignorieren und nur Ereignisse von heute anzeigen",
+        nextEventDayOnly: "Nur nächster Ereignistag",
+        nextEventDayOnlyDesc:
+          "Nur die Ereignisse des einen nächstgelegenen Tages anzeigen - heute, falls vorhanden, sonst der nächste Tag mit Ereignissen (ggf. mehrere)",
         daysAhead: "Tage im Voraus (0 = unbegrenzt)",
         daysAheadDesc: "Nur Ereignisse innerhalb dieser Anzahl Tage anzeigen (0 = unbegrenzt)",
         daysPast: "Tage in der Vergangenheit (0 = nur heute)",
@@ -331,12 +374,33 @@
         visibilitySoon: "Baldige Ereignisse",
         visibilitySoonDesc: "Ereignisse innerhalb der „Bald“-Schwelle in der Liste anzeigen",
         visibilityCardTitleDesc: "Kartentitel in der Karte anzeigen",
+        hideCardTitle: "Ausblenden",
+        hideCardTitleDesc: "Eigenen Kartentitel ausblenden, auch wenn oben einer gesetzt ist",
+        tapAction: "Aktion beim Antippen",
+        tapActionDesc: "Was passiert, wenn eine Zeile angetippt oder angeklickt wird",
+        holdAction: "Aktion beim Gedrückthalten",
+        holdActionDesc: "Was passiert, wenn eine Zeile gedrückt gehalten wird",
         visibilityIcon: "Icon",
         visibilityIconDesc: "Symbol vor jeder Zeile anzeigen",
         visibilityTitleDesc: "Namen des Ereignisses anzeigen",
         visibilitySubtitleDesc: "Ereignistyp anzeigen",
         visibilityCountrySuffix: "Feiertagssuffix",
         visibilityCountrySuffixDesc: "Land (und ggf. Bundesland/Provinz) hinter dem Namen/Typ des Feiertags anhängen, z. B. „Tag der Deutschen Einheit · DE (BY)“",
+        columnsHeading: "Zeilenspalten",
+        columnsDesc: "Lege fest, was jede Zeile anzeigt, und in welcher Reihenfolge. Eigene Textspalten können freien Text mit Platzhaltern kombinieren: {name}, {type}, {occurrence}, {when}, {country}.",
+        columnTypeIcon: "Icon",
+        columnTypeInfo: "Name + Typ",
+        columnTypeName: "Name",
+        columnTypeSubtitle: "Typ",
+        columnTypeText: "Freier Text",
+        columnAdd: "Hinzufügen",
+        columnMoveUp: "Nach oben",
+        columnMoveDown: "Nach unten",
+        columnRemove: "Entfernen",
+        columnTemplatePlaceholder: "z. B. {name} wird heute {occurrence}",
+        columnColor: "Farbe",
+        columnsCompact: "Kompakt (kein Abstand, zentriert)",
+        columnsCompactDesc: "Entfernt den Abstand zwischen den Spalten, zentriert die Zeile und gleicht Schriftstärke und Deckkraft aller Felder an - nützlich, wenn die Spalten einen zusammenhängenden Satz ergeben.",
         visibilityBadgeDesc: "Jubiläums-Badge anzeigen",
         visibilityWhenDesc: "Zeitangabe (Countdown) anzeigen",
         visibilityVipOnly: "Nur VIP",
@@ -397,16 +461,27 @@
         colorTodayDesc: "Icon-Farbe für heutige Ereignisse",
         colorSoonDesc: "Icon-Farbe für Ereignisse innerhalb der „Bald“-Schwelle",
         colorAccentDesc: "Icon-Farbe für Ereignisse ohne besonderen Status",
+        animationLabel: "Animation",
+        animationNone: "Keine",
+        animationPulse: "Pulsieren",
+        animationBounce: "Hüpfen",
+        animationShake: "Wackeln",
+        animationSpin: "Drehen",
+        animationFlash: "Blinken",
+        animationDesc: "Dem Icon eine wiederkehrende Animation hinzufügen",
         matchTextLabel: "Auch den Text einfärben",
         matchTextDesc: "Auch den gesamten Zeilentext in dieser Icon-Farbe einfärben",
-        colorTitle: "Titel",
-        colorSubtitle: "Untertitel",
+        colorTitle: "Name",
+        colorSubtitle: "Typ",
         colorBadge: "Jubiläum",
         colorWhen: "Countdown",
+        colorText: "Freier Text",
+        cardTitleColorDesc: "Textfarbe für den Kartentitel",
         colorTitleDesc: "Textfarbe für den Namen des Ereignisses",
         colorSubtitleDesc: "Textfarbe für den Ereignistyp",
         colorBadgeDesc: "Textfarbe für das Jubiläums-Badge (Vorkommen-Nummer)",
         colorWhenDesc: "Textfarbe für die Zeitangabe (z. B. „in 3 Tagen“)",
+        colorTextDesc: "Textfarbe für eigene Textspalten (siehe Zeilenspalten unter Layout -> Anzeige)",
         backgroundLabel: "Hintergrund anzeigen",
         backgroundDesc: "Zeigt einen abgerundeten Hintergrund hinter der Jubiläumszahl an",
         colorBadgeBackground: "Hintergrundfarbe",
@@ -442,6 +517,7 @@
         fontSubtitleDesc: "Schriftgröße für den Ereignistyp",
         fontBadgeDesc: "Schriftgröße für das Jubiläums-Badge",
         fontWhenDesc: "Schriftgröße für die Zeitangabe (z. B. „in 3 Tagen“)",
+        fontTextDesc: "Schriftgröße für eigene Textspalten (siehe Zeilenspalten unter Layout -> Anzeige)",
         fontPlaceholder: "z. B. 1.2em oder 20px",
         fontBold: "Fett",
         fontItalic: "Kursiv",
@@ -452,7 +528,7 @@
         panelSettings: "Einstellungen",
         panelSettingsDesc: "Allgemein, Ereignisse und Zeitraum",
         panelLayout: "Layout",
-        panelLayoutDesc: "Anzeige, Schriften, Farben und Hintergründe",
+        panelLayoutDesc: "Anzeige, Schriften, Farben, Icons und Hintergründe",
         groupGeneral: "Allgemein",
         groupGeneralDesc: "",
         groupEvents: "Ereignisse",
@@ -535,6 +611,11 @@
         titlePlaceholder: "par ex. Événements à venir",
         count: "Nombre d'événements",
         countDesc: "Le nombre total d'événements affichés sur la carte",
+        todayOnly: "Aujourd'hui uniquement",
+        todayOnlyDesc: "Ignorer tous les autres filtres ci-dessous et n'afficher que les événements du jour",
+        nextEventDayOnly: "Seulement le jour du prochain événement",
+        nextEventDayOnlyDesc:
+          "N'afficher que les événements du jour le plus proche - aujourd'hui, le cas échéant, sinon le prochain jour avec des événements (éventuellement plusieurs)",
         daysAhead: "Jours à l'avance (0 = illimité)",
         daysAheadDesc: "N'afficher que les événements dans ce nombre de jours (0 = pas de limite)",
         daysPast: "Jours passés (0 = aujourd'hui seulement)",
@@ -555,12 +636,33 @@
         visibilitySoon: "Bientôt",
         visibilitySoonDesc: "Afficher les événements dans le seuil « bientôt »",
         visibilityCardTitleDesc: "Afficher le titre propre de la carte",
+        hideCardTitle: "Masquer",
+        hideCardTitleDesc: "Masquer le titre propre de la carte, même s'il est défini ci-dessus",
+        tapAction: "Action au toucher",
+        tapActionDesc: "Ce qui se passe lorsqu'une ligne est touchée ou cliquée",
+        holdAction: "Action à l'appui long",
+        holdActionDesc: "Ce qui se passe lorsqu'une ligne est maintenue appuyée",
         visibilityIcon: "Icône",
         visibilityIconDesc: "Afficher l'icône du type devant chaque ligne",
         visibilityTitleDesc: "Afficher le nom de l'événement",
         visibilitySubtitleDesc: "Afficher le type d'événement",
         visibilityCountrySuffix: "Suffixe du jour férié",
         visibilityCountrySuffixDesc: "Ajouter le pays (et la subdivision, le cas échéant) après le nom/type du jour férié, par ex. « Fête nationale · FR (75) »",
+        columnsHeading: "Colonnes de ligne",
+        columnsDesc: "Ajoutez, supprimez et réorganisez ce que chaque ligne affiche. Les colonnes de texte libre peuvent combiner du texte libre avec des espaces réservés : {name}, {type}, {occurrence}, {when}, {country}.",
+        columnTypeIcon: "Icône",
+        columnTypeInfo: "Nom + type",
+        columnTypeName: "Nom",
+        columnTypeSubtitle: "Type",
+        columnTypeText: "Texte libre",
+        columnAdd: "Ajouter",
+        columnMoveUp: "Monter",
+        columnMoveDown: "Descendre",
+        columnRemove: "Supprimer",
+        columnTemplatePlaceholder: "par ex. {name} a {occurrence} ans aujourd'hui",
+        columnColor: "Couleur",
+        columnsCompact: "Compact (sans espace, centré)",
+        columnsCompactDesc: "Supprime l'espace entre les colonnes, centre la ligne, et harmonise la graisse et l'opacité de tous les champs - utile lorsque les colonnes forment une seule phrase continue.",
         visibilityBadgeDesc: "Afficher le badge du numéro d'occurrence",
         visibilityWhenDesc: "Afficher le compte à rebours (par ex. « dans 3 jours »)",
         visibilityVipOnly: "VIP uniquement",
@@ -620,16 +722,27 @@
         colorTodayDesc: "Couleur de l'icône pour les événements du jour",
         colorSoonDesc: "Couleur de l'icône pour les événements dans le seuil « bientôt »",
         colorAccentDesc: "Couleur de l'icône pour les événements sans statut particulier",
+        animationLabel: "Animation",
+        animationDesc: "Ajouter une animation en boucle à cette icône",
+        animationNone: "Aucune",
+        animationPulse: "Pulsation",
+        animationBounce: "Rebond",
+        animationShake: "Secousse",
+        animationSpin: "Rotation",
+        animationFlash: "Clignotement",
         matchTextLabel: "Colorer aussi le texte",
         matchTextDesc: "Colorer aussi tout le texte de la ligne avec cette couleur d'icône",
-        colorTitle: "Titre",
-        colorSubtitle: "Sous-titre",
+        colorTitle: "Nom",
+        colorSubtitle: "Type",
         colorBadge: "Occurrence",
         colorWhen: "Compte à rebours",
+        colorText: "Texte libre",
+        cardTitleColorDesc: "Couleur du texte pour le titre propre de la carte",
         colorTitleDesc: "Couleur du texte pour le nom de l'événement",
         colorSubtitleDesc: "Couleur du texte pour le type d'événement",
         colorBadgeDesc: "Couleur du texte pour le badge du numéro d'occurrence",
         colorWhenDesc: "Couleur du texte pour le compte à rebours (par ex. « dans 3 jours »)",
+        colorTextDesc: "Couleur du texte pour les colonnes de texte libre (voir Colonnes de ligne sous Disposition -> Affichage)",
         backgroundLabel: "Afficher le fond",
         backgroundDesc: "Afficher un fond arrondi derrière le numéro d'occurrence",
         colorBadgeBackground: "Couleur de fond",
@@ -665,6 +778,7 @@
         fontSubtitleDesc: "Taille de police pour le type d'événement",
         fontBadgeDesc: "Taille de police pour le badge du numéro d'occurrence",
         fontWhenDesc: "Taille de police pour le compte à rebours (par ex. « dans 3 jours »)",
+        fontTextDesc: "Taille de police pour les colonnes de texte libre (voir Colonnes de ligne sous Disposition -> Affichage)",
         fontPlaceholder: "par ex. 1.2em ou 20px",
         fontBold: "Gras",
         fontItalic: "Italique",
@@ -675,7 +789,7 @@
         panelSettings: "Paramètres",
         panelSettingsDesc: "Général, événements et période",
         panelLayout: "Mise en page",
-        panelLayoutDesc: "Affichage, polices, couleurs et fonds",
+        panelLayoutDesc: "Affichage, polices, couleurs, icônes et fonds",
         groupGeneral: "Général",
         groupGeneralDesc: "",
         groupEvents: "Événements",
@@ -758,6 +872,11 @@
         titlePlaceholder: "bijv. Aankomende evenementen",
         count: "Aantal evenementen",
         countDesc: "Het totale aantal evenementen dat op de kaart wordt getoond",
+        todayOnly: "Alleen vandaag",
+        todayOnlyDesc: "Negeer alle andere filters hieronder en toon alleen evenementen van vandaag",
+        nextEventDayOnly: "Alleen eerstvolgende evenementdag",
+        nextEventDayOnlyDesc:
+          "Toon alleen de evenementen op de eerstvolgende dag - vandaag, indien van toepassing, anders de eerstvolgende dag met evenementen (mogelijk meerdere)",
         daysAhead: "Dagen vooruit (0 = onbeperkt)",
         daysAheadDesc: "Toon alleen evenementen binnen dit aantal dagen (0 = geen limiet)",
         daysPast: "Dagen in het verleden (0 = alleen vandaag)",
@@ -778,12 +897,33 @@
         visibilitySoon: "Binnenkort",
         visibilitySoonDesc: "Toon evenementen binnen de „binnenkort”-drempel",
         visibilityCardTitleDesc: "Toon de eigen titel van de kaart",
+        hideCardTitle: "Verbergen",
+        hideCardTitleDesc: "Verberg de eigen titel van de kaart, ook als deze hierboven is ingesteld",
+        tapAction: "Actie bij tikken",
+        tapActionDesc: "Wat er gebeurt als op een rij wordt getikt of geklikt",
+        holdAction: "Actie bij ingedrukt houden",
+        holdActionDesc: "Wat er gebeurt als een rij ingedrukt wordt gehouden",
         visibilityIcon: "Icoon",
         visibilityIconDesc: "Toon het type-icoon vóór elke rij",
         visibilityTitleDesc: "Toon de naam van het evenement",
         visibilitySubtitleDesc: "Toon het evenementtype",
         visibilityCountrySuffix: "Feestdagsuffix",
         visibilityCountrySuffixDesc: "Voeg het land (en eventueel de deelstaat/provincie) toe na de naam/type van de feestdag, bijv. „Bevrijdingsdag · NL (NH)”",
+        columnsHeading: "Rijkolommen",
+        columnsDesc: "Voeg toe, verwijder en herschik wat elke rij toont. Eigen tekstkolommen kunnen vrije tekst combineren met plaatshouders: {name}, {type}, {occurrence}, {when}, {country}.",
+        columnTypeIcon: "Icoon",
+        columnTypeInfo: "Naam + type",
+        columnTypeName: "Naam",
+        columnTypeSubtitle: "Type",
+        columnTypeText: "Eigen tekst",
+        columnAdd: "Toevoegen",
+        columnMoveUp: "Omhoog",
+        columnMoveDown: "Omlaag",
+        columnRemove: "Verwijderen",
+        columnTemplatePlaceholder: "bijv. {name} wordt vandaag {occurrence}",
+        columnColor: "Kleur",
+        columnsCompact: "Compact (geen ruimte, gecentreerd)",
+        columnsCompactDesc: "Verwijdert de ruimte tussen de kolommen, centreert de rij, en laat alle velden overeenkomen in dikte en dekking - handig wanneer de kolommen één doorlopende zin vormen.",
         visibilityBadgeDesc: "Toon het badge met het jubileumnummer",
         visibilityWhenDesc: "Toon het aftellen (bijv. „over 3 dagen”)",
         visibilityVipOnly: "Alleen VIP",
@@ -843,16 +983,27 @@
         colorTodayDesc: "Icoonkleur voor evenementen van vandaag",
         colorSoonDesc: "Icoonkleur voor evenementen binnen de „binnenkort”-drempel",
         colorAccentDesc: "Icoonkleur voor evenementen zonder speciale status",
+        animationLabel: "Animatie",
+        animationDesc: "Voeg een herhalende animatie toe aan dit icoon",
+        animationNone: "Geen",
+        animationPulse: "Pulseren",
+        animationBounce: "Stuiteren",
+        animationShake: "Schudden",
+        animationSpin: "Draaien",
+        animationFlash: "Knipperen",
         matchTextLabel: "Ook de tekst inkleuren",
         matchTextDesc: "Ook alle tekst van de rij inkleuren met deze icoonkleur",
-        colorTitle: "Titel",
-        colorSubtitle: "Ondertitel",
+        colorTitle: "Naam",
+        colorSubtitle: "Type",
         colorBadge: "Jubileum",
         colorWhen: "Aftellen",
+        colorText: "Eigen tekst",
+        cardTitleColorDesc: "Tekstkleur voor de eigen titel van de kaart",
         colorTitleDesc: "Tekstkleur voor de naam van het evenement",
         colorSubtitleDesc: "Tekstkleur voor het evenementtype",
         colorBadgeDesc: "Tekstkleur voor het jubileumnummer-badge",
         colorWhenDesc: "Tekstkleur voor het aftellen (bijv. „over 3 dagen”)",
+        colorTextDesc: "Tekstkleur voor eigen tekstkolommen (zie Rijkolommen onder Layout -> Weergave)",
         backgroundLabel: "Achtergrond tonen",
         backgroundDesc: "Toon een afgeronde achtergrond achter het jubileumnummer",
         colorBadgeBackground: "Achtergrondkleur",
@@ -888,6 +1039,7 @@
         fontSubtitleDesc: "Lettergrootte voor het evenementtype",
         fontBadgeDesc: "Lettergrootte voor het jubileumnummer-badge",
         fontWhenDesc: "Lettergrootte voor het aftellen (bijv. „over 3 dagen”)",
+        fontTextDesc: "Lettergrootte voor eigen tekstkolommen (zie Rijkolommen onder Layout -> Weergave)",
         fontPlaceholder: "bijv. 1.2em of 20px",
         fontBold: "Vet",
         fontItalic: "Cursief",
@@ -898,7 +1050,7 @@
         panelSettings: "Instellingen",
         panelSettingsDesc: "Algemeen, evenementen en periode",
         panelLayout: "Lay-out",
-        panelLayoutDesc: "Weergave, lettertypen, kleuren en achtergronden",
+        panelLayoutDesc: "Weergave, lettertypen, kleuren, iconen en achtergronden",
         groupGeneral: "Algemeen",
         groupGeneralDesc: "",
         groupEvents: "Evenementen",
@@ -981,6 +1133,11 @@
         titlePlaceholder: "np. Nadchodzące wydarzenia",
         count: "Liczba wydarzeń",
         countDesc: "Łączna liczba wydarzeń pokazywanych na karcie",
+        todayOnly: "Tylko dzisiaj",
+        todayOnlyDesc: "Zignoruj wszystkie inne filtry poniżej i pokaż tylko dzisiejsze wydarzenia",
+        nextEventDayOnly: "Tylko dzień najbliższego wydarzenia",
+        nextEventDayOnlyDesc:
+          "Pokaż tylko wydarzenia z najbliższego dnia - dzisiaj, jeśli są, w przeciwnym razie następny dzień z wydarzeniami (możliwe więcej niż jedno)",
         daysAhead: "Dni naprzód (0 = bez limitu)",
         daysAheadDesc: "Pokazuj tylko wydarzenia w ciągu tylu dni (0 = bez limitu)",
         daysPast: "Dni wstecz (0 = tylko dzisiaj)",
@@ -1001,12 +1158,33 @@
         visibilitySoon: "Wkrótce",
         visibilitySoonDesc: "Pokaż wydarzenia w progu „wkrótce”",
         visibilityCardTitleDesc: "Pokaż własny tytuł karty",
+        hideCardTitle: "Ukryj",
+        hideCardTitleDesc: "Ukryj własny tytuł karty, nawet jeśli ustawiono go powyżej",
+        tapAction: "Akcja dotknięcia",
+        tapActionDesc: "Co się dzieje po dotknięciu lub kliknięciu wiersza",
+        holdAction: "Akcja przytrzymania",
+        holdActionDesc: "Co się dzieje po przytrzymaniu wiersza",
         visibilityIcon: "Ikona",
         visibilityIconDesc: "Pokaż ikonę typu przed każdym wierszem",
         visibilityTitleDesc: "Pokaż nazwę wydarzenia",
         visibilitySubtitleDesc: "Pokaż typ wydarzenia",
         visibilityCountrySuffix: "Sufiks święta",
         visibilityCountrySuffixDesc: "Dodaj kraj (i ewentualnie region) po nazwie/typie święta, np. „Święto Niepodległości · PL (MAZ)”",
+        columnsHeading: "Kolumny wiersza",
+        columnsDesc: "Dodawaj, usuwaj i zmieniaj kolejność tego, co pokazuje każdy wiersz. Kolumny własnego tekstu mogą łączyć dowolny tekst z symbolami zastępczymi: {name}, {type}, {occurrence}, {when}, {country}.",
+        columnTypeIcon: "Ikona",
+        columnTypeInfo: "Nazwa + typ",
+        columnTypeName: "Nazwa",
+        columnTypeSubtitle: "Typ",
+        columnTypeText: "Własny tekst",
+        columnAdd: "Dodaj",
+        columnMoveUp: "Przenieś w górę",
+        columnMoveDown: "Przenieś w dół",
+        columnRemove: "Usuń",
+        columnTemplatePlaceholder: "np. {name} kończy dziś {occurrence} lat",
+        columnColor: "Kolor",
+        columnsCompact: "Kompaktowy (bez odstępów, wyśrodkowany)",
+        columnsCompactDesc: "Usuwa odstępy między kolumnami, wyśrodkowuje wiersz i ujednolica grubość oraz krycie wszystkich pól - przydatne, gdy kolumny tworzą jedno spójne zdanie.",
         visibilityBadgeDesc: "Pokaż odznakę numeru wystąpienia",
         visibilityWhenDesc: "Pokaż odliczanie (np. „za 3 dni”)",
         visibilityVipOnly: "Tylko VIP",
@@ -1066,16 +1244,27 @@
         colorTodayDesc: "Kolor ikony dla dzisiejszych wydarzeń",
         colorSoonDesc: "Kolor ikony dla wydarzeń w progu „wkrótce”",
         colorAccentDesc: "Kolor ikony dla wydarzeń bez specjalnego statusu",
+        animationLabel: "Animacja",
+        animationDesc: "Dodaj zapętloną animację do tej ikony",
+        animationNone: "Brak",
+        animationPulse: "Pulsowanie",
+        animationBounce: "Odbijanie",
+        animationShake: "Trzęsienie",
+        animationSpin: "Obracanie",
+        animationFlash: "Miganie",
         matchTextLabel: "Zabarw też tekst",
         matchTextDesc: "Zabarw też cały tekst wiersza tym kolorem ikony",
-        colorTitle: "Tytuł",
-        colorSubtitle: "Podtytuł",
+        colorTitle: "Nazwa",
+        colorSubtitle: "Typ",
         colorBadge: "Wystąpienie",
         colorWhen: "Odliczanie",
+        colorText: "Własny tekst",
+        cardTitleColorDesc: "Kolor tekstu dla własnego tytułu karty",
         colorTitleDesc: "Kolor tekstu dla nazwy wydarzenia",
         colorSubtitleDesc: "Kolor tekstu dla typu wydarzenia",
         colorBadgeDesc: "Kolor tekstu dla odznaki numeru wystąpienia",
         colorWhenDesc: "Kolor tekstu dla odliczania (np. „za 3 dni”)",
+        colorTextDesc: "Kolor tekstu dla kolumn własnego tekstu (zobacz Kolumny wiersza w Układ -> Wyświetlanie)",
         backgroundLabel: "Pokaż tło",
         backgroundDesc: "Pokaż zaokrąglone tło za numerem wystąpienia",
         colorBadgeBackground: "Kolor tła",
@@ -1111,6 +1300,7 @@
         fontSubtitleDesc: "Rozmiar czcionki dla typu wydarzenia",
         fontBadgeDesc: "Rozmiar czcionki dla odznaki numeru wystąpienia",
         fontWhenDesc: "Rozmiar czcionki dla odliczania (np. „za 3 dni”)",
+        fontTextDesc: "Rozmiar czcionki dla kolumn własnego tekstu (zobacz Kolumny wiersza w Układ -> Wyświetlanie)",
         fontPlaceholder: "np. 1.2em lub 20px",
         fontBold: "Pogrubienie",
         fontItalic: "Kursywa",
@@ -1121,7 +1311,7 @@
         panelSettings: "Ustawienia",
         panelSettingsDesc: "Ogólne, wydarzenia i okres",
         panelLayout: "Układ",
-        panelLayoutDesc: "Wyświetlanie, czcionki, kolory i tła",
+        panelLayoutDesc: "Wyświetlanie, czcionki, kolory, ikony i tła",
         groupGeneral: "Ogólne",
         groupGeneralDesc: "",
         groupEvents: "Wydarzenia",
@@ -1204,6 +1394,11 @@
         titlePlaceholder: "p. ej. Próximos eventos",
         count: "Número de eventos",
         countDesc: "El número total de eventos mostrados en la tarjeta",
+        todayOnly: "Solo hoy",
+        todayOnlyDesc: "Ignorar todos los demás filtros a continuación y mostrar solo los eventos de hoy",
+        nextEventDayOnly: "Solo el día del próximo evento",
+        nextEventDayOnlyDesc:
+          "Mostrar solo los eventos del día más próximo - hoy, si los hay, o si no el siguiente día con eventos (posiblemente más de uno)",
         daysAhead: "Días de antelación (0 = ilimitado)",
         daysAheadDesc: "Mostrar solo eventos dentro de este número de días (0 = sin límite)",
         daysPast: "Días pasados (0 = solo hoy)",
@@ -1224,12 +1419,33 @@
         visibilitySoon: "Próximamente",
         visibilitySoonDesc: "Mostrar eventos dentro del umbral «pronto»",
         visibilityCardTitleDesc: "Mostrar el título propio de la tarjeta",
+        hideCardTitle: "Ocultar",
+        hideCardTitleDesc: "Ocultar el título propio de la tarjeta, aunque esté configurado arriba",
+        tapAction: "Acción al tocar",
+        tapActionDesc: "Qué ocurre al tocar o hacer clic en una fila",
+        holdAction: "Acción al mantener pulsado",
+        holdActionDesc: "Qué ocurre al mantener pulsada una fila",
         visibilityIcon: "Icono",
         visibilityIconDesc: "Mostrar el icono de tipo delante de cada fila",
         visibilityTitleDesc: "Mostrar el nombre del evento",
         visibilitySubtitleDesc: "Mostrar el tipo de evento",
         visibilityCountrySuffix: "Sufijo del festivo",
         visibilityCountrySuffixDesc: "Añadir el país (y la subdivisión, si la hay) tras el nombre/tipo del festivo, p. ej. «Día de la Hispanidad · ES (MD)»",
+        columnsHeading: "Columnas de fila",
+        columnsDesc: "Añade, elimina y reordena lo que muestra cada fila. Las columnas de texto personalizado pueden combinar texto libre con marcadores de posición: {name}, {type}, {occurrence}, {when}, {country}.",
+        columnTypeIcon: "Icono",
+        columnTypeInfo: "Nombre + tipo",
+        columnTypeName: "Nombre",
+        columnTypeSubtitle: "Tipo",
+        columnTypeText: "Texto personalizado",
+        columnAdd: "Añadir",
+        columnMoveUp: "Subir",
+        columnMoveDown: "Bajar",
+        columnRemove: "Eliminar",
+        columnTemplatePlaceholder: "p. ej. {name} cumple {occurrence} hoy",
+        columnColor: "Color",
+        columnsCompact: "Compacto (sin espacios, centrado)",
+        columnsCompactDesc: "Elimina el espacio entre columnas, centra la fila y iguala el grosor y la opacidad de todos los campos - útil cuando las columnas forman una sola frase continua.",
         visibilityBadgeDesc: "Mostrar la insignia del número de ocurrencia",
         visibilityWhenDesc: "Mostrar la cuenta atrás (p. ej. «en 3 días»)",
         visibilityVipOnly: "Solo VIP",
@@ -1289,16 +1505,27 @@
         colorTodayDesc: "Color del icono para los eventos de hoy",
         colorSoonDesc: "Color del icono para eventos dentro del umbral «pronto»",
         colorAccentDesc: "Color del icono para eventos sin estado especial",
+        animationLabel: "Animación",
+        animationDesc: "Añadir una animación en bucle a este icono",
+        animationNone: "Ninguna",
+        animationPulse: "Pulso",
+        animationBounce: "Rebote",
+        animationShake: "Vibración",
+        animationSpin: "Giro",
+        animationFlash: "Parpadeo",
         matchTextLabel: "Colorear también el texto",
         matchTextDesc: "Colorear también todo el texto de la fila con este color de icono",
-        colorTitle: "Título",
-        colorSubtitle: "Subtítulo",
+        colorTitle: "Nombre",
+        colorSubtitle: "Tipo",
         colorBadge: "Ocurrencia",
         colorWhen: "Cuenta atrás",
+        colorText: "Texto personalizado",
+        cardTitleColorDesc: "Color del texto para el título propio de la tarjeta",
         colorTitleDesc: "Color del texto para el nombre del evento",
         colorSubtitleDesc: "Color del texto para el tipo de evento",
         colorBadgeDesc: "Color del texto para la insignia del número de ocurrencia",
         colorWhenDesc: "Color del texto para la cuenta atrás (p. ej. «en 3 días»)",
+        colorTextDesc: "Color del texto para columnas de texto personalizado (ver Columnas de fila en Diseño -> Visualización)",
         backgroundLabel: "Mostrar fondo",
         backgroundDesc: "Mostrar un fondo redondeado detrás del número de ocurrencia",
         colorBadgeBackground: "Color de fondo",
@@ -1334,6 +1561,7 @@
         fontSubtitleDesc: "Tamaño de fuente para el tipo de evento",
         fontBadgeDesc: "Tamaño de fuente para la insignia del número de ocurrencia",
         fontWhenDesc: "Tamaño de fuente para la cuenta atrás (p. ej. «en 3 días»)",
+        fontTextDesc: "Tamaño de fuente para columnas de texto personalizado (ver Columnas de fila en Diseño -> Visualización)",
         fontPlaceholder: "p. ej. 1.2em o 20px",
         fontBold: "Negrita",
         fontItalic: "Cursiva",
@@ -1344,7 +1572,7 @@
         panelSettings: "Ajustes",
         panelSettingsDesc: "General, eventos y período",
         panelLayout: "Diseño",
-        panelLayoutDesc: "Visualización, fuentes, colores y fondos",
+        panelLayoutDesc: "Visualización, fuentes, colores, iconos y fondos",
         groupGeneral: "General",
         groupGeneralDesc: "",
         groupEvents: "Eventos",
@@ -1427,6 +1655,11 @@
         titlePlaceholder: "ad es. Eventi in arrivo",
         count: "Numero di eventi",
         countDesc: "Il numero totale di eventi mostrati sulla scheda",
+        todayOnly: "Solo oggi",
+        todayOnlyDesc: "Ignora tutti gli altri filtri sottostanti e mostra solo gli eventi di oggi",
+        nextEventDayOnly: "Solo il giorno del prossimo evento",
+        nextEventDayOnlyDesc:
+          "Mostra solo gli eventi del giorno più vicino - oggi, se presenti, altrimenti il giorno successivo con eventi (possibilmente più di uno)",
         daysAhead: "Giorni in anticipo (0 = illimitato)",
         daysAheadDesc: "Mostra solo eventi entro questo numero di giorni (0 = nessun limite)",
         daysPast: "Giorni passati (0 = solo oggi)",
@@ -1447,12 +1680,33 @@
         visibilitySoon: "A breve",
         visibilitySoonDesc: "Mostra eventi entro la soglia «a breve»",
         visibilityCardTitleDesc: "Mostra il titolo proprio della scheda",
+        hideCardTitle: "Nascondi",
+        hideCardTitleDesc: "Nascondi il titolo proprio della scheda, anche se impostato sopra",
+        tapAction: "Azione al tocco",
+        tapActionDesc: "Cosa succede quando si tocca o si fa clic su una riga",
+        holdAction: "Azione alla pressione prolungata",
+        holdActionDesc: "Cosa succede quando si tiene premuta una riga",
         visibilityIcon: "Icona",
         visibilityIconDesc: "Mostra l'icona del tipo davanti a ogni riga",
         visibilityTitleDesc: "Mostra il nome dell'evento",
         visibilitySubtitleDesc: "Mostra il tipo di evento",
         visibilityCountrySuffix: "Suffisso festività",
         visibilityCountrySuffixDesc: "Aggiunge il paese (ed eventualmente la suddivisione) dopo il nome/tipo della festività, ad es. «Festa della Repubblica · IT (RM)»",
+        columnsHeading: "Colonne di riga",
+        columnsDesc: "Aggiungi, rimuovi e riordina ciò che ogni riga mostra. Le colonne di testo libero possono combinare testo libero con segnaposto: {name}, {type}, {occurrence}, {when}, {country}.",
+        columnTypeIcon: "Icona",
+        columnTypeInfo: "Nome + tipo",
+        columnTypeName: "Nome",
+        columnTypeSubtitle: "Tipo",
+        columnTypeText: "Testo libero",
+        columnAdd: "Aggiungi",
+        columnMoveUp: "Sposta su",
+        columnMoveDown: "Sposta giù",
+        columnRemove: "Rimuovi",
+        columnTemplatePlaceholder: "ad es. {name} compie {occurrence} anni oggi",
+        columnColor: "Colore",
+        columnsCompact: "Compatto (senza spazi, centrato)",
+        columnsCompactDesc: "Rimuove lo spazio tra le colonne, centra la riga e uniforma spessore e opacità di tutti i campi - utile quando le colonne formano un'unica frase continua.",
         visibilityBadgeDesc: "Mostra il badge del numero di occorrenza",
         visibilityWhenDesc: "Mostra il conto alla rovescia (ad es. «tra 3 giorni»)",
         visibilityVipOnly: "Solo VIP",
@@ -1512,16 +1766,27 @@
         colorTodayDesc: "Colore dell'icona per gli eventi di oggi",
         colorSoonDesc: "Colore dell'icona per gli eventi entro la soglia «a breve»",
         colorAccentDesc: "Colore dell'icona per gli eventi senza stato particolare",
+        animationLabel: "Animazione",
+        animationDesc: "Aggiungi un'animazione in loop a questa icona",
+        animationNone: "Nessuna",
+        animationPulse: "Pulsazione",
+        animationBounce: "Rimbalzo",
+        animationShake: "Scuotimento",
+        animationSpin: "Rotazione",
+        animationFlash: "Lampeggio",
         matchTextLabel: "Colora anche il testo",
         matchTextDesc: "Colora anche tutto il testo della riga con questo colore dell'icona",
-        colorTitle: "Titolo",
-        colorSubtitle: "Sottotitolo",
+        colorTitle: "Nome",
+        colorSubtitle: "Tipo",
         colorBadge: "Occorrenza",
         colorWhen: "Conto alla rovescia",
+        colorText: "Testo libero",
+        cardTitleColorDesc: "Colore del testo per il titolo proprio della scheda",
         colorTitleDesc: "Colore del testo per il nome dell'evento",
         colorSubtitleDesc: "Colore del testo per il tipo di evento",
         colorBadgeDesc: "Colore del testo per il badge del numero di occorrenza",
         colorWhenDesc: "Colore del testo per il conto alla rovescia (ad es. «tra 3 giorni»)",
+        colorTextDesc: "Colore del testo per le colonne di testo libero (vedi Colonne di riga in Layout -> Visualizzazione)",
         backgroundLabel: "Mostra sfondo",
         backgroundDesc: "Mostra uno sfondo arrotondato dietro il numero di occorrenza",
         colorBadgeBackground: "Colore di sfondo",
@@ -1557,6 +1822,7 @@
         fontSubtitleDesc: "Dimensione del font per il tipo di evento",
         fontBadgeDesc: "Dimensione del font per il badge del numero di occorrenza",
         fontWhenDesc: "Dimensione del font per il conto alla rovescia (ad es. «tra 3 giorni»)",
+        fontTextDesc: "Dimensione del font per le colonne di testo libero (vedi Colonne di riga in Layout -> Visualizzazione)",
         fontPlaceholder: "ad es. 1.2em o 20px",
         fontBold: "Grassetto",
         fontItalic: "Corsivo",
@@ -1567,7 +1833,7 @@
         panelSettings: "Impostazioni",
         panelSettingsDesc: "Generale, eventi e periodo",
         panelLayout: "Layout",
-        panelLayoutDesc: "Visualizzazione, font, colori e sfondi",
+        panelLayoutDesc: "Visualizzazione, font, colori, icone e sfondi",
         groupGeneral: "Generale",
         groupGeneralDesc: "",
         groupEvents: "Eventi",
@@ -1650,6 +1916,11 @@
         titlePlaceholder: "por ex. Próximos eventos",
         count: "Número de eventos",
         countDesc: "O número total de eventos mostrados no cartão",
+        todayOnly: "Somente hoje",
+        todayOnlyDesc: "Ignorar todos os outros filtros abaixo e mostrar apenas os eventos de hoje",
+        nextEventDayOnly: "Somente o dia do próximo evento",
+        nextEventDayOnlyDesc:
+          "Mostrar apenas os eventos do dia mais próximo - hoje, se houver, senão o próximo dia com eventos (possivelmente mais de um)",
         daysAhead: "Dias à frente (0 = ilimitado)",
         daysAheadDesc: "Mostrar apenas eventos dentro desse número de dias (0 = sem limite)",
         daysPast: "Dias no passado (0 = apenas hoje)",
@@ -1670,12 +1941,33 @@
         visibilitySoon: "Em breve",
         visibilitySoonDesc: "Mostrar eventos dentro do limite \"em breve\"",
         visibilityCardTitleDesc: "Mostrar o título próprio do cartão",
+        hideCardTitle: "Ocultar",
+        hideCardTitleDesc: "Ocultar o título próprio do cartão, mesmo se definido acima",
+        tapAction: "Ação ao tocar",
+        tapActionDesc: "O que acontece ao tocar ou clicar em uma linha",
+        holdAction: "Ação ao pressionar e segurar",
+        holdActionDesc: "O que acontece ao pressionar e segurar uma linha",
         visibilityIcon: "Ícone",
         visibilityIconDesc: "Mostrar o ícone do tipo antes de cada linha",
         visibilityTitleDesc: "Mostrar o nome do evento",
         visibilitySubtitleDesc: "Mostrar o tipo de evento",
         visibilityCountrySuffix: "Sufixo do feriado",
         visibilityCountrySuffixDesc: "Acrescenta o país (e a subdivisão, se houver) após o nome/tipo do feriado, por ex. \"Independência do Brasil · BR (SP)\"",
+        columnsHeading: "Colunas da linha",
+        columnsDesc: "Adicione, remova e reorganize o que cada linha mostra. Colunas de texto personalizado podem combinar texto livre com espaços reservados: {name}, {type}, {occurrence}, {when}, {country}.",
+        columnTypeIcon: "Ícone",
+        columnTypeInfo: "Nome + tipo",
+        columnTypeName: "Nome",
+        columnTypeSubtitle: "Tipo",
+        columnTypeText: "Texto personalizado",
+        columnAdd: "Adicionar",
+        columnMoveUp: "Mover para cima",
+        columnMoveDown: "Mover para baixo",
+        columnRemove: "Remover",
+        columnTemplatePlaceholder: "por ex. {name} completa {occurrence} anos hoje",
+        columnColor: "Cor",
+        columnsCompact: "Compacto (sem espaços, centralizado)",
+        columnsCompactDesc: "Remove o espaçamento entre as colunas, centraliza a linha e uniformiza a espessura e a opacidade de todos os campos - útil quando as colunas formam uma única frase contínua.",
         visibilityBadgeDesc: "Mostrar o selo do número de ocorrência",
         visibilityWhenDesc: "Mostrar a contagem regressiva (por ex. \"em 3 dias\")",
         visibilityVipOnly: "Apenas VIP",
@@ -1735,16 +2027,27 @@
         colorTodayDesc: "Cor do ícone para eventos de hoje",
         colorSoonDesc: "Cor do ícone para eventos dentro do limite \"em breve\"",
         colorAccentDesc: "Cor do ícone para eventos sem status especial",
+        animationLabel: "Animação",
+        animationDesc: "Adicionar uma animação em loop a este ícone",
+        animationNone: "Nenhuma",
+        animationPulse: "Pulsar",
+        animationBounce: "Saltar",
+        animationShake: "Tremer",
+        animationSpin: "Girar",
+        animationFlash: "Piscar",
         matchTextLabel: "Colorir também o texto",
         matchTextDesc: "Colorir também todo o texto da linha com esta cor de ícone",
-        colorTitle: "Título",
-        colorSubtitle: "Subtítulo",
+        colorTitle: "Nome",
+        colorSubtitle: "Tipo",
         colorBadge: "Ocorrência",
         colorWhen: "Contagem regressiva",
+        colorText: "Texto personalizado",
+        cardTitleColorDesc: "Cor do texto para o título próprio do cartão",
         colorTitleDesc: "Cor do texto para o nome do evento",
         colorSubtitleDesc: "Cor do texto para o tipo de evento",
         colorBadgeDesc: "Cor do texto para o selo do número de ocorrência",
         colorWhenDesc: "Cor do texto para a contagem regressiva (por ex. \"em 3 dias\")",
+        colorTextDesc: "Cor do texto para colunas de texto personalizado (veja Colunas da linha em Layout -> Exibição)",
         backgroundLabel: "Mostrar fundo",
         backgroundDesc: "Mostrar um fundo arredondado atrás do número de ocorrência",
         colorBadgeBackground: "Cor de fundo",
@@ -1780,6 +2083,7 @@
         fontSubtitleDesc: "Tamanho da fonte para o tipo de evento",
         fontBadgeDesc: "Tamanho da fonte para o selo do número de ocorrência",
         fontWhenDesc: "Tamanho da fonte para a contagem regressiva (por ex. \"em 3 dias\")",
+        fontTextDesc: "Tamanho da fonte para colunas de texto personalizado (veja Colunas da linha em Layout -> Exibição)",
         fontPlaceholder: "por ex. 1.2em ou 20px",
         fontBold: "Negrito",
         fontItalic: "Itálico",
@@ -1790,7 +2094,7 @@
         panelSettings: "Configurações",
         panelSettingsDesc: "Geral, eventos e período",
         panelLayout: "Layout",
-        panelLayoutDesc: "Exibição, fontes, cores e fundos",
+        panelLayoutDesc: "Exibição, fontes, cores, ícones e fundos",
         groupGeneral: "Geral",
         groupGeneralDesc: "",
         groupEvents: "Eventos",
@@ -1873,6 +2177,11 @@
         titlePlaceholder: "напр. Ближайшие события",
         count: "Количество событий",
         countDesc: "Общее количество событий, показываемых на карточке",
+        todayOnly: "Только сегодня",
+        todayOnlyDesc: "Игнорировать все остальные фильтры ниже и показывать только сегодняшние события",
+        nextEventDayOnly: "Только день ближайшего события",
+        nextEventDayOnlyDesc:
+          "Показывать только события ближайшего дня - сегодняшнего, если есть, иначе следующего дня с событиями (возможно, несколькими)",
         daysAhead: "Дней вперёд (0 = без ограничений)",
         daysAheadDesc: "Показывать только события в пределах этого количества дней (0 = без ограничений)",
         daysPast: "Дней в прошлом (0 = только сегодня)",
@@ -1893,12 +2202,33 @@
         visibilitySoon: "Скоро",
         visibilitySoonDesc: "Показывать события в пределах порога «скоро»",
         visibilityCardTitleDesc: "Показывать собственный заголовок карточки",
+        hideCardTitle: "Скрыть",
+        hideCardTitleDesc: "Скрыть собственный заголовок карточки, даже если он задан выше",
+        tapAction: "Действие при нажатии",
+        tapActionDesc: "Что происходит при нажатии или клике на строку",
+        holdAction: "Действие при удержании",
+        holdActionDesc: "Что происходит при удержании строки нажатой",
         visibilityIcon: "Значок",
         visibilityIconDesc: "Показывать значок типа перед каждой строкой",
         visibilityTitleDesc: "Показывать имя события",
         visibilitySubtitleDesc: "Показывать тип события",
         visibilityCountrySuffix: "Суффикс праздника",
         visibilityCountrySuffixDesc: "Добавлять страну (и регион, если есть) после названия/типа праздника, напр. «День России · RU (MOW)»",
+        columnsHeading: "Столбцы строки",
+        columnsDesc: "Добавляйте, удаляйте и меняйте порядок того, что показывает каждая строка. Столбцы произвольного текста могут сочетать свободный текст с плейсхолдерами: {name}, {type}, {occurrence}, {when}, {country}.",
+        columnTypeIcon: "Значок",
+        columnTypeInfo: "Имя + тип",
+        columnTypeName: "Имя",
+        columnTypeSubtitle: "Тип",
+        columnTypeText: "Произвольный текст",
+        columnAdd: "Добавить",
+        columnMoveUp: "Переместить вверх",
+        columnMoveDown: "Переместить вниз",
+        columnRemove: "Удалить",
+        columnTemplatePlaceholder: "напр. {name} исполняется {occurrence} сегодня",
+        columnColor: "Цвет",
+        columnsCompact: "Компактно (без промежутков, по центру)",
+        columnsCompactDesc: "Убирает промежутки между столбцами, центрирует строку и выравнивает толщину и прозрачность всех полей - полезно, когда столбцы образуют одно связное предложение.",
         visibilityBadgeDesc: "Показывать значок номера события",
         visibilityWhenDesc: "Показывать обратный отсчёт (напр. «через 3 дня»)",
         visibilityVipOnly: "Только VIP",
@@ -1958,16 +2288,27 @@
         colorTodayDesc: "Цвет значка для сегодняшних событий",
         colorSoonDesc: "Цвет значка для событий в пределах порога «скоро»",
         colorAccentDesc: "Цвет значка для событий без особого статуса",
+        animationLabel: "Анимация",
+        animationDesc: "Добавить зацикленную анимацию к этому значку",
+        animationNone: "Нет",
+        animationPulse: "Пульсация",
+        animationBounce: "Подпрыгивание",
+        animationShake: "Встряхивание",
+        animationSpin: "Вращение",
+        animationFlash: "Мигание",
         matchTextLabel: "Также окрашивать текст",
         matchTextDesc: "Также окрашивать весь текст строки в этот цвет значка",
-        colorTitle: "Заголовок",
-        colorSubtitle: "Подзаголовок",
+        colorTitle: "Имя",
+        colorSubtitle: "Тип",
         colorBadge: "Номер события",
         colorWhen: "Обратный отсчёт",
+        colorText: "Произвольный текст",
+        cardTitleColorDesc: "Цвет текста для собственного заголовка карточки",
         colorTitleDesc: "Цвет текста для имени события",
         colorSubtitleDesc: "Цвет текста для типа события",
         colorBadgeDesc: "Цвет текста для значка номера события",
         colorWhenDesc: "Цвет текста для обратного отсчёта (напр. «через 3 дня»)",
+        colorTextDesc: "Цвет текста для столбцов произвольного текста (см. Столбцы строки в разделе Макет -> Отображение)",
         backgroundLabel: "Показывать фон",
         backgroundDesc: "Показывать скруглённый фон позади номера события",
         colorBadgeBackground: "Цвет фона",
@@ -2003,6 +2344,7 @@
         fontSubtitleDesc: "Размер шрифта для типа события",
         fontBadgeDesc: "Размер шрифта для значка номера события",
         fontWhenDesc: "Размер шрифта для обратного отсчёта (напр. «через 3 дня»)",
+        fontTextDesc: "Размер шрифта для столбцов произвольного текста (см. Столбцы строки в разделе Макет -> Отображение)",
         fontPlaceholder: "напр. 1.2em или 20px",
         fontBold: "Жирный",
         fontItalic: "Курсив",
@@ -2013,7 +2355,7 @@
         panelSettings: "Настройки",
         panelSettingsDesc: "Общее, события и период",
         panelLayout: "Оформление",
-        panelLayoutDesc: "Отображение, шрифты, цвета и фоны",
+        panelLayoutDesc: "Отображение, шрифты, цвета, значки и фоны",
         groupGeneral: "Общее",
         groupGeneralDesc: "",
         groupEvents: "События",
@@ -2096,6 +2438,11 @@
         titlePlaceholder: "t.ex. Kommande händelser",
         count: "Antal händelser",
         countDesc: "Det totala antalet händelser som visas på kortet",
+        todayOnly: "Endast idag",
+        todayOnlyDesc: "Ignorera alla andra filter nedan och visa endast dagens händelser",
+        nextEventDayOnly: "Endast nästa händelsedag",
+        nextEventDayOnlyDesc:
+          "Visa endast händelser för den närmaste dagen - idag, om sådana finns, annars nästa dag med händelser (eventuellt fler än en)",
         daysAhead: "Dagar framåt (0 = obegränsat)",
         daysAheadDesc: "Visa endast händelser inom detta antal dagar (0 = ingen gräns)",
         daysPast: "Dagar bakåt (0 = endast idag)",
@@ -2116,12 +2463,35 @@
         visibilitySoon: "Snart",
         visibilitySoonDesc: "Visa händelser inom \"snart\"-tröskeln",
         visibilityCardTitleDesc: "Visa kortets egen titel",
+        hideCardTitle: "Dölj",
+        hideCardTitleDesc: "Dölj kortets egen titel, även om den är inställd ovan",
+        tapAction: "Åtgärd vid tryck",
+        tapActionDesc: "Vad som händer när en rad trycks eller klickas",
+        holdAction: "Åtgärd vid tryck och håll",
+        holdActionDesc: "Vad som händer när en rad trycks och hålls in",
         visibilityIcon: "Ikon",
         visibilityIconDesc: "Visa typikonen framför varje rad",
         visibilityTitleDesc: "Visa händelsens namn",
         visibilitySubtitleDesc: "Visa händelsetypen",
         visibilityCountrySuffix: "Helgdagssuffix",
         visibilityCountrySuffixDesc: "Lägg till landet (och ev. delstat/region) efter helgdagens namn/typ, t.ex. \"Nationaldagen · SE (AB)\"",
+        columnsHeading: "Radkolumner",
+        columnsDesc:
+          "Lägg till, ta bort och ändra ordning på vad varje rad visar. Egna textkolumner kan blanda fri text med platshållare: {name}, {type}, {occurrence}, {when}, {country}.",
+        columnTypeIcon: "Ikon",
+        columnTypeInfo: "Namn + typ",
+        columnTypeName: "Namn",
+        columnTypeSubtitle: "Typ",
+        columnTypeText: "Egen text",
+        columnAdd: "Lägg till",
+        columnMoveUp: "Flytta upp",
+        columnMoveDown: "Flytta ner",
+        columnRemove: "Ta bort",
+        columnTemplatePlaceholder: "t.ex. {name} fyller {occurrence} idag",
+        columnColor: "Färg",
+        columnsCompact: "Kompakt (inga mellanrum, centrerad)",
+        columnsCompactDesc:
+          "Tar bort mellanrummet mellan kolumnerna, centrerar raden och gör vikt och opacitet lika för alla fält - användbart när kolumnerna bildar en sammanhängande mening.",
         visibilityBadgeDesc: "Visa märket för händelsenumret",
         visibilityWhenDesc: "Visa nedräkningen (t.ex. \"om 3 dagar\")",
         visibilityVipOnly: "Endast VIP",
@@ -2181,16 +2551,28 @@
         colorTodayDesc: "Ikonfärg för dagens händelser",
         colorSoonDesc: "Ikonfärg för händelser inom \"snart\"-tröskeln",
         colorAccentDesc: "Ikonfärg för händelser utan särskild status",
+        animationLabel: "Animation",
+        animationDesc: "Lägg till en repeterande animation för denna ikon",
+        animationNone: "Ingen",
+        animationPulse: "Pulsera",
+        animationBounce: "Studsa",
+        animationShake: "Skaka",
+        animationSpin: "Snurra",
+        animationFlash: "Blinka",
         matchTextLabel: "Färga även texten",
         matchTextDesc: "Färga även hela radens text med denna ikonfärg",
-        colorTitle: "Titel",
-        colorSubtitle: "Undertitel",
+        colorTitle: "Namn",
+        colorSubtitle: "Typ",
         colorBadge: "Händelsenummer",
         colorWhen: "Nedräkning",
+        colorText: "Egen text",
         colorTitleDesc: "Textfärg för händelsens namn",
+        cardTitleColorDesc: "Textfärg för kortets egen titel",
         colorSubtitleDesc: "Textfärg för händelsetypen",
         colorBadgeDesc: "Textfärg för märket med händelsenumret",
         colorWhenDesc: "Textfärg för nedräkningen (t.ex. \"om 3 dagar\")",
+        colorTextDesc:
+          "Textfärg för egna textkolumner (se Radkolumner under Layout -> Visning)",
         backgroundLabel: "Visa bakgrund",
         backgroundDesc: "Visa en rundad bakgrund bakom händelsenumret",
         colorBadgeBackground: "Bakgrundsfärg",
@@ -2226,6 +2608,8 @@
         fontSubtitleDesc: "Teckenstorlek för händelsetypen",
         fontBadgeDesc: "Teckenstorlek för märket med händelsenumret",
         fontWhenDesc: "Teckenstorlek för nedräkningen (t.ex. \"om 3 dagar\")",
+        fontTextDesc:
+          "Teckenstorlek för egna textkolumner (se Radkolumner under Layout -> Visning)",
         fontPlaceholder: "t.ex. 1.2em eller 20px",
         fontBold: "Fet",
         fontItalic: "Kursiv",
@@ -2236,7 +2620,7 @@
         panelSettings: "Inställningar",
         panelSettingsDesc: "Allmänt, händelser och period",
         panelLayout: "Layout",
-        panelLayoutDesc: "Visning, typsnitt, färger och bakgrunder",
+        panelLayoutDesc: "Visning, typsnitt, färger, ikoner och bakgrunder",
         groupGeneral: "Allmänt",
         groupGeneralDesc: "",
         groupEvents: "Händelser",
@@ -2321,6 +2705,11 @@
         titlePlaceholder: "例如：即将到来的事件",
         count: "事件数量",
         countDesc: "卡片上显示的事件总数",
+        todayOnly: "仅今天",
+        todayOnlyDesc: "忽略以下所有其他筛选条件，仅显示今天发生的事件",
+        nextEventDayOnly: "仅下一个事件日",
+        nextEventDayOnlyDesc:
+          "仅显示最近一天的事件——如果有的话是今天，否则是下一个有事件的日子（可能不止一个）",
         daysAhead: "提前天数（0 = 不限）",
         daysAheadDesc: "仅显示在此天数内发生的事件（0 = 不限）",
         daysPast: "过去天数（0 = 仅今天）",
@@ -2341,12 +2730,35 @@
         visibilitySoon: "即将到来",
         visibilitySoonDesc: "显示在“即将到来”阈值内的事件",
         visibilityCardTitleDesc: "显示卡片自身的标题",
+        hideCardTitle: "隐藏",
+        hideCardTitleDesc: "隐藏卡片自身的标题，即使上方已设置",
+        tapAction: "点击操作",
+        tapActionDesc: "点击或单击某行时执行的操作",
+        holdAction: "长按操作",
+        holdActionDesc: "长按某行时执行的操作",
         visibilityIcon: "图标",
         visibilityIconDesc: "在每行前显示类型图标",
         visibilityTitleDesc: "显示事件名称",
         visibilitySubtitleDesc: "显示事件类型",
         visibilityCountrySuffix: "节假日后缀",
         visibilityCountrySuffixDesc: "在节假日名称/类型后附加国家（及地区，如有），例如“国庆节 · CN (BJ)”",
+        columnsHeading: "行列",
+        columnsDesc:
+          "添加、删除并重新排列每行显示的内容。自定义文本列可以混合自由文本与占位符：{name}、{type}、{occurrence}、{when}、{country}。",
+        columnTypeIcon: "图标",
+        columnTypeInfo: "名称 + 类型",
+        columnTypeName: "名称",
+        columnTypeSubtitle: "类型",
+        columnTypeText: "自定义文本",
+        columnAdd: "添加",
+        columnMoveUp: "上移",
+        columnMoveDown: "下移",
+        columnRemove: "移除",
+        columnTemplatePlaceholder: "例如：{name} 今天满 {occurrence} 岁",
+        columnColor: "颜色",
+        columnsCompact: "紧凑（无间距，居中）",
+        columnsCompactDesc:
+          "移除各列之间的间距，使该行居中，并让所有字段的粗细和不透明度保持一致——适用于各列组成一个连贯句子的情况。",
         visibilityBadgeDesc: "显示周年数徽章",
         visibilityWhenDesc: "显示倒计时（例如“3 天后”）",
         visibilityVipOnly: "仅 VIP",
@@ -2406,16 +2818,27 @@
         colorTodayDesc: "今天事件的图标颜色",
         colorSoonDesc: "“即将到来”阈值内事件的图标颜色",
         colorAccentDesc: "无特殊状态事件的图标颜色",
+        animationLabel: "动画",
+        animationDesc: "为此图标添加循环动画",
+        animationNone: "无",
+        animationPulse: "脉动",
+        animationBounce: "弹跳",
+        animationShake: "摇晃",
+        animationSpin: "旋转",
+        animationFlash: "闪烁",
         matchTextLabel: "同时为文本着色",
         matchTextDesc: "同时用此图标颜色为整行文本着色",
-        colorTitle: "标题",
-        colorSubtitle: "副标题",
+        colorTitle: "名称",
+        colorSubtitle: "类型",
         colorBadge: "周年数",
         colorWhen: "倒计时",
+        colorText: "自定义文本",
         colorTitleDesc: "事件名称的文本颜色",
+        cardTitleColorDesc: "卡片自身标题的文本颜色",
         colorSubtitleDesc: "事件类型的文本颜色",
         colorBadgeDesc: "周年数徽章的文本颜色",
         colorWhenDesc: "倒计时的文本颜色（例如“3 天后”）",
+        colorTextDesc: "自定义文本列的文本颜色（参见“布局 -> 显示”中的行列）",
         backgroundLabel: "显示背景",
         backgroundDesc: "在周年数后方显示圆角背景",
         colorBadgeBackground: "背景颜色",
@@ -2451,6 +2874,7 @@
         fontSubtitleDesc: "事件类型的字体大小",
         fontBadgeDesc: "周年数徽章的字体大小",
         fontWhenDesc: "倒计时的字体大小（例如“3 天后”）",
+        fontTextDesc: "自定义文本列的字体大小（参见“布局 -> 显示”中的行列）",
         fontPlaceholder: "例如：1.2em 或 20px",
         fontBold: "粗体",
         fontItalic: "斜体",
@@ -2461,7 +2885,7 @@
         panelSettings: "设置",
         panelSettingsDesc: "常规、事件和时间段",
         panelLayout: "布局",
-        panelLayoutDesc: "显示、字体、颜色和背景",
+        panelLayoutDesc: "显示、字体、颜色、图标和背景",
         groupGeneral: "常规",
         groupGeneralDesc: "",
         groupEvents: "事件",
@@ -2544,6 +2968,11 @@
         titlePlaceholder: "např. Nadcházející události",
         count: "Počet událostí",
         countDesc: "Celkový počet událostí zobrazených na kartě",
+        todayOnly: "Pouze dnes",
+        todayOnlyDesc: "Ignorovat všechny ostatní filtry níže a zobrazit pouze dnešní události",
+        nextEventDayOnly: "Pouze den nejbližší události",
+        nextEventDayOnlyDesc:
+          "Zobrazit pouze události z jediného nejbližšího dne - dnešního, pokud existuje, jinak dalšího dne s událostmi (případně více než jednou)",
         daysAhead: "Dní dopředu (0 = neomezeno)",
         daysAheadDesc: "Zobrazit pouze události v tomto počtu dní (0 = bez omezení)",
         daysPast: "Dní zpět (0 = pouze dnes)",
@@ -2564,12 +2993,35 @@
         visibilitySoon: "Brzy",
         visibilitySoonDesc: "Zobrazit události v prahu „brzy“",
         visibilityCardTitleDesc: "Zobrazit vlastní název karty",
+        hideCardTitle: "Skrýt",
+        hideCardTitleDesc: "Skrýt vlastní název karty, i když je nastaven výše",
+        tapAction: "Akce při klepnutí",
+        tapActionDesc: "Co se stane při klepnutí nebo kliknutí na řádek",
+        holdAction: "Akce při podržení",
+        holdActionDesc: "Co se stane při podržení řádku",
         visibilityIcon: "Ikona",
         visibilityIconDesc: "Zobrazit ikonu typu před každým řádkem",
         visibilityTitleDesc: "Zobrazit jméno události",
         visibilitySubtitleDesc: "Zobrazit typ události",
         visibilityCountrySuffix: "Přípona svátku",
         visibilityCountrySuffixDesc: "Připojit zemi (a případně kraj) za název/typ svátku, např. „Den české státnosti · CZ (PR)“",
+        columnsHeading: "Sloupce řádku",
+        columnsDesc:
+          "Přidávejte, odebírejte a měňte pořadí toho, co každý řádek zobrazuje. Vlastní textové sloupce mohou kombinovat volný text se zástupnými symboly: {name}, {type}, {occurrence}, {when}, {country}.",
+        columnTypeIcon: "Ikona",
+        columnTypeInfo: "Jméno + typ",
+        columnTypeName: "Jméno",
+        columnTypeSubtitle: "Typ",
+        columnTypeText: "Vlastní text",
+        columnAdd: "Přidat",
+        columnMoveUp: "Posunout nahoru",
+        columnMoveDown: "Posunout dolů",
+        columnRemove: "Odebrat",
+        columnTemplatePlaceholder: "např. {name} má dnes {occurrence}. narozeniny",
+        columnColor: "Barva",
+        columnsCompact: "Kompaktní (bez mezer, na střed)",
+        columnsCompactDesc:
+          "Odstraní mezery mezi sloupci, vystředí řádek a sjednotí váhu a krytí všech polí - užitečné, když sloupce tvoří jednu souvislou větu.",
         visibilityBadgeDesc: "Zobrazit odznak čísla výročí",
         visibilityWhenDesc: "Zobrazit odpočet (např. „za 3 dny“)",
         visibilityVipOnly: "Pouze VIP",
@@ -2629,16 +3081,28 @@
         colorTodayDesc: "Barva ikony pro dnešní události",
         colorSoonDesc: "Barva ikony pro události v prahu „brzy“",
         colorAccentDesc: "Barva ikony pro události bez zvláštního stavu",
+        animationLabel: "Animace",
+        animationDesc: "Přidat této ikoně smyčkovou animaci",
+        animationNone: "Žádná",
+        animationPulse: "Pulzování",
+        animationBounce: "Poskakování",
+        animationShake: "Třesení",
+        animationSpin: "Otáčení",
+        animationFlash: "Blikání",
         matchTextLabel: "Obarvit i text",
         matchTextDesc: "Obarvit touto barvou ikony i celý text řádku",
-        colorTitle: "Nadpis",
-        colorSubtitle: "Podnadpis",
+        colorTitle: "Jméno",
+        colorSubtitle: "Typ",
         colorBadge: "Výročí",
         colorWhen: "Odpočet",
+        colorText: "Vlastní text",
         colorTitleDesc: "Barva textu pro jméno události",
+        cardTitleColorDesc: "Barva textu pro vlastní název karty",
         colorSubtitleDesc: "Barva textu pro typ události",
         colorBadgeDesc: "Barva textu pro odznak čísla výročí",
         colorWhenDesc: "Barva textu pro odpočet (např. „za 3 dny“)",
+        colorTextDesc:
+          "Barva textu pro vlastní textové sloupce (viz Sloupce řádku v Rozvržení -> Zobrazení)",
         backgroundLabel: "Zobrazit pozadí",
         backgroundDesc: "Zobrazit zaoblené pozadí za číslem výročí",
         colorBadgeBackground: "Barva pozadí",
@@ -2674,6 +3138,8 @@
         fontSubtitleDesc: "Velikost písma pro typ události",
         fontBadgeDesc: "Velikost písma pro odznak čísla výročí",
         fontWhenDesc: "Velikost písma pro odpočet (např. „za 3 dny“)",
+        fontTextDesc:
+          "Velikost písma pro vlastní textové sloupce (viz Sloupce řádku v Rozvržení -> Zobrazení)",
         fontPlaceholder: "např. 1.2em nebo 20px",
         fontBold: "Tučné",
         fontItalic: "Kurzíva",
@@ -2684,7 +3150,7 @@
         panelSettings: "Nastavení",
         panelSettingsDesc: "Obecné, události a období",
         panelLayout: "Rozvržení",
-        panelLayoutDesc: "Zobrazení, písma, barvy a pozadí",
+        panelLayoutDesc: "Zobrazení, písma, barvy, ikony a pozadí",
         groupGeneral: "Obecné",
         groupGeneralDesc: "",
         groupEvents: "Události",
@@ -2767,6 +3233,11 @@
         titlePlaceholder: "f.eks. Kommende hendelser",
         count: "Antall hendelser",
         countDesc: "Det totale antallet hendelser som vises på kortet",
+        todayOnly: "Bare i dag",
+        todayOnlyDesc: "Ignorer alle andre filtre nedenfor og vis kun dagens hendelser",
+        nextEventDayOnly: "Bare neste hendelsesdag",
+        nextEventDayOnlyDesc:
+          "Vis bare hendelser for den nærmeste dagen - i dag, hvis noen, ellers neste dag med hendelser (eventuelt flere enn én)",
         daysAhead: "Dager fremover (0 = ubegrenset)",
         daysAheadDesc: "Vis bare hendelser innen dette antallet dager (0 = ingen grense)",
         daysPast: "Dager tilbake (0 = bare i dag)",
@@ -2787,12 +3258,35 @@
         visibilitySoon: "Snart",
         visibilitySoonDesc: "Vis hendelser innenfor «snart»-terskelen",
         visibilityCardTitleDesc: "Vis kortets egen tittel",
+        hideCardTitle: "Skjul",
+        hideCardTitleDesc: "Skjul kortets egen tittel, selv om den er angitt ovenfor",
+        tapAction: "Handling ved trykk",
+        tapActionDesc: "Hva som skjer når en rad trykkes eller klikkes",
+        holdAction: "Handling ved trykk og hold",
+        holdActionDesc: "Hva som skjer når en rad trykkes og holdes inne",
         visibilityIcon: "Ikon",
         visibilityIconDesc: "Vis typeikonet foran hver rad",
         visibilityTitleDesc: "Vis hendelsens navn",
         visibilitySubtitleDesc: "Vis hendelsestypen",
         visibilityCountrySuffix: "Helligdagssuffiks",
         visibilityCountrySuffixDesc: "Legg til landet (og eventuelt fylket) etter helligdagens navn/type, f.eks. «Grunnlovsdagen · NO (OSL)»",
+        columnsHeading: "Radkolonner",
+        columnsDesc:
+          "Legg til, fjern og endre rekkefølgen på det hver rad viser. Egendefinerte tekstkolonner kan blande fri tekst med plassholdere: {name}, {type}, {occurrence}, {when}, {country}.",
+        columnTypeIcon: "Ikon",
+        columnTypeInfo: "Navn + type",
+        columnTypeName: "Navn",
+        columnTypeSubtitle: "Type",
+        columnTypeText: "Egendefinert tekst",
+        columnAdd: "Legg til",
+        columnMoveUp: "Flytt opp",
+        columnMoveDown: "Flytt ned",
+        columnRemove: "Fjern",
+        columnTemplatePlaceholder: "f.eks. {name} fyller {occurrence} i dag",
+        columnColor: "Farge",
+        columnsCompact: "Kompakt (ingen mellomrom, sentrert)",
+        columnsCompactDesc:
+          "Fjerner mellomrommet mellom kolonnene, sentrerer raden og gjør vekt og opasitet lik for alle felt - nyttig når kolonnene danner én sammenhengende setning.",
         visibilityBadgeDesc: "Vis merket for jubileumsnummeret",
         visibilityWhenDesc: "Vis nedtellingen (f.eks. «om 3 dager»)",
         visibilityVipOnly: "Kun VIP",
@@ -2852,16 +3346,28 @@
         colorTodayDesc: "Ikonfarge for dagens hendelser",
         colorSoonDesc: "Ikonfarge for hendelser innenfor «snart»-terskelen",
         colorAccentDesc: "Ikonfarge for hendelser uten spesiell status",
+        animationLabel: "Animasjon",
+        animationDesc: "Legg til en løkkeanimasjon for dette ikonet",
+        animationNone: "Ingen",
+        animationPulse: "Puls",
+        animationBounce: "Sprett",
+        animationShake: "Rist",
+        animationSpin: "Snurr",
+        animationFlash: "Blink",
         matchTextLabel: "Fargelegg også teksten",
         matchTextDesc: "Fargelegg også all tekst i raden med denne ikonfargen",
-        colorTitle: "Tittel",
-        colorSubtitle: "Undertittel",
+        colorTitle: "Navn",
+        colorSubtitle: "Type",
         colorBadge: "Jubileum",
         colorWhen: "Nedtelling",
+        colorText: "Egendefinert tekst",
         colorTitleDesc: "Tekstfarge for hendelsens navn",
+        cardTitleColorDesc: "Tekstfarge for kortets egen tittel",
         colorSubtitleDesc: "Tekstfarge for hendelsestypen",
         colorBadgeDesc: "Tekstfarge for merket med jubileumsnummeret",
         colorWhenDesc: "Tekstfarge for nedtellingen (f.eks. «om 3 dager»)",
+        colorTextDesc:
+          "Tekstfarge for egendefinerte tekstkolonner (se Radkolonner under Layout -> Visning)",
         backgroundLabel: "Vis bakgrunn",
         backgroundDesc: "Vis en avrundet bakgrunn bak jubileumsnummeret",
         colorBadgeBackground: "Bakgrunnsfarge",
@@ -2897,6 +3403,8 @@
         fontSubtitleDesc: "Skriftstørrelse for hendelsestypen",
         fontBadgeDesc: "Skriftstørrelse for merket med jubileumsnummeret",
         fontWhenDesc: "Skriftstørrelse for nedtellingen (f.eks. «om 3 dager»)",
+        fontTextDesc:
+          "Skriftstørrelse for egendefinerte tekstkolonner (se Radkolonner under Layout -> Visning)",
         fontPlaceholder: "f.eks. 1.2em eller 20px",
         fontBold: "Fet",
         fontItalic: "Kursiv",
@@ -2907,7 +3415,7 @@
         panelSettings: "Innstillinger",
         panelSettingsDesc: "Generelt, hendelser og periode",
         panelLayout: "Layout",
-        panelLayoutDesc: "Visning, skrifter, farger og bakgrunner",
+        panelLayoutDesc: "Visning, skrifter, farger, ikoner og bakgrunner",
         groupGeneral: "Generelt",
         groupGeneralDesc: "",
         groupEvents: "Hendelser",
@@ -2990,6 +3498,11 @@
         titlePlaceholder: "f.eks. Kommende begivenheder",
         count: "Antal begivenheder",
         countDesc: "Det samlede antal begivenheder, der vises på kortet",
+        todayOnly: "Kun i dag",
+        todayOnlyDesc: "Ignorer alle andre filtre nedenfor og vis kun dagens begivenheder",
+        nextEventDayOnly: "Kun næste begivenhedsdag",
+        nextEventDayOnlyDesc:
+          "Vis kun begivenheder for den nærmeste dag - i dag, hvis nogen, ellers næste dag med begivenheder (eventuelt flere end én)",
         daysAhead: "Dage frem (0 = ubegrænset)",
         daysAheadDesc: "Vis kun begivenheder inden for dette antal dage (0 = ingen grænse)",
         daysPast: "Dage tilbage (0 = kun i dag)",
@@ -3010,12 +3523,35 @@
         visibilitySoon: "Snart",
         visibilitySoonDesc: "Vis begivenheder inden for \"snart\"-tærsklen",
         visibilityCardTitleDesc: "Vis kortets egen titel",
+        hideCardTitle: "Skjul",
+        hideCardTitleDesc: "Skjul kortets egen titel, selv når den er angivet ovenfor",
+        tapAction: "Handling ved tryk",
+        tapActionDesc: "Hvad der sker, når en række trykkes eller klikkes",
+        holdAction: "Handling ved tryk og hold",
+        holdActionDesc: "Hvad der sker, når en række trykkes og holdes nede",
         visibilityIcon: "Ikon",
         visibilityIconDesc: "Vis typeikonet foran hver række",
         visibilityTitleDesc: "Vis begivenhedens navn",
         visibilitySubtitleDesc: "Vis begivenhedstypen",
         visibilityCountrySuffix: "Helligdagssuffiks",
         visibilityCountrySuffixDesc: "Tilføj landet (og evt. regionen) efter helligdagens navn/type, f.eks. \"Grundlovsdag · DK (84)\"",
+        columnsHeading: "Rækkekolonner",
+        columnsDesc:
+          "Tilføj, fjern og omorganiser hvad hver række viser. Brugerdefinerede tekstkolonner kan blande fri tekst med pladsholdere: {name}, {type}, {occurrence}, {when}, {country}.",
+        columnTypeIcon: "Ikon",
+        columnTypeInfo: "Navn + type",
+        columnTypeName: "Navn",
+        columnTypeSubtitle: "Type",
+        columnTypeText: "Brugerdefineret tekst",
+        columnAdd: "Tilføj",
+        columnMoveUp: "Flyt op",
+        columnMoveDown: "Flyt ned",
+        columnRemove: "Fjern",
+        columnTemplatePlaceholder: "f.eks. {name} fylder {occurrence} i dag",
+        columnColor: "Farve",
+        columnsCompact: "Kompakt (ingen mellemrum, centreret)",
+        columnsCompactDesc:
+          "Fjerner mellemrummet mellem kolonnerne, centrerer rækken og gør vægt og opacitet ens for alle felter - nyttigt når kolonnerne danner én sammenhængende sætning.",
         visibilityBadgeDesc: "Vis mærket for jubilæumsnummeret",
         visibilityWhenDesc: "Vis nedtællingen (f.eks. \"om 3 dage\")",
         visibilityVipOnly: "Kun VIP",
@@ -3075,16 +3611,28 @@
         colorTodayDesc: "Ikonfarve for dagens begivenheder",
         colorSoonDesc: "Ikonfarve for begivenheder inden for \"snart\"-tærsklen",
         colorAccentDesc: "Ikonfarve for begivenheder uden særlig status",
+        animationLabel: "Animation",
+        animationDesc: "Tilføj en løkkeanimation til dette ikon",
+        animationNone: "Ingen",
+        animationPulse: "Puls",
+        animationBounce: "Hop",
+        animationShake: "Ryst",
+        animationSpin: "Spin",
+        animationFlash: "Blink",
         matchTextLabel: "Farvelæg også teksten",
         matchTextDesc: "Farvelæg også hele rækkens tekst med denne ikonfarve",
-        colorTitle: "Titel",
-        colorSubtitle: "Undertitel",
+        colorTitle: "Navn",
+        colorSubtitle: "Type",
         colorBadge: "Jubilæum",
         colorWhen: "Nedtælling",
+        colorText: "Brugerdefineret tekst",
         colorTitleDesc: "Tekstfarve for begivenhedens navn",
+        cardTitleColorDesc: "Tekstfarve for kortets egen titel",
         colorSubtitleDesc: "Tekstfarve for begivenhedstypen",
         colorBadgeDesc: "Tekstfarve for mærket med jubilæumsnummeret",
         colorWhenDesc: "Tekstfarve for nedtællingen (f.eks. \"om 3 dage\")",
+        colorTextDesc:
+          "Tekstfarve for brugerdefinerede tekstkolonner (se Rækkekolonner under Layout -> Visning)",
         backgroundLabel: "Vis baggrund",
         backgroundDesc: "Vis en afrundet baggrund bag jubilæumsnummeret",
         colorBadgeBackground: "Baggrundsfarve",
@@ -3120,6 +3668,8 @@
         fontSubtitleDesc: "Skriftstørrelse for begivenhedstypen",
         fontBadgeDesc: "Skriftstørrelse for mærket med jubilæumsnummeret",
         fontWhenDesc: "Skriftstørrelse for nedtællingen (f.eks. \"om 3 dage\")",
+        fontTextDesc:
+          "Skriftstørrelse for brugerdefinerede tekstkolonner (se Rækkekolonner under Layout -> Visning)",
         fontPlaceholder: "f.eks. 1.2em eller 20px",
         fontBold: "Fed",
         fontItalic: "Kursiv",
@@ -3130,7 +3680,7 @@
         panelSettings: "Indstillinger",
         panelSettingsDesc: "Generelt, begivenheder og periode",
         panelLayout: "Layout",
-        panelLayoutDesc: "Visning, skrifttyper, farver og baggrunde",
+        panelLayoutDesc: "Visning, skrifttyper, farver, ikoner og baggrunde",
         groupGeneral: "Generelt",
         groupGeneralDesc: "",
         groupEvents: "Begivenheder",
@@ -3213,6 +3763,11 @@
         titlePlaceholder: "örn. Yaklaşan Etkinlikler",
         count: "Etkinlik sayısı",
         countDesc: "Kartta gösterilen toplam etkinlik sayısı",
+        todayOnly: "Yalnızca bugün",
+        todayOnlyDesc: "Aşağıdaki tüm diğer filtreleri yok say ve yalnızca bugün gerçekleşen etkinlikleri göster",
+        nextEventDayOnly: "Yalnızca sonraki etkinlik günü",
+        nextEventDayOnlyDesc:
+          "Yalnızca en yakın gündeki etkinlikleri göster - varsa bugünkü, yoksa etkinlik olan sonraki gün (birden fazla olabilir)",
         daysAhead: "İleri gün sayısı (0 = sınırsız)",
         daysAheadDesc: "Yalnızca bu gün sayısı içinde gerçekleşen etkinlikleri göster (0 = sınır yok)",
         daysPast: "Geçmiş gün sayısı (0 = yalnızca bugün)",
@@ -3233,12 +3788,35 @@
         visibilitySoon: "Yakında",
         visibilitySoonDesc: "\"Yakında\" eşiği içindeki etkinlikleri göster",
         visibilityCardTitleDesc: "Kartın kendi başlığını göster",
+        hideCardTitle: "Gizle",
+        hideCardTitleDesc: "Yukarıda ayarlanmış olsa bile kartın kendi başlığını gizle",
+        tapAction: "Dokunma eylemi",
+        tapActionDesc: "Bir satıra dokunulduğunda veya tıklandığında ne olacağı",
+        holdAction: "Basılı tutma eylemi",
+        holdActionDesc: "Bir satır basılı tutulduğunda ne olacağı",
         visibilityIcon: "Simge",
         visibilityIconDesc: "Her satırın önünde tür simgesini göster",
         visibilityTitleDesc: "Etkinlik adını göster",
         visibilitySubtitleDesc: "Etkinlik türünü göster",
         visibilityCountrySuffix: "Tatil eki",
         visibilityCountrySuffixDesc: "Tatilin adının/türünün ardına ülkeyi (ve varsa bölgeyi) ekler, örn. \"Cumhuriyet Bayramı · TR (34)\"",
+        columnsHeading: "Satır sütunları",
+        columnsDesc:
+          "Her satırın gösterdiği içeriği ekleyin, kaldırın ve yeniden sıralayın. Özel metin sütunları serbest metni yer tutucularla karıştırabilir: {name}, {type}, {occurrence}, {when}, {country}.",
+        columnTypeIcon: "Simge",
+        columnTypeInfo: "Ad + tür",
+        columnTypeName: "Ad",
+        columnTypeSubtitle: "Tür",
+        columnTypeText: "Özel metin",
+        columnAdd: "Ekle",
+        columnMoveUp: "Yukarı taşı",
+        columnMoveDown: "Aşağı taşı",
+        columnRemove: "Kaldır",
+        columnTemplatePlaceholder: "örn. {name} bugün {occurrence} yaşına giriyor",
+        columnColor: "Renk",
+        columnsCompact: "Kompakt (boşluksuz, ortalanmış)",
+        columnsCompactDesc:
+          "Sütunlar arasındaki boşluğu kaldırır, satırı ortalar ve tüm alanların kalınlık ve saydamlığını eşitler - sütunların tek bir cümle oluşturduğu durumlarda kullanışlıdır.",
         visibilityBadgeDesc: "Tekrar numarası rozetini göster",
         visibilityWhenDesc: "Geri sayımı göster (örn. \"3 gün sonra\")",
         visibilityVipOnly: "Yalnızca VIP",
@@ -3298,16 +3876,28 @@
         colorTodayDesc: "Bugünkü etkinlikler için simge rengi",
         colorSoonDesc: "\"Yakında\" eşiği içindeki etkinlikler için simge rengi",
         colorAccentDesc: "Özel durumu olmayan etkinlikler için simge rengi",
+        animationLabel: "Animasyon",
+        animationDesc: "Bu simgeye döngüsel bir animasyon ekle",
+        animationNone: "Yok",
+        animationPulse: "Nabız",
+        animationBounce: "Zıplama",
+        animationShake: "Sallanma",
+        animationSpin: "Dönme",
+        animationFlash: "Yanıp sönme",
         matchTextLabel: "Metni de renklendir",
         matchTextDesc: "Satırın tüm metnini de bu simge rengiyle renklendir",
-        colorTitle: "Başlık",
-        colorSubtitle: "Alt başlık",
+        colorTitle: "Ad",
+        colorSubtitle: "Tür",
         colorBadge: "Tekrar sayısı",
         colorWhen: "Geri sayım",
+        colorText: "Özel metin",
         colorTitleDesc: "Etkinlik adı için metin rengi",
+        cardTitleColorDesc: "Kartın kendi başlığı için metin rengi",
         colorSubtitleDesc: "Etkinlik türü için metin rengi",
         colorBadgeDesc: "Tekrar numarası rozeti için metin rengi",
         colorWhenDesc: "Geri sayım için metin rengi (örn. \"3 gün sonra\")",
+        colorTextDesc:
+          "Özel metin sütunları için metin rengi (bkz. Düzen -> Görünüm altındaki Satır sütunları)",
         backgroundLabel: "Arka planı göster",
         backgroundDesc: "Tekrar numarasının arkasında yuvarlatılmış bir arka plan göster",
         colorBadgeBackground: "Arka plan rengi",
@@ -3343,6 +3933,8 @@
         fontSubtitleDesc: "Etkinlik türü için yazı tipi boyutu",
         fontBadgeDesc: "Tekrar numarası rozeti için yazı tipi boyutu",
         fontWhenDesc: "Geri sayım için yazı tipi boyutu (örn. \"3 gün sonra\")",
+        fontTextDesc:
+          "Özel metin sütunları için yazı tipi boyutu (bkz. Düzen -> Görünüm altındaki Satır sütunları)",
         fontPlaceholder: "örn. 1.2em veya 20px",
         fontBold: "Kalın",
         fontItalic: "İtalik",
@@ -3353,7 +3945,7 @@
         panelSettings: "Ayarlar",
         panelSettingsDesc: "Genel, etkinlikler ve dönem",
         panelLayout: "Düzen",
-        panelLayoutDesc: "Görünüm, yazı tipleri, renkler ve arka planlar",
+        panelLayoutDesc: "Görünüm, yazı tipleri, renkler, simgeler ve arka planlar",
         groupGeneral: "Genel",
         groupGeneralDesc: "",
         groupEvents: "Etkinlikler",
@@ -3375,6 +3967,16 @@
     return STRINGS[lang] || STRINGS.en;
   }
 
+  // Implicit column layout for any dashboard saved before this feature
+  // existed (config.columns unset) - matches the legacy fixed row template
+  // in _row() exactly, and seeds the "Spalten" editor's list on first open.
+  const DEFAULT_COLUMNS = [
+    { id: "icon", type: "icon" },
+    { id: "info", type: "info" },
+    { id: "badge", type: "badge" },
+    { id: "when", type: "when" },
+  ];
+
   function defaultConfig(config) {
     config = config || {};
     return {
@@ -3384,6 +3986,8 @@
       days_ahead: 0,
       days_past: 0,
       soon_days: 7,
+      today_only: false,
+      next_event_day_only: false,
       types: [],
       // Only meaningful for holiday-type events (see CATEGORY_ICONS in
       // const.py) - empty means "show every category", same semantics as
@@ -3412,15 +4016,45 @@
       // name/type text instead of the old hover-only tooltip.
       show_name_country: false,
       show_subtitle_country: false,
+      // Deliberately not defaulted to an array - "unset" (every dashboard
+      // saved before this feature existed) must stay distinguishable from
+      // "explicitly configured" so _row() can pick the right render path.
+      // See _buildDisplayBody's column-list editor for how this gets set.
+      columns: undefined,
+      // Squashes the gap between columns and centers the row, and neutralizes
+      // the couple of hardcoded style differences between fields (the name's
+      // semi-bold weight, the subtitle/countdown's dimmed opacity) that
+      // otherwise still show even once every field is given matching
+      // color/font-size - meant for building one continuous sentence out of
+      // columns rather than a classic multi-field row.
+      columns_compact: false,
+      // HA's own action-config shape ({action: "more-info"/"navigate"/...}).
+      // Defaulting tap to "more-info" preserves this card's original,
+      // pre-configurable click behavior for every dashboard saved before
+      // this feature existed; hold has never done anything, so it defaults
+      // to "none".
+      tap_action: { action: "more-info" },
+      hold_action: { action: "none" },
       ...config,
+      // Per icon-color-category (accent/today/soon) animation, keyed the
+      // same way as colors.match_* so the same "which category is this
+      // row's icon in" lookup (colorCategory in _row()) drives both.
+      icon_animation: {
+        accent: "none",
+        today: "none",
+        soon: "none",
+        ...(config.icon_animation || {}),
+      },
       colors: {
         today: "",
         soon: "",
         accent: "",
+        card_title: "",
         title: "",
         subtitle: "",
         badge: "",
         when: "",
+        text: "",
         match_accent: false,
         match_today: false,
         match_soon: false,
@@ -3438,6 +4072,7 @@
         subtitle: "",
         badge: "",
         when: "",
+        text: "",
         ...(config.font_sizes || {}),
       },
       font_style: {
@@ -3480,6 +4115,14 @@
           underline: false,
           letter_spacing: "",
           ...((config.font_style || {}).when || {}),
+        },
+        text: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).text || {}),
         },
       },
       background: {
@@ -3547,6 +4190,14 @@
     return Math.round((today0 - prevYear) / 86400000);
   }
 
+  // Plain {placeholder} substitution for "text" columns - no expressions or
+  // conditionals, consistent with this card's no-build-step, no-cleverness
+  // approach elsewhere. Missing keys render as empty string rather than
+  // leaving the literal "{foo}" in the output.
+  function renderTemplate(template, values) {
+    return template.replace(/\{(\w+)\}/g, (_, key) => (values[key] ?? ""));
+  }
+
   const CARD_STYLE = `
     ha-card { padding: 16px; position: relative; overflow: hidden; }
     /* Custom card background (color/image) lives on its own layer behind
@@ -3574,6 +4225,7 @@
       text-transform: var(--annuals-title-transform, none);
       text-decoration: var(--annuals-title-decoration, none);
       letter-spacing: var(--annuals-title-spacing, normal);
+      color: var(--annuals-card-title-color, inherit);
       margin-bottom: 12px;
     }
     .list {
@@ -3589,10 +4241,12 @@
       align-items: center;
       gap: 12px;
       padding: 6px 12px 6px 4px;
-      cursor: pointer;
       border-radius: 8px;
     }
-    .row:hover {
+    .row.has-action {
+      cursor: pointer;
+    }
+    .row.has-action:hover {
       background: var(--secondary-background-color, rgba(0, 0, 0, 0.04));
     }
     .row.highlight-today {
@@ -3620,6 +4274,35 @@
     .icon { flex-shrink: 0; color: var(--annuals-accent-color, var(--primary-text-color)); }
     .icon.today { color: var(--annuals-today-color, var(--error-color)); }
     .icon.soon { color: var(--annuals-soon-color, var(--warning-color)); }
+    /* Optional per-category (Default/Today/Soon) icon animation - see the
+       Layout -> Icons editor tab. Applied directly on the icon element via
+       an anim-* class computed from config.icon_animation in _row(), so
+       these rules stay a flat list with no category-crossed combinations. */
+    @keyframes annuals-icon-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+    @keyframes annuals-icon-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-25%); }
+    }
+    @keyframes annuals-icon-shake {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-14deg); }
+      75% { transform: rotate(14deg); }
+    }
+    @keyframes annuals-icon-spin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes annuals-icon-flash {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.25; }
+    }
+    .icon.anim-pulse { animation: annuals-icon-pulse 1.4s ease-in-out infinite; }
+    .icon.anim-bounce { animation: annuals-icon-bounce 1s ease-in-out infinite; }
+    .icon.anim-shake { animation: annuals-icon-shake 0.6s ease-in-out infinite; }
+    .icon.anim-spin { animation: annuals-icon-spin 2s linear infinite; }
+    .icon.anim-flash { animation: annuals-icon-flash 1.2s ease-in-out infinite; }
     .vip-badge,
     .important-badge {
       position: absolute;
@@ -3730,6 +4413,70 @@
       text-decoration: var(--annuals-row-when-decoration, none);
       letter-spacing: var(--annuals-row-when-spacing, normal);
     }
+    /* Free-form "text" column (see _buildColumnCell) - flexes to fill
+       remaining row width like .info, but wraps instead of truncating since
+       its content is a full templated sentence rather than a single-line
+       name/type. Falls back to the same title color/size variables as
+       .name, since it most often replaces that field. pre-wrap (not normal)
+       so a leading/trailing space typed into the template - the only way to
+       add spacing between columns in compact mode, where the row's own gap
+       is zero - actually renders instead of being collapsed away as
+       "whitespace at the edge of a box", which is what plain normal does to
+       every column since each is its own separate box, not one shared run
+       of inline text. */
+    .text-col {
+      flex: 1;
+      min-width: 0;
+      white-space: pre-wrap;
+      color: var(--annuals-text-color, inherit);
+      font-size: var(--annuals-row-text-size, inherit);
+      font-weight: var(--annuals-row-text-weight, normal);
+      font-style: var(--annuals-row-text-style, normal);
+      text-transform: var(--annuals-row-text-transform, none);
+      text-decoration: var(--annuals-row-text-decoration, none);
+      letter-spacing: var(--annuals-row-text-spacing, normal);
+    }
+    /* "Compact" mode (columns_compact) - for building one continuous
+       sentence out of columns instead of a classic multi-field row: removes
+       every field's built-in width/growth/alignment so nothing but the
+       columns' own content determines spacing, centers the whole row, and
+       neutralizes the couple of hardcoded style differences (name's
+       semi-bold weight, subtitle/countdown's dimmed opacity) that otherwise
+       still show even once every column is given the same color/font-size.
+       align-items switches from the normal row's vertical centering to
+       baseline - centering mixed font sizes makes the smaller ones look
+       like they're floating relative to the bigger ones (each box's middle
+       lines up, not the text itself), whereas baseline is how differently
+       sized words actually sit together in a real sentence. */
+    .list.columns-compact .row { gap: 0; justify-content: center; align-items: baseline; flex-wrap: wrap; }
+    /* The icon has no text of its own to align by, so flexbox falls back to
+       treating its bottom margin edge as its "baseline" - for a box as tall
+       as the icon, that lines its bottom up with roughly the middle of the
+       surrounding text instead of its actual baseline, leaving it floating
+       high above the row. flex-end (true bottom-of-line alignment) overshoots
+       the other way though - the row's own cross-size is set by the tallest
+       participant's full line box (including the space reserved below
+       baseline for descenders, the tails on letters like g/y), so flush
+       bottom alignment drops the icon below the actual text baseline into
+       that reserved space, which the icon itself doesn't need. Measured
+       empirically against both a 14px default row and a 28px bold name -
+       the same 6px pull-up lands the icon within ~1px of the real baseline
+       in both, so it's a genuine constant, not a per-font-size guess. */
+    .list.columns-compact .icon-wrap { align-self: flex-end; margin-bottom: 6px; }
+    .list.columns-compact .info,
+    .list.columns-compact .text-col,
+    .list.columns-compact .name,
+    .list.columns-compact .type {
+      flex: none;
+      opacity: 1;
+    }
+    .list.columns-compact .name { font-weight: var(--annuals-row-title-weight, normal); }
+    .list.columns-compact .type,
+    .list.columns-compact .when {
+      opacity: 1;
+    }
+    .list.columns-compact .badge-slot { width: auto; flex: none; justify-content: center; }
+    .list.columns-compact .when { min-width: 0; text-align: center; flex: none; }
     .empty { opacity: 0.6; text-align: center; padding: 12px; }
   `;
 
@@ -3779,7 +4526,7 @@
       const config = this._config;
       const now = new Date();
       const all = getEvents(this._hass);
-      const filtered = all.filter((e) => {
+      let filtered = all.filter((e) => {
         if (config.types && config.types.length && !config.types.includes(e.type)) return false;
         // Only holiday-type events carry a category at all (see getEvents) -
         // this never filters anything else out, same as `types` being
@@ -3792,6 +4539,10 @@
         )
           return false;
         if (config.days_ahead && config.days_ahead > 0 && e.days > config.days_ahead) return false;
+        // e.days is always the sensor's "days until next occurrence" (never
+        // negative - it jumps forward the day after an event), so this is
+        // simply "only the events landing exactly today".
+        if (config.today_only && e.days !== 0) return false;
         // When both filters are on, they combine as OR (VIP or Important),
         // not AND - otherwise enabling both would only show events that are
         // both at once, which reads as "either" to anyone flipping two
@@ -3803,6 +4554,14 @@
         }
         return true;
       });
+      // "Only next event day" - once every other filter above has been
+      // applied, keep only whichever events share the single soonest
+      // `days` value (today if any event falls today, otherwise the
+      // nearest upcoming day - possibly more than one event on that day).
+      if (config.next_event_day_only && filtered.length) {
+        const minDays = Math.min(...filtered.map((e) => e.days));
+        filtered = filtered.filter((e) => e.days === minDays);
+      }
       // defaultConfig() always fills this in - no "|| 7" fallback here, since
       // that would treat a deliberate 0 (soon-highlighting disabled) as
       // unset and silently re-enable a 7-day "soon" window.
@@ -3855,6 +4614,8 @@
       // under "accent" unless they also happen to be today/soon) - used to
       // optionally match the row's text color to its icon color.
       const colorCategory = iconClass || "accent";
+      const animName = (config.icon_animation || {})[colorCategory];
+      const iconAnimClass = animName && animName !== "none" ? ` anim-${animName}` : "";
       const matchClass = config.colors[`match_${colorCategory}`] ? ` match-${colorCategory}-text` : "";
       div.className = "row" + (highlightClass ? ` ${highlightClass}` : "") + matchClass;
       let typeLabel = strings.types[e.type] || e.type;
@@ -3891,44 +4652,265 @@
       const badgeValue = isRecent && e.daysSince > 0 ? e.occurrence - 1 : e.occurrence;
       const badgeClass = config.colors.badge_background === false ? "badge no-background" : "badge";
 
-      div.innerHTML = `
-        <div class="icon-wrap">
-          <ha-icon icon="${e.icon}" class="icon ${iconClass}"></ha-icon>
-          ${e.vip && config.show_vip_badge !== false ? `<ha-icon class="vip-badge" icon="${config.vip_badge_icon || "mdi:star"}"></ha-icon>` : ""}
-          ${e.important && config.show_important_badge !== false ? `<ha-icon class="important-badge" icon="${config.important_badge_icon || "mdi:exclamation-thick"}"></ha-icon>` : ""}
-        </div>
-        <div class="info">
-          <div class="name"></div>
-          <div class="type"></div>
-        </div>
-        <div class="badge-slot">${showBadge ? `<span class="${badgeClass}">${badgeValue}</span>` : ""}</div>
-        <div class="when"></div>
-      `;
-      const iconWrapEl = div.querySelector(".icon-wrap");
-      if (config.show_icon === false) iconWrapEl.style.display = "none";
-
-      const nameEl = div.querySelector(".name");
-      nameEl.textContent = countrySuffix && config.show_name_country ? `${e.name} · ${countrySuffix}` : e.name;
-      if (config.show_name === false) nameEl.style.display = "none";
-
-      const typeEl = div.querySelector(".type");
-      typeEl.textContent =
+      const nameText = countrySuffix && config.show_name_country ? `${e.name} · ${countrySuffix}` : e.name;
+      const typeText =
         countrySuffix && config.show_subtitle_country ? `${typeLabel} · ${countrySuffix}` : typeLabel;
-      if (config.show_subtitle === false) typeEl.style.display = "none";
 
-      const whenEl = div.querySelector(".when");
-      whenEl.textContent = when;
-      if (config.show_when === false) whenEl.style.display = "none";
-      div.addEventListener("click", () => {
-        this.dispatchEvent(
-          new CustomEvent("hass-more-info", {
-            detail: { entityId: e.entityId },
-            bubbles: true,
-            composed: true,
-          })
-        );
-      });
+      // Shared value set for "text" column templates ({name}/{type}/
+      // {occurrence}/{when}/{country}) - reuses everything already computed
+      // above instead of recomputing per column.
+      const values = {
+        name: e.name,
+        type: typeLabel,
+        occurrence: badgeValue != null ? String(badgeValue) : "",
+        when,
+        country: countrySuffix,
+      };
+
+      // config.columns is only ever set once a user has actually opened the
+      // new "Spalten" editor and reordered/added/removed something (see
+      // _buildDisplayBody) - every dashboard saved before this feature keeps
+      // rendering through the untouched fixed-template path below, so there
+      // is zero migration/regression risk for existing configs.
+      if (Array.isArray(config.columns)) {
+        const ctx = { iconClass, iconAnimClass, nameText, typeText, showBadge, badgeValue, badgeClass };
+        // Countdown ("when") reads as the sentence's opening word ("In 2
+        // days, Anna has her birthday") only until the event's identity has
+        // actually been named - once a name/subtitle/info column has
+        // appeared, any later countdown is a trailing remark instead
+        // ("Anna's birthday is today") and gets lower-cased instead. Custom
+        // text columns don't count either way - they're just connective
+        // words, not the event's identity.
+        let identityShown = false;
+        for (const col of config.columns) {
+          // Guards against a malformed/empty entry (e.g. a stray "-" left in
+          // the raw YAML editor) crashing the whole card instead of just
+          // skipping that one column.
+          if (!col || typeof col !== "object") continue;
+          div.appendChild(this._buildColumnCell(col, e, values, config, ctx, !identityShown));
+          if (col.type === "name" || col.type === "subtitle" || col.type === "info") identityShown = true;
+        }
+      } else {
+        div.innerHTML = `
+          <div class="icon-wrap">
+            <ha-icon icon="${e.icon}" class="icon ${iconClass}${iconAnimClass}"></ha-icon>
+            ${e.vip && config.show_vip_badge !== false ? `<ha-icon class="vip-badge" icon="${config.vip_badge_icon || "mdi:star"}"></ha-icon>` : ""}
+            ${e.important && config.show_important_badge !== false ? `<ha-icon class="important-badge" icon="${config.important_badge_icon || "mdi:exclamation-thick"}"></ha-icon>` : ""}
+          </div>
+          <div class="info">
+            <div class="name"></div>
+            <div class="type"></div>
+          </div>
+          <div class="badge-slot">${showBadge ? `<span class="${badgeClass}">${badgeValue}</span>` : ""}</div>
+          <div class="when"></div>
+        `;
+        const iconWrapEl = div.querySelector(".icon-wrap");
+        if (config.show_icon === false) iconWrapEl.style.display = "none";
+
+        const nameEl = div.querySelector(".name");
+        nameEl.textContent = nameText;
+        if (config.show_name === false) nameEl.style.display = "none";
+
+        const typeEl = div.querySelector(".type");
+        typeEl.textContent = typeText;
+        if (config.show_subtitle === false) typeEl.style.display = "none";
+
+        const whenEl = div.querySelector(".when");
+        whenEl.textContent = when;
+        if (config.show_when === false) whenEl.style.display = "none";
+      }
+
+      this._wireRowActions(div, config, e.entityId);
       return div;
+    }
+
+    // Tap and (separately) press-and-hold on a row each run their own
+    // configurable action (config.tap_action/hold_action - HA's own
+    // {action: "more-info"/"navigate"/...} shape, edited via the native
+    // ui_action selector in Settings -> General). Defaults preserve this
+    // card's original, unconfigurable behavior: tap opens more-info, hold
+    // does nothing.
+    _wireRowActions(div, config, entityId) {
+      const HOLD_MS = 500;
+      const tapAction = config.tap_action || { action: "more-info" };
+      const holdAction = config.hold_action || { action: "none" };
+      const hasAction =
+        (tapAction.action && tapAction.action !== "none") ||
+        (holdAction.action && holdAction.action !== "none");
+      if (hasAction) div.classList.add("has-action");
+
+      let holdTimer = null;
+      let holdFired = false;
+      const clearHoldTimer = () => {
+        if (holdTimer) {
+          clearTimeout(holdTimer);
+          holdTimer = null;
+        }
+      };
+      div.addEventListener("pointerdown", (ev) => {
+        if (ev.button !== 0) return;
+        holdFired = false;
+        holdTimer = setTimeout(() => {
+          holdFired = true;
+          this._handleRowAction(holdAction, entityId);
+        }, HOLD_MS);
+      });
+      div.addEventListener("pointerup", clearHoldTimer);
+      div.addEventListener("pointerleave", clearHoldTimer);
+      div.addEventListener("pointercancel", clearHoldTimer);
+      // A long-press on touch devices would otherwise also open the
+      // browser's own text-selection/context menu.
+      div.addEventListener("contextmenu", (ev) => {
+        if (holdAction.action && holdAction.action !== "none") ev.preventDefault();
+      });
+      div.addEventListener("click", () => {
+        if (holdFired) return;
+        this._handleRowAction(tapAction, entityId);
+      });
+    }
+
+    // Executes one HA action-config object against this row's entity -
+    // covers every action the native ui_action selector offers, in the same
+    // shape HA's own cards use (perform_action/service, navigation_path,
+    // url_path, target, data/service_data).
+    _handleRowAction(actionConfig, entityId) {
+      const action = (actionConfig && actionConfig.action) || "none";
+      switch (action) {
+        case "none":
+          return;
+        case "more-info":
+          this.dispatchEvent(
+            new CustomEvent("hass-more-info", {
+              detail: { entityId },
+              bubbles: true,
+              composed: true,
+            })
+          );
+          return;
+        case "toggle":
+          if (this._hass) this._hass.callService("homeassistant", "toggle", { entity_id: entityId });
+          return;
+        case "navigate":
+          if (actionConfig.navigation_path) {
+            history.pushState(null, "", actionConfig.navigation_path);
+            this.dispatchEvent(new CustomEvent("location-changed", { bubbles: true, composed: true }));
+          }
+          return;
+        case "url":
+          if (actionConfig.url_path) {
+            window.open(actionConfig.url_path, actionConfig.new_tab === false ? "_self" : "_blank");
+          }
+          return;
+        case "call-service":
+        case "perform-action": {
+          const serviceStr = actionConfig.perform_action || actionConfig.service;
+          if (!serviceStr || !this._hass) return;
+          const [domain, service] = serviceStr.split(".");
+          this._hass.callService(
+            domain,
+            service,
+            actionConfig.data || actionConfig.service_data || {},
+            actionConfig.target || {}
+          );
+          return;
+        }
+        case "assist":
+          this.dispatchEvent(
+            new CustomEvent("show-dialog", {
+              detail: {
+                dialogTag: "ha-voice-command-dialog",
+                dialogImport: () => {},
+                dialogParams: {},
+              },
+              bubbles: true,
+              composed: true,
+            })
+          );
+          return;
+        default:
+          return;
+      }
+    }
+
+    // Builds one column's DOM node for the generic column-based row layout
+    // (used once config.columns is set). Mirrors the legacy fixed markup
+    // exactly for icon/info/badge/when so existing CSS and color/font-size
+    // theming keep applying unchanged; "name"/"subtitle" split the "info"
+    // block apart for layouts that reorder them independently; "text" is
+    // the new free-form template column.
+    _buildColumnCell(col, e, values, config, ctx, whenLeading) {
+      const { iconClass, iconAnimClass, nameText, typeText, showBadge, badgeValue, badgeClass } = ctx;
+      switch (col.type) {
+        case "icon": {
+          const wrap = document.createElement("div");
+          wrap.className = "icon-wrap";
+          wrap.innerHTML = `
+            <ha-icon icon="${e.icon}" class="icon ${iconClass}${iconAnimClass}"></ha-icon>
+            ${e.vip && config.show_vip_badge !== false ? `<ha-icon class="vip-badge" icon="${config.vip_badge_icon || "mdi:star"}"></ha-icon>` : ""}
+            ${e.important && config.show_important_badge !== false ? `<ha-icon class="important-badge" icon="${config.important_badge_icon || "mdi:exclamation-thick"}"></ha-icon>` : ""}
+          `;
+          return wrap;
+        }
+        case "info": {
+          const info = document.createElement("div");
+          info.className = "info";
+          const name = document.createElement("div");
+          name.className = "name";
+          name.textContent = nameText;
+          const type = document.createElement("div");
+          type.className = "type";
+          type.textContent = typeText;
+          info.append(name, type);
+          return info;
+        }
+        case "name": {
+          const name = document.createElement("div");
+          name.className = "name";
+          name.textContent = nameText;
+          return name;
+        }
+        case "subtitle": {
+          const type = document.createElement("div");
+          type.className = "type";
+          type.textContent = typeText;
+          return type;
+        }
+        case "badge": {
+          const slot = document.createElement("div");
+          slot.className = "badge-slot";
+          if (showBadge) slot.innerHTML = `<span class="${badgeClass}">${badgeValue}</span>`;
+          return slot;
+        }
+        case "when": {
+          const whenEl = document.createElement("div");
+          whenEl.className = "when";
+          // Countdown reads as the sentence's opening word ("In 2 days...")
+          // only until the event's name has actually appeared earlier in
+          // the row - after that it's a trailing remark ("...is today")
+          // instead, so its case is forced to match regardless of how the
+          // underlying translation string itself happens to be cased.
+          const text = values.when || "";
+          whenEl.textContent = whenLeading
+            ? text.charAt(0).toUpperCase() + text.slice(1)
+            : text.charAt(0).toLowerCase() + text.slice(1);
+          return whenEl;
+        }
+        case "text": {
+          // Color/font-size/style are global (config.colors.text /
+          // font_sizes.text / font_style.text, set in Colors/Fonts like
+          // every other field) rather than per-column-instance, applied via
+          // the --annuals-text-color/-row-text-* CSS variables .text-col
+          // already reads - see _render().
+          const textEl = document.createElement("div");
+          textEl.className = "text-col";
+          textEl.textContent = renderTemplate(col.template || "", values);
+          return textEl;
+        }
+        default:
+          // Unknown column type (e.g. a newer card version's config loaded
+          // into an older one) - render nothing rather than throwing.
+          return document.createElement("div");
+      }
     }
 
     _render() {
@@ -3955,6 +4937,8 @@
       if (config.colors.today) card.style.setProperty("--annuals-today-color", config.colors.today);
       if (config.colors.soon) card.style.setProperty("--annuals-soon-color", config.colors.soon);
       if (config.colors.accent) card.style.setProperty("--annuals-accent-color", config.colors.accent);
+      if (config.colors.card_title)
+        card.style.setProperty("--annuals-card-title-color", config.colors.card_title);
       if (config.colors.title) card.style.setProperty("--annuals-title-color", config.colors.title);
       if (config.colors.subtitle)
         card.style.setProperty("--annuals-subtitle-color", config.colors.subtitle);
@@ -3962,6 +4946,7 @@
       if (config.colors.badge_background_color)
         card.style.setProperty("--annuals-badge-bg-color", config.colors.badge_background_color);
       if (config.colors.when) card.style.setProperty("--annuals-when-color", config.colors.when);
+      if (config.colors.text) card.style.setProperty("--annuals-text-color", config.colors.text);
       if (config.colors.highlight_past)
         card.style.setProperty("--annuals-highlight-past-color", config.colors.highlight_past);
       if (config.colors.highlight_today)
@@ -3980,6 +4965,8 @@
         card.style.setProperty("--annuals-row-badge-size", config.font_sizes.badge);
       if (config.font_sizes.when)
         card.style.setProperty("--annuals-row-when-size", config.font_sizes.when);
+      if (config.font_sizes.text)
+        card.style.setProperty("--annuals-row-text-size", config.font_sizes.text);
 
       const setFontStyle = (cssKey, style) => {
         card.style.removeProperty(`--annuals-${cssKey}-weight`);
@@ -3999,6 +4986,7 @@
       setFontStyle("row-subtitle", config.font_style.subtitle);
       setFontStyle("row-badge", config.font_style.badge);
       setFontStyle("row-when", config.font_style.when);
+      setFontStyle("row-text", config.font_style.text);
 
       const bg = config.background;
       card.style.removeProperty("--annuals-bg-color");
@@ -4027,6 +5015,7 @@
       titleEl.textContent = config.title || strings.defaultTitle;
 
       const listEl = this.shadowRoot.querySelector(".list");
+      listEl.classList.toggle("columns-compact", config.columns_compact === true);
       listEl.innerHTML = "";
 
       // Which categories get a highlighted row background is controlled
@@ -4052,7 +5041,7 @@
     {
       key: "layout",
       icon: "mdi:view-dashboard-outline",
-      groups: ["display", "fonts", "colors", "background"],
+      groups: ["display", "fonts", "colors", "icons", "background"],
     },
   ];
 
@@ -4063,6 +5052,7 @@
     { key: "display", icon: "mdi:eye-outline" },
     { key: "fonts", icon: "mdi:format-size" },
     { key: "colors", icon: "mdi:palette" },
+    { key: "icons", icon: "mdi:shape-outline" },
     { key: "background", icon: "mdi:image" },
   ];
 
@@ -4166,6 +5156,91 @@
       border-bottom: 1px solid var(--divider-color, #e0e0e0);
     }
     .section-heading:first-child { margin-top: 0; }
+    /* The "Row columns" heading is the first child of its own wrapper div,
+       so the generic :first-child reset above would zero its top margin -
+       but it isn't the first thing in the panel (Show/Hide precedes it), so
+       it still needs the normal section gap above it. */
+    .columns-section .section-heading:first-child { margin-top: 32px; }
+    .columns-desc {
+      font-size: 0.85em;
+      opacity: 0.7;
+      margin: -4px 0 12px;
+    }
+    .columns-list { margin-bottom: 10px; }
+    .column-row {
+      border: 1px solid var(--divider-color, #e0e0e0);
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+    }
+    .column-row-main {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .column-type-label {
+      font-weight: 500;
+      font-size: 0.9em;
+      min-width: 80px;
+    }
+    .icon-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      border-radius: 6px;
+      border: 1px solid var(--divider-color, #e0e0e0);
+      background: var(--card-background-color, transparent);
+      color: inherit;
+      cursor: pointer;
+      padding: 0;
+    }
+    .icon-btn:hover { background: var(--secondary-background-color, rgba(0, 0, 0, 0.05)); }
+    .icon-btn:disabled { opacity: 0.35; cursor: default; }
+    .icon-btn ha-icon { --mdc-icon-size: 16px; }
+    .column-template-input {
+      flex: 1;
+      min-width: 140px;
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--divider-color, #e0e0e0);
+      background: var(--card-background-color, transparent);
+      color: inherit;
+      font: inherit;
+    }
+    .column-suffix-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 4px 0 0 68px;
+    }
+    .column-suffix-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8em;
+      white-space: nowrap;
+      opacity: 0.85;
+    }
+    .column-add-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .columns-compact-row { margin-top: 12px; }
+    .column-add-row select {
+      flex: 1;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid var(--divider-color, #e0e0e0);
+      background: var(--card-background-color, transparent);
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
     .field-row { margin-bottom: 16px; }
     .field-row-split {
       display: flex;
@@ -4173,6 +5248,12 @@
       margin-bottom: 16px;
     }
     .field-row-split .field-col { flex: 1; min-width: 0; }
+    /* The right-hand column sits close to the dialog's right edge, so a
+       tooltip opening the usual way (left-aligned, expanding rightward)
+       overflows past it and gets clipped - open it right-aligned instead,
+       expanding leftward, same fix as .toggle-group below. Applies to any
+       current or future field in this column, not just today's fields. */
+    .field-row-split .field-col:last-child .tooltip-anchor::after { left: auto; right: 0; }
     /* A flex item's children never collapse their margins with anything
        outside it (flex establishes a new block-formatting context), so the
        last row's own margin-bottom would sit *in addition to*
@@ -4200,6 +5281,20 @@
     .sub-field-row .field-input-row input[type="color"] { width: 28px; height: 28px; }
     .sub-field-row .preset-btn { padding: 4px 6px; font-size: 0.8em; max-width: 110px; }
     .sub-field-row .preset-btn .preset-swatch { width: 14px; height: 14px; }
+    /* Narrow enough that the "also color the text" toggle still fits next
+       to it on the same line, instead of stretching the full row width like
+       a regular field-input-row select. */
+    .anim-select { flex: none; width: auto; min-width: 110px; }
+    /* Toggle-groups normally always wrap to their own full-width line (see
+       .field-input-row > .toggle-group below) - the animation row is the one
+       place a toggle-group is meant to sit right on the same line as the
+       control before it, pushed to the row's end via the auto margin. */
+    .anim-row .field-input-row > .toggle-group {
+      flex-basis: auto;
+      justify-content: flex-start;
+      margin-top: 0;
+      margin-left: auto;
+    }
     .field-label {
       display: flex;
       align-items: center;
@@ -4395,7 +5490,7 @@
     .toggle-row {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
       gap: 12px;
       margin-bottom: 16px;
     }
@@ -4627,16 +5722,119 @@
       this._syncFieldRow(key, value);
     }
 
+    // Tap and hold sit side by side (same .field-row-split/.field-col
+    // pattern as the background size/opacity and visibility columns
+    // elsewhere in this editor) so their two dropdowns land at equal width
+    // instead of each spanning the full row. Each column's input slot is
+    // filled in by _upgradeActionSelector below, once ha-selector is
+    // confirmed available - there's no plain text-input fallback for an
+    // action config, unlike _fieldRowHtml.
+    _actionSelectorSplitHtml(keys) {
+      return `
+        <div class="field-row-split">
+          ${keys
+            .map(
+              (key) => `
+            <div class="field-col">
+              <div class="field-label">
+                <span class="label-text"></span>
+                <span class="tooltip-anchor" data-tooltip="">
+                  <ha-icon icon="mdi:information-outline"></ha-icon>
+                </span>
+              </div>
+              <div class="field-input-row">
+                <div class="action-selector-slot" data-action-slot="${key}"></div>
+              </div>
+            </div>
+          `
+            )
+            .join("")}
+        </div>
+      `;
+    }
+
+    // Renders HA's own native "what should this do" action-config selector
+    // (More info / Navigate / URL / Perform action / Toggle / Assist /
+    // Nothing) via the same already-loaded-by-the-frontend ha-selector
+    // component _upgradeIconField above relies on for ha-icon-picker - no
+    // bundling of HA's own action-config UI needed.
+    _upgradeActionSelector(body, key, label, desc, defaultAction) {
+      const col = body.querySelector(`[data-action-slot="${key}"]`).closest(".field-col");
+      col.querySelector(".label-text").textContent = label;
+      col.querySelector(".tooltip-anchor").dataset.tooltip = desc;
+      const slot = col.querySelector(`[data-action-slot="${key}"]`);
+      if (!customElements.get("ha-selector")) return;
+      const selector = document.createElement("ha-selector");
+      selector.hass = this._hass;
+      selector.selector = { ui_action: {} };
+      selector.value = this._config[key] || defaultAction;
+      selector.style.display = "block";
+      selector.style.width = "100%";
+      selector.addEventListener("value-changed", (ev) => {
+        ev.stopPropagation();
+        this._config = defaultConfig({ ...this._config, [key]: ev.detail.value });
+        this._emit();
+      });
+      slot.appendChild(selector);
+      this._actionSelectors = this._actionSelectors || {};
+      this._actionSelectors[key] = selector;
+    }
+
+    _syncActionSelector(key, value) {
+      const selector = this._actionSelectors && this._actionSelectors[key];
+      if (!selector) return;
+      selector.hass = this._hass;
+      if (JSON.stringify(selector.value) !== JSON.stringify(value)) selector.value = value;
+    }
+
     _buildGeneralBody(strings) {
       const body = document.createElement("div");
       body.className = "general-body";
-      body.innerHTML = this._fieldRowHtml("title", "text", strings.editor.titlePlaceholder);
+      body.innerHTML =
+        this._fieldRowHtml("title", "text", strings.editor.titlePlaceholder) +
+        this._visibilityRowHtml("hide_title") +
+        this._actionSelectorSplitHtml(["tap_action", "hold_action"]);
       this._wireFieldRow(body, "title", strings.editor.title, strings.editor.titleDesc, (v) => v);
+
+      // Inverted on purpose - this toggle lives right under the title field
+      // now (moved from Layout -> Display -> Show/Hide) and reads as "Hide"
+      // rather than "Show", but still drives the same show_title config key
+      // as before (checked means show_title === false) so no config
+      // migration is needed.
+      const hideRow = body.querySelector('input[data-visibility="hide_title"]').closest(".toggle-row");
+      hideRow.querySelector(".label-text").textContent = strings.editor.hideCardTitle;
+      const hideTooltip = hideRow.querySelector(".tooltip-anchor");
+      if (hideTooltip) hideTooltip.dataset.tooltip = strings.editor.hideCardTitleDesc;
+      const hideToggle = hideRow.querySelector('input[data-visibility="hide_title"]');
+      hideToggle.addEventListener("change", () => {
+        this._config = defaultConfig({ ...this._config, show_title: !hideToggle.checked });
+        this._emit();
+      });
+
+      this._upgradeActionSelector(
+        body,
+        "tap_action",
+        strings.editor.tapAction,
+        strings.editor.tapActionDesc,
+        { action: "more-info" }
+      );
+      this._upgradeActionSelector(
+        body,
+        "hold_action",
+        strings.editor.holdAction,
+        strings.editor.holdActionDesc,
+        { action: "none" }
+      );
+
       return body;
     }
 
     _syncGeneralInputs() {
       this._syncFieldRow("title", this._config.title || "");
+      const hideToggle = this.shadowRoot.querySelector('input[data-visibility="hide_title"]');
+      if (hideToggle) hideToggle.checked = this._config.show_title === false;
+      this._syncActionSelector("tap_action", this._config.tap_action || { action: "more-info" });
+      this._syncActionSelector("hold_action", this._config.hold_action || { action: "none" });
     }
 
     _buildEventsBody(strings) {
@@ -4847,6 +6045,8 @@
       const body = document.createElement("div");
       body.className = "period-body";
       body.innerHTML =
+        this._visibilityTwoColHtml(["today_only"], ["next_event_day_only"]) +
+        '<hr class="toggle-divider">' +
         this._fieldRowHtml("days_ahead", "number", "", 'min="0" max="365"') +
         this._fieldRowHtml("days_past", "number", "", 'min="0" max="30"') +
         this._fieldRowHtml("soon_days", "number", "", 'min="0" max="60"');
@@ -4859,6 +6059,25 @@
       this._wireFieldRow(body, "soon_days", strings.editor.soonDays, strings.editor.soonDaysDesc, (v) =>
         Math.max(0, Number(v) || 0)
       );
+
+      const periodVisLabels = {
+        today_only: [strings.editor.todayOnly, strings.editor.todayOnlyDesc],
+        next_event_day_only: [strings.editor.nextEventDayOnly, strings.editor.nextEventDayOnlyDesc],
+      };
+      for (const key of Object.keys(periodVisLabels)) {
+        const row = body.querySelector(`input[data-visibility="${key}"]`).closest(".toggle-row");
+        const [label, desc] = periodVisLabels[key];
+        row.querySelector(".label-text").textContent = label;
+        const tooltipEl = row.querySelector(".tooltip-anchor");
+        if (tooltipEl) tooltipEl.dataset.tooltip = desc;
+
+        const toggle = row.querySelector(`input[data-visibility="${key}"]`);
+        toggle.addEventListener("change", () => {
+          this._config = defaultConfig({ ...this._config, [key]: toggle.checked });
+          this._emit();
+        });
+      }
+
       return body;
     }
 
@@ -4870,6 +6089,10 @@
       this._syncFieldRow("days_ahead", this._config.days_ahead);
       this._syncFieldRow("days_past", this._config.days_past);
       this._syncFieldRow("soon_days", this._config.soon_days);
+      const todayOnlyToggle = this.shadowRoot.querySelector('input[data-visibility="today_only"]');
+      if (todayOnlyToggle) todayOnlyToggle.checked = this._config.today_only === true;
+      const nextDayToggle = this.shadowRoot.querySelector('input[data-visibility="next_event_day_only"]');
+      if (nextDayToggle) nextDayToggle.checked = this._config.next_event_day_only === true;
     }
 
     _groupText(key, strings) {
@@ -4880,6 +6103,7 @@
         display: [strings.editor.groupDisplay, strings.editor.groupDisplayDesc],
         fonts: [strings.editor.fonts, ""],
         colors: [strings.editor.colors, ""],
+        icons: [strings.editor.colorsIconsHeading, ""],
         background: [strings.editor.cardBackgroundTabTitle, ""],
       };
       return map[key];
@@ -4905,14 +6129,14 @@
       ).join("");
       const toggleGroupHtml = (dataAttr) => `
         <div class="toggle-group">
-          <span class="toggle-label"></span>
-          <span class="tooltip-anchor" data-tooltip="">
-            <ha-icon icon="mdi:information-outline"></ha-icon>
-          </span>
           <label class="toggle">
             <input type="checkbox" data-${dataAttr}="${key}">
             <span class="track"></span>
           </label>
+          <span class="toggle-label"></span>
+          <span class="tooltip-anchor" data-tooltip="">
+            <ha-icon icon="mdi:information-outline"></ha-icon>
+          </span>
         </div>
       `;
       const matchToggle = options.matchToggle ? toggleGroupHtml("match") : "";
@@ -4940,6 +6164,83 @@
           </div>
         </div>
       `;
+    }
+
+    // Per-category (accent/today/soon) icon animation dropdown - a
+    // sub-field-row directly under that category's color row, matching the
+    // badge_background_color sub-row pattern elsewhere in this tab. The
+    // "Also color the text" toggle (see _colorRowHtml's old matchToggle
+    // option, before it moved here) sits inline right after the select
+    // instead of on its own row - the select carries its own narrow class
+    // (.anim-select) and the .anim-row modifier on the row itself overrides
+    // the generic "toggle-group always wraps to a full-width line" rule
+    // (see EDITOR_STYLE) so both fit on one line.
+    _animSelectRowHtml(key) {
+      return `
+        <div class="field-row sub-field-row anim-row">
+          <div class="field-label">
+            <span class="label-text"></span>
+            <span class="tooltip-anchor" data-tooltip="">
+              <ha-icon icon="mdi:information-outline"></ha-icon>
+            </span>
+          </div>
+          <div class="field-input-row">
+            <select class="anim-select" data-anim="${key}">
+              <option value="none"></option>
+              <option value="pulse"></option>
+              <option value="bounce"></option>
+              <option value="shake"></option>
+              <option value="spin"></option>
+              <option value="flash"></option>
+            </select>
+            <div class="toggle-group">
+              <label class="toggle">
+                <input type="checkbox" data-match="${key}">
+                <span class="track"></span>
+              </label>
+              <span class="toggle-label"></span>
+              <span class="tooltip-anchor" data-tooltip="">
+                <ha-icon icon="mdi:information-outline"></ha-icon>
+              </span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    _wireAnimSelect(body, key, strings) {
+      const select = body.querySelector(`select[data-anim="${key}"]`);
+      if (!select) return;
+      const row = select.closest(".sub-field-row");
+      row.querySelector(".label-text").textContent = strings.editor.animationLabel || "Animation";
+      const tooltip = row.querySelector(".tooltip-anchor");
+      if (tooltip) tooltip.dataset.tooltip = strings.editor.animationDesc || "";
+      const optionLabels = {
+        none: strings.editor.animationNone || "None",
+        pulse: strings.editor.animationPulse || "Pulse",
+        bounce: strings.editor.animationBounce || "Bounce",
+        shake: strings.editor.animationShake || "Shake",
+        spin: strings.editor.animationSpin || "Spin",
+        flash: strings.editor.animationFlash || "Flash",
+      };
+      Array.from(select.options).forEach((opt) => {
+        opt.textContent = optionLabels[opt.value] || opt.value;
+      });
+      select.value = this._config.icon_animation[key] || "none";
+      select.addEventListener("change", () => {
+        this._config = defaultConfig({
+          ...this._config,
+          icon_animation: { ...this._config.icon_animation, [key]: select.value },
+        });
+        this._emit();
+      });
+    }
+
+    _syncIconsInputs() {
+      for (const key of ["accent", "today", "soon"]) {
+        const select = this.shadowRoot.querySelector(`select[data-anim="${key}"]`);
+        if (select) select.value = this._config.icon_animation[key] || "none";
+      }
     }
 
     _matchPreset(value) {
@@ -5002,21 +6303,25 @@
         accent: "var(--primary-text-color)",
         today: "var(--error-color)",
         soon: "var(--warning-color)",
+        card_title: "var(--primary-text-color)",
         title: "var(--primary-text-color)",
         subtitle: "var(--primary-text-color)",
         badge: "var(--primary-text-color)",
         badge_background_color: "rgba(128, 128, 128, 0.25)",
         when: "var(--primary-text-color)",
+        text: "var(--primary-text-color)",
       };
       for (const key of [
         "accent",
         "today",
         "soon",
+        "card_title",
         "title",
         "subtitle",
         "badge",
         "badge_background_color",
         "when",
+        "text",
       ]) {
         this._syncColorSwatch(key, this._config.colors[key] || "", fallbacks[key]);
 
@@ -5128,12 +6433,16 @@
         });
       });
 
-      const matchToggle = row.querySelector(`input[data-match="${key}"]`);
+      // body-wide (not row-scoped) lookups - the "Also color the text"
+      // toggle now lives in its own sub-field-row after the animation
+      // picker (see _matchToggleRowHtml) rather than inline in this row,
+      // but bgToggle (badge's "show background") still renders inline here.
+      const matchToggle = body.querySelector(`input[data-match="${key}"]`);
       if (matchToggle) {
         const strings = t(this._hass);
-        row.querySelector(".toggle-label").textContent = strings.editor.matchTextLabel;
-        row.querySelector(".toggle-group .tooltip-anchor").dataset.tooltip =
-          strings.editor.matchTextDesc;
+        const group = matchToggle.closest(".toggle-group");
+        group.querySelector(".toggle-label").textContent = strings.editor.matchTextLabel;
+        group.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.matchTextDesc;
         matchToggle.addEventListener("change", () => {
           this._config = defaultConfig({
             ...this._config,
@@ -5143,12 +6452,12 @@
         });
       }
 
-      const bgToggle = row.querySelector(`input[data-bg="${key}"]`);
+      const bgToggle = body.querySelector(`input[data-bg="${key}"]`);
       if (bgToggle) {
         const strings = t(this._hass);
-        row.querySelector(".toggle-label").textContent = strings.editor.backgroundLabel;
-        row.querySelector(".toggle-group .tooltip-anchor").dataset.tooltip =
-          strings.editor.backgroundDesc;
+        const group = bgToggle.closest(".toggle-group");
+        group.querySelector(".toggle-label").textContent = strings.editor.backgroundLabel;
+        group.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.backgroundDesc;
         bgToggle.addEventListener("change", () => {
           this._config = defaultConfig({
             ...this._config,
@@ -5181,38 +6490,21 @@
       const body = document.createElement("div");
       body.className = "colors-body";
 
-      const iconsHeading = document.createElement("div");
-      iconsHeading.className = "section-heading";
-      iconsHeading.textContent = strings.editor.colorsIconsHeading;
-      body.appendChild(iconsHeading);
-
-      const iconRows = document.createElement("div");
-      iconRows.innerHTML =
-        this._colorRowHtml("accent", strings.editor.colorPlaceholder, { matchToggle: true }) +
-        this._colorRowHtml("today", strings.editor.colorPlaceholder, { matchToggle: true }) +
-        this._colorRowHtml("soon", strings.editor.colorPlaceholder, { matchToggle: true });
-      body.appendChild(iconRows);
-
-      const labelsHeading = document.createElement("div");
-      labelsHeading.className = "section-heading";
-      labelsHeading.textContent = strings.editor.colorsLabelsHeading;
-      body.appendChild(labelsHeading);
-
       const labelRows = document.createElement("div");
       labelRows.innerHTML =
+        this._colorRowHtml("card_title", strings.editor.colorPlaceholder) +
         this._colorRowHtml("title", strings.editor.colorPlaceholder) +
         this._colorRowHtml("subtitle", strings.editor.colorPlaceholder) +
         this._colorRowHtml("badge", strings.editor.colorPlaceholder, { bgToggle: true }) +
         this._colorRowHtml("badge_background_color", strings.editor.colorPlaceholder, { sub: true }) +
-        this._colorRowHtml("when", strings.editor.colorPlaceholder);
+        this._colorRowHtml("when", strings.editor.colorPlaceholder) +
+        this._colorRowHtml("text", strings.editor.colorPlaceholder);
       body.appendChild(labelRows);
 
       this._paintPresetSwatches(body, strings);
 
       const labels = {
-        accent: [strings.editor.colorAccent, strings.editor.colorAccentDesc],
-        today: [strings.editor.colorToday, strings.editor.colorTodayDesc],
-        soon: [strings.editor.colorSoon, strings.editor.colorSoonDesc],
+        card_title: [strings.editor.fontCardTitle, strings.editor.cardTitleColorDesc],
         title: [strings.editor.colorTitle, strings.editor.colorTitleDesc],
         subtitle: [strings.editor.colorSubtitle, strings.editor.colorSubtitleDesc],
         badge: [strings.editor.colorBadge, strings.editor.colorBadgeDesc],
@@ -5221,19 +6513,54 @@
           strings.editor.colorBadgeBackgroundDesc,
         ],
         when: [strings.editor.colorWhen, strings.editor.colorWhenDesc],
+        text: [strings.editor.colorText, strings.editor.colorTextDesc],
       };
       for (const key of [
-        "accent",
-        "today",
-        "soon",
+        "card_title",
         "title",
         "subtitle",
         "badge",
         "badge_background_color",
         "when",
+        "text",
       ]) {
         const [label, desc] = labels[key];
         this._wireColorRow(body, key, label, desc);
+      }
+
+      if (!this._presetOutsideClickWired) {
+        this._presetOutsideClickWired = true;
+        this.addEventListener("click", () => this._closeAllPresetMenus());
+      }
+
+      return body;
+    }
+
+    _buildIconsBody(strings) {
+      const body = document.createElement("div");
+      body.className = "icons-body";
+
+      const rows = document.createElement("div");
+      rows.innerHTML =
+        this._colorRowHtml("accent", strings.editor.colorPlaceholder) +
+        this._animSelectRowHtml("accent") +
+        this._colorRowHtml("today", strings.editor.colorPlaceholder) +
+        this._animSelectRowHtml("today") +
+        this._colorRowHtml("soon", strings.editor.colorPlaceholder) +
+        this._animSelectRowHtml("soon");
+      body.appendChild(rows);
+
+      this._paintPresetSwatches(body, strings);
+
+      const labels = {
+        accent: [strings.editor.colorAccent, strings.editor.colorAccentDesc],
+        today: [strings.editor.colorToday, strings.editor.colorTodayDesc],
+        soon: [strings.editor.colorSoon, strings.editor.colorSoonDesc],
+      };
+      for (const key of ["accent", "today", "soon"]) {
+        const [label, desc] = labels[key];
+        this._wireColorRow(body, key, label, desc);
+        this._wireAnimSelect(body, key, strings);
       }
 
       if (!this._presetOutsideClickWired) {
@@ -5251,16 +6578,16 @@
       body.innerHTML =
         `
         <div class="toggle-row">
+          <label class="toggle">
+            <input type="checkbox" data-bg-card-enabled>
+            <span class="track"></span>
+          </label>
           <div class="field-label">
             <span class="label-text"></span>
             <span class="tooltip-anchor" data-tooltip="">
               <ha-icon icon="mdi:information-outline"></ha-icon>
             </span>
           </div>
-          <label class="toggle">
-            <input type="checkbox" data-bg-card-enabled>
-            <span class="track"></span>
-          </label>
         </div>
         ` +
         this._colorRowHtml("color", strings.editor.colorPlaceholder) +
@@ -5456,16 +6783,16 @@
     _highlightRowHtml(key) {
       return `
         <div class="toggle-row">
+          <label class="toggle">
+            <input type="checkbox" data-highlight="${key}">
+            <span class="track"></span>
+          </label>
           <div class="field-label">
             <span class="label-text"></span>
             <span class="tooltip-anchor" data-tooltip="">
               <ha-icon icon="mdi:information-outline"></ha-icon>
             </span>
           </div>
-          <label class="toggle">
-            <input type="checkbox" data-highlight="${key}">
-            <span class="track"></span>
-          </label>
         </div>
       `;
     }
@@ -5504,16 +6831,9 @@
         past: config.show_past !== false,
         today: config.show_today !== false,
         soon: config.show_soon !== false,
-        font_size_title: config.show_title !== false,
-        icon: config.show_icon !== false,
-        title: config.show_name !== false,
-        subtitle: config.show_subtitle !== false,
-        badge: config.show_badge !== false,
-        when: config.show_when !== false,
         vip_only: config.show_vip_only === true,
         important_only: config.show_important_only === true,
-        title_country: config.show_name_country === true,
-        subtitle_country: config.show_subtitle_country === true,
+        columns_compact: config.columns_compact === true,
       };
       for (const key of Object.keys(visMap)) {
         const toggle = this.shadowRoot.querySelector(`input[data-visibility="${key}"]`);
@@ -5521,21 +6841,26 @@
       }
       this._syncIconField("vip_badge_icon", config.vip_badge_icon || "");
       this._syncIconField("important_badge_icon", config.important_badge_icon || "");
+      // Config may have changed from outside this editor's own commit path
+      // (e.g. the user switched to the raw YAML code-editor and back) -
+      // rebuild the columns list from scratch so it never drifts out of
+      // sync with the actual saved config.
+      this._renderColumnsList();
     }
 
     _visibilityRowHtml(key, extraClass) {
       return `
         <div class="toggle-row${extraClass ? ` ${extraClass}` : ""}">
+          <label class="toggle">
+            <input type="checkbox" data-visibility="${key}">
+            <span class="track"></span>
+          </label>
           <div class="field-label">
             <span class="label-text"></span>
             <span class="tooltip-anchor" data-tooltip="">
               <ha-icon icon="mdi:information-outline"></ha-icon>
             </span>
           </div>
-          <label class="toggle">
-            <input type="checkbox" data-visibility="${key}">
-            <span class="track"></span>
-          </label>
         </div>
       `;
     }
@@ -5563,6 +6888,243 @@
       `;
     }
 
+    // Working column list for the "Spalten" editor - config.columns itself
+    // if the user has ever committed a change, otherwise the implicit
+    // default (see DEFAULT_COLUMNS) so the list has something to show and
+    // reorder even before anything has been saved. Always returns a fresh
+    // array of shallow copies so callers can freely splice/reorder/mutate
+    // without touching the live config until _commitColumns() is called.
+    _currentColumns() {
+      const cols = Array.isArray(this._config.columns) ? this._config.columns : DEFAULT_COLUMNS;
+      return cols.map((c) => ({ ...c }));
+    }
+
+    _commitColumns(columns) {
+      this._config = defaultConfig({ ...this._config, columns });
+      this._emit();
+      this._renderColumnsList();
+    }
+
+    _columnTypeLabel(type, strings) {
+      const map = {
+        icon: strings.editor.columnTypeIcon || "Icon",
+        info: strings.editor.columnTypeInfo || "Name + type",
+        name: strings.editor.columnTypeName || "Name",
+        subtitle: strings.editor.columnTypeSubtitle || "Type",
+        badge: strings.editor.colorBadge,
+        when: strings.editor.colorWhen,
+        text: strings.editor.columnTypeText || "Custom text",
+      };
+      return map[type] || type;
+    }
+
+    _buildColumnsSection(strings) {
+      const section = document.createElement("div");
+      section.className = "columns-section";
+
+      const heading = document.createElement("div");
+      heading.className = "section-heading";
+      heading.textContent = strings.editor.columnsHeading || "Row columns";
+      section.appendChild(heading);
+
+      const desc = document.createElement("div");
+      desc.className = "columns-desc";
+      desc.textContent =
+        strings.editor.columnsDesc ||
+        "Add, remove, and reorder what each row shows. Custom text columns can mix free text with placeholders: {name}, {type}, {occurrence}, {when}, {country}.";
+      section.appendChild(desc);
+
+      const list = document.createElement("div");
+      list.className = "columns-list";
+      section.appendChild(list);
+      this._columnsListEl = list;
+
+      const addRow = document.createElement("div");
+      addRow.className = "column-add-row";
+      addRow.innerHTML = `
+        <select data-column-add-type>
+          <option value="icon"></option>
+          <option value="info"></option>
+          <option value="name"></option>
+          <option value="subtitle"></option>
+          <option value="badge"></option>
+          <option value="when"></option>
+          <option value="text"></option>
+        </select>
+        <button type="button" class="preset-btn" data-column-add>
+          <ha-icon icon="mdi:plus"></ha-icon>
+          <span></span>
+        </button>
+      `;
+      const select = addRow.querySelector("select");
+      Array.from(select.options).forEach((opt) => {
+        opt.textContent = this._columnTypeLabel(opt.value, strings);
+      });
+      addRow.querySelector("[data-column-add] span").textContent = strings.editor.columnAdd || "Add";
+      addRow.querySelector("[data-column-add]").addEventListener("click", () => {
+        const type = select.value;
+        // Always a fresh random id, even for types that only ever appear
+        // once by default (icon/info/badge/when) - so a user adding a
+        // *second* instance of the same type later never collides with the
+        // first one's id.
+        const id = `${type}-${Math.random().toString(36).slice(2, 8)}`;
+        const columns = this._currentColumns();
+        columns.push(type === "text" ? { id, type, template: "" } : { id, type });
+        this._commitColumns(columns);
+      });
+      section.appendChild(addRow);
+
+      const compactRow = document.createElement("div");
+      compactRow.innerHTML = this._visibilityRowHtml("columns_compact", "columns-compact-row");
+      compactRow.querySelector(".label-text").textContent =
+        strings.editor.columnsCompact || "Compact (no gaps, centered)";
+      const compactTooltip = compactRow.querySelector(".tooltip-anchor");
+      if (compactTooltip) {
+        compactTooltip.dataset.tooltip =
+          strings.editor.columnsCompactDesc ||
+          "Remove the spacing between columns, center the row, and make every field match in weight and opacity - useful when the columns form one continuous sentence.";
+      }
+      const compactToggle = compactRow.querySelector('input[data-visibility="columns_compact"]');
+      compactToggle.addEventListener("change", () => {
+        this._config = defaultConfig({ ...this._config, columns_compact: compactToggle.checked });
+        this._emit();
+      });
+      section.appendChild(compactRow);
+
+      this._renderColumnsList(strings);
+      return section;
+    }
+
+    _columnRowHtml(col, index, strings) {
+      const isText = col.type === "text";
+      const suffixKeys =
+        col.type === "info"
+          ? ["name", "subtitle"]
+          : col.type === "name"
+            ? ["name"]
+            : col.type === "subtitle"
+              ? ["subtitle"]
+              : [];
+      return `
+        <div class="column-row" data-col-index="${index}">
+          <div class="column-row-main">
+            <button type="button" class="icon-btn" data-col-action="up" title="${strings.editor.columnMoveUp || "Move up"}">
+              <ha-icon icon="mdi:chevron-up"></ha-icon>
+            </button>
+            <button type="button" class="icon-btn" data-col-action="down" title="${strings.editor.columnMoveDown || "Move down"}">
+              <ha-icon icon="mdi:chevron-down"></ha-icon>
+            </button>
+            <span class="column-type-label"></span>
+            ${isText ? `<input type="text" class="column-template-input" data-col-template>` : ""}
+            <button type="button" class="icon-btn column-remove" data-col-action="remove" title="${strings.editor.columnRemove || "Remove"}">
+              <ha-icon icon="mdi:close"></ha-icon>
+            </button>
+          </div>
+          ${
+            suffixKeys.length
+              ? `
+                <div class="column-suffix-list">
+                  ${suffixKeys
+                    .map(
+                      (key) => `
+                        <div class="column-suffix-toggle">
+                          <label class="toggle">
+                            <input type="checkbox" data-col-suffix="${key}">
+                            <span class="track"></span>
+                          </label>
+                          <span class="suffix-label"></span>
+                        </div>
+                      `
+                    )
+                    .join("")}
+                </div>
+              `
+              : ""
+          }
+        </div>
+      `;
+    }
+
+    _renderColumnsList(strings) {
+      strings = strings || t(this._hass);
+      if (!this._columnsListEl) return;
+      const columns = this._currentColumns();
+      this._columnsListEl.innerHTML = columns
+        .map((col, index) => this._columnRowHtml(col, index, strings))
+        .join("");
+
+      columns.forEach((col, index) => {
+        const row = this._columnsListEl.querySelector(`[data-col-index="${index}"]`);
+        if (!row) return;
+        row.querySelector(".column-type-label").textContent = this._columnTypeLabel(col.type, strings);
+
+        const upBtn = row.querySelector('[data-col-action="up"]');
+        const downBtn = row.querySelector('[data-col-action="down"]');
+        upBtn.disabled = index === 0;
+        downBtn.disabled = index === columns.length - 1;
+        upBtn.addEventListener("click", () => {
+          const cols = this._currentColumns();
+          [cols[index - 1], cols[index]] = [cols[index], cols[index - 1]];
+          this._commitColumns(cols);
+        });
+        downBtn.addEventListener("click", () => {
+          const cols = this._currentColumns();
+          [cols[index + 1], cols[index]] = [cols[index], cols[index + 1]];
+          this._commitColumns(cols);
+        });
+
+        const removeBtn = row.querySelector('[data-col-action="remove"]');
+        // At least one column must always remain - an empty row would just
+        // look broken, and there's no "empty state" designed for it.
+        removeBtn.disabled = columns.length <= 1;
+        removeBtn.addEventListener("click", () => {
+          const cols = this._currentColumns();
+          cols.splice(index, 1);
+          this._commitColumns(cols);
+        });
+
+        if (col.type === "text") {
+          const templateInput = row.querySelector("[data-col-template]");
+          templateInput.placeholder =
+            strings.editor.columnTemplatePlaceholder || "e.g. {name} turns {occurrence} today";
+          templateInput.value = col.template || "";
+          templateInput.addEventListener("change", () => {
+            const cols = this._currentColumns();
+            cols[index] = { ...cols[index], template: templateInput.value };
+            this._commitColumns(cols);
+          });
+        }
+
+        const suffixKeys =
+          col.type === "info"
+            ? ["name", "subtitle"]
+            : col.type === "name"
+              ? ["name"]
+              : col.type === "subtitle"
+                ? ["subtitle"]
+                : [];
+        suffixKeys.forEach((key) => {
+          const configKey = key === "name" ? "show_name_country" : "show_subtitle_country";
+          const cb = row.querySelector(`[data-col-suffix="${key}"]`);
+          if (!cb) return;
+          cb.checked = this._config[configKey] === true;
+          const labelEl = cb.closest(".column-suffix-toggle").querySelector(".suffix-label");
+          labelEl.textContent =
+            suffixKeys.length > 1
+              ? `${strings.editor.visibilityCountrySuffix || "Holiday suffix"} (${
+                  key === "name"
+                    ? strings.editor.columnTypeName || "Name"
+                    : strings.editor.columnTypeSubtitle || "Type"
+                })`
+              : strings.editor.visibilityCountrySuffix || "Holiday suffix";
+          cb.addEventListener("change", () => {
+            this._config = defaultConfig({ ...this._config, [configKey]: cb.checked });
+            this._emit();
+          });
+        });
+      });
+    }
+
     _buildDisplayBody(strings) {
       const body = document.createElement("div");
       body.className = "display-body";
@@ -5573,56 +7135,29 @@
       body.appendChild(visHeading);
 
       const visRows = document.createElement("div");
-      // Three groups, separated by dashed dividers: which events appear at
-      // all (past/today/soon | VIP/Important filters), the card's own
-      // title (alone, not paired with anything), then which fields are
-      // shown per row (icon/title/subtitle | occurrence/countdown).
-      visRows.innerHTML =
-        this._visibilityTwoColHtml(["past", "today", "soon"], ["vip_only", "important_only"]) +
-        '<hr class="toggle-divider">' +
-        this._visibilityRowHtml("font_size_title") +
-        '<hr class="toggle-divider">' +
-        this._visibilityTwoColHtml(["icon", ["title", "title_country"], ["subtitle", "subtitle_country"]], [
-          "badge",
-          "when",
-        ]);
+      // Which events appear at all (past/today/soon | VIP/Important
+      // filters). The card's own title lives in Settings -> General now
+      // (right under the title text field, as "Hide"), and which fields
+      // appear per row - and in what order - is the "Spalten" section
+      // below instead of a fixed icon/title/subtitle/badge/when grid.
+      visRows.innerHTML = this._visibilityTwoColHtml(["past", "today", "soon"], ["vip_only", "important_only"]);
       body.appendChild(visRows);
+
+      body.appendChild(this._buildColumnsSection(strings));
 
       const visLabels = {
         past: [strings.editor.visibilityPast, strings.editor.visibilityPastDesc],
         today: [strings.editor.visibilityToday, strings.editor.visibilityTodayDesc],
         soon: [strings.editor.visibilitySoon, strings.editor.visibilitySoonDesc],
-        font_size_title: [strings.editor.fontCardTitle, strings.editor.visibilityCardTitleDesc],
-        icon: [strings.editor.visibilityIcon, strings.editor.visibilityIconDesc],
-        title: [strings.editor.colorTitle, strings.editor.visibilityTitleDesc],
-        subtitle: [strings.editor.colorSubtitle, strings.editor.visibilitySubtitleDesc],
-        badge: [strings.editor.colorBadge, strings.editor.visibilityBadgeDesc],
-        when: [strings.editor.colorWhen, strings.editor.visibilityWhenDesc],
         vip_only: [strings.editor.visibilityVipOnly, strings.editor.visibilityVipOnlyDesc],
         important_only: [strings.editor.visibilityImportantOnly, strings.editor.visibilityImportantOnlyDesc],
-        title_country: [
-          strings.editor.visibilityCountrySuffix || "Holiday suffix",
-          strings.editor.visibilityCountrySuffixDesc || "",
-        ],
-        subtitle_country: [
-          strings.editor.visibilityCountrySuffix || "Holiday suffix",
-          strings.editor.visibilityCountrySuffixDesc || "",
-        ],
       };
       const visConfigKeys = {
         past: "show_past",
         today: "show_today",
         soon: "show_soon",
-        font_size_title: "show_title",
-        icon: "show_icon",
-        title: "show_name",
-        subtitle: "show_subtitle",
-        badge: "show_badge",
-        when: "show_when",
         vip_only: "show_vip_only",
         important_only: "show_important_only",
-        title_country: "show_name_country",
-        subtitle_country: "show_subtitle_country",
       };
       for (const key of Object.keys(visConfigKeys)) {
         const row = body.querySelector(`input[data-visibility="${key}"]`).closest(".toggle-row");
@@ -5765,32 +7300,32 @@
             <input type="text" data-font="${key}" placeholder="${placeholder}">
             <div class="field-toggles">
               <div class="toggle-group">
-                <span class="toggle-label"></span>
                 <label class="toggle">
                   <input type="checkbox" data-bold="${key}">
                   <span class="track"></span>
                 </label>
+                <span class="toggle-label"></span>
               </div>
               <div class="toggle-group">
-                <span class="toggle-label"></span>
                 <label class="toggle">
                   <input type="checkbox" data-italic="${key}">
                   <span class="track"></span>
                 </label>
+                <span class="toggle-label"></span>
               </div>
               <div class="toggle-group">
-                <span class="toggle-label"></span>
                 <label class="toggle">
                   <input type="checkbox" data-uppercase="${key}">
                   <span class="track"></span>
                 </label>
+                <span class="toggle-label"></span>
               </div>
               <div class="toggle-group">
-                <span class="toggle-label"></span>
                 <label class="toggle">
                   <input type="checkbox" data-underline="${key}">
                   <span class="track"></span>
                 </label>
+                <span class="toggle-label"></span>
               </div>
             </div>
           </div>
@@ -5814,6 +7349,7 @@
         { key: "subtitle", value: config.font_sizes.subtitle, style: config.font_style.subtitle },
         { key: "badge", value: config.font_sizes.badge, style: config.font_style.badge },
         { key: "when", value: config.font_sizes.when, style: config.font_style.when },
+        { key: "text", value: config.font_sizes.text, style: config.font_style.text },
       ];
       for (const { key, value, style } of rows) {
         const input = this.shadowRoot.querySelector(`input[data-font="${key}"]`);
@@ -5836,18 +7372,14 @@
       const body = document.createElement("div");
       body.className = "fonts-body";
 
-      const heading = document.createElement("div");
-      heading.className = "section-heading";
-      heading.textContent = strings.editor.colorsLabelsHeading;
-      body.appendChild(heading);
-
       const rows = document.createElement("div");
       rows.innerHTML =
         this._fontRowHtml("font_size_title", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
         this._fontRowHtml("title", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
         this._fontRowHtml("subtitle", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
         this._fontRowHtml("badge", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        this._fontRowHtml("when", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder);
+        this._fontRowHtml("when", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
+        this._fontRowHtml("text", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder);
       body.appendChild(rows);
 
       const toggleLabels = [
@@ -5867,8 +7399,9 @@
         subtitle: [strings.editor.colorSubtitle, strings.editor.fontSubtitleDesc],
         badge: [strings.editor.colorBadge, strings.editor.fontBadgeDesc],
         when: [strings.editor.colorWhen, strings.editor.fontWhenDesc],
+        text: [strings.editor.colorText, strings.editor.fontTextDesc],
       };
-      for (const key of ["font_size_title", "title", "subtitle", "badge", "when"]) {
+      for (const key of ["font_size_title", "title", "subtitle", "badge", "when", "text"]) {
         const row = body.querySelector(`input[data-font="${key}"]`).closest(".field-row");
         const [label, desc] = labels[key];
         row.querySelector(".label-text").textContent = label;
@@ -5944,6 +7477,7 @@
         period: this.shadowRoot.querySelector(".period-body"),
         display: this.shadowRoot.querySelector(".display-body"),
         colors: this.shadowRoot.querySelector(".colors-body"),
+        icons: this.shadowRoot.querySelector(".icons-body"),
         fonts: this.shadowRoot.querySelector(".fonts-body"),
         background: this.shadowRoot.querySelector(".background-body"),
       };
@@ -5964,6 +7498,7 @@
       if (key === "period") this._syncPeriodInputs();
       if (key === "fonts") this._syncFontInputs();
       if (key === "display") this._syncDisplayInputs();
+      if (key === "icons") { this._syncColorInputs(); this._syncIconsInputs(); }
       if (key === "background") this._syncBackgroundInputs();
     }
 
@@ -6045,6 +7580,7 @@
         this.shadowRoot.appendChild(this._buildPeriodBody(strings));
         this.shadowRoot.appendChild(this._buildDisplayBody(strings));
         this.shadowRoot.appendChild(this._buildColorsBody(strings));
+        this.shadowRoot.appendChild(this._buildIconsBody(strings));
         this.shadowRoot.appendChild(this._buildFontsBody(strings));
         this.shadowRoot.appendChild(this._buildBackgroundBody(strings));
 
@@ -6057,6 +7593,7 @@
         this._syncEventsInputs();
         this._syncPeriodInputs();
         this._syncColorInputs();
+        this._syncIconsInputs();
         this._syncFontInputs();
         this._syncDisplayInputs();
         this._syncBackgroundInputs();
@@ -6086,6 +7623,7 @@
       this._syncEventsInputs();
       this._syncPeriodInputs();
       this._syncColorInputs();
+      this._syncIconsInputs();
       this._syncFontInputs();
       this._syncDisplayInputs();
       this._syncBackgroundInputs();

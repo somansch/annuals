@@ -2,6 +2,23 @@
 
 All notable changes to this integration are documented here.
 
+## v2.2.0
+
+### Added
+- **Row columns**: the custom card's row layout is now fully configurable. Add, remove, and reorder columns (Icon, Name, Type, Name + Type, Occurrence, Countdown, or free-form Custom text), and build rows that read like a sentence, e.g. "🎉 Anna turns 30 today! 🎉". Custom text columns support `{name}`, `{type}`, `{occurrence}`, `{when}`, and `{country}` placeholders, and get their own color and font-size controls.
+- **Compact mode** (`columns_compact`): removes the spacing between columns, centers the row, and equalizes weight/opacity across fields - useful when the columns form one continuous sentence rather than a table row.
+- **Icon animations**: each of the three icon colors (Default, Today, Soon) can now have a looping animation (Pulse, Bounce, Shake, Spin, Flash) applied, configured in a new **Icons** tab in Layout (between Colors and Card background).
+- **"Today only"** and **"Only next event day"** filters, for building small at-a-glance cards (e.g. duplicate the card, filter to today only, and give it a single custom-text column).
+- **Configurable tap/hold actions**: clicking or tapping a row used to always open its more-info dialog - this is now just the default. Settings → General has new **Tap** and **Hold** action fields using Home Assistant's own action picker (More info, Navigate, URL, Perform action, Toggle, Assist, or Nothing), each configurable independently.
+
+### Changed
+- The Layout → Display editor's Show/Hide section was reorganized: the card-title Hide toggle and the Today-only/Next-event-day-only filters moved out of Colors/Fonts to sit alongside the new Row columns editor; per-column styling for custom text columns now lives in the Fonts and Colors tabs next to the other field styles.
+- Renamed the "Title"/"Subtitle" color and font labels to "Name"/"Type" for clarity.
+
+### Fixed
+- **Public holiday import**: importing more than one category that both define the same holiday (e.g. many US states list their statutory holidays under both "government" and "public", sometimes under slightly different names such as "Washington's Birthday" vs. "Washington and Lincoln Day") no longer creates a duplicate event for the same day. Holidays are now deduplicated by date across every selected category, with "public" always taking precedence when a date qualifies under more than one.
+- On rare occasions - most likely right after a restart - the bundled custom card could fail to load ("Custom element doesn't exist: annuals-card") because this integration's own setup could run before the frontend integration had finished initializing, in which case it crashed and aborted for that session. `frontend` is now declared as an explicit dependency in the manifest, so Home Assistant always sets it up first.
+
 ## v2.1.0
 
 ### Added

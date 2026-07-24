@@ -347,7 +347,7 @@ def _holiday_options_schema(country_code: str) -> vol.Schema:
 def _build_holiday_rows(
     country: str, subdivision: str | None, categories: list[str], language: str | None
 ) -> list[dict]:
-    """One row per distinct holiday in the given category(ies), for the
+    """One row per distinct holiday across the given category(ies), for the
     current year.
 
     Some categories (school holidays, notably) list every single calendar
@@ -361,15 +361,41 @@ def _build_holiday_rows(
     entry anyway (via the unique_id dedup in AnnualsConfigFlow.async_step_import),
     just wastefully and with a misleading "N events queued" count.
 
+    Many countries/subdivisions also define the *same* holiday under more
+    than one category at once (e.g. several US states list their statutory
+    holidays as both "government" and "public") - often under a slightly
+    *different* name per category too (e.g. "Washington's Birthday" in
+    "government" vs. "Washington and Lincoln Day" in "public", or "Birthday
+    of Martin Luther King, Jr." vs. "Martin Luther King Jr. Day" - confirmed
+    against the `holidays` library for US/UT), so the name-derived key above
+    can't recognise them as the same holiday. Selecting more than one such
+    category would otherwise queue a duplicate row for the same day, which
+    the unique_id dedup in AnnualsConfigFlow.async_step_import can't catch
+    either, since it includes the category. So holidays are first resolved
+    per category (for the multi-day collapsing above), then merged across
+    every selected category *by date* - each calendar date ends up with only
+    one row - since the date, not the name, is what actually identifies "the
+    same holiday" across categories. "public" always wins that merge over
+    any other category, since it's the most broadly meaningful
+    classification when a date qualifies as both; a tie between two
+    non-public categories keeps whichever was selected first. (Two
+    genuinely-different holidays from different categories coinciding on
+    the same date - rather than being the same holiday listed twice - would
+    also collapse to one row here, but that's a rare coincidence next to how
+    common the same-holiday-two-categories case is.)
+
     Keyed for identity (CONF_HOLIDAY_KEY) using the *default*-language name
-    with any "(observed)"/"(estimated)" suffix stripped (see
+    of whichever category's entry won the merge above, with any
+    "(observed)"/"(estimated)" suffix stripped (see
     dates.holiday_key_from_name) - kept separate from the *display* name,
     which uses whatever language was actually requested. Both come from the
     same underlying dates so they always describe the same holiday, even
     though matching happens by date, not by name.
     """
     year = date.today().year
-    rows: list[dict] = []
+    # occurrence date -> (category, holiday_key, display_name)
+    chosen: dict[date, tuple[str, str, str]] = {}
+
     for category in categories:
         default_cal = _holiday_calendar(country, subdivision, category, year, None)
         display_cal = (
@@ -386,19 +412,26 @@ def _build_holiday_rows(
 
         for key, occurrence in earliest_by_key.items():
             default_name = default_cal[occurrence]
-            rows.append(
-                {
-                    CONF_EVENT_NAME: display_cal.get(occurrence, default_name),
-                    CONF_EVENT_TYPE: TYPE_HOLIDAY,
-                    CONF_COUNTRY: country,
-                    CONF_SUBDIVISION: subdivision,
-                    CONF_CATEGORY: category,
-                    CONF_LANGUAGE: language,
-                    CONF_HOLIDAY_KEY: key,
-                    CONF_ICON: "",
-                    CONF_VIP: False,
-                }
-            )
+            display_name = display_cal.get(occurrence, default_name)
+            existing = chosen.get(occurrence)
+            if existing is None or (category == "public" and existing[0] != "public"):
+                chosen[occurrence] = (category, key, display_name)
+
+    rows: list[dict] = []
+    for category, key, display_name in chosen.values():
+        rows.append(
+            {
+                CONF_EVENT_NAME: display_name,
+                CONF_EVENT_TYPE: TYPE_HOLIDAY,
+                CONF_COUNTRY: country,
+                CONF_SUBDIVISION: subdivision,
+                CONF_CATEGORY: category,
+                CONF_LANGUAGE: language,
+                CONF_HOLIDAY_KEY: key,
+                CONF_ICON: "",
+                CONF_VIP: False,
+            }
+        )
     return rows
 
 
