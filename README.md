@@ -97,11 +97,19 @@ Re-importing the same CSV later - e.g. a centrally maintained file synced on a s
 
 For scheduled or automated imports (instead of clicking through the UI each time), call the **`annuals.import_csv`** action from an automation, script, or Developer Tools → Actions. Same columns, same file-based dedup behavior as above. Provide the CSV either as inline text or as a path on the HA host:
 
+<details>
+<summary>YAML: import from a file path</summary>
+
 ```yaml
 action: annuals.import_csv
 data:
   file_path: /config/annuals/contacts.csv
 ```
+
+</details>
+
+<details>
+<summary>YAML: import from inline content</summary>
 
 ```yaml
 action: annuals.import_csv
@@ -110,6 +118,8 @@ data:
     name,type,day,month,year,icon,vip
     Anna,birthday,12,4,1988,,
 ```
+
+</details>
 
 `file_path` must be inside a directory listed under `homeassistant: allowlist_external_dirs` in `configuration.yaml`. Combine this with a **time trigger** to keep a centrally maintained CSV in sync on a schedule, without any manual re-upload.
 
@@ -192,6 +202,9 @@ Since `vip` and `important` are plain sensor attributes, they're just as usable 
 
 **Notify me when a VIP has their day today:**
 
+<details>
+<summary>YAML</summary>
+
 ```yaml
 automation:
   - alias: "Annuals - VIP event today"
@@ -214,7 +227,12 @@ automation:
                   {{ state_attr(repeat.item, 'name') }} has their event today!
 ```
 
+</details>
+
 **Remind me 7 days before an important milestone:**
+
+<details>
+<summary>YAML</summary>
 
 ```yaml
 automation:
@@ -237,6 +255,8 @@ automation:
                 message: >
                   {{ state_attr(repeat.item, 'name') }}'s {{ state_attr(repeat.item, 'occurrence_number') }}. event is in 7 days!
 ```
+
+</details>
 
 Adjust the `"7"` in the second example to match however far ahead you want the reminder, and add a second `repeat` block (or duplicate the automation) if you want more than one lead time.
 
@@ -285,6 +305,9 @@ A plain, unstyled card - just the defaults, letting the row highlighting (today/
 
 <img src="docs/annuals-card-example-1.png" alt="Annuals card, default styling" width="60%">
 
+<details>
+<summary>YAML</summary>
+
 ```yaml
 type: custom:annuals-card
 title: ""
@@ -314,9 +337,14 @@ vip_badge_icon: mdi:star
 important_badge_icon: mdi:exclamation-thick
 ```
 
+</details>
+
 A fully styled card - custom colors per row element, bold/uppercase/underlined fonts, highlight tints for past/today/soon, custom VIP/Important badge icons and colors, and a translucent background image:
 
 <img src="docs/annuals-card-example-2.png" alt="Annuals card, fully styled" width="60%">
+
+<details>
+<summary>YAML</summary>
 
 ```yaml
 type: custom:annuals-card
@@ -388,6 +416,8 @@ background:
   size: contain
   opacity: 13
 ```
+
+</details>
 
 Both are set through the visual editor above - shown here as YAML just to make the full option set easy to scan and copy. Every field left at its default (`""`, `false`, or omitted) in these examples inherits from your Home Assistant theme, per the CSS variables below.
 
