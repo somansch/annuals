@@ -58,6 +58,7 @@
                 "description": "Elk evenement krijgt een eigen item, dat je later kunt terugvinden en bewerken via Instellingen → Apparaten en diensten door op de naam te zoeken.",
                 "data": {
                     "name": "Naam",
+                    "last_name": "Achternaam (optioneel)",
                     "type": "Type evenement",
                     "day": "Dag",
                     "month": "Maand",
@@ -71,6 +72,7 @@
                 "description": "Wijzig een willekeurig veld hieronder en verzend om dit evenement bij te werken.",
                 "data": {
                     "name": "Naam",
+                    "last_name": "Achternaam (optioneel)",
                     "type": "Type evenement",
                     "day": "Dag",
                     "month": "Maand",
@@ -97,6 +99,7 @@
                 "description": "Wijzig een willekeurig veld hieronder en verzend om dit evenement bij te werken.",
                 "data": {
                     "name": "Naam",
+                    "last_name": "Achternaam (optioneel)",
                     "type": "Type evenement",
                     "day": "Dag",
                     "month": "Maand",
@@ -107,7 +110,7 @@
             },
             "import_csv": {
                 "title": "Evenementen importeren vanuit CSV",
-                "description": "Kolommen: name, type, day, month, year (optioneel), icon (optioneel), vip (optioneel). „type” moet een van de volgende Engelse sleutels zijn: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (altijd in het Engels, ongeacht je taalinstelling). „vip” accepteert 1/true/yes/y/x (hoofdlettergevoeligheid maakt niet uit); laat leeg of laat de kolom weg voor een niet-VIP-evenement. Houd elke kolom aan, ook als een waarde leeg is - een rij zonder komma aan het einde schuift de volgende waarden naar links. Ongeldige rijen worden overgeslagen en gelogd.\n\nVoorbeeld:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
+                "description": "Kolommen: name, type, day, month, year (optioneel), icon (optioneel), vip (optioneel), last_name (optioneel). „type” moet een van de volgende Engelse sleutels zijn: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (altijd in het Engels, ongeacht je taalinstelling). „vip” accepteert 1/true/yes/y/x (hoofdlettergevoeligheid maakt niet uit); laat leeg of laat de kolom weg voor een niet-VIP-evenement. Houd elke kolom aan, ook als een waarde leeg is - een rij zonder komma aan het einde schuift de volgende waarden naar links. Ongeldige rijen worden overgeslagen en gelogd.\n\nVoorbeeld:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Müller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n```",
                 "data": {
                     "csv_file": "CSV-bestand"
                 }
@@ -117,6 +120,7 @@
                 "menu_options": {
                     "annual_settings": "Annual Instellingen",
                     "import_csv": "Evenementen importeren vanuit CSV",
+                    "export_csv": "Evenementen exporteren naar CSV",
                     "import_holidays": "Feestdagen importeren",
                     "remove_holidays": "Geïmporteerde feestdagen verwijderen",
                     "delete_all": "Alle Annuals-gegevens verwijderen"
@@ -175,6 +179,8 @@
         "abort": {
             "hub_not_configurable": "De Annuals-hub heeft geen eigen instellingen - hij bevat alleen de gedeelde kalenders.",
             "import_started": "Import gestart: {created} evenement(en) in de wachtrij, {skipped} rij(en) overgeslagen (zie het logboek voor details).",
+            "csv_exported": "{count} evenement(en) geëxporteerd. [annuals_export.csv downloaden]({url}) (Ctrl/Cmd+klik om te downloaden - een gewone klik werkt hier niet)\n\nOf kopieer de CSV hieronder:\n\n```\n{csv}\n```",
+            "no_events_to_export": "Er zijn nog geen evenementen om te exporteren.",
             "deleted_all": "Alle Annuals-evenementen, kalenders en de hub zijn verwijderd.",
             "holiday_import_started": "Import gestart: {count} feestdag(en) in de wachtrij voor {country}.",
             "no_holidays_imported": "Er zijn nog geen feestdagen geïmporteerd.",

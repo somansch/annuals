@@ -58,6 +58,7 @@
                 "description": "Cada evento obtiene su propia entrada, que luego puedes encontrar y editar desde Ajustes → Dispositivos y servicios buscando su nombre.",
                 "data": {
                     "name": "Nombre",
+                    "last_name": "Apellido (opcional)",
                     "type": "Tipo de evento",
                     "day": "Día",
                     "month": "Mes",
@@ -71,6 +72,7 @@
                 "description": "Cambia cualquier campo de abajo y envía para actualizar este evento.",
                 "data": {
                     "name": "Nombre",
+                    "last_name": "Apellido (opcional)",
                     "type": "Tipo de evento",
                     "day": "Día",
                     "month": "Mes",
@@ -97,6 +99,7 @@
                 "description": "Cambia cualquier campo de abajo y envía para actualizar este evento.",
                 "data": {
                     "name": "Nombre",
+                    "last_name": "Apellido (opcional)",
                     "type": "Tipo de evento",
                     "day": "Día",
                     "month": "Mes",
@@ -107,7 +110,7 @@
             },
             "import_csv": {
                 "title": "Importar eventos desde CSV",
-                "description": "Columnas: name, type, day, month, year (opcional), icon (opcional), vip (opcional). «type» debe ser una de estas claves en inglés: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (siempre en inglés, sin importar tu idioma). «vip» acepta 1/true/yes/y/x (sin distinguir mayúsculas/minúsculas); déjalo vacío u omite la columna para un evento que no sea VIP. Mantén todas las columnas aunque un valor esté vacío: una fila sin la coma final desplaza los valores siguientes hacia la izquierda. Las filas no válidas se omiten y quedan registradas.\n\nEjemplo:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
+                "description": "Columnas: name, type, day, month, year (opcional), icon (opcional), vip (opcional), last_name (opcional). «type» debe ser una de estas claves en inglés: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (siempre en inglés, sin importar tu idioma). «vip» acepta 1/true/yes/y/x (sin distinguir mayúsculas/minúsculas); déjalo vacío u omite la columna para un evento que no sea VIP. Mantén todas las columnas aunque un valor esté vacío: una fila sin la coma final desplaza los valores siguientes hacia la izquierda. Las filas no válidas se omiten y quedan registradas.\n\nEjemplo:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Müller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n```",
                 "data": {
                     "csv_file": "Archivo CSV"
                 }
@@ -117,6 +120,7 @@
                 "menu_options": {
                     "annual_settings": "Annual Ajustes",
                     "import_csv": "Importar eventos desde CSV",
+                    "export_csv": "Exportar eventos a CSV",
                     "import_holidays": "Importar festivos",
                     "remove_holidays": "Eliminar festivos importados",
                     "delete_all": "Eliminar todos los datos de Annuals"
@@ -175,6 +179,8 @@
         "abort": {
             "hub_not_configurable": "El concentrador Annuals no tiene ajustes propios: solo contiene los calendarios compartidos.",
             "import_started": "Importación iniciada: {created} evento(s) en cola, {skipped} fila(s) omitida(s) (consulta el registro para más detalles).",
+            "csv_exported": "{count} evento(s) exportado(s). [Descargar annuals_export.csv]({url}) (Ctrl/Cmd+clic para descargar - un clic normal no funciona aquí)\n\nO copia el CSV de abajo:\n\n```\n{csv}\n```",
+            "no_events_to_export": "Todavía no hay eventos para exportar.",
             "deleted_all": "Se han eliminado todos los eventos, calendarios y el concentrador de Annuals.",
             "holiday_import_started": "Importación iniciada: {count} festivo(s) en cola para {country}.",
             "no_holidays_imported": "Todavía no se ha importado ningún festivo.",

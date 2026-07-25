@@ -58,6 +58,7 @@
                 "description": "Varje händelse får en egen post, som du senare kan hitta och redigera under Inställningar → Enheter och tjänster genom att söka på namnet.",
                 "data": {
                     "name": "Namn",
+                    "last_name": "Efternamn (valfritt)",
                     "type": "Händelsetyp",
                     "day": "Dag",
                     "month": "Månad",
@@ -71,6 +72,7 @@
                 "description": "Ändra valfritt fält nedan och skicka in för att uppdatera händelsen.",
                 "data": {
                     "name": "Namn",
+                    "last_name": "Efternamn (valfritt)",
                     "type": "Händelsetyp",
                     "day": "Dag",
                     "month": "Månad",
@@ -97,6 +99,7 @@
                 "description": "Ändra valfritt fält nedan och skicka in för att uppdatera händelsen.",
                 "data": {
                     "name": "Namn",
+                    "last_name": "Efternamn (valfritt)",
                     "type": "Händelsetyp",
                     "day": "Dag",
                     "month": "Månad",
@@ -107,7 +110,7 @@
             },
             "import_csv": {
                 "title": "Importera händelser från CSV",
-                "description": "Kolumner: name, type, day, month, year (valfritt), icon (valfritt), vip (valfritt). \"type\" måste vara en av dessa engelska nycklar: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (alltid på engelska, oavsett språkinställning). \"vip\" accepterar 1/true/yes/y/x (skiftlägesokänsligt); lämna tomt eller utelämna kolumnen för en icke-VIP-händelse. Behåll alla kolumner även när ett värde är tomt - en rad utan avslutande kommatecken förskjuter efterföljande värden ett steg åt vänster. Ogiltiga rader hoppas över och loggas.\n\nExempel:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
+                "description": "Kolumner: name, type, day, month, year (valfritt), icon (valfritt), vip (valfritt), last_name (valfritt). \"type\" måste vara en av dessa engelska nycklar: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (alltid på engelska, oavsett språkinställning). \"vip\" accepterar 1/true/yes/y/x (skiftlägesokänsligt); lämna tomt eller utelämna kolumnen för en icke-VIP-händelse. Behåll alla kolumner även när ett värde är tomt - en rad utan avslutande kommatecken förskjuter efterföljande värden ett steg åt vänster. Ogiltiga rader hoppas över och loggas.\n\nExempel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Müller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n```",
                 "data": {
                     "csv_file": "CSV-fil"
                 }
@@ -117,6 +120,7 @@
                 "menu_options": {
                     "annual_settings": "Annual Inställningar",
                     "import_csv": "Importera händelser från CSV",
+                    "export_csv": "Exportera händelser till CSV",
                     "import_holidays": "Importera helgdagar",
                     "remove_holidays": "Ta bort importerade helgdagar",
                     "delete_all": "Ta bort all Annuals-data"
@@ -175,6 +179,8 @@
         "abort": {
             "hub_not_configurable": "Annuals-huben har inga egna inställningar - den innehåller bara de delade kalendrarna.",
             "import_started": "Import startad: {created} händelse(r) i kö, {skipped} rad(er) överhoppade (se loggen för detaljer).",
+            "csv_exported": "{count} händelse(r) exporterade. [Ladda ner annuals_export.csv]({url}) (Ctrl/Cmd+klick för att ladda ner - ett vanligt klick fungerar inte här)\n\nEller kopiera CSV:n nedan:\n\n```\n{csv}\n```",
+            "no_events_to_export": "Det finns inga händelser att exportera ännu.",
             "deleted_all": "Alla Annuals-händelser, kalendrar och huben har tagits bort.",
             "holiday_import_started": "Import startad: {count} helgdag(ar) i kö för {country}.",
             "no_holidays_imported": "Inga helgdagar har importerats än.",

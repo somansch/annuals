@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import csv
-from datetime import date
+from datetime import date, timedelta
 import io
 import logging
 
@@ -9,6 +9,7 @@ import holidays as holidays_lib
 import voluptuous as vol
 
 from homeassistant.components.file_upload import process_uploaded_file
+from homeassistant.components.http.auth import async_sign_path
 from homeassistant.config_entries import ConfigEntry, SOURCE_IMPORT, ConfigFlow, OptionsFlow
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.selector import selector
@@ -24,6 +25,7 @@ from .const import (
     CONF_ICON,
     CONF_IMPORTANT_THRESHOLDS,
     CONF_LANGUAGE,
+    CONF_LAST_NAME,
     CONF_MONTH,
     CONF_SUBDIVISION,
     CONF_VIP,
@@ -36,7 +38,8 @@ from .const import (
     TYPE_HOLIDAY,
 )
 from .dates import _holiday_calendar, holiday_key_from_name
-from .helpers import async_event_type_labels, hub_title
+from .helpers import async_event_type_labels, export_csv_text, full_name, hub_title
+from .http import EXPORT_CSV_URL
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -86,6 +89,16 @@ def _event_schema(defaults: dict | None = None) -> vol.Schema:
     return vol.Schema(
         {
             vol.Required(CONF_EVENT_NAME, default=defaults.get(CONF_EVENT_NAME, "")): str,
+            # Optional - lets a compact dashboard card show the first name
+            # only (the existing "name" field/attribute, unchanged) while
+            # still keeping the full name available for entry titles,
+            # calendar messages, and the card's {last_name}/{full_name}
+            # placeholders. Never offered for TYPE_HOLIDAY - that type never
+            # reaches this schema at all (see EVENT_TYPES above), holidays
+            # keep the single imported name as-is.
+            vol.Optional(
+                CONF_LAST_NAME, default=defaults.get(CONF_LAST_NAME, "")
+            ): str,
             vol.Required(
                 CONF_EVENT_TYPE, default=defaults.get(CONF_EVENT_TYPE, TYPE_BIRTHDAY)
             ): _event_type_selector(),
@@ -148,6 +161,7 @@ def _validate_and_normalise(user_input: dict) -> tuple[dict | None, dict[str, st
 
     data = {
         CONF_EVENT_NAME: name,
+        CONF_LAST_NAME: user_input.get(CONF_LAST_NAME, "").strip(),
         CONF_EVENT_TYPE: user_input[CONF_EVENT_TYPE],
         CONF_DAY: day,
         CONF_MONTH: month,
@@ -172,11 +186,14 @@ def _parse_csv_rows(text: str) -> tuple[list[dict], list[str]]:
     """Parse CSV text into validated event data dicts, plus per-line errors.
 
     Columns: name, type, day, month, year (optional), icon (optional),
-    vip (optional). `type` must be one of the internal English keys (e.g.
-    "birthday"), case-insensitively - translated labels are deliberately
-    not accepted, so the same file works regardless of the server's
-    language. `vip` accepts 1/true/yes/y/x (case-insensitive); anything
-    else (including a missing column) means not VIP.
+    vip (optional), last_name (optional). `type` must be one of the internal
+    English keys (e.g. "birthday"), case-insensitively - translated labels
+    are deliberately not accepted, so the same file works regardless of the
+    server's language. `vip` accepts 1/true/yes/y/x (case-insensitive);
+    anything else (including a missing column) means not VIP. `last_name`
+    is never applied to holiday-type rows in practice, since holidays are
+    never CSV-imported (see EVENT_TYPES) - not worth rejecting the column
+    if present, just meaningless for those rows.
     """
     reader = csv.DictReader(io.StringIO(text))
     if not reader.fieldnames:
@@ -221,6 +238,7 @@ def _parse_csv_rows(text: str) -> tuple[list[dict], list[str]]:
         rows.append(
             {
                 CONF_EVENT_NAME: name,
+                CONF_LAST_NAME: row.get("last_name", ""),
                 CONF_EVENT_TYPE: event_type,
                 CONF_DAY: day,
                 CONF_MONTH: month,
@@ -258,6 +276,10 @@ def _import_unique_id(data: dict) -> str:
             f"holiday:{data[CONF_COUNTRY]}:{subdivision_key}:"
             f"{data[CONF_CATEGORY]}:{data[CONF_HOLIDAY_KEY]}"
         )
+    # Keyed on the first/only name alone, not full_name() - deliberately,
+    # so that adding a last name to a row that was already being synced
+    # without one (or correcting it) still matches and updates the same
+    # entry, instead of the identity shifting and creating a duplicate.
     name_key = data[CONF_EVENT_NAME].strip().casefold()
     return f"{data[CONF_EVENT_TYPE]}:{data[CONF_DAY]:02d}{data[CONF_MONTH]:02d}:{name_key}"
 
@@ -436,13 +458,14 @@ def _build_holiday_rows(
 
 
 async def _entry_title(hass: HomeAssistant, data: dict) -> str:
-    """Type-prefixed entry title, e.g. "Geburtstag: Anna" - the prefix makes
-    the alphabetically-sorted entry list on the integration page group by
-    type, and the search box match on either part.
+    """Type-prefixed entry title, e.g. "Geburtstag: Anna Müller" (or just
+    "Geburtstag: Anna" with no last name set) - the prefix makes the
+    alphabetically-sorted entry list on the integration page group by type,
+    and the search box match on any part of the name, first or last.
     """
     labels = await async_event_type_labels(hass)
     label = labels[data[CONF_EVENT_TYPE]]
-    return f"{label}: {data[CONF_EVENT_NAME]}"
+    return f"{label}: {full_name(data)}"
 
 
 class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -604,6 +627,24 @@ class AnnualsOptionsFlow(OptionsFlow):
             errors=errors,
         )
 
+    async def async_step_export_csv(self, user_input=None):
+        """One-click export: no form, just a link to download the CSV as a
+        real file. The link is a short-lived signed URL (AnnualsExportCsvView
+        requires a session, which a flow's description text has no way to
+        carry) pointing at the same export the file also gets embedded below
+        as a copyable fallback, in case the link can't be opened for some
+        reason. See services.py's export_csv action for the
+        scriptable/host-file-writing equivalent.
+        """
+        csv_text, count = export_csv_text(self.hass)
+        if count == 0:
+            return self.async_abort(reason="no_events_to_export")
+        download_url = async_sign_path(self.hass, EXPORT_CSV_URL, timedelta(minutes=5))
+        return self.async_abort(
+            reason="csv_exported",
+            description_placeholders={"count": str(count), "csv": csv_text, "url": download_url},
+        )
+
     async def async_step_import_holidays(self, user_input=None):
         """Step 1 of importing public holidays: pick a country.
 
@@ -752,6 +793,7 @@ class AnnualsOptionsFlow(OptionsFlow):
             menu_options=[
                 "annual_settings",
                 "import_csv",
+                "export_csv",
                 "import_holidays",
                 "remove_holidays",
                 "delete_all",

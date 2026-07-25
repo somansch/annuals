@@ -2,6 +2,19 @@
 
 All notable changes to this integration are documented here.
 
+## v2.3.0
+
+### Added
+- **Last name** field for non-holiday events (Adding an event, and CSV import via a new `last_name` column): keep first and last name apart, e.g. to show just the first name on a compact card and the full name elsewhere. Exposed as new `last_name` and `full_name` sensor attributes, new `{last_name}`/`{full_name}` custom-card template placeholders, new **Last name**/**Full name** row-column types, and dedicated color/font-size rows in the Colors and Fonts tabs, right next to Name. Entry titles now show the full name. Fully backward compatible - existing events and configs are unaffected until a last name is actually set.
+- **Full name + Type** row-column type: the same combined, single-column layout as the existing Name + Type, just built from the full name instead. Gets its own pair of **Holiday suffix** toggles (full name / type), matching Name + Type.
+- **Export events to CSV**: a new "Export events to CSV" option in the Annuals Settings hub menu generates a CSV of every manually-added/CSV-imported event (same columns as import, so it can be re-imported unchanged), offering a real download link (Ctrl/Cmd+click - a plain click is intercepted by Home Assistant's own in-app navigation) plus the CSV inline to copy as a fallback. For automated/scheduled backups, the new **`annuals.export_csv`** action does the same and can optionally write straight to a file on the HA host, returning the CSV as response data either way.
+- **Per-category "Show icon" toggle** in the Icons tab: Default/Today/Soon each get their own switch (on by default) to hide just that category's icon - and any VIP/Important badge attached to it - without affecting the other two.
+
+### Fixed
+- The card editor's "Row columns" list and several other fields (color swatches, background image/opacity, font size/style) could lose keyboard focus mid-keystroke on busy Home Assistant instances, because every state update re-ran the fields' sync logic and, in several places, compared focus against `document.activeElement` - which doesn't reflect focus correctly for elements inside the editor's shadow DOM and so never matched. Typing into a Custom text column's template field (or several other fields) on a sufficiently active instance could require re-clicking into the field after nearly every character. Focus detection now correctly checks the shadow root, and the columns list only fully rebuilds its DOM when the columns actually changed structurally, instead of on every Home Assistant state update.
+- Row columns using a standalone Name, Last name, Full name, Type, or Custom text column (as opposed to the combined Name + Type/Full name + Type) never absorbed the row's leftover width the way the combined columns do, so the Badge/Countdown columns after them didn't line up between rows - each row's badge/countdown started right after that row's own name, shifting left or right depending on how long the name happened to be. These columns now match the combined columns' layout behavior, so custom row-column combinations align like a table again, same as the built-in layout always has.
+- New Row columns added via the "+" button got a random id suffix (e.g. `last_name-q5b9zq`) even when only one of that type existed. Only actual duplicates now get a numbered suffix (`-2`, `-3`, ...); the first of each type keeps a clean, readable id (e.g. `last_name`).
+
 ## v2.2.0
 
 ### Added

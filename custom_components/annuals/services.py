@@ -5,16 +5,18 @@ import logging
 import voluptuous as vol
 
 from homeassistant.config_entries import SOURCE_IMPORT
-from homeassistant.core import HomeAssistant, ServiceCall, callback
+from homeassistant.core import HomeAssistant, ServiceCall, SupportsResponse, callback
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import config_validation as cv
 
 from .config_flow import _parse_csv_rows
 from .const import DOMAIN
+from .helpers import export_csv_text
 
 _LOGGER = logging.getLogger(__name__)
 
 SERVICE_IMPORT_CSV = "import_csv"
+SERVICE_EXPORT_CSV = "export_csv"
 
 # "content" and "file_path" are mutually exclusive but one of them is
 # required - the same CSV format/columns as the UI's "Import events from
@@ -80,6 +82,37 @@ async def _async_handle_import_csv(hass: HomeAssistant, call: ServiceCall) -> No
     )
 
 
+EXPORT_CSV_SCHEMA = vol.Schema({vol.Optional("file_path"): str})
+
+
+def _write_export_csv(hass: HomeAssistant, call: ServiceCall) -> dict:
+    """Build the CSV (in-memory, no blocking I/O) and, if a path was given,
+    write it to disk - run in an executor purely for the file write.
+    """
+    csv_text, count = export_csv_text(hass)
+
+    file_path = call.data.get("file_path")
+    if file_path:
+        if not hass.config.is_allowed_path(file_path):
+            raise HomeAssistantError(
+                f"'{file_path}' is not in an allowed directory - add its parent "
+                "under homeassistant: allowlist_external_dirs in configuration.yaml."
+            )
+        try:
+            with open(file_path, "w", encoding="utf-8") as handle:
+                handle.write(csv_text)
+        except OSError as err:
+            raise HomeAssistantError(f"Could not write '{file_path}': {err}") from err
+
+    return {"content": csv_text, "count": count}
+
+
+async def _async_handle_export_csv(hass: HomeAssistant, call: ServiceCall) -> dict:
+    result = await hass.async_add_executor_job(_write_export_csv, hass, call)
+    _LOGGER.info("Annuals CSV export (service): %d event(s) exported", result["count"])
+    return result
+
+
 @callback
 def async_register_services(hass: HomeAssistant) -> None:
     """Register Annuals' services once at integration startup."""
@@ -91,4 +124,15 @@ def async_register_services(hass: HomeAssistant) -> None:
 
     hass.services.async_register(
         DOMAIN, SERVICE_IMPORT_CSV, _handle, schema=IMPORT_CSV_SCHEMA
+    )
+
+    async def _handle_export(call: ServiceCall) -> dict:
+        return await _async_handle_export_csv(hass, call)
+
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_EXPORT_CSV,
+        _handle_export,
+        schema=EXPORT_CSV_SCHEMA,
+        supports_response=SupportsResponse.OPTIONAL,
     )

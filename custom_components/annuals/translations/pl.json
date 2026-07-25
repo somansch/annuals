@@ -58,6 +58,7 @@
                 "description": "Każde wydarzenie otrzymuje własny wpis, który później znajdziesz i edytujesz w Ustawienia → Urządzenia i usługi, wyszukując po nazwie.",
                 "data": {
                     "name": "Nazwa",
+                    "last_name": "Nazwisko (opcjonalnie)",
                     "type": "Typ wydarzenia",
                     "day": "Dzień",
                     "month": "Miesiąc",
@@ -71,6 +72,7 @@
                 "description": "Zmień dowolne pole poniżej i zatwierdź, aby zaktualizować to wydarzenie.",
                 "data": {
                     "name": "Nazwa",
+                    "last_name": "Nazwisko (opcjonalnie)",
                     "type": "Typ wydarzenia",
                     "day": "Dzień",
                     "month": "Miesiąc",
@@ -97,6 +99,7 @@
                 "description": "Zmień dowolne pole poniżej i zatwierdź, aby zaktualizować to wydarzenie.",
                 "data": {
                     "name": "Nazwa",
+                    "last_name": "Nazwisko (opcjonalnie)",
                     "type": "Typ wydarzenia",
                     "day": "Dzień",
                     "month": "Miesiąc",
@@ -107,7 +110,7 @@
             },
             "import_csv": {
                 "title": "Importuj wydarzenia z pliku CSV",
-                "description": "Kolumny: name, type, day, month, year (opcjonalnie), icon (opcjonalnie), vip (opcjonalnie). „type” musi być jednym z następujących angielskich kluczy: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (zawsze po angielsku, niezależnie od ustawień języka). „vip” akceptuje 1/true/yes/y/x (wielkość liter nie ma znaczenia); pozostaw puste lub pomiń kolumnę dla wydarzenia bez statusu VIP. Zachowaj każdą kolumnę, nawet jeśli wartość jest pusta – wiersz bez przecinka na końcu przesuwa kolejne wartości w lewo. Nieprawidłowe wiersze są pomijane i zapisywane w dzienniku.\n\nPrzykład:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
+                "description": "Kolumny: name, type, day, month, year (opcjonalnie), icon (opcjonalnie), vip (opcjonalnie), last_name (opcjonalnie). „type” musi być jednym z następujących angielskich kluczy: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (zawsze po angielsku, niezależnie od ustawień języka). „vip” akceptuje 1/true/yes/y/x (wielkość liter nie ma znaczenia); pozostaw puste lub pomiń kolumnę dla wydarzenia bez statusu VIP. Zachowaj każdą kolumnę, nawet jeśli wartość jest pusta – wiersz bez przecinka na końcu przesuwa kolejne wartości w lewo. Nieprawidłowe wiersze są pomijane i zapisywane w dzienniku.\n\nPrzykład:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Müller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n```",
                 "data": {
                     "csv_file": "Plik CSV"
                 }
@@ -117,6 +120,7 @@
                 "menu_options": {
                     "annual_settings": "Annual Ustawienia",
                     "import_csv": "Importuj wydarzenia z CSV",
+                    "export_csv": "Eksportuj wydarzenia do CSV",
                     "import_holidays": "Importuj święta",
                     "remove_holidays": "Usuń zaimportowane święta",
                     "delete_all": "Usuń wszystkie dane Annuals"
@@ -175,6 +179,8 @@
         "abort": {
             "hub_not_configurable": "Centrum Annuals nie ma własnych ustawień – zawiera tylko wspólne kalendarze.",
             "import_started": "Import rozpoczęty: {created} wydarzenie(a) w kolejce, {skipped} wiersz(y) pominięto (szczegóły w dzienniku).",
+            "csv_exported": "Wyeksportowano {count} wydarzeń. [Pobierz annuals_export.csv]({url}) (Ctrl/Cmd+klik, aby pobrać - zwykłe kliknięcie tu nie zadziała)\n\nLub skopiuj poniższy CSV:\n\n```\n{csv}\n```",
+            "no_events_to_export": "Nie ma jeszcze żadnych wydarzeń do wyeksportowania.",
             "deleted_all": "Wszystkie wydarzenia, kalendarze i centrum Annuals zostały usunięte.",
             "holiday_import_started": "Import rozpoczęty: {count} święto(a) w kolejce dla {country}.",
             "no_holidays_imported": "Nie zaimportowano jeszcze żadnych świąt.",

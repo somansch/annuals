@@ -58,6 +58,7 @@
                 "description": "每个事件都会创建独立的条目，之后可以在“设置 → 设备与服务”中通过搜索名称找到并编辑。",
                 "data": {
                     "name": "姓名",
+                    "last_name": "姓氏（可选）",
                     "type": "事件类型",
                     "day": "日",
                     "month": "月",
@@ -71,6 +72,7 @@
                 "description": "修改下方任意字段并提交以更新此事件。",
                 "data": {
                     "name": "姓名",
+                    "last_name": "姓氏（可选）",
                     "type": "事件类型",
                     "day": "日",
                     "month": "月",
@@ -97,6 +99,7 @@
                 "description": "修改下方任意字段并提交以更新此事件。",
                 "data": {
                     "name": "姓名",
+                    "last_name": "姓氏（可选）",
                     "type": "事件类型",
                     "day": "日",
                     "month": "月",
@@ -107,7 +110,7 @@
             },
             "import_csv": {
                 "title": "从 CSV 导入事件",
-                "description": "列：name、type、day、month、year（可选）、icon（可选）、vip（可选）。“type”必须是以下英文键之一：birthday、anniversary、name_day、wedding_anniversary、memorial、pet_birthday、work_anniversary、custom（始终使用英文，与语言设置无关）。“vip”接受 1/true/yes/y/x（不区分大小写）；留空或省略该列表示非 VIP 事件。即使某个值为空，也要保留该列 —— 缺少末尾逗号会导致后面的值向左移位。无效行会被跳过并记录到日志中。\n\n示例：\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
+                "description": "列：name、type、day、month、year（可选）、icon（可选）、vip（可选）、last_name（可选）。“type”必须是以下英文键之一：birthday、anniversary、name_day、wedding_anniversary、memorial、pet_birthday、work_anniversary、custom（始终使用英文，与语言设置无关）。“vip”接受 1/true/yes/y/x（不区分大小写）；留空或省略该列表示非 VIP 事件。即使某个值为空，也要保留该列 —— 缺少末尾逗号会导致后面的值向左移位。无效行会被跳过并记录到日志中。\n\n示例：\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Müller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n```",
                 "data": {
                     "csv_file": "CSV 文件"
                 }
@@ -117,6 +120,7 @@
                 "menu_options": {
                     "annual_settings": "Annual 设置",
                     "import_csv": "从 CSV 导入事件",
+                    "export_csv": "将事件导出为 CSV",
                     "import_holidays": "导入节假日",
                     "remove_holidays": "删除已导入的节假日",
                     "delete_all": "删除所有 Annuals 数据"
@@ -175,6 +179,8 @@
         "abort": {
             "hub_not_configurable": "Annuals 中心没有自身设置 —— 它只保存共享日历。",
             "import_started": "导入已开始：{created} 个事件已加入队列，{skipped} 行被跳过（详情见日志）。",
+            "csv_exported": "已导出 {count} 个事件。[下载 annuals_export.csv]({url})（按住 Ctrl/Cmd 点击以下载 - 普通点击在此处无效）\n\n或复制下方的 CSV：\n\n```\n{csv}\n```",
+            "no_events_to_export": "还没有可导出的事件。",
             "deleted_all": "所有 Annuals 事件、日历及中心均已删除。",
             "holiday_import_started": "导入已开始：{country} 的 {count} 个节假日事件已加入队列。",
             "no_holidays_imported": "尚未导入任何节假日。",

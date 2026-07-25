@@ -14,7 +14,6 @@ from .const import (
     CONF_CATEGORY,
     CONF_COUNTRY,
     CONF_DAY,
-    CONF_EVENT_NAME,
     CONF_EVENT_TYPE,
     CONF_HOLIDAY_KEY,
     CONF_MONTH,
@@ -32,7 +31,7 @@ from .dates import (
     occurrence_in_year,
     occurrence_number,
 )
-from .helpers import async_event_type_labels
+from .helpers import async_event_type_labels, full_name
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -88,7 +87,7 @@ class AnnualsTypeCalendar(CalendarEntity):
         self._cached_event: CalendarEvent | None = None
 
     def _summary(self, entry: ConfigEntry, occurrence: date) -> str:
-        name = entry.data[CONF_EVENT_NAME]
+        name = full_name(entry.data)
         # Holidays (like Custom) have no type label worth stating - "New
         # Year's Day - Holiday" would just repeat what the calendar itself
         # (its plural type name) already says, and they have no occurrence

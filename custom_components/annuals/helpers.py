@@ -10,10 +10,75 @@ they are stored/global strings, not per-viewing-user UI.
 
 from __future__ import annotations
 
+import csv
+import io
+
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import translation
 
-from .const import ALL_EVENT_TYPES, DOMAIN
+from .const import (
+    ALL_EVENT_TYPES,
+    CONF_DAY,
+    CONF_EVENT_NAME,
+    CONF_EVENT_TYPE,
+    CONF_HUB,
+    CONF_ICON,
+    CONF_LAST_NAME,
+    CONF_MONTH,
+    CONF_VIP,
+    CONF_YEAR,
+    DOMAIN,
+    TYPE_HOLIDAY,
+)
+
+
+def full_name(data: dict) -> str:
+    """First + last name, or just the first name when no last name was
+    given - used anywhere a single display string is needed (entry title,
+    calendar event summary, CSV-import identity). TYPE_HOLIDAY entries never
+    carry CONF_LAST_NAME, so this is always a no-op passthrough of the
+    imported holiday name for them.
+    """
+    last_name = (data.get(CONF_LAST_NAME) or "").strip()
+    return f"{data[CONF_EVENT_NAME]} {last_name}".strip() if last_name else data[CONF_EVENT_NAME]
+
+
+def export_rows(hass: HomeAssistant) -> list[dict]:
+    """Every manually-added/CSV-imported event's data, in the shape
+    csv-import rows are parsed into (see config_flow._parse_csv_rows) - the
+    mirror of CSV import. Holidays are excluded since they're never
+    CSV-imported either (see EVENT_TYPES), and the hub entry itself has no
+    event fields.
+    """
+    return [
+        entry.data
+        for entry in hass.config_entries.async_entries(DOMAIN)
+        if not entry.data.get(CONF_HUB) and entry.data.get(CONF_EVENT_TYPE) != TYPE_HOLIDAY
+    ]
+
+
+def export_csv_text(hass: HomeAssistant) -> tuple[str, int]:
+    """Render every exportable event as CSV text (same columns as import,
+    so the result can be re-imported unchanged) and how many rows it has.
+    """
+    rows = export_rows(hass)
+    buffer = io.StringIO()
+    writer = csv.writer(buffer)
+    writer.writerow(["name", "type", "day", "month", "year", "icon", "vip", "last_name"])
+    for data in rows:
+        writer.writerow(
+            [
+                data[CONF_EVENT_NAME],
+                data[CONF_EVENT_TYPE],
+                data[CONF_DAY],
+                data[CONF_MONTH],
+                data.get(CONF_YEAR) or "",
+                data.get(CONF_ICON) or "",
+                "1" if data.get(CONF_VIP) else "",
+                data.get(CONF_LAST_NAME) or "",
+            ]
+        )
+    return buffer.getvalue(), len(rows)
 
 
 async def async_event_type_labels(hass: HomeAssistant) -> dict[str, str]:

@@ -28,3 +28,24 @@ import_csv:
       example: /config/annuals/contacts.csv
       selector:
         text:
+
+export_csv:
+  name: Export CSV
+  description: >-
+    Export every manually-added/CSV-imported event (not holidays - see the
+    integration for why) as CSV, using the same columns as CSV import so the
+    result can be re-imported unchanged. Optionally writes the file to the
+    Home Assistant host directly; the exported content is also returned as
+    response data (call with "Perform action" -> response, or from a script)
+    either way.
+  fields:
+    file_path:
+      name: File path
+      description: >-
+        Optional path to write the CSV file to on the Home Assistant host.
+        Must be inside a directory listed under
+        homeassistant: allowlist_external_dirs in configuration.yaml. Leave
+        empty to only get the content back as response data.
+      example: /config/annuals/export.csv
+      selector:
+        text:

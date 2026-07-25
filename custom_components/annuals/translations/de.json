@@ -58,6 +58,7 @@
                 "description": "Jedes Ereignis bekommt einen eigenen Eintrag, den du später unter Einstellungen → Geräte & Dienste über die Suche nach seinem Namen findest und bearbeiten kannst.",
                 "data": {
                     "name": "Name",
+                    "last_name": "Nachname (optional)",
                     "type": "Ereignistyp",
                     "day": "Tag",
                     "month": "Monat",
@@ -71,6 +72,7 @@
                 "description": "Ändere ein beliebiges Feld unten und speichere, um dieses Ereignis zu aktualisieren.",
                 "data": {
                     "name": "Name",
+                    "last_name": "Nachname (optional)",
                     "type": "Ereignistyp",
                     "day": "Tag",
                     "month": "Monat",
@@ -97,6 +99,7 @@
                 "description": "Ändere ein beliebiges Feld unten und speichere, um dieses Ereignis zu aktualisieren.",
                 "data": {
                     "name": "Name",
+                    "last_name": "Nachname (optional)",
                     "type": "Ereignistyp",
                     "day": "Tag",
                     "month": "Monat",
@@ -107,7 +110,7 @@
             },
             "import_csv": {
                 "title": "Ereignisse aus CSV importieren",
-                "description": "Spalten: name, type, day, month, year (optional), icon (optional), vip (optional). Bei „type“ ist ausschließlich einer der folgenden englischen Schlüssel gültig: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (unabhängig von deiner Spracheinstellung). „vip“ akzeptiert 1/true/yes/y/x (Groß-/Kleinschreibung egal); leer lassen oder Spalte weglassen für ein nicht-VIP-Ereignis. Jede Spalte muss auch bei einem leeren Wert erhalten bleiben - fehlt ein Komma am Zeilenende, rutschen die folgenden Werte nach links. Ungültige Zeilen werden übersprungen und protokolliert.\n\nBeispiel:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
+                "description": "Spalten: name, type, day, month, year (optional), icon (optional), vip (optional), last_name (optional). Bei „type“ ist ausschließlich einer der folgenden englischen Schlüssel gültig: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (unabhängig von deiner Spracheinstellung). „vip“ akzeptiert 1/true/yes/y/x (Groß-/Kleinschreibung egal); leer lassen oder Spalte weglassen für ein nicht-VIP-Ereignis. Jede Spalte muss auch bei einem leeren Wert erhalten bleiben - fehlt ein Komma am Zeilenende, rutschen die folgenden Werte nach links. Ungültige Zeilen werden übersprungen und protokolliert.\n\nBeispiel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Müller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n```",
                 "data": {
                     "csv_file": "CSV-Datei"
                 }
@@ -117,6 +120,7 @@
                 "menu_options": {
                     "annual_settings": "Annual Einstellung",
                     "import_csv": "Ereignisse aus CSV importieren",
+                    "export_csv": "Ereignisse als CSV exportieren",
                     "import_holidays": "Feiertage importieren",
                     "remove_holidays": "Importierte Feiertage entfernen",
                     "delete_all": "Alle Annuals-Daten löschen"
@@ -175,6 +179,8 @@
         "abort": {
             "hub_not_configurable": "Der Annuals-Hub hat keine eigenen Einstellungen – er hält nur die gemeinsamen Kalender.",
             "import_started": "Import gestartet: {created} Ereignis(se) werden angelegt, {skipped} Zeile(n) übersprungen (Details im Log).",
+            "csv_exported": "{count} Ereignis(se) exportiert. [annuals_export.csv herunterladen]({url}) (Strg/Cmd-Klick zum Herunterladen - ein einfacher Klick funktioniert hier nicht)\n\nOder kopiere die CSV unten:\n\n```\n{csv}\n```",
+            "no_events_to_export": "Es gibt noch keine Ereignisse zum Exportieren.",
             "deleted_all": "Alle Annuals-Ereignisse, Kalender und der Hub wurden entfernt.",
             "holiday_import_started": "Import gestartet: {count} Feiertags-Ereignis(se) für {country} werden angelegt.",
             "no_holidays_imported": "Es wurden noch keine Feiertage importiert.",

@@ -22,6 +22,7 @@ from .const import (
     CONF_ICON,
     CONF_IMPORTANT_THRESHOLDS,
     CONF_LANGUAGE,
+    CONF_LAST_NAME,
     CONF_MONTH,
     CONF_SUBDIVISION,
     CONF_VIP,
@@ -69,6 +70,12 @@ class AnnualEventSensor(SensorEntity):
         event_type: str = data[CONF_EVENT_TYPE]
         name: str = data[CONF_EVENT_NAME]
         self._name = name
+        # Empty for TYPE_HOLIDAY (never offered on that form) and for any
+        # event added before this field existed - never touches
+        # self._name/entity_id/translation placeholders below, which must
+        # stay exactly as before for existing entries; only the "last_name"/
+        # "full_name" attributes (see _update_state) are new.
+        self._last_name: str = data.get(CONF_LAST_NAME) or ""
 
         self._attr_unique_id = f"{DOMAIN}-{config_entry.entry_id}"
         # translation_key per type gives the entity a type-prefixed, translated
@@ -115,6 +122,8 @@ class AnnualEventSensor(SensorEntity):
         self._attr_extra_state_attributes: dict[str, Any] = {
             "type": event_type,
             "name": self._name,
+            "last_name": self._last_name,
+            "full_name": f"{self._name} {self._last_name}".strip() if self._last_name else self._name,
             "next_date": occurrence.isoformat(),
             "occurrence_number": occurrence_num,
             "day": day,

@@ -58,6 +58,7 @@
                 "description": "Každá událost má vlastní záznam, který později najdeš a upravíš v Nastavení → Zařízení a služby vyhledáním podle jména.",
                 "data": {
                     "name": "Jméno",
+                    "last_name": "Příjmení (volitelné)",
                     "type": "Typ události",
                     "day": "Den",
                     "month": "Měsíc",
@@ -71,6 +72,7 @@
                 "description": "Změňte libovolné pole níže a odešlete pro aktualizaci této události.",
                 "data": {
                     "name": "Jméno",
+                    "last_name": "Příjmení (volitelné)",
                     "type": "Typ události",
                     "day": "Den",
                     "month": "Měsíc",
@@ -97,6 +99,7 @@
                 "description": "Změňte libovolné pole níže a odešlete pro aktualizaci této události.",
                 "data": {
                     "name": "Jméno",
+                    "last_name": "Příjmení (volitelné)",
                     "type": "Typ události",
                     "day": "Den",
                     "month": "Měsíc",
@@ -107,7 +110,7 @@
             },
             "import_csv": {
                 "title": "Import událostí z CSV",
-                "description": "Sloupce: name, type, day, month, year (volitelné), icon (volitelné), vip (volitelné). „type“ musí být jeden z těchto anglických klíčů: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (vždy anglicky, bez ohledu na nastavení jazyka). „vip“ přijímá 1/true/yes/y/x (nezáleží na velikosti písmen); ponechte prázdné nebo sloupec vynechte pro událost bez VIP statusu. Zachovejte všechny sloupce i při prázdné hodnotě – řádek bez koncové čárky posune následující hodnoty o jednu doleva. Neplatné řádky se přeskočí a zaznamenají do protokolu.\n\nPříklad:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
+                "description": "Sloupce: name, type, day, month, year (volitelné), icon (volitelné), vip (volitelné), last_name (volitelné). „type“ musí být jeden z těchto anglických klíčů: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (vždy anglicky, bez ohledu na nastavení jazyka). „vip“ přijímá 1/true/yes/y/x (nezáleží na velikosti písmen); ponechte prázdné nebo sloupec vynechte pro událost bez VIP statusu. Zachovejte všechny sloupce i při prázdné hodnotě – řádek bez koncové čárky posune následující hodnoty o jednu doleva. Neplatné řádky se přeskočí a zaznamenají do protokolu.\n\nPříklad:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Müller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n```",
                 "data": {
                     "csv_file": "Soubor CSV"
                 }
@@ -117,6 +120,7 @@
                 "menu_options": {
                     "annual_settings": "Annual Nastavení",
                     "import_csv": "Import událostí z CSV",
+                    "export_csv": "Exportovat události do CSV",
                     "import_holidays": "Import svátků",
                     "remove_holidays": "Odstranit importované svátky",
                     "delete_all": "Smazat všechna data Annuals"
@@ -175,6 +179,8 @@
         "abort": {
             "hub_not_configurable": "Hub Annuals nemá vlastní nastavení – obsahuje pouze sdílené kalendáře.",
             "import_started": "Import zahájen: {created} událostí zařazeno do fronty, {skipped} řádků přeskočeno (podrobnosti v protokolu).",
+            "csv_exported": "Exportováno {count} událostí. [Stáhnout annuals_export.csv]({url}) (Ctrl/Cmd+klik pro stažení - obyčejné kliknutí zde nefunguje)\n\nNebo zkopírujte níže uvedené CSV:\n\n```\n{csv}\n```",
+            "no_events_to_export": "Zatím nejsou žádné události k exportu.",
             "deleted_all": "Všechny události, kalendáře a hub Annuals byly odstraněny.",
             "holiday_import_started": "Import zahájen: {count} svátků zařazeno do fronty pro {country}.",
             "no_holidays_imported": "Zatím nebyly importovány žádné svátky.",

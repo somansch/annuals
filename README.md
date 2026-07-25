@@ -8,7 +8,7 @@
 
 ## Overview
 
-Keeping track of birthdays, anniversaries, and other yearly dates usually means either a separate app you have to remember to check, or a calendar entry that just says "Anna's birthday" without telling you it's her 30th this year. Annuals brings that into Home Assistant instead, so it can show up on your dashboard, feed your existing notification automations, and answer "how many days until X, and which one is it" without any manual bookkeeping each year.
+Keeping track of birthdays, holidays, anniversaries, and other yearly dates usually means either a separate app you have to remember to check, or a calendar entry that just says "Anna's birthday" without telling you it's her 30th this year. Annuals brings that into Home Assistant instead, so it can show up on your dashboard, feed your existing notification automations, and answer "how many days until X, and which one is it" without any manual bookkeeping each year.
 
 Typical reasons to use it:
 - **Never miss a birthday or anniversary again** - get a notification the morning of, or a heads-up a week before a milestone, using your existing notification setup (mobile app, Alexa, TTS, whatever you already have).
@@ -32,7 +32,8 @@ The first time you go to **Settings → Devices & Services → Add Integration �
 
 | Field | Description |
 |---|---|
-| **Name** | Whose event this is (e.g. "Anna"). Becomes the entry's title and the entity name. |
+| **Name** | Whose event this is (e.g. "Anna"). Becomes the entry's title and the entity name (together with Last name, if set). |
+| **Last name** | Optional, not offered for holidays. Lets you keep first and last name separate - e.g. use just the first name for a compact card, or the full name elsewhere. Exposed as the `last_name` and `full_name` (first + last, or just first if no last name is set) sensor attributes, and as `{last_name}`/`{full_name}` placeholders and dedicated column types in the [custom dashboard card](#custom-dashboard-card). |
 | **Event type** | One of the eight types below - each gets a matching icon and its own aggregate calendar. |
 | **Day** / **Month** | The recurring date. Deliberately separate fields instead of a date picker - a picker would make you click back month by month to reach a birth year like 1970. |
 | **Year** | Optional. Type it directly (one keystroke instead of a picker). Leave empty when unknown - the `occurrence_number` attribute is then hidden, since it can't be computed without a starting year. |
@@ -88,12 +89,19 @@ The file needs a header row with these columns:
 | `year` | No | Leave empty if unknown. |
 | `icon` | No | An MDI icon name (e.g. `mdi:cake-variant`) to override the type's default. |
 | `vip` | No | Accepts `1`/`true`/`yes`/`y`/`x` (case-insensitive) to mark the event VIP. Leave empty or omit the column otherwise. |
+| `last_name` | No | Kept separate from `name` - see [Adding an event](#adding-an-event) above. |
 
 Keep every column even when a value is empty - a row with a missing trailing comma shifts the following values left.
 
-Re-importing the same CSV later - e.g. a centrally maintained file synced on a schedule - does not create duplicate events. Each row is matched against existing entries by type + day/month + name (not year, so correcting a wrong birth year still matches the same person); a match updates that event's data in place instead of adding a second one. This only applies to CSV-imported events - manually added events are never touched or matched by a later import.
+```csv
+name,type,day,month,year,icon,vip,last_name
+Anna,birthday,12,4,1988,,,Miller
+Max,pet_birthday,3,9,2020,mdi:dog,,
+Acme Corp,work_anniversary,1,7,2015,,,
+Test Custom,custom,1,1,,mdi:test-tube,1,
+```
 
-### Importing via the `annuals.import_csv` action
+Re-importing the same CSV later - e.g. a centrally maintained file synced on a schedule - does not create duplicate events. Each row is matched against existing entries by type + day/month + name (not year or last_name, so correcting a wrong birth year or filling in a previously-missing last name still matches the same person); a match updates that event's data in place instead of adding a second one. This only applies to CSV-imported events - manually added events are never touched or matched by a later import.
 
 For scheduled or automated imports (instead of clicking through the UI each time), call the **`annuals.import_csv`** action from an automation, script, or Developer Tools → Actions. Same columns, same file-based dedup behavior as above. Provide the CSV either as inline text or as a path on the HA host:
 
@@ -115,21 +123,44 @@ data:
 action: annuals.import_csv
 data:
   content: |
-    name,type,day,month,year,icon,vip
-    Anna,birthday,12,4,1988,,
+    name,type,day,month,year,icon,vip,last_name
+    Anna,birthday,12,4,1988,,,Müller
 ```
 
 </details>
 
 `file_path` must be inside a directory listed under `homeassistant: allowlist_external_dirs` in `configuration.yaml`. Combine this with a **time trigger** to keep a centrally maintained CSV in sync on a schedule, without any manual re-upload.
 
-```csv
-name,type,day,month,year,icon,vip
-Anna,birthday,12,4,1988,,
-Max,pet_birthday,3,9,2020,mdi:dog,
-Acme Corp,work_anniversary,1,7,2015,,
-Test Custom,custom,1,1,,mdi:test-tube,1
+## Exporting events to CSV
+
+Find the **"Annuals Settings" hub entry** under **Settings → Devices & Services → Annuals**, click **Configure**, and pick **"Export events to CSV"** - it immediately generates the file, offers a **download link** (real file, using the exact same columns as CSV import - `name,type,day,month,year,icon,vip,last_name` - so a freshly exported file can be re-imported unchanged), and also shows it inline as a copyable code block as a fallback. Only manually added and CSV-imported events are included; imported holidays aren't, since they're never CSV-imported either (re-import them via [Importing public holidays](#importing-public-holidays) instead).
+
+**Use Ctrl/Cmd+click (or right-click → "Save link as") on the download link, not a plain click** - Home Assistant's own UI intercepts a plain click on any link inside this kind of dialog for its own in-app navigation, which never lets the download happen. This is spelled out in the dialog itself as a reminder.
+
+For scheduled/automated exports (e.g. a nightly backup), call the **`annuals.export_csv`** action instead. It always returns the CSV as response data, and optionally writes it to a file on the HA host at the same time:
+
+<details>
+<summary>YAML: export and read the response</summary>
+
+```yaml
+action: annuals.export_csv
+response_variable: export
 ```
+
+</details>
+
+<details>
+<summary>YAML: export straight to a file</summary>
+
+```yaml
+action: annuals.export_csv
+data:
+  file_path: /config/annuals/backup.csv
+```
+
+</details>
+
+`file_path` must be inside a directory listed under `homeassistant: allowlist_external_dirs` in `configuration.yaml`, same as CSV import.
 
 ## Importing public holidays
 
@@ -179,6 +210,8 @@ Attributes on each event's sensor:
 | `state` | Days until the next occurrence. |
 | `type` | One of `birthday`, `anniversary`, `name_day`, `wedding_anniversary`, `memorial`, `pet_birthday`, `work_anniversary`, `custom`, `holiday`. |
 | `name` | The plain name as entered (e.g. "Anna"), without the type prefix baked into the entity's display name - handy for building sentences on a dashboard. |
+| `last_name` | The **Last name** field as entered, or an empty string if not set. Always an empty string for `holiday` events. |
+| `full_name` | `name` + `last_name` (e.g. "Anna Miller"), or just `name` if no last name was set. Always equal to `name` for `holiday` events. |
 | `next_date` | Date (ISO format) of the next occurrence. |
 | `occurrence_number` | Which occurrence the next date will be (e.g. `30` for a 30th birthday) - `null` when no year was entered. Always `null` for `holiday` events. |
 | `day`, `month`, `year` | The event's date as entered (`year` is `null` when unknown). Not applicable to `holiday` events - see `next_date` instead, since a public holiday's date shifts by year. |
@@ -283,7 +316,9 @@ The editor is split into two tabs - **Settings** (general settings, which event 
 
 ### Row columns
 
-Each row's layout is fully configurable from Layout → Display → **Row columns**: add, remove, and reorder as many columns as you like, choosing from Icon, Name, Type, Name + Type, Occurrence, Countdown, or free-form **Custom text**. A custom text column mixes any text you like with placeholders - `{name}`, `{type}`, `{occurrence}`, `{when}`, `{country}` - so a row can read as one continuous sentence instead of a fixed table layout, e.g. turning "Anna · Birthday · 30 · Today" into "🎉 Anna turns 30 today! 🎉".
+Each row's layout is fully configurable from Layout → Display → **Row columns**: add, remove, and reorder as many columns as you like, choosing from Icon, Name, Last name, Full name, Type, Name + Type, Full name + Type, Occurrence, Countdown, or free-form **Custom text**. A custom text column mixes any text you like with placeholders - `{name}`, `{last_name}`, `{full_name}`, `{type}`, `{occurrence}`, `{when}`, `{country}` - so a row can read as one continuous sentence instead of a fixed table layout, e.g. turning "Anna · Birthday · 30 · Today" into "🎉 Anna turns 30 today! 🎉".
+
+**Name flexibility for non-holiday events:** set a Last name on an event (Adding an event, above) to get first/last name apart - e.g. a **Name** column showing just "Anna" for a compact card, and a separate **Full name** column ("Anna Müller") elsewhere. Both Colors and Fonts have dedicated rows for Last name and Full name, right next to Name. **Name + Type** and **Full name + Type** columns each get their own pair of **Holiday suffix** toggles (one for the name/full name, one for the type) - same as the standalone Name/Full name/Type columns - to append the imported country (+ subdivision) for holiday rows, e.g. "· US (UT)".
 
 Turning on **Compact** mode removes the spacing between columns, centers the row, and equalizes the weight/opacity of every field - meant for exactly that sentence-style layout. This is also how to build a small "today only" card: duplicate the card, turn on the **Today only** filter (Settings), reduce the columns to a single custom-text one, and enable Compact:
 

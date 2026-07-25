@@ -58,6 +58,7 @@
                 "description": "Her etkinlik kendi girişini alır; daha sonra Ayarlar → Cihazlar ve hizmetler bölümünden adını arayarak bulup düzenleyebilirsiniz.",
                 "data": {
                     "name": "Ad",
+                    "last_name": "Soyad (isteğe bağlı)",
                     "type": "Etkinlik türü",
                     "day": "Gün",
                     "month": "Ay",
@@ -71,6 +72,7 @@
                 "description": "Aşağıdaki herhangi bir alanı değiştirin ve bu etkinliği güncellemek için gönderin.",
                 "data": {
                     "name": "Ad",
+                    "last_name": "Soyad (isteğe bağlı)",
                     "type": "Etkinlik türü",
                     "day": "Gün",
                     "month": "Ay",
@@ -97,6 +99,7 @@
                 "description": "Aşağıdaki herhangi bir alanı değiştirin ve bu etkinliği güncellemek için gönderin.",
                 "data": {
                     "name": "Ad",
+                    "last_name": "Soyad (isteğe bağlı)",
                     "type": "Etkinlik türü",
                     "day": "Gün",
                     "month": "Ay",
@@ -107,7 +110,7 @@
             },
             "import_csv": {
                 "title": "CSV'den etkinlik içe aktar",
-                "description": "Sütunlar: name, type, day, month, year (isteğe bağlı), icon (isteğe bağlı), vip (isteğe bağlı). \"type\" şu İngilizce anahtarlardan biri olmalıdır: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (dil ayarınızdan bağımsız olarak her zaman İngilizce). \"vip\" 1/true/yes/y/x değerlerini kabul eder (büyük/küçük harf duyarlı değildir); VIP olmayan bir etkinlik için boş bırakın veya sütunu atlayın. Bir değer boş olsa bile her sütunu koruyun - sonundaki virgülü eksik bir satır, sonraki değerleri sola kaydırır. Geçersiz satırlar atlanır ve günlüğe kaydedilir.\n\nÖrnek:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
+                "description": "Sütunlar: name, type, day, month, year (isteğe bağlı), icon (isteğe bağlı), vip (isteğe bağlı), last_name (isteğe bağlı). \"type\" şu İngilizce anahtarlardan biri olmalıdır: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (dil ayarınızdan bağımsız olarak her zaman İngilizce). \"vip\" 1/true/yes/y/x değerlerini kabul eder (büyük/küçük harf duyarlı değildir); VIP olmayan bir etkinlik için boş bırakın veya sütunu atlayın. Bir değer boş olsa bile her sütunu koruyun - sonundaki virgülü eksik bir satır, sonraki değerleri sola kaydırır. Geçersiz satırlar atlanır ve günlüğe kaydedilir.\n\nÖrnek:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Müller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n```",
                 "data": {
                     "csv_file": "CSV dosyası"
                 }
@@ -117,6 +120,7 @@
                 "menu_options": {
                     "annual_settings": "Annual Ayarları",
                     "import_csv": "CSV'den etkinlik içe aktar",
+                    "export_csv": "Etkinlikleri CSV olarak dışa aktar",
                     "import_holidays": "Tatilleri içe aktar",
                     "remove_holidays": "İçe aktarılan tatilleri kaldır",
                     "delete_all": "Tüm Annuals verilerini sil"
@@ -175,6 +179,8 @@
         "abort": {
             "hub_not_configurable": "Annuals merkezinin kendine ait ayarları yoktur - yalnızca paylaşılan takvimleri içerir.",
             "import_started": "İçe aktarma başladı: {created} etkinlik kuyruğa alındı, {skipped} satır atlandı (ayrıntılar için günlüğe bakın).",
+            "csv_exported": "{count} etkinlik dışa aktarıldı. [annuals_export.csv dosyasını indir]({url}) (indirmek için Ctrl/Cmd+tıklayın - normal tıklama burada işe yaramaz)\n\nVeya aşağıdaki CSV'yi kopyalayın:\n\n```\n{csv}\n```",
+            "no_events_to_export": "Henüz dışa aktarılacak bir etkinlik yok.",
             "deleted_all": "Tüm Annuals etkinlikleri, takvimleri ve merkezi kaldırıldı.",
             "holiday_import_started": "İçe aktarma başladı: {country} için {count} tatil kuyruğa alındı.",
             "no_holidays_imported": "Henüz hiç tatil içe aktarılmadı.",

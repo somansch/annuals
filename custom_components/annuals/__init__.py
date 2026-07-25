@@ -15,6 +15,7 @@ from homeassistant.helpers.typing import ConfigType
 
 from .const import CONF_HUB, DATA_SENSORS, DOMAIN
 from .helpers import hub_title
+from .http import AnnualsExportCsvView
 from .services import async_register_services
 
 _LOGGER = logging.getLogger(__name__)
@@ -78,6 +79,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     frontend.add_extra_js_url(hass, f"{FRONTEND_JS_URL}?v={version}")
 
     async_register_services(hass)
+    hass.http.register_view(AnnualsExportCsvView())
     return True
 
 

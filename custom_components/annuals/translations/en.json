@@ -58,6 +58,7 @@
                 "description": "Each event gets its own entry, so you can find and edit it later from Settings → Devices & Services by searching its name.",
                 "data": {
                     "name": "Name",
+                    "last_name": "Last name (optional)",
                     "type": "Event type",
                     "day": "Day",
                     "month": "Month",
@@ -71,6 +72,7 @@
                 "description": "Change any field below and submit to update this event.",
                 "data": {
                     "name": "Name",
+                    "last_name": "Last name (optional)",
                     "type": "Event type",
                     "day": "Day",
                     "month": "Month",
@@ -97,6 +99,7 @@
                 "description": "Change any field below and submit to update this event.",
                 "data": {
                     "name": "Name",
+                    "last_name": "Last name (optional)",
                     "type": "Event type",
                     "day": "Day",
                     "month": "Month",
@@ -107,7 +110,7 @@
             },
             "import_csv": {
                 "title": "Import events from CSV",
-                "description": "Columns: name, type, day, month, year (optional), icon (optional), vip (optional). `type` must be one of: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (always in English, regardless of your language setting). `vip` accepts 1/true/yes/y/x (case-insensitive); leave it empty or omit the column for a non-VIP event. Keep every column even when a value is empty - a row with a missing trailing comma shifts the following values left. Invalid rows are skipped and logged.\n\nExample:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
+                "description": "Columns: name, type, day, month, year (optional), icon (optional), vip (optional), last_name (optional). `type` must be one of: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (always in English, regardless of your language setting). `vip` accepts 1/true/yes/y/x (case-insensitive); leave it empty or omit the column for a non-VIP event. Keep every column even when a value is empty - a row with a missing trailing comma shifts the following values left. Invalid rows are skipped and logged.\n\nExample:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Müller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n```",
                 "data": {
                     "csv_file": "CSV file"
                 }
@@ -117,6 +120,7 @@
                 "menu_options": {
                     "annual_settings": "Annual Settings",
                     "import_csv": "Import events from CSV",
+                    "export_csv": "Export events to CSV",
                     "import_holidays": "Import holidays",
                     "remove_holidays": "Remove imported holidays",
                     "delete_all": "Delete all Annuals data"
@@ -175,6 +179,8 @@
         "abort": {
             "hub_not_configurable": "The Annuals hub has no settings of its own - it just holds the shared calendars.",
             "import_started": "Import started: {created} event(s) queued, {skipped} row(s) skipped (see the log for details).",
+            "csv_exported": "{count} event(s) exported. [Download annuals_export.csv]({url}) (Ctrl/Cmd+click to download - a plain click won't work here)\n\nOr copy the CSV below:\n\n```\n{csv}\n```",
+            "no_events_to_export": "No events to export yet - add some first.",
             "deleted_all": "All Annuals events, calendars, and the hub have been removed.",
             "holiday_import_started": "Import started: {count} holiday event(s) queued for {country}.",
             "no_holidays_imported": "No holidays have been imported yet.",

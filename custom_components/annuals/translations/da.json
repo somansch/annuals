@@ -58,6 +58,7 @@
                 "description": "Hver begivenhed får sin egen post, som du senere kan finde og redigere under Indstillinger → Enheder og tjenester ved at søge på navnet.",
                 "data": {
                     "name": "Navn",
+                    "last_name": "Efternavn (valgfrit)",
                     "type": "Begivenhedstype",
                     "day": "Dag",
                     "month": "Måned",
@@ -71,6 +72,7 @@
                 "description": "Ændr et vilkårligt felt nedenfor, og indsend for at opdatere denne begivenhed.",
                 "data": {
                     "name": "Navn",
+                    "last_name": "Efternavn (valgfrit)",
                     "type": "Begivenhedstype",
                     "day": "Dag",
                     "month": "Måned",
@@ -97,6 +99,7 @@
                 "description": "Ændr et vilkårligt felt nedenfor, og indsend for at opdatere denne begivenhed.",
                 "data": {
                     "name": "Navn",
+                    "last_name": "Efternavn (valgfrit)",
                     "type": "Begivenhedstype",
                     "day": "Dag",
                     "month": "Måned",
@@ -107,7 +110,7 @@
             },
             "import_csv": {
                 "title": "Importer begivenheder fra CSV",
-                "description": "Kolonner: name, type, day, month, year (valgfrit), icon (valgfrit), vip (valgfrit). \"type\" skal være en af følgende engelske nøgler: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (altid på engelsk, uanset dit sprogvalg). \"vip\" accepterer 1/true/yes/y/x (der skelnes ikke mellem store/små bogstaver); lad stå tomt eller undlad kolonnen for en ikke-VIP-begivenhed. Behold alle kolonner, selv når en værdi er tom - en række uden afsluttende komma rykker de følgende værdier et trin til venstre. Ugyldige rækker springes over og logges.\n\nEksempel:\n```\nname,type,day,month,year,icon,vip\nAnna,birthday,12,4,1988,,\nMax,pet_birthday,3,9,2020,mdi:dog,\nTest Custom,custom,1,1,,mdi:test-tube,1\n```",
+                "description": "Kolonner: name, type, day, month, year (valgfrit), icon (valgfrit), vip (valgfrit), last_name (valgfrit). \"type\" skal være en af følgende engelske nøgler: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (altid på engelsk, uanset dit sprogvalg). \"vip\" accepterer 1/true/yes/y/x (der skelnes ikke mellem store/små bogstaver); lad stå tomt eller undlad kolonnen for en ikke-VIP-begivenhed. Behold alle kolonner, selv når en værdi er tom - en række uden afsluttende komma rykker de følgende værdier et trin til venstre. Ugyldige rækker springes over og logges.\n\nEksempel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Müller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n```",
                 "data": {
                     "csv_file": "CSV-fil"
                 }
@@ -117,6 +120,7 @@
                 "menu_options": {
                     "annual_settings": "Annual Indstillinger",
                     "import_csv": "Importer begivenheder fra CSV",
+                    "export_csv": "Eksporter begivenheder til CSV",
                     "import_holidays": "Importer helligdage",
                     "remove_holidays": "Fjern importerede helligdage",
                     "delete_all": "Slet alle Annuals-data"
@@ -175,6 +179,8 @@
         "abort": {
             "hub_not_configurable": "Annuals-hubben har ingen egne indstillinger - den indeholder kun de delte kalendere.",
             "import_started": "Import startet: {created} begivenhed(er) i kø, {skipped} række(r) sprunget over (se loggen for detaljer).",
+            "csv_exported": "{count} begivenhed(er) eksporteret. [Download annuals_export.csv]({url}) (Ctrl/Cmd+klik for at downloade - et almindeligt klik virker ikke her)\n\nEller kopiér CSV'en herunder:\n\n```\n{csv}\n```",
+            "no_events_to_export": "Der er endnu ingen begivenheder at eksportere.",
             "deleted_all": "Alle Annuals-begivenheder, kalendere og hubben er fjernet.",
             "holiday_import_started": "Import startet: {count} helligdag(e) sat i kø for {country}.",
             "no_holidays_imported": "Der er endnu ikke importeret nogen helligdage.",

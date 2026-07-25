@@ -7,6 +7,9 @@ CONF_HUB = "hub"
 HUB_UNIQUE_ID = "annuals_hub"
 
 CONF_EVENT_NAME = "name"
+# Optional, non-holiday types only - see _entry_title/full_name in
+# config_flow.py and sensor.py for how it combines with CONF_EVENT_NAME.
+CONF_LAST_NAME = "last_name"
 CONF_EVENT_TYPE = "type"
 CONF_DAY = "day"
 CONF_MONTH = "month"
