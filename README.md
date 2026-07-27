@@ -6,6 +6,8 @@
 
 **Available languages:** English, Deutsch, Français, Nederlands, Polski, Español, Italiano, Português (Brasil), Русский, Svenska, 简体中文, Čeština, Norsk bokmål, Dansk, Türkçe
 
+<img src="docs/annuals-card-summary.png" alt="List, Timeline, and Compact layouts side by side" width="45%">
+
 ## Overview
 
 Keeping track of birthdays, holidays, anniversaries, and other yearly dates usually means either a separate app you have to remember to check, or a calendar entry that just says "Anna's birthday" without telling you it's her 30th this year. Annuals brings that into Home Assistant instead, so it can show up on your dashboard, feed your existing notification automations, and answer "how many days until X, and which one is it" without any manual bookkeeping each year.
@@ -308,21 +310,46 @@ Annuals bundles its own Lovelace card (`custom:annuals-card`) - no separate fron
 
 The card's own UI text (not the integration's entities/config-flow, which follow your server's language setting) follows **your personal profile language** - Settings → People → your user → Language - and is available in the same 15 languages as the rest of the integration.
 
+A List card, a Timeline card, and a Compact one-line card, side by side - all the same integration, three different layouts:
+
+<img src="docs/annuals-card-summary.png" alt="List, Timeline, and Compact layouts side by side" width="90%">
+
 ### The visual editor
 
 <img src="docs/annuals-card-editor.png" alt="Annuals card visual editor" width="45%">
 
-The editor is split into two tabs - **Settings** (general settings, which event types to include, and the days-ahead/days-past/soon-threshold time window) and **Layout** (display/row columns, fonts, colors, icons, highlight tinting, and card background) - each further grouped into collapsible sections so the form stays manageable even with this many options.
+The editor is split into two tabs - **Settings** (general settings, which event types to include, and the days-ahead/days-past/soon-threshold time window) and **Layout** (display/row columns, fonts, colors, icons, card background, and timeline) - each further grouped into collapsible sections so the form stays manageable even with this many options.
 
 ### Row columns
 
-Each row's layout is fully configurable from Layout → Display → **Row columns**: add, remove, and reorder as many columns as you like, choosing from Icon, Name, Last name, Full name, Type, Name + Type, Full name + Type, Occurrence, Countdown, or free-form **Custom text**. A custom text column mixes any text you like with placeholders - `{name}`, `{last_name}`, `{full_name}`, `{type}`, `{occurrence}`, `{when}`, `{country}` - so a row can read as one continuous sentence instead of a fixed table layout, e.g. turning "Anna · Birthday · 30 · Today" into "🎉 Anna turns 30 today! 🎉".
+Each row's layout is fully configurable from Layout → Display → **Row columns**: add, remove, and reorder as many columns as you like, choosing from Icon, Name, Last name, Full name, Type, Name + Type, Full name + Type, Occurrence, Countdown, or free-form **Custom text**. A custom text column mixes any text you like with placeholders - `{name}`, `{last_name}`, `{full_name}`, `{type}`, `{occurrence}`, `{when}`, `{country}` - so a row can read as one continuous sentence instead of a fixed table layout, e.g. turning "Anna · Birthday · 30 · Today" into "🎉 Anna turns 30 today! 🎉". The default arrangement (before you change anything) is **Icon, Full name + Type, Occurrence, Countdown**.
 
 **Name flexibility for non-holiday events:** set a Last name on an event (Adding an event, above) to get first/last name apart - e.g. a **Name** column showing just "Anna" for a compact card, and a separate **Full name** column ("Anna Müller") elsewhere. Both Colors and Fonts have dedicated rows for Last name and Full name, right next to Name. **Name + Type** and **Full name + Type** columns each get their own pair of **Holiday suffix** toggles (one for the name/full name, one for the type) - same as the standalone Name/Full name/Type columns - to append the imported country (+ subdivision) for holiday rows, e.g. "· US (UT)".
 
-Turning on **Compact** mode removes the spacing between columns, centers the row, and equalizes the weight/opacity of every field - meant for exactly that sentence-style layout. This is also how to build a small "today only" card: duplicate the card, turn on the **Today only** filter (Settings), reduce the columns to a single custom-text one, and enable Compact:
+Turning on **Compact** mode removes the spacing between columns, centers the row, and equalizes the weight/opacity of every field - meant for exactly that sentence-style layout. Switching it on immediately swaps the columns to **Icon, Full name, Occurrence, Type, Countdown**, with a plain space column automatically inserted before each of the last four so nothing runs together with no gap - a starting point you're still free to add, remove, or reorder from there. Switching Compact back off resets the columns to the standard (non-compact) default above. This is also how to build a small "today only" card: duplicate the card, turn on the **Today only** filter (Settings), reduce the columns to a single custom-text one, and enable Compact:
 
 <img src="docs/birthday_small_animated.gif" alt="Compact today-only birthday card" width="40%">
+
+### Timeline layout
+
+**Layout style** (Layout → Display) switches the whole card from the classic row list to a **Timeline**: a compact horizontal axis with a dot per visible event (sized and positioned by how close it is to today), a header sentence for whichever day is soonest/most recent, and a "Details" toggle that expands the full chronological list. Handy for a narrow Sections-view column where a full row list doesn't fit.
+
+<img src="docs/annuals-card-timeline-example-1.png" alt="Timeline layout, collapsed" width="60%">
+
+Tapping **Details** expands the same axis into the full chronological list, oldest to furthest out:
+
+<img src="docs/annuals-card-timeline-example-2.png" alt="Timeline layout, expanded Details list" width="45%">
+
+- **Options** (Layout → Timeline): **Show full name** shows each event's full name (first + last) instead of just the first name, everywhere the layout uses a name - the header, a dot's tooltip, and the expandable list. **Show holiday suffix** appends the imported country (+ subdivision) after a holiday's name, e.g. "Pioneer Day (US-UT)".
+- **Timeline line / Divider line**: the axis's own width, style (solid/dashed/dotted), and color, and the same three for the vertical line marking the boundary between past and future events (only drawn once past events are visible).
+- **Colors** tab adds Header, Tooltip, List (Details), and Details/More button rows (only shown while Timeline is the active layout style), plus an **Event types** section listing every event type (Birthdays, Anniversaries, Name days, …) with its own color - this drives that type's dot and icon color on the axis, header, and list, replacing the built-in default palette.
+- The footer's **"More" button** (next to "Details") runs its own configurable action - typically a Navigate action pointing at a dashboard using the full List layout - and is hidden entirely while left on "Nothing".
+
+VIP/Important badges get their own Timeline-specific badge colors (Colors tab), independent from the List layout's own badge colors, since the two layouts render them differently (a star/exclamation glyph on the dot itself here, versus a corner badge on the row icon in List).
+
+Everything above - per-event-type dot colors, header/tooltip/list fonts and colors, icons - is just as themeable as the classic List layout:
+
+<img src="docs/annuals-card-timeline-example-3.gif" alt="Timeline layout with custom fonts, colors, and event type colors" width="45%">
 
 ### Icon animations
 
@@ -362,8 +389,8 @@ highlight_soon: false
 show_icon: true
 show_name: true
 show_name_country: false
-show_subtitle: true
-show_subtitle_country: false
+show_type: true
+show_type_country: false
 show_badge: true
 show_when: true
 show_vip_badge: true
@@ -406,7 +433,7 @@ highlight_today: true
 highlight_soon: true
 show_icon: true
 show_name: true
-show_subtitle: false
+show_type: false
 show_badge: true
 show_when: true
 show_vip_badge: true
@@ -417,7 +444,7 @@ colors:
   today: "#e91e63"
   soon: "#ffeb3b"
   accent: "#607d8b"
-  title: "#607d8b"
+  name: "#607d8b"
   badge: "#2196f3"
   when: "#9e9e9e"
   match_today: true
@@ -427,15 +454,15 @@ colors:
   vip_badge: var(--primary-color)
   important_badge: "#795548"
 font_sizes:
-  title: 24px
+  name: 24px
   badge: 24px
   when: 20px
 font_style:
-  title:
+  name:
     bold: true
     uppercase: true
     letter_spacing: 2px
-  subtitle:
+  type:
     italic: true
   badge:
     italic: true
@@ -465,14 +492,17 @@ Every color, font size, and font style set in the card's editor is also exposed 
 
 To theme every Annuals card at once, add these under a theme's `styles` (or set them globally via `card-mod`/custom CSS targeting `annuals-card`):
 
+<details>
+<summary>CSS variables</summary>
+
 | Variable | Affects | Falls back to |
 | --- | --- | --- |
 | `--annuals-accent-color` | Icon color for events with no special status | `--primary-text-color` |
 | `--annuals-today-color` | Icon color for today's events | `--error-color` |
 | `--annuals-soon-color` | Icon color for events within the "soon" threshold | `--warning-color` |
 | `--annuals-card-title-color` | Card's own title text color | inherit |
-| `--annuals-title-color` | Event name text color | inherit |
-| `--annuals-subtitle-color` | Event type text color | inherit |
+| `--annuals-name-color` | Event name text color | inherit |
+| `--annuals-type-color` | Event type text color | inherit |
 | `--annuals-badge-color` | Occurrence number badge text color | inherit |
 | `--annuals-badge-bg-color` | Occurrence number badge background color | `rgba(128, 128, 128, 0.25)` |
 | `--annuals-when-color` | Countdown text color | inherit |
@@ -483,10 +513,16 @@ To theme every Annuals card at once, add these under a theme's `styles` (or set 
 | `--annuals-vip-badge-color` | VIP badge background color | `--error-color` |
 | `--annuals-important-badge-color` | Important badge background color | `--annuals-soon-color` |
 | `--annuals-title-size` | Card title font size | `1.2em` |
-| `--annuals-row-title-size` / `-row-subtitle-size` / `-row-badge-size` / `-row-when-size` / `-row-text-size` | Per-field row font sizes (`-row-text-size` is for custom text columns) | inherit |
+| `--annuals-row-name-size` / `-row-type-size` / `-row-badge-size` / `-row-when-size` / `-row-text-size` | Per-field row font sizes (`-row-text-size` is for custom text columns) | inherit |
 | `--annuals-title-weight` / `-style` / `-transform` / `-decoration` / `-spacing` | Card title bold/italic/uppercase/underline/letter-spacing | normal |
-| `--annuals-row-title-weight` / `-row-subtitle-weight` / `-row-badge-weight` / `-row-when-weight` / `-row-text-weight` (+ matching `-style`/`-transform`/`-decoration`/`-spacing`) | Same style options per row field, including custom text columns | normal |
+| `--annuals-row-name-weight` / `-row-type-weight` / `-row-badge-weight` / `-row-when-weight` / `-row-text-weight` (+ matching `-style`/`-transform`/`-decoration`/`-spacing`) | Same style options per row field, including custom text columns | normal |
 | `--annuals-bg-color` / `-bg-image` / `-bg-size` / `-bg-repeat` / `-bg-opacity` | Card background color/image/behavior/opacity | transparent / none |
+| `--annuals-vip-badge-timeline-color` / `--annuals-important-badge-timeline-color` | Timeline layout only - VIP star / Important exclamation glyph color on the axis dots | white / `--annuals-soon-color` |
+| `--annuals-timeline-header-color` / `-timeline-tooltip-color` / `-timeline-list-color` / `-timeline-button-color` | Timeline layout only - header sentence, dot tooltip, expandable list, and Details/More button text colors | inherit / `--secondary-text-color` |
+| `--annuals-timeline-header-size` / `-timeline-tooltip-size` / `-timeline-list-size` / `-timeline-button-size` (+ matching `-weight`/`-style`/`-transform`/`-decoration`/`-spacing`) | Timeline layout only - same four fields' font size/style | inherit / normal |
+| `--annuals-timeline-line-color` / `-width` / `-style` and `-timeline-divider-color` / `-width` / `-style` | Timeline layout only - the horizontal axis line and the vertical past/future divider | `--divider-color` / `4px` / solid |
+
+</details>
 
 
 ## Installation

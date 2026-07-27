@@ -33,6 +33,35 @@
       dayAgo: "Yesterday",
       daysAgo: (n) => `${n} days ago`,
       noEvents: "No upcoming events",
+      // Timeline layout only (see _timelineSentenceFragment) - one sentence
+      // template shared by every event type, so it doesn't need a
+      // "birthday"/"anniversary"/"holiday"-specific variant. {sup} becomes a
+      // real <sup> element (English ordinals need the suffix raised, e.g.
+      // 27ᵗʰ) - every other placeholder is a plain string substitution.
+      possessive: (name) => `${name}'s`,
+      ordinalParts: (n) => {
+        const v = n % 100;
+        if (v >= 11 && v <= 13) return { num: `${n}`, sup: "th" };
+        switch (n % 10) {
+          case 1:
+            return { num: `${n}`, sup: "st" };
+          case 2:
+            return { num: `${n}`, sup: "nd" };
+          case 3:
+            return { num: `${n}`, sup: "rd" };
+          default:
+            return { num: `${n}`, sup: "th" };
+        }
+      },
+      timelineSentence: "{possessive} {ordinal}{sup} {type} is {when}",
+      timelineSentenceSimple: "{name} is {when}",
+      // Recent-past events (e.daysSince > 0) use these instead - "is" would
+      // read wrong for something that already happened ("...is 2 days ago").
+      timelineSentencePast: "{possessive} {ordinal}{sup} {type} was {when}",
+      timelineSentenceSimplePast: "{name} was {when}",
+      timelineExpand: "Details",
+      timelineCollapse: "Less",
+      timelineMore: "More",
       types: {
         birthday: "Birthday",
         anniversary: "Anniversary",
@@ -100,6 +129,53 @@
         categoriesDesc: "Only show holidays in the checked categories (other event types are unaffected)",
         showAll: "Show All",
         hideAll: "Hide All",
+        layoutStyleLabel: "Layout style",
+        layoutStyleDesc:
+          "List shows the classic icon/name/type/badge/countdown rows. Timeline shows a compact horizontal axis with the next event highlighted and the rest as clickable dots - handy for a narrow Sections-view column.",
+        layoutStyleList: "List",
+        layoutStyleTimeline: "Timeline",
+        timelineLineHeading: "Timeline line",
+        timelineLineWidth: "Width",
+        timelineLineWidthDesc: "Thickness of the horizontal axis line, e.g. \"4px\".",
+        timelineLineColor: "Color",
+        timelineLineColorDesc: "Color of the horizontal axis line.",
+        timelineDividerHeading: "Divider line",
+        timelineDividerWidth: "Width",
+        timelineDividerWidthDesc:
+          "Thickness of the vertical divider marking the past/future boundary, e.g. \"1px\".",
+        timelineDividerColor: "Color",
+        timelineDividerColorDesc: "Color of the vertical past/future divider line.",
+        lineStyleLabel: "Style",
+        lineStyleSolid: "Solid",
+        lineStyleDashed: "Dashed",
+        lineStyleDotted: "Dotted",
+        timelineOptionsHeading: "Options",
+        timelineShowFullName: "Show full name",
+        timelineShowFullNameDesc:
+          "Show each event's full name (first and last) instead of just its first name, in the header, tooltip and expandable list.",
+        showHolidaySuffix: "Show holiday suffix",
+        showHolidaySuffixDesc:
+          "Append the holiday's country (and subdivision, if any) in parentheses after its name, e.g. \"Pioneer Day (US-UT)\".",
+        moreAction: "\"More\" button",
+        moreActionDesc:
+          "What the timeline's bottom-right \"More\" button does. Typically a Navigate action pointing at a dashboard that shows the same events in the full List layout. Leave it on \"Nothing\" to hide the button.",
+        groupTimeline: "Timeline",
+        groupTimelineDesc: "Only used when Layout style (under Display) is set to Timeline.",
+        timelineHeaderLabel: "Header",
+        timelineHeaderFontDesc:
+          "Font for the description line above the axis, e.g. \"Kevin's 27th birthday is today\".",
+        timelineHeaderColorDesc: "Text color for the description line above the axis.",
+        timelineTooltipLabel: "Tooltip",
+        timelineTooltipFontDesc: "Font for the text shown when a dot on the axis is clicked.",
+        timelineTooltipColorDesc: "Text color for the text shown when a dot on the axis is clicked.",
+        timelineListLabel: "List (Details)",
+        timelineListFontDesc: "Font for the expandable chronological list under the axis.",
+        timelineListColorDesc: "Text color for the expandable chronological list under the axis.",
+        timelineButtonLabel: "Details / More button",
+        timelineButtonFontDesc: "Font for the footer's Details and More buttons.",
+        timelineButtonColorDesc: "Text color for the footer's Details and More buttons.",
+        eventTypesHeading: "Event types",
+        eventTypeColorDesc: "Color used for this event type's icon and dot on the timeline.",
         visibilityHeading: "Show / Hide",
         visibilityPast: "Past events",
         visibilityPastDesc: "Show events whose anniversary already passed within the configured past window",
@@ -116,8 +192,8 @@
         holdActionDesc: "What happens when a row is pressed and held",
         visibilityIcon: "Icon",
         visibilityIconDesc: "Show the type icon in front of each row",
-        visibilityTitleDesc: "Show the event name",
-        visibilitySubtitleDesc: "Show the event type",
+        visibilityNameDesc: "Show the event name",
+        visibilityTypeDesc: "Show the event type",
         visibilityCountrySuffix: "Holiday suffix",
         visibilityCountrySuffixDesc: "Append the country (and subdivision, if any) after the holiday's name/type, e.g. “Independence Day · US (UT)”",
         columnsHeading: "Row columns",
@@ -128,7 +204,7 @@
         columnTypeLastName: "Last name",
         columnTypeFullName: "Full name",
         columnTypeFullNameType: "Full name + type",
-        columnTypeSubtitle: "Type",
+        columnTypeType: "Type",
         columnTypeText: "Custom text",
         columnAdd: "Add",
         columnMoveUp: "Move up",
@@ -164,10 +240,18 @@
         highlightVipDesc: "Show a badge on the icon of VIP-flagged events",
         highlightImportant: "Important events",
         highlightImportantDesc: "Show a badge on the icon of events automatically flagged as important",
-        vipBadgeColor: "Badge color",
-        vipBadgeColorDesc: "Background color of the VIP badge",
-        importantBadgeColor: "Badge color",
-        importantBadgeColorDesc: "Background color of the Important badge",
+        vipBadgeColorList: "Badge color (List)",
+        vipBadgeColorListDesc:
+          "Color of the VIP star badge in the List layout's corner badge, in the Timeline layout's header, and in its expandable Details list.",
+        vipBadgeColorTimeline: "Badge color (Timeline)",
+        vipBadgeColorTimelineDesc:
+          "Color of the VIP star icon on the Timeline layout's axis dots specifically. Only shown while Layout style is set to Timeline.",
+        importantBadgeColorList: "Badge color (List)",
+        importantBadgeColorListDesc:
+          "Color of the Important exclamation-mark badge in the List layout's corner badge, in the Timeline layout's header, and in its expandable Details list.",
+        importantBadgeColorTimeline: "Badge color (Timeline)",
+        importantBadgeColorTimelineDesc:
+          "Color of the Important exclamation-mark icon on the Timeline layout's axis dots specifically. Only shown while Layout style is set to Timeline.",
         colors: "Colors",
         cardBackgroundTabTitle: "Card Background",
         cardBackgroundEnable: "Show background",
@@ -209,18 +293,18 @@
         animationFlash: "Flash",
         matchTextLabel: "Also color the text",
         matchTextDesc: "Also color the whole row's text with this icon color",
-        colorTitle: "Name",
-        colorSubtitle: "Type",
+        colorName: "Name",
+        colorType: "Type",
         colorBadge: "Occurrence",
         colorWhen: "Countdown",
         colorText: "Custom text",
         cardTitleColorDesc: "Text color for the card's own title",
-        colorTitleDesc: "Text color for the event name",
+        colorNameDesc: "Text color for the event name",
         colorLastName: "Last name",
         colorLastNameDesc: "Text color for the event's last name",
         colorFullName: "Full name",
         colorFullNameDesc: "Text color for the event's full name (first + last)",
-        colorSubtitleDesc: "Text color for the event type",
+        colorTypeDesc: "Text color for the event type",
         colorBadgeDesc: "Text color for the occurrence number badge",
         colorWhenDesc: "Text color for the countdown (e.g. “in 3 days”)",
         colorTextDesc: "Text color for custom text columns (see Row columns in Layout -> Display)",
@@ -255,10 +339,10 @@
         fonts: "Fonts",
         fontCardTitle: "Card title",
         fontCardTitleDesc: "Font size for the card's own title",
-        fontTitleDesc: "Font size for the event name",
+        fontNameDesc: "Font size for the event name",
         fontLastNameDesc: "Font size for the event's last name",
         fontFullNameDesc: "Font size for the event's full name (first + last)",
-        fontSubtitleDesc: "Font size for the event type",
+        fontTypeDesc: "Font size for the event type",
         fontBadgeDesc: "Font size for the occurrence number badge",
         fontWhenDesc: "Font size for the countdown (e.g. “in 3 days”)",
         fontTextDesc: "Font size for custom text columns (see Row columns in Layout -> Display)",
@@ -272,7 +356,7 @@
         panelSettings: "Settings",
         panelSettingsDesc: "General, events, and time period",
         panelLayout: "Layout",
-        panelLayoutDesc: "Display, fonts, colors, icons, and backgrounds",
+        panelLayoutDesc: "Display, fonts, colors, icons, card background and timeline",
         groupGeneral: "General",
         groupGeneralDesc: "",
         groupEvents: "Events",
@@ -291,6 +375,22 @@
       dayAgo: "Gestern",
       daysAgo: (n) => `vor ${n} Tagen`,
       noEvents: "Keine anstehenden Ereignisse",
+      // Genitiv ohne Apostroph ("Kevins Geburtstag") - nur bei einem
+      // Namen, der bereits auf einen Zischlaut endet, bleibt es beim bloßen
+      // Apostroph ("Klaus' Geburtstag"), statt ein zusätzliches "s"
+      // anzuhängen.
+      possessive: (name) => (/[sxzß]$/i.test(name) ? `${name}'` : `${name}s`),
+      ordinalParts: (n) => ({ num: `${n}.`, sup: "" }),
+      // Deutsche Substantive (Geburtstag, Jahrestag, ...) bleiben groß-
+      // geschrieben, egal an welcher Stelle im Satz sie stehen.
+      capitalizeSentenceType: true,
+      timelineSentence: "{possessive} {ordinal}{sup} {type} ist {when}",
+      timelineSentenceSimple: "{name} ist {when}",
+      timelineSentencePast: "{possessive} {ordinal}{sup} {type} war {when}",
+      timelineSentenceSimplePast: "{name} war {when}",
+      timelineExpand: "Details",
+      timelineCollapse: "Weniger",
+      timelineMore: "Mehr",
       types: {
         birthday: "Geburtstag",
         anniversary: "Jahrestag",
@@ -377,6 +477,53 @@
         categoriesDesc: "Nur Feiertage der angehakten Kategorien anzeigen (andere Ereignistypen sind davon nicht betroffen)",
         showAll: "Alle anzeigen",
         hideAll: "Alle ausblenden",
+        layoutStyleLabel: "Kartenlayout",
+        layoutStyleDesc:
+          "Liste zeigt die klassischen Zeilen mit Icon/Name/Untertitel/Abzeichen/Countdown. Timeline zeigt eine kompakte horizontale Achse mit hervorgehobenem nächsten Ereignis und den übrigen als anklickbare Punkte - praktisch für eine schmale Spalte in der Sections-Ansicht.",
+        layoutStyleList: "Liste",
+        layoutStyleTimeline: "Timeline",
+        timelineLineHeading: "Timeline-Linie",
+        timelineLineWidth: "Breite",
+        timelineLineWidthDesc: "Dicke der horizontalen Achsenlinie, z. B. „4px“.",
+        timelineLineColor: "Farbe",
+        timelineLineColorDesc: "Farbe der horizontalen Achsenlinie.",
+        timelineDividerHeading: "Trennlinie",
+        timelineDividerWidth: "Breite",
+        timelineDividerWidthDesc:
+          "Dicke der senkrechten Trennlinie zwischen Vergangenheit und Zukunft, z. B. „1px“.",
+        timelineDividerColor: "Farbe",
+        timelineDividerColorDesc: "Farbe der senkrechten Trennlinie zwischen Vergangenheit und Zukunft.",
+        lineStyleLabel: "Stil",
+        lineStyleSolid: "Durchgängig",
+        lineStyleDashed: "Gestrichelt",
+        lineStyleDotted: "Gepunktet",
+        timelineOptionsHeading: "Optionen",
+        timelineShowFullName: "Vollständigen Namen anzeigen",
+        timelineShowFullNameDesc:
+          "Zeigt im Header, im Tooltip und in der aufklappbaren Liste den vollständigen Namen (Vor- und Nachname) statt nur des Vornamens an.",
+        showHolidaySuffix: "Feiertagssuffix anzeigen",
+        showHolidaySuffixDesc:
+          "Land (und ggf. Bundesland/Region) des Feiertags in Klammern hinter dessen Namen anhängen, z. B. „Pioneer Day (US-UT)“.",
+        moreAction: "„Mehr“-Schaltfläche",
+        moreActionDesc:
+          "Was die Schaltfläche „Mehr“ unten rechts in der Timeline auslöst. Üblicherweise eine Navigations-Aktion zu einem Dashboard, das dieselben Ereignisse im vollständigen Listen-Layout zeigt. Bei „Nichts“ wird die Schaltfläche ausgeblendet.",
+        groupTimeline: "Timeline",
+        groupTimelineDesc: "Wird nur verwendet, wenn unter Anzeige als Kartenlayout „Timeline“ ausgewählt ist.",
+        timelineHeaderLabel: "Kopfzeile",
+        timelineHeaderFontDesc:
+          "Schrift für die Beschreibungszeile über der Achse, z. B. „Kevins 27. Geburtstag ist heute“.",
+        timelineHeaderColorDesc: "Textfarbe für die Beschreibungszeile über der Achse.",
+        timelineTooltipLabel: "Tooltip",
+        timelineTooltipFontDesc: "Schrift für den Text, der beim Klick auf einen Punkt der Achse erscheint.",
+        timelineTooltipColorDesc: "Textfarbe für den Text, der beim Klick auf einen Punkt der Achse erscheint.",
+        timelineListLabel: "Liste (Details)",
+        timelineListFontDesc: "Schrift für die aufklappbare chronologische Liste unter der Achse.",
+        timelineListColorDesc: "Textfarbe für die aufklappbare chronologische Liste unter der Achse.",
+        timelineButtonLabel: "Details-/More-Button",
+        timelineButtonFontDesc: "Schrift für die Details- und More-Buttons in der Fußzeile.",
+        timelineButtonColorDesc: "Textfarbe für die Details- und More-Buttons in der Fußzeile.",
+        eventTypesHeading: "Ereignistypen",
+        eventTypeColorDesc: "Farbe für Icon und Punkt dieses Ereignistyps auf der Timeline.",
         visibilityHeading: "Ein- und ausblenden",
         visibilityPast: "Vergangene Ereignisse",
         visibilityPastDesc: "Vergangene Ereignisse innerhalb des eingestellten Zeitraums in der Liste anzeigen",
@@ -393,8 +540,8 @@
         holdActionDesc: "Was passiert, wenn eine Zeile gedrückt gehalten wird",
         visibilityIcon: "Icon",
         visibilityIconDesc: "Symbol vor jeder Zeile anzeigen",
-        visibilityTitleDesc: "Namen des Ereignisses anzeigen",
-        visibilitySubtitleDesc: "Ereignistyp anzeigen",
+        visibilityNameDesc: "Namen des Ereignisses anzeigen",
+        visibilityTypeDesc: "Ereignistyp anzeigen",
         visibilityCountrySuffix: "Feiertagssuffix",
         visibilityCountrySuffixDesc: "Land (und ggf. Bundesland/Provinz) hinter dem Namen/Typ des Feiertags anhängen, z. B. „Tag der Deutschen Einheit · DE (BY)“",
         columnsHeading: "Zeilenspalten",
@@ -405,7 +552,7 @@
         columnTypeLastName: "Nachname",
         columnTypeFullName: "Vollständiger Name",
         columnTypeFullNameType: "Vollständiger Name + Typ",
-        columnTypeSubtitle: "Typ",
+        columnTypeType: "Typ",
         columnTypeText: "Freier Text",
         columnAdd: "Hinzufügen",
         columnMoveUp: "Nach oben",
@@ -442,10 +589,18 @@
         highlightVipDesc: "Badge auf dem Icon von VIP-Ereignissen anzeigen",
         highlightImportant: "Important Events",
         highlightImportantDesc: "Badge auf dem Icon von automatisch als wichtig markierten Ereignissen anzeigen",
-        vipBadgeColor: "Badge-Farbe",
-        vipBadgeColorDesc: "Hintergrundfarbe des VIP-Badges",
-        importantBadgeColor: "Badge-Farbe",
-        importantBadgeColorDesc: "Hintergrundfarbe des Important-Badges",
+        vipBadgeColorList: "Badge-Farbe (Liste)",
+        vipBadgeColorListDesc:
+          "Farbe des VIP-Sterns im Eck-Badge des Listen-Layouts, im Header des Timeline-Layouts und in dessen aufklappbarer Liste.",
+        vipBadgeColorTimeline: "Badge-Farbe (Timeline)",
+        vipBadgeColorTimelineDesc:
+          "Farbe des VIP-Sterns speziell auf den Achsenpunkten des Timeline-Layouts. Nur sichtbar, wenn als Kartenlayout „Timeline“ ausgewählt ist.",
+        importantBadgeColorList: "Badge-Farbe (Liste)",
+        importantBadgeColorListDesc:
+          "Farbe des Important-Ausrufezeichens im Eck-Badge des Listen-Layouts, im Header des Timeline-Layouts und in dessen aufklappbarer Liste.",
+        importantBadgeColorTimeline: "Badge-Farbe (Timeline)",
+        importantBadgeColorTimelineDesc:
+          "Farbe des Important-Ausrufezeichens speziell auf den Achsenpunkten des Timeline-Layouts. Nur sichtbar, wenn als Kartenlayout „Timeline“ ausgewählt ist.",
         colors: "Farben",
         cardBackgroundTabTitle: "Kartenhintergrund",
         cardBackgroundEnable: "Hintergrund anzeigen",
@@ -487,18 +642,18 @@
         animationDesc: "Dem Icon eine wiederkehrende Animation hinzufügen",
         matchTextLabel: "Auch den Text einfärben",
         matchTextDesc: "Auch den gesamten Zeilentext in dieser Icon-Farbe einfärben",
-        colorTitle: "Name",
-        colorSubtitle: "Typ",
+        colorName: "Name",
+        colorType: "Typ",
         colorBadge: "Jubiläum",
         colorWhen: "Countdown",
         colorText: "Freier Text",
         cardTitleColorDesc: "Textfarbe für den Kartentitel",
-        colorTitleDesc: "Textfarbe für den Namen des Ereignisses",
+        colorNameDesc: "Textfarbe für den Namen des Ereignisses",
         colorLastName: "Nachname",
         colorLastNameDesc: "Textfarbe für den Nachnamen des Ereignisses",
         colorFullName: "Vollständiger Name",
         colorFullNameDesc: "Textfarbe für den vollständigen Namen des Ereignisses (Vor- und Nachname)",
-        colorSubtitleDesc: "Textfarbe für den Ereignistyp",
+        colorTypeDesc: "Textfarbe für den Ereignistyp",
         colorBadgeDesc: "Textfarbe für das Jubiläums-Badge (Vorkommen-Nummer)",
         colorWhenDesc: "Textfarbe für die Zeitangabe (z. B. „in 3 Tagen“)",
         colorTextDesc: "Textfarbe für eigene Textspalten (siehe Zeilenspalten unter Layout -> Anzeige)",
@@ -533,10 +688,10 @@
         fonts: "Schriften",
         fontCardTitle: "Kartentitel",
         fontCardTitleDesc: "Schriftgröße für den Kartentitel",
-        fontTitleDesc: "Schriftgröße für den Namen des Ereignisses",
+        fontNameDesc: "Schriftgröße für den Namen des Ereignisses",
         fontLastNameDesc: "Schriftgröße für den Nachnamen des Ereignisses",
         fontFullNameDesc: "Schriftgröße für den vollständigen Namen des Ereignisses (Vor- und Nachname)",
-        fontSubtitleDesc: "Schriftgröße für den Ereignistyp",
+        fontTypeDesc: "Schriftgröße für den Ereignistyp",
         fontBadgeDesc: "Schriftgröße für das Jubiläums-Badge",
         fontWhenDesc: "Schriftgröße für die Zeitangabe (z. B. „in 3 Tagen“)",
         fontTextDesc: "Schriftgröße für eigene Textspalten (siehe Zeilenspalten unter Layout -> Anzeige)",
@@ -550,7 +705,7 @@
         panelSettings: "Einstellungen",
         panelSettingsDesc: "Allgemein, Ereignisse und Zeitraum",
         panelLayout: "Layout",
-        panelLayoutDesc: "Anzeige, Schriften, Farben, Icons und Hintergründe",
+        panelLayoutDesc: "Anzeige, Schriften, Farben, Icons, Kartenhintergrund und Timeline",
         groupGeneral: "Allgemein",
         groupGeneralDesc: "",
         groupEvents: "Ereignisse",
@@ -569,6 +724,15 @@
       dayAgo: "Hier",
       daysAgo: (n) => `il y a ${n} jours`,
       noEvents: "Aucun événement à venir",
+      possessive: (name) => name,
+      ordinalParts: (n) => (n === 1 ? { num: "1", sup: "er" } : { num: `${n}`, sup: "e" }),
+      timelineSentence: "{ordinal}{sup} {type} de {possessive} est {when}",
+      timelineSentenceSimple: "{name} est {when}",
+      timelineSentencePast: "{ordinal}{sup} {type} de {possessive} était {when}",
+      timelineSentenceSimplePast: "{name} était {when}",
+      timelineExpand: "Détails",
+      timelineCollapse: "Réduire",
+      timelineMore: "Plus",
       types: {
         birthday: "Anniversaire",
         anniversary: "Date commémorative",
@@ -650,6 +814,53 @@
         categoriesDesc: "N'afficher que les jours fériés des catégories cochées (les autres types d'événements ne sont pas concernés)",
         showAll: "Tout afficher",
         hideAll: "Tout masquer",
+        layoutStyleLabel: "Style de mise en page",
+        layoutStyleDesc:
+          "Liste affiche les lignes classiques icône/nom/sous-titre/badge/compte à rebours. Timeline affiche un axe horizontal compact avec le prochain événement mis en évidence et les autres sous forme de points cliquables - pratique pour une colonne étroite en vue Sections.",
+        layoutStyleList: "Liste",
+        layoutStyleTimeline: "Timeline",
+        timelineLineHeading: "Ligne de la timeline",
+        timelineLineWidth: "Épaisseur",
+        timelineLineWidthDesc: "Épaisseur de la ligne horizontale de l'axe, par ex. « 4px ».",
+        timelineLineColor: "Couleur",
+        timelineLineColorDesc: "Couleur de la ligne horizontale de l'axe.",
+        timelineDividerHeading: "Ligne de séparation",
+        timelineDividerWidth: "Épaisseur",
+        timelineDividerWidthDesc:
+          "Épaisseur de la ligne verticale marquant la limite entre passé et futur, par ex. « 1px ».",
+        timelineDividerColor: "Couleur",
+        timelineDividerColorDesc: "Couleur de la ligne verticale de séparation passé/futur.",
+        lineStyleLabel: "Style",
+        lineStyleSolid: "Continu",
+        lineStyleDashed: "Tirets",
+        lineStyleDotted: "Pointillés",
+        timelineOptionsHeading: "Options",
+        timelineShowFullName: "Afficher le nom complet",
+        timelineShowFullNameDesc:
+          "Affiche le nom complet (prénom et nom) de chaque événement au lieu du seul prénom, dans l'en-tête, l'infobulle et la liste déroulante.",
+        showHolidaySuffix: "Afficher le suffixe du jour férié",
+        showHolidaySuffixDesc:
+          "Ajouter le pays du jour férié (et la subdivision, le cas échéant) entre parenthèses après son nom, par ex. « Pioneer Day (US-UT) ».",
+        moreAction: "Bouton « Plus »",
+        moreActionDesc:
+          "Ce que fait le bouton « Plus » en bas à droite de la timeline. Généralement une action de navigation vers un tableau de bord affichant les mêmes événements dans le layout Liste complet. Laissez sur « Rien » pour masquer le bouton.",
+        groupTimeline: "Timeline",
+        groupTimelineDesc: "Utilisé uniquement lorsque le style de mise en page (sous Affichage) est réglé sur Timeline.",
+        timelineHeaderLabel: "En-tête",
+        timelineHeaderFontDesc:
+          "Police pour la ligne de description au-dessus de l'axe, par ex. « L'anniversaire de Kevin est aujourd'hui ».",
+        timelineHeaderColorDesc: "Couleur du texte pour la ligne de description au-dessus de l'axe.",
+        timelineTooltipLabel: "Infobulle",
+        timelineTooltipFontDesc: "Police pour le texte affiché lorsqu'un point de l'axe est cliqué.",
+        timelineTooltipColorDesc: "Couleur du texte affiché lorsqu'un point de l'axe est cliqué.",
+        timelineListLabel: "Liste (Détails)",
+        timelineListFontDesc: "Police pour la liste chronologique dépliable sous l'axe.",
+        timelineListColorDesc: "Couleur du texte pour la liste chronologique dépliable sous l'axe.",
+        timelineButtonLabel: "Bouton Détails / Plus",
+        timelineButtonFontDesc: "Police pour les boutons Détails et Plus du pied de carte.",
+        timelineButtonColorDesc: "Couleur du texte pour les boutons Détails et Plus du pied de carte.",
+        eventTypesHeading: "Types d'événements",
+        eventTypeColorDesc: "Couleur utilisée pour l'icône et le point de ce type d'événement sur la chronologie.",
         visibilityHeading: "Afficher / Masquer",
         visibilityPast: "Événements passés",
         visibilityPastDesc: "Afficher les événements dont l'anniversaire est déjà passé dans la période configurée",
@@ -666,8 +877,8 @@
         holdActionDesc: "Ce qui se passe lorsqu'une ligne est maintenue appuyée",
         visibilityIcon: "Icône",
         visibilityIconDesc: "Afficher l'icône du type devant chaque ligne",
-        visibilityTitleDesc: "Afficher le nom de l'événement",
-        visibilitySubtitleDesc: "Afficher le type d'événement",
+        visibilityNameDesc: "Afficher le nom de l'événement",
+        visibilityTypeDesc: "Afficher le type d'événement",
         visibilityCountrySuffix: "Suffixe du jour férié",
         visibilityCountrySuffixDesc: "Ajouter le pays (et la subdivision, le cas échéant) après le nom/type du jour férié, par ex. « Fête nationale · FR (75) »",
         columnsHeading: "Colonnes de ligne",
@@ -678,7 +889,7 @@
         columnTypeLastName: "Nom de famille",
         columnTypeFullName: "Nom complet",
         columnTypeFullNameType: "Nom complet + type",
-        columnTypeSubtitle: "Type",
+        columnTypeType: "Type",
         columnTypeText: "Texte libre",
         columnAdd: "Ajouter",
         columnMoveUp: "Monter",
@@ -714,10 +925,18 @@
         highlightVipDesc: "Afficher un badge sur l'icône des événements marqués VIP",
         highlightImportant: "Événements importants",
         highlightImportantDesc: "Afficher un badge sur l'icône des événements automatiquement marqués comme importants",
-        vipBadgeColor: "Couleur du badge",
-        vipBadgeColorDesc: "Couleur de fond du badge VIP",
-        importantBadgeColor: "Couleur du badge",
-        importantBadgeColorDesc: "Couleur de fond du badge Important",
+        vipBadgeColorList: "Couleur du badge (Liste)",
+        vipBadgeColorListDesc:
+          "Couleur du badge étoile VIP dans le badge d'angle du layout Liste, dans l'en-tête du layout Timeline, et dans sa liste Détails dépliable.",
+        vipBadgeColorTimeline: "Couleur du badge (Timeline)",
+        vipBadgeColorTimelineDesc:
+          "Couleur de l'icône étoile VIP spécifiquement sur les points de l'axe du layout Timeline. Affiché uniquement lorsque le style de mise en page est réglé sur Timeline.",
+        importantBadgeColorList: "Couleur du badge (Liste)",
+        importantBadgeColorListDesc:
+          "Couleur du badge point d'exclamation Important dans le badge d'angle du layout Liste, dans l'en-tête du layout Timeline, et dans sa liste Détails dépliable.",
+        importantBadgeColorTimeline: "Couleur du badge (Timeline)",
+        importantBadgeColorTimelineDesc:
+          "Couleur de l'icône point d'exclamation Important spécifiquement sur les points de l'axe du layout Timeline. Affiché uniquement lorsque le style de mise en page est réglé sur Timeline.",
         colors: "Couleurs",
         cardBackgroundTabTitle: "Fond de carte",
         cardBackgroundEnable: "Afficher le fond",
@@ -759,18 +978,18 @@
         animationFlash: "Clignotement",
         matchTextLabel: "Colorer aussi le texte",
         matchTextDesc: "Colorer aussi tout le texte de la ligne avec cette couleur d'icône",
-        colorTitle: "Nom",
-        colorSubtitle: "Type",
+        colorName: "Nom",
+        colorType: "Type",
         colorBadge: "Occurrence",
         colorWhen: "Compte à rebours",
         colorText: "Texte libre",
         cardTitleColorDesc: "Couleur du texte pour le titre propre de la carte",
-        colorTitleDesc: "Couleur du texte pour le nom de l'événement",
+        colorNameDesc: "Couleur du texte pour le nom de l'événement",
         colorLastName: "Nom de famille",
         colorLastNameDesc: "Couleur du texte pour le nom de famille de l'événement",
         colorFullName: "Nom complet",
         colorFullNameDesc: "Couleur du texte pour le nom complet de l'événement (prénom et nom)",
-        colorSubtitleDesc: "Couleur du texte pour le type d'événement",
+        colorTypeDesc: "Couleur du texte pour le type d'événement",
         colorBadgeDesc: "Couleur du texte pour le badge du numéro d'occurrence",
         colorWhenDesc: "Couleur du texte pour le compte à rebours (par ex. « dans 3 jours »)",
         colorTextDesc: "Couleur du texte pour les colonnes de texte libre (voir Colonnes de ligne sous Disposition -> Affichage)",
@@ -805,10 +1024,10 @@
         fonts: "Polices",
         fontCardTitle: "Titre de la carte",
         fontCardTitleDesc: "Taille de police pour le titre propre de la carte",
-        fontTitleDesc: "Taille de police pour le nom de l'événement",
+        fontNameDesc: "Taille de police pour le nom de l'événement",
         fontLastNameDesc: "Taille de police pour le nom de famille de l'événement",
         fontFullNameDesc: "Taille de police pour le nom complet de l'événement (prénom et nom)",
-        fontSubtitleDesc: "Taille de police pour le type d'événement",
+        fontTypeDesc: "Taille de police pour le type d'événement",
         fontBadgeDesc: "Taille de police pour le badge du numéro d'occurrence",
         fontWhenDesc: "Taille de police pour le compte à rebours (par ex. « dans 3 jours »)",
         fontTextDesc: "Taille de police pour les colonnes de texte libre (voir Colonnes de ligne sous Disposition -> Affichage)",
@@ -822,7 +1041,7 @@
         panelSettings: "Paramètres",
         panelSettingsDesc: "Général, événements et période",
         panelLayout: "Mise en page",
-        panelLayoutDesc: "Affichage, polices, couleurs, icônes et fonds",
+        panelLayoutDesc: "Affichage, polices, couleurs, icônes, fond de carte et timeline",
         groupGeneral: "Général",
         groupGeneralDesc: "",
         groupEvents: "Événements",
@@ -841,6 +1060,15 @@
       dayAgo: "Gisteren",
       daysAgo: (n) => `${n} dagen geleden`,
       noEvents: "Geen aankomende evenementen",
+      possessive: (name) => (/[sxz]$/i.test(name) ? `${name}'` : `${name}s`),
+      ordinalParts: (n) => ({ num: `${n}e`, sup: "" }),
+      timelineSentence: "{possessive} {ordinal}{sup} {type} is {when}",
+      timelineSentenceSimple: "{name} is {when}",
+      timelineSentencePast: "{possessive} {ordinal}{sup} {type} was {when}",
+      timelineSentenceSimplePast: "{name} was {when}",
+      timelineExpand: "Details",
+      timelineCollapse: "Minder",
+      timelineMore: "Meer",
       types: {
         birthday: "Verjaardag",
         anniversary: "Jaardag",
@@ -922,6 +1150,53 @@
         categoriesDesc: "Toon alleen feestdagen uit de aangevinkte categorieën (andere evenementtypes blijven onaangetast)",
         showAll: "Alles tonen",
         hideAll: "Alles verbergen",
+        layoutStyleLabel: "Kaartlayout",
+        layoutStyleDesc:
+          "Lijst toont de klassieke rijen met icoon/naam/subtitel/badge/aftellen. Timeline toont een compacte horizontale as met het eerstvolgende evenement uitgelicht en de rest als klikbare punten - handig voor een smalle kolom in de Sections-weergave.",
+        layoutStyleList: "Lijst",
+        layoutStyleTimeline: "Timeline",
+        timelineLineHeading: "Timeline-lijn",
+        timelineLineWidth: "Dikte",
+        timelineLineWidthDesc: "Dikte van de horizontale aslijn, bijv. „4px”.",
+        timelineLineColor: "Kleur",
+        timelineLineColorDesc: "Kleur van de horizontale aslijn.",
+        timelineDividerHeading: "Scheidingslijn",
+        timelineDividerWidth: "Dikte",
+        timelineDividerWidthDesc:
+          "Dikte van de verticale scheidingslijn tussen verleden en toekomst, bijv. „1px”.",
+        timelineDividerColor: "Kleur",
+        timelineDividerColorDesc: "Kleur van de verticale scheidingslijn tussen verleden en toekomst.",
+        lineStyleLabel: "Stijl",
+        lineStyleSolid: "Doorlopend",
+        lineStyleDashed: "Gestreept",
+        lineStyleDotted: "Gestippeld",
+        timelineOptionsHeading: "Opties",
+        timelineShowFullName: "Volledige naam tonen",
+        timelineShowFullNameDesc:
+          "Toont in de header, tooltip en uitklapbare lijst de volledige naam (voor- en achternaam) in plaats van alleen de voornaam.",
+        showHolidaySuffix: "Feestdagsuffix tonen",
+        showHolidaySuffixDesc:
+          "Voeg het land (en eventueel de deelstaat/provincie) van de feestdag tussen haakjes toe na de naam, bijv. „Pioneer Day (US-UT)”.",
+        moreAction: "„Meer”-knop",
+        moreActionDesc:
+          "Wat de „Meer”-knop rechtsonder in de timeline doet. Meestal een navigatie-actie naar een dashboard dat dezelfde evenementen in het volledige Lijst-layout toont. Laat op „Niets” staan om de knop te verbergen.",
+        groupTimeline: "Timeline",
+        groupTimelineDesc: "Wordt alleen gebruikt wanneer Kaartlayout (onder Weergave) is ingesteld op Timeline.",
+        timelineHeaderLabel: "Kop",
+        timelineHeaderFontDesc:
+          "Lettertype voor de beschrijvingsregel boven de as, bijv. „Kevins verjaardag is vandaag”.",
+        timelineHeaderColorDesc: "Tekstkleur voor de beschrijvingsregel boven de as.",
+        timelineTooltipLabel: "Tooltip",
+        timelineTooltipFontDesc: "Lettertype voor de tekst die wordt getoond wanneer op een punt op de as wordt geklikt.",
+        timelineTooltipColorDesc: "Tekstkleur voor de tekst die wordt getoond wanneer op een punt op de as wordt geklikt.",
+        timelineListLabel: "Lijst (Details)",
+        timelineListFontDesc: "Lettertype voor de uitklapbare chronologische lijst onder de as.",
+        timelineListColorDesc: "Tekstkleur voor de uitklapbare chronologische lijst onder de as.",
+        timelineButtonLabel: "Details-/Meer-knop",
+        timelineButtonFontDesc: "Lettertype voor de Details- en Meer-knoppen in de voettekst.",
+        timelineButtonColorDesc: "Tekstkleur voor de Details- en Meer-knoppen in de voettekst.",
+        eventTypesHeading: "Gebeurtenistypen",
+        eventTypeColorDesc: "Kleur voor het icoon en de stip van dit gebeurtenistype op de tijdlijn.",
         visibilityHeading: "Tonen / Verbergen",
         visibilityPast: "Vergane evenementen",
         visibilityPastDesc: "Toon evenementen waarvan de jaardag al is geweest binnen het ingestelde verleden-venster",
@@ -938,8 +1213,8 @@
         holdActionDesc: "Wat er gebeurt als een rij ingedrukt wordt gehouden",
         visibilityIcon: "Icoon",
         visibilityIconDesc: "Toon het type-icoon vóór elke rij",
-        visibilityTitleDesc: "Toon de naam van het evenement",
-        visibilitySubtitleDesc: "Toon het evenementtype",
+        visibilityNameDesc: "Toon de naam van het evenement",
+        visibilityTypeDesc: "Toon het evenementtype",
         visibilityCountrySuffix: "Feestdagsuffix",
         visibilityCountrySuffixDesc: "Voeg het land (en eventueel de deelstaat/provincie) toe na de naam/type van de feestdag, bijv. „Bevrijdingsdag · NL (NH)”",
         columnsHeading: "Rijkolommen",
@@ -950,7 +1225,7 @@
         columnTypeLastName: "Achternaam",
         columnTypeFullName: "Volledige naam",
         columnTypeFullNameType: "Volledige naam + type",
-        columnTypeSubtitle: "Type",
+        columnTypeType: "Type",
         columnTypeText: "Eigen tekst",
         columnAdd: "Toevoegen",
         columnMoveUp: "Omhoog",
@@ -986,10 +1261,18 @@
         highlightVipDesc: "Toon een badge op het icoon van VIP-evenementen",
         highlightImportant: "Belangrijke evenementen",
         highlightImportantDesc: "Toon een badge op het icoon van automatisch als belangrijk gemarkeerde evenementen",
-        vipBadgeColor: "Badgekleur",
-        vipBadgeColorDesc: "Achtergrondkleur van het VIP-badge",
-        importantBadgeColor: "Badgekleur",
-        importantBadgeColorDesc: "Achtergrondkleur van het Important-badge",
+        vipBadgeColorList: "Badgekleur (Lijst)",
+        vipBadgeColorListDesc:
+          "Kleur van het VIP-sterbadge in het hoekbadge van het Lijst-layout, in de kop van het Timeline-layout, en in de uitklapbare Details-lijst.",
+        vipBadgeColorTimeline: "Badgekleur (Timeline)",
+        vipBadgeColorTimelineDesc:
+          "Kleur van het VIP-stericoon specifiek op de aspunten van het Timeline-layout. Alleen zichtbaar wanneer Kaartlayout is ingesteld op Timeline.",
+        importantBadgeColorList: "Badgekleur (Lijst)",
+        importantBadgeColorListDesc:
+          "Kleur van het Important-uitroeptekenbadge in het hoekbadge van het Lijst-layout, in de kop van het Timeline-layout, en in de uitklapbare Details-lijst.",
+        importantBadgeColorTimeline: "Badgekleur (Timeline)",
+        importantBadgeColorTimelineDesc:
+          "Kleur van het Important-uitroepteken-icoon specifiek op de aspunten van het Timeline-layout. Alleen zichtbaar wanneer Kaartlayout is ingesteld op Timeline.",
         colors: "Kleuren",
         cardBackgroundTabTitle: "Kaartachtergrond",
         cardBackgroundEnable: "Achtergrond tonen",
@@ -1031,18 +1314,18 @@
         animationFlash: "Knipperen",
         matchTextLabel: "Ook de tekst inkleuren",
         matchTextDesc: "Ook alle tekst van de rij inkleuren met deze icoonkleur",
-        colorTitle: "Naam",
-        colorSubtitle: "Type",
+        colorName: "Naam",
+        colorType: "Type",
         colorBadge: "Jubileum",
         colorWhen: "Aftellen",
         colorText: "Eigen tekst",
         cardTitleColorDesc: "Tekstkleur voor de eigen titel van de kaart",
-        colorTitleDesc: "Tekstkleur voor de naam van het evenement",
+        colorNameDesc: "Tekstkleur voor de naam van het evenement",
         colorLastName: "Achternaam",
         colorLastNameDesc: "Tekstkleur voor de achternaam van het evenement",
         colorFullName: "Volledige naam",
         colorFullNameDesc: "Tekstkleur voor de volledige naam van het evenement (voor- en achternaam)",
-        colorSubtitleDesc: "Tekstkleur voor het evenementtype",
+        colorTypeDesc: "Tekstkleur voor het evenementtype",
         colorBadgeDesc: "Tekstkleur voor het jubileumnummer-badge",
         colorWhenDesc: "Tekstkleur voor het aftellen (bijv. „over 3 dagen”)",
         colorTextDesc: "Tekstkleur voor eigen tekstkolommen (zie Rijkolommen onder Layout -> Weergave)",
@@ -1077,10 +1360,10 @@
         fonts: "Lettertypen",
         fontCardTitle: "Kaarttitel",
         fontCardTitleDesc: "Lettergrootte voor de eigen titel van de kaart",
-        fontTitleDesc: "Lettergrootte voor de naam van het evenement",
+        fontNameDesc: "Lettergrootte voor de naam van het evenement",
         fontLastNameDesc: "Lettergrootte voor de achternaam van het evenement",
         fontFullNameDesc: "Lettergrootte voor de volledige naam van het evenement (voor- en achternaam)",
-        fontSubtitleDesc: "Lettergrootte voor het evenementtype",
+        fontTypeDesc: "Lettergrootte voor het evenementtype",
         fontBadgeDesc: "Lettergrootte voor het jubileumnummer-badge",
         fontWhenDesc: "Lettergrootte voor het aftellen (bijv. „over 3 dagen”)",
         fontTextDesc: "Lettergrootte voor eigen tekstkolommen (zie Rijkolommen onder Layout -> Weergave)",
@@ -1094,7 +1377,7 @@
         panelSettings: "Instellingen",
         panelSettingsDesc: "Algemeen, evenementen en periode",
         panelLayout: "Lay-out",
-        panelLayoutDesc: "Weergave, lettertypen, kleuren, iconen en achtergronden",
+        panelLayoutDesc: "Weergave, lettertypen, kleuren, iconen, kaartachtergrond en timeline",
         groupGeneral: "Algemeen",
         groupGeneralDesc: "",
         groupEvents: "Evenementen",
@@ -1113,6 +1396,21 @@
       dayAgo: "Wczoraj",
       daysAgo: (n) => `${n} dni temu`,
       noEvents: "Brak nadchodzących wydarzeń",
+      // Polska odmiana przez przypadki nie daje się bezpiecznie zastosować do
+      // dowolnie wpisanych imion, dlatego zamiast dopasowywać przypadek,
+      // zdanie budowane jest w formie neutralnej "Imię: N. typ — kiedy" -
+      // ta sama forma działa dla wydarzeń przeszłych i przyszłych, ponieważ
+      // to samo "kiedy" (np. "wczoraj"/"za 3 dni") już niesie informację o
+      // czasie.
+      possessive: (name) => name,
+      ordinalParts: (n) => ({ num: `${n}.`, sup: "" }),
+      timelineSentence: "{possessive}: {ordinal}{sup} {type} — {when}",
+      timelineSentenceSimple: "{name} — {when}",
+      timelineSentencePast: "{possessive}: {ordinal}{sup} {type} — {when}",
+      timelineSentenceSimplePast: "{name} — {when}",
+      timelineExpand: "Szczegóły",
+      timelineCollapse: "Mniej",
+      timelineMore: "Więcej",
       types: {
         birthday: "Urodziny",
         anniversary: "Rocznica",
@@ -1194,6 +1492,53 @@
         categoriesDesc: "Pokazuj tylko święta z zaznaczonych kategorii (inne typy wydarzeń pozostają bez zmian)",
         showAll: "Pokaż wszystko",
         hideAll: "Ukryj wszystko",
+        layoutStyleLabel: "Układ karty",
+        layoutStyleDesc:
+          "Lista pokazuje klasyczne wiersze ikona/nazwa/podtytuł/odznaka/odliczanie. Timeline pokazuje kompaktową poziomą oś z wyróżnionym najbliższym wydarzeniem, a resztą jako klikalne punkty - przydatne w wąskiej kolumnie widoku Sekcje.",
+        layoutStyleList: "Lista",
+        layoutStyleTimeline: "Timeline",
+        timelineLineHeading: "Linia osi czasu",
+        timelineLineWidth: "Grubość",
+        timelineLineWidthDesc: "Grubość poziomej linii osi, np. „4px”.",
+        timelineLineColor: "Kolor",
+        timelineLineColorDesc: "Kolor poziomej linii osi.",
+        timelineDividerHeading: "Linia rozdzielająca",
+        timelineDividerWidth: "Grubość",
+        timelineDividerWidthDesc:
+          "Grubość pionowej linii oddzielającej przeszłość od przyszłości, np. „1px”.",
+        timelineDividerColor: "Kolor",
+        timelineDividerColorDesc: "Kolor pionowej linii oddzielającej przeszłość od przyszłości.",
+        lineStyleLabel: "Styl",
+        lineStyleSolid: "Ciągła",
+        lineStyleDashed: "Przerywana",
+        lineStyleDotted: "Kropkowana",
+        timelineOptionsHeading: "Opcje",
+        timelineShowFullName: "Pokaż pełne imię i nazwisko",
+        timelineShowFullNameDesc:
+          "Pokazuje pełne imię i nazwisko każdego wydarzenia zamiast samego imienia, w nagłówku, dymku i rozwijanej liście.",
+        showHolidaySuffix: "Pokaż sufiks święta",
+        showHolidaySuffixDesc:
+          "Dodaj kraj święta (i region, jeśli występuje) w nawiasie po jego nazwie, np. „Pioneer Day (US-UT)”.",
+        moreAction: "Przycisk „Więcej”",
+        moreActionDesc:
+          "Co robi przycisk „Więcej” w prawym dolnym rogu osi czasu. Zwykle akcja nawigacji do pulpitu pokazującego te same wydarzenia w pełnym układzie Lista. Pozostaw „Nic”, aby ukryć przycisk.",
+        groupTimeline: "Timeline",
+        groupTimelineDesc: "Używane tylko wtedy, gdy Układ karty (w sekcji Wyświetlanie) jest ustawiony na Timeline.",
+        timelineHeaderLabel: "Nagłówek",
+        timelineHeaderFontDesc:
+          "Czcionka dla linii opisu nad osią, np. „Kevin: 27. urodziny — dzisiaj”.",
+        timelineHeaderColorDesc: "Kolor tekstu dla linii opisu nad osią.",
+        timelineTooltipLabel: "Dymek",
+        timelineTooltipFontDesc: "Czcionka dla tekstu wyświetlanego po kliknięciu punktu na osi.",
+        timelineTooltipColorDesc: "Kolor tekstu wyświetlanego po kliknięciu punktu na osi.",
+        timelineListLabel: "Lista (Szczegóły)",
+        timelineListFontDesc: "Czcionka dla rozwijanej chronologicznej listy pod osią.",
+        timelineListColorDesc: "Kolor tekstu rozwijanej chronologicznej listy pod osią.",
+        timelineButtonLabel: "Przycisk Szczegóły / Więcej",
+        timelineButtonFontDesc: "Czcionka przycisków Szczegóły i Więcej w stopce.",
+        timelineButtonColorDesc: "Kolor tekstu przycisków Szczegóły i Więcej w stopce.",
+        eventTypesHeading: "Typy wydarzeń",
+        eventTypeColorDesc: "Kolor ikony i kropki tego typu wydarzenia na osi czasu.",
         visibilityHeading: "Pokaż / Ukryj",
         visibilityPast: "Minione wydarzenia",
         visibilityPastDesc: "Pokaż wydarzenia, których rocznica już minęła w skonfigurowanym oknie przeszłości",
@@ -1210,8 +1555,8 @@
         holdActionDesc: "Co się dzieje po przytrzymaniu wiersza",
         visibilityIcon: "Ikona",
         visibilityIconDesc: "Pokaż ikonę typu przed każdym wierszem",
-        visibilityTitleDesc: "Pokaż nazwę wydarzenia",
-        visibilitySubtitleDesc: "Pokaż typ wydarzenia",
+        visibilityNameDesc: "Pokaż nazwę wydarzenia",
+        visibilityTypeDesc: "Pokaż typ wydarzenia",
         visibilityCountrySuffix: "Sufiks święta",
         visibilityCountrySuffixDesc: "Dodaj kraj (i ewentualnie region) po nazwie/typie święta, np. „Święto Niepodległości · PL (MAZ)”",
         columnsHeading: "Kolumny wiersza",
@@ -1222,7 +1567,7 @@
         columnTypeLastName: "Nazwisko",
         columnTypeFullName: "Pełne imię i nazwisko",
         columnTypeFullNameType: "Pełne imię i nazwisko + typ",
-        columnTypeSubtitle: "Typ",
+        columnTypeType: "Typ",
         columnTypeText: "Własny tekst",
         columnAdd: "Dodaj",
         columnMoveUp: "Przenieś w górę",
@@ -1258,10 +1603,18 @@
         highlightVipDesc: "Pokaż odznakę na ikonie wydarzeń oznaczonych VIP",
         highlightImportant: "Wydarzenia ważne",
         highlightImportantDesc: "Pokaż odznakę na ikonie wydarzeń automatycznie oznaczonych jako ważne",
-        vipBadgeColor: "Kolor odznaki",
-        vipBadgeColorDesc: "Kolor tła odznaki VIP",
-        importantBadgeColor: "Kolor odznaki",
-        importantBadgeColorDesc: "Kolor tła odznaki Important",
+        vipBadgeColorList: "Kolor odznaki (Lista)",
+        vipBadgeColorListDesc:
+          "Kolor odznaki gwiazdki VIP w odznace narożnej układu Lista, w nagłówku układu Timeline i na jego rozwijanej liście Szczegóły.",
+        vipBadgeColorTimeline: "Kolor odznaki (Timeline)",
+        vipBadgeColorTimelineDesc:
+          "Kolor ikony gwiazdki VIP konkretnie na punktach osi układu Timeline. Widoczne tylko, gdy Układ karty jest ustawiony na Timeline.",
+        importantBadgeColorList: "Kolor odznaki (Lista)",
+        importantBadgeColorListDesc:
+          "Kolor odznaki wykrzyknika Important w odznace narożnej układu Lista, w nagłówku układu Timeline i na jego rozwijanej liście Szczegóły.",
+        importantBadgeColorTimeline: "Kolor odznaki (Timeline)",
+        importantBadgeColorTimelineDesc:
+          "Kolor ikony wykrzyknika Important konkretnie na punktach osi układu Timeline. Widoczne tylko, gdy Układ karty jest ustawiony na Timeline.",
         colors: "Kolory",
         cardBackgroundTabTitle: "Tło karty",
         cardBackgroundEnable: "Pokaż tło",
@@ -1303,18 +1656,18 @@
         animationFlash: "Miganie",
         matchTextLabel: "Zabarw też tekst",
         matchTextDesc: "Zabarw też cały tekst wiersza tym kolorem ikony",
-        colorTitle: "Nazwa",
-        colorSubtitle: "Typ",
+        colorName: "Nazwa",
+        colorType: "Typ",
         colorBadge: "Wystąpienie",
         colorWhen: "Odliczanie",
         colorText: "Własny tekst",
         cardTitleColorDesc: "Kolor tekstu dla własnego tytułu karty",
-        colorTitleDesc: "Kolor tekstu dla nazwy wydarzenia",
+        colorNameDesc: "Kolor tekstu dla nazwy wydarzenia",
         colorLastName: "Nazwisko",
         colorLastNameDesc: "Kolor tekstu dla nazwiska wydarzenia",
         colorFullName: "Pełne imię i nazwisko",
         colorFullNameDesc: "Kolor tekstu dla pełnego imienia i nazwiska wydarzenia",
-        colorSubtitleDesc: "Kolor tekstu dla typu wydarzenia",
+        colorTypeDesc: "Kolor tekstu dla typu wydarzenia",
         colorBadgeDesc: "Kolor tekstu dla odznaki numeru wystąpienia",
         colorWhenDesc: "Kolor tekstu dla odliczania (np. „za 3 dni”)",
         colorTextDesc: "Kolor tekstu dla kolumn własnego tekstu (zobacz Kolumny wiersza w Układ -> Wyświetlanie)",
@@ -1349,10 +1702,10 @@
         fonts: "Czcionki",
         fontCardTitle: "Tytuł karty",
         fontCardTitleDesc: "Rozmiar czcionki dla własnego tytułu karty",
-        fontTitleDesc: "Rozmiar czcionki dla nazwy wydarzenia",
+        fontNameDesc: "Rozmiar czcionki dla nazwy wydarzenia",
         fontLastNameDesc: "Rozmiar czcionki dla nazwiska wydarzenia",
         fontFullNameDesc: "Rozmiar czcionki dla pełnego imienia i nazwiska wydarzenia",
-        fontSubtitleDesc: "Rozmiar czcionki dla typu wydarzenia",
+        fontTypeDesc: "Rozmiar czcionki dla typu wydarzenia",
         fontBadgeDesc: "Rozmiar czcionki dla odznaki numeru wystąpienia",
         fontWhenDesc: "Rozmiar czcionki dla odliczania (np. „za 3 dni”)",
         fontTextDesc: "Rozmiar czcionki dla kolumn własnego tekstu (zobacz Kolumny wiersza w Układ -> Wyświetlanie)",
@@ -1366,7 +1719,7 @@
         panelSettings: "Ustawienia",
         panelSettingsDesc: "Ogólne, wydarzenia i okres",
         panelLayout: "Układ",
-        panelLayoutDesc: "Wyświetlanie, czcionki, kolory, ikony i tła",
+        panelLayoutDesc: "Wyświetlanie, czcionki, kolory, ikony, tło karty i timeline",
         groupGeneral: "Ogólne",
         groupGeneralDesc: "",
         groupEvents: "Wydarzenia",
@@ -1385,6 +1738,15 @@
       dayAgo: "Ayer",
       daysAgo: (n) => `hace ${n} días`,
       noEvents: "No hay próximos eventos",
+      possessive: (name) => name,
+      ordinalParts: (n) => ({ num: `${n}º`, sup: "" }),
+      timelineSentence: "{ordinal}{sup} {type} de {possessive} es {when}",
+      timelineSentenceSimple: "{name} es {when}",
+      timelineSentencePast: "{ordinal}{sup} {type} de {possessive} fue {when}",
+      timelineSentenceSimplePast: "{name} fue {when}",
+      timelineExpand: "Detalles",
+      timelineCollapse: "Menos",
+      timelineMore: "Más",
       types: {
         birthday: "Cumpleaños",
         anniversary: "Aniversario",
@@ -1466,6 +1828,53 @@
         categoriesDesc: "Mostrar solo los festivos de las categorías marcadas (los demás tipos de evento no se ven afectados)",
         showAll: "Mostrar todo",
         hideAll: "Ocultar todo",
+        layoutStyleLabel: "Estilo de diseño",
+        layoutStyleDesc:
+          "Lista muestra las filas clásicas de icono/nombre/subtítulo/insignia/cuenta atrás. Timeline muestra un eje horizontal compacto con el próximo evento resaltado y el resto como puntos pulsables - útil para una columna estrecha en la vista Secciones.",
+        layoutStyleList: "Lista",
+        layoutStyleTimeline: "Timeline",
+        timelineLineHeading: "Línea de la timeline",
+        timelineLineWidth: "Grosor",
+        timelineLineWidthDesc: "Grosor de la línea horizontal del eje, p. ej. «4px».",
+        timelineLineColor: "Color",
+        timelineLineColorDesc: "Color de la línea horizontal del eje.",
+        timelineDividerHeading: "Línea divisoria",
+        timelineDividerWidth: "Grosor",
+        timelineDividerWidthDesc:
+          "Grosor de la línea vertical que marca el límite entre pasado y futuro, p. ej. «1px».",
+        timelineDividerColor: "Color",
+        timelineDividerColorDesc: "Color de la línea vertical divisoria entre pasado y futuro.",
+        lineStyleLabel: "Estilo",
+        lineStyleSolid: "Sólida",
+        lineStyleDashed: "Discontinua",
+        lineStyleDotted: "Punteada",
+        timelineOptionsHeading: "Opciones",
+        timelineShowFullName: "Mostrar nombre completo",
+        timelineShowFullNameDesc:
+          "Muestra el nombre completo (nombre y apellido) de cada evento en lugar de solo el nombre, en el encabezado, la información sobre herramientas y la lista desplegable.",
+        showHolidaySuffix: "Mostrar sufijo del festivo",
+        showHolidaySuffixDesc:
+          "Añade el país del festivo (y la subdivisión, si la hay) entre paréntesis después de su nombre, p. ej. «Pioneer Day (US-UT)».",
+        moreAction: "Botón «Más»",
+        moreActionDesc:
+          "Qué hace el botón «Más» de la esquina inferior derecha de la timeline. Normalmente una acción de navegación hacia un panel que muestra los mismos eventos en el diseño Lista completo. Déjalo en «Nada» para ocultar el botón.",
+        groupTimeline: "Timeline",
+        groupTimelineDesc: "Solo se usa cuando el Estilo de diseño (en Visualización) está configurado como Timeline.",
+        timelineHeaderLabel: "Encabezado",
+        timelineHeaderFontDesc:
+          "Fuente para la línea de descripción sobre el eje, p. ej. «El cumpleaños número 27 de Kevin es hoy».",
+        timelineHeaderColorDesc: "Color de texto para la línea de descripción sobre el eje.",
+        timelineTooltipLabel: "Info sobre",
+        timelineTooltipFontDesc: "Fuente para el texto mostrado al pulsar un punto del eje.",
+        timelineTooltipColorDesc: "Color de texto para el texto mostrado al pulsar un punto del eje.",
+        timelineListLabel: "Lista (Detalles)",
+        timelineListFontDesc: "Fuente para la lista cronológica desplegable bajo el eje.",
+        timelineListColorDesc: "Color de texto para la lista cronológica desplegable bajo el eje.",
+        timelineButtonLabel: "Botón Detalles / Más",
+        timelineButtonFontDesc: "Fuente para los botones Detalles y Más del pie.",
+        timelineButtonColorDesc: "Color de texto para los botones Detalles y Más del pie.",
+        eventTypesHeading: "Tipos de evento",
+        eventTypeColorDesc: "Color del icono y del punto de este tipo de evento en la línea de tiempo.",
         visibilityHeading: "Mostrar / Ocultar",
         visibilityPast: "Eventos pasados",
         visibilityPastDesc: "Mostrar eventos cuyo aniversario ya pasó dentro de la ventana pasada configurada",
@@ -1482,8 +1891,8 @@
         holdActionDesc: "Qué ocurre al mantener pulsada una fila",
         visibilityIcon: "Icono",
         visibilityIconDesc: "Mostrar el icono de tipo delante de cada fila",
-        visibilityTitleDesc: "Mostrar el nombre del evento",
-        visibilitySubtitleDesc: "Mostrar el tipo de evento",
+        visibilityNameDesc: "Mostrar el nombre del evento",
+        visibilityTypeDesc: "Mostrar el tipo de evento",
         visibilityCountrySuffix: "Sufijo del festivo",
         visibilityCountrySuffixDesc: "Añadir el país (y la subdivisión, si la hay) tras el nombre/tipo del festivo, p. ej. «Día de la Hispanidad · ES (MD)»",
         columnsHeading: "Columnas de fila",
@@ -1494,7 +1903,7 @@
         columnTypeLastName: "Apellido",
         columnTypeFullName: "Nombre completo",
         columnTypeFullNameType: "Nombre completo + tipo",
-        columnTypeSubtitle: "Tipo",
+        columnTypeType: "Tipo",
         columnTypeText: "Texto personalizado",
         columnAdd: "Añadir",
         columnMoveUp: "Subir",
@@ -1530,10 +1939,18 @@
         highlightVipDesc: "Mostrar una insignia en el icono de los eventos marcados como VIP",
         highlightImportant: "Eventos importantes",
         highlightImportantDesc: "Mostrar una insignia en el icono de los eventos marcados automáticamente como importantes",
-        vipBadgeColor: "Color de la insignia",
-        vipBadgeColorDesc: "Color de fondo de la insignia VIP",
-        importantBadgeColor: "Color de la insignia",
-        importantBadgeColorDesc: "Color de fondo de la insignia Important",
+        vipBadgeColorList: "Color de la insignia (Lista)",
+        vipBadgeColorListDesc:
+          "Color de la insignia de estrella VIP en la insignia de esquina del diseño Lista, en el encabezado del diseño Timeline y en su lista Detalles desplegable.",
+        vipBadgeColorTimeline: "Color de la insignia (Timeline)",
+        vipBadgeColorTimelineDesc:
+          "Color del icono de estrella VIP específicamente en los puntos del eje del diseño Timeline. Solo se muestra cuando el Estilo de diseño está configurado como Timeline.",
+        importantBadgeColorList: "Color de la insignia (Lista)",
+        importantBadgeColorListDesc:
+          "Color de la insignia de signo de exclamación Important en la insignia de esquina del diseño Lista, en el encabezado del diseño Timeline y en su lista Detalles desplegable.",
+        importantBadgeColorTimeline: "Color de la insignia (Timeline)",
+        importantBadgeColorTimelineDesc:
+          "Color del icono de signo de exclamación Important específicamente en los puntos del eje del diseño Timeline. Solo se muestra cuando el Estilo de diseño está configurado como Timeline.",
         colors: "Colores",
         cardBackgroundTabTitle: "Fondo de la tarjeta",
         cardBackgroundEnable: "Mostrar fondo",
@@ -1575,18 +1992,18 @@
         animationFlash: "Parpadeo",
         matchTextLabel: "Colorear también el texto",
         matchTextDesc: "Colorear también todo el texto de la fila con este color de icono",
-        colorTitle: "Nombre",
-        colorSubtitle: "Tipo",
+        colorName: "Nombre",
+        colorType: "Tipo",
         colorBadge: "Ocurrencia",
         colorWhen: "Cuenta atrás",
         colorText: "Texto personalizado",
         cardTitleColorDesc: "Color del texto para el título propio de la tarjeta",
-        colorTitleDesc: "Color del texto para el nombre del evento",
+        colorNameDesc: "Color del texto para el nombre del evento",
         colorLastName: "Apellido",
         colorLastNameDesc: "Color del texto para el apellido del evento",
         colorFullName: "Nombre completo",
         colorFullNameDesc: "Color del texto para el nombre completo del evento (nombre y apellido)",
-        colorSubtitleDesc: "Color del texto para el tipo de evento",
+        colorTypeDesc: "Color del texto para el tipo de evento",
         colorBadgeDesc: "Color del texto para la insignia del número de ocurrencia",
         colorWhenDesc: "Color del texto para la cuenta atrás (p. ej. «en 3 días»)",
         colorTextDesc: "Color del texto para columnas de texto personalizado (ver Columnas de fila en Diseño -> Visualización)",
@@ -1621,10 +2038,10 @@
         fonts: "Fuentes",
         fontCardTitle: "Título de la tarjeta",
         fontCardTitleDesc: "Tamaño de fuente para el título propio de la tarjeta",
-        fontTitleDesc: "Tamaño de fuente para el nombre del evento",
+        fontNameDesc: "Tamaño de fuente para el nombre del evento",
         fontLastNameDesc: "Tamaño de fuente para el apellido del evento",
         fontFullNameDesc: "Tamaño de fuente para el nombre completo del evento (nombre y apellido)",
-        fontSubtitleDesc: "Tamaño de fuente para el tipo de evento",
+        fontTypeDesc: "Tamaño de fuente para el tipo de evento",
         fontBadgeDesc: "Tamaño de fuente para la insignia del número de ocurrencia",
         fontWhenDesc: "Tamaño de fuente para la cuenta atrás (p. ej. «en 3 días»)",
         fontTextDesc: "Tamaño de fuente para columnas de texto personalizado (ver Columnas de fila en Diseño -> Visualización)",
@@ -1638,7 +2055,7 @@
         panelSettings: "Ajustes",
         panelSettingsDesc: "General, eventos y período",
         panelLayout: "Diseño",
-        panelLayoutDesc: "Visualización, fuentes, colores, iconos y fondos",
+        panelLayoutDesc: "Visualización, fuentes, colores, iconos, fondo de tarjeta y timeline",
         groupGeneral: "General",
         groupGeneralDesc: "",
         groupEvents: "Eventos",
@@ -1657,6 +2074,15 @@
       dayAgo: "Ieri",
       daysAgo: (n) => `${n} giorni fa`,
       noEvents: "Nessun evento in arrivo",
+      possessive: (name) => name,
+      ordinalParts: (n) => ({ num: `${n}°`, sup: "" }),
+      timelineSentence: "{ordinal}{sup} {type} di {possessive} è {when}",
+      timelineSentenceSimple: "{name} è {when}",
+      timelineSentencePast: "{ordinal}{sup} {type} di {possessive} era {when}",
+      timelineSentenceSimplePast: "{name} era {when}",
+      timelineExpand: "Dettagli",
+      timelineCollapse: "Meno",
+      timelineMore: "Altro",
       types: {
         birthday: "Compleanno",
         anniversary: "Anniversario",
@@ -1738,6 +2164,53 @@
         categoriesDesc: "Mostra solo le festività delle categorie selezionate (gli altri tipi di evento non sono interessati)",
         showAll: "Mostra tutto",
         hideAll: "Nascondi tutto",
+        layoutStyleLabel: "Stile del layout",
+        layoutStyleDesc:
+          "Lista mostra le righe classiche icona/nome/sottotitolo/badge/conto alla rovescia. Timeline mostra un asse orizzontale compatto con il prossimo evento evidenziato e gli altri come punti cliccabili - utile per una colonna stretta nella vista Sezioni.",
+        layoutStyleList: "Lista",
+        layoutStyleTimeline: "Timeline",
+        timelineLineHeading: "Linea della timeline",
+        timelineLineWidth: "Spessore",
+        timelineLineWidthDesc: "Spessore della linea orizzontale dell'asse, ad es. «4px».",
+        timelineLineColor: "Colore",
+        timelineLineColorDesc: "Colore della linea orizzontale dell'asse.",
+        timelineDividerHeading: "Linea di separazione",
+        timelineDividerWidth: "Spessore",
+        timelineDividerWidthDesc:
+          "Spessore della linea verticale che segna il confine tra passato e futuro, ad es. «1px».",
+        timelineDividerColor: "Colore",
+        timelineDividerColorDesc: "Colore della linea verticale di separazione tra passato e futuro.",
+        lineStyleLabel: "Stile",
+        lineStyleSolid: "Continua",
+        lineStyleDashed: "Tratteggiata",
+        lineStyleDotted: "Punteggiata",
+        timelineOptionsHeading: "Opzioni",
+        timelineShowFullName: "Mostra nome completo",
+        timelineShowFullNameDesc:
+          "Mostra il nome completo (nome e cognome) di ogni evento invece del solo nome, nell'intestazione, nel tooltip e nell'elenco espandibile.",
+        showHolidaySuffix: "Mostra suffisso festività",
+        showHolidaySuffixDesc:
+          "Aggiunge il paese della festività (e la suddivisione, se presente) tra parentesi dopo il suo nome, ad es. «Pioneer Day (US-UT)».",
+        moreAction: "Pulsante «Altro»",
+        moreActionDesc:
+          "Cosa fa il pulsante «Altro» in basso a destra nella timeline. Tipicamente un'azione di navigazione verso una dashboard che mostra gli stessi eventi nel layout Lista completo. Lascialo su «Nulla» per nascondere il pulsante.",
+        groupTimeline: "Timeline",
+        groupTimelineDesc: "Usato solo quando lo Stile del layout (in Visualizzazione) è impostato su Timeline.",
+        timelineHeaderLabel: "Intestazione",
+        timelineHeaderFontDesc:
+          "Font per la riga di descrizione sopra l'asse, ad es. «Il 27° compleanno di Kevin è oggi».",
+        timelineHeaderColorDesc: "Colore del testo per la riga di descrizione sopra l'asse.",
+        timelineTooltipLabel: "Tooltip",
+        timelineTooltipFontDesc: "Font per il testo mostrato quando si clicca su un punto dell'asse.",
+        timelineTooltipColorDesc: "Colore del testo mostrato quando si clicca su un punto dell'asse.",
+        timelineListLabel: "Elenco (Dettagli)",
+        timelineListFontDesc: "Font per l'elenco cronologico espandibile sotto l'asse.",
+        timelineListColorDesc: "Colore del testo per l'elenco cronologico espandibile sotto l'asse.",
+        timelineButtonLabel: "Pulsante Dettagli / Altro",
+        timelineButtonFontDesc: "Font per i pulsanti Dettagli e Altro del piè di pagina.",
+        timelineButtonColorDesc: "Colore del testo per i pulsanti Dettagli e Altro del piè di pagina.",
+        eventTypesHeading: "Tipi di evento",
+        eventTypeColorDesc: "Colore dell'icona e del punto di questo tipo di evento sulla timeline.",
         visibilityHeading: "Mostra / Nascondi",
         visibilityPast: "Eventi passati",
         visibilityPastDesc: "Mostra eventi il cui anniversario è già trascorso entro la finestra passata configurata",
@@ -1754,8 +2227,8 @@
         holdActionDesc: "Cosa succede quando si tiene premuta una riga",
         visibilityIcon: "Icona",
         visibilityIconDesc: "Mostra l'icona del tipo davanti a ogni riga",
-        visibilityTitleDesc: "Mostra il nome dell'evento",
-        visibilitySubtitleDesc: "Mostra il tipo di evento",
+        visibilityNameDesc: "Mostra il nome dell'evento",
+        visibilityTypeDesc: "Mostra il tipo di evento",
         visibilityCountrySuffix: "Suffisso festività",
         visibilityCountrySuffixDesc: "Aggiunge il paese (ed eventualmente la suddivisione) dopo il nome/tipo della festività, ad es. «Festa della Repubblica · IT (RM)»",
         columnsHeading: "Colonne di riga",
@@ -1766,7 +2239,7 @@
         columnTypeLastName: "Cognome",
         columnTypeFullName: "Nome completo",
         columnTypeFullNameType: "Nome completo + tipo",
-        columnTypeSubtitle: "Tipo",
+        columnTypeType: "Tipo",
         columnTypeText: "Testo libero",
         columnAdd: "Aggiungi",
         columnMoveUp: "Sposta su",
@@ -1802,10 +2275,18 @@
         highlightVipDesc: "Mostra un badge sull'icona degli eventi contrassegnati come VIP",
         highlightImportant: "Eventi importanti",
         highlightImportantDesc: "Mostra un badge sull'icona degli eventi contrassegnati automaticamente come importanti",
-        vipBadgeColor: "Colore del badge",
-        vipBadgeColorDesc: "Colore di sfondo del badge VIP",
-        importantBadgeColor: "Colore del badge",
-        importantBadgeColorDesc: "Colore di sfondo del badge Important",
+        vipBadgeColorList: "Colore del badge (Lista)",
+        vipBadgeColorListDesc:
+          "Colore del badge a stella VIP nel badge d'angolo del layout Lista, nell'intestazione del layout Timeline e nel suo elenco Dettagli espandibile.",
+        vipBadgeColorTimeline: "Colore del badge (Timeline)",
+        vipBadgeColorTimelineDesc:
+          "Colore dell'icona a stella VIP specificamente sui punti dell'asse del layout Timeline. Mostrato solo quando lo Stile del layout è impostato su Timeline.",
+        importantBadgeColorList: "Colore del badge (Lista)",
+        importantBadgeColorListDesc:
+          "Colore del badge punto esclamativo Important nel badge d'angolo del layout Lista, nell'intestazione del layout Timeline e nel suo elenco Dettagli espandibile.",
+        importantBadgeColorTimeline: "Colore del badge (Timeline)",
+        importantBadgeColorTimelineDesc:
+          "Colore dell'icona punto esclamativo Important specificamente sui punti dell'asse del layout Timeline. Mostrato solo quando lo Stile del layout è impostato su Timeline.",
         colors: "Colori",
         cardBackgroundTabTitle: "Sfondo scheda",
         cardBackgroundEnable: "Mostra sfondo",
@@ -1847,18 +2328,18 @@
         animationFlash: "Lampeggio",
         matchTextLabel: "Colora anche il testo",
         matchTextDesc: "Colora anche tutto il testo della riga con questo colore dell'icona",
-        colorTitle: "Nome",
-        colorSubtitle: "Tipo",
+        colorName: "Nome",
+        colorType: "Tipo",
         colorBadge: "Occorrenza",
         colorWhen: "Conto alla rovescia",
         colorText: "Testo libero",
         cardTitleColorDesc: "Colore del testo per il titolo proprio della scheda",
-        colorTitleDesc: "Colore del testo per il nome dell'evento",
+        colorNameDesc: "Colore del testo per il nome dell'evento",
         colorLastName: "Cognome",
         colorLastNameDesc: "Colore del testo per il cognome dell'evento",
         colorFullName: "Nome completo",
         colorFullNameDesc: "Colore del testo per il nome completo dell'evento (nome e cognome)",
-        colorSubtitleDesc: "Colore del testo per il tipo di evento",
+        colorTypeDesc: "Colore del testo per il tipo di evento",
         colorBadgeDesc: "Colore del testo per il badge del numero di occorrenza",
         colorWhenDesc: "Colore del testo per il conto alla rovescia (ad es. «tra 3 giorni»)",
         colorTextDesc: "Colore del testo per le colonne di testo libero (vedi Colonne di riga in Layout -> Visualizzazione)",
@@ -1893,10 +2374,10 @@
         fonts: "Font",
         fontCardTitle: "Titolo della scheda",
         fontCardTitleDesc: "Dimensione del font per il titolo proprio della scheda",
-        fontTitleDesc: "Dimensione del font per il nome dell'evento",
+        fontNameDesc: "Dimensione del font per il nome dell'evento",
         fontLastNameDesc: "Dimensione del font per il cognome dell'evento",
         fontFullNameDesc: "Dimensione del font per il nome completo dell'evento (nome e cognome)",
-        fontSubtitleDesc: "Dimensione del font per il tipo di evento",
+        fontTypeDesc: "Dimensione del font per il tipo di evento",
         fontBadgeDesc: "Dimensione del font per il badge del numero di occorrenza",
         fontWhenDesc: "Dimensione del font per il conto alla rovescia (ad es. «tra 3 giorni»)",
         fontTextDesc: "Dimensione del font per le colonne di testo libero (vedi Colonne di riga in Layout -> Visualizzazione)",
@@ -1910,7 +2391,7 @@
         panelSettings: "Impostazioni",
         panelSettingsDesc: "Generale, eventi e periodo",
         panelLayout: "Layout",
-        panelLayoutDesc: "Visualizzazione, font, colori, icone e sfondi",
+        panelLayoutDesc: "Visualizzazione, font, colori, icone, sfondo scheda e timeline",
         groupGeneral: "Generale",
         groupGeneralDesc: "",
         groupEvents: "Eventi",
@@ -1929,6 +2410,15 @@
       dayAgo: "Ontem",
       daysAgo: (n) => `${n} dias atrás`,
       noEvents: "Nenhum evento próximo",
+      possessive: (name) => name,
+      ordinalParts: (n) => ({ num: `${n}º`, sup: "" }),
+      timelineSentence: "{ordinal}{sup} {type} de {possessive} é {when}",
+      timelineSentenceSimple: "{name} é {when}",
+      timelineSentencePast: "{ordinal}{sup} {type} de {possessive} foi {when}",
+      timelineSentenceSimplePast: "{name} foi {when}",
+      timelineExpand: "Detalhes",
+      timelineCollapse: "Menos",
+      timelineMore: "Mais",
       types: {
         birthday: "Aniversário",
         anniversary: "Data comemorativa",
@@ -2010,6 +2500,53 @@
         categoriesDesc: "Mostrar apenas feriados das categorias marcadas (os outros tipos de evento não são afetados)",
         showAll: "Mostrar tudo",
         hideAll: "Ocultar tudo",
+        layoutStyleLabel: "Estilo de layout",
+        layoutStyleDesc:
+          "Lista mostra as linhas clássicas de ícone/nome/subtítulo/selo/contagem regressiva. Timeline mostra um eixo horizontal compacto com o próximo evento destacado e o restante como pontos clicáveis - útil para uma coluna estreita na visualização de Seções.",
+        layoutStyleList: "Lista",
+        layoutStyleTimeline: "Timeline",
+        timelineLineHeading: "Linha da timeline",
+        timelineLineWidth: "Espessura",
+        timelineLineWidthDesc: "Espessura da linha horizontal do eixo, ex.: \"4px\".",
+        timelineLineColor: "Cor",
+        timelineLineColorDesc: "Cor da linha horizontal do eixo.",
+        timelineDividerHeading: "Linha divisória",
+        timelineDividerWidth: "Espessura",
+        timelineDividerWidthDesc:
+          "Espessura da linha vertical que marca o limite entre passado e futuro, ex.: \"1px\".",
+        timelineDividerColor: "Cor",
+        timelineDividerColorDesc: "Cor da linha vertical divisória entre passado e futuro.",
+        lineStyleLabel: "Estilo",
+        lineStyleSolid: "Sólida",
+        lineStyleDashed: "Tracejada",
+        lineStyleDotted: "Pontilhada",
+        timelineOptionsHeading: "Opções",
+        timelineShowFullName: "Mostrar nome completo",
+        timelineShowFullNameDesc:
+          "Exibe o nome completo (nome e sobrenome) de cada evento em vez de apenas o primeiro nome, no cabeçalho, na dica de ferramenta e na lista expansível.",
+        showHolidaySuffix: "Mostrar sufixo do feriado",
+        showHolidaySuffixDesc:
+          "Adiciona o país do feriado (e a subdivisão, se houver) entre parênteses após o seu nome, ex.: \"Pioneer Day (US-UT)\".",
+        moreAction: "Botão \"Mais\"",
+        moreActionDesc:
+          "O que o botão \"Mais\" no canto inferior direito da timeline faz. Normalmente uma ação de navegação para um painel que mostra os mesmos eventos no layout Lista completo. Deixe em \"Nada\" para ocultar o botão.",
+        groupTimeline: "Timeline",
+        groupTimelineDesc: "Usado apenas quando o Estilo de layout (em Exibição) está definido como Timeline.",
+        timelineHeaderLabel: "Cabeçalho",
+        timelineHeaderFontDesc:
+          "Fonte para a linha de descrição acima do eixo, ex.: \"O 27º aniversário de Kevin é hoje\".",
+        timelineHeaderColorDesc: "Cor do texto para a linha de descrição acima do eixo.",
+        timelineTooltipLabel: "Dica de ferramenta",
+        timelineTooltipFontDesc: "Fonte para o texto mostrado ao clicar em um ponto do eixo.",
+        timelineTooltipColorDesc: "Cor do texto mostrado ao clicar em um ponto do eixo.",
+        timelineListLabel: "Lista (Detalhes)",
+        timelineListFontDesc: "Fonte para a lista cronológica expansível abaixo do eixo.",
+        timelineListColorDesc: "Cor do texto para a lista cronológica expansível abaixo do eixo.",
+        timelineButtonLabel: "Botão Detalhes / Mais",
+        timelineButtonFontDesc: "Fonte para os botões Detalhes e Mais do rodapé.",
+        timelineButtonColorDesc: "Cor do texto para os botões Detalhes e Mais do rodapé.",
+        eventTypesHeading: "Tipos de evento",
+        eventTypeColorDesc: "Cor do ícone e do ponto deste tipo de evento na linha do tempo.",
         visibilityHeading: "Mostrar / Ocultar",
         visibilityPast: "Eventos passados",
         visibilityPastDesc: "Mostrar eventos cujo aniversário já passou dentro da janela passada configurada",
@@ -2026,8 +2563,8 @@
         holdActionDesc: "O que acontece ao pressionar e segurar uma linha",
         visibilityIcon: "Ícone",
         visibilityIconDesc: "Mostrar o ícone do tipo antes de cada linha",
-        visibilityTitleDesc: "Mostrar o nome do evento",
-        visibilitySubtitleDesc: "Mostrar o tipo de evento",
+        visibilityNameDesc: "Mostrar o nome do evento",
+        visibilityTypeDesc: "Mostrar o tipo de evento",
         visibilityCountrySuffix: "Sufixo do feriado",
         visibilityCountrySuffixDesc: "Acrescenta o país (e a subdivisão, se houver) após o nome/tipo do feriado, por ex. \"Independência do Brasil · BR (SP)\"",
         columnsHeading: "Colunas da linha",
@@ -2038,7 +2575,7 @@
         columnTypeLastName: "Sobrenome",
         columnTypeFullName: "Nome completo",
         columnTypeFullNameType: "Nome completo + tipo",
-        columnTypeSubtitle: "Tipo",
+        columnTypeType: "Tipo",
         columnTypeText: "Texto personalizado",
         columnAdd: "Adicionar",
         columnMoveUp: "Mover para cima",
@@ -2074,10 +2611,18 @@
         highlightVipDesc: "Mostrar um selo no ícone de eventos marcados como VIP",
         highlightImportant: "Eventos importantes",
         highlightImportantDesc: "Mostrar um selo no ícone de eventos marcados automaticamente como importantes",
-        vipBadgeColor: "Cor do selo",
-        vipBadgeColorDesc: "Cor de fundo do selo VIP",
-        importantBadgeColor: "Cor do selo",
-        importantBadgeColorDesc: "Cor de fundo do selo Important",
+        vipBadgeColorList: "Cor do selo (Lista)",
+        vipBadgeColorListDesc:
+          "Cor do selo de estrela VIP no selo de canto do layout Lista, no cabeçalho do layout Timeline e na sua lista Detalhes expansível.",
+        vipBadgeColorTimeline: "Cor do selo (Timeline)",
+        vipBadgeColorTimelineDesc:
+          "Cor do ícone de estrela VIP especificamente nos pontos do eixo do layout Timeline. Mostrado apenas quando o Estilo de layout está definido como Timeline.",
+        importantBadgeColorList: "Cor do selo (Lista)",
+        importantBadgeColorListDesc:
+          "Cor do selo de ponto de exclamação Important no selo de canto do layout Lista, no cabeçalho do layout Timeline e na sua lista Detalhes expansível.",
+        importantBadgeColorTimeline: "Cor do selo (Timeline)",
+        importantBadgeColorTimelineDesc:
+          "Cor do ícone de ponto de exclamação Important especificamente nos pontos do eixo do layout Timeline. Mostrado apenas quando o Estilo de layout está definido como Timeline.",
         colors: "Cores",
         cardBackgroundTabTitle: "Fundo do cartão",
         cardBackgroundEnable: "Mostrar fundo",
@@ -2119,18 +2664,18 @@
         animationFlash: "Piscar",
         matchTextLabel: "Colorir também o texto",
         matchTextDesc: "Colorir também todo o texto da linha com esta cor de ícone",
-        colorTitle: "Nome",
-        colorSubtitle: "Tipo",
+        colorName: "Nome",
+        colorType: "Tipo",
         colorBadge: "Ocorrência",
         colorWhen: "Contagem regressiva",
         colorText: "Texto personalizado",
         cardTitleColorDesc: "Cor do texto para o título próprio do cartão",
-        colorTitleDesc: "Cor do texto para o nome do evento",
+        colorNameDesc: "Cor do texto para o nome do evento",
         colorLastName: "Sobrenome",
         colorLastNameDesc: "Cor do texto para o sobrenome do evento",
         colorFullName: "Nome completo",
         colorFullNameDesc: "Cor do texto para o nome completo do evento (nome e sobrenome)",
-        colorSubtitleDesc: "Cor do texto para o tipo de evento",
+        colorTypeDesc: "Cor do texto para o tipo de evento",
         colorBadgeDesc: "Cor do texto para o selo do número de ocorrência",
         colorWhenDesc: "Cor do texto para a contagem regressiva (por ex. \"em 3 dias\")",
         colorTextDesc: "Cor do texto para colunas de texto personalizado (veja Colunas da linha em Layout -> Exibição)",
@@ -2165,10 +2710,10 @@
         fonts: "Fontes",
         fontCardTitle: "Título do cartão",
         fontCardTitleDesc: "Tamanho da fonte para o título próprio do cartão",
-        fontTitleDesc: "Tamanho da fonte para o nome do evento",
+        fontNameDesc: "Tamanho da fonte para o nome do evento",
         fontLastNameDesc: "Tamanho da fonte para o sobrenome do evento",
         fontFullNameDesc: "Tamanho da fonte para o nome completo do evento (nome e sobrenome)",
-        fontSubtitleDesc: "Tamanho da fonte para o tipo de evento",
+        fontTypeDesc: "Tamanho da fonte para o tipo de evento",
         fontBadgeDesc: "Tamanho da fonte para o selo do número de ocorrência",
         fontWhenDesc: "Tamanho da fonte para a contagem regressiva (por ex. \"em 3 dias\")",
         fontTextDesc: "Tamanho da fonte para colunas de texto personalizado (veja Colunas da linha em Layout -> Exibição)",
@@ -2182,7 +2727,7 @@
         panelSettings: "Configurações",
         panelSettingsDesc: "Geral, eventos e período",
         panelLayout: "Layout",
-        panelLayoutDesc: "Exibição, fontes, cores, ícones e fundos",
+        panelLayoutDesc: "Exibição, fontes, cores, ícones, fundo do cartão e timeline",
         groupGeneral: "Geral",
         groupGeneralDesc: "",
         groupEvents: "Eventos",
@@ -2201,6 +2746,20 @@
       dayAgo: "Вчера",
       daysAgo: (n) => `${n} дн. назад`,
       noEvents: "Нет ближайших событий",
+      // Русское склонение по падежам нельзя безопасно применить к
+      // произвольно введённым именам, поэтому вместо родительного падежа
+      // используется нейтральная форма «Имя: N. тип — когда» - она одинаково
+      // подходит для прошедших и будущих событий, так как само «когда»
+      // (например, «вчера»/«через 3 дня») уже передаёт время.
+      possessive: (name) => name,
+      ordinalParts: (n) => ({ num: `${n}-й`, sup: "" }),
+      timelineSentence: "{possessive}: {ordinal}{sup} {type} — {when}",
+      timelineSentenceSimple: "{name} — {when}",
+      timelineSentencePast: "{possessive}: {ordinal}{sup} {type} — {when}",
+      timelineSentenceSimplePast: "{name} — {when}",
+      timelineExpand: "Подробнее",
+      timelineCollapse: "Свернуть",
+      timelineMore: "Ещё",
       types: {
         birthday: "День рождения",
         anniversary: "Годовщина",
@@ -2282,6 +2841,53 @@
         categoriesDesc: "Показывать только праздники отмеченных категорий (остальные типы событий не затрагиваются)",
         showAll: "Показать все",
         hideAll: "Скрыть все",
+        layoutStyleLabel: "Стиль макета",
+        layoutStyleDesc:
+          "Список показывает классические строки значок/имя/подзаголовок/значок-badge/обратный отсчёт. Timeline показывает компактную горизонтальную ось с выделенным ближайшим событием и остальными в виде кликабельных точек - удобно для узкой колонки в виде Секции.",
+        layoutStyleList: "Список",
+        layoutStyleTimeline: "Timeline",
+        timelineLineHeading: "Линия таймлайна",
+        timelineLineWidth: "Толщина",
+        timelineLineWidthDesc: "Толщина горизонтальной линии оси, напр. «4px».",
+        timelineLineColor: "Цвет",
+        timelineLineColorDesc: "Цвет горизонтальной линии оси.",
+        timelineDividerHeading: "Разделительная линия",
+        timelineDividerWidth: "Толщина",
+        timelineDividerWidthDesc:
+          "Толщина вертикальной линии, отмечающей границу между прошлым и будущим, напр. «1px».",
+        timelineDividerColor: "Цвет",
+        timelineDividerColorDesc: "Цвет вертикальной разделительной линии между прошлым и будущим.",
+        lineStyleLabel: "Стиль",
+        lineStyleSolid: "Сплошная",
+        lineStyleDashed: "Пунктирная",
+        lineStyleDotted: "Точечная",
+        timelineOptionsHeading: "Параметры",
+        timelineShowFullName: "Показывать полное имя",
+        timelineShowFullNameDesc:
+          "Показывает полное имя (имя и фамилию) каждого события вместо только имени — в заголовке, всплывающей подсказке и раскрывающемся списке.",
+        showHolidaySuffix: "Показывать суффикс праздника",
+        showHolidaySuffixDesc:
+          "Добавлять страну праздника (и регион, если есть) в скобках после его названия, напр. «Pioneer Day (US-UT)».",
+        moreAction: "Кнопка «Ещё»",
+        moreActionDesc:
+          "Что делает кнопка «Ещё» в правом нижнем углу таймлайна. Обычно действие перехода на дашборд, показывающий те же события в полном макете Список. Оставьте «Ничего», чтобы скрыть кнопку.",
+        groupTimeline: "Timeline",
+        groupTimelineDesc: "Используется только когда Стиль макета (в разделе Отображение) установлен на Timeline.",
+        timelineHeaderLabel: "Заголовок",
+        timelineHeaderFontDesc:
+          "Шрифт для строки описания над осью, напр. «Kevin: 27-й день рождения — сегодня».",
+        timelineHeaderColorDesc: "Цвет текста для строки описания над осью.",
+        timelineTooltipLabel: "Подсказка",
+        timelineTooltipFontDesc: "Шрифт для текста, показываемого при нажатии на точку оси.",
+        timelineTooltipColorDesc: "Цвет текста, показываемого при нажатии на точку оси.",
+        timelineListLabel: "Список (Подробнее)",
+        timelineListFontDesc: "Шрифт для раскрываемого хронологического списка под осью.",
+        timelineListColorDesc: "Цвет текста раскрываемого хронологического списка под осью.",
+        timelineButtonLabel: "Кнопка Подробнее / Ещё",
+        timelineButtonFontDesc: "Шрифт кнопок Подробнее и Ещё в нижней части карточки.",
+        timelineButtonColorDesc: "Цвет текста кнопок Подробнее и Ещё в нижней части карточки.",
+        eventTypesHeading: "Типы событий",
+        eventTypeColorDesc: "Цвет значка и точки этого типа события на шкале времени.",
         visibilityHeading: "Показать / Скрыть",
         visibilityPast: "Прошедшие события",
         visibilityPastDesc: "Показывать события, годовщина которых уже прошла в настроенном окне прошлого",
@@ -2298,8 +2904,8 @@
         holdActionDesc: "Что происходит при удержании строки нажатой",
         visibilityIcon: "Значок",
         visibilityIconDesc: "Показывать значок типа перед каждой строкой",
-        visibilityTitleDesc: "Показывать имя события",
-        visibilitySubtitleDesc: "Показывать тип события",
+        visibilityNameDesc: "Показывать имя события",
+        visibilityTypeDesc: "Показывать тип события",
         visibilityCountrySuffix: "Суффикс праздника",
         visibilityCountrySuffixDesc: "Добавлять страну (и регион, если есть) после названия/типа праздника, напр. «День России · RU (MOW)»",
         columnsHeading: "Столбцы строки",
@@ -2310,7 +2916,7 @@
         columnTypeLastName: "Фамилия",
         columnTypeFullName: "Полное имя",
         columnTypeFullNameType: "Полное имя + тип",
-        columnTypeSubtitle: "Тип",
+        columnTypeType: "Тип",
         columnTypeText: "Произвольный текст",
         columnAdd: "Добавить",
         columnMoveUp: "Переместить вверх",
@@ -2346,10 +2952,18 @@
         highlightVipDesc: "Показывать бейдж на значке событий, отмеченных как VIP",
         highlightImportant: "Важные события",
         highlightImportantDesc: "Показывать бейдж на значке событий, автоматически отмеченных как важные",
-        vipBadgeColor: "Цвет бейджа",
-        vipBadgeColorDesc: "Цвет фона VIP-бейджа",
-        importantBadgeColor: "Цвет бейджа",
-        importantBadgeColorDesc: "Цвет фона бейджа Important",
+        vipBadgeColorList: "Цвет бейджа (Список)",
+        vipBadgeColorListDesc:
+          "Цвет VIP-бейджа со звездой в угловом бейдже макета Список, в заголовке макета Timeline и в его раскрываемом списке Подробнее.",
+        vipBadgeColorTimeline: "Цвет бейджа (Timeline)",
+        vipBadgeColorTimelineDesc:
+          "Цвет значка звезды VIP именно на точках оси макета Timeline. Отображается только когда Стиль макета установлен на Timeline.",
+        importantBadgeColorList: "Цвет бейджа (Список)",
+        importantBadgeColorListDesc:
+          "Цвет бейджа с восклицательным знаком Important в угловом бейдже макета Список, в заголовке макета Timeline и в его раскрываемом списке Подробнее.",
+        importantBadgeColorTimeline: "Цвет бейджа (Timeline)",
+        importantBadgeColorTimelineDesc:
+          "Цвет значка восклицательного знака Important именно на точках оси макета Timeline. Отображается только когда Стиль макета установлен на Timeline.",
         colors: "Цвета",
         cardBackgroundTabTitle: "Фон карточки",
         cardBackgroundEnable: "Показывать фон",
@@ -2391,18 +3005,18 @@
         animationFlash: "Мигание",
         matchTextLabel: "Также окрашивать текст",
         matchTextDesc: "Также окрашивать весь текст строки в этот цвет значка",
-        colorTitle: "Имя",
-        colorSubtitle: "Тип",
+        colorName: "Имя",
+        colorType: "Тип",
         colorBadge: "Номер события",
         colorWhen: "Обратный отсчёт",
         colorText: "Произвольный текст",
         cardTitleColorDesc: "Цвет текста для собственного заголовка карточки",
-        colorTitleDesc: "Цвет текста для имени события",
+        colorNameDesc: "Цвет текста для имени события",
         colorLastName: "Фамилия",
         colorLastNameDesc: "Цвет текста для фамилии события",
         colorFullName: "Полное имя",
         colorFullNameDesc: "Цвет текста для полного имени события (имя и фамилия)",
-        colorSubtitleDesc: "Цвет текста для типа события",
+        colorTypeDesc: "Цвет текста для типа события",
         colorBadgeDesc: "Цвет текста для значка номера события",
         colorWhenDesc: "Цвет текста для обратного отсчёта (напр. «через 3 дня»)",
         colorTextDesc: "Цвет текста для столбцов произвольного текста (см. Столбцы строки в разделе Макет -> Отображение)",
@@ -2437,10 +3051,10 @@
         fonts: "Шрифты",
         fontCardTitle: "Заголовок карточки",
         fontCardTitleDesc: "Размер шрифта для собственного заголовка карточки",
-        fontTitleDesc: "Размер шрифта для имени события",
+        fontNameDesc: "Размер шрифта для имени события",
         fontLastNameDesc: "Размер шрифта для фамилии события",
         fontFullNameDesc: "Размер шрифта для полного имени события (имя и фамилия)",
-        fontSubtitleDesc: "Размер шрифта для типа события",
+        fontTypeDesc: "Размер шрифта для типа события",
         fontBadgeDesc: "Размер шрифта для значка номера события",
         fontWhenDesc: "Размер шрифта для обратного отсчёта (напр. «через 3 дня»)",
         fontTextDesc: "Размер шрифта для столбцов произвольного текста (см. Столбцы строки в разделе Макет -> Отображение)",
@@ -2454,7 +3068,7 @@
         panelSettings: "Настройки",
         panelSettingsDesc: "Общее, события и период",
         panelLayout: "Оформление",
-        panelLayoutDesc: "Отображение, шрифты, цвета, значки и фоны",
+        panelLayoutDesc: "Отображение, шрифты, цвета, значки, фон карточки и timeline",
         groupGeneral: "Общее",
         groupGeneralDesc: "",
         groupEvents: "События",
@@ -2473,6 +3087,19 @@
       dayAgo: "Igår",
       daysAgo: (n) => `för ${n} dagar sedan`,
       noEvents: "Inga kommande händelser",
+      possessive: (name) => (/[sxz]$/i.test(name) ? `${name}'` : `${name}s`),
+      ordinalParts: (n) => {
+        const teen = n % 100 >= 10 && n % 100 <= 12;
+        const last = n % 10;
+        return { num: `${n}`, sup: !teen && (last === 1 || last === 2) ? ":a" : ":e" };
+      },
+      timelineSentence: "{possessive} {ordinal}{sup} {type} är {when}",
+      timelineSentenceSimple: "{name} är {when}",
+      timelineSentencePast: "{possessive} {ordinal}{sup} {type} var {when}",
+      timelineSentenceSimplePast: "{name} var {when}",
+      timelineExpand: "Detaljer",
+      timelineCollapse: "Mindre",
+      timelineMore: "Mer",
       types: {
         birthday: "Födelsedag",
         anniversary: "Årsdag",
@@ -2554,6 +3181,53 @@
         categoriesDesc: "Visa endast helgdagar i de markerade kategorierna (övriga händelsetyper påverkas inte)",
         showAll: "Visa alla",
         hideAll: "Dölj alla",
+        layoutStyleLabel: "Kortlayout",
+        layoutStyleDesc:
+          "Lista visar de klassiska raderna med ikon/namn/undertext/badge/nedräkning. Timeline visar en kompakt horisontell axel med nästa händelse markerad och resten som klickbara punkter - praktiskt för en smal kolumn i Sektioner-vyn.",
+        layoutStyleList: "Lista",
+        layoutStyleTimeline: "Timeline",
+        timelineLineHeading: "Tidslinje",
+        timelineLineWidth: "Tjocklek",
+        timelineLineWidthDesc: "Tjocklek på den horisontella axellinjen, t.ex. \"4px\".",
+        timelineLineColor: "Färg",
+        timelineLineColorDesc: "Färg på den horisontella axellinjen.",
+        timelineDividerHeading: "Avgränsarlinje",
+        timelineDividerWidth: "Tjocklek",
+        timelineDividerWidthDesc:
+          "Tjocklek på den vertikala linjen som markerar gränsen mellan dåtid och framtid, t.ex. \"1px\".",
+        timelineDividerColor: "Färg",
+        timelineDividerColorDesc: "Färg på den vertikala avgränsarlinjen mellan dåtid och framtid.",
+        lineStyleLabel: "Stil",
+        lineStyleSolid: "Heldragen",
+        lineStyleDashed: "Streckad",
+        lineStyleDotted: "Prickad",
+        timelineOptionsHeading: "Alternativ",
+        timelineShowFullName: "Visa fullständigt namn",
+        timelineShowFullNameDesc:
+          "Visar varje händelses fullständiga namn (förnamn och efternamn) istället för bara förnamnet, i rubriken, verktygstipset och den expanderbara listan.",
+        showHolidaySuffix: "Visa helgdagssuffix",
+        showHolidaySuffixDesc:
+          "Lägg till helgdagens land (och delstat/region, om sådan finns) inom parentes efter namnet, t.ex. \"Pioneer Day (US-UT)\".",
+        moreAction: "\"Mer\"-knapp",
+        moreActionDesc:
+          "Vad knappen \"Mer\" längst ned till höger i tidslinjen gör. Vanligtvis en navigeringsåtgärd till en instrumentpanel som visar samma händelser i det fullständiga Lista-layouten. Lämna på \"Inget\" för att dölja knappen.",
+        groupTimeline: "Timeline",
+        groupTimelineDesc: "Används endast när Kortlayout (under Visning) är inställd på Timeline.",
+        timelineHeaderLabel: "Rubrik",
+        timelineHeaderFontDesc:
+          "Teckensnitt för beskrivningsraden ovanför axeln, t.ex. \"Kevins 27:e födelsedag är idag\".",
+        timelineHeaderColorDesc: "Textfärg för beskrivningsraden ovanför axeln.",
+        timelineTooltipLabel: "Tooltip",
+        timelineTooltipFontDesc: "Teckensnitt för texten som visas när en punkt på axeln klickas.",
+        timelineTooltipColorDesc: "Textfärg för texten som visas när en punkt på axeln klickas.",
+        timelineListLabel: "Lista (Detaljer)",
+        timelineListFontDesc: "Teckensnitt för den utfällbara kronologiska listan under axeln.",
+        timelineListColorDesc: "Textfärg för den utfällbara kronologiska listan under axeln.",
+        timelineButtonLabel: "Knappen Detaljer / Mer",
+        timelineButtonFontDesc: "Teckensnitt för knapparna Detaljer och Mer i sidfoten.",
+        timelineButtonColorDesc: "Textfärg för knapparna Detaljer och Mer i sidfoten.",
+        eventTypesHeading: "Händelsetyper",
+        eventTypeColorDesc: "Färg för ikonen och punkten för denna händelsetyp på tidslinjen.",
         visibilityHeading: "Visa / Dölj",
         visibilityPast: "Tidigare händelser",
         visibilityPastDesc: "Visa händelser vars årsdag redan passerat inom det inställda tidigare-fönstret",
@@ -2570,8 +3244,8 @@
         holdActionDesc: "Vad som händer när en rad trycks och hålls in",
         visibilityIcon: "Ikon",
         visibilityIconDesc: "Visa typikonen framför varje rad",
-        visibilityTitleDesc: "Visa händelsens namn",
-        visibilitySubtitleDesc: "Visa händelsetypen",
+        visibilityNameDesc: "Visa händelsens namn",
+        visibilityTypeDesc: "Visa händelsetypen",
         visibilityCountrySuffix: "Helgdagssuffix",
         visibilityCountrySuffixDesc: "Lägg till landet (och ev. delstat/region) efter helgdagens namn/typ, t.ex. \"Nationaldagen · SE (AB)\"",
         columnsHeading: "Radkolumner",
@@ -2583,7 +3257,7 @@
         columnTypeLastName: "Efternamn",
         columnTypeFullName: "Fullständigt namn",
         columnTypeFullNameType: "Fullständigt namn + typ",
-        columnTypeSubtitle: "Typ",
+        columnTypeType: "Typ",
         columnTypeText: "Egen text",
         columnAdd: "Lägg till",
         columnMoveUp: "Flytta upp",
@@ -2620,10 +3294,18 @@
         highlightVipDesc: "Visa ett märke på ikonen för VIP-markerade händelser",
         highlightImportant: "Viktiga händelser",
         highlightImportantDesc: "Visa ett märke på ikonen för händelser som automatiskt markerats som viktiga",
-        vipBadgeColor: "Märkesfärg",
-        vipBadgeColorDesc: "Bakgrundsfärg för VIP-märket",
-        importantBadgeColor: "Märkesfärg",
-        importantBadgeColorDesc: "Bakgrundsfärg för Important-märket",
+        vipBadgeColorList: "Märkesfärg (Lista)",
+        vipBadgeColorListDesc:
+          "Färg på VIP-stjärnmärket i Lista-layoutens hörnmärke, i Timeline-layoutens rubrik och i dess utfällbara Detaljer-lista.",
+        vipBadgeColorTimeline: "Märkesfärg (Timeline)",
+        vipBadgeColorTimelineDesc:
+          "Färg på VIP-stjärnikonen specifikt på Timeline-layoutens axelpunkter. Visas endast när Kortlayout är inställd på Timeline.",
+        importantBadgeColorList: "Märkesfärg (Lista)",
+        importantBadgeColorListDesc:
+          "Färg på Important-utropsteckenmärket i Lista-layoutens hörnmärke, i Timeline-layoutens rubrik och i dess utfällbara Detaljer-lista.",
+        importantBadgeColorTimeline: "Märkesfärg (Timeline)",
+        importantBadgeColorTimelineDesc:
+          "Färg på Important-utropsteckenikonen specifikt på Timeline-layoutens axelpunkter. Visas endast när Kortlayout är inställd på Timeline.",
         colors: "Färger",
         cardBackgroundTabTitle: "Kortbakgrund",
         cardBackgroundEnable: "Visa bakgrund",
@@ -2665,18 +3347,18 @@
         animationFlash: "Blinka",
         matchTextLabel: "Färga även texten",
         matchTextDesc: "Färga även hela radens text med denna ikonfärg",
-        colorTitle: "Namn",
-        colorSubtitle: "Typ",
+        colorName: "Namn",
+        colorType: "Typ",
         colorBadge: "Händelsenummer",
         colorWhen: "Nedräkning",
         colorText: "Egen text",
-        colorTitleDesc: "Textfärg för händelsens namn",
+        colorNameDesc: "Textfärg för händelsens namn",
         colorLastName: "Efternamn",
         colorLastNameDesc: "Textfärg för händelsens efternamn",
         colorFullName: "Fullständigt namn",
         colorFullNameDesc: "Textfärg för händelsens fullständiga namn (för- och efternamn)",
         cardTitleColorDesc: "Textfärg för kortets egen titel",
-        colorSubtitleDesc: "Textfärg för händelsetypen",
+        colorTypeDesc: "Textfärg för händelsetypen",
         colorBadgeDesc: "Textfärg för märket med händelsenumret",
         colorWhenDesc: "Textfärg för nedräkningen (t.ex. \"om 3 dagar\")",
         colorTextDesc:
@@ -2712,10 +3394,10 @@
         fonts: "Typsnitt",
         fontCardTitle: "Kortets titel",
         fontCardTitleDesc: "Teckenstorlek för kortets egen titel",
-        fontTitleDesc: "Teckenstorlek för händelsens namn",
+        fontNameDesc: "Teckenstorlek för händelsens namn",
         fontLastNameDesc: "Teckenstorlek för händelsens efternamn",
         fontFullNameDesc: "Teckenstorlek för händelsens fullständiga namn (för- och efternamn)",
-        fontSubtitleDesc: "Teckenstorlek för händelsetypen",
+        fontTypeDesc: "Teckenstorlek för händelsetypen",
         fontBadgeDesc: "Teckenstorlek för märket med händelsenumret",
         fontWhenDesc: "Teckenstorlek för nedräkningen (t.ex. \"om 3 dagar\")",
         fontTextDesc:
@@ -2730,7 +3412,7 @@
         panelSettings: "Inställningar",
         panelSettingsDesc: "Allmänt, händelser och period",
         panelLayout: "Layout",
-        panelLayoutDesc: "Visning, typsnitt, färger, ikoner och bakgrunder",
+        panelLayoutDesc: "Visning, typsnitt, färger, ikoner, kortbakgrund och timeline",
         groupGeneral: "Allmänt",
         groupGeneralDesc: "",
         groupEvents: "Händelser",
@@ -2749,6 +3431,17 @@
       dayAgo: "昨天",
       daysAgo: (n) => `${n} 天前`,
       noEvents: "没有即将到来的事件",
+      // "when" 本身（今天/明天/N 天后/N 天前）已经表达了时态，因此过去和未来
+      // 使用同一模板即可，无需单独的过去式版本。
+      possessive: (name) => `${name}的`,
+      ordinalParts: (n) => ({ num: `第 ${n} 个`, sup: "" }),
+      timelineSentence: "{possessive}{ordinal}{sup}{type}是{when}",
+      timelineSentenceSimple: "{name} {when}",
+      timelineSentencePast: "{possessive}{ordinal}{sup}{type}是{when}",
+      timelineSentenceSimplePast: "{name} {when}",
+      timelineExpand: "详情",
+      timelineCollapse: "收起",
+      timelineMore: "更多",
       types: {
         birthday: "生日",
         anniversary: "纪念日",
@@ -2832,6 +3525,49 @@
         categoriesDesc: "仅显示已勾选类别的节假日（其他事件类型不受影响）",
         showAll: "全部显示",
         hideAll: "全部隐藏",
+        layoutStyleLabel: "布局样式",
+        layoutStyleDesc:
+          "「列表」显示经典的图标/姓名/副标题/徽章/倒计时行。「时间轴」显示一条紧凑的水平轴，突出显示最近的事件，其余事件以可点击的圆点表示 - 适合分区视图中的窄列。",
+        layoutStyleList: "列表",
+        layoutStyleTimeline: "时间轴",
+        timelineLineHeading: "时间轴线",
+        timelineLineWidth: "粗细",
+        timelineLineWidthDesc: "水平轴线的粗细，例如「4px」。",
+        timelineLineColor: "颜色",
+        timelineLineColorDesc: "水平轴线的颜色。",
+        timelineDividerHeading: "分隔线",
+        timelineDividerWidth: "粗细",
+        timelineDividerWidthDesc: "标记过去与未来分界的竖直分隔线粗细，例如「1px」。",
+        timelineDividerColor: "颜色",
+        timelineDividerColorDesc: "过去与未来之间竖直分隔线的颜色。",
+        lineStyleLabel: "样式",
+        lineStyleSolid: "实线",
+        lineStyleDashed: "虚线",
+        lineStyleDotted: "点线",
+        timelineOptionsHeading: "选项",
+        timelineShowFullName: "显示全名",
+        timelineShowFullNameDesc: "在标题、提示框和可展开列表中显示每个事件的全名（名字和姓氏），而不仅仅是名字。",
+        showHolidaySuffix: "显示节日后缀",
+        showHolidaySuffixDesc: "在节日名称后以括号附加其所属国家（及地区，如有），例如「Pioneer Day (US-UT)」。",
+        moreAction: "「更多」按钮",
+        moreActionDesc:
+          "时间轴右下角「更多」按钮的作用。通常是跳转到以完整列表布局显示相同事件的仪表盘的导航操作。留空为「无」可隐藏该按钮。",
+        groupTimeline: "时间轴",
+        groupTimelineDesc: "仅当「显示」下的布局样式设置为「时间轴」时使用。",
+        timelineHeaderLabel: "标题行",
+        timelineHeaderFontDesc: "轴上方描述行的字体，例如「Kevin 的第 27 个生日是今天」。",
+        timelineHeaderColorDesc: "轴上方描述行的文字颜色。",
+        timelineTooltipLabel: "提示框",
+        timelineTooltipFontDesc: "点击轴上圆点时显示文字的字体。",
+        timelineTooltipColorDesc: "点击轴上圆点时显示文字的颜色。",
+        timelineListLabel: "列表（详情）",
+        timelineListFontDesc: "轴下方可展开的按时间排列列表的字体。",
+        timelineListColorDesc: "轴下方可展开的按时间排列列表的文字颜色。",
+        timelineButtonLabel: "详情 / 更多 按钮",
+        timelineButtonFontDesc: "页脚「详情」和「更多」按钮的字体。",
+        timelineButtonColorDesc: "页脚「详情」和「更多」按钮的文字颜色。",
+        eventTypesHeading: "事件类型",
+        eventTypeColorDesc: "此事件类型在时间轴上的图标和圆点颜色。",
         visibilityHeading: "显示 / 隐藏",
         visibilityPast: "过去的事件",
         visibilityPastDesc: "显示在设定的过去时间范围内已经过去的周年纪念事件",
@@ -2848,8 +3584,8 @@
         holdActionDesc: "长按某行时执行的操作",
         visibilityIcon: "图标",
         visibilityIconDesc: "在每行前显示类型图标",
-        visibilityTitleDesc: "显示事件名称",
-        visibilitySubtitleDesc: "显示事件类型",
+        visibilityNameDesc: "显示事件名称",
+        visibilityTypeDesc: "显示事件类型",
         visibilityCountrySuffix: "节假日后缀",
         visibilityCountrySuffixDesc: "在节假日名称/类型后附加国家（及地区，如有），例如“国庆节 · CN (BJ)”",
         columnsHeading: "行列",
@@ -2861,7 +3597,7 @@
         columnTypeLastName: "姓氏",
         columnTypeFullName: "全名",
         columnTypeFullNameType: "全名 + 类型",
-        columnTypeSubtitle: "类型",
+        columnTypeType: "类型",
         columnTypeText: "自定义文本",
         columnAdd: "添加",
         columnMoveUp: "上移",
@@ -2898,10 +3634,14 @@
         highlightVipDesc: "在标记为 VIP 的事件图标上显示徽章",
         highlightImportant: "重要事件",
         highlightImportantDesc: "在自动标记为重要的事件图标上显示徽章",
-        vipBadgeColor: "徽章颜色",
-        vipBadgeColorDesc: "VIP 徽章的背景颜色",
-        importantBadgeColor: "徽章颜色",
-        importantBadgeColorDesc: "Important 徽章的背景颜色",
+        vipBadgeColorList: "徽章颜色（列表）",
+        vipBadgeColorListDesc: "列表布局角标中的 VIP 星形徽章、时间轴布局标题行以及其可展开详情列表中的 VIP 星形颜色。",
+        vipBadgeColorTimeline: "徽章颜色（时间轴）",
+        vipBadgeColorTimelineDesc: "专门用于时间轴布局轴上圆点的 VIP 星形图标颜色。仅当布局样式设置为时间轴时显示。",
+        importantBadgeColorList: "徽章颜色（列表）",
+        importantBadgeColorListDesc: "列表布局角标中的 Important 感叹号徽章、时间轴布局标题行以及其可展开详情列表中的 Important 感叹号颜色。",
+        importantBadgeColorTimeline: "徽章颜色（时间轴）",
+        importantBadgeColorTimelineDesc: "专门用于时间轴布局轴上圆点的 Important 感叹号图标颜色。仅当布局样式设置为时间轴时显示。",
         colors: "颜色",
         cardBackgroundTabTitle: "卡片背景",
         cardBackgroundEnable: "显示背景",
@@ -2943,18 +3683,18 @@
         animationFlash: "闪烁",
         matchTextLabel: "同时为文本着色",
         matchTextDesc: "同时用此图标颜色为整行文本着色",
-        colorTitle: "名称",
-        colorSubtitle: "类型",
+        colorName: "名称",
+        colorType: "类型",
         colorBadge: "周年数",
         colorWhen: "倒计时",
         colorText: "自定义文本",
-        colorTitleDesc: "事件名称的文本颜色",
+        colorNameDesc: "事件名称的文本颜色",
         colorLastName: "姓氏",
         colorLastNameDesc: "事件姓氏的文本颜色",
         colorFullName: "全名",
         colorFullNameDesc: "事件全名（名+姓）的文本颜色",
         cardTitleColorDesc: "卡片自身标题的文本颜色",
-        colorSubtitleDesc: "事件类型的文本颜色",
+        colorTypeDesc: "事件类型的文本颜色",
         colorBadgeDesc: "周年数徽章的文本颜色",
         colorWhenDesc: "倒计时的文本颜色（例如“3 天后”）",
         colorTextDesc: "自定义文本列的文本颜色（参见“布局 -> 显示”中的行列）",
@@ -2989,10 +3729,10 @@
         fonts: "字体",
         fontCardTitle: "卡片标题",
         fontCardTitleDesc: "卡片自身标题的字体大小",
-        fontTitleDesc: "事件名称的字体大小",
+        fontNameDesc: "事件名称的字体大小",
         fontLastNameDesc: "事件姓氏的字体大小",
         fontFullNameDesc: "事件全名（名+姓）的字体大小",
-        fontSubtitleDesc: "事件类型的字体大小",
+        fontTypeDesc: "事件类型的字体大小",
         fontBadgeDesc: "周年数徽章的字体大小",
         fontWhenDesc: "倒计时的字体大小（例如“3 天后”）",
         fontTextDesc: "自定义文本列的字体大小（参见“布局 -> 显示”中的行列）",
@@ -3006,7 +3746,7 @@
         panelSettings: "设置",
         panelSettingsDesc: "常规、事件和时间段",
         panelLayout: "布局",
-        panelLayoutDesc: "显示、字体、颜色、图标和背景",
+        panelLayoutDesc: "显示、字体、颜色、图标、卡片背景和时间轴",
         groupGeneral: "常规",
         groupGeneralDesc: "",
         groupEvents: "事件",
@@ -3025,6 +3765,20 @@
       dayAgo: "Včera",
       daysAgo: (n) => `před ${n} dny`,
       noEvents: "Žádné nadcházející události",
+      // Skloňování libovolně zadaných jmen podle pádů nelze bezpečně
+      // provést automaticky, proto se místo genitivu používá neutrální
+      // tvar "Jméno: N. typ — kdy" - stejný tvar funguje pro minulé i
+      // budoucí události, protože samotné "kdy" (např. "včera"/"za 3 dny")
+      // už čas vyjadřuje.
+      possessive: (name) => name,
+      ordinalParts: (n) => ({ num: `${n}.`, sup: "" }),
+      timelineSentence: "{possessive}: {ordinal}{sup} {type} — {when}",
+      timelineSentenceSimple: "{name} — {when}",
+      timelineSentencePast: "{possessive}: {ordinal}{sup} {type} — {when}",
+      timelineSentenceSimplePast: "{name} — {when}",
+      timelineExpand: "Podrobnosti",
+      timelineCollapse: "Méně",
+      timelineMore: "Více",
       types: {
         birthday: "Narozeniny",
         anniversary: "Výročí",
@@ -3106,6 +3860,53 @@
         categoriesDesc: "Zobrazit pouze svátky ze zaškrtnutých kategorií (ostatní typy událostí nejsou ovlivněny)",
         showAll: "Zobrazit vše",
         hideAll: "Skrýt vše",
+        layoutStyleLabel: "Styl rozvržení",
+        layoutStyleDesc:
+          "Seznam zobrazuje klasické řádky s ikonou/jménem/podtitulem/odznakem/odpočtem. Timeline zobrazuje kompaktní vodorovnou osu se zvýrazněnou nejbližší událostí a ostatními jako klikatelné body - vhodné pro úzký sloupec v zobrazení Sekce.",
+        layoutStyleList: "Seznam",
+        layoutStyleTimeline: "Timeline",
+        timelineLineHeading: "Čára osy",
+        timelineLineWidth: "Tloušťka",
+        timelineLineWidthDesc: "Tloušťka vodorovné čáry osy, např. „4px“.",
+        timelineLineColor: "Barva",
+        timelineLineColorDesc: "Barva vodorovné čáry osy.",
+        timelineDividerHeading: "Oddělovací čára",
+        timelineDividerWidth: "Tloušťka",
+        timelineDividerWidthDesc:
+          "Tloušťka svislé čáry oddělující minulost a budoucnost, např. „1px“.",
+        timelineDividerColor: "Barva",
+        timelineDividerColorDesc: "Barva svislé oddělovací čáry mezi minulostí a budoucností.",
+        lineStyleLabel: "Styl",
+        lineStyleSolid: "Plná",
+        lineStyleDashed: "Čárkovaná",
+        lineStyleDotted: "Tečkovaná",
+        timelineOptionsHeading: "Možnosti",
+        timelineShowFullName: "Zobrazit celé jméno",
+        timelineShowFullNameDesc:
+          "Zobrazí u každé události celé jméno (jméno a příjmení) místo pouze jména, v záhlaví, popisku a v rozbalovacím seznamu.",
+        showHolidaySuffix: "Zobrazit příponu svátku",
+        showHolidaySuffixDesc:
+          "Přidá zemi svátku (a případně region) v závorce za jeho název, např. „Pioneer Day (US-UT)“.",
+        moreAction: "Tlačítko „Více“",
+        moreActionDesc:
+          "Co dělá tlačítko „Více“ vpravo dole na časové ose. Obvykle akce navigace na řídicí panel zobrazující stejné události v plném rozvržení Seznam. Ponechte na „Nic“, chcete-li tlačítko skrýt.",
+        groupTimeline: "Timeline",
+        groupTimelineDesc: "Používá se pouze tehdy, když je Styl rozvržení (v sekci Zobrazení) nastaven na Timeline.",
+        timelineHeaderLabel: "Záhlaví",
+        timelineHeaderFontDesc:
+          "Písmo pro popisný řádek nad osou, např. „Kevin: 27. narozeniny — dnes“.",
+        timelineHeaderColorDesc: "Barva textu popisného řádku nad osou.",
+        timelineTooltipLabel: "Bublina nápovědy",
+        timelineTooltipFontDesc: "Písmo textu zobrazeného po kliknutí na bod na ose.",
+        timelineTooltipColorDesc: "Barva textu zobrazeného po kliknutí na bod na ose.",
+        timelineListLabel: "Seznam (Podrobnosti)",
+        timelineListFontDesc: "Písmo rozbalovacího chronologického seznamu pod osou.",
+        timelineListColorDesc: "Barva textu rozbalovacího chronologického seznamu pod osou.",
+        timelineButtonLabel: "Tlačítko Podrobnosti / Více",
+        timelineButtonFontDesc: "Písmo tlačítek Podrobnosti a Více v patičce.",
+        timelineButtonColorDesc: "Barva textu tlačítek Podrobnosti a Více v patičce.",
+        eventTypesHeading: "Typy událostí",
+        eventTypeColorDesc: "Barva ikony a tečky tohoto typu události na časové ose.",
         visibilityHeading: "Zobrazit / Skrýt",
         visibilityPast: "Minulé události",
         visibilityPastDesc: "Zobrazit události, jejichž výročí již proběhlo v nastaveném minulém okně",
@@ -3122,8 +3923,8 @@
         holdActionDesc: "Co se stane při podržení řádku",
         visibilityIcon: "Ikona",
         visibilityIconDesc: "Zobrazit ikonu typu před každým řádkem",
-        visibilityTitleDesc: "Zobrazit jméno události",
-        visibilitySubtitleDesc: "Zobrazit typ události",
+        visibilityNameDesc: "Zobrazit jméno události",
+        visibilityTypeDesc: "Zobrazit typ události",
         visibilityCountrySuffix: "Přípona svátku",
         visibilityCountrySuffixDesc: "Připojit zemi (a případně kraj) za název/typ svátku, např. „Den české státnosti · CZ (PR)“",
         columnsHeading: "Sloupce řádku",
@@ -3135,7 +3936,7 @@
         columnTypeLastName: "Příjmení",
         columnTypeFullName: "Celé jméno",
         columnTypeFullNameType: "Celé jméno + typ",
-        columnTypeSubtitle: "Typ",
+        columnTypeType: "Typ",
         columnTypeText: "Vlastní text",
         columnAdd: "Přidat",
         columnMoveUp: "Posunout nahoru",
@@ -3172,10 +3973,18 @@
         highlightVipDesc: "Zobrazit odznak na ikoně událostí označených jako VIP",
         highlightImportant: "Důležité události",
         highlightImportantDesc: "Zobrazit odznak na ikoně událostí automaticky označených jako důležité",
-        vipBadgeColor: "Barva odznaku",
-        vipBadgeColorDesc: "Barva pozadí VIP odznaku",
-        importantBadgeColor: "Barva odznaku",
-        importantBadgeColorDesc: "Barva pozadí odznaku Important",
+        vipBadgeColorList: "Barva odznaku (Seznam)",
+        vipBadgeColorListDesc:
+          "Barva hvězdičkového odznaku VIP v rohovém odznaku rozvržení Seznam, v záhlaví rozvržení Timeline a v jeho rozbalovacím seznamu Podrobnosti.",
+        vipBadgeColorTimeline: "Barva odznaku (Timeline)",
+        vipBadgeColorTimelineDesc:
+          "Barva ikony hvězdičky VIP konkrétně na bodech osy rozvržení Timeline. Zobrazí se pouze při nastavení Stylu rozvržení na Timeline.",
+        importantBadgeColorList: "Barva odznaku (Seznam)",
+        importantBadgeColorListDesc:
+          "Barva odznaku s vykřičníkem Important v rohovém odznaku rozvržení Seznam, v záhlaví rozvržení Timeline a v jeho rozbalovacím seznamu Podrobnosti.",
+        importantBadgeColorTimeline: "Barva odznaku (Timeline)",
+        importantBadgeColorTimelineDesc:
+          "Barva ikony vykřičníku Important konkrétně na bodech osy rozvržení Timeline. Zobrazí se pouze při nastavení Stylu rozvržení na Timeline.",
         colors: "Barvy",
         cardBackgroundTabTitle: "Pozadí karty",
         cardBackgroundEnable: "Zobrazit pozadí",
@@ -3217,18 +4026,18 @@
         animationFlash: "Blikání",
         matchTextLabel: "Obarvit i text",
         matchTextDesc: "Obarvit touto barvou ikony i celý text řádku",
-        colorTitle: "Jméno",
-        colorSubtitle: "Typ",
+        colorName: "Jméno",
+        colorType: "Typ",
         colorBadge: "Výročí",
         colorWhen: "Odpočet",
         colorText: "Vlastní text",
-        colorTitleDesc: "Barva textu pro jméno události",
+        colorNameDesc: "Barva textu pro jméno události",
         colorLastName: "Příjmení",
         colorLastNameDesc: "Barva textu pro příjmení události",
         colorFullName: "Celé jméno",
         colorFullNameDesc: "Barva textu pro celé jméno události (jméno a příjmení)",
         cardTitleColorDesc: "Barva textu pro vlastní název karty",
-        colorSubtitleDesc: "Barva textu pro typ události",
+        colorTypeDesc: "Barva textu pro typ události",
         colorBadgeDesc: "Barva textu pro odznak čísla výročí",
         colorWhenDesc: "Barva textu pro odpočet (např. „za 3 dny“)",
         colorTextDesc:
@@ -3264,10 +4073,10 @@
         fonts: "Písma",
         fontCardTitle: "Název karty",
         fontCardTitleDesc: "Velikost písma pro vlastní název karty",
-        fontTitleDesc: "Velikost písma pro jméno události",
+        fontNameDesc: "Velikost písma pro jméno události",
         fontLastNameDesc: "Velikost písma pro příjmení události",
         fontFullNameDesc: "Velikost písma pro celé jméno události (jméno a příjmení)",
-        fontSubtitleDesc: "Velikost písma pro typ události",
+        fontTypeDesc: "Velikost písma pro typ události",
         fontBadgeDesc: "Velikost písma pro odznak čísla výročí",
         fontWhenDesc: "Velikost písma pro odpočet (např. „za 3 dny“)",
         fontTextDesc:
@@ -3282,7 +4091,7 @@
         panelSettings: "Nastavení",
         panelSettingsDesc: "Obecné, události a období",
         panelLayout: "Rozvržení",
-        panelLayoutDesc: "Zobrazení, písma, barvy, ikony a pozadí",
+        panelLayoutDesc: "Zobrazení, písma, barvy, ikony, pozadí karty a timeline",
         groupGeneral: "Obecné",
         groupGeneralDesc: "",
         groupEvents: "Události",
@@ -3301,6 +4110,15 @@
       dayAgo: "I går",
       daysAgo: (n) => `for ${n} dager siden`,
       noEvents: "Ingen kommende hendelser",
+      possessive: (name) => (/[sxz]$/i.test(name) ? `${name}'` : `${name}s`),
+      ordinalParts: (n) => ({ num: `${n}.`, sup: "" }),
+      timelineSentence: "{possessive} {ordinal}{sup} {type} er {when}",
+      timelineSentenceSimple: "{name} er {when}",
+      timelineSentencePast: "{possessive} {ordinal}{sup} {type} var {when}",
+      timelineSentenceSimplePast: "{name} var {when}",
+      timelineExpand: "Detaljer",
+      timelineCollapse: "Mindre",
+      timelineMore: "Mer",
       types: {
         birthday: "Bursdag",
         anniversary: "Jubileum",
@@ -3382,6 +4200,53 @@
         categoriesDesc: "Vis bare helligdager i de avkryssede kategoriene (andre hendelsestyper påvirkes ikke)",
         showAll: "Vis alle",
         hideAll: "Skjul alle",
+        layoutStyleLabel: "Kortlayout",
+        layoutStyleDesc:
+          "Liste viser de klassiske radene med ikon/navn/undertittel/merke/nedtelling. Timeline viser en kompakt horisontal akse med den neste hendelsen uthevet og resten som klikkbare punkter - praktisk for en smal kolonne i Seksjoner-visningen.",
+        layoutStyleList: "Liste",
+        layoutStyleTimeline: "Timeline",
+        timelineLineHeading: "Tidslinje",
+        timelineLineWidth: "Tykkelse",
+        timelineLineWidthDesc: "Tykkelse på den horisontale akselinjen, f.eks. «4px».",
+        timelineLineColor: "Farge",
+        timelineLineColorDesc: "Farge på den horisontale akselinjen.",
+        timelineDividerHeading: "Skillelinje",
+        timelineDividerWidth: "Tykkelse",
+        timelineDividerWidthDesc:
+          "Tykkelse på den vertikale linjen som markerer grensen mellom fortid og fremtid, f.eks. «1px».",
+        timelineDividerColor: "Farge",
+        timelineDividerColorDesc: "Farge på den vertikale skillelinjen mellom fortid og fremtid.",
+        lineStyleLabel: "Stil",
+        lineStyleSolid: "Heltrukket",
+        lineStyleDashed: "Stiplet",
+        lineStyleDotted: "Prikket",
+        timelineOptionsHeading: "Alternativer",
+        timelineShowFullName: "Vis fullt navn",
+        timelineShowFullNameDesc:
+          "Viser det fulle navnet (for- og etternavn) for hver hendelse i stedet for bare fornavnet, i overskriften, verktøytipset og den utvidbare listen.",
+        showHolidaySuffix: "Vis høytidssuffiks",
+        showHolidaySuffixDesc:
+          "Legg til høytidens land (og region, hvis noen) i parentes etter navnet, f.eks. «Pioneer Day (US-UT)».",
+        moreAction: "«Mer»-knapp",
+        moreActionDesc:
+          "Hva «Mer»-knappen nederst til høyre i tidslinjen gjør. Vanligvis en navigasjonshandling til et dashbord som viser de samme hendelsene i det fulle Liste-layoutet. La stå på «Ingenting» for å skjule knappen.",
+        groupTimeline: "Timeline",
+        groupTimelineDesc: "Brukes kun når Kortlayout (under Visning) er satt til Timeline.",
+        timelineHeaderLabel: "Overskrift",
+        timelineHeaderFontDesc:
+          "Skrift for beskrivelseslinjen over aksen, f.eks. «Kevins 27. bursdag er i dag».",
+        timelineHeaderColorDesc: "Tekstfarge for beskrivelseslinjen over aksen.",
+        timelineTooltipLabel: "Verktøytips",
+        timelineTooltipFontDesc: "Skrift for teksten som vises når et punkt på aksen klikkes.",
+        timelineTooltipColorDesc: "Tekstfarge for teksten som vises når et punkt på aksen klikkes.",
+        timelineListLabel: "Liste (Detaljer)",
+        timelineListFontDesc: "Skrift for den utvidbare kronologiske listen under aksen.",
+        timelineListColorDesc: "Tekstfarge for den utvidbare kronologiske listen under aksen.",
+        timelineButtonLabel: "Detaljer-/Mer-knapp",
+        timelineButtonFontDesc: "Skrift for Detaljer- og Mer-knappene i bunnteksten.",
+        timelineButtonColorDesc: "Tekstfarge for Detaljer- og Mer-knappene i bunnteksten.",
+        eventTypesHeading: "Hendelsestyper",
+        eventTypeColorDesc: "Farge for ikonet og punktet til denne hendelsestypen på tidslinjen.",
         visibilityHeading: "Vis / Skjul",
         visibilityPast: "Tidligere hendelser",
         visibilityPastDesc: "Vis hendelser hvis jubileum allerede har passert innenfor det konfigurerte tidligere-vinduet",
@@ -3398,8 +4263,8 @@
         holdActionDesc: "Hva som skjer når en rad trykkes og holdes inne",
         visibilityIcon: "Ikon",
         visibilityIconDesc: "Vis typeikonet foran hver rad",
-        visibilityTitleDesc: "Vis hendelsens navn",
-        visibilitySubtitleDesc: "Vis hendelsestypen",
+        visibilityNameDesc: "Vis hendelsens navn",
+        visibilityTypeDesc: "Vis hendelsestypen",
         visibilityCountrySuffix: "Helligdagssuffiks",
         visibilityCountrySuffixDesc: "Legg til landet (og eventuelt fylket) etter helligdagens navn/type, f.eks. «Grunnlovsdagen · NO (OSL)»",
         columnsHeading: "Radkolonner",
@@ -3411,7 +4276,7 @@
         columnTypeLastName: "Etternavn",
         columnTypeFullName: "Fullt navn",
         columnTypeFullNameType: "Fullt navn + type",
-        columnTypeSubtitle: "Type",
+        columnTypeType: "Type",
         columnTypeText: "Egendefinert tekst",
         columnAdd: "Legg til",
         columnMoveUp: "Flytt opp",
@@ -3448,10 +4313,18 @@
         highlightVipDesc: "Vis et merke på ikonet til VIP-merkede hendelser",
         highlightImportant: "Viktige hendelser",
         highlightImportantDesc: "Vis et merke på ikonet til hendelser som automatisk er merket som viktige",
-        vipBadgeColor: "Merkefarge",
-        vipBadgeColorDesc: "Bakgrunnsfarge for VIP-merket",
-        importantBadgeColor: "Merkefarge",
-        importantBadgeColorDesc: "Bakgrunnsfarge for Important-merket",
+        vipBadgeColorList: "Merkefarge (Liste)",
+        vipBadgeColorListDesc:
+          "Farge på VIP-stjernemerket i hjørnemerket til Liste-layoutet, i overskriften til Timeline-layoutet og i dets utvidbare Detaljer-liste.",
+        vipBadgeColorTimeline: "Merkefarge (Timeline)",
+        vipBadgeColorTimelineDesc:
+          "Farge på VIP-stjerneikonet spesifikt på akse-punktene til Timeline-layoutet. Vises kun når Kortlayout er satt til Timeline.",
+        importantBadgeColorList: "Merkefarge (Liste)",
+        importantBadgeColorListDesc:
+          "Farge på Important-utropstegnmerket i hjørnemerket til Liste-layoutet, i overskriften til Timeline-layoutet og i dets utvidbare Detaljer-liste.",
+        importantBadgeColorTimeline: "Merkefarge (Timeline)",
+        importantBadgeColorTimelineDesc:
+          "Farge på Important-utropstegnikonet spesifikt på akse-punktene til Timeline-layoutet. Vises kun når Kortlayout er satt til Timeline.",
         colors: "Farger",
         cardBackgroundTabTitle: "Kortbakgrunn",
         cardBackgroundEnable: "Vis bakgrunn",
@@ -3493,18 +4366,18 @@
         animationFlash: "Blink",
         matchTextLabel: "Fargelegg også teksten",
         matchTextDesc: "Fargelegg også all tekst i raden med denne ikonfargen",
-        colorTitle: "Navn",
-        colorSubtitle: "Type",
+        colorName: "Navn",
+        colorType: "Type",
         colorBadge: "Jubileum",
         colorWhen: "Nedtelling",
         colorText: "Egendefinert tekst",
-        colorTitleDesc: "Tekstfarge for hendelsens navn",
+        colorNameDesc: "Tekstfarge for hendelsens navn",
         colorLastName: "Etternavn",
         colorLastNameDesc: "Tekstfarge for hendelsens etternavn",
         colorFullName: "Fullt navn",
         colorFullNameDesc: "Tekstfarge for hendelsens fulle navn (fornavn og etternavn)",
         cardTitleColorDesc: "Tekstfarge for kortets egen tittel",
-        colorSubtitleDesc: "Tekstfarge for hendelsestypen",
+        colorTypeDesc: "Tekstfarge for hendelsestypen",
         colorBadgeDesc: "Tekstfarge for merket med jubileumsnummeret",
         colorWhenDesc: "Tekstfarge for nedtellingen (f.eks. «om 3 dager»)",
         colorTextDesc:
@@ -3540,10 +4413,10 @@
         fonts: "Skrifter",
         fontCardTitle: "Korttittel",
         fontCardTitleDesc: "Skriftstørrelse for kortets egen tittel",
-        fontTitleDesc: "Skriftstørrelse for hendelsens navn",
+        fontNameDesc: "Skriftstørrelse for hendelsens navn",
         fontLastNameDesc: "Skriftstørrelse for hendelsens etternavn",
         fontFullNameDesc: "Skriftstørrelse for hendelsens fulle navn (fornavn og etternavn)",
-        fontSubtitleDesc: "Skriftstørrelse for hendelsestypen",
+        fontTypeDesc: "Skriftstørrelse for hendelsestypen",
         fontBadgeDesc: "Skriftstørrelse for merket med jubileumsnummeret",
         fontWhenDesc: "Skriftstørrelse for nedtellingen (f.eks. «om 3 dager»)",
         fontTextDesc:
@@ -3558,7 +4431,7 @@
         panelSettings: "Innstillinger",
         panelSettingsDesc: "Generelt, hendelser og periode",
         panelLayout: "Layout",
-        panelLayoutDesc: "Visning, skrifter, farger, ikoner og bakgrunner",
+        panelLayoutDesc: "Visning, skrifter, farger, ikoner, kortbakgrunn og timeline",
         groupGeneral: "Generelt",
         groupGeneralDesc: "",
         groupEvents: "Hendelser",
@@ -3577,6 +4450,15 @@
       dayAgo: "I går",
       daysAgo: (n) => `for ${n} dage siden`,
       noEvents: "Ingen kommende begivenheder",
+      possessive: (name) => (/[sxz]$/i.test(name) ? `${name}'` : `${name}s`),
+      ordinalParts: (n) => ({ num: `${n}.`, sup: "" }),
+      timelineSentence: "{possessive} {ordinal}{sup} {type} er {when}",
+      timelineSentenceSimple: "{name} er {when}",
+      timelineSentencePast: "{possessive} {ordinal}{sup} {type} var {when}",
+      timelineSentenceSimplePast: "{name} var {when}",
+      timelineExpand: "Detaljer",
+      timelineCollapse: "Mindre",
+      timelineMore: "Mere",
       types: {
         birthday: "Fødselsdag",
         anniversary: "Mærkedag",
@@ -3658,6 +4540,53 @@
         categoriesDesc: "Vis kun helligdage i de afkrydsede kategorier (andre begivenhedstyper påvirkes ikke)",
         showAll: "Vis alle",
         hideAll: "Skjul alle",
+        layoutStyleLabel: "Kortlayout",
+        layoutStyleDesc:
+          "Liste viser de klassiske rækker med ikon/navn/undertekst/badge/nedtælling. Timeline viser en kompakt vandret akse med den næste begivenhed fremhævet og resten som klikbare punkter - praktisk til en smal kolonne i Sektioner-visningen.",
+        layoutStyleList: "Liste",
+        layoutStyleTimeline: "Timeline",
+        timelineLineHeading: "Tidslinje",
+        timelineLineWidth: "Tykkelse",
+        timelineLineWidthDesc: "Tykkelse på den vandrette akselinje, f.eks. „4px”.",
+        timelineLineColor: "Farve",
+        timelineLineColorDesc: "Farve på den vandrette akselinje.",
+        timelineDividerHeading: "Skillelinje",
+        timelineDividerWidth: "Tykkelse",
+        timelineDividerWidthDesc:
+          "Tykkelse på den lodrette linje, der markerer grænsen mellem fortid og fremtid, f.eks. „1px”.",
+        timelineDividerColor: "Farve",
+        timelineDividerColorDesc: "Farve på den lodrette skillelinje mellem fortid og fremtid.",
+        lineStyleLabel: "Stil",
+        lineStyleSolid: "Massiv",
+        lineStyleDashed: "Stiplet",
+        lineStyleDotted: "Prikket",
+        timelineOptionsHeading: "Indstillinger",
+        timelineShowFullName: "Vis fulde navn",
+        timelineShowFullNameDesc:
+          "Viser det fulde navn (for- og efternavn) for hver begivenhed i stedet for kun fornavnet, i overskriften, tooltippet og den udvidelige liste.",
+        showHolidaySuffix: "Vis helligdagssuffiks",
+        showHolidaySuffixDesc:
+          "Tilføj helligdagens land (og region, hvis nogen) i parentes efter navnet, f.eks. „Pioneer Day (US-UT)”.",
+        moreAction: "„Mere”-knap",
+        moreActionDesc:
+          "Hvad „Mere”-knappen nederst til højre i tidslinjen gør. Typisk en navigationshandling til et dashboard, der viser de samme begivenheder i det fulde Liste-layout. Lad den stå på „Intet” for at skjule knappen.",
+        groupTimeline: "Timeline",
+        groupTimelineDesc: "Bruges kun når Kortlayout (under Visning) er sat til Timeline.",
+        timelineHeaderLabel: "Overskrift",
+        timelineHeaderFontDesc:
+          "Skrifttype til beskrivelseslinjen over aksen, f.eks. „Kevins 27. fødselsdag er i dag”.",
+        timelineHeaderColorDesc: "Tekstfarve til beskrivelseslinjen over aksen.",
+        timelineTooltipLabel: "Værktøjstip",
+        timelineTooltipFontDesc: "Skrifttype til teksten, der vises, når der klikkes på et punkt på aksen.",
+        timelineTooltipColorDesc: "Tekstfarve til teksten, der vises, når der klikkes på et punkt på aksen.",
+        timelineListLabel: "Liste (Detaljer)",
+        timelineListFontDesc: "Skrifttype til den udvidelige kronologiske liste under aksen.",
+        timelineListColorDesc: "Tekstfarve til den udvidelige kronologiske liste under aksen.",
+        timelineButtonLabel: "Detaljer-/Mere-knap",
+        timelineButtonFontDesc: "Skrifttype til Detaljer- og Mere-knapperne i bunden.",
+        timelineButtonColorDesc: "Tekstfarve til Detaljer- og Mere-knapperne i bunden.",
+        eventTypesHeading: "Begivenhedstyper",
+        eventTypeColorDesc: "Farve til ikonet og prikken for denne begivenhedstype på tidslinjen.",
         visibilityHeading: "Vis / Skjul",
         visibilityPast: "Tidligere begivenheder",
         visibilityPastDesc: "Vis begivenheder, hvis mærkedag allerede er passeret inden for det konfigurerede tidligere-vindue",
@@ -3674,8 +4603,8 @@
         holdActionDesc: "Hvad der sker, når en række trykkes og holdes nede",
         visibilityIcon: "Ikon",
         visibilityIconDesc: "Vis typeikonet foran hver række",
-        visibilityTitleDesc: "Vis begivenhedens navn",
-        visibilitySubtitleDesc: "Vis begivenhedstypen",
+        visibilityNameDesc: "Vis begivenhedens navn",
+        visibilityTypeDesc: "Vis begivenhedstypen",
         visibilityCountrySuffix: "Helligdagssuffiks",
         visibilityCountrySuffixDesc: "Tilføj landet (og evt. regionen) efter helligdagens navn/type, f.eks. \"Grundlovsdag · DK (84)\"",
         columnsHeading: "Rækkekolonner",
@@ -3687,7 +4616,7 @@
         columnTypeLastName: "Efternavn",
         columnTypeFullName: "Fulde navn",
         columnTypeFullNameType: "Fulde navn + type",
-        columnTypeSubtitle: "Type",
+        columnTypeType: "Type",
         columnTypeText: "Brugerdefineret tekst",
         columnAdd: "Tilføj",
         columnMoveUp: "Flyt op",
@@ -3724,10 +4653,18 @@
         highlightVipDesc: "Vis et mærke på ikonet for VIP-markerede begivenheder",
         highlightImportant: "Vigtige begivenheder",
         highlightImportantDesc: "Vis et mærke på ikonet for begivenheder, der automatisk er markeret som vigtige",
-        vipBadgeColor: "Mærkefarve",
-        vipBadgeColorDesc: "Baggrundsfarve for VIP-mærket",
-        importantBadgeColor: "Mærkefarve",
-        importantBadgeColorDesc: "Baggrundsfarve for Important-mærket",
+        vipBadgeColorList: "Mærkefarve (Liste)",
+        vipBadgeColorListDesc:
+          "Farve på VIP-stjernemærket i Liste-layoutets hjørnemærke, i Timeline-layoutets overskrift og i dets udvidelige Detaljer-liste.",
+        vipBadgeColorTimeline: "Mærkefarve (Timeline)",
+        vipBadgeColorTimelineDesc:
+          "Farve på VIP-stjerneikonet specifikt på Timeline-layoutets akse-punkter. Vises kun når Kortlayout er sat til Timeline.",
+        importantBadgeColorList: "Mærkefarve (Liste)",
+        importantBadgeColorListDesc:
+          "Farve på Important-udråbstegnsmærket i Liste-layoutets hjørnemærke, i Timeline-layoutets overskrift og i dets udvidelige Detaljer-liste.",
+        importantBadgeColorTimeline: "Mærkefarve (Timeline)",
+        importantBadgeColorTimelineDesc:
+          "Farve på Important-udråbstegnsikonet specifikt på Timeline-layoutets akse-punkter. Vises kun når Kortlayout er sat til Timeline.",
         colors: "Farver",
         cardBackgroundTabTitle: "Kortbaggrund",
         cardBackgroundEnable: "Vis baggrund",
@@ -3769,18 +4706,18 @@
         animationFlash: "Blink",
         matchTextLabel: "Farvelæg også teksten",
         matchTextDesc: "Farvelæg også hele rækkens tekst med denne ikonfarve",
-        colorTitle: "Navn",
-        colorSubtitle: "Type",
+        colorName: "Navn",
+        colorType: "Type",
         colorBadge: "Jubilæum",
         colorWhen: "Nedtælling",
         colorText: "Brugerdefineret tekst",
-        colorTitleDesc: "Tekstfarve for begivenhedens navn",
+        colorNameDesc: "Tekstfarve for begivenhedens navn",
         colorLastName: "Efternavn",
         colorLastNameDesc: "Tekstfarve for begivenhedens efternavn",
         colorFullName: "Fulde navn",
         colorFullNameDesc: "Tekstfarve for begivenhedens fulde navn (fornavn og efternavn)",
         cardTitleColorDesc: "Tekstfarve for kortets egen titel",
-        colorSubtitleDesc: "Tekstfarve for begivenhedstypen",
+        colorTypeDesc: "Tekstfarve for begivenhedstypen",
         colorBadgeDesc: "Tekstfarve for mærket med jubilæumsnummeret",
         colorWhenDesc: "Tekstfarve for nedtællingen (f.eks. \"om 3 dage\")",
         colorTextDesc:
@@ -3816,10 +4753,10 @@
         fonts: "Skrifttyper",
         fontCardTitle: "Korttitel",
         fontCardTitleDesc: "Skriftstørrelse for kortets egen titel",
-        fontTitleDesc: "Skriftstørrelse for begivenhedens navn",
+        fontNameDesc: "Skriftstørrelse for begivenhedens navn",
         fontLastNameDesc: "Skriftstørrelse for begivenhedens efternavn",
         fontFullNameDesc: "Skriftstørrelse for begivenhedens fulde navn (fornavn og efternavn)",
-        fontSubtitleDesc: "Skriftstørrelse for begivenhedstypen",
+        fontTypeDesc: "Skriftstørrelse for begivenhedstypen",
         fontBadgeDesc: "Skriftstørrelse for mærket med jubilæumsnummeret",
         fontWhenDesc: "Skriftstørrelse for nedtællingen (f.eks. \"om 3 dage\")",
         fontTextDesc:
@@ -3834,7 +4771,7 @@
         panelSettings: "Indstillinger",
         panelSettingsDesc: "Generelt, begivenheder og periode",
         panelLayout: "Layout",
-        panelLayoutDesc: "Visning, skrifttyper, farver, ikoner og baggrunde",
+        panelLayoutDesc: "Visning, skrifttyper, farver, ikoner, kortbaggrund og timeline",
         groupGeneral: "Generelt",
         groupGeneralDesc: "",
         groupEvents: "Begivenheder",
@@ -3853,6 +4790,21 @@
       dayAgo: "Dün",
       daysAgo: (n) => `${n} gün önce`,
       noEvents: "Yaklaşan etkinlik yok",
+      // Türkçedeki iyelik eki (-'nin/-'nın/-'nün/-'nun) ünlü uyumuna göre
+      // değişir ve rastgele girilen isimlere güvenli biçimde
+      // uygulanamayacağından, cümle bunun yerine "İsim: N. tür — ne zaman"
+      // biçiminde kuruluyor - aynı biçim hem geçmiş hem gelecek etkinlikler
+      // için çalışıyor, çünkü "ne zaman" (ör. "dün"/"3 gün sonra") zamanı
+      // zaten belirtiyor.
+      possessive: (name) => name,
+      ordinalParts: (n) => ({ num: `${n}.`, sup: "" }),
+      timelineSentence: "{possessive}: {ordinal}{sup} {type} — {when}",
+      timelineSentenceSimple: "{name} — {when}",
+      timelineSentencePast: "{possessive}: {ordinal}{sup} {type} — {when}",
+      timelineSentenceSimplePast: "{name} — {when}",
+      timelineExpand: "Ayrıntılar",
+      timelineCollapse: "Daha az",
+      timelineMore: "Daha fazla",
       types: {
         birthday: "Doğum günü",
         anniversary: "Yıl dönümü",
@@ -3934,6 +4886,53 @@
         categoriesDesc: "Yalnızca işaretli kategorilerdeki tatilleri göster (diğer etkinlik türleri etkilenmez)",
         showAll: "Tümünü göster",
         hideAll: "Tümünü gizle",
+        layoutStyleLabel: "Düzen stili",
+        layoutStyleDesc:
+          "Liste, klasik simge/ad/alt başlık/rozet/geri sayım satırlarını gösterir. Timeline, bir sonraki etkinliğin vurgulandığı ve geri kalanının tıklanabilir noktalar olarak gösterildiği kompakt bir yatay eksen gösterir - Bölümler görünümünde dar bir sütun için kullanışlıdır.",
+        layoutStyleList: "Liste",
+        layoutStyleTimeline: "Timeline",
+        timelineLineHeading: "Zaman çizelgesi çizgisi",
+        timelineLineWidth: "Kalınlık",
+        timelineLineWidthDesc: "Yatay eksen çizgisinin kalınlığı, örn. \"4px\".",
+        timelineLineColor: "Renk",
+        timelineLineColorDesc: "Yatay eksen çizgisinin rengi.",
+        timelineDividerHeading: "Ayırıcı çizgi",
+        timelineDividerWidth: "Kalınlık",
+        timelineDividerWidthDesc:
+          "Geçmiş ile gelecek arasındaki sınırı işaretleyen dikey çizginin kalınlığı, örn. \"1px\".",
+        timelineDividerColor: "Renk",
+        timelineDividerColorDesc: "Geçmiş ile gelecek arasındaki dikey ayırıcı çizginin rengi.",
+        lineStyleLabel: "Stil",
+        lineStyleSolid: "Düz",
+        lineStyleDashed: "Kesikli",
+        lineStyleDotted: "Noktalı",
+        timelineOptionsHeading: "Seçenekler",
+        timelineShowFullName: "Tam adı göster",
+        timelineShowFullNameDesc:
+          "Başlıkta, araç ipucunda ve genişletilebilir listede yalnızca adı yerine her etkinliğin tam adını (ad ve soyad) gösterir.",
+        showHolidaySuffix: "Tatil sonekini göster",
+        showHolidaySuffixDesc:
+          "Tatilin ülkesini (ve varsa bölgesini) adının ardından parantez içinde ekler, örn. \"Pioneer Day (US-UT)\".",
+        moreAction: "\"Daha fazla\" düğmesi",
+        moreActionDesc:
+          "Zaman çizelgesinin sağ alt köşesindeki \"Daha fazla\" düğmesinin ne yaptığı. Genellikle aynı etkinlikleri tam Liste düzeninde gösteren bir panoya yönlendiren bir gezinme eylemi. Düğmeyi gizlemek için \"Hiçbiri\" olarak bırakın.",
+        groupTimeline: "Timeline",
+        groupTimelineDesc: "Yalnızca Düzen stili (Görünüm altında) Timeline olarak ayarlandığında kullanılır.",
+        timelineHeaderLabel: "Başlık",
+        timelineHeaderFontDesc:
+          "Eksenin üzerindeki açıklama satırının yazı tipi, örn. \"Kevin: 27. doğum günü — bugün\".",
+        timelineHeaderColorDesc: "Eksenin üzerindeki açıklama satırının metin rengi.",
+        timelineTooltipLabel: "İpucu",
+        timelineTooltipFontDesc: "Eksendeki bir noktaya tıklandığında gösterilen metnin yazı tipi.",
+        timelineTooltipColorDesc: "Eksendeki bir noktaya tıklandığında gösterilen metnin rengi.",
+        timelineListLabel: "Liste (Ayrıntılar)",
+        timelineListFontDesc: "Eksenin altındaki genişletilebilir kronolojik listenin yazı tipi.",
+        timelineListColorDesc: "Eksenin altındaki genişletilebilir kronolojik listenin metin rengi.",
+        timelineButtonLabel: "Ayrıntılar / Daha fazla düğmesi",
+        timelineButtonFontDesc: "Alt bilgideki Ayrıntılar ve Daha fazla düğmelerinin yazı tipi.",
+        timelineButtonColorDesc: "Alt bilgideki Ayrıntılar ve Daha fazla düğmelerinin metin rengi.",
+        eventTypesHeading: "Etkinlik türleri",
+        eventTypeColorDesc: "Bu etkinlik türünün zaman çizelgesindeki simge ve nokta rengi.",
         visibilityHeading: "Göster / Gizle",
         visibilityPast: "Geçmiş etkinlikler",
         visibilityPastDesc: "Yıl dönümü, ayarlanan geçmiş penceresi içinde zaten geçmiş olan etkinlikleri göster",
@@ -3950,8 +4949,8 @@
         holdActionDesc: "Bir satır basılı tutulduğunda ne olacağı",
         visibilityIcon: "Simge",
         visibilityIconDesc: "Her satırın önünde tür simgesini göster",
-        visibilityTitleDesc: "Etkinlik adını göster",
-        visibilitySubtitleDesc: "Etkinlik türünü göster",
+        visibilityNameDesc: "Etkinlik adını göster",
+        visibilityTypeDesc: "Etkinlik türünü göster",
         visibilityCountrySuffix: "Tatil eki",
         visibilityCountrySuffixDesc: "Tatilin adının/türünün ardına ülkeyi (ve varsa bölgeyi) ekler, örn. \"Cumhuriyet Bayramı · TR (34)\"",
         columnsHeading: "Satır sütunları",
@@ -3963,7 +4962,7 @@
         columnTypeLastName: "Soyad",
         columnTypeFullName: "Tam ad",
         columnTypeFullNameType: "Tam ad + tür",
-        columnTypeSubtitle: "Tür",
+        columnTypeType: "Tür",
         columnTypeText: "Özel metin",
         columnAdd: "Ekle",
         columnMoveUp: "Yukarı taşı",
@@ -4000,10 +4999,18 @@
         highlightVipDesc: "VIP olarak işaretlenmiş etkinliklerin simgesinde bir rozet göster",
         highlightImportant: "Önemli etkinlikler",
         highlightImportantDesc: "Otomatik olarak önemli işaretlenmiş etkinliklerin simgesinde bir rozet göster",
-        vipBadgeColor: "Rozet rengi",
-        vipBadgeColorDesc: "VIP rozetinin arka plan rengi",
-        importantBadgeColor: "Rozet rengi",
-        importantBadgeColorDesc: "Important rozetinin arka plan rengi",
+        vipBadgeColorList: "Rozet rengi (Liste)",
+        vipBadgeColorListDesc:
+          "Liste düzeninin köşe rozetindeki, Timeline düzeninin başlığındaki ve genişletilebilir Ayrıntılar listesindeki VIP yıldız rozetinin rengi.",
+        vipBadgeColorTimeline: "Rozet rengi (Timeline)",
+        vipBadgeColorTimelineDesc:
+          "Özellikle Timeline düzeninin eksen noktalarındaki VIP yıldız simgesinin rengi. Yalnızca Düzen stili Timeline olarak ayarlandığında gösterilir.",
+        importantBadgeColorList: "Rozet rengi (Liste)",
+        importantBadgeColorListDesc:
+          "Liste düzeninin köşe rozetindeki, Timeline düzeninin başlığındaki ve genişletilebilir Ayrıntılar listesindeki Important ünlem işareti rozetinin rengi.",
+        importantBadgeColorTimeline: "Rozet rengi (Timeline)",
+        importantBadgeColorTimelineDesc:
+          "Özellikle Timeline düzeninin eksen noktalarındaki Important ünlem işareti simgesinin rengi. Yalnızca Düzen stili Timeline olarak ayarlandığında gösterilir.",
         colors: "Renkler",
         cardBackgroundTabTitle: "Kart Arka Planı",
         cardBackgroundEnable: "Arka planı göster",
@@ -4045,18 +5052,18 @@
         animationFlash: "Yanıp sönme",
         matchTextLabel: "Metni de renklendir",
         matchTextDesc: "Satırın tüm metnini de bu simge rengiyle renklendir",
-        colorTitle: "Ad",
-        colorSubtitle: "Tür",
+        colorName: "Ad",
+        colorType: "Tür",
         colorBadge: "Tekrar sayısı",
         colorWhen: "Geri sayım",
         colorText: "Özel metin",
-        colorTitleDesc: "Etkinlik adı için metin rengi",
+        colorNameDesc: "Etkinlik adı için metin rengi",
         colorLastName: "Soyad",
         colorLastNameDesc: "Etkinliğin soyadı için metin rengi",
         colorFullName: "Tam ad",
         colorFullNameDesc: "Etkinliğin tam adı (ad ve soyad) için metin rengi",
         cardTitleColorDesc: "Kartın kendi başlığı için metin rengi",
-        colorSubtitleDesc: "Etkinlik türü için metin rengi",
+        colorTypeDesc: "Etkinlik türü için metin rengi",
         colorBadgeDesc: "Tekrar numarası rozeti için metin rengi",
         colorWhenDesc: "Geri sayım için metin rengi (örn. \"3 gün sonra\")",
         colorTextDesc:
@@ -4092,10 +5099,10 @@
         fonts: "Yazı tipleri",
         fontCardTitle: "Kart başlığı",
         fontCardTitleDesc: "Kartın kendi başlığı için yazı tipi boyutu",
-        fontTitleDesc: "Etkinlik adı için yazı tipi boyutu",
+        fontNameDesc: "Etkinlik adı için yazı tipi boyutu",
         fontLastNameDesc: "Etkinliğin soyadı için yazı tipi boyutu",
         fontFullNameDesc: "Etkinliğin tam adı (ad ve soyad) için yazı tipi boyutu",
-        fontSubtitleDesc: "Etkinlik türü için yazı tipi boyutu",
+        fontTypeDesc: "Etkinlik türü için yazı tipi boyutu",
         fontBadgeDesc: "Tekrar numarası rozeti için yazı tipi boyutu",
         fontWhenDesc: "Geri sayım için yazı tipi boyutu (örn. \"3 gün sonra\")",
         fontTextDesc:
@@ -4110,7 +5117,7 @@
         panelSettings: "Ayarlar",
         panelSettingsDesc: "Genel, etkinlikler ve dönem",
         panelLayout: "Düzen",
-        panelLayoutDesc: "Görünüm, yazı tipleri, renkler, simgeler ve arka planlar",
+        panelLayoutDesc: "Görünüm, yazı tipleri, renkler, simgeler, kart arka planı ve zaman çizelgesi",
         groupGeneral: "Genel",
         groupGeneralDesc: "",
         groupEvents: "Etkinlikler",
@@ -4132,21 +5139,87 @@
     return STRINGS[lang] || STRINGS.en;
   }
 
-  // Implicit column layout for any dashboard saved before this feature
-  // existed (config.columns unset) - matches the legacy fixed row template
-  // in _row() exactly, and seeds the "Spalten" editor's list on first open.
+  // Seeds the "Row columns" editor's list the first time it's opened for a
+  // card that has never set config.columns explicitly - purely a starting
+  // point to customize from, not the render path itself (that's still
+  // _row()'s own hardcoded legacy template, untouched, for zero regression
+  // risk on every dashboard saved before this feature existed).
   const DEFAULT_COLUMNS = [
     { id: "icon", type: "icon" },
-    { id: "info", type: "info" },
+    { id: "full_name_type", type: "full_name_type" },
     { id: "badge", type: "badge" },
     { id: "when", type: "when" },
   ];
 
+  // Applied the moment "Compact (no gaps, centered)" is switched on (see the
+  // compactToggle handler in _buildColumnsSection) - Icon, Full name,
+  // Occurrence, Type, Countdown, each of the latter four preceded by its own
+  // space-only text column. Compact mode zeroes the flex gap between
+  // columns (see .list.columns-compact .row in CARD_STYLE) so two fields
+  // would otherwise run together with no separator at all; a real space
+  // character between them reads correctly on its own and, unlike a CSS
+  // gap, stays put if the user later mixes in their own custom text
+  // columns around this starting arrangement.
+  const COMPACT_DEFAULT_COLUMNS = [
+    { id: "icon", type: "icon" },
+    { id: "space-1", type: "text", template: " " },
+    { id: "full_name", type: "full_name" },
+    { id: "space-2", type: "text", template: " " },
+    { id: "badge", type: "badge" },
+    { id: "space-3", type: "text", template: " " },
+    { id: "type", type: "type" },
+    { id: "space-4", type: "text", template: " " },
+    { id: "when", type: "when" },
+  ];
+
+  // Rewrites a handful of legacy config keys from before "title"/"subtitle"
+  // were split off from the row's own name/type fields (they used to mean
+  // "this row's name"/"this row's type"; now "title" means only the card's
+  // own heading, unambiguously). Old YAML keeps reading correctly forever;
+  // new-key values win if both happen to be present. Every defaultConfig()
+  // call runs this first, and every editor mutation re-runs defaultConfig(),
+  // so the very next _emit() after any edit persists only the new keys -
+  // no separate "save" migration step needed.
+  function migrateLegacyKeys(config) {
+    const c = { ...config };
+    const moveKey = (obj, oldKey, newKey) => {
+      if (obj && obj[oldKey] !== undefined) {
+        if (obj[newKey] === undefined) obj[newKey] = obj[oldKey];
+        delete obj[oldKey];
+      }
+    };
+    if (c.colors) {
+      c.colors = { ...c.colors };
+      moveKey(c.colors, "title", "name");
+      moveKey(c.colors, "subtitle", "type");
+    }
+    if (c.font_sizes) {
+      c.font_sizes = { ...c.font_sizes };
+      moveKey(c.font_sizes, "title", "name");
+      moveKey(c.font_sizes, "subtitle", "type");
+    }
+    if (c.font_style) {
+      c.font_style = { ...c.font_style };
+      moveKey(c.font_style, "title", "name");
+      moveKey(c.font_style, "subtitle", "type");
+    }
+    moveKey(c, "show_subtitle", "show_type");
+    moveKey(c, "show_subtitle_country", "show_type_country");
+    if (Array.isArray(c.columns)) {
+      c.columns = c.columns.map((col) => (col.type === "subtitle" ? { ...col, type: "type" } : col));
+    }
+    return c;
+  }
+
   function defaultConfig(config) {
-    config = config || {};
+    config = migrateLegacyKeys(config || {});
     return {
       title: "",
       show_title: true,
+      // "list" is every dashboard saved before this feature existed - the
+      // classic icon/name/type/badge/when row list, untouched. "timeline"
+      // is the new compact horizontal-axis layout (see _buildTimeline).
+      layout_style: "list",
       count: 10,
       days_ahead: 0,
       days_past: 0,
@@ -4168,7 +5241,7 @@
       font_size_title: "",
       show_icon: true,
       show_name: true,
-      show_subtitle: true,
+      show_type: true,
       show_badge: true,
       show_when: true,
       show_vip_only: false,
@@ -4180,7 +5253,7 @@
       // Holidays only - appends the imported country (+ subdivision) to the
       // name/type text instead of the old hover-only tooltip.
       show_name_country: false,
-      show_subtitle_country: false,
+      show_type_country: false,
       show_full_name_country: false,
       // Deliberately not defaulted to an array - "unset" (every dashboard
       // saved before this feature existed) must stay distinguishable from
@@ -4189,7 +5262,7 @@
       columns: undefined,
       // Squashes the gap between columns and centers the row, and neutralizes
       // the couple of hardcoded style differences between fields (the name's
-      // semi-bold weight, the subtitle/countdown's dimmed opacity) that
+      // semi-bold weight, the type/countdown's dimmed opacity) that
       // otherwise still show even once every field is given matching
       // color/font-size - meant for building one continuous sentence out of
       // columns rather than a classic multi-field row.
@@ -4201,6 +5274,34 @@
       // to "none".
       tap_action: { action: "more-info" },
       hold_action: { action: "none" },
+      // Timeline layout only: what the footer's "More" button does, in the
+      // same HA action-config shape as tap/hold above. Defaults to "none",
+      // which hides the button entirely rather than showing one that does
+      // nothing - it's meant to be pointed at a fuller list view (e.g. a
+      // navigate action to a dashboard with the regular list layout).
+      more_action: { action: "none" },
+      // Timeline layout only: the horizontal axis line's own thickness/style,
+      // and the same for the vertical past/future divider (see
+      // _buildTimeline) - width is a free-form CSS length string (e.g.
+      // "4px") the same way font_sizes fields are, style is one of
+      // solid/dashed/dotted. Colors for both live in `colors` below, same
+      // pattern as every other themeable field on this card.
+      timeline_line_width: "",
+      timeline_line_style: "solid",
+      timeline_divider_width: "",
+      timeline_divider_style: "solid",
+      // Timeline layout only, under Layout -> Timeline -> Options: appends
+      // " (country[-subdivision])" after a holiday event's own name in its
+      // sentence (header/tooltip/list all share _timelineSentenceFragment),
+      // e.g. "Pioneer Day (US-UT)". Off by default, same reasoning as the
+      // list layout's own show_*_country toggles - most setups only ever
+      // import a single country/region and don't need it repeated.
+      show_holiday_suffix: false,
+      // Timeline layout only, under Layout -> Timeline -> Options: shows
+      // each event's full name (first + last) instead of just the first
+      // name, everywhere _timelineSentenceFragment is used (header, tooltip,
+      // expandable list) since they all share that one function.
+      timeline_show_full_name: false,
       ...config,
       // Per icon-color-category (accent/today/soon) animation, keyed the
       // same way as colors.match_* so the same "which category is this
@@ -4227,10 +5328,10 @@
         soon: "",
         accent: "",
         card_title: "",
-        title: "",
+        name: "",
         last_name: "",
         full_name: "",
-        subtitle: "",
+        type: "",
         badge: "",
         when: "",
         text: "",
@@ -4244,16 +5345,44 @@
         highlight_soon: "",
         vip_badge: "",
         important_badge: "",
+        // Timeline layout has its own independent VIP/Important badge
+        // colors - vip_badge/important_badge above drive the list layout's
+        // corner badges; these drive the timeline's star/exclamation glyphs
+        // instead, since a single shared color meant changing one always
+        // silently affected the other layout too.
+        vip_badge_timeline: "",
+        important_badge_timeline: "",
+        // Timeline layout only (see Layout -> Timeline in the editor and
+        // _buildTimeline) - the header sentence above the axis, each dot's
+        // click tooltip, and the expandable chronological list, styled
+        // independently from the list layout's own fields above since
+        // they're a completely different visual (no per-row icon/badge/when
+        // split to color individually).
+        timeline_header: "",
+        timeline_tooltip: "",
+        timeline_list: "",
+        // The footer's Details/More buttons - same reasoning as the three
+        // above, appended last since it's the most recently added.
+        timeline_button: "",
+        // The axis line itself, and the vertical past/future divider - see
+        // timeline_line_width/timeline_line_style above for the rest of
+        // each line's styling.
+        timeline_line: "",
+        timeline_divider: "",
         ...(config.colors || {}),
       },
       font_sizes: {
-        title: "",
+        name: "",
         last_name: "",
         full_name: "",
-        subtitle: "",
+        type: "",
         badge: "",
         when: "",
         text: "",
+        timeline_header: "",
+        timeline_tooltip: "",
+        timeline_list: "",
+        timeline_button: "",
         ...(config.font_sizes || {}),
       },
       font_style: {
@@ -4265,13 +5394,13 @@
           letter_spacing: "",
           ...((config.font_style || {}).font_size_title || {}),
         },
-        title: {
+        name: {
           bold: false,
           italic: false,
           uppercase: false,
           underline: false,
           letter_spacing: "",
-          ...((config.font_style || {}).title || {}),
+          ...((config.font_style || {}).name || {}),
         },
         last_name: {
           bold: false,
@@ -4289,13 +5418,13 @@
           letter_spacing: "",
           ...((config.font_style || {}).full_name || {}),
         },
-        subtitle: {
+        type: {
           bold: false,
           italic: false,
           uppercase: false,
           underline: false,
           letter_spacing: "",
-          ...((config.font_style || {}).subtitle || {}),
+          ...((config.font_style || {}).type || {}),
         },
         badge: {
           bold: false,
@@ -4320,6 +5449,38 @@
           underline: false,
           letter_spacing: "",
           ...((config.font_style || {}).text || {}),
+        },
+        timeline_header: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).timeline_header || {}),
+        },
+        timeline_tooltip: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).timeline_tooltip || {}),
+        },
+        timeline_list: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).timeline_list || {}),
+        },
+        timeline_button: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).timeline_button || {}),
         },
       },
       background: {
@@ -4484,9 +5645,13 @@
     .icon.today { color: var(--annuals-today-color, var(--error-color)); }
     .icon.soon { color: var(--annuals-soon-color, var(--warning-color)); }
     /* Optional per-category (Default/Today/Soon) icon animation - see the
-       Layout -> Icons editor tab. Applied directly on the icon element via
-       an anim-* class computed from config.icon_animation in _row(), so
-       these rules stay a flat list with no category-crossed combinations. */
+       Layout -> Icons editor tab. Applied via an anim-* class computed from
+       config.icon_animation, directly on the icon in _row() (list layout),
+       or on a wrapping span around the timeline's header/list MDI icons
+       (see _buildTimeline and .timeline-icon-anim-wrap) - never on the
+       timeline's axis dots themselves, which have no MDI icon of their own
+       to animate. Deliberately not scoped to .icon so the wrapper variant
+       works too. */
     @keyframes annuals-icon-pulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.2); }
@@ -4507,11 +5672,11 @@
       0%, 100% { opacity: 1; }
       50% { opacity: 0.25; }
     }
-    .icon.anim-pulse { animation: annuals-icon-pulse 1.4s ease-in-out infinite; }
-    .icon.anim-bounce { animation: annuals-icon-bounce 1s ease-in-out infinite; }
-    .icon.anim-shake { animation: annuals-icon-shake 0.6s ease-in-out infinite; }
-    .icon.anim-spin { animation: annuals-icon-spin 2s linear infinite; }
-    .icon.anim-flash { animation: annuals-icon-flash 1.2s ease-in-out infinite; }
+    .anim-pulse { animation: annuals-icon-pulse 1.4s ease-in-out infinite; }
+    .anim-bounce { animation: annuals-icon-bounce 1s ease-in-out infinite; }
+    .anim-shake { animation: annuals-icon-shake 0.6s ease-in-out infinite; }
+    .anim-spin { animation: annuals-icon-spin 2s linear infinite; }
+    .anim-flash { animation: annuals-icon-flash 1.2s ease-in-out infinite; }
     .vip-badge,
     .important-badge {
       position: absolute;
@@ -4539,7 +5704,7 @@
     }
     /* "Match text" per icon category - when enabled in the editor, every
        text element in a matching row takes on that category's icon color,
-       overriding the individually configured title/subtitle/badge/when
+       overriding the individually configured name/type/badge/when
        colors for just that row. Higher specificity (.row.match-* .name vs
        plain .name) wins regardless of stylesheet order. */
     .row.match-accent-text .name,
@@ -4589,26 +5754,26 @@
       min-width: 0;
     }
     .name {
-      font-weight: var(--annuals-row-title-weight, 500);
-      font-style: var(--annuals-row-title-style, normal);
-      text-transform: var(--annuals-row-title-transform, none);
-      text-decoration: var(--annuals-row-title-decoration, none);
-      letter-spacing: var(--annuals-row-title-spacing, normal);
+      font-weight: var(--annuals-row-name-weight, 500);
+      font-style: var(--annuals-row-name-style, normal);
+      text-transform: var(--annuals-row-name-transform, none);
+      text-decoration: var(--annuals-row-name-decoration, none);
+      letter-spacing: var(--annuals-row-name-spacing, normal);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      color: var(--annuals-title-color, inherit);
-      font-size: var(--annuals-row-title-size, inherit);
+      color: var(--annuals-name-color, inherit);
+      font-size: var(--annuals-row-name-size, inherit);
     }
     .type {
-      font-size: var(--annuals-row-subtitle-size, 0.85em);
-      font-weight: var(--annuals-row-subtitle-weight, normal);
-      font-style: var(--annuals-row-subtitle-style, normal);
-      text-transform: var(--annuals-row-subtitle-transform, none);
-      text-decoration: var(--annuals-row-subtitle-decoration, none);
-      letter-spacing: var(--annuals-row-subtitle-spacing, normal);
+      font-size: var(--annuals-row-type-size, 0.85em);
+      font-weight: var(--annuals-row-type-weight, normal);
+      font-style: var(--annuals-row-type-style, normal);
+      text-transform: var(--annuals-row-type-transform, none);
+      text-decoration: var(--annuals-row-type-decoration, none);
+      letter-spacing: var(--annuals-row-type-spacing, normal);
       opacity: 0.6;
-      color: var(--annuals-subtitle-color, inherit);
+      color: var(--annuals-type-color, inherit);
     }
     .last-name, .full-name {
       overflow: hidden;
@@ -4702,7 +5867,7 @@
        every field's built-in width/growth/alignment so nothing but the
        columns' own content determines spacing, centers the whole row, and
        neutralizes the couple of hardcoded style differences (name's
-       semi-bold weight, subtitle/countdown's dimmed opacity) that otherwise
+       semi-bold weight, type/countdown's dimmed opacity) that otherwise
        still show even once every column is given the same color/font-size.
        align-items switches from the normal row's vertical centering to
        baseline - centering mixed font sizes makes the smaller ones look
@@ -4727,19 +5892,374 @@
     .list.columns-compact .info,
     .list.columns-compact .text-col,
     .list.columns-compact .name,
+    .list.columns-compact .last-name,
+    .list.columns-compact .full-name,
     .list.columns-compact .type {
       flex: none;
       opacity: 1;
     }
-    .list.columns-compact .name { font-weight: var(--annuals-row-title-weight, normal); }
-    .list.columns-compact .type,
+    .list.columns-compact .name { font-weight: var(--annuals-row-name-weight, normal); }
+    .list.columns-compact .last-name { font-weight: var(--annuals-row-last-name-weight, normal); }
+    .list.columns-compact .full-name { font-weight: var(--annuals-row-full-name-weight, normal); }
+    .list.columns-compact .type {
+      font-size: var(--annuals-row-type-size, 1em);
+    }
     .list.columns-compact .when {
       opacity: 1;
     }
     .list.columns-compact .badge-slot { width: auto; flex: none; justify-content: center; }
     .list.columns-compact .when { min-width: 0; text-align: center; flex: none; }
     .empty { opacity: 0.6; text-align: center; padding: 12px; }
+    /* Compact horizontal-axis layout (layout_style: "timeline") - see
+       _buildTimeline. Deliberately its own small block of styles instead of
+       reusing .row/.icon-wrap/etc., since it's a completely different visual
+       (one header line per soonest-day event plus a dot axis) rather than a
+       list of rows. */
+    .timeline-header {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+    .timeline-header-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    /* This event has no circle behind its icon at all - just the bare glyph,
+       since the header line is a single description rather than one row
+       among many that needs a strong visual anchor. position:relative is the
+       positioning context for the VIP/Important overlay badges below - same
+       icon + corner-badge structure the expandable Details list uses (see
+       .timeline-list-icon-wrap), so the two contexts read consistently. */
+    .timeline-header-icons {
+      display: flex;
+      align-items: center;
+      position: relative;
+      flex: 0 0 auto;
+    }
+    /* Wraps the header/list MDI icon when Layout -> Icons has an animation
+       set for its category - kept separate from the icon's own translateY
+       alignment (see _buildTimeline/_alignTimelineIconToText) so the two
+       transforms don't fight over the same element. */
+    .timeline-icon-anim-wrap {
+      display: inline-flex;
+    }
+    .timeline-header-icons ha-icon {
+      --mdc-icon-size: 20px;
+      /* translateY is set inline by _alignTimelineIconToText - flexbox only
+         centers the icon's *box*, and an mdi glyph is rarely centered within
+         its own 24x24 viewBox, so the visible symbol still needs nudging to
+         line its center up with the text's. */
+      display: block;
+    }
+    /* Bare glyphs, no round background - same treatment as the Details
+       list's own .timeline-list-badge. Two classes needed on the selector so
+       it beats the ".timeline-header-icons ha-icon" rule above (one class
+       plus a type selector still outranks a single class). */
+    .timeline-header-icons .timeline-header-badge {
+      position: absolute;
+      --mdc-icon-size: 12px;
+      width: 12px;
+      height: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .timeline-header-badge-important {
+      top: -4px;
+      left: -4px;
+    }
+    .timeline-header-badge-vip {
+      top: -4px;
+      right: -4px;
+    }
+    .timeline-header .sentence {
+      font-size: var(--annuals-timeline-header-size, 13px);
+      font-weight: var(--annuals-timeline-header-weight, normal);
+      font-style: var(--annuals-timeline-header-style, normal);
+      text-transform: var(--annuals-timeline-header-transform, none);
+      text-decoration: var(--annuals-timeline-header-decoration, none);
+      letter-spacing: var(--annuals-timeline-header-spacing, normal);
+      color: var(--annuals-timeline-header-color, inherit);
+      line-height: 1.4;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    /* The English ordinal suffix ("27th") - see _timelineSentenceFragment.
+       line-height:0 keeps the raised suffix from growing the line box, which
+       would otherwise push the text's center up away from the icon's. */
+    .timeline-header .sentence sup,
+    .timeline-list-item sup,
+    .timeline-tip sup {
+      line-height: 0;
+      font-size: 0.7em;
+    }
+    .timeline-axis {
+      /* height and .line's top are set inline (see _buildTimeline) - they
+         grow to fit whichever same-day cluster on the axis has the most
+         events, since those stack vertically instead of overlapping.
+         margin-left reserves room for the leftmost dot's own Important
+         glyph, which extends further left than the dot itself (see
+         .timeline-dot-important) - without it, a dot sitting at the
+         axis's own 0% (the furthest-back past event, or day 0 with no past
+         events at all) could have that glyph clipped against ha-card's own
+         16px padding, since the worst case (radius + ring + glyph width at
+         MAX_SIZE) runs a couple pixels past that on its own. */
+      position: relative;
+      height: 34px;
+      margin-left: 20px;
+    }
+    /* Rendered as a top border on a 0-height box, not a filled background -
+       border-style is what lets Layout -> Timeline's line-style option
+       (solid/dashed/dotted) actually work; a background-color bar can only
+       ever be solid. Width/style/color are all configurable there; _buildTimeline
+       reads the same configured width back to keep this positioned centered
+       on axisCenter regardless of how thick it is. */
+    .timeline-axis .line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 0;
+      border-top-width: var(--annuals-timeline-line-width, 4px);
+      border-top-style: var(--annuals-timeline-line-style, solid);
+      border-top-color: var(--annuals-timeline-line-color, var(--divider-color, rgba(128, 128, 128, 0.4)));
+    }
+    /* Marks the past/future boundary - only present once at least one
+       recent-past event is on the axis (see _buildTimeline). Left is set
+       inline, halfway between today and the nearest past event. Same
+       border-based rendering as .line above, for the same reason (so its
+       own configurable style option can be dashed/dotted, not just solid). */
+    .timeline-divider {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 0;
+      border-left-width: var(--annuals-timeline-divider-width, 1px);
+      border-left-style: var(--annuals-timeline-divider-style, solid);
+      border-left-color: var(--annuals-timeline-divider-color, var(--divider-color, rgba(128, 128, 128, 0.4)));
+    }
+    /* Each event is a small group (the circle plus, for Important events, an
+       adjacent glyph to its left) positioned as one unit - top/left are set
+       inline (see _buildTimeline), left placing the *circle* at its
+       days-until position regardless of whether an Important glyph extends
+       further left. */
+    .timeline-dot-wrap {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+    }
+    .timeline-dot-wrap.is-next {
+      cursor: default;
+    }
+    .timeline-dot {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      /* The ring that separates each dot from the background (and from an
+         adjacent same-day dot) - a fixed-width outline in the card's own
+         background color, same trick as .is-next used before this was
+         applied to every dot. */
+      box-shadow: 0 0 0 2px var(--card-background-color, var(--ha-card-background, #fff));
+    }
+    /* VIP replaces the dot's plain color with the badge icon itself, large
+       and centered inside the still-visible circle - centering the glyph
+       directly on a bare transparent dot read as a naked symbol with no
+       "this is a dot on the axis" anchor. */
+    .timeline-dot-vip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* width/height/--mdc-icon-size/color are all set inline (see
+       _buildTimeline) - color specifically because it needs to read the
+       configurable Badge Color (Timeline) var with a white fallback, which
+       an ordinary CSS rule here can't express. */
+    /* Important leaves the circle untouched and adds a same-height glyph
+       immediately to its left instead - unlike VIP, Important doesn't
+       replace the event's own identity marker. No margin and no square
+       aspect-ratio here: the container's width is set inline to the glyph's
+       own measured width (see _fitTimelineIcon), so its right edge - and
+       therefore the glyph's right edge - sits flush against the circle
+       instead of leaving the empty side-padding a square icon box has. */
+    .timeline-dot-important {
+      position: absolute;
+      top: 50%;
+      /* right:100% is the circle's own border edge; the ring is drawn
+         *outside* that by box-shadow, so the glyph is pushed out by the ring
+         width to sit against its outer edge rather than overlapping it.
+         Set inline from TIMELINE_DOT_RING so the two can't drift apart. */
+      right: 100%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .timeline-tip {
+      /* left/top/width are set inline per-tooltip (see _buildTimeline), so
+         it stays inside the card on both axes. border-box so the width set
+         there (measured via offsetWidth, which includes padding+border) is
+         applied back as the same total width. */
+      box-sizing: border-box;
+      position: absolute;
+      background: var(--card-background-color, var(--ha-card-background, #fff));
+      border: 1px solid var(--divider-color, rgba(128, 128, 128, 0.4));
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: var(--annuals-timeline-tooltip-size, 11px);
+      font-weight: var(--annuals-timeline-tooltip-weight, normal);
+      font-style: var(--annuals-timeline-tooltip-style, normal);
+      text-transform: var(--annuals-timeline-tooltip-transform, none);
+      text-decoration: var(--annuals-timeline-tooltip-decoration, none);
+      letter-spacing: var(--annuals-timeline-tooltip-spacing, normal);
+      color: var(--annuals-timeline-tooltip-color, inherit);
+      max-width: 220px;
+      white-space: normal;
+      pointer-events: none;
+      z-index: 1;
+      display: none;
+    }
+    /* Footer button row under the axis: the list-expander on the left, the
+       configurable "More" action on the right. */
+    .timeline-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 6px;
+    }
+    .timeline-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      padding: 4px 6px;
+      margin: 0;
+      border-radius: 6px;
+      cursor: pointer;
+      font: inherit;
+      font-size: var(--annuals-timeline-button-size, 12px);
+      font-weight: var(--annuals-timeline-button-weight, inherit);
+      font-style: var(--annuals-timeline-button-style, inherit);
+      text-transform: var(--annuals-timeline-button-transform, none);
+      text-decoration: var(--annuals-timeline-button-decoration, none);
+      letter-spacing: var(--annuals-timeline-button-spacing, normal);
+      color: var(--annuals-timeline-button-color, var(--secondary-text-color, #888));
+    }
+    .timeline-btn:hover {
+      background: var(--secondary-background-color, rgba(128, 128, 128, 0.12));
+    }
+    .timeline-btn ha-icon {
+      --mdc-icon-size: 18px;
+      display: block;
+      transition: transform 0.18s ease;
+    }
+    .timeline-btn.is-open ha-icon {
+      transform: rotate(180deg);
+    }
+    /* The expandable chronological list under the footer - same sentence
+       text as each dot's tooltip, prefixed with that event's own icon in its
+       type color. */
+    .timeline-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 1px solid var(--divider-color, rgba(128, 128, 128, 0.4));
+    }
+    .timeline-list[hidden] {
+      display: none;
+    }
+    .timeline-list-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      line-height: 1.4;
+    }
+    /* Applied to the text span, not the whole row, so the row's own icon
+       (sized independently via --mdc-icon-size below) isn't affected by
+       this text-only styling. */
+    .timeline-list-item span {
+      font-size: var(--annuals-timeline-list-size, 12px);
+      font-weight: var(--annuals-timeline-list-weight, normal);
+      font-style: var(--annuals-timeline-list-style, normal);
+      text-transform: var(--annuals-timeline-list-transform, none);
+      text-decoration: var(--annuals-timeline-list-decoration, none);
+      letter-spacing: var(--annuals-timeline-list-spacing, normal);
+      color: var(--annuals-timeline-list-color, inherit);
+    }
+    .timeline-list-item ha-icon {
+      --mdc-icon-size: 18px;
+      flex: 0 0 auto;
+      /* translateY set inline by _alignTimelineIconToText, same reason as
+         the header icon above. */
+      display: block;
+    }
+    /* Positioning context for the VIP/Important badge overlays below - the
+       wrap, not the icon itself, so a badge's absolute position isn't
+       thrown off by the icon's own translateY alignment offset. */
+    .timeline-list-icon-wrap {
+      position: relative;
+      flex: 0 0 auto;
+    }
+    /* Bare glyphs, no round background - unlike the list layout's own
+       .vip-badge/.important-badge, which do have one. Sized smaller than
+       .timeline-list-item's own ha-icon rule, so the specificity here needs
+       two classes to win over that one-class-plus-type selector. */
+    .timeline-list-item .timeline-list-badge {
+      position: absolute;
+      --mdc-icon-size: 11px;
+      width: 11px;
+      height: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .timeline-list-badge-important {
+      top: -4px;
+      left: -4px;
+    }
+    .timeline-list-badge-vip {
+      top: -4px;
+      right: -4px;
+    }
   `;
+
+  // One accent color per event type, used only by the timeline layout to
+  // tell dots apart at a glance without a legend (see the Colors tab for
+  // per-field text/badge colors, which stay separate from this). These are
+  // Home Assistant's own standard theme color variables, so they follow
+  // whatever theme is active instead of being fixed values; the literal
+  // fallbacks only apply on a theme that doesn't define them. Covers every
+  // type in const.py's ALL_EVENT_TYPES - an earlier version was missing
+  // name_day and memorial, which silently fell through to the "custom" grey.
+  const TIMELINE_TYPE_COLORS = {
+    birthday: "var(--deep-orange-color, #ff6f22)",
+    anniversary: "var(--purple-color, #926bc7)",
+    name_day: "var(--cyan-color, #00bcd4)",
+    wedding_anniversary: "var(--pink-color, #e91e63)",
+    memorial: "var(--blue-grey-color, #607d8b)",
+    pet_birthday: "var(--green-color, #4caf50)",
+    work_anniversary: "var(--blue-color, #2196f3)",
+    custom: "var(--grey-color, #9e9e9e)",
+    holiday: "var(--teal-color, #009688)",
+  };
+  // Event type keys in the fixed order they're listed throughout the editor
+  // (Event types filter grid, this new Colors -> EVENT TYPES section) -
+  // shared so both stay in sync with TIMELINE_TYPE_COLORS above.
+  const EVENT_TYPE_KEYS = Object.keys(TIMELINE_TYPE_COLORS);
+  function timelineDotColor(config, type) {
+    const configured = config && config.colors && config.colors[`type_${type}`];
+    return configured || TIMELINE_TYPE_COLORS[type] || TIMELINE_TYPE_COLORS.custom;
+  }
+  // Width of the ring drawn around each dot (see .timeline-dot's box-shadow).
+  // Kept here because _buildTimeline needs it in JS too, to sit the Important
+  // glyph against the ring's *outer* edge rather than the circle's own edge.
+  const TIMELINE_DOT_RING = 2;
 
   class AnnualsCard extends HTMLElement {
     constructor() {
@@ -4799,7 +6319,6 @@
           !config.categories.includes(e.category)
         )
           return false;
-        if (config.days_ahead && config.days_ahead > 0 && e.days > config.days_ahead) return false;
         // e.days is always the sensor's "days until next occurrence" (never
         // negative - it jumps forward the day after an event), so this is
         // simply "only the events landing exactly today".
@@ -4837,8 +6356,13 @@
           daysSince: e.days === 0 ? 0 : daysSincePrevOccurrence(e.month, e.day, now),
         }))
         .filter((e) => (e.daysSince === 0 ? showToday : showPast));
+      // days_ahead only caps how far into the future upcoming events are
+      // shown - applying it earlier (to `filtered`) would also cull recent
+      // past events being considered for the hero section above, whose own
+      // window is governed by days_past instead, not days_ahead.
       const upcoming = filtered
         .filter((e) => e.days > 0 && !this._isRecent(e, now))
+        .filter((e) => !config.days_ahead || config.days_ahead <= 0 || e.days <= config.days_ahead)
         .filter((e) => e.days > soonDays || showSoon);
       return { hero, upcoming };
     }
@@ -4851,6 +6375,715 @@
       const { hero, upcoming } = this._filteredEvents();
       const sortKey = (e) => (e.daysSince !== undefined ? -e.daysSince : e.days);
       return [...hero, ...upcoming].sort((a, b) => sortKey(a) - sortKey(b)).slice(0, this._config.count || 10);
+    }
+
+    // "when" text for the timeline layout - e.daysSince (attached in
+    // _filteredEvents, only for hero/recent-past events) takes priority over
+    // e.days (always the forward-looking "days until next occurrence") the
+    // same way _row() has to handle it, since a recent-past event's own
+    // e.days already points at its *next* year's occurrence by this point.
+    _timelineWhenText(e, strings) {
+      if (e.daysSince !== undefined && e.daysSince > 0) {
+        return e.daysSince === 1 ? strings.dayAgo : strings.daysAgo(e.daysSince);
+      }
+      return e.days === 0 ? strings.today : e.days === 1 ? strings.inDay : strings.inDays(e.days);
+    }
+
+    // VIP/Important flags for one event, resolved against this card's usual
+    // show_vip_badge/show_important_badge toggles and icon config - both can
+    // be present on the same event, since the timeline draws them in two
+    // different places (see _buildTimeline): a small overlay badge beside
+    // the axis dot's own icon, and the same beside the header/expandable
+    // Details list's icon (those two share both the same look and the same
+    // color). Which color config drives them depends on `context`:
+    // "timeline" (the default) uses the Timeline's own Badge Color fields
+    // (vip_badge_timeline/important_badge_timeline) for the axis dots only;
+    // "list" uses the same Badge Color fields the classic List layout's own
+    // corner badges use (vip_badge/important_badge) for both the header and
+    // the expandable Details list - two independent colors so the compact
+    // axis view and the two textual views can each be themed on their own.
+    _timelineBadges(e, config, context) {
+      const vipColorVar =
+        context === "list" ? "--annuals-vip-badge-color" : "--annuals-vip-badge-timeline-color";
+      const importantColorVar =
+        context === "list" ? "--annuals-important-badge-color" : "--annuals-important-badge-timeline-color";
+      const vip =
+        e.vip && config.show_vip_badge !== false
+          ? {
+              icon: config.vip_badge_icon || "mdi:star",
+              colorVar: vipColorVar,
+              fallback: "var(--error-color)",
+            }
+          : null;
+      const important =
+        e.important && config.show_important_badge !== false
+          ? {
+              icon: config.important_badge_icon || "mdi:exclamation-thick",
+              colorVar: importantColorVar,
+              fallback: "var(--annuals-soon-color, var(--warning-color))",
+            }
+          : null;
+      return { vip, important };
+    }
+
+    // Same accent/today/soon category lookup _row() uses for the list
+    // layout's icon animation, applied to one timeline event instead of one
+    // rendered row - returns the "anim-x" class (or "" for none/unset) to
+    // add to that event's axis dot.
+    _timelineAnimClass(e, config) {
+      const soonDays = config.soon_days;
+      const colorCategory = e.days === 0 ? "today" : e.days > 0 && e.days <= soonDays ? "soon" : "accent";
+      const animName = (config.icon_animation || {})[colorCategory];
+      return animName && animName !== "none" ? `anim-${animName}` : "";
+    }
+
+    // Scales one of the timeline's badge glyphs (VIP star / Important
+    // exclamation) to a target size in real pixels, and optionally sizes its
+    // container to the glyph's own width.
+    //
+    // Every icon fills its 24x24 viewBox differently - mdi:star's path spans
+    // 20x19 of it, mdi:exclamation-thick's only 4x18 - so a fixed
+    // --mdc-icon-size renders visually large for one icon and tiny for
+    // another, and a square icon box leaves wide empty side-padding around a
+    // narrow glyph. Since both badge icons are user-configurable, the actual
+    // path bounds are measured instead of assuming any one icon's ratio.
+    //
+    // ha-icon builds its <svg> asynchronously inside two nested shadow roots,
+    // so this measures on the next frame; the caller's initial estimate
+    // stands if the svg still isn't there (or if this is an icon-font build
+    // with no path to measure at all).
+    _fitTimelineIcon(icon, container, opts) {
+      requestAnimationFrame(() => {
+        const inner = icon.shadowRoot && icon.shadowRoot.querySelector("ha-svg-icon");
+        const svg = inner && inner.shadowRoot && inner.shadowRoot.querySelector("svg");
+        const path = svg && svg.querySelector("path");
+        if (!path) return;
+        let bbox;
+        try {
+          bbox = path.getBBox();
+        } catch (err) {
+          return; // not laid out yet - keep the estimate
+        }
+        if (!bbox || !bbox.width || !bbox.height) return;
+        // getBBox reports the svg's own user units, so normalize against the
+        // viewBox rather than assuming the usual 24x24.
+        const viewBox = (svg.getAttribute("viewBox") || "0 0 24 24").split(/[\s,]+/);
+        const unitW = parseFloat(viewBox[2]) || 24;
+        const unitH = parseFloat(viewBox[3]) || 24;
+        const w = bbox.width / unitW;
+        const h = bbox.height / unitH;
+        // fitBy "both" keeps the whole glyph inside the target box (VIP,
+        // which sits inside the circle); "height" matches only the glyph's
+        // height and lets its width follow (Important, which sits beside the
+        // circle and should be exactly as tall as it).
+        const ratio = opts.fitBy === "height" ? h : Math.max(w, h);
+        const iconSize = Math.round(opts.target / ratio);
+        icon.style.width = `${iconSize}px`;
+        icon.style.height = `${iconSize}px`;
+        icon.style.setProperty("--mdc-icon-size", `${iconSize}px`);
+        if (container && opts.fitContainerWidth) {
+          container.style.width = `${Math.ceil(w * iconSize)}px`;
+        }
+      });
+    }
+
+    // Nudges an icon vertically so the *visible glyph's* center lines up
+    // with the center of the text beside it. Flexbox only centers the
+    // icon's box, and an mdi glyph is rarely centered inside its own 24x24
+    // viewBox (mdi:cake-variant, for one, sits noticeably high), so box
+    // centering alone leaves the symbol looking off relative to the text.
+    // Measured on the next frame for the same reason as _fitTimelineIcon:
+    // ha-icon builds its <svg> asynchronously in nested shadow roots.
+    _alignTimelineIconToText(icon, textEl) {
+      requestAnimationFrame(() => {
+        const inner = icon.shadowRoot && icon.shadowRoot.querySelector("ha-svg-icon");
+        const svg = inner && inner.shadowRoot && inner.shadowRoot.querySelector("svg");
+        const path = svg && svg.querySelector("path");
+        if (!path) return;
+        const glyph = path.getBoundingClientRect();
+        const text = textEl.getBoundingClientRect();
+        if (!glyph.height || !text.height) return;
+        const delta = (text.top + text.height / 2) - (glyph.top + glyph.height / 2);
+        if (!delta) return;
+        icon.style.transform = `translateY(${Math.round(delta * 10) / 10}px)`;
+      });
+    }
+
+    // One-sentence description shared by the timeline's header (the single
+    // soonest event) and every dot's click tooltip, e.g. "Kevin's 27th
+    // birthday is today" (English ordinal suffix superscript) or "Kevins 27.
+    // Geburtstag ist heute" (German keeps "Geburtstag" capitalized - it's a
+    // noun - and drops the apostrophe a name ending in s/x/z/ß would
+    // otherwise double up, e.g. "Klaus'" not "Klauss'"), or for an event
+    // with no occurrence count (a holiday, or any event added before
+    // occurrence tracking existed), simply "Labor Day is in 43 days" - the
+    // same templates work for every event type since neither hardcodes
+    // "birthday"/"anniversary"/etc. anywhere. Returns a DocumentFragment
+    // (not a string) so the ordinal suffix can be an actual <sup> element -
+    // callers append it directly rather than assigning textContent/innerHTML.
+    _timelineSentenceFragment(e, strings, config) {
+      const frag = document.createDocumentFragment();
+      const whenRaw = this._timelineWhenText(e, strings);
+      // Both templates always put {when} at the sentence's end (never its
+      // start), so unlike _row()'s version of this same countdown text, it
+      // always needs the lowercased "...is today"/"...ist heute" form here.
+      const when = whenRaw.charAt(0).toLowerCase() + whenRaw.slice(1);
+      // Same adjustment _row() makes for its own badge number: once an
+      // event's date has passed, e.occurrence already counts *next* year's
+      // occurrence (the sensor jumped forward the day after the event), so
+      // a recent-past event's sentence needs that number one lower to
+      // describe the occurrence that actually just happened.
+      const isPast = e.daysSince !== undefined && e.daysSince > 0;
+      const occurrence = isPast && e.occurrence != null ? e.occurrence - 1 : e.occurrence;
+      // Layout -> Timeline -> Options: "Pioneer Day (US-UT)" instead of just
+      // "Pioneer Day" - hyphenated country-subdivision, distinct from the
+      // list layout's own "US (UT)" country-suffix format (see _row()),
+      // since this one's meant to read as a single parenthetical rather than
+      // nested parens.
+      const holidaySuffix =
+        config.show_holiday_suffix && e.type === "holiday" && e.country
+          ? ` (${e.country}${e.subdivision ? `-${e.subdivision}` : ""})`
+          : "";
+      const baseName = config.timeline_show_full_name && e.fullName ? e.fullName : e.name;
+      const displayName = `${baseName}${holidaySuffix}`;
+      if (!(config.show_badge !== false && occurrence != null)) {
+        const tmpl =
+          (isPast ? strings.timelineSentenceSimplePast : strings.timelineSentenceSimple) || "{name} is {when}";
+        frag.appendChild(document.createTextNode(tmpl.replace("{name}", displayName).replace("{when}", when)));
+        return frag;
+      }
+      let typeLabel = strings.types[e.type] || e.type;
+      if (e.type === "holiday" && e.category) {
+        typeLabel = `${typeLabel} (${(strings.categories || {})[e.category] || e.category})`;
+      }
+      // German nouns stay capitalized wherever they sit in the sentence;
+      // only English (and any other language not opting in) lowercases the
+      // type the way _row()'s trailing countdown text does.
+      const typeText = strings.capitalizeSentenceType
+        ? typeLabel
+        : typeLabel.charAt(0).toLowerCase() + typeLabel.slice(1);
+      const possessive = (strings.possessive || ((n) => `${n}'s`))(displayName);
+      const { num, sup } = (strings.ordinalParts || ((n) => ({ num: `${n}.`, sup: "" })))(occurrence);
+      // {sup} is the one placeholder handled specially below (split instead
+      // of replaced) so its value can become a real <sup> element; every
+      // other placeholder is a plain string substitution.
+      const tmpl =
+        (isPast ? strings.timelineSentencePast : strings.timelineSentence) ||
+        "{possessive} {ordinal}{sup} {type} is {when}";
+      const [before, after] = tmpl.split("{sup}");
+      const fill = (s) =>
+        (s || "").replace("{possessive}", possessive).replace("{ordinal}", num).replace("{type}", typeText).replace("{when}", when);
+      frag.appendChild(document.createTextNode(fill(before)));
+      if (sup) {
+        const supEl = document.createElement("sup");
+        supEl.textContent = sup;
+        frag.appendChild(supEl);
+      }
+      frag.appendChild(document.createTextNode(fill(after)));
+      return frag;
+    }
+
+    // Compact horizontal-axis layout (layout_style: "timeline"): one header
+    // line per event sharing the soonest day (events is already sorted
+    // chronologically, oldest-past-first, by _visibleEvents), plus a dot per
+    // event positioned and sized by its own signed distance from today (see
+    // axisDaysOf below) - closer events (in either direction, past or
+    // future) render bigger, linearly (not logarithmically) across the
+    // widest gap in the set, so the axis always fits its container
+    // regardless of days_ahead/days_past. Every dot not already described in
+    // the header is clickable, toggling a small tooltip instead of
+    // permanently showing every event's details at once - that's what keeps
+    // this fitting a narrow Sections-view column where the regular row list
+    // can't.
+    _buildTimeline(events, strings) {
+      const config = this._config;
+      const wrap = document.createElement("div");
+      wrap.className = "timeline";
+
+      // Signed day offset from today for one event: e.days is always the
+      // sensor's forward-looking "days until next occurrence" (see
+      // getEvents), which already points at *next* year's date once an
+      // event's own date has passed - daysSince (attached in
+      // _filteredEvents, only for hero/recent-past events) is what actually
+      // says "this happened N days ago", so it takes priority whenever
+      // present and positive. Used everywhere below instead of raw e.days
+      // so recent-past events land correctly to the left of today on the
+      // axis instead of scattered among next year's events.
+      const isPastEvent = (e) => e.daysSince !== undefined && e.daysSince > 0;
+      const axisDaysOf = (e) => (isPastEvent(e) ? -e.daysSince : e.days);
+
+      // Every event sharing the *first* day gets its own header line, not
+      // just the first one _visibleEvents happened to sort first - two
+      // events landing on the same day are equally deserving of a header
+      // line, and showing only one made the other's own tooltip the only
+      // place its text ever appeared. No cap on how many share that day; the
+      // header is normal in-flow content, so the card simply grows taller to
+      // fit however many lines that takes. "First" always means events[0] -
+      // _visibleEvents already sorts oldest-past-first, so this is the
+      // oldest recent-past event whenever one is visible at all, and falls
+      // back to today/the soonest upcoming event exactly as before once no
+      // past events are shown.
+      const minAxisDays = axisDaysOf(events[0]);
+      const nextGroup = events.filter((e) => axisDaysOf(e) === minAxisDays);
+      const header = document.createElement("div");
+      header.className = "timeline-header";
+      nextGroup.forEach((ev) => {
+        // "list" context, not "timeline" - the header's icon+badge is the
+        // same visual (and now the same color) as the expandable Details
+        // list's own rows; only the axis dots use the Timeline's own Badge
+        // Color fields.
+        const badges = this._timelineBadges(ev, config, "list");
+        const row = document.createElement("div");
+        row.className = "timeline-header-row";
+        // Same icon + small overlay badge structure the expandable Details
+        // list uses (see events.forEach below) - exclamation top-left, star
+        // top-right of the entity's own icon, rather than the older
+        // "Important sits beside the marker, VIP replaces it" layout, so the
+        // two contexts read consistently as the user expects.
+        const headerIcons = document.createElement("div");
+        headerIcons.className = "timeline-header-icons";
+
+        const mainIcon = document.createElement("ha-icon");
+        mainIcon.setAttribute("icon", ev.icon);
+        mainIcon.style.color = timelineDotColor(config, ev.type);
+        // Animated via a wrapping span, not the icon itself - the icon
+        // already carries its own inline transform (translateY, set below by
+        // _alignTimelineIconToText), and a CSS animation targeting the same
+        // property on the same element would override that alignment for as
+        // long as the animation runs. Nesting them keeps both transforms
+        // independent: the wrapper spins/pulses/etc, the icon inside it
+        // still sits at its aligned offset.
+        const mainAnimClass = this._timelineAnimClass(ev, config);
+        if (mainAnimClass) {
+          const animWrap = document.createElement("span");
+          animWrap.className = `timeline-icon-anim-wrap ${mainAnimClass}`;
+          animWrap.appendChild(mainIcon);
+          headerIcons.appendChild(animWrap);
+        } else {
+          headerIcons.appendChild(mainIcon);
+        }
+
+        if (badges.important) {
+          const excl = document.createElement("ha-icon");
+          excl.className = "timeline-header-badge timeline-header-badge-important";
+          excl.setAttribute("icon", badges.important.icon);
+          excl.style.color = `var(${badges.important.colorVar}, ${badges.important.fallback})`;
+          headerIcons.appendChild(excl);
+        }
+        if (badges.vip) {
+          const star = document.createElement("ha-icon");
+          star.className = "timeline-header-badge timeline-header-badge-vip";
+          star.setAttribute("icon", badges.vip.icon);
+          star.style.color = `var(${badges.vip.colorVar}, ${badges.vip.fallback})`;
+          headerIcons.appendChild(star);
+        }
+        row.appendChild(headerIcons);
+
+        const sentence = document.createElement("div");
+        sentence.className = "sentence";
+        sentence.appendChild(this._timelineSentenceFragment(ev, strings, config));
+        row.appendChild(sentence);
+        header.appendChild(row);
+        this._alignTimelineIconToText(mainIcon, sentence);
+      });
+      wrap.appendChild(header);
+
+      const axis = document.createElement("div");
+      axis.className = "timeline-axis";
+      // Mirrors whatever CARD_STYLE's ".timeline-axis .line" border-top-width
+      // actually renders at, so the line's vertical center still lands on
+      // axisCenter (see line.style.top below) no matter how thick the user
+      // has configured it.
+      const LINE_THICKNESS = parseFloat(config.timeline_line_width) || 4;
+      const line = document.createElement("div");
+      line.className = "line";
+      axis.appendChild(line);
+
+      const tip = document.createElement("div");
+      tip.className = "timeline-tip";
+      axis.appendChild(tip);
+
+      // The axis spans from the furthest-back recent-past event (if any) to
+      // the furthest-out upcoming one, with today sitting wherever that
+      // split lands rather than always at the left edge - maxPast/maxFuture
+      // guard against an empty side (e.g. no past events at all) collapsing
+      // that side's scale to 0.
+      const pastDaysSince = events.filter(isPastEvent).map((e) => e.daysSince);
+      const futureDays = events.filter((e) => !isPastEvent(e)).map((e) => e.days);
+      const maxPast = Math.max(0, ...pastDaysSince);
+      const maxFuture = Math.max(1, ...futureDays);
+      const totalSpan = maxPast + maxFuture;
+
+      // A full-height divider marking the past/future boundary, halfway
+      // between today (axisDays 0, whether or not anything actually happens
+      // today) and the nearest recent-past event - only drawn once there's
+      // an actual past event on the axis to separate from.
+      if (pastDaysSince.length) {
+        const nearestPastAxisDays = -Math.min(...pastDaysSince);
+        const dividerAxisDays = nearestPastAxisDays / 2;
+        const dividerRatio = (dividerAxisDays + maxPast) / totalSpan;
+        const divider = document.createElement("div");
+        divider.className = "timeline-divider";
+        divider.style.left = `${dividerRatio * 100}%`;
+        axis.appendChild(divider);
+      }
+
+      const MIN_SIZE = 6;
+      const MAX_SIZE = 18;
+      // Clear space kept between two stacked same-day dots' own edges (on
+      // top of their rings) - a fixed size *added to that specific
+      // cluster's own largest dot*, not to a global maximum, so two small,
+      // far-out same-day dots stack tightly instead of inheriting a gap
+      // sized for the biggest dot anywhere on the axis.
+      const RING_GAP = 5;
+
+      // Purely distance-based (from today, in either direction) - a VIP
+      // event deliberately gets no size bump, so its dot stays comparable to
+      // its neighbours' and the star simply scales to fill whatever size
+      // that dot is (see _fitTimelineIcon).
+      const maxDist = Math.max(maxPast, maxFuture, 1);
+      const sizeOf = (e, isNext) => {
+        const ratio = Math.abs(axisDaysOf(e)) / maxDist;
+        return isNext ? MAX_SIZE : Math.max(MIN_SIZE, MAX_SIZE - ratio * (MAX_SIZE - MIN_SIZE));
+      };
+      const sizes = events.map((e) => sizeOf(e, axisDaysOf(e) === minAxisDays));
+
+      // Same-day events would otherwise all land at the exact same x
+      // position (ratio is purely days-based) and fully overlap. Each
+      // cluster instead stacks straight above/below a shared center -
+      // offsets of (slot - (n-1)/2) * slotSize put a lone event exactly on
+      // the line, center a 3-way cluster's middle event exactly on the
+      // line, and split the line exactly between the two middle events of
+      // a 2- or 4-way cluster - which is what lets the one straight axis
+      // line still read as "centered" through every cluster it passes, not
+      // just the biggest one. No cap on cluster size either way: the axis
+      // (and so the card) simply grows by one more slotSize per additional
+      // same-day event, via maxOffset below. Keyed by axisDaysOf, not raw
+      // e.days, so a recent-past event never clusters with an unrelated
+      // future event that happens to share the same forward day count.
+      const dayGroups = new Map();
+      events.forEach((e, i) => {
+        const key = axisDaysOf(e);
+        if (!dayGroups.has(key)) dayGroups.set(key, []);
+        dayGroups.get(key).push(i);
+      });
+      const offsetByIndex = new Array(events.length);
+      let maxOffset = 0;
+      dayGroups.forEach((indices) => {
+        const n = indices.length;
+        const slotSize = Math.max(...indices.map((idx) => sizes[idx])) + RING_GAP;
+        indices.forEach((eventIdx, slot) => {
+          const offset = Math.round((slot - (n - 1) / 2) * slotSize);
+          offsetByIndex[eventIdx] = offset;
+          maxOffset = Math.max(maxOffset, Math.abs(offset));
+        });
+      });
+      const TOP_PAD = 4;
+      const axisCenter = MAX_SIZE / 2 + TOP_PAD + maxOffset;
+      // Symmetric: since offsets range from -maxOffset to +maxOffset, the
+      // container needs the same MAX_SIZE/2+TOP_PAD+maxOffset clearance
+      // *below* the line as axisCenter already reserves above it - not just
+      // MAX_SIZE/2+TOP_PAD. Reserving only the top half here (a leftover
+      // from an earlier stack-only-upward version of this) let a
+      // below-the-line dot overlap the footer's Details/More buttons, which
+      // sit right after the axis in normal flow.
+      axis.style.height = `${axisCenter * 2}px`;
+      // The line's own top-left corner (not its center) is what `top`
+      // positions - offset by half its thickness so its visual center lands
+      // on axisCenter, matching how each dot is centered via
+      // translate(-50%, -50%) on *its* box. Skipping this half-thickness
+      // correction is what made the line sit visibly below the dots' true
+      // center once the line was thickened past 1-2px.
+      line.style.top = `${axisCenter - LINE_THICKNESS / 2}px`;
+
+      // Tracked on the instance (not a local closure) so the single
+      // document-level "click outside closes the tooltip" listener below -
+      // added once per card instance, never re-added on every re-render -
+      // always reads whichever render's tip/dot is current.
+      this._timelineTipState = { tipEl: tip, activeWrap: null };
+      if (!this._timelineOutsideClickHandler) {
+        this._timelineOutsideClickHandler = (ev) => {
+          const state = this._timelineTipState;
+          if (!state || !state.activeWrap) return;
+          if (!ev.composedPath().includes(state.activeWrap)) {
+            state.tipEl.style.display = "none";
+            state.activeWrap = null;
+          }
+        };
+        document.addEventListener("click", this._timelineOutsideClickHandler);
+      }
+
+      events.forEach((e, i) => {
+        const isNext = axisDaysOf(e) === minAxisDays;
+        const offset = offsetByIndex[i];
+        // 0% at the furthest-back past event, 100% at the furthest-out
+        // future one - today lands wherever (maxPast/totalSpan) puts it,
+        // not fixed to the left edge, once any past event is on the axis.
+        const ratio = (axisDaysOf(e) + maxPast) / totalSpan;
+        const size = sizes[i];
+        const badges = this._timelineBadges(e, config, "timeline");
+
+        const dotWrap = document.createElement("div");
+        dotWrap.className = "timeline-dot-wrap" + (isNext ? " is-next" : "");
+        dotWrap.style.left = `${ratio * 100}%`;
+        dotWrap.style.top = `${axisCenter + offset}px`;
+        dotWrap.style.width = `${size}px`;
+        dotWrap.style.height = `${size}px`;
+
+        const circle = document.createElement("div");
+        circle.className = "timeline-dot";
+        if (badges.vip) {
+          circle.classList.add("timeline-dot-vip");
+          // The circle keeps the event's own type color, same as every
+          // other dot - only the icon replaces the plain color fill.
+          // Filling the circle with the VIP badge color itself instead
+          // (always red by default, regardless of event type) was the bug
+          // report this fixed.
+          circle.style.background = timelineDotColor(config, e.type);
+          const vipIcon = document.createElement("ha-icon");
+          vipIcon.setAttribute("icon", badges.vip.icon);
+          // Explicit inline color, not just the CARD_STYLE default
+          // (".timeline-dot-vip ha-icon { color: #fff }") - that CSS rule
+          // was the whole bug report: it always won over the Badge Color
+          // (Timeline) setting since nothing here ever overrode it with the
+          // configured var. White stays the fallback (for contrast against
+          // whatever color the circle itself is), but a configured color now
+          // actually takes effect on the star, same as it already did for
+          // the Important glyph beside it.
+          vipIcon.style.color = `var(${badges.vip.colorVar}, #fff)`;
+          // display:flex directly on the ha-icon element (not just on its
+          // parent) is what actually centers the glyph - ha-icon's own
+          // internal layout otherwise leaves it off-center, which is what an
+          // earlier version of this ran into. Sizes below are only a first
+          // estimate; _fitTimelineIcon replaces them next frame with values
+          // scaled from the glyph's measured bounds, so the star fills this
+          // dot's diameter no matter how big the dot is or which icon is
+          // configured.
+          vipIcon.style.display = "flex";
+          vipIcon.style.alignItems = "center";
+          vipIcon.style.justifyContent = "center";
+          vipIcon.style.width = `${size}px`;
+          vipIcon.style.height = `${size}px`;
+          vipIcon.style.setProperty("--mdc-icon-size", `${size}px`);
+          circle.appendChild(vipIcon);
+          // 0.94, not 1.0: the ring around the dot reads as part of it, so a
+          // glyph running the full diameter looks like it's spilling over
+          // the edge rather than sitting in the circle.
+          this._fitTimelineIcon(vipIcon, circle, { target: size * 0.94, fitBy: "both" });
+        } else {
+          circle.style.background = timelineDotColor(config, e.type);
+        }
+        dotWrap.appendChild(circle);
+
+        if (badges.important) {
+          const imp = document.createElement("div");
+          imp.className = "timeline-dot-important";
+          // Pushed out past the ring, which box-shadow draws outside the
+          // circle's border box (where right:100% lands) - see
+          // TIMELINE_DOT_RING.
+          imp.style.marginRight = `${TIMELINE_DOT_RING}px`;
+          const impIcon = document.createElement("ha-icon");
+          impIcon.setAttribute("icon", badges.important.icon);
+          impIcon.style.color = `var(${badges.important.colorVar}, ${badges.important.fallback})`;
+          // Same reasoning as the VIP icon above; here the glyph is matched
+          // to the circle's height and the container to the glyph's width,
+          // so it ends up exactly as tall as the circle and flush against
+          // its left edge.
+          impIcon.style.display = "flex";
+          impIcon.style.alignItems = "center";
+          impIcon.style.justifyContent = "center";
+          impIcon.style.width = `${size}px`;
+          impIcon.style.height = `${size}px`;
+          impIcon.style.setProperty("--mdc-icon-size", `${size}px`);
+          imp.style.width = `${Math.round(size * 0.4)}px`;
+          imp.appendChild(impIcon);
+          dotWrap.appendChild(imp);
+          this._fitTimelineIcon(impIcon, imp, {
+            target: size,
+            fitBy: "height",
+            fitContainerWidth: true,
+          });
+        }
+
+        // The next event's own details already sit in the header above it -
+        // clicking its dot would just show the same thing again in a
+        // tooltip, so only every later dot gets the click handler.
+        if (!isNext) {
+          dotWrap.addEventListener("click", (ev) => {
+            // Stopped so the document-level "click outside" listener above
+            // doesn't immediately close the tooltip this same click just
+            // opened (see the reopening check below for the toggle-closed
+            // case instead).
+            ev.stopPropagation();
+            const state = this._timelineTipState;
+            const reopening = state.activeWrap === dotWrap && tip.style.display === "block";
+            tip.style.display = "none";
+            state.activeWrap = null;
+            if (reopening) return;
+            tip.textContent = "";
+            tip.appendChild(this._timelineSentenceFragment(e, strings, config));
+            // Measured with left pinned to 0 and width released, then locked
+            // to that measurement before left moves. An absolutely
+            // positioned box with `left` set and `right: auto` shrink-fits
+            // against "containing block width - left", so assigning left
+            // *after* measuring silently re-narrows the tooltip (measured
+            // live: the same text renders 179x28 at left:0 but 59x98 at
+            // left:400), which threw off both the centering math and the
+            // height used to place it vertically.
+            tip.style.width = "auto";
+            tip.style.left = "0px";
+            tip.style.display = "block";
+            const tipWidth = tip.offsetWidth;
+            tip.style.width = `${tipWidth}px`;
+            const tipHeight = tip.offsetHeight;
+
+            // ha-card sets overflow:hidden (its background-image support
+            // needs it), so anything spilling past the card is silently cut
+            // off rather than just overhanging - the tooltip is therefore
+            // clamped inside the card on both axes.
+            const axisRect = axis.getBoundingClientRect();
+            const cardRect = this.shadowRoot.querySelector("ha-card").getBoundingClientRect();
+            const dotRect = dotWrap.getBoundingClientRect();
+            const pad = 4;
+            const gap = 6;
+
+            const centerX = dotRect.left + dotRect.width / 2 - axisRect.left;
+            const minLeft = tipWidth / 2 + (cardRect.left + pad - axisRect.left);
+            const maxLeft = cardRect.right - pad - axisRect.left - tipWidth / 2;
+            tip.style.left = `${Math.min(Math.max(centerX, minLeft), Math.max(minLeft, maxLeft))}px`;
+            tip.style.transform = "translateX(-50%)";
+
+            // Above the dot by default; flipped below when that would clip
+            // against the card's top (which is the common case, since the
+            // axis sits just under the header), then clamped so a card too
+            // short for either placement still shows the whole tooltip.
+            let topAbs = dotRect.top - gap - tipHeight;
+            if (topAbs < cardRect.top + pad) topAbs = dotRect.bottom + gap;
+            if (topAbs + tipHeight > cardRect.bottom - pad) topAbs = cardRect.bottom - pad - tipHeight;
+            if (topAbs < cardRect.top + pad) topAbs = cardRect.top + pad;
+            tip.style.top = `${topAbs - axisRect.top}px`;
+            state.activeWrap = dotWrap;
+          });
+        }
+        axis.appendChild(dotWrap);
+      });
+
+      wrap.appendChild(axis);
+
+      // Footer: the list expander on the left, the configurable "More"
+      // action on the right.
+      const footer = document.createElement("div");
+      footer.className = "timeline-footer";
+
+      const expandBtn = document.createElement("button");
+      expandBtn.type = "button";
+      expandBtn.className = "timeline-btn";
+      const expandIcon = document.createElement("ha-icon");
+      expandIcon.setAttribute("icon", "mdi:chevron-down");
+      const expandLabel = document.createElement("span");
+      expandBtn.append(expandIcon, expandLabel);
+      footer.appendChild(expandBtn);
+
+      // Only rendered when an action is actually configured - an always-on
+      // button that does nothing when clicked would just be confusing.
+      const moreAction = config.more_action || { action: "none" };
+      if ((moreAction.action || "none") !== "none") {
+        const moreBtn = document.createElement("button");
+        moreBtn.type = "button";
+        moreBtn.className = "timeline-btn";
+        moreBtn.textContent = strings.timelineMore || "More";
+        moreBtn.addEventListener("click", (ev) => {
+          ev.stopPropagation();
+          this._handleRowAction(moreAction, nextGroup[0].entityId);
+        });
+        footer.appendChild(moreBtn);
+      }
+      wrap.appendChild(footer);
+
+      // The full chronological list, same sentence text as the tooltips,
+      // each prefixed with that event's own icon in its type color - plus,
+      // same as the list layout's own row icon, small VIP/Important badges
+      // overlaid top-right/top-left. Unlike the list layout's badges these
+      // have no round background - bare glyphs in the same color the
+      // timeline axis dots use, consistent with how this whole layout
+      // treats VIP/Important everywhere else.
+      const listEl = document.createElement("div");
+      listEl.className = "timeline-list";
+      events.forEach((e) => {
+        const item = document.createElement("div");
+        item.className = "timeline-list-item";
+
+        const iconWrap = document.createElement("div");
+        iconWrap.className = "timeline-list-icon-wrap";
+        const icon = document.createElement("ha-icon");
+        icon.setAttribute("icon", e.icon);
+        icon.style.color = timelineDotColor(config, e.type);
+        // Same wrap-for-animation reasoning as the header icon above.
+        const listAnimClass = this._timelineAnimClass(e, config);
+        if (listAnimClass) {
+          const animWrap = document.createElement("span");
+          animWrap.className = `timeline-icon-anim-wrap ${listAnimClass}`;
+          animWrap.appendChild(icon);
+          iconWrap.appendChild(animWrap);
+        } else {
+          iconWrap.appendChild(icon);
+        }
+
+        const badges = this._timelineBadges(e, config, "list");
+        if (badges.important) {
+          const excl = document.createElement("ha-icon");
+          excl.className = "timeline-list-badge timeline-list-badge-important";
+          excl.setAttribute("icon", badges.important.icon);
+          excl.style.color = `var(${badges.important.colorVar}, ${badges.important.fallback})`;
+          iconWrap.appendChild(excl);
+        }
+        if (badges.vip) {
+          const star = document.createElement("ha-icon");
+          star.className = "timeline-list-badge timeline-list-badge-vip";
+          star.setAttribute("icon", badges.vip.icon);
+          star.style.color = `var(${badges.vip.colorVar}, ${badges.vip.fallback})`;
+          iconWrap.appendChild(star);
+        }
+
+        const text = document.createElement("span");
+        text.appendChild(this._timelineSentenceFragment(e, strings, config));
+        item.append(iconWrap, text);
+        listEl.appendChild(item);
+        this._alignTimelineIconToText(icon, text);
+      });
+      wrap.appendChild(listEl);
+
+      // Expanded state lives on the instance, not in this DOM: _render()
+      // rebuilds the whole card on every Home Assistant state update, so a
+      // per-render local would silently collapse the list under the user.
+      const applyExpanded = () => {
+        const open = this._timelineExpanded === true;
+        listEl.hidden = !open;
+        expandBtn.classList.toggle("is-open", open);
+        expandLabel.textContent = open
+          ? strings.timelineCollapse || "Less"
+          : strings.timelineExpand || "All events";
+        expandBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      };
+      expandBtn.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        this._timelineExpanded = this._timelineExpanded !== true;
+        applyExpanded();
+      });
+      applyExpanded();
+
+      return wrap;
+    }
+
+    // Cleans up the one document-level click listener _buildTimeline adds
+    // (see above) once this card is removed from a dashboard - otherwise it
+    // would linger on `document` forever, since nothing else ever removes
+    // it.
+    disconnectedCallback() {
+      if (this._timelineOutsideClickHandler) {
+        document.removeEventListener("click", this._timelineOutsideClickHandler);
+        this._timelineOutsideClickHandler = null;
+      }
     }
 
     _row(e, strings) {
@@ -4882,7 +7115,7 @@
       div.className =
         "row" + (highlightClass ? ` ${highlightClass}` : "") + matchClass + (iconVisible ? "" : " icon-hidden");
       let typeLabel = strings.types[e.type] || e.type;
-      // Holidays share one generic "Holiday" subtitle otherwise, which
+      // Holidays share one generic "Holiday" type label otherwise, which
       // doesn't distinguish a public holiday from a school break - the
       // category (already driving the row's icon - see CATEGORY_ICONS in
       // const.py) is appended so it's visible as text too.
@@ -4890,8 +7123,8 @@
         typeLabel = `${typeLabel} (${(strings.categories || {})[e.category] || e.category})`;
       }
       // Country (+ subdivision), useful once more than one country/region is
-      // imported at once - opt-in per show_name_country/show_subtitle_country
-      // (see the "Show country/subdivision" sub-options under Title/Subtitle
+      // imported at once - opt-in per show_name_country/show_type_country
+      // (see the "Show country/subdivision" sub-options under Name/Type
       // in the editor) rather than always-on, since most setups only ever
       // import a single country and don't need it repeated on every row.
       const countrySuffix =
@@ -4917,7 +7150,7 @@
 
       const nameText = countrySuffix && config.show_name_country ? `${e.name} · ${countrySuffix}` : e.name;
       const typeText =
-        countrySuffix && config.show_subtitle_country ? `${typeLabel} · ${countrySuffix}` : typeLabel;
+        countrySuffix && config.show_type_country ? `${typeLabel} · ${countrySuffix}` : typeLabel;
       const fullNameSuffixedText =
         countrySuffix && config.show_full_name_country ? `${e.fullName} · ${countrySuffix}` : e.fullName;
 
@@ -4938,75 +7171,47 @@
       };
 
       // config.columns is only ever set once a user has actually opened the
-      // new "Spalten" editor and reordered/added/removed something (see
-      // _buildDisplayBody) - every dashboard saved before this feature keeps
-      // rendering through the untouched fixed-template path below, so there
-      // is zero migration/regression risk for existing configs.
-      if (Array.isArray(config.columns)) {
-        const ctx = {
-          iconClass,
-          iconAnimClass,
-          iconVisible,
-          nameText,
-          typeText,
-          lastNameText: e.lastName,
-          fullNameText: fullNameSuffixedText,
-          showBadge,
-          badgeValue,
-          badgeClass,
-        };
-        // Countdown ("when") reads as the sentence's opening word ("In 2
-        // days, Anna has her birthday") only until the event's identity has
-        // actually been named - once a name/subtitle/info column has
-        // appeared, any later countdown is a trailing remark instead
-        // ("Anna's birthday is today") and gets lower-cased instead. Custom
-        // text columns don't count either way - they're just connective
-        // words, not the event's identity.
-        let identityShown = false;
-        for (const col of config.columns) {
-          // Guards against a malformed/empty entry (e.g. a stray "-" left in
-          // the raw YAML editor) crashing the whole card instead of just
-          // skipping that one column.
-          if (!col || typeof col !== "object") continue;
-          div.appendChild(this._buildColumnCell(col, e, values, config, ctx, !identityShown));
-          if (
-            col.type === "name" ||
-            col.type === "subtitle" ||
-            col.type === "info" ||
-            col.type === "last_name" ||
-            col.type === "full_name" ||
-            col.type === "full_name_type"
-          )
-            identityShown = true;
-        }
-      } else {
-        div.innerHTML = `
-          <div class="icon-wrap">
-            <ha-icon icon="${e.icon}" class="icon ${iconClass}${iconAnimClass}"></ha-icon>
-            ${e.vip && config.show_vip_badge !== false ? `<ha-icon class="vip-badge" icon="${config.vip_badge_icon || "mdi:star"}"></ha-icon>` : ""}
-            ${e.important && config.show_important_badge !== false ? `<ha-icon class="important-badge" icon="${config.important_badge_icon || "mdi:exclamation-thick"}"></ha-icon>` : ""}
-          </div>
-          <div class="info">
-            <div class="name"></div>
-            <div class="type"></div>
-          </div>
-          <div class="badge-slot">${showBadge ? `<span class="${badgeClass}">${badgeValue}</span>` : ""}</div>
-          <div class="when"></div>
-        `;
-        const iconWrapEl = div.querySelector(".icon-wrap");
-        if (config.show_icon === false || !iconVisible) iconWrapEl.style.display = "none";
-
-        const nameEl = div.querySelector(".name");
-        nameEl.textContent = nameText;
-        if (config.show_name === false) nameEl.style.display = "none";
-
-        const typeEl = div.querySelector(".type");
-        typeEl.textContent = typeText;
-        if (config.show_subtitle === false) typeEl.style.display = "none";
-
-        const whenEl = div.querySelector(".when");
-        whenEl.textContent = when;
-        if (config.show_when === false) whenEl.style.display = "none";
+      // "Row columns" editor and reordered/added/removed something (see
+      // _buildDisplayBody) - every dashboard that never touched it renders
+      // via the same DEFAULT_COLUMNS the editor already shows as its
+      // starting point, so what you see in the editor is what actually
+      // renders, both before and after the first structural edit.
+      const columns = Array.isArray(config.columns) ? config.columns : DEFAULT_COLUMNS;
+      const ctx = {
+        iconClass,
+        iconAnimClass,
+        iconVisible,
+        nameText,
+        typeText,
+        lastNameText: e.lastName,
+        fullNameText: fullNameSuffixedText,
+        showBadge,
+        badgeValue,
+        badgeClass,
+      };
+      // Countdown ("when") reads as the sentence's opening word ("In 2
+      // days, Anna has her birthday") only until the event's identity has
+      // actually been named - once a name/type/info column has
+      // appeared, any later countdown is a trailing remark instead
+      // ("Anna's birthday is today") and gets lower-cased instead. Custom
+      // text columns don't count either way - they're just connective
+      // words, not the event's identity.
+      let identityShown = false;
+      for (const col of columns) {
+        // Guards against a malformed/empty entry (e.g. a stray "-" left in
+        // the raw YAML editor) crashing the whole card instead of just
+        // skipping that one column.
+        if (!col || typeof col !== "object") continue;
+        div.appendChild(this._buildColumnCell(col, e, values, config, ctx, !identityShown));
+        if (
+          col.type === "name" ||
+          col.type === "type" ||
+          col.type === "info" ||
+          col.type === "last_name" ||
+          col.type === "full_name" ||
+          col.type === "full_name_type"
+        )
+          identityShown = true;
       }
 
       this._wireRowActions(div, config, e.entityId);
@@ -5124,7 +7329,7 @@
     // Builds one column's DOM node for the generic column-based row layout
     // (used once config.columns is set). Mirrors the legacy fixed markup
     // exactly for icon/info/badge/when so existing CSS and color/font-size
-    // theming keep applying unchanged; "name"/"subtitle" split the "info"
+    // theming keep applying unchanged; "name"/"type" split the "info"
     // block apart for layouts that reorder them independently; "text" is
     // the new free-form template column.
     _buildColumnCell(col, e, values, config, ctx, whenLeading) {
@@ -5182,7 +7387,7 @@
           name.textContent = nameText;
           return name;
         }
-        case "subtitle": {
+        case "type": {
           const type = document.createElement("div");
           type.className = "type";
           type.textContent = typeText;
@@ -5264,9 +7469,9 @@
       if (config.colors.accent) card.style.setProperty("--annuals-accent-color", config.colors.accent);
       if (config.colors.card_title)
         card.style.setProperty("--annuals-card-title-color", config.colors.card_title);
-      if (config.colors.title) card.style.setProperty("--annuals-title-color", config.colors.title);
-      if (config.colors.subtitle)
-        card.style.setProperty("--annuals-subtitle-color", config.colors.subtitle);
+      if (config.colors.name) card.style.setProperty("--annuals-name-color", config.colors.name);
+      if (config.colors.type)
+        card.style.setProperty("--annuals-type-color", config.colors.type);
       if (config.colors.last_name)
         card.style.setProperty("--annuals-last-name-color", config.colors.last_name);
       if (config.colors.full_name)
@@ -5286,10 +7491,45 @@
         card.style.setProperty("--annuals-vip-badge-color", config.colors.vip_badge);
       if (config.colors.important_badge)
         card.style.setProperty("--annuals-important-badge-color", config.colors.important_badge);
-      if (config.font_sizes.title)
-        card.style.setProperty("--annuals-row-title-size", config.font_sizes.title);
-      if (config.font_sizes.subtitle)
-        card.style.setProperty("--annuals-row-subtitle-size", config.font_sizes.subtitle);
+      if (config.colors.vip_badge_timeline)
+        card.style.setProperty("--annuals-vip-badge-timeline-color", config.colors.vip_badge_timeline);
+      if (config.colors.important_badge_timeline)
+        card.style.setProperty(
+          "--annuals-important-badge-timeline-color",
+          config.colors.important_badge_timeline
+        );
+      if (config.colors.timeline_header)
+        card.style.setProperty("--annuals-timeline-header-color", config.colors.timeline_header);
+      if (config.colors.timeline_tooltip)
+        card.style.setProperty("--annuals-timeline-tooltip-color", config.colors.timeline_tooltip);
+      if (config.colors.timeline_list)
+        card.style.setProperty("--annuals-timeline-list-color", config.colors.timeline_list);
+      if (config.colors.timeline_button)
+        card.style.setProperty("--annuals-timeline-button-color", config.colors.timeline_button);
+      if (config.colors.timeline_line)
+        card.style.setProperty("--annuals-timeline-line-color", config.colors.timeline_line);
+      if (config.timeline_line_width)
+        card.style.setProperty("--annuals-timeline-line-width", config.timeline_line_width);
+      if (config.timeline_line_style)
+        card.style.setProperty("--annuals-timeline-line-style", config.timeline_line_style);
+      if (config.colors.timeline_divider)
+        card.style.setProperty("--annuals-timeline-divider-color", config.colors.timeline_divider);
+      if (config.timeline_divider_width)
+        card.style.setProperty("--annuals-timeline-divider-width", config.timeline_divider_width);
+      if (config.timeline_divider_style)
+        card.style.setProperty("--annuals-timeline-divider-style", config.timeline_divider_style);
+      if (config.font_sizes.timeline_header)
+        card.style.setProperty("--annuals-timeline-header-size", config.font_sizes.timeline_header);
+      if (config.font_sizes.timeline_tooltip)
+        card.style.setProperty("--annuals-timeline-tooltip-size", config.font_sizes.timeline_tooltip);
+      if (config.font_sizes.timeline_list)
+        card.style.setProperty("--annuals-timeline-list-size", config.font_sizes.timeline_list);
+      if (config.font_sizes.timeline_button)
+        card.style.setProperty("--annuals-timeline-button-size", config.font_sizes.timeline_button);
+      if (config.font_sizes.name)
+        card.style.setProperty("--annuals-row-name-size", config.font_sizes.name);
+      if (config.font_sizes.type)
+        card.style.setProperty("--annuals-row-type-size", config.font_sizes.type);
       if (config.font_sizes.last_name)
         card.style.setProperty("--annuals-row-last-name-size", config.font_sizes.last_name);
       if (config.font_sizes.full_name)
@@ -5315,13 +7555,17 @@
         if (style.letter_spacing) card.style.setProperty(`--annuals-${cssKey}-spacing`, style.letter_spacing);
       };
       setFontStyle("title", config.font_style.font_size_title);
-      setFontStyle("row-title", config.font_style.title);
-      setFontStyle("row-subtitle", config.font_style.subtitle);
+      setFontStyle("row-name", config.font_style.name);
+      setFontStyle("row-type", config.font_style.type);
       setFontStyle("row-last-name", config.font_style.last_name);
       setFontStyle("row-full-name", config.font_style.full_name);
       setFontStyle("row-badge", config.font_style.badge);
       setFontStyle("row-when", config.font_style.when);
       setFontStyle("row-text", config.font_style.text);
+      setFontStyle("timeline-header", config.font_style.timeline_header);
+      setFontStyle("timeline-tooltip", config.font_style.timeline_tooltip);
+      setFontStyle("timeline-list", config.font_style.timeline_list);
+      setFontStyle("timeline-button", config.font_style.timeline_button);
 
       const bg = config.background;
       card.style.removeProperty("--annuals-bg-color");
@@ -5361,6 +7605,8 @@
         empty.className = "empty";
         empty.textContent = strings.noEvents;
         listEl.appendChild(empty);
+      } else if (config.layout_style === "timeline") {
+        listEl.appendChild(this._buildTimeline(combined, strings));
       } else {
         combined.forEach((e) => listEl.appendChild(this._row(e, strings)));
       }
@@ -5376,7 +7622,7 @@
     {
       key: "layout",
       icon: "mdi:view-dashboard-outline",
-      groups: ["display", "fonts", "colors", "icons", "background"],
+      groups: ["display", "fonts", "colors", "icons", "background", "timeline"],
     },
   ];
 
@@ -5389,6 +7635,7 @@
     { key: "colors", icon: "mdi:palette" },
     { key: "icons", icon: "mdi:shape-outline" },
     { key: "background", icon: "mdi:image" },
+    { key: "timeline", icon: "mdi:chart-timeline-variant" },
   ];
 
   const EDITOR_STYLE = `
@@ -5587,8 +7834,13 @@
        tooltip opening the usual way (left-aligned, expanding rightward)
        overflows past it and gets clipped - open it right-aligned instead,
        expanding leftward, same fix as .toggle-group below. Applies to any
-       current or future field in this column, not just today's fields. */
-    .field-row-split .field-col:last-child .tooltip-anchor::after { left: auto; right: 0; }
+       current or future field in this column, not just today's fields.
+       :not(:only-child) excludes a .field-row-split that only ever holds a
+       single column (e.g. the "More" button action selector) - that lone
+       column spans the row's full width starting at the LEFT edge, so
+       right-aligning it would flip the overflow to the opposite (left)
+       side instead of fixing it. */
+    .field-row-split .field-col:last-child:not(:only-child) .tooltip-anchor::after { left: auto; right: 0; }
     /* A flex item's children never collapse their margins with anything
        outside it (flex establishes a new block-formatting context), so the
        last row's own margin-bottom would sit *in addition to*
@@ -6464,6 +8716,7 @@
         colors: [strings.editor.colors, ""],
         icons: [strings.editor.colorsIconsHeading, ""],
         background: [strings.editor.cardBackgroundTabTitle, ""],
+        timeline: [strings.editor.groupTimeline, strings.editor.groupTimelineDesc],
       };
       return map[key];
     }
@@ -6678,28 +8931,40 @@
         today: "var(--error-color)",
         soon: "var(--warning-color)",
         card_title: "var(--primary-text-color)",
-        title: "var(--primary-text-color)",
+        name: "var(--primary-text-color)",
         last_name: "var(--primary-text-color)",
         full_name: "var(--primary-text-color)",
-        subtitle: "var(--primary-text-color)",
+        type: "var(--primary-text-color)",
         badge: "var(--primary-text-color)",
         badge_background_color: "rgba(128, 128, 128, 0.25)",
         when: "var(--primary-text-color)",
         text: "var(--primary-text-color)",
+        timeline_header: "var(--primary-text-color)",
+        timeline_tooltip: "var(--primary-text-color)",
+        timeline_list: "var(--primary-text-color)",
+        timeline_button: "var(--secondary-text-color)",
       };
+      for (const key of EVENT_TYPE_KEYS) {
+        fallbacks[`type_${key}`] = TIMELINE_TYPE_COLORS[key];
+      }
       for (const key of [
         "accent",
         "today",
         "soon",
         "card_title",
-        "title",
+        "name",
         "last_name",
         "full_name",
-        "subtitle",
+        "type",
         "badge",
         "badge_background_color",
         "when",
         "text",
+        "timeline_header",
+        "timeline_tooltip",
+        "timeline_list",
+        "timeline_button",
+        ...EVENT_TYPE_KEYS.map((key) => `type_${key}`),
       ]) {
         this._syncColorSwatch(key, this._config.colors[key] || "", fallbacks[key]);
 
@@ -6871,24 +9136,36 @@
       const labelRows = document.createElement("div");
       labelRows.innerHTML =
         this._colorRowHtml("card_title", strings.editor.colorPlaceholder) +
-        this._colorRowHtml("title", strings.editor.colorPlaceholder) +
+        this._colorRowHtml("name", strings.editor.colorPlaceholder) +
         this._colorRowHtml("last_name", strings.editor.colorPlaceholder) +
         this._colorRowHtml("full_name", strings.editor.colorPlaceholder) +
-        this._colorRowHtml("subtitle", strings.editor.colorPlaceholder) +
+        this._colorRowHtml("type", strings.editor.colorPlaceholder) +
         this._colorRowHtml("badge", strings.editor.colorPlaceholder, { bgToggle: true }) +
         this._colorRowHtml("badge_background_color", strings.editor.colorPlaceholder, { sub: true }) +
         this._colorRowHtml("when", strings.editor.colorPlaceholder) +
-        this._colorRowHtml("text", strings.editor.colorPlaceholder);
+        this._colorRowHtml("text", strings.editor.colorPlaceholder) +
+        // Timeline layout only - see _applyLayoutStyleVisibility, which
+        // hides these three whenever layout_style isn't "timeline".
+        this._colorRowHtml("timeline_header", strings.editor.colorPlaceholder) +
+        this._colorRowHtml("timeline_tooltip", strings.editor.colorPlaceholder) +
+        this._colorRowHtml("timeline_list", strings.editor.colorPlaceholder) +
+        this._colorRowHtml("timeline_button", strings.editor.colorPlaceholder) +
+        // Timeline layout only, same as the four rows above - one row per
+        // event type (see EVENT_TYPE_KEYS/TIMELINE_TYPE_COLORS), each in the
+        // exact same field-row style as Header/Tooltip/etc above so it reads
+        // as one continuous list rather than a visually distinct grid.
+        `<div class="section-heading" data-heading="event_types"></div>` +
+        EVENT_TYPE_KEYS.map((key) => this._colorRowHtml(`type_${key}`, strings.editor.colorPlaceholder)).join("");
       body.appendChild(labelRows);
 
       this._paintPresetSwatches(body, strings);
 
       const labels = {
         card_title: [strings.editor.fontCardTitle, strings.editor.cardTitleColorDesc],
-        title: [strings.editor.colorTitle, strings.editor.colorTitleDesc],
+        name: [strings.editor.colorName, strings.editor.colorNameDesc],
         last_name: [strings.editor.colorLastName, strings.editor.colorLastNameDesc],
         full_name: [strings.editor.colorFullName, strings.editor.colorFullNameDesc],
-        subtitle: [strings.editor.colorSubtitle, strings.editor.colorSubtitleDesc],
+        type: [strings.editor.colorType, strings.editor.colorTypeDesc],
         badge: [strings.editor.colorBadge, strings.editor.colorBadgeDesc],
         badge_background_color: [
           strings.editor.colorBadgeBackground,
@@ -6896,20 +9173,34 @@
         ],
         when: [strings.editor.colorWhen, strings.editor.colorWhenDesc],
         text: [strings.editor.colorText, strings.editor.colorTextDesc],
+        timeline_header: [strings.editor.timelineHeaderLabel, strings.editor.timelineHeaderColorDesc],
+        timeline_tooltip: [strings.editor.timelineTooltipLabel, strings.editor.timelineTooltipColorDesc],
+        timeline_list: [strings.editor.timelineListLabel, strings.editor.timelineListColorDesc],
+        timeline_button: [strings.editor.timelineButtonLabel, strings.editor.timelineButtonColorDesc],
       };
       for (const key of [
         "card_title",
-        "title",
+        "name",
         "last_name",
         "full_name",
-        "subtitle",
+        "type",
         "badge",
         "badge_background_color",
         "when",
         "text",
+        "timeline_header",
+        "timeline_tooltip",
+        "timeline_list",
+        "timeline_button",
       ]) {
         const [label, desc] = labels[key];
         this._wireColorRow(body, key, label, desc);
+      }
+
+      const eventTypesHeading = body.querySelector('[data-heading="event_types"]');
+      if (eventTypesHeading) eventTypesHeading.textContent = strings.editor.eventTypesHeading;
+      for (const key of EVENT_TYPE_KEYS) {
+        this._wireColorRow(body, `type_${key}`, strings.typesPlural[key] || strings.types[key] || key, strings.editor.eventTypeColorDesc);
       }
 
       if (!this._presetOutsideClickWired) {
@@ -7232,6 +9523,17 @@
         config.colors.important_badge || "",
         "var(--annuals-soon-color, var(--warning-color))"
       );
+      // #fff, not --error-color like the List field above - the Timeline's
+      // VIP star sits directly on top of the dot's own colored circle (see
+      // _buildTimeline), so it defaults to white for contrast rather than
+      // red; the swatch preview needs to match that real fallback or it
+      // shows a color the star never actually renders in when unset.
+      this._syncColorSwatch("vip_badge_timeline", config.colors.vip_badge_timeline || "", "#fff");
+      this._syncColorSwatch(
+        "important_badge_timeline",
+        config.colors.important_badge_timeline || "",
+        "var(--annuals-soon-color, var(--warning-color))"
+      );
       const visMap = {
         past: config.show_past !== false,
         today: config.show_today !== false,
@@ -7318,7 +9620,7 @@
         name: strings.editor.columnTypeName || "Name",
         last_name: strings.editor.columnTypeLastName || "Last name",
         full_name: strings.editor.columnTypeFullName || "Full name",
-        subtitle: strings.editor.columnTypeSubtitle || "Type",
+        type: strings.editor.columnTypeType || "Type",
         badge: strings.editor.colorBadge,
         when: strings.editor.colorWhen,
         text: strings.editor.columnTypeText || "Custom text",
@@ -7357,7 +9659,7 @@
           <option value="name"></option>
           <option value="last_name"></option>
           <option value="full_name"></option>
-          <option value="subtitle"></option>
+          <option value="type"></option>
           <option value="badge"></option>
           <option value="when"></option>
           <option value="text"></option>
@@ -7399,8 +9701,24 @@
       }
       const compactToggle = compactRow.querySelector('input[data-visibility="columns_compact"]');
       compactToggle.addEventListener("change", () => {
-        this._config = defaultConfig({ ...this._config, columns_compact: compactToggle.checked });
+        // Flipping this toggle immediately swaps the whole column
+        // arrangement - Compact's own Icon/Full name/Occurrence/Type/
+        // Countdown (with its space columns) turning on, or back to the
+        // plain Icon/Full name + type/Occurrence/Countdown default turning
+        // off - rather than just changing spacing/weight under whatever
+        // columns happened to be configured already. Either arrangement
+        // stays fully user-customizable afterward, same as any other time
+        // the columns list gets touched.
+        const columns = compactToggle.checked
+          ? COMPACT_DEFAULT_COLUMNS.map((c) => ({ ...c }))
+          : undefined;
+        this._config = defaultConfig({
+          ...this._config,
+          columns_compact: compactToggle.checked,
+          columns,
+        });
         this._emit();
+        this._renderColumnsList();
       });
       section.appendChild(compactRow);
 
@@ -7412,13 +9730,13 @@
       const isText = col.type === "text";
       const suffixKeys =
         col.type === "info"
-          ? ["name", "subtitle"]
+          ? ["name", "type"]
           : col.type === "full_name_type"
-            ? ["full_name", "subtitle"]
+            ? ["full_name", "type"]
             : col.type === "name"
               ? ["name"]
-              : col.type === "subtitle"
-                ? ["subtitle"]
+              : col.type === "type"
+                ? ["type"]
                 : [];
       return `
         <div class="column-row" data-col-index="${index}">
@@ -7502,13 +9820,13 @@
 
           const suffixKeys =
             col.type === "info"
-              ? ["name", "subtitle"]
+              ? ["name", "type"]
               : col.type === "full_name_type"
-                ? ["full_name", "subtitle"]
+                ? ["full_name", "type"]
                 : col.type === "name"
                   ? ["name"]
-                  : col.type === "subtitle"
-                    ? ["subtitle"]
+                  : col.type === "type"
+                    ? ["type"]
                     : [];
           suffixKeys.forEach((key) => {
             const configKey =
@@ -7516,7 +9834,7 @@
                 ? "show_name_country"
                 : key === "full_name"
                   ? "show_full_name_country"
-                  : "show_subtitle_country";
+                  : "show_type_country";
             const cb = row.querySelector(`[data-col-suffix="${key}"]`);
             if (!cb) return;
             cb.checked = this._config[configKey] === true;
@@ -7585,13 +9903,13 @@
 
         const suffixKeys =
           col.type === "info"
-            ? ["name", "subtitle"]
+            ? ["name", "type"]
             : col.type === "full_name_type"
-              ? ["full_name", "subtitle"]
+              ? ["full_name", "type"]
               : col.type === "name"
                 ? ["name"]
-                : col.type === "subtitle"
-                  ? ["subtitle"]
+                : col.type === "type"
+                  ? ["type"]
                   : [];
         suffixKeys.forEach((key) => {
           const configKey =
@@ -7599,7 +9917,7 @@
               ? "show_name_country"
               : key === "full_name"
                 ? "show_full_name_country"
-                : "show_subtitle_country";
+                : "show_type_country";
           const cb = row.querySelector(`[data-col-suffix="${key}"]`);
           if (!cb) return;
           cb.checked = this._config[configKey] === true;
@@ -7626,6 +9944,36 @@
       const body = document.createElement("div");
       body.className = "display-body";
 
+      const layoutWrap = document.createElement("div");
+      layoutWrap.innerHTML = `
+        <div class="field-row">
+          <div class="field-label">
+            <span class="label-text"></span>
+            <span class="tooltip-anchor" data-tooltip="">
+              <ha-icon icon="mdi:information-outline"></ha-icon>
+            </span>
+          </div>
+          <div class="field-input-row">
+            <select data-layout-style>
+              <option value="list"></option>
+              <option value="timeline"></option>
+            </select>
+          </div>
+        </div>
+      `;
+      const layoutRow = layoutWrap.firstElementChild;
+      layoutRow.querySelector(".label-text").textContent = strings.editor.layoutStyleLabel;
+      layoutRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.layoutStyleDesc;
+      const layoutSelect = layoutRow.querySelector("select[data-layout-style]");
+      layoutSelect.querySelector('option[value="list"]').textContent = strings.editor.layoutStyleList;
+      layoutSelect.querySelector('option[value="timeline"]').textContent = strings.editor.layoutStyleTimeline;
+      layoutSelect.value = this._config.layout_style || "list";
+      layoutSelect.addEventListener("change", () => {
+        this._config = defaultConfig({ ...this._config, layout_style: layoutSelect.value });
+        this._emit();
+      });
+      body.appendChild(layoutRow);
+
       const visHeading = document.createElement("div");
       visHeading.className = "section-heading";
       visHeading.textContent = strings.editor.visibilityHeading;
@@ -7636,10 +9984,17 @@
       // filters). The card's own title lives in Settings -> General now
       // (right under the title text field, as "Hide"), and which fields
       // appear per row - and in what order - is the "Spalten" section
-      // below instead of a fixed icon/title/subtitle/badge/when grid.
+      // below instead of a fixed icon/name/type/badge/when grid.
       visRows.innerHTML = this._visibilityTwoColHtml(["past", "today", "soon"], ["vip_only", "important_only"]);
       body.appendChild(visRows);
 
+      // Row columns only apply to the classic list layout - the timeline
+      // layout has its own fixed header+axis shape, so this section would
+      // just be dead configuration with nothing to affect. Always built
+      // (rather than conditionally, the way this used to work) so
+      // _applyLayoutStyleVisibility can just hide/show it like every other
+      // layout-specific field, instead of this body needing its own special
+      // case for it.
       body.appendChild(this._buildColumnsSection(strings));
 
       const visLabels = {
@@ -7692,6 +10047,7 @@
         this._highlightRowHtml("vip") +
         this._fieldRowHtml("vip_badge_icon", "text", strings.editor.vipBadgeIconPlaceholder, "", true) +
         this._colorRowHtml("vip_badge", strings.editor.colorPlaceholder, { sub: true }) +
+        this._colorRowHtml("vip_badge_timeline", strings.editor.colorPlaceholder, { sub: true }) +
         this._highlightRowHtml("important") +
         this._fieldRowHtml(
           "important_badge_icon",
@@ -7700,7 +10056,8 @@
           "",
           true
         ) +
-        this._colorRowHtml("important_badge", strings.editor.colorPlaceholder, { sub: true });
+        this._colorRowHtml("important_badge", strings.editor.colorPlaceholder, { sub: true }) +
+        this._colorRowHtml("important_badge_timeline", strings.editor.colorPlaceholder, { sub: true });
       body.appendChild(rows);
 
       const labels = {
@@ -7761,7 +10118,20 @@
         (v) => v
       );
       this._upgradeIconField(body, "vip_badge_icon");
-      this._wireColorRow(body, "vip_badge", strings.editor.vipBadgeColor, strings.editor.vipBadgeColorDesc, "colors");
+      this._wireColorRow(
+        body,
+        "vip_badge",
+        strings.editor.vipBadgeColorList,
+        strings.editor.vipBadgeColorListDesc,
+        "colors"
+      );
+      this._wireColorRow(
+        body,
+        "vip_badge_timeline",
+        strings.editor.vipBadgeColorTimeline,
+        strings.editor.vipBadgeColorTimelineDesc,
+        "colors"
+      );
 
       this._wireFieldRow(
         body,
@@ -7774,8 +10144,15 @@
       this._wireColorRow(
         body,
         "important_badge",
-        strings.editor.importantBadgeColor,
-        strings.editor.importantBadgeColorDesc,
+        strings.editor.importantBadgeColorList,
+        strings.editor.importantBadgeColorListDesc,
+        "colors"
+      );
+      this._wireColorRow(
+        body,
+        "important_badge_timeline",
+        strings.editor.importantBadgeColorTimeline,
+        strings.editor.importantBadgeColorTimelineDesc,
         "colors"
       );
 
@@ -7842,13 +10219,17 @@
       const config = this._config;
       const rows = [
         { key: "font_size_title", value: config.font_size_title, style: config.font_style.font_size_title },
-        { key: "title", value: config.font_sizes.title, style: config.font_style.title },
+        { key: "name", value: config.font_sizes.name, style: config.font_style.name },
         { key: "last_name", value: config.font_sizes.last_name, style: config.font_style.last_name },
         { key: "full_name", value: config.font_sizes.full_name, style: config.font_style.full_name },
-        { key: "subtitle", value: config.font_sizes.subtitle, style: config.font_style.subtitle },
+        { key: "type", value: config.font_sizes.type, style: config.font_style.type },
         { key: "badge", value: config.font_sizes.badge, style: config.font_style.badge },
         { key: "when", value: config.font_sizes.when, style: config.font_style.when },
         { key: "text", value: config.font_sizes.text, style: config.font_style.text },
+        { key: "timeline_header", value: config.font_sizes.timeline_header, style: config.font_style.timeline_header },
+        { key: "timeline_tooltip", value: config.font_sizes.timeline_tooltip, style: config.font_style.timeline_tooltip },
+        { key: "timeline_list", value: config.font_sizes.timeline_list, style: config.font_style.timeline_list },
+        { key: "timeline_button", value: config.font_sizes.timeline_button, style: config.font_style.timeline_button },
       ];
       for (const { key, value, style } of rows) {
         const input = this.shadowRoot.querySelector(`input[data-font="${key}"]`);
@@ -7874,13 +10255,19 @@
       const rows = document.createElement("div");
       rows.innerHTML =
         this._fontRowHtml("font_size_title", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        this._fontRowHtml("title", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
+        this._fontRowHtml("name", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
         this._fontRowHtml("last_name", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
         this._fontRowHtml("full_name", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        this._fontRowHtml("subtitle", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
+        this._fontRowHtml("type", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
         this._fontRowHtml("badge", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
         this._fontRowHtml("when", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        this._fontRowHtml("text", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder);
+        this._fontRowHtml("text", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
+        // Timeline layout only - see _applyLayoutStyleVisibility, which
+        // hides these three whenever layout_style isn't "timeline".
+        this._fontRowHtml("timeline_header", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
+        this._fontRowHtml("timeline_tooltip", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
+        this._fontRowHtml("timeline_list", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
+        this._fontRowHtml("timeline_button", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder);
       body.appendChild(rows);
 
       const toggleLabels = [
@@ -7896,15 +10283,32 @@
 
       const labels = {
         font_size_title: [strings.editor.fontCardTitle, strings.editor.fontCardTitleDesc],
-        title: [strings.editor.colorTitle, strings.editor.fontTitleDesc],
+        name: [strings.editor.colorName, strings.editor.fontNameDesc],
         last_name: [strings.editor.colorLastName, strings.editor.fontLastNameDesc],
         full_name: [strings.editor.colorFullName, strings.editor.fontFullNameDesc],
-        subtitle: [strings.editor.colorSubtitle, strings.editor.fontSubtitleDesc],
+        type: [strings.editor.colorType, strings.editor.fontTypeDesc],
         badge: [strings.editor.colorBadge, strings.editor.fontBadgeDesc],
         when: [strings.editor.colorWhen, strings.editor.fontWhenDesc],
         text: [strings.editor.colorText, strings.editor.fontTextDesc],
+        timeline_header: [strings.editor.timelineHeaderLabel, strings.editor.timelineHeaderFontDesc],
+        timeline_tooltip: [strings.editor.timelineTooltipLabel, strings.editor.timelineTooltipFontDesc],
+        timeline_list: [strings.editor.timelineListLabel, strings.editor.timelineListFontDesc],
+        timeline_button: [strings.editor.timelineButtonLabel, strings.editor.timelineButtonFontDesc],
       };
-      for (const key of ["font_size_title", "title", "last_name", "full_name", "subtitle", "badge", "when", "text"]) {
+      for (const key of [
+        "font_size_title",
+        "name",
+        "last_name",
+        "full_name",
+        "type",
+        "badge",
+        "when",
+        "text",
+        "timeline_header",
+        "timeline_tooltip",
+        "timeline_list",
+        "timeline_button",
+      ]) {
         const row = body.querySelector(`input[data-font="${key}"]`).closest(".field-row");
         const [label, desc] = labels[key];
         row.querySelector(".label-text").textContent = label;
@@ -7955,6 +10359,280 @@
       return body;
     }
 
+    // Timeline layout only: the footer's "More" button action. The header
+    // sentence/tooltip/expandable-list font and color settings that used to
+    // live here moved into the Fonts/Colors tabs instead (see
+    // _buildFontsBody/_buildColorsBody) - same rows, same wiring, just
+    // appended there and hidden by _applyLayoutStyleVisibility unless
+    // layout_style is "timeline", so they sit next to every other font/color
+    // control instead of duplicating that tab elsewhere.
+    // One width input + line-style <select> + color row, shared by the axis
+    // line and the past/future divider below - same three knobs for both,
+    // just against different config keys.
+    _lineStyleRowsHtml(widthKey, colorKey) {
+      return (
+        `
+        <div class="field-row">
+          <div class="field-label">
+            <span class="label-text"></span>
+            <span class="tooltip-anchor" data-tooltip="">
+              <ha-icon icon="mdi:information-outline"></ha-icon>
+            </span>
+          </div>
+          <div class="field-input-row">
+            <input type="text" data-field="${widthKey}" placeholder="e.g. 4px">
+          </div>
+        </div>
+        <div class="field-row sub-field-row">
+          <div class="field-label">
+            <span class="label-text"></span>
+          </div>
+          <div class="field-input-row">
+            <select data-line-style="${widthKey}">
+              <option value="solid"></option>
+              <option value="dashed"></option>
+              <option value="dotted"></option>
+            </select>
+          </div>
+        </div>
+      ` + this._colorRowHtml(colorKey, "e.g. #cccccc or var(--divider-color)", { sub: true })
+      );
+    }
+
+    // widthKey doubles as the line-style <select>'s own key (see
+    // _lineStyleRowsHtml) since each line only has one style select, but the
+    // actual config key it reads/writes is styleKey - kept separate from
+    // widthKey since "solid"/"dashed"/"dotted" is a wholly different config
+    // field from the CSS-length width string.
+    _wireLineStyleRows(body, widthKey, styleKey, colorKey, labels) {
+      const strings = t(this._hass);
+      this._wireFieldRow(body, widthKey, labels.width, labels.widthDesc, (v) => v);
+
+      const select = body.querySelector(`select[data-line-style="${widthKey}"]`);
+      const row = select.closest(".sub-field-row");
+      row.querySelector(".label-text").textContent = labels.style;
+      const optionLabels = {
+        solid: strings.editor.lineStyleSolid || "Solid",
+        dashed: strings.editor.lineStyleDashed || "Dashed",
+        dotted: strings.editor.lineStyleDotted || "Dotted",
+      };
+      Array.from(select.options).forEach((opt) => {
+        opt.textContent = optionLabels[opt.value] || opt.value;
+      });
+      select.value = this._config[styleKey] || "solid";
+      select.addEventListener("change", () => {
+        this._config = defaultConfig({ ...this._config, [styleKey]: select.value });
+        this._emit();
+      });
+
+      this._wireColorRow(body, colorKey, labels.color, labels.colorDesc, "colors");
+    }
+
+    _buildTimelineBody(strings) {
+      const body = document.createElement("div");
+      body.className = "timeline-config-body";
+
+      const lineHeading = document.createElement("div");
+      lineHeading.className = "section-heading";
+      lineHeading.textContent = strings.editor.timelineLineHeading;
+      body.appendChild(lineHeading);
+      const lineRows = document.createElement("div");
+      lineRows.innerHTML = this._lineStyleRowsHtml("timeline_line_width", "timeline_line");
+      body.appendChild(lineRows);
+      this._wireLineStyleRows(body, "timeline_line_width", "timeline_line_style", "timeline_line", {
+        width: strings.editor.timelineLineWidth,
+        widthDesc: strings.editor.timelineLineWidthDesc,
+        style: strings.editor.lineStyleLabel,
+        color: strings.editor.timelineLineColor,
+        colorDesc: strings.editor.timelineLineColorDesc,
+      });
+
+      const dividerHeading = document.createElement("div");
+      dividerHeading.className = "section-heading";
+      dividerHeading.textContent = strings.editor.timelineDividerHeading;
+      body.appendChild(dividerHeading);
+      const dividerRows = document.createElement("div");
+      dividerRows.innerHTML = this._lineStyleRowsHtml("timeline_divider_width", "timeline_divider");
+      body.appendChild(dividerRows);
+      this._wireLineStyleRows(body, "timeline_divider_width", "timeline_divider_style", "timeline_divider", {
+        width: strings.editor.timelineDividerWidth,
+        widthDesc: strings.editor.timelineDividerWidthDesc,
+        style: strings.editor.lineStyleLabel,
+        color: strings.editor.timelineDividerColor,
+        colorDesc: strings.editor.timelineDividerColorDesc,
+      });
+
+      this._paintPresetSwatches(body, strings);
+
+      const optionsHeading = document.createElement("div");
+      optionsHeading.className = "section-heading";
+      optionsHeading.textContent = strings.editor.timelineOptionsHeading;
+      body.appendChild(optionsHeading);
+      const optionsRows = document.createElement("div");
+      optionsRows.innerHTML = this._visibilityTwoColHtml(["timeline_show_full_name"], ["show_holiday_suffix"]);
+      body.appendChild(optionsRows);
+      const fullNameToggle = optionsRows.querySelector('input[data-visibility="timeline_show_full_name"]');
+      const fullNameRow = fullNameToggle.closest(".toggle-row");
+      fullNameRow.querySelector(".label-text").textContent = strings.editor.timelineShowFullName;
+      fullNameRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.timelineShowFullNameDesc;
+      fullNameToggle.addEventListener("change", () => {
+        this._config = defaultConfig({ ...this._config, timeline_show_full_name: fullNameToggle.checked });
+        this._emit();
+      });
+      const suffixToggle = optionsRows.querySelector('input[data-visibility="show_holiday_suffix"]');
+      const suffixRow = suffixToggle.closest(".toggle-row");
+      suffixRow.querySelector(".label-text").textContent = strings.editor.showHolidaySuffix;
+      suffixRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.showHolidaySuffixDesc;
+      suffixToggle.addEventListener("change", () => {
+        this._config = defaultConfig({ ...this._config, show_holiday_suffix: suffixToggle.checked });
+        this._emit();
+      });
+
+      const moreWrap = document.createElement("div");
+      moreWrap.innerHTML = this._actionSelectorSplitHtml(["more_action"]);
+      body.appendChild(moreWrap);
+      this._upgradeActionSelector(
+        moreWrap,
+        "more_action",
+        strings.editor.moreAction,
+        strings.editor.moreActionDesc,
+        { action: "none" }
+      );
+
+      if (!this._presetOutsideClickWired) {
+        this._presetOutsideClickWired = true;
+        this.addEventListener("click", () => this._closeAllPresetMenus());
+      }
+
+      return body;
+    }
+
+    _syncTimelineInputs() {
+      const fullNameToggle = this.shadowRoot.querySelector('input[data-visibility="timeline_show_full_name"]');
+      if (fullNameToggle) fullNameToggle.checked = this._config.timeline_show_full_name === true;
+      this._syncActionSelector("more_action", this._config.more_action || { action: "none" });
+      this._syncFieldRow("timeline_line_width", this._config.timeline_line_width);
+      const lineStyleSelect = this.shadowRoot.querySelector('select[data-line-style="timeline_line_width"]');
+      if (lineStyleSelect) lineStyleSelect.value = this._config.timeline_line_style || "solid";
+      this._syncColorSwatch("timeline_line", this._config.colors.timeline_line || "", "var(--divider-color)");
+
+      this._syncFieldRow("timeline_divider_width", this._config.timeline_divider_width);
+      const dividerStyleSelect = this.shadowRoot.querySelector(
+        'select[data-line-style="timeline_divider_width"]'
+      );
+      if (dividerStyleSelect) dividerStyleSelect.value = this._config.timeline_divider_style || "solid";
+      this._syncColorSwatch("timeline_divider", this._config.colors.timeline_divider || "", "var(--divider-color)");
+
+      const suffixToggle = this.shadowRoot.querySelector('input[data-visibility="show_holiday_suffix"]');
+      if (suffixToggle) suffixToggle.checked = this._config.show_holiday_suffix === true;
+    }
+
+    // Hides whichever of this card's Layout fields the *current* layout
+    // style doesn't read, instead of leaving them visible but silently
+    // ignored - in both directions: list-only fields disappear in timeline
+    // mode, and the timeline-only fields (appended to the end of Fonts/
+    // Colors - see _buildFontsBody/_buildColorsBody) disappear in list mode.
+    _applyLayoutStyleVisibility() {
+      const isTimeline = this._config.layout_style === "timeline";
+      const setRowHidden = (input, hidden) => {
+        if (!input) return;
+        const row = input.closest(".field-row, .toggle-row");
+        if (!row) return;
+        row.style.display = hidden ? "none" : "";
+      };
+      const setFontRowHidden = (bodyClass, key, hidden) => {
+        const input = this.shadowRoot.querySelector(`.${bodyClass} input[data-font="${key}"]`);
+        if (!input) return;
+        const row = input.closest(".field-row");
+        setRowHidden(input, hidden);
+        const sub = row && row.nextElementSibling;
+        if (sub && sub.classList.contains("sub-field-row")) sub.style.display = hidden ? "none" : "";
+      };
+
+      // Fonts/Colors: everything but the card title (which both layouts
+      // share) only applies to the list layout's own row fields.
+      for (const key of ["name", "last_name", "full_name", "type", "badge", "when", "text"]) {
+        setFontRowHidden("fonts-body", key, isTimeline);
+      }
+      for (const key of ["name", "last_name", "full_name", "type", "badge", "badge_background_color", "when", "text"]) {
+        setRowHidden(this.shadowRoot.querySelector(`.colors-body input[data-color="${key}"]`), isTimeline);
+      }
+
+      // The reverse: the timeline's own header/tooltip/expandable-list font
+      // and color rows, appended to the end of the same two tabs, only
+      // apply once the timeline layout is actually selected.
+      for (const key of ["timeline_header", "timeline_tooltip", "timeline_list", "timeline_button"]) {
+        setFontRowHidden("fonts-body", key, !isTimeline);
+        setRowHidden(this.shadowRoot.querySelector(`.colors-body input[data-color="${key}"]`), !isTimeline);
+      }
+
+      // EVENT TYPES section (Colors tab): the per-type dot/icon color only
+      // means anything on the timeline axis, so the whole heading plus its
+      // one row per event type stays hidden in list mode, same as the four
+      // timeline_* rows above.
+      const eventTypesHeading = this.shadowRoot.querySelector('.colors-body [data-heading="event_types"]');
+      if (eventTypesHeading) eventTypesHeading.style.display = isTimeline ? "" : "none";
+      for (const key of EVENT_TYPE_KEYS) {
+        setRowHidden(this.shadowRoot.querySelector(`.colors-body input[data-color="type_${key}"]`), !isTimeline);
+      }
+
+      // Icons tab: Default/Today/Soon stay visible either way, but their
+      // color/preset controls and per-category "show icon" toggle only
+      // affect the list layout's own icon - the animation itself is
+      // layout-agnostic (applied to the list row's icon in _row(), and to
+      // the timeline's own header/list MDI icons in _buildTimeline via
+      // _timelineAnimClass), so it stays configurable in both modes.
+      for (const key of ["accent", "today", "soon"]) {
+        const colorInput = this.shadowRoot.querySelector(`.icons-body input[data-color="${key}"]`);
+        if (colorInput) {
+          const inputRow = colorInput.closest(".field-row").querySelector(".field-input-row");
+          if (inputRow) inputRow.style.display = isTimeline ? "none" : "";
+        }
+        const iconToggle = this.shadowRoot.querySelector(`.icons-body input[data-icon-visible="${key}"]`);
+        if (iconToggle) {
+          const toggleLabel = iconToggle.closest("label");
+          if (toggleLabel) toggleLabel.style.display = isTimeline ? "none" : "";
+        }
+        const matchToggle = this.shadowRoot.querySelector(`.icons-body input[data-match="${key}"]`);
+        if (matchToggle) {
+          const toggleGroup = matchToggle.closest(".toggle-group");
+          if (toggleGroup) toggleGroup.style.display = isTimeline ? "none" : "";
+        }
+      }
+
+      // Display: past/today/soon row-highlighting has no "row" to highlight
+      // in the timeline layout.
+      for (const key of ["past", "today", "soon"]) {
+        const toggle = this.shadowRoot.querySelector(`.display-body input[data-highlight="${key}"]`);
+        setRowHidden(toggle, isTimeline);
+        const colorInput = this.shadowRoot.querySelector(`.display-body input[data-color="highlight_${key}"]`);
+        setRowHidden(colorInput, isTimeline);
+      }
+      // VIP/Important icon fields apply to both layouts (the list layout's
+      // corner badges, the timeline's dot/list glyphs), and so does the List
+      // layout's own Badge Color field now - it's always visible regardless
+      // of layout_style, same as the icon fields, so it can be configured
+      // ahead of switching back to List. Only the Timeline's own Badge Color
+      // field (vip_badge_timeline/important_badge_timeline) stays
+      // timeline-only, since it has nothing to color while List is active.
+      for (const key of ["vip_badge_timeline", "important_badge_timeline"]) {
+        setRowHidden(this.shadowRoot.querySelector(`.display-body input[data-color="${key}"]`), !isTimeline);
+      }
+
+      // Row columns has nothing to configure in the timeline layout either
+      // - it has its own fixed header+axis shape, not a row of columns.
+      const columnsSection = this.shadowRoot.querySelector(".columns-section");
+      if (columnsSection) columnsSection.style.display = isTimeline ? "none" : "";
+
+      // Settings -> General: tap/hold only drive the list layout's own row
+      // click handling - the timeline has no "row" to tap, since its axis
+      // dots (click to open a tooltip) and header sentence (no click at all)
+      // already have their own fixed behavior.
+      const tapSlot = this.shadowRoot.querySelector('[data-action-slot="tap_action"]');
+      const tapSplitRow = tapSlot && tapSlot.closest(".field-row-split");
+      if (tapSplitRow) tapSplitRow.style.display = isTimeline ? "none" : "";
+    }
+
     _superForGroup(key) {
       return SUPER_GROUPS.find((sg) => sg.groups.includes(key)).key;
     }
@@ -7983,6 +10661,7 @@
         icons: this.shadowRoot.querySelector(".icons-body"),
         fonts: this.shadowRoot.querySelector(".fonts-body"),
         background: this.shadowRoot.querySelector(".background-body"),
+        timeline: this.shadowRoot.querySelector(".timeline-config-body"),
       };
       for (const [bodyKey, el] of Object.entries(bodies)) {
         superContent.appendChild(el);
@@ -8003,6 +10682,12 @@
       if (key === "display") this._syncDisplayInputs();
       if (key === "icons") { this._syncColorInputs(); this._syncIconsInputs(); }
       if (key === "background") this._syncBackgroundInputs();
+      if (key === "timeline") this._syncTimelineInputs();
+      // Re-applied after the body-swap above, which unconditionally shows
+      // whichever body just became active (including icons-body) - without
+      // this, switching to a hidden-when-timeline tab would instantly
+      // un-hide it again.
+      this._applyLayoutStyleVisibility();
     }
 
     // Accordion: opening a super-panel closes the other one. If the newly
@@ -8086,6 +10771,7 @@
         this.shadowRoot.appendChild(this._buildIconsBody(strings));
         this.shadowRoot.appendChild(this._buildFontsBody(strings));
         this.shadowRoot.appendChild(this._buildBackgroundBody(strings));
+        this.shadowRoot.appendChild(this._buildTimelineBody(strings));
 
         // Both top-level sections (Settings/Layout) start collapsed - the
         // internal active-tab state is still wired up via _selectTab so
@@ -8100,6 +10786,8 @@
         this._syncFontInputs();
         this._syncDisplayInputs();
         this._syncBackgroundInputs();
+        this._syncTimelineInputs();
+        this._applyLayoutStyleVisibility();
         return;
       }
 
@@ -8130,6 +10818,8 @@
       this._syncFontInputs();
       this._syncDisplayInputs();
       this._syncBackgroundInputs();
+      this._syncTimelineInputs();
+      this._applyLayoutStyleVisibility();
     }
   }
 

@@ -2,6 +2,21 @@
 
 All notable changes to this integration are documented here.
 
+## v2.4.0
+
+### Added
+- **Timeline layout style**: a new alternative to the classic row list, switchable per-card via **Layout style** (Layout → Display). Shows a compact horizontal axis with one dot per visible event - sized and positioned by how close it is to today - a header sentence for the soonest/most recent day, and a "Details" toggle that expands the full chronological list. Handy for a narrow Sections-view column where the full row list doesn't fit. Comes with its own **Timeline** tab in Layout:
+  - **Timeline line** / **Divider line**: the axis's width, style (solid/dashed/dotted), and color, and the same for the vertical line marking the boundary between past and future events.
+  - **Options**: **Show full name** (each event's full name everywhere the layout shows a name - header, dot tooltip, expandable list) and **Show holiday suffix** (appends the imported country/subdivision after a holiday's name, e.g. "Pioneer Day (US-UT)"), side by side.
+  - A configurable **"More" button** next to "Details" (its own action-config field, hidden while left on "Nothing") - typically pointed at a dashboard using the full List layout.
+  - Dedicated Colors/Fonts rows for Header, Tooltip, List (Details), and Details/More button text, plus its own independent VIP/Important badge colors (a star/exclamation glyph on the dot itself, rather than a corner badge).
+- **Event type colors**: a new **Event types** section in the Colors tab (Timeline layout only) lists every event type - Birthdays, Anniversaries, Name days, Wedding anniversaries, Memorials, Pet birthdays, Work anniversaries, Custom, Holidays - each with its own color, driving that type's dot and icon color on the axis, header, and list in place of the built-in default palette.
+
+### Changed
+- **Renamed the card's `title`/`subtitle` row fields to `name`/`type`** so `title` refers exclusively to the card's own heading from now on, never the event's name. Every place this appeared - `colors`, `font_sizes`, `font_style`, the `show_subtitle`/`show_subtitle_country` toggles, the Row Columns `subtitle` column type, the corresponding CSS custom properties (`--annuals-title-color` → `--annuals-name-color`, `--annuals-subtitle-color` → `--annuals-type-color`, `--annuals-row-title-*` → `--annuals-row-name-*`, `--annuals-row-subtitle-*` → `--annuals-row-type-*`), and the Colors/Fonts tab labels ("Title"/"Subtitle" → "Name"/"Type") - is renamed accordingly. Existing dashboards keep working unchanged: the old key names are still read correctly, and are quietly rewritten to the new ones the next time the card's editor saves any change at all. No action needed unless you theme this card directly via CSS variables, in which case update to the new variable names above.
+- **Row Columns default arrangement** changed from Icon/Name + Type/Occurrence/Countdown to **Icon/Full name + Type/Occurrence/Countdown** - only affects a card that has never touched the "Row columns" editor; existing customized arrangements are unaffected.
+- **Compact mode** (the "Compact (no gaps, centered)" toggle in Row columns) now actively manages the column arrangement instead of just restyling whatever was already there: switching it on immediately swaps to **Icon, Full name, Occurrence, Type, Countdown**, with a plain space column automatically inserted before each of the last four so fields don't run together with the gap removed - still fully editable afterward. Switching it back off resets the columns to the standard default above.
+
 ## v2.3.0
 
 ### Added

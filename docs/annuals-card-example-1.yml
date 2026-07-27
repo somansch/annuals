@@ -15,7 +15,7 @@ highlight_soon: false
 font_size_title: ""
 show_icon: true
 show_name: true
-show_subtitle: true
+show_type: true
 show_badge: true
 show_when: true
 show_vip_only: false
@@ -28,8 +28,8 @@ colors:
   today: ""
   soon: ""
   accent: ""
-  title: ""
-  subtitle: ""
+  name: ""
+  type: ""
   badge: ""
   when: ""
   match_accent: false
@@ -43,8 +43,8 @@ colors:
   vip_badge: ""
   important_badge: ""
 font_sizes:
-  title: ""
-  subtitle: ""
+  name: ""
+  type: ""
   badge: ""
   when: ""
 font_style:
@@ -54,13 +54,13 @@ font_style:
     uppercase: false
     underline: false
     letter_spacing: ""
-  title:
+  name:
     bold: false
     italic: false
     uppercase: false
     underline: false
     letter_spacing: ""
-  subtitle:
+  type:
     bold: false
     italic: false
     uppercase: false
