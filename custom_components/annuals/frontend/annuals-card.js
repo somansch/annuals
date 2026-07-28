@@ -5526,6 +5526,28 @@
     return events;
   }
 
+  // Cheap fingerprint of just the entities getEvents() actually reads -
+  // used by AnnualsCard.set hass to skip a render when nothing relevant
+  // changed. `hass` is replaced with a new object on literally every state
+  // change anywhere in Home Assistant (a light turning on, an unrelated
+  // sensor ticking, ...), not just this card's own entities, which on a
+  // busy production instance can happen many times a second - full
+  // re-renders on every one of those wiped any transient UI state (a
+  // Timeline tooltip left open by a click, a row mid-:hover, an icon's CSS
+  // animation, which restarts from frame zero when its element is
+  // recreated) long before a person could ever notice the underlying data
+  // actually changed. state/last_updated is enough to catch a real change
+  // without stringifying every attribute on every tick.
+  function eventsSignature(hass) {
+    let sig = "";
+    for (const entityId in hass.states) {
+      if (!entityId.startsWith(ENTITY_PREFIX)) continue;
+      const s = hass.states[entityId];
+      sig += entityId + ":" + s.state + ":" + s.last_updated + ";";
+    }
+    return sig;
+  }
+
   // Mirrors dates.py's occurrence_in_year: Feb 29 falls back to Feb 28 in
   // non-leap years, so a leap-day event still has a "last occurrence" every
   // year instead of only every four.
@@ -6270,11 +6292,23 @@
     setConfig(config) {
       this._config = defaultConfig(config);
       this._built = false;
+      this._eventsSignature = undefined;
       this._render();
     }
 
     set hass(hass) {
+      // See eventsSignature() above - re-render only on the first hass
+      // (nothing built yet), a language change (translations depend on
+      // it), or an actual change to one of this card's own entities;
+      // every other state update in the system leaves the existing DOM -
+      // and whatever transient state a person is mid-interaction with -
+      // untouched.
+      const prevHass = this._hass;
       this._hass = hass;
+      const signature = eventsSignature(hass);
+      const langChanged = !prevHass || prevHass.language !== hass.language;
+      if (this._built && !langChanged && signature === this._eventsSignature) return;
+      this._eventsSignature = signature;
       this._render();
     }
 
@@ -9735,9 +9769,11 @@
             ? ["full_name", "type"]
             : col.type === "name"
               ? ["name"]
-              : col.type === "type"
-                ? ["type"]
-                : [];
+              : col.type === "full_name"
+                ? ["full_name"]
+                : col.type === "type"
+                  ? ["type"]
+                  : [];
       return `
         <div class="column-row" data-col-index="${index}">
           <div class="column-row-main">
@@ -9825,9 +9861,11 @@
                 ? ["full_name", "type"]
                 : col.type === "name"
                   ? ["name"]
-                  : col.type === "type"
-                    ? ["type"]
-                    : [];
+                  : col.type === "full_name"
+                    ? ["full_name"]
+                    : col.type === "type"
+                      ? ["type"]
+                      : [];
           suffixKeys.forEach((key) => {
             const configKey =
               key === "name"
@@ -9908,9 +9946,11 @@
               ? ["full_name", "type"]
               : col.type === "name"
                 ? ["name"]
-                : col.type === "type"
-                  ? ["type"]
-                  : [];
+                : col.type === "full_name"
+                  ? ["full_name"]
+                  : col.type === "type"
+                    ? ["type"]
+                    : [];
         suffixKeys.forEach((key) => {
           const configKey =
             key === "name"

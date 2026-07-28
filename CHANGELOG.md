@@ -2,6 +2,15 @@
 
 All notable changes to this integration are documented here.
 
+## v2.4.1
+
+### Fixed
+- The card re-rendered on **every** Home Assistant state update anywhere in the system - not just its own entities - since `hass` is handed to every card as a new object on every single change (a light turning on, an unrelated sensor tick, ...). On a busy production instance this could happen many times a second, and each render fully recreated the row/timeline DOM, which silently discarded whatever a person was mid-interaction with: a Timeline dot's tooltip closing itself shortly after opening, icon animations restarting from frame zero at random, and a List row's hover highlight flickering while the mouse sat still over it. The card now only re-renders when one of its own entities actually changed (or the language did) - config changes made through the editor still apply immediately as before.
+
+### Added
+- **Update notification**: since an already-open browser tab keeps the previously loaded card cached until it's reloaded, restarting Home Assistant after an update to the bundled card now shows a one-time persistent notification ("Annuals card updated") reminding you to refresh, instead of leaving you to guess whether a refresh is needed after every restart.
+- **Holiday suffix toggle for the standalone "Full name" row column**: previously only available on the combined "Full name + Type" column - useful for Compact mode or a List layout without a Type row, where you still want the country/subdivision suffix appended.
+
 ## v2.4.0
 
 ### Added
@@ -16,6 +25,9 @@ All notable changes to this integration are documented here.
 - **Renamed the card's `title`/`subtitle` row fields to `name`/`type`** so `title` refers exclusively to the card's own heading from now on, never the event's name. Every place this appeared - `colors`, `font_sizes`, `font_style`, the `show_subtitle`/`show_subtitle_country` toggles, the Row Columns `subtitle` column type, the corresponding CSS custom properties (`--annuals-title-color` → `--annuals-name-color`, `--annuals-subtitle-color` → `--annuals-type-color`, `--annuals-row-title-*` → `--annuals-row-name-*`, `--annuals-row-subtitle-*` → `--annuals-row-type-*`), and the Colors/Fonts tab labels ("Title"/"Subtitle" → "Name"/"Type") - is renamed accordingly. Existing dashboards keep working unchanged: the old key names are still read correctly, and are quietly rewritten to the new ones the next time the card's editor saves any change at all. No action needed unless you theme this card directly via CSS variables, in which case update to the new variable names above.
 - **Row Columns default arrangement** changed from Icon/Name + Type/Occurrence/Countdown to **Icon/Full name + Type/Occurrence/Countdown** - only affects a card that has never touched the "Row columns" editor; existing customized arrangements are unaffected.
 - **Compact mode** (the "Compact (no gaps, centered)" toggle in Row columns) now actively manages the column arrangement instead of just restyling whatever was already there: switching it on immediately swaps to **Icon, Full name, Occurrence, Type, Countdown**, with a plain space column automatically inserted before each of the last four so fields don't run together with the gap removed - still fully editable afterward. Switching it back off resets the columns to the standard default above.
+
+### Fixed
+- Full names weren't showing in the actual rendered List/Timeline cards for dashboards created after the new Row Columns default above, because that default only seeded the editor's displayed column list and never actually drove row rendering - rows silently fell back to a separate, hardcoded name-only template. Row rendering now always follows the same column list the editor shows, whether or not `columns` has been customized.
 
 ## v2.3.0
 

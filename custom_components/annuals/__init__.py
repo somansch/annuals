@@ -4,13 +4,14 @@ import functools
 import logging
 from pathlib import Path
 
-from homeassistant.components import frontend
+from homeassistant.components import frontend, persistent_notification
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.event import async_track_time_change
+from homeassistant.helpers.storage import Store
 from homeassistant.helpers.typing import ConfigType
 
 from .const import CONF_HUB, DATA_SENSORS, DOMAIN
@@ -37,6 +38,12 @@ _HUB_FLOW_STARTED = "hub_flow_started"
 # is served from this URL and auto-loaded on every dashboard via
 # frontend.add_extra_js_url - no manual "Add resource" step required.
 FRONTEND_JS_URL = "/annuals-frontend/annuals-card.js"
+
+# Remembers the frontend JS's own mtime (see FRONTEND_JS_URL's cache-busting
+# "?v=" below) across restarts, purely so a persistent notification can be
+# shown exactly when it actually changed - not on every restart regardless.
+FRONTEND_VERSION_STORE_KEY = f"{DOMAIN}_frontend_version"
+FRONTEND_VERSION_STORE_VERSION = 1
 
 
 def _platforms_for(config_entry: ConfigEntry) -> list[Platform]:
@@ -77,6 +84,28 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     # (i.e. on every restart after an update).
     version = int(frontend_path.stat().st_mtime)
     frontend.add_extra_js_url(hass, f"{FRONTEND_JS_URL}?v={version}")
+
+    # The cache-busting "?v=" above only takes effect on a browser tab's next
+    # *full* page load - restarting HA (e.g. after a HACS update) doesn't by
+    # itself make an already-open tab re-fetch the new file, since it's an ES
+    # module the browser already has cached under the old URL for that page's
+    # lifetime. There's no way to force that from here without an unprompted
+    # reload of someone's browser, which could interrupt whatever else they're
+    # doing - so instead, just reliably tell them a refresh is actually needed
+    # this time, rather than leaving them to guess (or reflexively refresh)
+    # after every restart regardless of whether this card even changed.
+    store = Store(hass, FRONTEND_VERSION_STORE_VERSION, FRONTEND_VERSION_STORE_KEY)
+    previous = await store.async_load()
+    if previous is not None and previous.get("version") != version:
+        persistent_notification.async_create(
+            hass,
+            "The bundled Annuals dashboard card was updated. Refresh any open "
+            "browser tab (F5) to load the new version - already-open tabs keep "
+            "running the previous one until then.",
+            title="Annuals card updated",
+            notification_id=f"{DOMAIN}_frontend_updated",
+        )
+    await store.async_save({"version": version})
 
     async_register_services(hass)
     hass.http.register_view(AnnualsExportCsvView())
