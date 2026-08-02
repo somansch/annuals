@@ -7,6 +7,6 @@
   "documentation": "https://github.com/somansch/annuals",
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/somansch/annuals/issues",
-  "requirements": ["holidays>=0.50"],
-  "version": "2.4.1"
+  "requirements": ["holidays>=0.50", "icalendar>=5.0", "vobject>=0.9.6"],
+  "version": "2.5.0"
 }

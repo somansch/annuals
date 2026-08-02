@@ -115,15 +115,86 @@
                     "csv_file": "CSV dosyası"
                 }
             },
+            "import_ics": {
+                "title": "ICS takviminden etkinlik içe aktar",
+                "description": "Bir .ics takvim dosyası yükleyin - genellikle Apple Kişiler, Google Kişiler/Android veya Outlook'tan dışa aktarılmış bir \"Doğum günleri\" takvimi. Yalnızca tüm gün süren ve yinelenme geçersiz kılması içermeyen girişler okunur; saat belirtilen etkinlikler atlanır. Sonraki adımlar, herhangi bir şey içe aktarılmadan önce önerilen ad/soyad bölünmesini gözden geçirip düzeltmenize (ve herkes için ad/soyadı tek seferde değiştirmenize) olanak tanır.",
+                "data": {
+                    "ics_file": "ICS dosyası"
+                }
+            },
+            "import_vcard_menu": {
+                "title": "vCard'dan etkinlik içe aktar",
+                "description": "Bir kişinin doğum günü ile diğer tarihleri (yıl dönümleri, özel tarihler) ayrı dallardan işlenir, çünkü yalnızca doğum günleri tüm grup için tek bir etkinlik türünü paylaşır - diğer her tarihe, gözden geçirme sırasında kendi türü atanır.",
+                "menu_options": {
+                    "import_vcard": "Doğum günlerini içe aktar",
+                    "import_vcard_other_dates": "Diğer tarihleri içe aktar (yıl dönümleri, ...)"
+                }
+            },
+            "import_vcard": {
+                "title": "vCard'dan doğum günlerini içe aktar",
+                "description": "Bir .vcf dosyası yükleyin - genellikle Apple Kişiler, Google Kişiler/Android veya Outlook'tan dışa aktarılmış kişiler. Yalnızca doğum günü ayarlanmış girişler okunur. Ad/soyad bir tahminden değil, kişinin yapılandırılmış ad alanlarından alınır ve yılı belirtilmemiş bir doğum günü (vCard'ın bunu ifade etme biçimi) uydurulmak yerine bilinmiyor olarak tutulur. Sonraki adımlar, herhangi bir şey içe aktarılmadan önce her şeyi gözden geçirip düzeltmenize (ve herkes için ad/soyadı tek seferde değiştirmenize) olanak tanır.",
+                "data": {
+                    "vcard_file": "vCard dosyası"
+                }
+            },
+            "import_vcard_other_dates": {
+                "title": "vCard'dan diğer tarihleri içe aktar",
+                "description": "Bir .vcf dosyası yükleyin. Doğum günü dışındaki her tarihi okur: standart \"Yıl dönümü\" (Anniversary) alanı ile Apple/Google Kişiler'in her kişi için eklemenize izin verdiği özel etiketli tarihler (örn. \"Anniversary\", \"Other\" veya kendi yazdığınız bir etiket). Doğum günlerinin aksine bunların hepsi aynı türde etkinlik değildir - sonraki adımlar, bağlam için algılanan etiketiyle birlikte her birini gözden geçirmenize ve her birine ayrı ayrı doğru etkinlik türünü atamanıza olanak tanır.",
+                "data": {
+                    "vcard_file": "vCard dosyası"
+                }
+            },
+            "import_options": {
+                "title": "{source_label} içe aktarımı - ayarlar",
+                "description": "Bunlar dosyada bulunan her girişe uygulanır. Bir sonraki adımda tek tek girişleri gözden geçirip düzenleyebileceksiniz.",
+                "data": {
+                    "swap_names": "Tüm girişler için ad/soyadı değiştir",
+                    "use_description_year": "Bulunduğunda, her girişin başlangıç tarihi yerine açıklamasında bulunan yılı kullan (örn. \"geb. 1985\")",
+                    "type": "Etkinlik türü"
+                }
+            },
+            "import_review": {
+                "title": "{source_label} içe aktarımı - gözden geçirme ({page}/{total_pages})",
+                "description": "{legend}\n\nAşağıda önerilen ad/soyad bölünmesini kontrol edin ve yanlış olan her şeyi düzeltin - doğum günü de düzenlenebilir - veya bir girişi tamamen dışarıda bırakmak için işaretini kaldırın. Olası bir kopya, mevcut girişinin adıyla işaretlenir; ikinci bir giriş eklemek yerine mevcut girişi güncellemek için \"yeni olarak oluştur\" seçeneğini işaretsiz bırakın. Buradaki alan etiketleri, dil ayarınızdan bağımsız olarak yalnızca İngilizce gösterilir.",
+                "data": {
+                    "go_back": "Önceki sayfaya dön"
+                }
+            },
+            "remove_ics_imports": {
+                "title": "ICS ile içe aktarılan etkinlikleri kaldır",
+                "description": "{count} etkinlik önceki bir ICS içe aktarımıyla oluşturuldu. Hepsini kaldırmak için OK'a tıklayın - bir ICS içe aktarımının yalnızca güncellediği (oluşturmadığı) girişler bundan asla etkilenmez; manuel olarak eklenen, CSV veya vCard ile içe aktarılan etkinlikler de etkilenmez."
+            },
+            "remove_vcard_imports": {
+                "title": "vCard ile içe aktarılan etkinlikleri kaldır",
+                "description": "{count} etkinlik önceki bir vCard içe aktarımıyla oluşturuldu. Hepsini kaldırmak için OK'a tıklayın - bir vCard içe aktarımının yalnızca güncellediği (oluşturmadığı) girişler bundan asla etkilenmez; manuel olarak eklenen, CSV veya ICS ile içe aktarılan etkinlikler de etkilenmez."
+            },
             "hub_menu": {
                 "title": "Annuals Ayarları",
                 "menu_options": {
-                    "annual_settings": "Annual Ayarları",
-                    "import_csv": "CSV'den etkinlik içe aktar",
-                    "export_csv": "Etkinlikleri CSV olarak dışa aktar",
-                    "import_holidays": "Tatilleri içe aktar",
-                    "remove_holidays": "İçe aktarılan tatilleri kaldır",
-                    "delete_all": "Tüm Annuals verilerini sil"
+                    "annual_settings": "{icon_annual_settings} Annual Ayarları",
+                    "import_events": "{icon_import_events} Etkinlikleri içe aktar",
+                    "export_csv": "{icon_export_csv} Etkinlikleri CSV olarak dışa aktar",
+                    "remove_events": "{icon_remove_events} Etkinlikleri kaldır",
+                    "delete_all": "{icon_delete_all} Tüm Annuals verilerini sil"
+                }
+            },
+            "import_events": {
+                "title": "Etkinlikleri içe aktar",
+                "description": "İçe aktarılacak bir kaynak seçin.",
+                "menu_options": {
+                    "import_csv": "CSV",
+                    "import_ics": "ICS takvimi",
+                    "import_vcard_menu": "vCard",
+                    "import_holidays": "Tatiller"
+                }
+            },
+            "remove_events": {
+                "title": "Etkinlikleri kaldır",
+                "description": "Daha önce içe aktarılan hangi etkinliklerin kaldırılacağını seçin.",
+                "menu_options": {
+                    "remove_ics_imports": "ICS ile içe aktarılan",
+                    "remove_vcard_imports": "vCard ile içe aktarılan",
+                    "remove_holidays": "Tatiller"
                 }
             },
             "import_holidays": {
@@ -174,17 +245,27 @@
             "invalid_date": "Bu gün/ay/yıl kombinasyonu geçerli bir tarih değil.",
             "invalid_csv": "Bu dosya CSV olarak okunamadı. Kodlamayı ve biçimi kontrol edin.",
             "no_valid_rows": "Bu dosyada geçerli satır bulunamadı. Atlanan satırların ayrıntıları için günlüğe bakın.",
+            "invalid_ics": "Bu dosya ICS takvimi olarak okunamadı. Biçimi kontrol edin.",
+            "no_valid_entries": "Bu dosyada kullanılabilir, tüm gün süren giriş bulunamadı. Atlanan girişlerin ayrıntıları için günlüğe bakın.",
+            "invalid_vcard": "Bu dosya vCard olarak okunamadı. Biçimi kontrol edin.",
+            "no_valid_vcard_entries": "Bu dosyada kullanılabilir bir doğum günü olan kişi bulunamadı. Atlanan girişlerin ayrıntıları için günlüğe bakın.",
+            "no_valid_vcard_dates": "Bu dosyada yıl dönümü veya doğum günü dışında başka bir tarih bulunamadı. Atlanan girişlerin ayrıntıları için günlüğe bakın.",
             "no_batch_selected": "\"Tüm içe aktarılan tatilleri kaldır\" seçeneğini işaretleyin veya bir grup seçin."
         },
         "abort": {
             "hub_not_configurable": "Annuals merkezinin kendine ait ayarları yoktur - yalnızca paylaşılan takvimleri içerir.",
             "import_started": "İçe aktarma başladı: {created} etkinlik kuyruğa alındı, {skipped} satır atlandı (ayrıntılar için günlüğe bakın).",
+            "ics_import_started": "İçe aktarma başladı: {created} etkinlik oluşturuldu, {updated} güncellendi, {skipped} giriş atlandı veya hariç tutuldu.",
             "csv_exported": "{count} etkinlik dışa aktarıldı. [annuals_export.csv dosyasını indir]({url}) (indirmek için Ctrl/Cmd+tıklayın - normal tıklama burada işe yaramaz)\n\nVeya aşağıdaki CSV'yi kopyalayın:\n\n```\n{csv}\n```",
             "no_events_to_export": "Henüz dışa aktarılacak bir etkinlik yok.",
             "deleted_all": "Tüm Annuals etkinlikleri, takvimleri ve merkezi kaldırıldı.",
             "holiday_import_started": "İçe aktarma başladı: {country} için {count} tatil kuyruğa alındı.",
             "no_holidays_imported": "Henüz hiç tatil içe aktarılmadı.",
-            "holidays_removed": "{count} tatil kaldırıldı."
+            "holidays_removed": "{count} tatil kaldırıldı.",
+            "no_ics_imports": "ICS ile içe aktarılarak oluşturulan hiçbir etkinlik bulunamadı.",
+            "ics_imports_removed": "{count} ICS ile içe aktarılan etkinlik kaldırıldı.",
+            "no_vcard_imports": "vCard ile içe aktarılarak oluşturulan hiçbir etkinlik bulunamadı.",
+            "vcard_imports_removed": "{count} vCard ile içe aktarılan etkinlik kaldırıldı."
         }
     },
     "entity": {

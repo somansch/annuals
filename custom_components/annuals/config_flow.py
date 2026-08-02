@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import csv
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 import io
 import logging
+import re
 
 import holidays as holidays_lib
+from icalendar import Calendar
+import vobject
 import voluptuous as vol
 
 from homeassistant.components.file_upload import process_uploaded_file
@@ -24,6 +27,7 @@ from .const import (
     CONF_HUB,
     CONF_ICON,
     CONF_IMPORTANT_THRESHOLDS,
+    CONF_IMPORT_SOURCE,
     CONF_LANGUAGE,
     CONF_LAST_NAME,
     CONF_MONTH,
@@ -35,7 +39,9 @@ from .const import (
     EVENT_TYPES,
     HUB_UNIQUE_ID,
     TYPE_BIRTHDAY,
+    TYPE_CUSTOM,
     TYPE_HOLIDAY,
+    TYPE_WEDDING_ANNIVERSARY,
 )
 from .dates import _holiday_calendar, holiday_key_from_name
 from .helpers import async_event_type_labels, export_csv_text, full_name, hub_title
@@ -95,9 +101,14 @@ def _event_schema(defaults: dict | None = None) -> vol.Schema:
             # calendar messages, and the card's {last_name}/{full_name}
             # placeholders. Never offered for TYPE_HOLIDAY - that type never
             # reaches this schema at all (see EVENT_TYPES above), holidays
-            # keep the single imported name as-is.
+            # keep the single imported name as-is. No default= - same reason
+            # as CONF_YEAR below: the frontend omits an emptied optional
+            # field from the submitted payload, so a schema default= would
+            # make voluptuous silently refill it with the old stored value,
+            # making it impossible to actually clear a last name once set.
             vol.Optional(
-                CONF_LAST_NAME, default=defaults.get(CONF_LAST_NAME, "")
+                CONF_LAST_NAME,
+                description={"suggested_value": defaults.get(CONF_LAST_NAME)},
             ): str,
             vol.Required(
                 CONF_EVENT_TYPE, default=defaults.get(CONF_EVENT_TYPE, TYPE_BIRTHDAY)
@@ -254,6 +265,447 @@ def _parse_uploaded_csv(hass: HomeAssistant, uploaded_file_id: str) -> tuple[lis
     with process_uploaded_file(hass, uploaded_file_id) as file_path:
         text = file_path.read_text(encoding="utf-8-sig")
     return _parse_csv_rows(text)
+
+
+# Anything at or below Google's own "unknown birth year" sentinel (1604) is
+# treated as no year at all, matching this integration's existing convention
+# of an absent year meaning "unknown" (see CONF_YEAR in const.py). Shared by
+# both the ICS and vCard parsers.
+_UNKNOWN_YEAR_THRESHOLD = 1605
+
+# Best-effort strip of a common "<Name>'s Birthday"-style phrase so the
+# remainder is (usually) just the contact's name - not exhaustive across every
+# language a source calendar might use. Whatever's left over is still fully
+# editable in the review step, so an imperfect match here is never fatal.
+_ICS_NAME_PATTERNS = [
+    re.compile(r"^(.*?)'s [Bb]irthday$"),
+    re.compile(r"^(.*?)s Geburtstag$"),
+    re.compile(r"^Geburtstag von (.*?)$"),
+    re.compile(r"^(.*?) [Bb]irthday$"),
+]
+
+
+def _strip_birthday_phrase(summary: str) -> str:
+    text = summary.strip()
+    for pattern in _ICS_NAME_PATTERNS:
+        match = pattern.match(text)
+        if match:
+            return match.group(1).strip()
+    return text
+
+
+# Matches a plausible birth year (1800-2099) surrounded by non-digits, so it
+# doesn't grab a fragment of a longer number - used to pull a year out of an
+# ICS event's free-text DESCRIPTION (e.g. "geb. 1985", "*1990", "DOB:
+# 12.03.1988") for the optional "use description year" import setting.
+_YEAR_IN_TEXT_PATTERN = re.compile(r"(?<!\d)(1[89]\d{2}|20\d{2})(?!\d)")
+
+
+def _extract_year_from_text(text: str) -> int | None:
+    """Best-effort: the first plausible year found anywhere in free text.
+    Purely heuristic - a description mentioning an unrelated 4-digit number
+    (e.g. a work anniversary "since 2015") can produce a false match, which
+    is why this is opt-in and every row stays fully editable in review.
+    """
+    if not text:
+        return None
+    match = _YEAR_IN_TEXT_PATTERN.search(text)
+    return int(match.group(1)) if match else None
+
+
+def _split_name(name: str) -> tuple[str, str]:
+    """Split "Anna Maria Schmidt" into ("Anna Maria", "Schmidt") - split on the
+    last space, since that's the only heuristic that works without knowing the
+    actual number of given names. No space at all means "first name only".
+    """
+    name = name.strip()
+    if " " not in name:
+        return name, ""
+    first, _sep, last = name.rpartition(" ")
+    return first.strip(), last.strip()
+
+
+def _parse_ics_bytes(data: bytes) -> tuple[list[dict], list[str]]:
+    """Parse ICS bytes into candidate rows for the review step, plus a list of
+    human-readable skip reasons for entries deliberately left out (a timed
+    event, a recurrence override, or an unparseable date) - mirrors
+    _parse_csv_rows' (rows, errors) shape.
+
+    Only all-day VEVENTs are candidates - birthdays are never timed, so a real
+    time component means this isn't a birthday-style entry. Only the master
+    VEVENT per UID is used; RECURRENCE-ID override instances are skipped
+    (accepted limitation - good enough for a yearly-recurring birthday).
+    """
+    try:
+        calendar = Calendar.from_ical(data)
+    except ValueError as err:
+        return [], [f"could not parse calendar: {err}"]
+
+    rows: list[dict] = []
+    errors: list[str] = []
+    seen_uids: set[str] = set()
+
+    for component in calendar.walk("VEVENT"):
+        uid = str(component.get("uid", ""))
+        summary = str(component.get("summary", "")).strip()
+        label = summary or uid or "(unnamed event)"
+
+        if component.get("recurrence-id") is not None:
+            errors.append(f"{label}: skipped recurrence override")
+            continue
+        if uid and uid in seen_uids:
+            errors.append(f"{label}: skipped duplicate UID")
+            continue
+
+        dtstart = component.get("dtstart")
+        value = dtstart.dt if dtstart is not None else None
+        if isinstance(value, datetime):
+            errors.append(f"{label}: skipped timed (non-all-day) event")
+            continue
+        if not isinstance(value, date):
+            errors.append(f"{label}: missing or unparseable start date")
+            continue
+
+        if uid:
+            seen_uids.add(uid)
+
+        first_name, last_name = _split_name(_strip_birthday_phrase(summary))
+        if not first_name and not last_name:
+            errors.append(f"{label}: skipped - no name")
+            continue
+
+        year = value.year if value.year >= _UNKNOWN_YEAR_THRESHOLD else None
+        description = str(component.get("description", "")).strip()
+
+        rows.append(
+            {
+                "uid": uid,
+                "summary": summary,
+                "day": value.day,
+                "month": value.month,
+                "year": year,
+                "first_name": first_name,
+                "last_name": last_name,
+                # Preserved separately from "year" (the currently-effective
+                # value, editable in review) so the "use description year"
+                # import setting can be toggled on and off without losing
+                # either candidate - see async_step_import_options.
+                "dtstart_year": year,
+                "description_year": _extract_year_from_text(description),
+            }
+        )
+
+    return rows, errors
+
+
+def _parse_uploaded_ics(hass: HomeAssistant, uploaded_file_id: str) -> tuple[list[dict], list[str]]:
+    with process_uploaded_file(hass, uploaded_file_id) as file_path:
+        data = file_path.read_bytes()
+    return _parse_ics_bytes(data)
+
+
+def _ics_schema() -> vol.Schema:
+    return vol.Schema({vol.Required("ics_file"): selector({"file": {"accept": ".ics"}})})
+
+
+def _parse_vcard_bday(raw: str) -> tuple[int, int, int | None] | None:
+    """"YYYY-MM-DD"/"YYYYMMDD" -> a full date. "--MM-DD"/"--MMDD" - vCard's
+    own defined "year unknown" form, RFC 6474 - -> (day, month, None), no
+    guessing needed unlike ICS. Also treats a suspiciously old year as
+    unknown, same threshold as the ICS import, for messy real-world exports.
+    """
+    digits = raw.split("T", 1)[0].replace("-", "").strip()
+    try:
+        if len(digits) == 8:
+            year, month, day = int(digits[0:4]), int(digits[4:6]), int(digits[6:8])
+            date(year, month, day)
+            return day, month, (year if year >= _UNKNOWN_YEAR_THRESHOLD else None)
+        if len(digits) == 4:
+            month, day = int(digits[0:2]), int(digits[2:4])
+            date(2000, month, day)
+            return day, month, None
+    except (ValueError, IndexError):
+        return None
+    return None
+
+
+def _vcard_name_parts(vcard, fn: str) -> tuple[str, str]:
+    """Prefer the structured N property (Family;Given;Additional;...) - a
+    real split, not a guess. Falls back to splitting FN on the last space
+    (_split_name, also used for ICS) only when N is absent or empty.
+    """
+    if hasattr(vcard, "n"):
+        name = vcard.n.value
+        given = " ".join(p for p in (name.given, name.additional) if p).strip()
+        family = (name.family or "").strip()
+        if given or family:
+            return given, family
+    return _split_name(fn)
+
+
+def _parse_vcard_bytes(data: bytes) -> tuple[list[dict], list[str]]:
+    """Mirrors _parse_ics_bytes' (rows, errors) shape exactly, so the shared
+    options/review/finalize pipeline needs no source-specific branching.
+    """
+    try:
+        text = data.decode("utf-8-sig")
+        components = list(vobject.readComponents(text, ignoreUnreadable=True))
+    except Exception as err:  # vobject has no single documented exception type
+        return [], [f"could not parse vCard file: {err}"]
+
+    rows: list[dict] = []
+    errors: list[str] = []
+    seen: set[str] = set()
+
+    for vcard in components:
+        if getattr(vcard, "name", "").upper() != "VCARD":
+            continue
+        fn = str(vcard.fn.value).strip() if hasattr(vcard, "fn") else ""
+        uid = str(vcard.uid.value).strip() if hasattr(vcard, "uid") else ""
+        label = fn or uid or "(unnamed contact)"
+
+        key = uid or fn
+        if key and key in seen:
+            errors.append(f"{label}: skipped duplicate entry")
+            continue
+        if not hasattr(vcard, "bday"):
+            errors.append(f"{label}: no birthday set")
+            continue
+
+        parsed = _parse_vcard_bday(str(vcard.bday.value).strip())
+        if parsed is None:
+            errors.append(f"{label}: unparseable birthday ({vcard.bday.value!r})")
+            continue
+
+        first_name, last_name = _vcard_name_parts(vcard, fn)
+        if not first_name and not last_name:
+            errors.append(f"{label}: skipped - no name")
+            continue
+
+        if key:
+            seen.add(key)
+
+        day, month, year = parsed
+
+        rows.append(
+            {
+                "uid": uid,
+                "summary": fn or f"{first_name} {last_name}".strip(),
+                "day": day,
+                "month": month,
+                "year": year,
+                "first_name": first_name,
+                "last_name": last_name,
+            }
+        )
+
+    return rows, errors
+
+
+def _parse_uploaded_vcard(hass: HomeAssistant, uploaded_file_id: str) -> tuple[list[dict], list[str]]:
+    with process_uploaded_file(hass, uploaded_file_id) as file_path:
+        data = file_path.read_bytes()
+    return _parse_vcard_bytes(data)
+
+
+def _vcard_schema() -> vol.Schema:
+    return vol.Schema({vol.Required("vcard_file"): selector({"file": {"accept": ".vcf"}})})
+
+
+# Apple wraps its own built-in date/label choices as "_$!<Anniversary>!$_" -
+# a convention only Contacts.app itself is meant to interpret. Anything typed
+# in by hand as a custom label is already plain text and passes through
+# unchanged.
+_APPLE_LABEL_PATTERN = re.compile(r"^_\$!<(.+)>!\$_$")
+
+
+def _clean_vcard_label(raw: str) -> str:
+    match = _APPLE_LABEL_PATTERN.match(raw.strip())
+    return match.group(1) if match else raw.strip()
+
+
+def _default_type_for_label(label: str) -> str:
+    """Best-effort default for the per-row event type selector - always
+    editable in review, so a wrong guess here is never fatal."""
+    return TYPE_WEDDING_ANNIVERSARY if "annivers" in label.casefold() else TYPE_CUSTOM
+
+
+def _extract_vcard_other_dates(vcard) -> list[tuple[str, str]]:
+    """(raw_date_value, cleaned_label) pairs for every date on this contact
+    except BDAY: the standard vCard 4.0 ANNIVERSARY property, plus each
+    Apple/Google "custom date" - an item<N>.X-ABDATE grouped with its own
+    item<N>.X-ABLABEL, matched up via vobject's shared .group attribute.
+    """
+    results: list[tuple[str, str]] = []
+    if hasattr(vcard, "anniversary"):
+        results.append((str(vcard.anniversary.value).strip(), "Anniversary"))
+
+    labels_by_group = {
+        child.group: str(child.value).strip()
+        for child in vcard.getChildren()
+        if child.name == "X-ABLABEL" and child.group
+    }
+    for child in vcard.getChildren():
+        if child.name == "X-ABDATE" and child.group:
+            label = _clean_vcard_label(labels_by_group.get(child.group, "Other"))
+            results.append((str(child.value).strip(), label))
+    return results
+
+
+def _parse_vcard_other_dates_bytes(data: bytes) -> tuple[list[dict], list[str]]:
+    """Mirrors _parse_vcard_bytes' (rows, errors) shape, but yields zero or
+    more rows per contact - one per detected non-birthday date - each
+    carrying its own suggested "event_type" (see _default_type_for_label),
+    edited per-row in review instead of one type for the whole batch (unlike
+    every other import row shape, which shares a single batch-wide type).
+    """
+    try:
+        text = data.decode("utf-8-sig")
+        components = list(vobject.readComponents(text, ignoreUnreadable=True))
+    except Exception as err:  # vobject has no single documented exception type
+        return [], [f"could not parse vCard file: {err}"]
+
+    rows: list[dict] = []
+    errors: list[str] = []
+    seen: set[str] = set()
+
+    for vcard in components:
+        if getattr(vcard, "name", "").upper() != "VCARD":
+            continue
+        fn = str(vcard.fn.value).strip() if hasattr(vcard, "fn") else ""
+        uid = str(vcard.uid.value).strip() if hasattr(vcard, "uid") else ""
+        label = fn or uid or "(unnamed contact)"
+        contact_key = uid or fn
+
+        first_name, last_name = _vcard_name_parts(vcard, fn)
+
+        for raw_value, detected_label in _extract_vcard_other_dates(vcard):
+            # Keyed on the contact plus the specific date, not just the
+            # contact - a single vCard legitimately contributes several rows
+            # here (e.g. ANNIVERSARY and two X-ABDATE entries), which must
+            # not be treated as duplicates of each other. A genuinely
+            # repeated vCard block (same contact twice in the file) still
+            # collapses, since it produces the same (contact, label) keys.
+            dedup_key = f"{contact_key}:{detected_label}" if contact_key else None
+            if dedup_key and dedup_key in seen:
+                errors.append(f"{label} ({detected_label}): skipped duplicate entry")
+                continue
+
+            parsed = _parse_vcard_bday(raw_value)
+            if parsed is None:
+                errors.append(f"{label} ({detected_label}): unparseable date ({raw_value!r})")
+                continue
+
+            if not first_name and not last_name:
+                errors.append(f"{label} ({detected_label}): skipped - no name")
+                continue
+
+            if dedup_key:
+                seen.add(dedup_key)
+
+            day, month, year = parsed
+            rows.append(
+                {
+                    "uid": uid,
+                    "summary": fn or f"{first_name} {last_name}".strip(),
+                    "day": day,
+                    "month": month,
+                    "year": year,
+                    "first_name": first_name,
+                    "last_name": last_name,
+                    "detected_label": detected_label,
+                    "event_type": _default_type_for_label(detected_label),
+                }
+            )
+
+    return rows, errors
+
+
+def _parse_uploaded_vcard_other_dates(
+    hass: HomeAssistant, uploaded_file_id: str
+) -> tuple[list[dict], list[str]]:
+    with process_uploaded_file(hass, uploaded_file_id) as file_path:
+        data = file_path.read_bytes()
+    return _parse_vcard_other_dates_bytes(data)
+
+
+def _import_options_schema(
+    defaults: dict | None = None,
+    *,
+    include_description_year: bool = False,
+    include_event_type: bool = True,
+) -> vol.Schema:
+    defaults = defaults or {}
+    schema_dict: dict = {
+        vol.Optional(
+            "swap_names", default=defaults.get("swap_names", False)
+        ): selector({"boolean": {}}),
+    }
+    if include_description_year:
+        # ICS-only - vCard rows never carry a "description_year" candidate,
+        # so this field is omitted from the schema entirely for that source
+        # rather than shown as a no-op.
+        schema_dict[
+            vol.Optional(
+                "use_description_year",
+                default=defaults.get("use_description_year", False),
+            )
+        ] = selector({"boolean": {}})
+    if include_event_type:
+        # Omitted when every row picks its own type in review instead (the
+        # vCard "other dates" branch) - a single batch-wide type wouldn't
+        # apply there.
+        schema_dict[
+            vol.Required(CONF_EVENT_TYPE, default=defaults.get(CONF_EVENT_TYPE, TYPE_BIRTHDAY))
+        ] = _event_type_selector()
+    return vol.Schema(schema_dict)
+
+
+# How many entries the review step shows per page - reusing the same step_id
+# repeatedly with an incrementing self._import_review_page instead of
+# rendering every parsed entry (potentially a whole contacts list) in one
+# unbounded form. Shared by both the ICS and vCard import wizards.
+_IMPORT_REVIEW_PAGE_SIZE = 20
+
+
+def _find_import_duplicate(
+    hass: HomeAssistant, event_type: str, day: int, month: int, first_name: str, last_name: str
+) -> ConfigEntry | None:
+    """Look for an existing (non-hub) entry of the same type that's probably
+    the same person as the proposed row - two tiers, first match wins:
+
+    1. Same day/month, and the combined name overlaps (substring either
+       direction, not equality - deliberately looser than _import_unique_id's
+       exact match, so it also catches e.g. an existing "Anna" matching a new
+       "Anna Schmidt" on the same day, a case the exact dedup would treat as
+       unrelated and create as a genuine new entry).
+    2. Regardless of day/month, an exact (case-insensitive) full-name match -
+       catches the same person under a different date (a source calendar
+       error, a corrected birth year changing nothing else, two imports
+       disagreeing on the date), which tier 1 alone would silently miss and
+       create as an unrelated duplicate entry.
+    """
+    new_full = f"{first_name} {last_name}".strip().casefold()
+    if not new_full:
+        return None
+    exact_name_match: ConfigEntry | None = None
+    for entry in hass.config_entries.async_entries(DOMAIN):
+        data = entry.data
+        if data.get(CONF_HUB) or data.get(CONF_EVENT_TYPE) != event_type:
+            continue
+        existing_full = full_name(data).casefold()
+        if not existing_full:
+            continue
+        if data.get(CONF_DAY) == day and data.get(CONF_MONTH) == month:
+            if existing_full in new_full or new_full in existing_full:
+                return entry
+        elif existing_full == new_full and exact_name_match is None:
+            exact_name_match = entry
+    return exact_name_match
+
+
+def _ics_force_new_key(index: int, existing_full: str) -> str:
+    return f'{index + 1}. Create as a new entry instead of updating "{existing_full}"'
 
 
 def _import_unique_id(data: dict) -> str:
@@ -519,6 +971,13 @@ class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
             _LOGGER.warning("Annuals import: skipped invalid row (%s)", errors)
             return self.async_abort(reason="invalid_import_row")
 
+        # _validate_and_normalise(_holiday) rebuilds `data` from a fixed set
+        # of keys, dropping anything else in import_data - re-attach the
+        # import-source marker (see AnnualsOptionsFlow.async_step_import_review)
+        # here rather than there, so it survives.
+        if CONF_IMPORT_SOURCE in import_data:
+            data[CONF_IMPORT_SOURCE] = import_data[CONF_IMPORT_SOURCE]
+
         await self.async_set_unique_id(_import_unique_id(data))
         self._abort_if_unique_id_configured(updates=data, reload_on_update=True)
 
@@ -625,6 +1084,477 @@ class AnnualsOptionsFlow(OptionsFlow):
             step_id="import_csv",
             data_schema=_csv_schema(),
             errors=errors,
+        )
+
+    async def async_step_import_ics(self, user_input=None):
+        """Step 1 of 3: upload an ICS calendar (e.g. a phone's exported
+        Birthdays calendar) and parse it into candidate rows.
+
+        No entries are created here - parsed rows are stashed on the flow
+        instance and handed to the shared async_step_import_options next
+        (also used by vCard import), so the user can review/correct the
+        proposed name split before anything is actually imported (unlike CSV
+        import, which imports directly).
+        """
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            try:
+                rows, row_errors = await self.hass.async_add_executor_job(
+                    _parse_uploaded_ics, self.hass, user_input["ics_file"]
+                )
+            except (OSError, ValueError):
+                errors["base"] = "invalid_ics"
+            else:
+                for message in row_errors:
+                    _LOGGER.warning("Annuals ICS import: %s", message)
+
+                if not rows:
+                    errors["base"] = "no_valid_entries"
+                else:
+                    for row in rows:
+                        row["include"] = True
+                    self._import_rows = rows
+                    self._import_skipped = len(row_errors)
+                    self._import_review_page = 0
+                    self._import_swap_applied = False
+                    self._import_use_description_year = False
+                    self._import_row_type_mode = False
+                    self._import_fixed_event_type = None
+                    self._import_source = "ics"
+                    self._import_source_label = "ICS"
+                    return await self.async_step_import_options()
+
+        return self.async_show_form(
+            step_id="import_ics",
+            data_schema=_ics_schema(),
+            errors=errors,
+            last_step=False,
+        )
+
+    async def async_step_import_vcard_menu(self, user_input=None):
+        """Entry point for vCard import - a contact's birthday and its other
+        dates (anniversaries, custom dates) go through different branches of
+        the wizard, since only birthdays share a single batch-wide event
+        type (see async_step_import_vcard_other_dates).
+        """
+        return self.async_show_menu(
+            step_id="import_vcard_menu",
+            menu_options=["import_vcard", "import_vcard_other_dates"],
+        )
+
+    async def async_step_import_vcard(self, user_input=None):
+        """Step 1 of 3: upload a vCard (.vcf) export (e.g. from a phone's
+        Contacts app) and parse it into candidate rows.
+
+        Unlike ICS, vCard has a structured N (name) property and a BDAY
+        property with its own defined "year unknown" form - see
+        _vcard_name_parts/_parse_vcard_bday - so no guessing is needed there.
+        From here on it's the exact same shared wizard as ICS import.
+        """
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            try:
+                rows, row_errors = await self.hass.async_add_executor_job(
+                    _parse_uploaded_vcard, self.hass, user_input["vcard_file"]
+                )
+            except (OSError, ValueError):
+                errors["base"] = "invalid_vcard"
+            else:
+                for message in row_errors:
+                    _LOGGER.warning("Annuals vCard import: %s", message)
+
+                if not rows:
+                    errors["base"] = "no_valid_vcard_entries"
+                else:
+                    for row in rows:
+                        row["include"] = True
+                    self._import_rows = rows
+                    self._import_skipped = len(row_errors)
+                    self._import_review_page = 0
+                    self._import_swap_applied = False
+                    self._import_use_description_year = False
+                    self._import_row_type_mode = False
+                    # Always birthdays here (that's the whole point of this
+                    # branch vs. "other dates") - no batch-wide type choice
+                    # needed, unlike ICS where the source calendar isn't
+                    # necessarily birthdays specifically.
+                    self._import_fixed_event_type = TYPE_BIRTHDAY
+                    self._import_source = "vcard"
+                    self._import_source_label = "vCard"
+                    return await self.async_step_import_options()
+
+        return self.async_show_form(
+            step_id="import_vcard",
+            data_schema=_vcard_schema(),
+            errors=errors,
+            last_step=False,
+        )
+
+    async def async_step_import_vcard_other_dates(self, user_input=None):
+        """Step 1 of 3 (other-dates branch): upload a vCard (.vcf) export and
+        parse it into candidate rows for every date *except* birthdays - the
+        standard ANNIVERSARY property, plus Apple/Google's "custom date"
+        item<N>.X-ABDATE/X-ABLABEL pairs (see _extract_vcard_other_dates).
+
+        Unlike every other import branch, each row here can end up a
+        different event type (an anniversary and an arbitrary custom date
+        aren't the same thing) - self._import_row_type_mode gates the
+        shared options/review steps into showing a per-row type selector
+        instead of one type for the whole batch.
+        """
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            try:
+                rows, row_errors = await self.hass.async_add_executor_job(
+                    _parse_uploaded_vcard_other_dates, self.hass, user_input["vcard_file"]
+                )
+            except (OSError, ValueError):
+                errors["base"] = "invalid_vcard"
+            else:
+                for message in row_errors:
+                    _LOGGER.warning("Annuals vCard import: %s", message)
+
+                if not rows:
+                    errors["base"] = "no_valid_vcard_dates"
+                else:
+                    for row in rows:
+                        row["include"] = True
+                    self._import_rows = rows
+                    self._import_skipped = len(row_errors)
+                    self._import_review_page = 0
+                    self._import_swap_applied = False
+                    self._import_use_description_year = False
+                    self._import_row_type_mode = True
+                    self._import_fixed_event_type = None
+                    self._import_source = "vcard"
+                    self._import_source_label = "vCard"
+                    return await self.async_step_import_options()
+
+        return self.async_show_form(
+            step_id="import_vcard_other_dates",
+            data_schema=_vcard_schema(),
+            errors=errors,
+            last_step=False,
+        )
+
+    async def async_step_import_options(self, user_input=None):
+        """Step 2 of 3 (shared by ICS and vCard import): global settings
+        applied to every parsed entry before the per-entry review step first
+        renders - a swap here must be decided before those fields are first
+        prefilled, since a flow step can't reactively re-render itself when a
+        checkbox changes.
+
+        Also the review step's back-button target from its first page, in
+        which case the current choices are prefilled rather than reset.
+        """
+        if user_input is not None:
+            swap_requested = bool(user_input.get("swap_names"))
+            # Toggled *relative to* the currently-applied state, not a reset
+            # to the original parse - correct whether this is the first time
+            # through or a return visit via the back button, and never
+            # double-swaps (or undoes a manual edit made in between) if the
+            # user just confirms the same choice again.
+            if swap_requested != self._import_swap_applied:
+                for row in self._import_rows:
+                    row["first_name"], row["last_name"] = row["last_name"], row["first_name"]
+                self._import_swap_applied = swap_requested
+
+            # Same toggle-relative-to-applied-state approach as swap above -
+            # only touches "year" when the choice actually changes, so a
+            # manual year edit made in a previous visit to review survives
+            # re-confirming the same choice on a later back-navigation.
+            use_description_year_requested = bool(user_input.get("use_description_year"))
+            if use_description_year_requested != getattr(
+                self, "_import_use_description_year", False
+            ):
+                for row in self._import_rows:
+                    if use_description_year_requested:
+                        if row.get("description_year") is not None:
+                            row["year"] = row["description_year"]
+                    elif "dtstart_year" in row:
+                        row["year"] = row["dtstart_year"]
+                self._import_use_description_year = use_description_year_requested
+
+            if self._import_fixed_event_type:
+                self._import_event_type = self._import_fixed_event_type
+            elif not self._import_row_type_mode:
+                self._import_event_type = user_input[CONF_EVENT_TYPE]
+            return await self.async_step_import_review()
+
+        return self.async_show_form(
+            step_id="import_options",
+            data_schema=_import_options_schema(
+                {
+                    "swap_names": self._import_swap_applied,
+                    "use_description_year": getattr(
+                        self, "_import_use_description_year", False
+                    ),
+                    CONF_EVENT_TYPE: getattr(self, "_import_event_type", TYPE_BIRTHDAY),
+                },
+                include_description_year=(self._import_source == "ics"),
+                include_event_type=not (self._import_row_type_mode or self._import_fixed_event_type),
+            ),
+            description_placeholders={"source_label": self._import_source_label},
+            last_step=False,
+        )
+
+    def _import_review_field_keys(self, index: int, row: dict) -> dict[str, str]:
+        # Built as the literal, readable label text itself rather than a
+        # translation-lookup key - strings.json has no way to express N
+        # per-index labels for an arbitrarily long, dynamically parsed list,
+        # and HA's flow forms show a field's raw schema key verbatim when no
+        # translation string matches it (same trick as _HUB_TITLE_WORD in
+        # helpers.py, used there for the same "can't route through
+        # strings.json" reason). English-only by construction - see README.
+        return {
+            "include": f"{index + 1}. Import this entry",
+            "first": f'{index + 1}. First name (was: "{row["summary"]}")',
+            "last": f"{index + 1}. Last name",
+            "day": f"{index + 1}. Day",
+            "month": f"{index + 1}. Month",
+            "year": f"{index + 1}. Year (leave empty if unknown)",
+            "type": f'{index + 1}. Event type (detected label: "{row.get("detected_label")}")',
+        }
+
+    async def async_step_import_review(self, user_input=None):
+        """Step 3 of 3 (shared by ICS and vCard import, repeated per page):
+        review/edit a page of entries, or finish and import on the last page.
+
+        Reuses this same step_id across pages instead of rendering every
+        parsed entry in one unbounded form - large contact lists stay
+        reviewable a page at a time. A "go back" field (top of the form)
+        returns to the previous page, or to the options step from page one.
+        """
+        start = self._import_review_page * _IMPORT_REVIEW_PAGE_SIZE
+        page = list(enumerate(self._import_rows))[start : start + _IMPORT_REVIEW_PAGE_SIZE]
+        is_last_page = start + _IMPORT_REVIEW_PAGE_SIZE >= len(self._import_rows)
+
+        if user_input is not None:
+            for index, row in page:
+                keys = self._import_review_field_keys(index, row)
+                row["first_name"] = (user_input.get(keys["first"]) or "").strip()
+                row["last_name"] = (user_input.get(keys["last"]) or "").strip()
+                day_raw = user_input.get(keys["day"])
+                row["day"] = int(day_raw) if day_raw is not None else row["day"]
+                month_raw = user_input.get(keys["month"])
+                row["month"] = int(month_raw) if month_raw is not None else row["month"]
+                year_raw = user_input.get(keys["year"])
+                row["year"] = int(year_raw) if year_raw not in (None, "") else None
+                row["include"] = bool(user_input.get(keys["include"], True))
+                if self._import_row_type_mode:
+                    row["event_type"] = user_input.get(keys["type"], row["event_type"])
+                if row.get("duplicate_of"):
+                    force_new_key = _ics_force_new_key(index, row["duplicate_of_label"])
+                    row["force_new"] = bool(user_input.get(force_new_key, False))
+
+            if user_input.get("go_back"):
+                if self._import_review_page > 0:
+                    self._import_review_page -= 1
+                    return await self.async_step_import_review()
+                return await self.async_step_import_options()
+
+            if not is_last_page:
+                self._import_review_page += 1
+                return await self.async_step_import_review()
+
+            created = 0
+            updated = 0
+            for row in self._import_rows:
+                if not row.get("include"):
+                    continue
+                candidate = {
+                    CONF_EVENT_NAME: row["first_name"],
+                    CONF_LAST_NAME: row["last_name"],
+                    CONF_EVENT_TYPE: row.get("event_type") or self._import_event_type,
+                    CONF_DAY: row["day"],
+                    CONF_MONTH: row["month"],
+                    CONF_YEAR: row["year"],
+                    CONF_ICON: "",
+                    CONF_VIP: False,
+                }
+                data, errors = _validate_and_normalise(candidate)
+                if data is None:
+                    _LOGGER.warning(
+                        "Annuals %s import: skipped invalid row (%s)", self._import_source, errors
+                    )
+                    continue
+
+                duplicate_entry_id = row.get("duplicate_of")
+                if duplicate_entry_id and not row.get("force_new"):
+                    entry = self.hass.config_entries.async_get_entry(duplicate_entry_id)
+                    if entry is not None:
+                        title = await _entry_title(self.hass, data)
+                        self.hass.config_entries.async_update_entry(entry, title=title, data=data)
+                        self.hass.config_entries.async_schedule_reload(entry.entry_id)
+                        updated += 1
+                        continue
+
+                # Marks this as created by this import specifically (unlike
+                # an update above, which leaves whatever the matched entry
+                # already was untouched) - see "Remove ICS/vCard-imported
+                # events".
+                data[CONF_IMPORT_SOURCE] = self._import_source
+                # Awaited sequentially, not fired off via async_create_task -
+                # see the matching comment in async_step_import_csv on why:
+                # each row's unique_id dedup check must see every earlier row
+                # already committed, or two rows that should collapse into
+                # one entry could each independently create a duplicate.
+                await self.hass.config_entries.flow.async_init(
+                    DOMAIN, context={"source": SOURCE_IMPORT}, data=data
+                )
+                created += 1
+
+            skipped = len(self._import_rows) - created - updated + self._import_skipped
+            return self.async_abort(
+                reason="ics_import_started",
+                description_placeholders={
+                    "created": str(created),
+                    "updated": str(updated),
+                    "skipped": str(skipped),
+                },
+            )
+
+        legend_lines = []
+        schema_dict: dict = {vol.Optional("go_back", default=False): selector({"boolean": {}})}
+        for index, row in page:
+            keys = self._import_review_field_keys(index, row)
+            year_str = str(row["year"]) if row["year"] else "?"
+            # "•" prefix is deliberate - the description is rendered as
+            # Markdown, and a line starting with "<number>. " is parsed as an
+            # ordered-list item and renumbered from 1 regardless of the
+            # literal digit typed here, which would show 1, 2, 3... instead
+            # of the correct 21, 22, 23... on page 2+. Prefixing with a
+            # non-list-marker character keeps the real index visible as-is.
+            label_suffix = f' ({row["detected_label"]})' if self._import_row_type_mode else ""
+            line = (
+                f'• {index + 1}. "{row["summary"]}" → '
+                f'{row["day"]:02d}.{row["month"]:02d}.{year_str}{label_suffix}'
+            )
+
+            duplicate = _find_import_duplicate(
+                self.hass,
+                row.get("event_type") or self._import_event_type,
+                row["day"],
+                row["month"],
+                row["first_name"],
+                row["last_name"],
+            )
+            include_label = keys["include"]
+            if duplicate is not None:
+                existing_full = full_name(duplicate.data)
+                row["duplicate_of"] = duplicate.entry_id
+                row["duplicate_of_label"] = existing_full
+                warning = f' — ⚠ possible duplicate of existing "{existing_full}"'
+                existing_day = duplicate.data.get(CONF_DAY)
+                existing_month = duplicate.data.get(CONF_MONTH)
+                if (existing_day, existing_month) != (row["day"], row["month"]):
+                    # Same name, different date - matched via the exact
+                    # name-only fallback in _find_import_duplicate, not the
+                    # day/month-based match, so the date mismatch itself
+                    # needs calling out or this warning looks like a bug.
+                    warning += f" (existing entry is on {existing_day:02d}.{existing_month:02d})"
+                line += warning
+                include_label += warning
+            else:
+                row.pop("duplicate_of", None)
+                row.pop("duplicate_of_label", None)
+            legend_lines.append(line)
+
+            schema_dict[
+                vol.Optional(include_label, default=row.get("include", True))
+            ] = selector({"boolean": {}})
+            if duplicate is not None:
+                force_new_key = _ics_force_new_key(index, existing_full)
+                schema_dict[
+                    vol.Optional(force_new_key, default=row.get("force_new", False))
+                ] = selector({"boolean": {}})
+            schema_dict[vol.Optional(keys["first"], default=row["first_name"])] = str
+            # No default= here - same reason as the year field just below
+            # (and the standalone event form's own last_name field): an
+            # emptied optional field is omitted from the submitted payload,
+            # so a schema default= would make voluptuous silently refill it
+            # with the old last name, making it impossible to actually clear
+            # one during review.
+            schema_dict[
+                vol.Optional(keys["last"], description={"suggested_value": row["last_name"]})
+            ] = str
+            schema_dict[vol.Optional(keys["day"], default=row["day"])] = selector(
+                {"number": {"min": 1, "max": 31, "mode": "box"}}
+            )
+            schema_dict[vol.Optional(keys["month"], default=str(row["month"]))] = _month_selector()
+            schema_dict[
+                vol.Optional(keys["year"], description={"suggested_value": row["year"]})
+            ] = selector({"number": {"min": 1, "max": 9999, "mode": "box"}})
+            if self._import_row_type_mode:
+                schema_dict[
+                    vol.Optional(keys["type"], default=row["event_type"])
+                ] = _event_type_selector()
+
+        total_pages = (len(self._import_rows) + _IMPORT_REVIEW_PAGE_SIZE - 1) // _IMPORT_REVIEW_PAGE_SIZE
+        return self.async_show_form(
+            step_id="import_review",
+            data_schema=vol.Schema(schema_dict),
+            description_placeholders={
+                "source_label": self._import_source_label,
+                "page": str(self._import_review_page + 1),
+                "total_pages": str(total_pages),
+                "legend": "\n".join(legend_lines),
+            },
+            last_step=is_last_page,
+        )
+
+    async def async_step_remove_ics_imports(self, user_input=None):
+        """Bulk-remove only the entries created by "Import events from ICS
+        calendar" (CONF_IMPORT_SOURCE == "ics") - never entries an ICS import
+        merely updated (see async_step_import_review's duplicate handling),
+        manually added events, or CSV/vCard imports.
+        """
+        entries = [
+            entry
+            for entry in self.hass.config_entries.async_entries(DOMAIN)
+            if entry.data.get(CONF_IMPORT_SOURCE) == "ics"
+        ]
+        if not entries:
+            return self.async_abort(reason="no_ics_imports")
+
+        if user_input is not None:
+            for entry in entries:
+                await self.hass.config_entries.async_remove(entry.entry_id)
+            return self.async_abort(
+                reason="ics_imports_removed",
+                description_placeholders={"count": str(len(entries))},
+            )
+
+        return self.async_show_form(
+            step_id="remove_ics_imports",
+            data_schema=vol.Schema({}),
+            description_placeholders={"count": str(len(entries))},
+        )
+
+    async def async_step_remove_vcard_imports(self, user_input=None):
+        """Bulk-remove only the entries created by "Import events from vCard"
+        (CONF_IMPORT_SOURCE == "vcard") - mirrors async_step_remove_ics_imports.
+        """
+        entries = [
+            entry
+            for entry in self.hass.config_entries.async_entries(DOMAIN)
+            if entry.data.get(CONF_IMPORT_SOURCE) == "vcard"
+        ]
+        if not entries:
+            return self.async_abort(reason="no_vcard_imports")
+
+        if user_input is not None:
+            for entry in entries:
+                await self.hass.config_entries.async_remove(entry.entry_id)
+            return self.async_abort(
+                reason="vcard_imports_removed",
+                description_placeholders={"count": str(len(entries))},
+            )
+
+        return self.async_show_form(
+            step_id="remove_vcard_imports",
+            data_schema=vol.Schema({}),
+            description_placeholders={"count": str(len(entries))},
         )
 
     async def async_step_export_csv(self, user_input=None):
@@ -788,16 +1718,43 @@ class AnnualsOptionsFlow(OptionsFlow):
         )
 
     async def async_step_hub_menu(self, user_input=None):
+        # Icons are supplied here rather than baked into each translation
+        # string, so every language renders them identically and adding/
+        # changing an icon never requires touching all 15 translation files.
         return self.async_show_menu(
             step_id="hub_menu",
             menu_options=[
                 "annual_settings",
-                "import_csv",
+                "import_events",
                 "export_csv",
-                "import_holidays",
-                "remove_holidays",
+                "remove_events",
                 "delete_all",
             ],
+            description_placeholders={
+                "icon_annual_settings": "⚙️",
+                "icon_import_events": "📥",
+                "icon_export_csv": "📤",
+                "icon_remove_events": "🗑️",
+                "icon_delete_all": "❌",
+            },
+        )
+
+    async def async_step_import_events(self, user_input=None):
+        """Single hub menu entry for every import source - routes to the
+        existing, unchanged wizards (CSV imports directly; ICS and vCard go
+        through their own multi-step review wizard; vCard branches once more
+        into birthdays vs. other dates - see async_step_import_vcard_menu).
+        """
+        return self.async_show_menu(
+            step_id="import_events",
+            menu_options=["import_csv", "import_ics", "import_vcard_menu", "import_holidays"],
+        )
+
+    async def async_step_remove_events(self, user_input=None):
+        """Single hub menu entry for every "remove imported X" action."""
+        return self.async_show_menu(
+            step_id="remove_events",
+            menu_options=["remove_ics_imports", "remove_vcard_imports", "remove_holidays"],
         )
 
     async def async_step_annual_settings(self, user_input=None):

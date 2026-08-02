@@ -115,15 +115,86 @@
                     "csv_file": "Archivo CSV"
                 }
             },
+            "import_ics": {
+                "title": "Importar eventos desde calendario ICS",
+                "description": "Sube un archivo de calendario .ics - normalmente un calendario de «Cumpleaños» exportado desde Contactos de Apple, Contactos de Google/Android u Outlook. Solo se leen las entradas de día completo sin excepciones de recurrencia; los eventos con hora se omiten. Los siguientes pasos te permiten revisar y corregir la división propuesta de nombre y apellido (e intercambiar nombre/apellido para todos a la vez) antes de importar nada.",
+                "data": {
+                    "ics_file": "Archivo ICS"
+                }
+            },
+            "import_vcard_menu": {
+                "title": "Importar eventos desde vCard",
+                "description": "El cumpleaños de un contacto y sus otras fechas (aniversarios, fechas personalizadas) siguen ramas distintas, ya que solo los cumpleaños comparten un único tipo de evento para todo el lote - a cada otra fecha se le asigna su propio tipo durante la revisión.",
+                "menu_options": {
+                    "import_vcard": "Importar cumpleaños",
+                    "import_vcard_other_dates": "Importar otras fechas (aniversarios, ...)"
+                }
+            },
+            "import_vcard": {
+                "title": "Importar cumpleaños desde vCard",
+                "description": "Sube un archivo .vcf - normalmente contactos exportados desde Contactos de Apple, Contactos de Google/Android u Outlook. Solo se leen las entradas con un cumpleaños establecido. El nombre y el apellido provienen de los campos de nombre estructurado del contacto, no de una suposición, y un cumpleaños sin año establecido (la forma en que vCard expresa esto) se mantiene como desconocido en lugar de inventarse. Los siguientes pasos te permiten revisar y corregir todo (e intercambiar nombre/apellido para todos a la vez) antes de importar nada.",
+                "data": {
+                    "vcard_file": "Archivo vCard"
+                }
+            },
+            "import_vcard_other_dates": {
+                "title": "Importar otras fechas desde vCard",
+                "description": "Sube un archivo .vcf. Se leen todas las fechas excepto el cumpleaños: el campo estándar «Aniversario», además de cualquier fecha con etiqueta personalizada que Contactos de Apple/Google te permite añadir por contacto (por ejemplo, «Aniversario», «Otro» o una etiqueta escrita por ti). A diferencia de los cumpleaños, estas no son todas del mismo tipo de evento - los siguientes pasos te permiten revisar cada una, con su etiqueta detectada mostrada como referencia, y asignarle individualmente el tipo de evento correcto.",
+                "data": {
+                    "vcard_file": "Archivo vCard"
+                }
+            },
+            "import_options": {
+                "title": "Importar desde {source_label} - ajustes",
+                "description": "Estos se aplican a cada entrada encontrada en el archivo. A continuación podrás revisar y editar las entradas individuales.",
+                "data": {
+                    "swap_names": "Intercambiar nombre/apellido en todas las entradas",
+                    "use_description_year": "Usar el año encontrado en la descripción de cada entrada en lugar de su fecha de inicio, cuando se encuentre uno (por ejemplo, «geb. 1985»)",
+                    "type": "Tipo de evento"
+                }
+            },
+            "import_review": {
+                "title": "Importar desde {source_label} - revisión ({page}/{total_pages})",
+                "description": "{legend}\n\nRevisa la división propuesta de nombre/apellido de abajo y corrige lo que esté mal - el propio cumpleaños también es editable - o desmarca una entrada para excluirla por completo. Un posible duplicado se marca con el nombre de su entrada existente; deja «crear como nuevo» sin marcar para actualizar esa entrada en lugar de añadir una segunda. Las etiquetas de los campos se muestran aquí solo en inglés, independientemente de tu idioma.",
+                "data": {
+                    "go_back": "Volver a la página anterior"
+                }
+            },
+            "remove_ics_imports": {
+                "title": "Eliminar eventos importados por ICS",
+                "description": "{count} evento(s) se crearon mediante una importación ICS anterior. Haz clic en «OK» para eliminarlos todos - las entradas que una importación ICS solo actualizó (en lugar de crear) nunca se ven afectadas, como tampoco los eventos añadidos manualmente o importados por CSV o vCard."
+            },
+            "remove_vcard_imports": {
+                "title": "Eliminar eventos importados por vCard",
+                "description": "{count} evento(s) se crearon mediante una importación vCard anterior. Haz clic en «OK» para eliminarlos todos - las entradas que una importación vCard solo actualizó (en lugar de crear) nunca se ven afectadas, como tampoco los eventos añadidos manualmente o importados por CSV o ICS."
+            },
             "hub_menu": {
                 "title": "Annuals Ajustes",
                 "menu_options": {
-                    "annual_settings": "Annual Ajustes",
-                    "import_csv": "Importar eventos desde CSV",
-                    "export_csv": "Exportar eventos a CSV",
-                    "import_holidays": "Importar festivos",
-                    "remove_holidays": "Eliminar festivos importados",
-                    "delete_all": "Eliminar todos los datos de Annuals"
+                    "annual_settings": "{icon_annual_settings} Annual Ajustes",
+                    "import_events": "{icon_import_events} Importar eventos",
+                    "export_csv": "{icon_export_csv} Exportar eventos a CSV",
+                    "remove_events": "{icon_remove_events} Eliminar eventos",
+                    "delete_all": "{icon_delete_all} Eliminar todos los datos de Annuals"
+                }
+            },
+            "import_events": {
+                "title": "Importar eventos",
+                "description": "Elige una fuente desde la que importar.",
+                "menu_options": {
+                    "import_csv": "CSV",
+                    "import_ics": "Calendario ICS",
+                    "import_vcard_menu": "vCard",
+                    "import_holidays": "Festivos"
+                }
+            },
+            "remove_events": {
+                "title": "Eliminar eventos",
+                "description": "Elige qué eventos importados anteriormente deseas eliminar.",
+                "menu_options": {
+                    "remove_ics_imports": "Importados por ICS",
+                    "remove_vcard_imports": "Importados por vCard",
+                    "remove_holidays": "Festivos"
                 }
             },
             "import_holidays": {
@@ -174,17 +245,27 @@
             "invalid_date": "Esta combinación de día/mes/año no es una fecha válida.",
             "invalid_csv": "No se pudo leer este archivo como CSV. Comprueba la codificación y el formato.",
             "no_valid_rows": "No se encontraron filas válidas en este archivo. Consulta el registro para ver los detalles de las filas omitidas.",
+            "invalid_ics": "No se pudo leer este archivo como calendario ICS. Comprueba el formato.",
+            "no_valid_entries": "No se encontraron entradas de día completo utilizables en este archivo. Consulta el registro para ver los detalles de las entradas omitidas.",
+            "invalid_vcard": "No se pudo leer este archivo como vCard. Comprueba el formato.",
+            "no_valid_vcard_entries": "No se encontraron contactos con un cumpleaños utilizable en este archivo. Consulta el registro para ver los detalles de las entradas omitidas.",
+            "no_valid_vcard_dates": "No se encontraron aniversarios ni otras fechas (aparte de cumpleaños) en este archivo. Consulta el registro para ver los detalles de las entradas omitidas.",
             "no_batch_selected": "Marca «Eliminar todos los festivos importados» o elige un lote."
         },
         "abort": {
             "hub_not_configurable": "El concentrador Annuals no tiene ajustes propios: solo contiene los calendarios compartidos.",
             "import_started": "Importación iniciada: {created} evento(s) en cola, {skipped} fila(s) omitida(s) (consulta el registro para más detalles).",
+            "ics_import_started": "Importación iniciada: {created} evento(s) creado(s), {updated} actualizado(s), {skipped} entrada(s) omitida(s) o excluida(s).",
             "csv_exported": "{count} evento(s) exportado(s). [Descargar annuals_export.csv]({url}) (Ctrl/Cmd+clic para descargar - un clic normal no funciona aquí)\n\nO copia el CSV de abajo:\n\n```\n{csv}\n```",
             "no_events_to_export": "Todavía no hay eventos para exportar.",
             "deleted_all": "Se han eliminado todos los eventos, calendarios y el concentrador de Annuals.",
             "holiday_import_started": "Importación iniciada: {count} festivo(s) en cola para {country}.",
             "no_holidays_imported": "Todavía no se ha importado ningún festivo.",
-            "holidays_removed": "{count} festivo(s) eliminado(s)."
+            "holidays_removed": "{count} festivo(s) eliminado(s).",
+            "no_ics_imports": "No se encontraron eventos creados por una importación ICS.",
+            "ics_imports_removed": "{count} evento(s) importado(s) por ICS eliminado(s).",
+            "no_vcard_imports": "No se encontraron eventos creados por una importación vCard.",
+            "vcard_imports_removed": "{count} evento(s) importado(s) por vCard eliminado(s)."
         }
     },
     "entity": {

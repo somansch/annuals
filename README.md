@@ -1,7 +1,7 @@
 # <img src="custom_components/annuals/brand/icon.png" width="40" height="40" align="top"> Annuals Integration for Home Assistant - more than birthdays only
 
 [![GitHub release](https://img.shields.io/github/v/release/somansch/annuals)](https://github.com/somansch/annuals/releases/latest)
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/default)
 [![License](https://img.shields.io/github/license/somansch/annuals)](LICENSE)
 
 **Available languages:** English, Deutsch, Français, Nederlands, Polski, Español, Italiano, Português (Brasil), Русский, Svenska, 简体中文, Čeština, Norsk bokmål, Dansk, Türkçe
@@ -18,15 +18,35 @@ Typical reasons to use it:
 - **Track more than birthdays** - holidays, name days, wedding anniversaries, memorials, pet birthdays, work anniversaries, or anything custom, each with its own icon and aggregate calendar.
 - **Import a whole country's public holidays** in a few clicks, categorized (public, bank, school breaks, religious, ...) and kept up to date on re-import.
 - **Highlight the ones that matter most** - flag close family as **VIP** so they always stand out, and let round-number milestones (18th, 30th, 50th, ...) mark themselves as **Important** automatically, both on the bundled dashboard card and in your own automations.
-- **Bring in a whole contact list at once** via CSV import, instead of adding entries one by one.
+- **Bring in a whole contact list at once** via CSV, ICS calendar, or vCard import, instead of adding entries one by one.
 
 Annuals tracks yearly-recurring events - birthdays, holidays, anniversaries, name days, wedding anniversaries, memorials, or anything custom - and reports, for each one, how many days until its next occurrence and which occurrence number that will be (e.g. someone's 30th birthday).
 
 **Architecture note:** each event is its own config entry, the same pattern Home Assistant uses for "helper"-style integrations (Generic Thermostat, Threshold, Derivative, ...). This means finding and editing a specific event later doesn't need a custom picker inside this integration - **Settings → Devices & Services** already has a search box, and clicking an entry's **Configure** opens that one event's form pre-filled, ready to edit.
 
+**Questions, feedback, or just want to see what others are doing with it?** Join the discussion on the [Home Assistant Community thread](https://community.home-assistant.io/t/annuals-more-than-just-a-birthday-tracker/1017120).
+
+## Quick links
+
+- [First-time setup](#first-time-setup)
+- [Adding an event](#adding-an-event)
+- [Annuals Settings](#annuals-settings) (milestones, import, export, remove, delete all)
+- [Importing events from a CSV file](#importing-events-from-a-csv-file)
+- [Importing events from an ICS calendar](#importing-events-from-an-ics-calendar)
+- [Importing events from a vCard (.vcf) file](#importing-events-from-a-vcard-vcf-file)
+- [Importing public holidays](#importing-public-holidays)
+- [Exporting events to CSV](#exporting-events-to-csv)
+- [Leap years](#leap-years)
+- [Created entities](#created-entities)
+- [Automation examples](#automation-examples)
+- [Native Calendar card](#native-calendar-card)
+- [Custom dashboard card](#custom-dashboard-card)
+- [Installation](#installation)
+- [Help and Contribution](#help-and-contribution)
+
 ## First-time setup
 
-The first time you go to **Settings → Devices & Services → Add Integration → "Annuals"**, it sets up just the **"Annuals Settings" hub entry** and its shared calendars - no event form, nothing to fill in yet. Add your events afterwards, either one at a time or all at once from a CSV file (see below).
+The first time you go to **Settings → Devices & Services → Add Integration → "Annuals"**, it sets up just the **"Annuals Settings" hub entry** and its shared calendars - no event form, nothing to fill in yet. Add your events afterwards, either one at a time or all at once ([Annuals Settings](#annuals-settings) below).
 
 ## Adding an event
 
@@ -57,29 +77,48 @@ There's a 9th type, **Holiday**, but it isn't offered in this form - it has no s
 
 To edit or remove an event afterwards, find its entry under **Settings → Devices & Services → Annuals**, and use **Configure** (edit) or the "⋮" menu (delete).
 
-### Leap years
+To add many events at once instead of one at a time see [Annuals Settings](#annuals-settings) below.
 
-The integration accounts for leap years (February 29) when calculating the number of days until the next anniversary.
+## Annuals Settings
 
-If your birthday is on February 29th it is calculated correctly, and it does not fall back to March 1st — instead, in non-leap years it falls back to February 28th.
+A handful of cross-event tools - milestone thresholds, bulk import/export, and bulk removal - live in one place, separate from any single event: the **"Annuals Settings" hub entry**, created during [first-time setup](#first-time-setup). Find it under **Settings → Devices & Services → Annuals** and click **Configure**:
 
-Concretely:
-- Leap year (e.g. 2028): the event falls exactly on February 29th.
-- Non-leap year (2025, 2026, 2027, 2029, …): the event falls on February 28th.
+<img src="docs/annuals-settings-summary.png" alt="Annuals Settings hub menu" width="45%">
 
-This is a deliberate design choice: it guarantees an occurrence every year (not just once every four years), and `occurrence_number` (e.g. "turning 30") still counts correctly, since it's simply computed as target year - birth year, independent of the exact day.
+### Annual Settings (automatic milestones)
 
-### Important annual (automatic milestones)
-
-Beyond the manual VIP flag, Annuals can automatically mark an event as **Important** based on its upcoming occurrence number - e.g. a 18th, 30th, or 50th birthday, or a 25th wedding anniversary. This is computed per event type from a list of milestone occurrence numbers, editable under **Settings → Devices & Services → Annuals → "Annuals Settings" hub entry → Configure → Annual Settings**.
+Beyond the manual **VIP annual** flag ([Adding an event](#adding-an-event) above), Annuals can automatically mark an event as **Important** based on its upcoming occurrence number - e.g. an 18th, 30th, or 50th birthday, or a 25th wedding anniversary. This is computed per event type from a list of milestone occurrence numbers, editable under **Annuals Settings → Configure → Annual Settings**.
 
 Each event type gets its own comma-separated list of occurrence numbers (e.g. `18,21,30,40,50,60,65,70,75,80,85,90,95,100` for birthdays) that come pre-filled with sensible cultural defaults - round numbers plus the traditional "special" birthdays, 5-year steps for work anniversaries, and so on. Edit a field to change its milestones, or clear it entirely to disable "Important" detection for that type. Name day and Custom events have no cultural convention, so they default to empty (never automatically "Important") unless you set your own list.
 
 Both `vip` and `important` are exposed as sensor attributes (see [Created entities](#created-entities) below) and both feed into the [custom dashboard card](#custom-dashboard-card)'s filters and badges - VIP is a manual, permanent flag on one event; Important is automatic and only true in the specific year a milestone is reached.
 
+### Import events
+
+<img src="docs/annuals-settings-import.png" alt="Import events source picker" width="45%">
+
+Pick a source to import from - useful for bringing in a whole contact list, calendar, or country's holidays at once instead of adding events one by one:
+
+- **[CSV](#importing-events-from-a-csv-file)** - a plain spreadsheet file, one row per event.
+- **[ICS calendar](#importing-events-from-an-ics-calendar)** - an exported "Birthdays" calendar.
+- **[vCard](#importing-events-from-a-vcard-vcf-file)** - an exported contact card, either birthdays or every other date on the contact (anniversaries, ...).
+- **[Holidays](#importing-public-holidays)** - a whole country's (and optionally state/province's) public holidays.
+
+### Export events to CSV
+
+Generates a CSV of every manually-added/CSV-imported event, ready to re-import unchanged or keep as a backup - see [Exporting events to CSV](#exporting-events-to-csv) below.
+
+### Remove events
+
+Removes only the events a particular source actually created - **ICS-imported**, **vCard-imported**, or **Holidays** - without touching manually added events, CSV-imported events, or events from any other source. Each import section below explains its own removal option in context.
+
+### Delete all Annuals data
+
+Permanently removes every event entry, the shared calendars, and the hub itself - the entire integration and everything it created. Requires confirming a warning screen before anything is deleted; this cannot be undone.
+
 ## Importing events from a CSV file
 
-Find the **"Annuals Settings" hub entry** under **Settings → Devices & Services → Annuals** and click **Configure** - this opens a menu with "Import events from CSV". Import is useful for bringing in a whole contact list at once instead of adding events one by one.
+Find the **"Annuals Settings" hub entry** under **Settings → Devices & Services → Annuals**, click **Configure**, and pick **"Import events" → "CSV"**. Import is useful for bringing in a whole contact list at once instead of adding events one by one.
 
 The file needs a header row with these columns:
 
@@ -126,16 +165,61 @@ action: annuals.import_csv
 data:
   content: |
     name,type,day,month,year,icon,vip,last_name
-    Anna,birthday,12,4,1988,,,Müller
+    Anna,birthday,12,4,1988,,,Miller
 ```
 
 </details>
 
 `file_path` must be inside a directory listed under `homeassistant: allowlist_external_dirs` in `configuration.yaml`. Combine this with a **time trigger** to keep a centrally maintained CSV in sync on a schedule, without any manual re-upload.
 
+## Importing events from an ICS calendar
+
+1. **Upload** the `.ics` file. Only all-day entries are read; timed (non-birthday-style) entries are skipped automatically.
+2. **Settings** - optionally **swap first/last name for every entry at once** (useful if the source calendar lists last name first), optionally **use the year found in each entry's description instead of its start date** (many exported "Birthdays" calendars set every event to a fixed placeholder year, while the real birth year - if known - is buried as text in the event's description, e.g. "born 1985"; enabling this searches for a plausible year there and uses it whenever one is found, otherwise falling back to the start date's year), and pick the **event type** to import as (defaults to Birthday).
+3. **Review** - every entry, one page at a time for large contact lists, with its proposed first/last name split (split on the last space, e.g. "Anna Maria Miller" → first name "Anna Maria", last name "Miller") and the birthday itself, all pre-filled and editable, plus a checkbox to leave out any entry you don't want. A **"Go back"** field at the top returns to the previous page, or to the Settings step from the first page, without losing anything already entered. Field labels on this page are shown in English only regardless of your language setting.
+
+If an entry's day/month and name overlap with an event you already have (of the same type), it's flagged as a possible duplicate right there in the review step, naming the existing entry - leave the "create as new entry" box unchecked to update that existing entry instead of adding a second one, or check it to bring both in side by side.
+
+Like CSV import, re-running this later for the same calendar updates exactly-matching entries in place (by type + day/month + name) instead of creating duplicates - and anything the review step didn't catch can always be corrected afterward via that entry's own **Configure** button, same as any manually added event.
+
+## Importing events from a vCard (.vcf) file
+
+Find the **"Annuals Settings" hub entry**, click **Configure**, and pick **"Import events" → "vCard"** - this first opens a choice between two branches:
+
+- **Import birthdays** - the wizard is identical to ICS import - upload, then settings (swap first/last name, pick the event type), then the paginated review with editable name/date, duplicate detection, the "create as new vs. update existing" choice, and the "Go back" field. Only contacts with a birthday set are read - everything else is skipped.
+- **Import other dates (anniversaries, ...)** - reads every date on a contact *except* the birthday: the standard "Anniversary" field, plus any custom-labelled date Apple/Google Contacts lets you add per contact (e.g. "Anniversary", "Other", or a label typed in by hand). Since these aren't all the same kind of event, there's no single event type to pick up front - the settings step only offers the name-swap toggle, and each entry in review gets its own event type selector, defaulting to Wedding anniversary for anything labelled "Anniversary" and Custom otherwise (the detected label is shown alongside each entry so a wrong guess is easy to spot and correct).
+
+Re-running either branch later for the same contacts/dates updates exactly-matching entries in place, same as ICS/CSV import.
+
+## Importing public holidays
+
+Find the **"Annuals Settings" hub entry** under **Settings → Devices & Services → Annuals**, click **Configure**, and pick **"Import events" → "Holidays"**. Annuals uses the [`holidays`](https://pypi.org/project/holidays/) Python library - already a dependency of this integration, not a separate download - which covers **250+ countries and territories and 150+ languages** for holiday names, so most countries' holidays are available out of the box.
+
+The wizard is two steps:
+
+1. **Country** - pick from the full list the `holidays` library supports.
+2. For that country: an optional **state/province** (leave empty for national holidays only; picking one adds that region's own holidays on top), **categories** (which ones are offered depends entirely on what that country's holiday data provides - e.g. `public`, `bank`, `school`, `catholic` - see the table below), and **language** for the holiday names (also country-dependent).
+
+| Category | Meaning |
+|---|---|
+| Public | Statutory/legal national holidays |
+| Bank | Bank holidays specifically |
+| Government | Government/administrative offices closed |
+| School | School holidays/breaks (often multi-day, e.g. summer break) |
+| Optional | Optional/discretionary holidays |
+| Unofficial | Observed but not legally mandated |
+| Half day | Half-day holiday |
+| Armed forces | Military-specific observances |
+| Workday | A working day despite falling near a holiday (make-up day) |
+| Catholic / Christian / Orthodox / Jewish / Islamic / Hindu / Buddhist | Religious observances |
+
+A multi-day category like school holidays (e.g. a 6-week summer break) is imported as a single event on its first day, not one event per day.
+
+Re-running the wizard later for the same country (and subdivision) updates the existing imported events instead of creating duplicates - safe to repeat if a country adds or removes a holiday
+
 ## Exporting events to CSV
 
-Find the **"Annuals Settings" hub entry** under **Settings → Devices & Services → Annuals**, click **Configure**, and pick **"Export events to CSV"** - it immediately generates the file, offers a **download link** (real file, using the exact same columns as CSV import - `name,type,day,month,year,icon,vip,last_name` - so a freshly exported file can be re-imported unchanged), and also shows it inline as a copyable code block as a fallback. Only manually added and CSV-imported events are included; imported holidays aren't, since they're never CSV-imported either (re-import them via [Importing public holidays](#importing-public-holidays) instead).
+Find the **"Annuals Settings" hub entry** under **Settings → Devices & Services → Annuals**, click **Configure**, and pick **"Export events to CSV"** - it immediately generates the file, offers a **download link** (real file, using the exact same columns as CSV import - `name,type,day,month,year,icon,vip,last_name` - so a freshly exported file can be re-imported unchanged), and also shows it inline as a copyable code block as a fallback. Only manually added and CSV/ICS/vCard-imported events are included; imported holidays aren't, re-import them via [Importing public holidays](#importing-public-holidays) instead.
 
 **Use Ctrl/Cmd+click (or right-click → "Save link as") on the download link, not a plain click** - Home Assistant's own UI intercepts a plain click on any link inside this kind of dialog for its own in-app navigation, which never lets the download happen. This is spelled out in the dialog itself as a reminder.
 
@@ -164,41 +248,21 @@ data:
 
 `file_path` must be inside a directory listed under `homeassistant: allowlist_external_dirs` in `configuration.yaml`, same as CSV import.
 
-## Importing public holidays
+## Leap years
 
-Find the **"Annuals Settings" hub entry** under **Settings → Devices & Services → Annuals** and click **Configure** - this opens a menu with "Import holidays". Annuals uses the [`holidays`](https://pypi.org/project/holidays/) Python library - already a dependency of this integration, not a separate download - which covers **250+ countries and territories and 150+ languages** for holiday names, so most countries' holidays are available out of the box.
+The integration accounts for leap years (February 29) when calculating the number of days until the next anniversary.
 
-The wizard is two steps:
+If your birthday is on February 29th it is calculated correctly, and it does not fall back to March 1st — instead, in non-leap years it falls back to February 28th.
 
-1. **Country** - pick from the full list the `holidays` library supports.
-2. For that country: an optional **state/province** (leave empty for national holidays only; picking one adds that region's own holidays on top), **categories** (which ones are offered depends entirely on what that country's holiday data provides - e.g. `public`, `bank`, `school`, `catholic` - see the table below), and **language** for the holiday names (also country-dependent).
+Concretely:
+- Leap year (e.g. 2028): the event falls exactly on February 29th.
+- Non-leap year (2025, 2026, 2027, 2029, …): the event falls on February 28th.
 
-| Category | Meaning |
-|---|---|
-| Public | Statutory/legal national holidays |
-| Bank | Bank holidays specifically |
-| Government | Government/administrative offices closed |
-| School | School holidays/breaks (often multi-day, e.g. summer break) |
-| Optional | Optional/discretionary holidays |
-| Unofficial | Observed but not legally mandated |
-| Half day | Half-day holiday |
-| Armed forces | Military-specific observances |
-| Workday | A working day despite falling near a holiday (make-up day) |
-| Catholic / Christian / Orthodox / Jewish / Islamic / Hindu / Buddhist | Religious observances |
-
-A multi-day category like school holidays (e.g. a 6-week summer break) is imported as a single event on its first day, not one event per day.
-
-Re-running the wizard later for the same country (and subdivision) updates the existing imported events instead of creating duplicates - safe to repeat if a country adds a new holiday or you want to refresh the list for a new year.
-
-To remove imported holidays again, use **"Annuals Settings" hub entry → Configure → Remove imported holidays** - pick one previously-imported batch (grouped by country/subdivision) to remove, or check the box to remove all of them at once. Manually added events (and events of any other type) are never touched by this.
-
-### Deleting everything
-
-**"Annuals Settings" hub entry → Configure → Delete all Annuals data.** Permanently removes every event entry, the shared calendars, and the hub itself - the entire integration and everything it created. Requires confirming a warning screen before anything is deleted; this cannot be undone.
+This is a deliberate design choice: it guarantees an occurrence every year (not just once every four years), and `occurrence_number` (e.g. "turning 30") still counts correctly, since it's simply computed as target year - birth year, independent of the exact day.
 
 ## Created entities
 
-Each event you add is its own config entry, titled `<Type>: <Name>` (e.g. "Birthday: Anna") so the integration page groups and searches by type. The single **"Annuals Settings" hub entry**, created during first-time setup, owns the shared per-type calendars (and any future cross-event entities). It has no event fields of its own beyond the CSV import and delete-all tools above; don't delete it manually unless you're removing the whole integration.
+Each event you add is its own config entry, titled `<Type>: <Name>` (e.g. "Birthday: Anna") so the integration page groups and searches by type. The single **"Annuals Settings" hub entry**, created during first-time setup, owns the shared per-type calendars (and any future cross-event entities). It has no event fields of its own beyond the tools listed under [Annuals Settings](#annuals-settings) above; don't delete it manually unless you're removing the whole integration.
 
 | Entity | Description |
 |---|---|
@@ -218,7 +282,7 @@ Attributes on each event's sensor:
 | `occurrence_number` | Which occurrence the next date will be (e.g. `30` for a 30th birthday) - `null` when no year was entered. Always `null` for `holiday` events. |
 | `day`, `month`, `year` | The event's date as entered (`year` is `null` when unknown). Not applicable to `holiday` events - see `next_date` instead, since a public holiday's date shifts by year. |
 | `vip` | `true` if the **VIP annual** flag is set on this event, `false` otherwise. |
-| `important` | `true` if the upcoming occurrence number matches one of that type's milestones in [Annual Settings](#important-annual-automatic-milestones), `false` otherwise (always `false` when no year was entered, since there's no occurrence number to check). |
+| `important` | `true` if the upcoming occurrence number matches one of that type's milestones in [Annual Settings](#annual-settings-automatic-milestones), `false` otherwise (always `false` when no year was entered, since there's no occurrence number to check). |
 | `category`, `country`, `subdivision` | `holiday` events only - the imported holiday's category (see [Importing public holidays](#importing-public-holidays)), country code, and subdivision code (empty if none was chosen). `null`/absent on every other type. |
 
 Attributes on each per-type calendar (standard Home Assistant calendar entity attributes, reflecting whichever event is current or comes up next for that type):
@@ -322,11 +386,11 @@ The editor is split into two tabs - **Settings** (general settings, which event 
 
 ### Row columns
 
-Each row's layout is fully configurable from Layout → Display → **Row columns**: add, remove, and reorder as many columns as you like, choosing from Icon, Name, Last name, Full name, Type, Name + Type, Full name + Type, Occurrence, Countdown, or free-form **Custom text**. A custom text column mixes any text you like with placeholders - `{name}`, `{last_name}`, `{full_name}`, `{type}`, `{occurrence}`, `{when}`, `{country}` - so a row can read as one continuous sentence instead of a fixed table layout, e.g. turning "Anna · Birthday · 30 · Today" into "🎉 Anna turns 30 today! 🎉". The default arrangement (before you change anything) is **Icon, Full name + Type, Occurrence, Countdown**.
+Each row's layout is fully configurable from Layout → Display → **Row columns**: add, remove, and reorder as many columns as you like, choosing from Icon, Name, Last name, Full name, Type, Name + Type, Full name + Type, Occurrence, Countdown, Date, or free-form **Custom text**. **Date** shows the next occurrence in short calendar form without a year (e.g. "3 Aug", localized to your profile language) - or "Today" once it's actually today, same as the Countdown column does. A custom text column mixes any text you like with placeholders - `{name}`, `{last_name}`, `{full_name}`, `{type}`, `{occurrence}`, `{when}`, `{date}`, `{country}` - so a row can read as one continuous sentence instead of a fixed table layout, e.g. turning "Anna · Birthday · 30 · Today" into "🎉 Anna turns 30 today! 🎉". The default arrangement (before you change anything) is **Icon, Full name + Type, Occurrence, Countdown**.
 
-**Name flexibility for non-holiday events:** set a Last name on an event (Adding an event, above) to get first/last name apart - e.g. a **Name** column showing just "Anna" for a compact card, and a separate **Full name** column ("Anna Müller") elsewhere. Both Colors and Fonts have dedicated rows for Last name and Full name, right next to Name. **Name + Type** and **Full name + Type** columns each get their own pair of **Holiday suffix** toggles (one for the name/full name, one for the type) - same as the standalone Name/Full name/Type columns - to append the imported country (+ subdivision) for holiday rows, e.g. "· US (UT)".
+**Name flexibility for non-holiday events:** set a Last name on an event (Adding an event, above) to get first/last name apart - e.g. a **Name** column showing just "Anna" for a compact card, and a separate **Full name** column ("Anna Miller") elsewhere. Both Colors and Fonts have dedicated rows for Last name and Full name, right next to Name. **Name + Type** and **Full name + Type** columns each get their own pair of **Holiday suffix** toggles (one for the name/full name, one for the type) - same as the standalone Name/Full name/Type columns - to append the imported country (+ subdivision) for holiday rows, e.g. "· US (UT)".
 
-Turning on **Compact** mode removes the spacing between columns, centers the row, and equalizes the weight/opacity of every field - meant for exactly that sentence-style layout. Switching it on immediately swaps the columns to **Icon, Full name, Occurrence, Type, Countdown**, with a plain space column automatically inserted before each of the last four so nothing runs together with no gap - a starting point you're still free to add, remove, or reorder from there. Switching Compact back off resets the columns to the standard (non-compact) default above. This is also how to build a small "today only" card: duplicate the card, turn on the **Today only** filter (Settings), reduce the columns to a single custom-text one, and enable Compact:
+Turning on **Compact** mode removes the spacing between columns, centers the row, and equalizes the weight/opacity of every field - meant for exactly that sentence-style layout. Switching it on immediately swaps the columns to **Icon, Full name, Occurrence, Type, Countdown, Date**, with a plain space column automatically inserted before each of the last five so nothing runs together with no gap - a starting point you're still free to add, remove, or reorder from there. Switching Compact back off resets the columns to the standard (non-compact) default above. This is also how to build a small "today only" card: duplicate the card, turn on the **Today only** filter (Settings), reduce the columns to a single custom-text one, and enable Compact:
 
 <img src="docs/birthday_small_animated.gif" alt="Compact today-only birthday card" width="40%">
 
@@ -340,7 +404,7 @@ Tapping **Details** expands the same axis into the full chronological list, olde
 
 <img src="docs/annuals-card-timeline-example-2.png" alt="Timeline layout, expanded Details list" width="45%">
 
-- **Options** (Layout → Timeline): **Show full name** shows each event's full name (first + last) instead of just the first name, everywhere the layout uses a name - the header, a dot's tooltip, and the expandable list. **Show holiday suffix** appends the imported country (+ subdivision) after a holiday's name, e.g. "Pioneer Day (US-UT)".
+- **Options** (Layout → Timeline): **Show full name** shows each event's full name (first + last) instead of just the first name, everywhere the layout uses a name - the header, a dot's tooltip, and the expandable list. **Show date** appends the short calendar date in parentheses at the very end, e.g. "...is in 3 days (6 Aug)" - left off on the event's own day, since the sentence there already ends "...is today". **Show holiday suffix** appends the imported country (+ subdivision) after a holiday's name, e.g. "Pioneer Day (US-UT)".
 - **Timeline line / Divider line**: the axis's own width, style (solid/dashed/dotted), and color, and the same three for the vertical line marking the boundary between past and future events (only drawn once past events are visible).
 - **Colors** tab adds Header, Tooltip, List (Details), and Details/More button rows (only shown while Timeline is the active layout style), plus an **Event types** section listing every event type (Birthdays, Anniversaries, Name days, …) with its own color - this drives that type's dot and icon color on the axis, header, and list, replacing the built-in default palette.
 - The footer's **"More" button** (next to "Details") runs its own configurable action - typically a Navigate action pointing at a dashboard using the full List layout - and is hidden entirely while left on "Nothing".
@@ -529,16 +593,12 @@ To theme every Annuals card at once, add these under a theme's `styles` (or set 
 
 ### HACS (recommended)
 
-1. Install HACS if you don't have it already
-2. Open HACS in Home Assistant
-3. Click on the 3 dots in the top right corner
-4. Select "Custom repositories"
-5. Add the following URL to the repository: `https://github.com/somansch/annuals`
-6. Select "Integration" as category
-7. Click the "ADD" button
-8. Search for "Annuals"
-9. Click the "Download" button
-10. Restart HA
+Annuals is part of the default HACS integration list:
+
+1. Open HACS in Home Assistant
+2. Search for "Annuals"
+3. Click the "Download" button
+4. Restart HA
 
 ### Manual
 
@@ -552,7 +612,7 @@ unzip annuals.zip
 rm annuals.zip
 ```
 
-The [custom dashboard card](#custom-dashboard-card) works identically either way - it's part of the same `annuals.zip`/`custom_components/annuals` tree, and the integration registers and serves it itself on every startup, so a manual install needs no separate Lovelace resource step, same as HACS.
+The [custom dashboard card](#custom-dashboard-card) works identically either way - it's part of the same `annuals.zip`/`custom_components/annuals` tree, and the integration registers and serves it itself on every startup, so a manual install needs no separate Lovelace resource step.
 
 ## Help and Contribution
 

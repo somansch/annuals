@@ -17,6 +17,17 @@ CONF_YEAR = "year"
 CONF_ICON = "icon"
 CONF_VIP = "vip"
 
+# Marks an entry as created by a specific bulk-import mechanism, distinct from
+# CONF_EVENT_TYPE (which holidays already overload for the same "find just
+# these later" purpose - see async_step_remove_holidays). Only ever set to
+# "ics" today, letting "Remove ICS-imported events" select just those entries
+# without touching manually added or CSV-imported ones of the same type. Only
+# set when an ICS row actually creates a *new* entry - never when it merely
+# updates an existing one (see async_step_import_ics_review's duplicate
+# handling), so updating a pre-existing event via ICS import doesn't
+# retroactively make it bulk-removable as "an ICS import".
+CONF_IMPORT_SOURCE = "import_source"
+
 TYPE_BIRTHDAY = "birthday"
 TYPE_ANNIVERSARY = "anniversary"
 TYPE_NAME_DAY = "name_day"

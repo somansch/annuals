@@ -115,15 +115,86 @@
                     "csv_file": "CSV-fil"
                 }
             },
+            "import_ics": {
+                "title": "Importer hendelser fra ICS-kalender",
+                "description": "Last opp en .ics-kalenderfil - vanligvis en eksportert «Bursdager»-kalender fra Apple Kontakter, Google Kontakter/Android eller Outlook. Bare heldagsoppføringer uten gjentakelses-overstyring blir lest; hendelser med klokkeslett hoppes over. De neste stegene lar deg gjennomgå og korrigere den foreslåtte navnedelingen (og bytte om for- og etternavn for alle samtidig) før noe importeres.",
+                "data": {
+                    "ics_file": "ICS-fil"
+                }
+            },
+            "import_vcard_menu": {
+                "title": "Importer hendelser fra vCard",
+                "description": "En kontakts bursdag og de andre datoene (jubileer, egendefinerte datoer) går gjennom separate grener, siden bare bursdager deler én felles hendelsestype for hele importen - hver andre dato får sin egen type tildelt under gjennomgangen.",
+                "menu_options": {
+                    "import_vcard": "Importer bursdager",
+                    "import_vcard_other_dates": "Importer andre datoer (jubileer, ...)"
+                }
+            },
+            "import_vcard": {
+                "title": "Importer bursdager fra vCard",
+                "description": "Last opp en .vcf-fil - vanligvis eksporterte kontakter fra Apple Kontakter, Google Kontakter/Android eller Outlook. Bare oppføringer med en bursdag angitt blir lest. For- og etternavn hentes fra kontaktens strukturerte navnefelt, ikke fra gjetting, og en bursdag uten angitt år (slik vCard selv uttrykker det) beholdes som ukjent i stedet for å bli funnet på. De neste stegene lar deg gjennomgå og korrigere alt (og bytte om for- og etternavn for alle samtidig) før noe importeres.",
+                "data": {
+                    "vcard_file": "vCard-fil"
+                }
+            },
+            "import_vcard_other_dates": {
+                "title": "Importer andre datoer fra vCard",
+                "description": "Last opp en .vcf-fil. Leser alle datoer bortsett fra bursdagen: standardfeltet «Jubileum» (Anniversary), pluss alle egendefinerte datoer Apple/Google Kontakter lar deg legge til per kontakt (f.eks. «Anniversary», «Other», eller en etikett du har skrevet inn selv). I motsetning til bursdager er ikke disse alle av samme type - de neste stegene lar deg gjennomgå hver enkelt, med den gjenkjente etiketten vist til orientering, og tildele riktig hendelsestype individuelt.",
+                "data": {
+                    "vcard_file": "vCard-fil"
+                }
+            },
+            "import_options": {
+                "title": "Import fra {source_label} - innstillinger",
+                "description": "Disse gjelder for alle oppføringer som finnes i filen. Du får sjansen til å gjennomgå og redigere enkeltoppføringer i neste steg.",
+                "data": {
+                    "swap_names": "Bytt om for- og etternavn for alle oppføringer",
+                    "use_description_year": "Bruk året funnet i hver oppførings beskrivelse i stedet for startdatoen, der et slikt finnes (f.eks. «geb. 1985»)",
+                    "type": "Hendelsestype"
+                }
+            },
+            "import_review": {
+                "title": "Import fra {source_label} - gjennomgang ({page}/{total_pages})",
+                "description": "{legend}\n\nSjekk den foreslåtte for-/etternavn-delingen under og korriger det som er feil - selve bursdagen kan også redigeres - eller fjern haken på en oppføring for å utelate den helt. En mulig duplikat merkes med navnet på den eksisterende oppføringen; la «opprett som ny» stå ukrysset for å oppdatere den eksisterende oppføringen i stedet for å legge til en ny. Feltnavnene her vises kun på engelsk, uansett språkinnstilling.",
+                "data": {
+                    "go_back": "Gå tilbake til forrige side"
+                }
+            },
+            "remove_ics_imports": {
+                "title": "Fjern ICS-importerte hendelser",
+                "description": "{count} hendelse(r) ble opprettet av en tidligere ICS-import. Klikk OK for å fjerne alle - oppføringer som en ICS-import bare har oppdatert (i stedet for å opprette), påvirkes aldri, og heller ikke manuelt lagt til, CSV- eller vCard-importerte hendelser."
+            },
+            "remove_vcard_imports": {
+                "title": "Fjern vCard-importerte hendelser",
+                "description": "{count} hendelse(r) ble opprettet av en tidligere vCard-import. Klikk OK for å fjerne alle - oppføringer som en vCard-import bare har oppdatert (i stedet for å opprette), påvirkes aldri, og heller ikke manuelt lagt til, CSV- eller ICS-importerte hendelser."
+            },
             "hub_menu": {
                 "title": "Annuals Innstillinger",
                 "menu_options": {
-                    "annual_settings": "Annual Innstillinger",
-                    "import_csv": "Importer hendelser fra CSV",
-                    "export_csv": "Eksporter hendelser til CSV",
-                    "import_holidays": "Importer helligdager",
-                    "remove_holidays": "Fjern importerte helligdager",
-                    "delete_all": "Slett all Annuals-data"
+                    "annual_settings": "{icon_annual_settings} Annual Innstillinger",
+                    "import_events": "{icon_import_events} Importer hendelser",
+                    "export_csv": "{icon_export_csv} Eksporter hendelser til CSV",
+                    "remove_events": "{icon_remove_events} Fjern hendelser",
+                    "delete_all": "{icon_delete_all} Slett all Annuals-data"
+                }
+            },
+            "import_events": {
+                "title": "Importer hendelser",
+                "description": "Velg en kilde å importere fra.",
+                "menu_options": {
+                    "import_csv": "CSV",
+                    "import_ics": "ICS-kalender",
+                    "import_vcard_menu": "vCard",
+                    "import_holidays": "Helligdager"
+                }
+            },
+            "remove_events": {
+                "title": "Fjern hendelser",
+                "description": "Velg hvilke tidligere importerte hendelser som skal fjernes.",
+                "menu_options": {
+                    "remove_ics_imports": "ICS-importerte",
+                    "remove_vcard_imports": "vCard-importerte",
+                    "remove_holidays": "Helligdager"
                 }
             },
             "import_holidays": {
@@ -174,17 +245,27 @@
             "invalid_date": "Denne kombinasjonen av dag/måned/år er ikke en gyldig dato.",
             "invalid_csv": "Kunne ikke lese denne filen som CSV. Sjekk koding og format.",
             "no_valid_rows": "Fant ingen gyldige rader i denne filen. Se loggen for detaljer om hoppede rader.",
+            "invalid_ics": "Kunne ikke lese denne filen som en ICS-kalender. Sjekk formatet.",
+            "no_valid_entries": "Fant ingen brukbare heldagsoppføringer i denne filen. Se loggen for detaljer om hoppede oppføringer.",
+            "invalid_vcard": "Kunne ikke lese denne filen som en vCard. Sjekk formatet.",
+            "no_valid_vcard_entries": "Fant ingen kontakter med en brukbar bursdag i denne filen. Se loggen for detaljer om hoppede oppføringer.",
+            "no_valid_vcard_dates": "Fant ingen jubileer eller andre datoer (bortsett fra bursdager) i denne filen. Se loggen for detaljer om hoppede oppføringer.",
             "no_batch_selected": "Kryss av for «Fjern alle importerte helligdager», eller velg en gruppe."
         },
         "abort": {
             "hub_not_configurable": "Annuals-huben har ingen egne innstillinger - den inneholder bare de delte kalendrene.",
             "import_started": "Import startet: {created} hendelse(r) i kø, {skipped} rad(er) hoppet over (se loggen for detaljer).",
+            "ics_import_started": "Import startet: {created} hendelse(r) opprettet, {updated} oppdatert, {skipped} oppføring(er) hoppet over eller ekskludert.",
             "csv_exported": "{count} hendelse(r) eksportert. [Last ned annuals_export.csv]({url}) (Ctrl/Cmd+klikk for å laste ned - et vanlig klikk fungerer ikke her)\n\nEller kopier CSV-en under:\n\n```\n{csv}\n```",
             "no_events_to_export": "Det finnes ingen hendelser å eksportere ennå.",
             "deleted_all": "Alle Annuals-hendelser, kalendere og huben er fjernet.",
             "holiday_import_started": "Import startet: {count} helligdag(er) i kø for {country}.",
             "no_holidays_imported": "Ingen helligdager er importert ennå.",
-            "holidays_removed": "{count} helligdag(er) fjernet."
+            "holidays_removed": "{count} helligdag(er) fjernet.",
+            "no_ics_imports": "Fant ingen hendelser opprettet av en ICS-import.",
+            "ics_imports_removed": "{count} ICS-importerte hendelse(r) fjernet.",
+            "no_vcard_imports": "Fant ingen hendelser opprettet av en vCard-import.",
+            "vcard_imports_removed": "{count} vCard-importerte hendelse(r) fjernet."
         }
     },
     "entity": {

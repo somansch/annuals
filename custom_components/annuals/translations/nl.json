@@ -115,15 +115,86 @@
                     "csv_file": "CSV-bestand"
                 }
             },
+            "import_ics": {
+                "title": "Evenementen importeren vanuit ICS-kalender",
+                "description": "Upload een .ics-kalenderbestand - doorgaans een geëxporteerde „Verjaardagen”-kalender uit Apple Contacten, Google Contacten/Android of Outlook. Alleen hele-dag-items zonder herhalingsoverride worden gelezen; evenementen met een tijdstip worden overgeslagen. In de volgende stappen kun je de voorgestelde naamsplitsing controleren en corrigeren (en voor iedereen tegelijk voornaam/achternaam omwisselen) voordat er iets wordt geïmporteerd.",
+                "data": {
+                    "ics_file": "ICS-bestand"
+                }
+            },
+            "import_vcard_menu": {
+                "title": "Evenementen importeren vanuit vCard",
+                "description": "De verjaardag van een contact en diens overige datums (jaardagen, aangepaste datums) doorlopen aparte trajecten, aangezien alleen verjaardagen voor de hele batch één gezamenlijk evenementtype delen - elke andere datum krijgt tijdens de controle zijn eigen type toegewezen.",
+                "menu_options": {
+                    "import_vcard": "Verjaardagen importeren",
+                    "import_vcard_other_dates": "Overige datums importeren (jaardagen, ...)"
+                }
+            },
+            "import_vcard": {
+                "title": "Verjaardagen importeren vanuit vCard",
+                "description": "Upload een .vcf-bestand - doorgaans geëxporteerde contacten uit Apple Contacten, Google Contacten/Android of Outlook. Alleen items met een ingestelde verjaardag worden gelezen. Voornaam/achternaam komt uit de gestructureerde naamvelden van het contact, niet uit een gok, en een verjaardag zonder ingesteld jaar (zoals vCard dit zelf uitdrukt) blijft onbekend in plaats van verzonnen te worden. In de volgende stappen kun je alles controleren en corrigeren (en voor iedereen tegelijk voornaam/achternaam omwisselen) voordat er iets wordt geïmporteerd.",
+                "data": {
+                    "vcard_file": "vCard-bestand"
+                }
+            },
+            "import_vcard_other_dates": {
+                "title": "Overige datums importeren vanuit vCard",
+                "description": "Upload een .vcf-bestand. Leest elke datum behalve de verjaardag: het standaardveld „Jaardag”, plus elke aangepast gelabelde datum die Apple/Google Contacten je per contact laat toevoegen (bijv. „Jaardag”, „Overig”, of een zelf ingetypt label). In tegenstelling tot verjaardagen zijn dit niet allemaal hetzelfde soort evenement - in de volgende stappen kun je elke datum afzonderlijk controleren, met het gedetecteerde label als context, en het juiste evenementtype toewijzen.",
+                "data": {
+                    "vcard_file": "vCard-bestand"
+                }
+            },
+            "import_options": {
+                "title": "Importeren vanuit {source_label} - instellingen",
+                "description": "Deze gelden voor elk item dat in het bestand is gevonden. Je krijgt hierna de kans om individuele items te controleren en te bewerken.",
+                "data": {
+                    "swap_names": "Voornaam/achternaam omwisselen voor alle items",
+                    "use_description_year": "Gebruik het jaar uit de omschrijving van elk item in plaats van de startdatum, indien daar een jaar in gevonden wordt (bijv. „geb. 1985”)",
+                    "type": "Type evenement"
+                }
+            },
+            "import_review": {
+                "title": "Importeren vanuit {source_label} - controle ({page}/{total_pages})",
+                "description": "{legend}\n\nControleer de voorgestelde splitsing in voornaam/achternaam hieronder en corrigeer wat fout is - ook de verjaardag zelf is bewerkbaar - of vink een item uit om het volledig weg te laten. Een mogelijk duplicaat wordt gemarkeerd met de naam van het bestaande item; laat „als nieuw aanmaken” uitgevinkt om dat item bij te werken in plaats van een tweede toe te voegen. Veldlabels worden hier altijd in het Engels getoond, ongeacht je taalinstelling.",
+                "data": {
+                    "go_back": "Terug naar de vorige pagina"
+                }
+            },
+            "remove_ics_imports": {
+                "title": "Uit ICS geïmporteerde evenementen verwijderen",
+                "description": "{count} evenement(en) zijn aangemaakt door een eerdere ICS-import. Klik op „OK” om ze allemaal te verwijderen - items die een ICS-import alleen heeft bijgewerkt (in plaats van aangemaakt) worden nooit beïnvloed, evenmin als handmatig toegevoegde, CSV- of vCard-geïmporteerde evenementen."
+            },
+            "remove_vcard_imports": {
+                "title": "Uit vCard geïmporteerde evenementen verwijderen",
+                "description": "{count} evenement(en) zijn aangemaakt door een eerdere vCard-import. Klik op „OK” om ze allemaal te verwijderen - items die een vCard-import alleen heeft bijgewerkt (in plaats van aangemaakt) worden nooit beïnvloed, evenmin als handmatig toegevoegde, CSV- of ICS-geïmporteerde evenementen."
+            },
             "hub_menu": {
                 "title": "Annuals Instellingen",
                 "menu_options": {
-                    "annual_settings": "Annual Instellingen",
-                    "import_csv": "Evenementen importeren vanuit CSV",
-                    "export_csv": "Evenementen exporteren naar CSV",
-                    "import_holidays": "Feestdagen importeren",
-                    "remove_holidays": "Geïmporteerde feestdagen verwijderen",
-                    "delete_all": "Alle Annuals-gegevens verwijderen"
+                    "annual_settings": "{icon_annual_settings} Annual Instellingen",
+                    "import_events": "{icon_import_events} Evenementen importeren",
+                    "export_csv": "{icon_export_csv} Evenementen exporteren naar CSV",
+                    "remove_events": "{icon_remove_events} Evenementen verwijderen",
+                    "delete_all": "{icon_delete_all} Alle Annuals-gegevens verwijderen"
+                }
+            },
+            "import_events": {
+                "title": "Evenementen importeren",
+                "description": "Kies een bron om vanuit te importeren.",
+                "menu_options": {
+                    "import_csv": "CSV",
+                    "import_ics": "ICS-kalender",
+                    "import_vcard_menu": "vCard",
+                    "import_holidays": "Feestdagen"
+                }
+            },
+            "remove_events": {
+                "title": "Evenementen verwijderen",
+                "description": "Kies welke eerder geïmporteerde evenementen je wilt verwijderen.",
+                "menu_options": {
+                    "remove_ics_imports": "Uit ICS geïmporteerd",
+                    "remove_vcard_imports": "Uit vCard geïmporteerd",
+                    "remove_holidays": "Feestdagen"
                 }
             },
             "import_holidays": {
@@ -174,17 +245,27 @@
             "invalid_date": "Deze combinatie van dag/maand/jaar is geen geldige datum.",
             "invalid_csv": "Dit bestand kon niet als CSV worden gelezen. Controleer de codering en indeling.",
             "no_valid_rows": "Geen geldige rijen gevonden in dit bestand. Bekijk het logboek voor details over overgeslagen rijen.",
+            "invalid_ics": "Dit bestand kon niet als ICS-kalender worden gelezen. Controleer de indeling.",
+            "no_valid_entries": "Geen bruikbare hele-dag-items gevonden in dit bestand. Bekijk het logboek voor details over overgeslagen items.",
+            "invalid_vcard": "Dit bestand kon niet als vCard worden gelezen. Controleer de indeling.",
+            "no_valid_vcard_entries": "Geen contacten met een bruikbare verjaardag gevonden in dit bestand. Bekijk het logboek voor details over overgeslagen items.",
+            "no_valid_vcard_dates": "Geen jaardagen of andere datums (naast verjaardagen) gevonden in dit bestand. Bekijk het logboek voor details over overgeslagen items.",
             "no_batch_selected": "Vink „Alle geïmporteerde feestdagen verwijderen” aan, of kies een batch."
         },
         "abort": {
             "hub_not_configurable": "De Annuals-hub heeft geen eigen instellingen - hij bevat alleen de gedeelde kalenders.",
             "import_started": "Import gestart: {created} evenement(en) in de wachtrij, {skipped} rij(en) overgeslagen (zie het logboek voor details).",
+            "ics_import_started": "Import gestart: {created} evenement(en) aangemaakt, {updated} bijgewerkt, {skipped} item(s) overgeslagen of uitgesloten.",
             "csv_exported": "{count} evenement(en) geëxporteerd. [annuals_export.csv downloaden]({url}) (Ctrl/Cmd+klik om te downloaden - een gewone klik werkt hier niet)\n\nOf kopieer de CSV hieronder:\n\n```\n{csv}\n```",
             "no_events_to_export": "Er zijn nog geen evenementen om te exporteren.",
             "deleted_all": "Alle Annuals-evenementen, kalenders en de hub zijn verwijderd.",
             "holiday_import_started": "Import gestart: {count} feestdag(en) in de wachtrij voor {country}.",
             "no_holidays_imported": "Er zijn nog geen feestdagen geïmporteerd.",
-            "holidays_removed": "{count} feestdag(en) verwijderd."
+            "holidays_removed": "{count} feestdag(en) verwijderd.",
+            "no_ics_imports": "Er zijn geen door een ICS-import aangemaakte evenementen gevonden.",
+            "ics_imports_removed": "{count} uit ICS geïmporteerd(e) evenement(en) verwijderd.",
+            "no_vcard_imports": "Er zijn geen door een vCard-import aangemaakte evenementen gevonden.",
+            "vcard_imports_removed": "{count} uit vCard geïmporteerd(e) evenement(en) verwijderd."
         }
     },
     "entity": {

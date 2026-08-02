@@ -115,15 +115,86 @@
                     "csv_file": "CSV 文件"
                 }
             },
+            "import_ics": {
+                "title": "从 ICS 日历导入事件",
+                "description": "上传一个 .ics 日历文件 —— 通常是从 Apple 通讯录、Google 通讯录/Android 或 Outlook 导出的“生日”日历。仅读取全天、非重复覆盖的条目；带时间的事件会被跳过。接下来的步骤中，你可以在导入前检查并更正建议的姓名拆分（并一次性为所有条目互换名字/姓氏）。",
+                "data": {
+                    "ics_file": "ICS 文件"
+                }
+            },
+            "import_vcard_menu": {
+                "title": "从 vCard 导入事件",
+                "description": "联系人的生日与其他日期（纪念日、自定义日期）走不同的分支，因为只有生日在整批中共用同一个事件类型 —— 其他每个日期都会在审核时单独指定类型。",
+                "menu_options": {
+                    "import_vcard": "导入生日",
+                    "import_vcard_other_dates": "导入其他日期（纪念日等）"
+                }
+            },
+            "import_vcard": {
+                "title": "从 vCard 导入生日",
+                "description": "上传一个 .vcf 文件 —— 通常是从 Apple 通讯录、Google 通讯录/Android 或 Outlook 导出的联系人。仅读取设置了生日的条目。姓名来自联系人的结构化姓名字段，而非猜测；未设置年份的生日（vCard 自身表达此意的方式）会保留为未知，而不会被臆造。接下来的步骤中，你可以检查并更正所有内容（并一次性为所有条目互换名字/姓氏），然后再导入。",
+                "data": {
+                    "vcard_file": "vCard 文件"
+                }
+            },
+            "import_vcard_other_dates": {
+                "title": "从 vCard 导入其他日期",
+                "description": "上传一个 .vcf 文件。读取除生日以外的所有日期：标准的“纪念日”字段，以及 Apple/Google 通讯录允许为每个联系人添加的任何自定义标签日期（例如“纪念日”“其他”或你自己输入的标签）。与生日不同，这些日期并非同一类事件 —— 接下来的步骤会逐一显示每个日期检测到的标签作为参考，供你分别审核并指定正确的事件类型。",
+                "data": {
+                    "vcard_file": "vCard 文件"
+                }
+            },
+            "import_options": {
+                "title": "从 {source_label} 导入 - 设置",
+                "description": "这些设置将应用于文件中找到的每个条目。接下来你可以检查并编辑各个条目。",
+                "data": {
+                    "swap_names": "为所有条目互换名字/姓氏",
+                    "use_description_year": "如果在条目描述中找到年份（例如“geb. 1985”），则使用该年份而非起始日期中的年份",
+                    "type": "事件类型"
+                }
+            },
+            "import_review": {
+                "title": "从 {source_label} 导入 - 审核（{page}/{total_pages}）",
+                "description": "{legend}\n\n请检查下方建议的姓名拆分并更正任何错误 —— 生日本身也可编辑 —— 或取消勾选某条目以将其完全排除。可能的重复项会标出其现有条目的名称；不勾选“创建为新条目”将更新该现有条目，而不是新增一条。此处的字段标签始终以英文显示，与你的语言设置无关。",
+                "data": {
+                    "go_back": "返回上一页"
+                }
+            },
+            "remove_ics_imports": {
+                "title": "删除通过 ICS 导入的事件",
+                "description": "此前的 ICS 导入创建了 {count} 个事件。点击“确定”删除全部 —— ICS 导入仅更新（而非创建）的条目不受影响，手动添加、CSV 或 vCard 导入的事件也不受影响。"
+            },
+            "remove_vcard_imports": {
+                "title": "删除通过 vCard 导入的事件",
+                "description": "此前的 vCard 导入创建了 {count} 个事件。点击“确定”删除全部 —— vCard 导入仅更新（而非创建）的条目不受影响，手动添加、CSV 或 ICS 导入的事件也不受影响。"
+            },
             "hub_menu": {
                 "title": "Annuals 设置",
                 "menu_options": {
-                    "annual_settings": "Annual 设置",
-                    "import_csv": "从 CSV 导入事件",
-                    "export_csv": "将事件导出为 CSV",
-                    "import_holidays": "导入节假日",
-                    "remove_holidays": "删除已导入的节假日",
-                    "delete_all": "删除所有 Annuals 数据"
+                    "annual_settings": "{icon_annual_settings} Annual 设置",
+                    "import_events": "{icon_import_events} 导入事件",
+                    "export_csv": "{icon_export_csv} 将事件导出为 CSV",
+                    "remove_events": "{icon_remove_events} 删除事件",
+                    "delete_all": "{icon_delete_all} 删除所有 Annuals 数据"
+                }
+            },
+            "import_events": {
+                "title": "导入事件",
+                "description": "选择要导入的来源。",
+                "menu_options": {
+                    "import_csv": "CSV",
+                    "import_ics": "ICS 日历",
+                    "import_vcard_menu": "vCard",
+                    "import_holidays": "节假日"
+                }
+            },
+            "remove_events": {
+                "title": "删除事件",
+                "description": "选择要删除的此前导入的事件类型。",
+                "menu_options": {
+                    "remove_ics_imports": "ICS 导入",
+                    "remove_vcard_imports": "vCard 导入",
+                    "remove_holidays": "节假日"
                 }
             },
             "import_holidays": {
@@ -174,17 +245,27 @@
             "invalid_date": "此日/月/年组合不是有效日期。",
             "invalid_csv": "无法将此文件读取为 CSV。请检查编码和格式。",
             "no_valid_rows": "此文件中未找到有效行。请查看日志了解被跳过行的详情。",
+            "invalid_ics": "无法将此文件读取为 ICS 日历。请检查格式。",
+            "no_valid_entries": "此文件中未找到可用的全天条目。请查看日志了解被跳过条目的详情。",
+            "invalid_vcard": "无法将此文件读取为 vCard。请检查格式。",
+            "no_valid_vcard_entries": "此文件中未找到包含可用生日的联系人。请查看日志了解被跳过条目的详情。",
+            "no_valid_vcard_dates": "此文件中未找到除生日外的纪念日或其他日期。请查看日志了解被跳过条目的详情。",
             "no_batch_selected": "请勾选“删除所有已导入的节假日”，或选择一个批次。"
         },
         "abort": {
             "hub_not_configurable": "Annuals 中心没有自身设置 —— 它只保存共享日历。",
             "import_started": "导入已开始：{created} 个事件已加入队列，{skipped} 行被跳过（详情见日志）。",
+            "ics_import_started": "导入已开始：已创建 {created} 个事件，更新 {updated} 个，跳过或排除 {skipped} 个条目。",
             "csv_exported": "已导出 {count} 个事件。[下载 annuals_export.csv]({url})（按住 Ctrl/Cmd 点击以下载 - 普通点击在此处无效）\n\n或复制下方的 CSV：\n\n```\n{csv}\n```",
             "no_events_to_export": "还没有可导出的事件。",
             "deleted_all": "所有 Annuals 事件、日历及中心均已删除。",
             "holiday_import_started": "导入已开始：{country} 的 {count} 个节假日事件已加入队列。",
             "no_holidays_imported": "尚未导入任何节假日。",
-            "holidays_removed": "已删除 {count} 个节假日事件。"
+            "holidays_removed": "已删除 {count} 个节假日事件。",
+            "no_ics_imports": "未找到通过 ICS 导入创建的事件。",
+            "ics_imports_removed": "已删除 {count} 个通过 ICS 导入的事件。",
+            "no_vcard_imports": "未找到通过 vCard 导入创建的事件。",
+            "vcard_imports_removed": "已删除 {count} 个通过 vCard 导入的事件。"
         }
     },
     "entity": {

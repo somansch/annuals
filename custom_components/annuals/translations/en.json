@@ -115,15 +115,86 @@
                     "csv_file": "CSV file"
                 }
             },
+            "import_ics": {
+                "title": "Import events from ICS calendar",
+                "description": "Upload an .ics calendar file - typically an exported \"Birthdays\" calendar from Apple Contacts, Google Contacts/Android, or Outlook. Only all-day, non-recurring-override entries are read; timed events are skipped. The next steps let you review and correct the proposed name split (and swap first/last name for everyone at once) before anything is imported.",
+                "data": {
+                    "ics_file": "ICS file"
+                }
+            },
+            "import_vcard_menu": {
+                "title": "Import events from vCard",
+                "description": "A contact's birthday and its other dates (anniversaries, custom dates) go through separate branches, since only birthdays share a single event type for the whole batch - every other date is assigned its own type during review.",
+                "menu_options": {
+                    "import_vcard": "Import birthdays",
+                    "import_vcard_other_dates": "Import other dates (anniversaries, ...)"
+                }
+            },
+            "import_vcard": {
+                "title": "Import birthdays from vCard",
+                "description": "Upload a .vcf file - typically exported contacts from Apple Contacts, Google Contacts/Android, or Outlook. Only entries with a birthday set are read. First/last name comes from the contact's structured name fields, not a guess, and a birthday with no year set (vCard's own way of expressing that) is kept as unknown rather than invented. The next steps let you review and correct everything (and swap first/last name for everyone at once) before anything is imported.",
+                "data": {
+                    "vcard_file": "vCard file"
+                }
+            },
+            "import_vcard_other_dates": {
+                "title": "Import other dates from vCard",
+                "description": "Upload a .vcf file. Reads every date other than the birthday: the standard \"Anniversary\" field, plus any custom-labelled date Apple/Google Contacts lets you add per contact (e.g. \"Anniversary\", \"Other\", or a label you typed in yourself). Unlike birthdays, these aren't all the same kind of event - the next steps let you review each one, with its detected label shown for context, and assign it the right event type individually.",
+                "data": {
+                    "vcard_file": "vCard file"
+                }
+            },
+            "import_options": {
+                "title": "Import from {source_label} - settings",
+                "description": "These apply to every entry found in the file. You'll get a chance to review and edit individual entries next.",
+                "data": {
+                    "swap_names": "Swap first/last name for all entries",
+                    "use_description_year": "Use the year found in each entry's description instead of its start date, where one is found (e.g. \"geb. 1985\")",
+                    "type": "Event type"
+                }
+            },
+            "import_review": {
+                "title": "Import from {source_label} - review ({page}/{total_pages})",
+                "description": "{legend}\n\nCheck the proposed first/last name split below and correct anything that's wrong - the birthday itself is editable too - or uncheck an entry to leave it out entirely. A possible duplicate is flagged with its existing entry's name; leave \"create as new\" unchecked to update that entry instead of adding a second one. Field labels here are shown in English only, regardless of your language setting.",
+                "data": {
+                    "go_back": "Go back to the previous page"
+                }
+            },
+            "remove_ics_imports": {
+                "title": "Remove ICS-imported events",
+                "description": "{count} event(s) were created by a previous ICS import. Click OK to remove all of them - entries an ICS import only updated (rather than created) are never affected, nor are manually added, CSV-, or vCard-imported events."
+            },
+            "remove_vcard_imports": {
+                "title": "Remove vCard-imported events",
+                "description": "{count} event(s) were created by a previous vCard import. Click OK to remove all of them - entries a vCard import only updated (rather than created) are never affected, nor are manually added, CSV-, or ICS-imported events."
+            },
             "hub_menu": {
                 "title": "Annuals Settings",
                 "menu_options": {
-                    "annual_settings": "Annual Settings",
-                    "import_csv": "Import events from CSV",
-                    "export_csv": "Export events to CSV",
-                    "import_holidays": "Import holidays",
-                    "remove_holidays": "Remove imported holidays",
-                    "delete_all": "Delete all Annuals data"
+                    "annual_settings": "{icon_annual_settings} Annual Settings",
+                    "import_events": "{icon_import_events} Import events",
+                    "export_csv": "{icon_export_csv} Export events to CSV",
+                    "remove_events": "{icon_remove_events} Remove events",
+                    "delete_all": "{icon_delete_all} Delete all Annuals data"
+                }
+            },
+            "import_events": {
+                "title": "Import events",
+                "description": "Pick a source to import from.",
+                "menu_options": {
+                    "import_csv": "CSV",
+                    "import_ics": "ICS calendar",
+                    "import_vcard_menu": "vCard",
+                    "import_holidays": "Holidays"
+                }
+            },
+            "remove_events": {
+                "title": "Remove events",
+                "description": "Pick which previously imported events to remove.",
+                "menu_options": {
+                    "remove_ics_imports": "ICS-imported",
+                    "remove_vcard_imports": "vCard-imported",
+                    "remove_holidays": "Holidays"
                 }
             },
             "import_holidays": {
@@ -174,17 +245,27 @@
             "invalid_date": "This day/month/year combination is not a valid date.",
             "invalid_csv": "Could not read this file as CSV. Check the encoding and format.",
             "no_valid_rows": "No valid rows found in this file. Check the log for details on skipped rows.",
+            "invalid_ics": "Could not read this file as an ICS calendar. Check the format.",
+            "no_valid_entries": "No usable all-day entries found in this file. Check the log for details on skipped entries.",
+            "invalid_vcard": "Could not read this file as a vCard. Check the format.",
+            "no_valid_vcard_entries": "No contacts with a usable birthday found in this file. Check the log for details on skipped entries.",
+            "no_valid_vcard_dates": "No anniversaries or other dates (besides birthdays) found in this file. Check the log for details on skipped entries.",
             "no_batch_selected": "Check \"Remove all imported holidays\", or pick a batch to remove."
         },
         "abort": {
             "hub_not_configurable": "The Annuals hub has no settings of its own - it just holds the shared calendars.",
             "import_started": "Import started: {created} event(s) queued, {skipped} row(s) skipped (see the log for details).",
+            "ics_import_started": "Import started: {created} event(s) created, {updated} updated, {skipped} entry/entries skipped or excluded.",
             "csv_exported": "{count} event(s) exported. [Download annuals_export.csv]({url}) (Ctrl/Cmd+click to download - a plain click won't work here)\n\nOr copy the CSV below:\n\n```\n{csv}\n```",
             "no_events_to_export": "No events to export yet - add some first.",
             "deleted_all": "All Annuals events, calendars, and the hub have been removed.",
             "holiday_import_started": "Import started: {count} holiday event(s) queued for {country}.",
             "no_holidays_imported": "No holidays have been imported yet.",
-            "holidays_removed": "{count} holiday event(s) removed."
+            "holidays_removed": "{count} holiday event(s) removed.",
+            "no_ics_imports": "No events created by an ICS import were found.",
+            "ics_imports_removed": "{count} ICS-imported event(s) removed.",
+            "no_vcard_imports": "No events created by a vCard import were found.",
+            "vcard_imports_removed": "{count} vCard-imported event(s) removed."
         }
     },
     "entity": {

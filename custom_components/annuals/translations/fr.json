@@ -115,15 +115,86 @@
                     "csv_file": "Fichier CSV"
                 }
             },
+            "import_ics": {
+                "title": "Importer des événements depuis un calendrier ICS",
+                "description": "Envoyez un fichier de calendrier .ics - généralement un calendrier « Anniversaires » exporté depuis Apple Contacts, Google Contacts/Android ou Outlook. Seules les entrées sur la journée entière et sans override de récurrence sont lues ; les entrées avec horaire sont ignorées. Les étapes suivantes vous permettent de vérifier et de corriger la séparation prénom/nom proposée (et d'inverser prénom/nom pour tout le monde en une fois) avant tout import.",
+                "data": {
+                    "ics_file": "Fichier ICS"
+                }
+            },
+            "import_vcard_menu": {
+                "title": "Importer des événements depuis une vCard",
+                "description": "L'anniversaire d'un contact et ses autres dates (dates commémoratives, dates personnalisées) suivent des parcours séparés, car seuls les anniversaires partagent un seul et même type d'événement pour tout le lot - chaque autre date se voit attribuer son propre type lors de la vérification.",
+                "menu_options": {
+                    "import_vcard": "Importer les anniversaires",
+                    "import_vcard_other_dates": "Importer d'autres dates (dates commémoratives, ...)"
+                }
+            },
+            "import_vcard": {
+                "title": "Importer des anniversaires depuis une vCard",
+                "description": "Envoyez un fichier .vcf - généralement des contacts exportés depuis Apple Contacts, Google Contacts/Android ou Outlook. Seules les entrées avec un anniversaire renseigné sont lues. Le prénom/nom provient des champs de nom structurés du contact, pas d'une supposition, et un anniversaire sans année renseignée (façon propre à vCard de l'exprimer) est conservé comme inconnu plutôt qu'inventé. Les étapes suivantes vous permettent de vérifier et de corriger chaque entrée (et d'inverser prénom/nom pour tout le monde en une fois) avant tout import.",
+                "data": {
+                    "vcard_file": "Fichier vCard"
+                }
+            },
+            "import_vcard_other_dates": {
+                "title": "Importer d'autres dates depuis une vCard",
+                "description": "Envoyez un fichier .vcf. Toutes les dates autres que l'anniversaire sont lues : le champ standard « Date commémorative », ainsi que toute date à étiquette personnalisée qu'Apple/Google Contacts permet d'ajouter par contact (par ex. « Anniversaire de mariage », « Autre », ou une étiquette saisie par vous-même). Contrairement aux anniversaires, ces dates ne sont pas toutes du même type d'événement - les étapes suivantes vous permettent de vérifier chacune d'elles, avec son étiquette détectée affichée pour contexte, et de lui attribuer individuellement le bon type d'événement.",
+                "data": {
+                    "vcard_file": "Fichier vCard"
+                }
+            },
+            "import_options": {
+                "title": "Import depuis {source_label} - paramètres",
+                "description": "Ces réglages s'appliquent à toutes les entrées trouvées dans le fichier. Vous pourrez vérifier et modifier chaque entrée individuellement à l'étape suivante.",
+                "data": {
+                    "swap_names": "Inverser prénom/nom pour toutes les entrées",
+                    "use_description_year": "Utiliser l'année trouvée dans la description de chaque entrée plutôt que sa date de début, lorsqu'elle est présente (par ex. « geb. 1985 »)",
+                    "type": "Type d'événement"
+                }
+            },
+            "import_review": {
+                "title": "Import depuis {source_label} - vérification ({page}/{total_pages})",
+                "description": "{legend}\n\nVérifiez la séparation prénom/nom proposée ci-dessous et corrigez ce qui ne va pas - l'anniversaire lui-même est également modifiable - ou décochez une entrée pour l'exclure entièrement. Un doublon potentiel est signalé avec le nom de l'entrée existante correspondante ; laissez « créer comme nouvelle entrée » décoché pour mettre à jour cette entrée plutôt que d'en ajouter une seconde. Les libellés des champs sont affichés uniquement en anglais ici, quel que soit votre paramètre de langue.",
+                "data": {
+                    "go_back": "Revenir à la page précédente"
+                }
+            },
+            "remove_ics_imports": {
+                "title": "Supprimer les événements importés depuis ICS",
+                "description": "{count} événement(s) ont été créés par un précédent import ICS. Cliquez sur « OK » pour tous les supprimer - les entrées qu'un import ICS a seulement mises à jour (plutôt que créées) ne sont jamais concernées, pas plus que les événements ajoutés manuellement ou importés depuis un CSV ou une vCard."
+            },
+            "remove_vcard_imports": {
+                "title": "Supprimer les événements importés depuis vCard",
+                "description": "{count} événement(s) ont été créés par un précédent import vCard. Cliquez sur « OK » pour tous les supprimer - les entrées qu'un import vCard a seulement mises à jour (plutôt que créées) ne sont jamais concernées, pas plus que les événements ajoutés manuellement ou importés depuis un CSV ou un calendrier ICS."
+            },
             "hub_menu": {
                 "title": "Annuals Paramètres",
                 "menu_options": {
-                    "annual_settings": "Annual Paramètres",
-                    "import_csv": "Importer des événements depuis un CSV",
-                    "export_csv": "Exporter les événements en CSV",
-                    "import_holidays": "Importer des jours fériés",
-                    "remove_holidays": "Supprimer les jours fériés importés",
-                    "delete_all": "Supprimer toutes les données Annuals"
+                    "annual_settings": "{icon_annual_settings} Annual Paramètres",
+                    "import_events": "{icon_import_events} Importer des événements",
+                    "export_csv": "{icon_export_csv} Exporter les événements en CSV",
+                    "remove_events": "{icon_remove_events} Supprimer des événements",
+                    "delete_all": "{icon_delete_all} Supprimer toutes les données Annuals"
+                }
+            },
+            "import_events": {
+                "title": "Importer des événements",
+                "description": "Choisissez une source à importer.",
+                "menu_options": {
+                    "import_csv": "CSV",
+                    "import_ics": "Calendrier ICS",
+                    "import_vcard_menu": "vCard",
+                    "import_holidays": "Jours fériés"
+                }
+            },
+            "remove_events": {
+                "title": "Supprimer des événements",
+                "description": "Choisissez quels événements précédemment importés supprimer.",
+                "menu_options": {
+                    "remove_ics_imports": "Importés depuis ICS",
+                    "remove_vcard_imports": "Importés depuis vCard",
+                    "remove_holidays": "Jours fériés"
                 }
             },
             "import_holidays": {
@@ -174,17 +245,27 @@
             "invalid_date": "Cette combinaison jour/mois/année n'est pas une date valide.",
             "invalid_csv": "Impossible de lire ce fichier en tant que CSV. Vérifiez l'encodage et le format.",
             "no_valid_rows": "Aucune ligne valide trouvée dans ce fichier. Consultez le journal pour le détail des lignes ignorées.",
+            "invalid_ics": "Impossible de lire ce fichier en tant que calendrier ICS. Vérifiez le format.",
+            "no_valid_entries": "Aucune entrée sur la journée entière utilisable trouvée dans ce fichier. Consultez le journal pour le détail des entrées ignorées.",
+            "invalid_vcard": "Impossible de lire ce fichier en tant que vCard. Vérifiez le format.",
+            "no_valid_vcard_entries": "Aucun contact avec un anniversaire utilisable trouvé dans ce fichier. Consultez le journal pour le détail des entrées ignorées.",
+            "no_valid_vcard_dates": "Aucune date commémorative ou autre date (hormis les anniversaires) trouvée dans ce fichier. Consultez le journal pour le détail des entrées ignorées.",
             "no_batch_selected": "Cochez « Supprimer tous les jours fériés importés », ou choisissez un lot."
         },
         "abort": {
             "hub_not_configurable": "Le hub Annuals n'a pas de paramètres propres - il contient uniquement les calendriers partagés.",
             "import_started": "Import démarré : {created} événement(s) en cours d'ajout, {skipped} ligne(s) ignorée(s) (voir le journal pour le détail).",
+            "ics_import_started": "Import démarré : {created} événement(s) créé(s), {updated} mis à jour, {skipped} entrée(s) ignorée(s) ou exclue(s).",
             "csv_exported": "{count} événement(s) exporté(s). [Télécharger annuals_export.csv]({url}) (Ctrl/Cmd+clic pour télécharger - un simple clic ne fonctionne pas ici)\n\nOu copiez le CSV ci-dessous :\n\n```\n{csv}\n```",
             "no_events_to_export": "Aucun événement à exporter pour le moment.",
             "deleted_all": "Tous les événements, calendriers et le hub Annuals ont été supprimés.",
             "holiday_import_started": "Import démarré : {count} jour(s) férié(s) en cours d'ajout pour {country}.",
             "no_holidays_imported": "Aucun jour férié n'a encore été importé.",
-            "holidays_removed": "{count} jour(s) férié(s) supprimé(s)."
+            "holidays_removed": "{count} jour(s) férié(s) supprimé(s).",
+            "no_ics_imports": "Aucun événement importé depuis ICS n'a été trouvé.",
+            "ics_imports_removed": "{count} événement(s) importé(s) depuis ICS supprimé(s).",
+            "no_vcard_imports": "Aucun événement importé depuis vCard n'a été trouvé.",
+            "vcard_imports_removed": "{count} événement(s) importé(s) depuis vCard supprimé(s)."
         }
     },
     "entity": {

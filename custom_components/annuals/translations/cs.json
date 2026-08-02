@@ -115,15 +115,86 @@
                     "csv_file": "Soubor CSV"
                 }
             },
+            "import_ics": {
+                "title": "Import událostí z kalendáře ICS",
+                "description": "Nahrajte soubor kalendáře .ics – obvykle exportovaný kalendář „Narozeniny“ z Apple Kontaktů, Google Kontaktů/Androidu nebo Outlooku. Načítají se pouze celodenní záznamy bez výjimek opakování; časované události se přeskočí. V dalších krocích můžete zkontrolovat a opravit navržené rozdělení jména (a najednou prohodit jméno/příjmení u všech), než se cokoli importuje.",
+                "data": {
+                    "ics_file": "Soubor ICS"
+                }
+            },
+            "import_vcard_menu": {
+                "title": "Import událostí z vCard",
+                "description": "Narozeniny kontaktu a jeho ostatní data (výročí, vlastní data) procházejí samostatnými větvemi, protože pouze narozeniny sdílejí jeden typ události pro celou dávku – každému ostatnímu datu se typ přiřadí jednotlivě při kontrole.",
+                "menu_options": {
+                    "import_vcard": "Import narozenin",
+                    "import_vcard_other_dates": "Import ostatních dat (výročí, ...)"
+                }
+            },
+            "import_vcard": {
+                "title": "Import narozenin z vCard",
+                "description": "Nahrajte soubor .vcf – obvykle exportované kontakty z Apple Kontaktů, Google Kontaktů/Androidu nebo Outlooku. Načítají se pouze záznamy s nastaveným datem narození. Jméno a příjmení pochází ze strukturovaných polí jména kontaktu, nikoli z odhadu, a datum narození bez nastaveného roku (způsob, jakým to vyjadřuje samotný formát vCard) zůstane neznámé místo vymyšlené hodnoty. V dalších krocích můžete vše zkontrolovat a opravit (a najednou prohodit jméno/příjmení u všech), než se cokoli importuje.",
+                "data": {
+                    "vcard_file": "Soubor vCard"
+                }
+            },
+            "import_vcard_other_dates": {
+                "title": "Import ostatních dat z vCard",
+                "description": "Nahrajte soubor .vcf. Načte se každé datum kromě narození: standardní pole „Výročí“ a také jakékoli vlastně pojmenované datum, které Apple/Google Kontakty umožňují u kontaktu přidat (např. „Výročí“, „Ostatní“ nebo vámi zadaný popisek). Na rozdíl od narozenin nejde vždy o stejný druh události – v dalších krocích můžete každý záznam zkontrolovat, s jeho rozpoznaným popiskem pro kontext, a přiřadit mu individuálně správný typ události.",
+                "data": {
+                    "vcard_file": "Soubor vCard"
+                }
+            },
+            "import_options": {
+                "title": "Import z {source_label} – nastavení",
+                "description": "Toto se použije na každý záznam nalezený v souboru. V dalším kroku budete mít možnost zkontrolovat a upravit jednotlivé záznamy.",
+                "data": {
+                    "swap_names": "Prohodit jméno/příjmení u všech záznamů",
+                    "use_description_year": "Použít rok nalezený v popisu každého záznamu místo jeho počátečního data, pokud je nalezen (např. „geb. 1985“)",
+                    "type": "Typ události"
+                }
+            },
+            "import_review": {
+                "title": "Import z {source_label} – kontrola ({page}/{total_pages})",
+                "description": "{legend}\n\nZkontrolujte níže navržené rozdělení jména a příjmení a opravte, co je špatně – upravit lze i samotné datum narození – nebo zrušte zaškrtnutí záznamu, aby byl zcela vynechán. Možný duplicitní záznam je označen jménem existujícího záznamu; ponechte „vytvořit jako nový“ nezaškrtnuté, pokud chcete místo přidání druhého záznamu aktualizovat ten stávající. Popisky polí jsou zde zobrazeny pouze v angličtině, bez ohledu na nastavení jazyka.",
+                "data": {
+                    "go_back": "Vrátit se na předchozí stránku"
+                }
+            },
+            "remove_ics_imports": {
+                "title": "Odstranit události importované z ICS",
+                "description": "{count} událost(í) bylo vytvořeno předchozím importem ICS. Kliknutím na OK odstraníte všechny – záznamy, které import ICS pouze aktualizoval (nikoli vytvořil), nejsou nikdy ovlivněny, stejně jako ručně přidané, CSV- nebo vCard-importované události."
+            },
+            "remove_vcard_imports": {
+                "title": "Odstranit události importované z vCard",
+                "description": "{count} událost(í) bylo vytvořeno předchozím importem vCard. Kliknutím na OK odstraníte všechny – záznamy, které import vCard pouze aktualizoval (nikoli vytvořil), nejsou nikdy ovlivněny, stejně jako ručně přidané, CSV- nebo ICS-importované události."
+            },
             "hub_menu": {
                 "title": "Annuals Nastavení",
                 "menu_options": {
-                    "annual_settings": "Annual Nastavení",
-                    "import_csv": "Import událostí z CSV",
-                    "export_csv": "Exportovat události do CSV",
-                    "import_holidays": "Import svátků",
-                    "remove_holidays": "Odstranit importované svátky",
-                    "delete_all": "Smazat všechna data Annuals"
+                    "annual_settings": "{icon_annual_settings} Annual Nastavení",
+                    "import_events": "{icon_import_events} Import událostí",
+                    "export_csv": "{icon_export_csv} Exportovat události do CSV",
+                    "remove_events": "{icon_remove_events} Odstranit události",
+                    "delete_all": "{icon_delete_all} Smazat všechna data Annuals"
+                }
+            },
+            "import_events": {
+                "title": "Import událostí",
+                "description": "Vyberte zdroj, ze kterého chcete importovat.",
+                "menu_options": {
+                    "import_csv": "CSV",
+                    "import_ics": "Kalendář ICS",
+                    "import_vcard_menu": "vCard",
+                    "import_holidays": "Svátky"
+                }
+            },
+            "remove_events": {
+                "title": "Odstranit události",
+                "description": "Vyberte, které dříve importované události chcete odstranit.",
+                "menu_options": {
+                    "remove_ics_imports": "Importované z ICS",
+                    "remove_vcard_imports": "Importované z vCard",
+                    "remove_holidays": "Svátky"
                 }
             },
             "import_holidays": {
@@ -174,17 +245,27 @@
             "invalid_date": "Tato kombinace den/měsíc/rok není platné datum.",
             "invalid_csv": "Tento soubor se nepodařilo přečíst jako CSV. Zkontrolujte kódování a formát.",
             "no_valid_rows": "V tomto souboru nebyly nalezeny žádné platné řádky. Podrobnosti o přeskočených řádcích najdete v protokolu.",
+            "invalid_ics": "Tento soubor se nepodařilo přečíst jako kalendář ICS. Zkontrolujte formát.",
+            "no_valid_entries": "V tomto souboru nebyly nalezeny žádné použitelné celodenní záznamy. Podrobnosti o přeskočených záznamech najdete v protokolu.",
+            "invalid_vcard": "Tento soubor se nepodařilo přečíst jako vCard. Zkontrolujte formát.",
+            "no_valid_vcard_entries": "V tomto souboru nebyly nalezeny žádné kontakty s použitelným datem narození. Podrobnosti o přeskočených záznamech najdete v protokolu.",
+            "no_valid_vcard_dates": "V tomto souboru nebyla nalezena žádná výročí ani jiná data (kromě narozenin). Podrobnosti o přeskočených záznamech najdete v protokolu.",
             "no_batch_selected": "Zaškrtněte „Odstranit všechny importované svátky“, nebo vyberte dávku."
         },
         "abort": {
             "hub_not_configurable": "Hub Annuals nemá vlastní nastavení – obsahuje pouze sdílené kalendáře.",
             "import_started": "Import zahájen: {created} událostí zařazeno do fronty, {skipped} řádků přeskočeno (podrobnosti v protokolu).",
+            "ics_import_started": "Import zahájen: {created} událostí vytvořeno, {updated} aktualizováno, {skipped} záznamů přeskočeno nebo vyloučeno.",
             "csv_exported": "Exportováno {count} událostí. [Stáhnout annuals_export.csv]({url}) (Ctrl/Cmd+klik pro stažení - obyčejné kliknutí zde nefunguje)\n\nNebo zkopírujte níže uvedené CSV:\n\n```\n{csv}\n```",
             "no_events_to_export": "Zatím nejsou žádné události k exportu.",
             "deleted_all": "Všechny události, kalendáře a hub Annuals byly odstraněny.",
             "holiday_import_started": "Import zahájen: {count} svátků zařazeno do fronty pro {country}.",
             "no_holidays_imported": "Zatím nebyly importovány žádné svátky.",
-            "holidays_removed": "Odstraněno {count} svátků."
+            "holidays_removed": "Odstraněno {count} svátků.",
+            "no_ics_imports": "Nebyly nalezeny žádné události vytvořené importem ICS.",
+            "ics_imports_removed": "Odstraněno {count} událostí importovaných z ICS.",
+            "no_vcard_imports": "Nebyly nalezeny žádné události vytvořené importem vCard.",
+            "vcard_imports_removed": "Odstraněno {count} událostí importovaných z vCard."
         }
     },
     "entity": {

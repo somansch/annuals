@@ -156,6 +156,9 @@
         showHolidaySuffix: "Show holiday suffix",
         showHolidaySuffixDesc:
           "Append the holiday's country (and subdivision, if any) in parentheses after its name, e.g. \"Pioneer Day (US-UT)\".",
+        timelineShowDate: "Show date",
+        timelineShowDateDesc:
+          "Append the short calendar date in parentheses at the end, e.g. \"...is in 3 days (6 Aug)\". Hidden on the event's own day, since the sentence already ends \"...is today\" right before it.",
         moreAction: "\"More\" button",
         moreActionDesc:
           "What the timeline's bottom-right \"More\" button does. Typically a Navigate action pointing at a dashboard that shows the same events in the full List layout. Leave it on \"Nothing\" to hide the button.",
@@ -197,7 +200,7 @@
         visibilityCountrySuffix: "Holiday suffix",
         visibilityCountrySuffixDesc: "Append the country (and subdivision, if any) after the holiday's name/type, e.g. “Independence Day · US (UT)”",
         columnsHeading: "Row columns",
-        columnsDesc: "Add, remove, and reorder what each row shows. Custom text columns can mix free text with placeholders: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {country}.",
+        columnsDesc: "Add, remove, and reorder what each row shows. Custom text columns can mix free text with placeholders: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
         columnTypeIcon: "Icon",
         columnTypeInfo: "Name + type",
         columnTypeName: "Name",
@@ -206,6 +209,7 @@
         columnTypeFullNameType: "Full name + type",
         columnTypeType: "Type",
         columnTypeText: "Custom text",
+        columnTypeDate: "Date",
         columnAdd: "Add",
         columnMoveUp: "Move up",
         columnMoveDown: "Move down",
@@ -504,6 +508,9 @@
         showHolidaySuffix: "Feiertagssuffix anzeigen",
         showHolidaySuffixDesc:
           "Land (und ggf. Bundesland/Region) des Feiertags in Klammern hinter dessen Namen anhängen, z. B. „Pioneer Day (US-UT)“.",
+        timelineShowDate: "Datum anzeigen",
+        timelineShowDateDesc:
+          "Hängt am Ende das Kurzdatum in Klammern an, z. B. „... ist in 3 Tagen (6. Aug.)“. Wird am Tag selbst ausgeblendet, da der Satz direkt davor schon mit „... ist heute“ endet.",
         moreAction: "„Mehr“-Schaltfläche",
         moreActionDesc:
           "Was die Schaltfläche „Mehr“ unten rechts in der Timeline auslöst. Üblicherweise eine Navigations-Aktion zu einem Dashboard, das dieselben Ereignisse im vollständigen Listen-Layout zeigt. Bei „Nichts“ wird die Schaltfläche ausgeblendet.",
@@ -545,7 +552,7 @@
         visibilityCountrySuffix: "Feiertagssuffix",
         visibilityCountrySuffixDesc: "Land (und ggf. Bundesland/Provinz) hinter dem Namen/Typ des Feiertags anhängen, z. B. „Tag der Deutschen Einheit · DE (BY)“",
         columnsHeading: "Zeilenspalten",
-        columnsDesc: "Lege fest, was jede Zeile anzeigt, und in welcher Reihenfolge. Eigene Textspalten können freien Text mit Platzhaltern kombinieren: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {country}.",
+        columnsDesc: "Lege fest, was jede Zeile anzeigt, und in welcher Reihenfolge. Eigene Textspalten können freien Text mit Platzhaltern kombinieren: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
         columnTypeIcon: "Icon",
         columnTypeInfo: "Name + Typ",
         columnTypeName: "Name",
@@ -554,6 +561,7 @@
         columnTypeFullNameType: "Vollständiger Name + Typ",
         columnTypeType: "Typ",
         columnTypeText: "Freier Text",
+        columnTypeDate: "Datum",
         columnAdd: "Hinzufügen",
         columnMoveUp: "Nach oben",
         columnMoveDown: "Nach unten",
@@ -841,6 +849,9 @@
         showHolidaySuffix: "Afficher le suffixe du jour férié",
         showHolidaySuffixDesc:
           "Ajouter le pays du jour férié (et la subdivision, le cas échéant) entre parenthèses après son nom, par ex. « Pioneer Day (US-UT) ».",
+        timelineShowDate: "Afficher la date",
+        timelineShowDateDesc:
+          "Ajoute la date courte entre parenthèses à la fin, par ex. « ... est dans 3 jours (6 août) ». Masquée le jour même, la phrase se terminant déjà juste avant par « ... est aujourd'hui ».",
         moreAction: "Bouton « Plus »",
         moreActionDesc:
           "Ce que fait le bouton « Plus » en bas à droite de la timeline. Généralement une action de navigation vers un tableau de bord affichant les mêmes événements dans le layout Liste complet. Laissez sur « Rien » pour masquer le bouton.",
@@ -882,7 +893,7 @@
         visibilityCountrySuffix: "Suffixe du jour férié",
         visibilityCountrySuffixDesc: "Ajouter le pays (et la subdivision, le cas échéant) après le nom/type du jour férié, par ex. « Fête nationale · FR (75) »",
         columnsHeading: "Colonnes de ligne",
-        columnsDesc: "Ajoutez, supprimez et réorganisez ce que chaque ligne affiche. Les colonnes de texte libre peuvent combiner du texte libre avec des espaces réservés : {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {country}.",
+        columnsDesc: "Ajoutez, supprimez et réorganisez ce que chaque ligne affiche. Les colonnes de texte libre peuvent combiner du texte libre avec des espaces réservés : {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
         columnTypeIcon: "Icône",
         columnTypeInfo: "Nom + type",
         columnTypeName: "Nom",
@@ -891,6 +902,7 @@
         columnTypeFullNameType: "Nom complet + type",
         columnTypeType: "Type",
         columnTypeText: "Texte libre",
+        columnTypeDate: "Date",
         columnAdd: "Ajouter",
         columnMoveUp: "Monter",
         columnMoveDown: "Descendre",
@@ -1177,6 +1189,9 @@
         showHolidaySuffix: "Feestdagsuffix tonen",
         showHolidaySuffixDesc:
           "Voeg het land (en eventueel de deelstaat/provincie) van de feestdag tussen haakjes toe na de naam, bijv. „Pioneer Day (US-UT)”.",
+        timelineShowDate: "Datum tonen",
+        timelineShowDateDesc:
+          "Voegt aan het einde de korte datum tussen haakjes toe, bijv. „... is over 3 dagen (6 aug)”. Verborgen op de dag zelf, omdat de zin daar al eindigt met „... is vandaag”.",
         moreAction: "„Meer”-knop",
         moreActionDesc:
           "Wat de „Meer”-knop rechtsonder in de timeline doet. Meestal een navigatie-actie naar een dashboard dat dezelfde evenementen in het volledige Lijst-layout toont. Laat op „Niets” staan om de knop te verbergen.",
@@ -1218,7 +1233,7 @@
         visibilityCountrySuffix: "Feestdagsuffix",
         visibilityCountrySuffixDesc: "Voeg het land (en eventueel de deelstaat/provincie) toe na de naam/type van de feestdag, bijv. „Bevrijdingsdag · NL (NH)”",
         columnsHeading: "Rijkolommen",
-        columnsDesc: "Voeg toe, verwijder en herschik wat elke rij toont. Eigen tekstkolommen kunnen vrije tekst combineren met plaatshouders: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {country}.",
+        columnsDesc: "Voeg toe, verwijder en herschik wat elke rij toont. Eigen tekstkolommen kunnen vrije tekst combineren met plaatshouders: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
         columnTypeIcon: "Icoon",
         columnTypeInfo: "Naam + type",
         columnTypeName: "Naam",
@@ -1227,6 +1242,7 @@
         columnTypeFullNameType: "Volledige naam + type",
         columnTypeType: "Type",
         columnTypeText: "Eigen tekst",
+        columnTypeDate: "Datum",
         columnAdd: "Toevoegen",
         columnMoveUp: "Omhoog",
         columnMoveDown: "Omlaag",
@@ -1519,6 +1535,9 @@
         showHolidaySuffix: "Pokaż sufiks święta",
         showHolidaySuffixDesc:
           "Dodaj kraj święta (i region, jeśli występuje) w nawiasie po jego nazwie, np. „Pioneer Day (US-UT)”.",
+        timelineShowDate: "Pokaż datę",
+        timelineShowDateDesc:
+          "Dodaje na końcu krótką datę w nawiasie, np. „... jest za 3 dni (6 sie)”. Ukryte w dniu wydarzenia, ponieważ zdanie kończy się wtedy już słowami „... jest dzisiaj”.",
         moreAction: "Przycisk „Więcej”",
         moreActionDesc:
           "Co robi przycisk „Więcej” w prawym dolnym rogu osi czasu. Zwykle akcja nawigacji do pulpitu pokazującego te same wydarzenia w pełnym układzie Lista. Pozostaw „Nic”, aby ukryć przycisk.",
@@ -1560,7 +1579,7 @@
         visibilityCountrySuffix: "Sufiks święta",
         visibilityCountrySuffixDesc: "Dodaj kraj (i ewentualnie region) po nazwie/typie święta, np. „Święto Niepodległości · PL (MAZ)”",
         columnsHeading: "Kolumny wiersza",
-        columnsDesc: "Dodawaj, usuwaj i zmieniaj kolejność tego, co pokazuje każdy wiersz. Kolumny własnego tekstu mogą łączyć dowolny tekst z symbolami zastępczymi: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {country}.",
+        columnsDesc: "Dodawaj, usuwaj i zmieniaj kolejność tego, co pokazuje każdy wiersz. Kolumny własnego tekstu mogą łączyć dowolny tekst z symbolami zastępczymi: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
         columnTypeIcon: "Ikona",
         columnTypeInfo: "Nazwa + typ",
         columnTypeName: "Nazwa",
@@ -1569,6 +1588,7 @@
         columnTypeFullNameType: "Pełne imię i nazwisko + typ",
         columnTypeType: "Typ",
         columnTypeText: "Własny tekst",
+        columnTypeDate: "Data",
         columnAdd: "Dodaj",
         columnMoveUp: "Przenieś w górę",
         columnMoveDown: "Przenieś w dół",
@@ -1855,6 +1875,9 @@
         showHolidaySuffix: "Mostrar sufijo del festivo",
         showHolidaySuffixDesc:
           "Añade el país del festivo (y la subdivisión, si la hay) entre paréntesis después de su nombre, p. ej. «Pioneer Day (US-UT)».",
+        timelineShowDate: "Mostrar fecha",
+        timelineShowDateDesc:
+          "Añade la fecha corta entre paréntesis al final, p. ej. «... es en 3 días (6 ago)». Se oculta el día del propio evento, ya que la frase ya termina justo antes con «... es hoy».",
         moreAction: "Botón «Más»",
         moreActionDesc:
           "Qué hace el botón «Más» de la esquina inferior derecha de la timeline. Normalmente una acción de navegación hacia un panel que muestra los mismos eventos en el diseño Lista completo. Déjalo en «Nada» para ocultar el botón.",
@@ -1896,7 +1919,7 @@
         visibilityCountrySuffix: "Sufijo del festivo",
         visibilityCountrySuffixDesc: "Añadir el país (y la subdivisión, si la hay) tras el nombre/tipo del festivo, p. ej. «Día de la Hispanidad · ES (MD)»",
         columnsHeading: "Columnas de fila",
-        columnsDesc: "Añade, elimina y reordena lo que muestra cada fila. Las columnas de texto personalizado pueden combinar texto libre con marcadores de posición: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {country}.",
+        columnsDesc: "Añade, elimina y reordena lo que muestra cada fila. Las columnas de texto personalizado pueden combinar texto libre con marcadores de posición: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
         columnTypeIcon: "Icono",
         columnTypeInfo: "Nombre + tipo",
         columnTypeName: "Nombre",
@@ -1905,6 +1928,7 @@
         columnTypeFullNameType: "Nombre completo + tipo",
         columnTypeType: "Tipo",
         columnTypeText: "Texto personalizado",
+        columnTypeDate: "Fecha",
         columnAdd: "Añadir",
         columnMoveUp: "Subir",
         columnMoveDown: "Bajar",
@@ -2191,6 +2215,9 @@
         showHolidaySuffix: "Mostra suffisso festività",
         showHolidaySuffixDesc:
           "Aggiunge il paese della festività (e la suddivisione, se presente) tra parentesi dopo il suo nome, ad es. «Pioneer Day (US-UT)».",
+        timelineShowDate: "Mostra data",
+        timelineShowDateDesc:
+          "Aggiunge la data breve tra parentesi alla fine, ad es. «...è tra 3 giorni (6 ago)». Nascosta nel giorno stesso, poiché la frase termina già subito prima con «...è oggi».",
         moreAction: "Pulsante «Altro»",
         moreActionDesc:
           "Cosa fa il pulsante «Altro» in basso a destra nella timeline. Tipicamente un'azione di navigazione verso una dashboard che mostra gli stessi eventi nel layout Lista completo. Lascialo su «Nulla» per nascondere il pulsante.",
@@ -2232,7 +2259,7 @@
         visibilityCountrySuffix: "Suffisso festività",
         visibilityCountrySuffixDesc: "Aggiunge il paese (ed eventualmente la suddivisione) dopo il nome/tipo della festività, ad es. «Festa della Repubblica · IT (RM)»",
         columnsHeading: "Colonne di riga",
-        columnsDesc: "Aggiungi, rimuovi e riordina ciò che ogni riga mostra. Le colonne di testo libero possono combinare testo libero con segnaposto: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {country}.",
+        columnsDesc: "Aggiungi, rimuovi e riordina ciò che ogni riga mostra. Le colonne di testo libero possono combinare testo libero con segnaposto: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
         columnTypeIcon: "Icona",
         columnTypeInfo: "Nome + tipo",
         columnTypeName: "Nome",
@@ -2241,6 +2268,7 @@
         columnTypeFullNameType: "Nome completo + tipo",
         columnTypeType: "Tipo",
         columnTypeText: "Testo libero",
+        columnTypeDate: "Data",
         columnAdd: "Aggiungi",
         columnMoveUp: "Sposta su",
         columnMoveDown: "Sposta giù",
@@ -2527,6 +2555,9 @@
         showHolidaySuffix: "Mostrar sufixo do feriado",
         showHolidaySuffixDesc:
           "Adiciona o país do feriado (e a subdivisão, se houver) entre parênteses após o seu nome, ex.: \"Pioneer Day (US-UT)\".",
+        timelineShowDate: "Mostrar data",
+        timelineShowDateDesc:
+          "Adiciona a data curta entre parênteses no final, ex.: \"...é em 3 dias (6 ago)\". Ocultada no próprio dia do evento, já que a frase já termina logo antes com \"...é hoje\".",
         moreAction: "Botão \"Mais\"",
         moreActionDesc:
           "O que o botão \"Mais\" no canto inferior direito da timeline faz. Normalmente uma ação de navegação para um painel que mostra os mesmos eventos no layout Lista completo. Deixe em \"Nada\" para ocultar o botão.",
@@ -2568,7 +2599,7 @@
         visibilityCountrySuffix: "Sufixo do feriado",
         visibilityCountrySuffixDesc: "Acrescenta o país (e a subdivisão, se houver) após o nome/tipo do feriado, por ex. \"Independência do Brasil · BR (SP)\"",
         columnsHeading: "Colunas da linha",
-        columnsDesc: "Adicione, remova e reorganize o que cada linha mostra. Colunas de texto personalizado podem combinar texto livre com espaços reservados: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {country}.",
+        columnsDesc: "Adicione, remova e reorganize o que cada linha mostra. Colunas de texto personalizado podem combinar texto livre com espaços reservados: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
         columnTypeIcon: "Ícone",
         columnTypeInfo: "Nome + tipo",
         columnTypeName: "Nome",
@@ -2577,6 +2608,7 @@
         columnTypeFullNameType: "Nome completo + tipo",
         columnTypeType: "Tipo",
         columnTypeText: "Texto personalizado",
+        columnTypeDate: "Data",
         columnAdd: "Adicionar",
         columnMoveUp: "Mover para cima",
         columnMoveDown: "Mover para baixo",
@@ -2868,6 +2900,9 @@
         showHolidaySuffix: "Показывать суффикс праздника",
         showHolidaySuffixDesc:
           "Добавлять страну праздника (и регион, если есть) в скобках после его названия, напр. «Pioneer Day (US-UT)».",
+        timelineShowDate: "Показывать дату",
+        timelineShowDateDesc:
+          "Добавляет в конце краткую дату в скобках, напр. «...через 3 дня (6 авг.)». Скрывается в день самого события, так как перед этим предложение уже заканчивается словами «...сегодня».",
         moreAction: "Кнопка «Ещё»",
         moreActionDesc:
           "Что делает кнопка «Ещё» в правом нижнем углу таймлайна. Обычно действие перехода на дашборд, показывающий те же события в полном макете Список. Оставьте «Ничего», чтобы скрыть кнопку.",
@@ -2909,7 +2944,7 @@
         visibilityCountrySuffix: "Суффикс праздника",
         visibilityCountrySuffixDesc: "Добавлять страну (и регион, если есть) после названия/типа праздника, напр. «День России · RU (MOW)»",
         columnsHeading: "Столбцы строки",
-        columnsDesc: "Добавляйте, удаляйте и меняйте порядок того, что показывает каждая строка. Столбцы произвольного текста могут сочетать свободный текст с плейсхолдерами: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {country}.",
+        columnsDesc: "Добавляйте, удаляйте и меняйте порядок того, что показывает каждая строка. Столбцы произвольного текста могут сочетать свободный текст с плейсхолдерами: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
         columnTypeIcon: "Значок",
         columnTypeInfo: "Имя + тип",
         columnTypeName: "Имя",
@@ -2918,6 +2953,7 @@
         columnTypeFullNameType: "Полное имя + тип",
         columnTypeType: "Тип",
         columnTypeText: "Произвольный текст",
+        columnTypeDate: "Дата",
         columnAdd: "Добавить",
         columnMoveUp: "Переместить вверх",
         columnMoveDown: "Переместить вниз",
@@ -3208,6 +3244,9 @@
         showHolidaySuffix: "Visa helgdagssuffix",
         showHolidaySuffixDesc:
           "Lägg till helgdagens land (och delstat/region, om sådan finns) inom parentes efter namnet, t.ex. \"Pioneer Day (US-UT)\".",
+        timelineShowDate: "Visa datum",
+        timelineShowDateDesc:
+          "Lägger till det korta datumet inom parentes i slutet, t.ex. \"...är om 3 dagar (6 aug)\". Döljs på själva dagen, eftersom meningen redan slutar med \"...är idag\" precis innan.",
         moreAction: "\"Mer\"-knapp",
         moreActionDesc:
           "Vad knappen \"Mer\" längst ned till höger i tidslinjen gör. Vanligtvis en navigeringsåtgärd till en instrumentpanel som visar samma händelser i det fullständiga Lista-layouten. Lämna på \"Inget\" för att dölja knappen.",
@@ -3250,7 +3289,7 @@
         visibilityCountrySuffixDesc: "Lägg till landet (och ev. delstat/region) efter helgdagens namn/typ, t.ex. \"Nationaldagen · SE (AB)\"",
         columnsHeading: "Radkolumner",
         columnsDesc:
-          "Lägg till, ta bort och ändra ordning på vad varje rad visar. Egna textkolumner kan blanda fri text med platshållare: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {country}.",
+          "Lägg till, ta bort och ändra ordning på vad varje rad visar. Egna textkolumner kan blanda fri text med platshållare: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
         columnTypeIcon: "Ikon",
         columnTypeInfo: "Namn + typ",
         columnTypeName: "Namn",
@@ -3259,6 +3298,7 @@
         columnTypeFullNameType: "Fullständigt namn + typ",
         columnTypeType: "Typ",
         columnTypeText: "Egen text",
+        columnTypeDate: "Datum",
         columnAdd: "Lägg till",
         columnMoveUp: "Flytta upp",
         columnMoveDown: "Flytta ner",
@@ -3549,6 +3589,8 @@
         timelineShowFullNameDesc: "在标题、提示框和可展开列表中显示每个事件的全名（名字和姓氏），而不仅仅是名字。",
         showHolidaySuffix: "显示节日后缀",
         showHolidaySuffixDesc: "在节日名称后以括号附加其所属国家（及地区，如有），例如「Pioneer Day (US-UT)」。",
+        timelineShowDate: "显示日期",
+        timelineShowDateDesc: "在末尾以括号附加简短日期，例如「...还有 3 天（8月6日）」。当天会自动隐藏，因为句子前面已经以「...就在今天」结尾。",
         moreAction: "「更多」按钮",
         moreActionDesc:
           "时间轴右下角「更多」按钮的作用。通常是跳转到以完整列表布局显示相同事件的仪表盘的导航操作。留空为「无」可隐藏该按钮。",
@@ -3590,7 +3632,7 @@
         visibilityCountrySuffixDesc: "在节假日名称/类型后附加国家（及地区，如有），例如“国庆节 · CN (BJ)”",
         columnsHeading: "行列",
         columnsDesc:
-          "添加、删除并重新排列每行显示的内容。自定义文本列可以混合自由文本与占位符：{name}、{last_name}、{full_name}、{type}、{occurrence}、{when}、{country}。",
+          "添加、删除并重新排列每行显示的内容。自定义文本列可以混合自由文本与占位符：{name}、{last_name}、{full_name}、{type}、{occurrence}、{when}、{date}、{country}。",
         columnTypeIcon: "图标",
         columnTypeInfo: "名称 + 类型",
         columnTypeName: "名称",
@@ -3599,6 +3641,7 @@
         columnTypeFullNameType: "全名 + 类型",
         columnTypeType: "类型",
         columnTypeText: "自定义文本",
+        columnTypeDate: "日期",
         columnAdd: "添加",
         columnMoveUp: "上移",
         columnMoveDown: "下移",
@@ -3887,6 +3930,9 @@
         showHolidaySuffix: "Zobrazit příponu svátku",
         showHolidaySuffixDesc:
           "Přidá zemi svátku (a případně region) v závorce za jeho název, např. „Pioneer Day (US-UT)“.",
+        timelineShowDate: "Zobrazit datum",
+        timelineShowDateDesc:
+          "Na konci přidá v závorce krátké datum, např. „...je za 3 dny (6. srp)“. V den samotné události je skryto, protože věta už těsně předtím končí slovy „...je dnes“.",
         moreAction: "Tlačítko „Více“",
         moreActionDesc:
           "Co dělá tlačítko „Více“ vpravo dole na časové ose. Obvykle akce navigace na řídicí panel zobrazující stejné události v plném rozvržení Seznam. Ponechte na „Nic“, chcete-li tlačítko skrýt.",
@@ -3929,7 +3975,7 @@
         visibilityCountrySuffixDesc: "Připojit zemi (a případně kraj) za název/typ svátku, např. „Den české státnosti · CZ (PR)“",
         columnsHeading: "Sloupce řádku",
         columnsDesc:
-          "Přidávejte, odebírejte a měňte pořadí toho, co každý řádek zobrazuje. Vlastní textové sloupce mohou kombinovat volný text se zástupnými symboly: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {country}.",
+          "Přidávejte, odebírejte a měňte pořadí toho, co každý řádek zobrazuje. Vlastní textové sloupce mohou kombinovat volný text se zástupnými symboly: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
         columnTypeIcon: "Ikona",
         columnTypeInfo: "Jméno + typ",
         columnTypeName: "Jméno",
@@ -3938,6 +3984,7 @@
         columnTypeFullNameType: "Celé jméno + typ",
         columnTypeType: "Typ",
         columnTypeText: "Vlastní text",
+        columnTypeDate: "Datum",
         columnAdd: "Přidat",
         columnMoveUp: "Posunout nahoru",
         columnMoveDown: "Posunout dolů",
@@ -4227,6 +4274,9 @@
         showHolidaySuffix: "Vis høytidssuffiks",
         showHolidaySuffixDesc:
           "Legg til høytidens land (og region, hvis noen) i parentes etter navnet, f.eks. «Pioneer Day (US-UT)».",
+        timelineShowDate: "Vis dato",
+        timelineShowDateDesc:
+          "Legger til den korte datoen i parentes til slutt, f.eks. «...er om 3 dager (6. aug)». Skjules på selve dagen, siden setningen allerede slutter med «...er i dag» rett før.",
         moreAction: "«Mer»-knapp",
         moreActionDesc:
           "Hva «Mer»-knappen nederst til høyre i tidslinjen gjør. Vanligvis en navigasjonshandling til et dashbord som viser de samme hendelsene i det fulle Liste-layoutet. La stå på «Ingenting» for å skjule knappen.",
@@ -4269,7 +4319,7 @@
         visibilityCountrySuffixDesc: "Legg til landet (og eventuelt fylket) etter helligdagens navn/type, f.eks. «Grunnlovsdagen · NO (OSL)»",
         columnsHeading: "Radkolonner",
         columnsDesc:
-          "Legg til, fjern og endre rekkefølgen på det hver rad viser. Egendefinerte tekstkolonner kan blande fri tekst med plassholdere: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {country}.",
+          "Legg til, fjern og endre rekkefølgen på det hver rad viser. Egendefinerte tekstkolonner kan blande fri tekst med plassholdere: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
         columnTypeIcon: "Ikon",
         columnTypeInfo: "Navn + type",
         columnTypeName: "Navn",
@@ -4278,6 +4328,7 @@
         columnTypeFullNameType: "Fullt navn + type",
         columnTypeType: "Type",
         columnTypeText: "Egendefinert tekst",
+        columnTypeDate: "Dato",
         columnAdd: "Legg til",
         columnMoveUp: "Flytt opp",
         columnMoveDown: "Flytt ned",
@@ -4567,6 +4618,9 @@
         showHolidaySuffix: "Vis helligdagssuffiks",
         showHolidaySuffixDesc:
           "Tilføj helligdagens land (og region, hvis nogen) i parentes efter navnet, f.eks. „Pioneer Day (US-UT)”.",
+        timelineShowDate: "Vis dato",
+        timelineShowDateDesc:
+          "Tilføjer den korte dato i parentes til sidst, f.eks. „...er om 3 dage (6. aug)”. Skjules på selve dagen, da sætningen allerede lige inden slutter med „...er i dag”.",
         moreAction: "„Mere”-knap",
         moreActionDesc:
           "Hvad „Mere”-knappen nederst til højre i tidslinjen gør. Typisk en navigationshandling til et dashboard, der viser de samme begivenheder i det fulde Liste-layout. Lad den stå på „Intet” for at skjule knappen.",
@@ -4609,7 +4663,7 @@
         visibilityCountrySuffixDesc: "Tilføj landet (og evt. regionen) efter helligdagens navn/type, f.eks. \"Grundlovsdag · DK (84)\"",
         columnsHeading: "Rækkekolonner",
         columnsDesc:
-          "Tilføj, fjern og omorganiser hvad hver række viser. Brugerdefinerede tekstkolonner kan blande fri tekst med pladsholdere: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {country}.",
+          "Tilføj, fjern og omorganiser hvad hver række viser. Brugerdefinerede tekstkolonner kan blande fri tekst med pladsholdere: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
         columnTypeIcon: "Ikon",
         columnTypeInfo: "Navn + type",
         columnTypeName: "Navn",
@@ -4618,6 +4672,7 @@
         columnTypeFullNameType: "Fulde navn + type",
         columnTypeType: "Type",
         columnTypeText: "Brugerdefineret tekst",
+        columnTypeDate: "Dato",
         columnAdd: "Tilføj",
         columnMoveUp: "Flyt op",
         columnMoveDown: "Flyt ned",
@@ -4913,6 +4968,9 @@
         showHolidaySuffix: "Tatil sonekini göster",
         showHolidaySuffixDesc:
           "Tatilin ülkesini (ve varsa bölgesini) adının ardından parantez içinde ekler, örn. \"Pioneer Day (US-UT)\".",
+        timelineShowDate: "Tarihi göster",
+        timelineShowDateDesc:
+          "Sonuna parantez içinde kısa tarihi ekler, örn. \"...3 gün sonra (6 Ağu)\". Etkinliğin kendi gününde gizlenir, çünkü cümle bundan hemen önce zaten \"...bugün\" ile bitiyor.",
         moreAction: "\"Daha fazla\" düğmesi",
         moreActionDesc:
           "Zaman çizelgesinin sağ alt köşesindeki \"Daha fazla\" düğmesinin ne yaptığı. Genellikle aynı etkinlikleri tam Liste düzeninde gösteren bir panoya yönlendiren bir gezinme eylemi. Düğmeyi gizlemek için \"Hiçbiri\" olarak bırakın.",
@@ -4955,7 +5013,7 @@
         visibilityCountrySuffixDesc: "Tatilin adının/türünün ardına ülkeyi (ve varsa bölgeyi) ekler, örn. \"Cumhuriyet Bayramı · TR (34)\"",
         columnsHeading: "Satır sütunları",
         columnsDesc:
-          "Her satırın gösterdiği içeriği ekleyin, kaldırın ve yeniden sıralayın. Özel metin sütunları serbest metni yer tutucularla karıştırabilir: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {country}.",
+          "Her satırın gösterdiği içeriği ekleyin, kaldırın ve yeniden sıralayın. Özel metin sütunları serbest metni yer tutucularla karıştırabilir: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
         columnTypeIcon: "Simge",
         columnTypeInfo: "Ad + tür",
         columnTypeName: "Ad",
@@ -4964,6 +5022,7 @@
         columnTypeFullNameType: "Tam ad + tür",
         columnTypeType: "Tür",
         columnTypeText: "Özel metin",
+        columnTypeDate: "Tarih",
         columnAdd: "Ekle",
         columnMoveUp: "Yukarı taşı",
         columnMoveDown: "Aşağı taşı",
@@ -5153,12 +5212,12 @@
 
   // Applied the moment "Compact (no gaps, centered)" is switched on (see the
   // compactToggle handler in _buildColumnsSection) - Icon, Full name,
-  // Occurrence, Type, Countdown, each of the latter four preceded by its own
-  // space-only text column. Compact mode zeroes the flex gap between
-  // columns (see .list.columns-compact .row in CARD_STYLE) so two fields
-  // would otherwise run together with no separator at all; a real space
-  // character between them reads correctly on its own and, unlike a CSS
-  // gap, stays put if the user later mixes in their own custom text
+  // Occurrence, Type, Countdown, Date, each of the latter five preceded by
+  // its own space-only text column. Compact mode zeroes the flex gap
+  // between columns (see .list.columns-compact .row in CARD_STYLE) so two
+  // fields would otherwise run together with no separator at all; a real
+  // space character between them reads correctly on its own and, unlike a
+  // CSS gap, stays put if the user later mixes in their own custom text
   // columns around this starting arrangement.
   const COMPACT_DEFAULT_COLUMNS = [
     { id: "icon", type: "icon" },
@@ -5170,6 +5229,8 @@
     { id: "type", type: "type" },
     { id: "space-4", type: "text", template: " " },
     { id: "when", type: "when" },
+    { id: "space-5", type: "text", template: " " },
+    { id: "date", type: "date" },
   ];
 
   // Rewrites a handful of legacy config keys from before "title"/"subtitle"
@@ -5302,6 +5363,14 @@
       // name, everywhere _timelineSentenceFragment is used (header, tooltip,
       // expandable list) since they all share that one function.
       timeline_show_full_name: false,
+      // Timeline layout only, under Layout -> Timeline -> Options: appends
+      // " (<short date>)" at the very end of the sentence, e.g. "...is in 3
+      // days (6 Aug)" - same short-date text the List layout's own Date
+      // column shows (see _timelineDateText). Suppressed on the day itself
+      // (_timelineDateText returns null) since the sentence already reads
+      // "...is today" right before it - repeating it as "(Today)" would be
+      // redundant.
+      timeline_show_date: false,
       ...config,
       // Per icon-color-category (accent/today/soon) animation, keyed the
       // same way as colors.match_* so the same "which category is this
@@ -6423,6 +6492,24 @@
       return e.days === 0 ? strings.today : e.days === 1 ? strings.inDay : strings.inDays(e.days);
     }
 
+    // Short calendar date ("6 Aug") for config.timeline_show_date - same
+    // day-offset math and Intl.DateTimeFormat call as _row()'s own dateText,
+    // kept separate since the timeline reads its offset off e.daysSince/
+    // e.days the same way _timelineWhenText does. Returns null on the event's
+    // own day - _timelineSentenceFragment already ends "...is today" there,
+    // so a literal "(Today)" right after it would just repeat itself.
+    _timelineDateText(e) {
+      const isPast = e.daysSince !== undefined && e.daysSince > 0;
+      if (!isPast && e.days === 0) return null;
+      const target = new Date();
+      target.setHours(0, 0, 0, 0);
+      target.setDate(target.getDate() + (isPast ? -e.daysSince : e.days));
+      return new Intl.DateTimeFormat(this._hass.language || "en", {
+        day: "numeric",
+        month: "short",
+      }).format(target);
+    }
+
     // VIP/Important flags for one event, resolved against this card's usual
     // show_vip_badge/show_important_badge toggles and icon config - both can
     // be present on the same event, since the timeline draws them in two
@@ -6580,10 +6667,18 @@
           : "";
       const baseName = config.timeline_show_full_name && e.fullName ? e.fullName : e.name;
       const displayName = `${baseName}${holidaySuffix}`;
+      // Layout -> Timeline -> Options: "Show date" appends " (<short date>)"
+      // at the very end of the sentence - null on the event's own day (see
+      // _timelineDateText), since the sentence already ends "...is today"
+      // right before it.
+      const timelineDateText = config.timeline_show_date ? this._timelineDateText(e) : null;
+      const dateSuffix = timelineDateText ? ` (${timelineDateText})` : "";
       if (!(config.show_badge !== false && occurrence != null)) {
         const tmpl =
           (isPast ? strings.timelineSentenceSimplePast : strings.timelineSentenceSimple) || "{name} is {when}";
-        frag.appendChild(document.createTextNode(tmpl.replace("{name}", displayName).replace("{when}", when)));
+        frag.appendChild(
+          document.createTextNode(tmpl.replace("{name}", displayName).replace("{when}", when) + dateSuffix)
+        );
         return frag;
       }
       let typeLabel = strings.types[e.type] || e.type;
@@ -6613,7 +6708,7 @@
         supEl.textContent = sup;
         frag.appendChild(supEl);
       }
-      frag.appendChild(document.createTextNode(fill(after)));
+      frag.appendChild(document.createTextNode(fill(after) + dateSuffix));
       return frag;
     }
 
@@ -7174,6 +7269,23 @@
       } else {
         when = e.days === 0 ? strings.today : e.days === 1 ? strings.inDay : strings.inDays(e.days);
       }
+      // Short calendar date ("3 Aug") for the same occurrence "when" already
+      // describes as a countdown - derived the same way, purely from the
+      // day-offset attributes (e.days / e.daysSince), so it always agrees
+      // with whatever the countdown column says. "Today" instead of the
+      // literal date once it's actually today, same as the countdown does.
+      let dateText;
+      if (e.days === 0) {
+        dateText = strings.today;
+      } else {
+        const target = new Date();
+        target.setHours(0, 0, 0, 0);
+        target.setDate(target.getDate() + (isRecent && e.daysSince > 0 ? -e.daysSince : e.days));
+        dateText = new Intl.DateTimeFormat(this._hass.language || "en", {
+          day: "numeric",
+          month: "short",
+        }).format(target);
+      }
       // occurrence_number always describes the *next* occurrence - once an
       // event's date has passed (daysSince > 0), the sensor has already
       // advanced to next year's count, so the occurrence that just happened
@@ -7189,7 +7301,7 @@
         countrySuffix && config.show_full_name_country ? `${e.fullName} · ${countrySuffix}` : e.fullName;
 
       // Shared value set for "text" column templates ({name}/{last_name}/
-      // {full_name}/{type}/{occurrence}/{when}/{country}) - reuses
+      // {full_name}/{type}/{occurrence}/{when}/{date}/{country}) - reuses
       // everything already computed above instead of recomputing per
       // column. last_name/full_name are simply empty/first-name-only for
       // holiday events and any event added before the field existed - see
@@ -7201,6 +7313,7 @@
         type: typeLabel,
         occurrence: badgeValue != null ? String(badgeValue) : "",
         when,
+        date: dateText,
         country: countrySuffix,
       };
 
@@ -7222,6 +7335,11 @@
         showBadge,
         badgeValue,
         badgeClass,
+        // Only the "Today"/"Heute" case of the Date column is a word whose
+        // case should follow its position in the row, same as Countdown - a
+        // real formatted date like "Aug 3" starts with the month name and
+        // must always stay capitalized regardless of position.
+        dateIsToday: e.days === 0,
       };
       // Countdown ("when") reads as the sentence's opening word ("In 2
       // days, Anna has her birthday") only until the event's identity has
@@ -7469,6 +7587,24 @@
           textEl.className = "text-col";
           textEl.textContent = renderTemplate(col.template || "", values);
           return textEl;
+        }
+        case "date": {
+          // Shares the Custom text column's styling (.text-col) rather than
+          // getting its own Colors/Fonts tab entry - it's the same kind of
+          // short, secondary text. On the day itself this reads "Today" -
+          // same word as the Countdown column's own today case - so it
+          // gets the same leading/trailing case treatment there. Any other
+          // day this is a real formatted date (e.g. "Aug 3" - the month
+          // name leads in several locales), which must always stay
+          // capitalized regardless of position in the row.
+          const dateEl = document.createElement("div");
+          dateEl.className = "text-col";
+          const dateText = values.date || "";
+          dateEl.textContent =
+            ctx.dateIsToday && !whenLeading
+              ? dateText.charAt(0).toLowerCase() + dateText.slice(1)
+              : dateText.charAt(0).toUpperCase() + dateText.slice(1);
+          return dateEl;
         }
         default:
           // Unknown column type (e.g. a newer card version's config loaded
@@ -9657,6 +9793,7 @@
         type: strings.editor.columnTypeType || "Type",
         badge: strings.editor.colorBadge,
         when: strings.editor.colorWhen,
+        date: strings.editor.columnTypeDate || "Date",
         text: strings.editor.columnTypeText || "Custom text",
       };
       return map[type] || type;
@@ -9675,7 +9812,7 @@
       desc.className = "columns-desc";
       desc.textContent =
         strings.editor.columnsDesc ||
-        "Add, remove, and reorder what each row shows. Custom text columns can mix free text with placeholders: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {country}.";
+        "Add, remove, and reorder what each row shows. Custom text columns can mix free text with placeholders: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.";
       section.appendChild(desc);
 
       const list = document.createElement("div");
@@ -9696,6 +9833,7 @@
           <option value="type"></option>
           <option value="badge"></option>
           <option value="when"></option>
+          <option value="date"></option>
           <option value="text"></option>
         </select>
         <button type="button" class="preset-btn" data-column-add>
@@ -9737,12 +9875,12 @@
       compactToggle.addEventListener("change", () => {
         // Flipping this toggle immediately swaps the whole column
         // arrangement - Compact's own Icon/Full name/Occurrence/Type/
-        // Countdown (with its space columns) turning on, or back to the
-        // plain Icon/Full name + type/Occurrence/Countdown default turning
-        // off - rather than just changing spacing/weight under whatever
-        // columns happened to be configured already. Either arrangement
-        // stays fully user-customizable afterward, same as any other time
-        // the columns list gets touched.
+        // Countdown/Date (with its space columns) turning on, or back to
+        // the plain Icon/Full name + type/Occurrence/Countdown default
+        // turning off - rather than just changing spacing/weight under
+        // whatever columns happened to be configured already. Either
+        // arrangement stays fully user-customizable afterward, same as any
+        // other time the columns list gets touched.
         const columns = compactToggle.checked
           ? COMPACT_DEFAULT_COLUMNS.map((c) => ({ ...c }))
           : undefined;
@@ -10509,7 +10647,10 @@
       optionsHeading.textContent = strings.editor.timelineOptionsHeading;
       body.appendChild(optionsHeading);
       const optionsRows = document.createElement("div");
-      optionsRows.innerHTML = this._visibilityTwoColHtml(["timeline_show_full_name"], ["show_holiday_suffix"]);
+      optionsRows.innerHTML = this._visibilityTwoColHtml(
+        ["timeline_show_full_name", "timeline_show_date"],
+        ["show_holiday_suffix"]
+      );
       body.appendChild(optionsRows);
       const fullNameToggle = optionsRows.querySelector('input[data-visibility="timeline_show_full_name"]');
       const fullNameRow = fullNameToggle.closest(".toggle-row");
@@ -10525,6 +10666,14 @@
       suffixRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.showHolidaySuffixDesc;
       suffixToggle.addEventListener("change", () => {
         this._config = defaultConfig({ ...this._config, show_holiday_suffix: suffixToggle.checked });
+        this._emit();
+      });
+      const dateToggle = optionsRows.querySelector('input[data-visibility="timeline_show_date"]');
+      const dateRow = dateToggle.closest(".toggle-row");
+      dateRow.querySelector(".label-text").textContent = strings.editor.timelineShowDate;
+      dateRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.timelineShowDateDesc;
+      dateToggle.addEventListener("change", () => {
+        this._config = defaultConfig({ ...this._config, timeline_show_date: dateToggle.checked });
         this._emit();
       });
 
@@ -10565,6 +10714,8 @@
 
       const suffixToggle = this.shadowRoot.querySelector('input[data-visibility="show_holiday_suffix"]');
       if (suffixToggle) suffixToggle.checked = this._config.show_holiday_suffix === true;
+      const dateToggle = this.shadowRoot.querySelector('input[data-visibility="timeline_show_date"]');
+      if (dateToggle) dateToggle.checked = this._config.timeline_show_date === true;
     }
 
     // Hides whichever of this card's Layout fields the *current* layout
