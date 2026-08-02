@@ -46,6 +46,15 @@ def days_until(target: date, today: date) -> int:
     return (target - today).days
 
 
+def one_time_date(year: int, month: int, day: int) -> date:
+    """A one-time event's literal, fixed date (see TYPE_ONE_TIME in
+    const.py) - unlike every other type, there's no "next occurrence" to
+    compute, since it never recurs; this is simply the date itself, whichever
+    year it falls in.
+    """
+    return date(year, month, day)
+
+
 def occurrence_number(year: int | None, occurrence: date) -> int | None:
     """How many times this event will have occurred as of `occurrence`
     (e.g. the 30th birthday). None when the starting year isn't known.

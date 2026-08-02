@@ -6,81 +6,28 @@ days_ahead: 0
 days_past: 0
 soon_days: 7
 types: []
+external_calendars:
+  - calendar.personal
+  - calendar.kids
+categories: []
 show_past: true
 show_today: true
 show_soon: true
 highlight_past: true
 highlight_today: true
 highlight_soon: false
-font_size_title: ""
 show_icon: true
 show_name: true
+show_name_country: false
 show_type: true
+show_type_country: false
+show_type_calendar_name: false
+show_type_time: true
+show_type_location: true
+show_type_description: true
 show_badge: true
 show_when: true
-show_vip_only: false
-show_important_only: false
 show_vip_badge: true
 show_important_badge: true
 vip_badge_icon: mdi:star
 important_badge_icon: mdi:exclamation-thick
-colors:
-  today: ""
-  soon: ""
-  accent: ""
-  name: ""
-  type: ""
-  badge: ""
-  when: ""
-  match_accent: false
-  match_today: false
-  match_soon: false
-  badge_background: true
-  badge_background_color: ""
-  highlight_past: ""
-  highlight_today: ""
-  highlight_soon: ""
-  vip_badge: ""
-  important_badge: ""
-font_sizes:
-  name: ""
-  type: ""
-  badge: ""
-  when: ""
-font_style:
-  font_size_title:
-    bold: false
-    italic: false
-    uppercase: false
-    underline: false
-    letter_spacing: ""
-  name:
-    bold: false
-    italic: false
-    uppercase: false
-    underline: false
-    letter_spacing: ""
-  type:
-    bold: false
-    italic: false
-    uppercase: false
-    underline: false
-    letter_spacing: ""
-  badge:
-    bold: false
-    italic: false
-    uppercase: false
-    underline: false
-    letter_spacing: ""
-  when:
-    bold: false
-    italic: false
-    uppercase: false
-    underline: false
-    letter_spacing: ""
-background:
-  enabled: false
-  color: ""
-  image: ""
-  size: cover
-  opacity: 100

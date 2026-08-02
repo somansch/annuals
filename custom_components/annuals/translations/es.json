@@ -11,6 +11,7 @@
                 "pet_birthday": "Cumpleaños de mascota",
                 "work_anniversary": "Aniversario laboral",
                 "custom": "Personalizado",
+                "one_time": "Evento puntual",
                 "holiday": "Festivo"
             }
         },
@@ -62,7 +63,7 @@
                     "type": "Tipo de evento",
                     "day": "Día",
                     "month": "Mes",
-                    "year": "Año (dejar vacío si se desconoce)",
+                    "year": "Año (dejar vacío si se desconoce; obligatorio para eventos puntuales)",
                     "icon": "Sobrescribir icono (opcional)",
                     "vip": "VIP Annual"
                 }
@@ -76,7 +77,7 @@
                     "type": "Tipo de evento",
                     "day": "Día",
                     "month": "Mes",
-                    "year": "Año (dejar vacío si se desconoce)",
+                    "year": "Año (dejar vacío si se desconoce; obligatorio para eventos puntuales)",
                     "icon": "Sobrescribir icono (opcional)",
                     "vip": "VIP Annual"
                 }
@@ -84,7 +85,8 @@
         },
         "error": {
             "name_required": "Introduce un nombre.",
-            "invalid_date": "Esta combinación de día/mes/año no es una fecha válida."
+            "invalid_date": "Esta combinación de día/mes/año no es una fecha válida.",
+            "year_required": "Los eventos puntuales requieren un año."
         },
         "abort": {
             "hub_not_configurable": "El concentrador Annuals no tiene ajustes propios: solo contiene los calendarios compartidos.",
@@ -103,21 +105,21 @@
                     "type": "Tipo de evento",
                     "day": "Día",
                     "month": "Mes",
-                    "year": "Año (dejar vacío si se desconoce)",
+                    "year": "Año (dejar vacío si se desconoce; obligatorio para eventos puntuales)",
                     "icon": "Sobrescribir icono (opcional)",
                     "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "Importar eventos desde CSV",
-                "description": "Columnas: name, type, day, month, year (opcional), icon (opcional), vip (opcional), last_name (opcional). «type» debe ser una de estas claves en inglés: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (siempre en inglés, sin importar tu idioma). «vip» acepta 1/true/yes/y/x (sin distinguir mayúsculas/minúsculas); déjalo vacío u omite la columna para un evento que no sea VIP. Mantén todas las columnas aunque un valor esté vacío: una fila sin la coma final desplaza los valores siguientes hacia la izquierda. Las filas no válidas se omiten y quedan registradas.\n\nEjemplo:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Müller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n```",
+                "description": "Columnas: name, type, day, month, year (opcional, obligatorio para one_time), icon (opcional), vip (opcional), last_name (opcional). «type» debe ser una de estas claves en inglés: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (siempre en inglés, sin importar tu idioma). «vip» acepta 1/true/yes/y/x (sin distinguir mayúsculas/minúsculas); déjalo vacío u omite la columna para un evento que no sea VIP. Mantén todas las columnas aunque un valor esté vacío: una fila sin la coma final desplaza los valores siguientes hacia la izquierda. Las filas no válidas se omiten y quedan registradas.\n\nEjemplo:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nVacaciones familiares,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "Archivo CSV"
                 }
             },
             "import_ics": {
                 "title": "Importar eventos desde calendario ICS",
-                "description": "Sube un archivo de calendario .ics - normalmente un calendario de «Cumpleaños» exportado desde Contactos de Apple, Contactos de Google/Android u Outlook. Solo se leen las entradas de día completo sin excepciones de recurrencia; los eventos con hora se omiten. Los siguientes pasos te permiten revisar y corregir la división propuesta de nombre y apellido (e intercambiar nombre/apellido para todos a la vez) antes de importar nada.",
+                "description": "Sube un archivo de calendario .ics - normalmente un calendario exportado. Solo se leen las entradas de día completo sin excepciones de recurrencia; los eventos con hora se omiten. Los siguientes pasos te permiten revisar y corregir la división propuesta de nombre y apellido (e intercambiar nombre/apellido para todos a la vez) antes de importar nada.",
                 "data": {
                     "ics_file": "Archivo ICS"
                 }
@@ -132,14 +134,14 @@
             },
             "import_vcard": {
                 "title": "Importar cumpleaños desde vCard",
-                "description": "Sube un archivo .vcf - normalmente contactos exportados desde Contactos de Apple, Contactos de Google/Android u Outlook. Solo se leen las entradas con un cumpleaños establecido. El nombre y el apellido provienen de los campos de nombre estructurado del contacto, no de una suposición, y un cumpleaños sin año establecido (la forma en que vCard expresa esto) se mantiene como desconocido en lugar de inventarse. Los siguientes pasos te permiten revisar y corregir todo (e intercambiar nombre/apellido para todos a la vez) antes de importar nada.",
+                "description": "Sube un archivo .vcf - normalmente contactos exportados. Solo se leen las entradas con un cumpleaños establecido. El nombre y el apellido provienen de los campos de nombre estructurado del contacto, no de una suposición, y un cumpleaños sin año establecido (la forma en que vCard expresa esto) se mantiene como desconocido en lugar de inventarse. Los siguientes pasos te permiten revisar y corregir todo (e intercambiar nombre/apellido para todos a la vez) antes de importar nada.",
                 "data": {
                     "vcard_file": "Archivo vCard"
                 }
             },
             "import_vcard_other_dates": {
                 "title": "Importar otras fechas desde vCard",
-                "description": "Sube un archivo .vcf. Se leen todas las fechas excepto el cumpleaños: el campo estándar «Aniversario», además de cualquier fecha con etiqueta personalizada que Contactos de Apple/Google te permite añadir por contacto (por ejemplo, «Aniversario», «Otro» o una etiqueta escrita por ti). A diferencia de los cumpleaños, estas no son todas del mismo tipo de evento - los siguientes pasos te permiten revisar cada una, con su etiqueta detectada mostrada como referencia, y asignarle individualmente el tipo de evento correcto.",
+                "description": "Sube un archivo .vcf. Se leen todas las fechas excepto el cumpleaños: el campo estándar «Aniversario», además de cualquier fecha con etiqueta personalizada que tu aplicación de contactos te permite añadir por contacto (por ejemplo, «Aniversario», «Otro» o una etiqueta escrita por ti). A diferencia de los cumpleaños, estas no son todas del mismo tipo de evento - los siguientes pasos te permiten revisar cada una, con su etiqueta detectada mostrada como referencia, y asignarle individualmente el tipo de evento correcto.",
                 "data": {
                     "vcard_file": "Archivo vCard"
                 }
@@ -243,6 +245,7 @@
         "error": {
             "name_required": "Introduce un nombre.",
             "invalid_date": "Esta combinación de día/mes/año no es una fecha válida.",
+            "year_required": "Los eventos puntuales requieren un año.",
             "invalid_csv": "No se pudo leer este archivo como CSV. Comprueba la codificación y el formato.",
             "no_valid_rows": "No se encontraron filas válidas en este archivo. Consulta el registro para ver los detalles de las filas omitidas.",
             "invalid_ics": "No se pudo leer este archivo como calendario ICS. Comprueba el formato.",
@@ -302,6 +305,10 @@
                 "name": "{name}",
                 "unit_of_measurement": "días"
             },
+            "one_time": {
+                "name": "{name}",
+                "unit_of_measurement": "días"
+            },
             "holiday": {
                 "name": "{name}",
                 "unit_of_measurement": "días"
@@ -331,6 +338,9 @@
             },
             "custom": {
                 "name": "Eventos personalizados"
+            },
+            "one_time": {
+                "name": "Eventos puntuales"
             },
             "holiday": {
                 "name": "Festivos"

@@ -11,6 +11,7 @@
                 "pet_birthday": "Evcil hayvan doğum günü",
                 "work_anniversary": "İş yıl dönümü",
                 "custom": "Özel",
+                "one_time": "Tek seferlik etkinlik",
                 "holiday": "Tatil"
             }
         },
@@ -62,7 +63,7 @@
                     "type": "Etkinlik türü",
                     "day": "Gün",
                     "month": "Ay",
-                    "year": "Yıl (bilinmiyorsa boş bırakın)",
+                    "year": "Yıl (bilinmiyorsa boş bırakın; tek seferlik etkinlikler için zorunludur)",
                     "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
                     "vip": "VIP Annual"
                 }
@@ -76,7 +77,7 @@
                     "type": "Etkinlik türü",
                     "day": "Gün",
                     "month": "Ay",
-                    "year": "Yıl (bilinmiyorsa boş bırakın)",
+                    "year": "Yıl (bilinmiyorsa boş bırakın; tek seferlik etkinlikler için zorunludur)",
                     "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
                     "vip": "VIP Annual"
                 }
@@ -84,7 +85,8 @@
         },
         "error": {
             "name_required": "Lütfen bir ad girin.",
-            "invalid_date": "Bu gün/ay/yıl kombinasyonu geçerli bir tarih değil."
+            "invalid_date": "Bu gün/ay/yıl kombinasyonu geçerli bir tarih değil.",
+            "year_required": "Tek seferlik etkinlikler için yıl gereklidir."
         },
         "abort": {
             "hub_not_configurable": "Annuals merkezinin kendine ait ayarları yoktur - yalnızca paylaşılan takvimleri içerir.",
@@ -103,21 +105,21 @@
                     "type": "Etkinlik türü",
                     "day": "Gün",
                     "month": "Ay",
-                    "year": "Yıl (bilinmiyorsa boş bırakın)",
+                    "year": "Yıl (bilinmiyorsa boş bırakın; tek seferlik etkinlikler için zorunludur)",
                     "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
                     "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "CSV'den etkinlik içe aktar",
-                "description": "Sütunlar: name, type, day, month, year (isteğe bağlı), icon (isteğe bağlı), vip (isteğe bağlı), last_name (isteğe bağlı). \"type\" şu İngilizce anahtarlardan biri olmalıdır: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (dil ayarınızdan bağımsız olarak her zaman İngilizce). \"vip\" 1/true/yes/y/x değerlerini kabul eder (büyük/küçük harf duyarlı değildir); VIP olmayan bir etkinlik için boş bırakın veya sütunu atlayın. Bir değer boş olsa bile her sütunu koruyun - sonundaki virgülü eksik bir satır, sonraki değerleri sola kaydırır. Geçersiz satırlar atlanır ve günlüğe kaydedilir.\n\nÖrnek:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Müller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n```",
+                "description": "Sütunlar: name, type, day, month, year (isteğe bağlı, one_time için zorunlu), icon (isteğe bağlı), vip (isteğe bağlı), last_name (isteğe bağlı). \"type\" şu İngilizce anahtarlardan biri olmalıdır: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (dil ayarınızdan bağımsız olarak her zaman İngilizce). \"vip\" 1/true/yes/y/x değerlerini kabul eder (büyük/küçük harf duyarlı değildir); VIP olmayan bir etkinlik için boş bırakın veya sütunu atlayın. Bir değer boş olsa bile her sütunu koruyun - sonundaki virgülü eksik bir satır, sonraki değerleri sola kaydırır. Geçersiz satırlar atlanır ve günlüğe kaydedilir.\n\nÖrnek:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nAile Tatili,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "CSV dosyası"
                 }
             },
             "import_ics": {
                 "title": "ICS takviminden etkinlik içe aktar",
-                "description": "Bir .ics takvim dosyası yükleyin - genellikle Apple Kişiler, Google Kişiler/Android veya Outlook'tan dışa aktarılmış bir \"Doğum günleri\" takvimi. Yalnızca tüm gün süren ve yinelenme geçersiz kılması içermeyen girişler okunur; saat belirtilen etkinlikler atlanır. Sonraki adımlar, herhangi bir şey içe aktarılmadan önce önerilen ad/soyad bölünmesini gözden geçirip düzeltmenize (ve herkes için ad/soyadı tek seferde değiştirmenize) olanak tanır.",
+                "description": "Bir .ics takvim dosyası yükleyin - genellikle dışa aktarılmış bir takvim. Yalnızca tüm gün süren ve yinelenme geçersiz kılması içermeyen girişler okunur; saat belirtilen etkinlikler atlanır. Sonraki adımlar, herhangi bir şey içe aktarılmadan önce önerilen ad/soyad bölünmesini gözden geçirip düzeltmenize (ve herkes için ad/soyadı tek seferde değiştirmenize) olanak tanır.",
                 "data": {
                     "ics_file": "ICS dosyası"
                 }
@@ -132,14 +134,14 @@
             },
             "import_vcard": {
                 "title": "vCard'dan doğum günlerini içe aktar",
-                "description": "Bir .vcf dosyası yükleyin - genellikle Apple Kişiler, Google Kişiler/Android veya Outlook'tan dışa aktarılmış kişiler. Yalnızca doğum günü ayarlanmış girişler okunur. Ad/soyad bir tahminden değil, kişinin yapılandırılmış ad alanlarından alınır ve yılı belirtilmemiş bir doğum günü (vCard'ın bunu ifade etme biçimi) uydurulmak yerine bilinmiyor olarak tutulur. Sonraki adımlar, herhangi bir şey içe aktarılmadan önce her şeyi gözden geçirip düzeltmenize (ve herkes için ad/soyadı tek seferde değiştirmenize) olanak tanır.",
+                "description": "Bir .vcf dosyası yükleyin - genellikle dışa aktarılmış kişiler. Yalnızca doğum günü ayarlanmış girişler okunur. Ad/soyad bir tahminden değil, kişinin yapılandırılmış ad alanlarından alınır ve yılı belirtilmemiş bir doğum günü (vCard'ın bunu ifade etme biçimi) uydurulmak yerine bilinmiyor olarak tutulur. Sonraki adımlar, herhangi bir şey içe aktarılmadan önce her şeyi gözden geçirip düzeltmenize (ve herkes için ad/soyadı tek seferde değiştirmenize) olanak tanır.",
                 "data": {
                     "vcard_file": "vCard dosyası"
                 }
             },
             "import_vcard_other_dates": {
                 "title": "vCard'dan diğer tarihleri içe aktar",
-                "description": "Bir .vcf dosyası yükleyin. Doğum günü dışındaki her tarihi okur: standart \"Yıl dönümü\" (Anniversary) alanı ile Apple/Google Kişiler'in her kişi için eklemenize izin verdiği özel etiketli tarihler (örn. \"Anniversary\", \"Other\" veya kendi yazdığınız bir etiket). Doğum günlerinin aksine bunların hepsi aynı türde etkinlik değildir - sonraki adımlar, bağlam için algılanan etiketiyle birlikte her birini gözden geçirmenize ve her birine ayrı ayrı doğru etkinlik türünü atamanıza olanak tanır.",
+                "description": "Bir .vcf dosyası yükleyin. Doğum günü dışındaki her tarihi okur: standart \"Yıl dönümü\" (Anniversary) alanı ile kişiler uygulamanızın her kişi için eklemenize izin verdiği özel etiketli tarihler (örn. \"Anniversary\", \"Other\" veya kendi yazdığınız bir etiket). Doğum günlerinin aksine bunların hepsi aynı türde etkinlik değildir - sonraki adımlar, bağlam için algılanan etiketiyle birlikte her birini gözden geçirmenize ve her birine ayrı ayrı doğru etkinlik türünü atamanıza olanak tanır.",
                 "data": {
                     "vcard_file": "vCard dosyası"
                 }
@@ -243,6 +245,7 @@
         "error": {
             "name_required": "Lütfen bir ad girin.",
             "invalid_date": "Bu gün/ay/yıl kombinasyonu geçerli bir tarih değil.",
+            "year_required": "Tek seferlik etkinlikler için yıl gereklidir.",
             "invalid_csv": "Bu dosya CSV olarak okunamadı. Kodlamayı ve biçimi kontrol edin.",
             "no_valid_rows": "Bu dosyada geçerli satır bulunamadı. Atlanan satırların ayrıntıları için günlüğe bakın.",
             "invalid_ics": "Bu dosya ICS takvimi olarak okunamadı. Biçimi kontrol edin.",
@@ -302,6 +305,10 @@
                 "name": "{name}",
                 "unit_of_measurement": "gün"
             },
+            "one_time": {
+                "name": "{name}",
+                "unit_of_measurement": "gün"
+            },
             "holiday": {
                 "name": "{name}",
                 "unit_of_measurement": "gün"
@@ -331,6 +338,9 @@
             },
             "custom": {
                 "name": "Özel etkinlikler"
+            },
+            "one_time": {
+                "name": "Tek seferlik etkinlikler"
             },
             "holiday": {
                 "name": "Tatiller"

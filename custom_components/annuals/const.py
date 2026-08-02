@@ -36,6 +36,7 @@ TYPE_MEMORIAL = "memorial"
 TYPE_PET_BIRTHDAY = "pet_birthday"
 TYPE_WORK_ANNIVERSARY = "work_anniversary"
 TYPE_CUSTOM = "custom"
+TYPE_ONE_TIME = "one_time"
 TYPE_HOLIDAY = "holiday"
 
 # The manually-addable types - offered in the "Add event"/"Edit event" type
@@ -52,7 +53,15 @@ EVENT_TYPES = [
     TYPE_PET_BIRTHDAY,
     TYPE_WORK_ANNIVERSARY,
     TYPE_CUSTOM,
+    TYPE_ONE_TIME,
 ]
+
+# EVENT_TYPES minus TYPE_ONE_TIME, for the "Annual Settings" milestone-
+# threshold form specifically - a one-time event never recurs, so there's no
+# "which occurrence number counts as a milestone" question to ask for it (see
+# async_step_annual_settings). Every other manually-addable type still gets a
+# field there, same as before.
+MILESTONE_EVENT_TYPES = [t for t in EVENT_TYPES if t != TYPE_ONE_TIME]
 
 # Every type that gets its own aggregate per-type calendar (calendar.py) -
 # EVENT_TYPES plus holiday, which still deserves a calendar.annuals_holiday
@@ -71,6 +80,7 @@ TYPE_ICONS = {
     TYPE_PET_BIRTHDAY: "mdi:paw",
     TYPE_WORK_ANNIVERSARY: "mdi:briefcase",
     TYPE_CUSTOM: "mdi:calendar-heart",
+    TYPE_ONE_TIME: "mdi:timer-sand",
     TYPE_HOLIDAY: "mdi:flag-variant",
 }
 
@@ -132,7 +142,9 @@ CONF_IMPORTANT_THRESHOLDS = "important_thresholds"
 # numbers plus the traditional "special" birthdays (65/75/85/95); work
 # anniversaries in 5-year steps; wedding/memorial anniversaries at the
 # customary milestone years. Types with no cultural convention for a
-# milestone (name day, custom) default to empty.
+# milestone (name day, custom) default to empty. TYPE_ONE_TIME isn't in
+# MILESTONE_EVENT_TYPES at all (see above) - the "" here is only ever read as
+# a fallback default value, never actually shown as its own field.
 DEFAULT_IMPORTANT_THRESHOLDS = {
     TYPE_BIRTHDAY: "18,21,30,40,50,60,65,70,75,80,85,90,95,100",
     TYPE_ANNIVERSARY: "10,20,25,30,40,50,60,70,75,80,90,100",
@@ -142,5 +154,6 @@ DEFAULT_IMPORTANT_THRESHOLDS = {
     TYPE_PET_BIRTHDAY: "1,5,10,15,20",
     TYPE_WORK_ANNIVERSARY: "5,10,15,20,25,30,35,40,45,50",
     TYPE_CUSTOM: "",
+    TYPE_ONE_TIME: "",
     TYPE_HOLIDAY: "",
 }

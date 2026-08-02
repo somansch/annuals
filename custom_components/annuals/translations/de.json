@@ -11,6 +11,7 @@
                 "pet_birthday": "Tiergeburtstag",
                 "work_anniversary": "Firmenjubiläum",
                 "custom": "Frei wählbar",
+                "one_time": "Einmaliges Ereignis",
                 "holiday": "Feiertag"
             }
         },
@@ -62,7 +63,7 @@
                     "type": "Ereignistyp",
                     "day": "Tag",
                     "month": "Monat",
-                    "year": "Jahr (leer lassen, wenn unbekannt)",
+                    "year": "Jahr (leer lassen, wenn unbekannt; bei einmaligen Ereignissen erforderlich)",
                     "icon": "Icon überschreiben (optional)",
                     "vip": "VIP Annual"
                 }
@@ -76,7 +77,7 @@
                     "type": "Ereignistyp",
                     "day": "Tag",
                     "month": "Monat",
-                    "year": "Jahr (leer lassen, wenn unbekannt)",
+                    "year": "Jahr (leer lassen, wenn unbekannt; bei einmaligen Ereignissen erforderlich)",
                     "icon": "Icon überschreiben (optional)",
                     "vip": "VIP Annual"
                 }
@@ -84,7 +85,8 @@
         },
         "error": {
             "name_required": "Bitte einen Namen eingeben.",
-            "invalid_date": "Diese Tag/Monat/Jahr-Kombination ist kein gültiges Datum."
+            "invalid_date": "Diese Tag/Monat/Jahr-Kombination ist kein gültiges Datum.",
+            "year_required": "Einmalige Ereignisse benötigen ein Jahr."
         },
         "abort": {
             "hub_not_configurable": "Der Annuals-Hub hat keine eigenen Einstellungen – er hält nur die gemeinsamen Kalender.",
@@ -103,21 +105,21 @@
                     "type": "Ereignistyp",
                     "day": "Tag",
                     "month": "Monat",
-                    "year": "Jahr (leer lassen, wenn unbekannt)",
+                    "year": "Jahr (leer lassen, wenn unbekannt; bei einmaligen Ereignissen erforderlich)",
                     "icon": "Icon überschreiben (optional)",
                     "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "Ereignisse aus CSV importieren",
-                "description": "Spalten: name, type, day, month, year (optional), icon (optional), vip (optional), last_name (optional). Bei „type“ ist ausschließlich einer der folgenden englischen Schlüssel gültig: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (unabhängig von deiner Spracheinstellung). „vip“ akzeptiert 1/true/yes/y/x (Groß-/Kleinschreibung egal); leer lassen oder Spalte weglassen für ein nicht-VIP-Ereignis. Jede Spalte muss auch bei einem leeren Wert erhalten bleiben - fehlt ein Komma am Zeilenende, rutschen die folgenden Werte nach links. Ungültige Zeilen werden übersprungen und protokolliert.\n\nBeispiel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Müller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n```",
+                "description": "Spalten: name, type, day, month, year (optional), icon (optional), vip (optional), last_name (optional). Bei „type“ ist ausschließlich einer der folgenden englischen Schlüssel gültig: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (unabhängig von deiner Spracheinstellung). Bei one_time ist year zwingend erforderlich. „vip“ akzeptiert 1/true/yes/y/x (Groß-/Kleinschreibung egal); leer lassen oder Spalte weglassen für ein nicht-VIP-Ereignis. Jede Spalte muss auch bei einem leeren Wert erhalten bleiben - fehlt ein Komma am Zeilenende, rutschen die folgenden Werte nach links. Ungültige Zeilen werden übersprungen und protokolliert.\n\nBeispiel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamilienurlaub,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "CSV-Datei"
                 }
             },
             "import_ics": {
                 "title": "Ereignisse aus ICS-Kalender importieren",
-                "description": "Lade eine .ics-Kalenderdatei hoch - typischerweise ein exportierter „Geburtstage“-Kalender aus Apple Kontakte, Google Kontakte/Android oder Outlook. Es werden nur ganztägige Einträge ohne Wiederholungs-Override gelesen; Einträge mit Uhrzeit werden übersprungen. In den nächsten Schritten kannst du den vorgeschlagenen Vor-/Nachnamen-Split prüfen und korrigieren (und bei Bedarf für alle auf einmal vertauschen), bevor irgendetwas importiert wird.",
+                "description": "Lade eine .ics-Kalenderdatei hoch - typischerweise ein exportierter Kalender. Es werden nur ganztägige Einträge ohne Wiederholungs-Override gelesen; Einträge mit Uhrzeit werden übersprungen. In den nächsten Schritten kannst du den vorgeschlagenen Vor-/Nachnamen-Split prüfen und korrigieren (und bei Bedarf für alle auf einmal vertauschen), bevor irgendetwas importiert wird.",
                 "data": {
                     "ics_file": "ICS-Datei"
                 }
@@ -132,14 +134,14 @@
             },
             "import_vcard": {
                 "title": "Geburtstage aus vCard importieren",
-                "description": "Lade eine .vcf-Datei hoch - typischerweise exportierte Kontakte aus Apple Kontakte, Google Kontakte/Android oder Outlook. Es werden nur Einträge mit gesetztem Geburtsdatum gelesen. Vor-/Nachname kommen aus den strukturierten Namensfeldern des Kontakts, nicht aus einer Schätzung, und ein Geburtsdatum ohne Jahr (so wie es vCard selbst vorsieht) bleibt als unbekannt erhalten, statt erfunden zu werden. In den nächsten Schritten kannst du alles prüfen und korrigieren (und bei Bedarf Vor-/Nachname für alle auf einmal vertauschen), bevor irgendetwas importiert wird.",
+                "description": "Lade eine .vcf-Datei hoch - typischerweise exportierte Kontakte. Es werden nur Einträge mit gesetztem Geburtsdatum gelesen. Vor-/Nachname kommen aus den strukturierten Namensfeldern des Kontakts, nicht aus einer Schätzung, und ein Geburtsdatum ohne Jahr (so wie es vCard selbst vorsieht) bleibt als unbekannt erhalten, statt erfunden zu werden. In den nächsten Schritten kannst du alles prüfen und korrigieren (und bei Bedarf Vor-/Nachname für alle auf einmal vertauschen), bevor irgendetwas importiert wird.",
                 "data": {
                     "vcard_file": "vCard-Datei"
                 }
             },
             "import_vcard_other_dates": {
                 "title": "Weitere Termine aus vCard importieren",
-                "description": "Lade eine .vcf-Datei hoch. Liest jeden Termin außer dem Geburtstag: das Standardfeld „Jubiläum“ (Anniversary), plus jeden individuell beschrifteten Termin, den Apple/Google Kontakte pro Kontakt erlauben (z. B. „Anniversary“, „Other“, oder eine selbst eingegebene Beschriftung). Anders als Geburtstage sind das nicht alles Ereignisse desselben Typs - in den nächsten Schritten kannst du jeden Eintrag prüfen, samt erkannter Beschriftung zur Orientierung, und ihm einzeln den passenden Ereignistyp zuweisen.",
+                "description": "Lade eine .vcf-Datei hoch. Liest jeden Termin außer dem Geburtstag: das Standardfeld „Jubiläum“ (Anniversary), plus jeden individuell beschrifteten Termin, den deine Kontakte-App pro Kontakt erlaubt (z. B. „Anniversary“, „Other“, oder eine selbst eingegebene Beschriftung). Anders als Geburtstage sind das nicht alles Ereignisse desselben Typs - in den nächsten Schritten kannst du jeden Eintrag prüfen, samt erkannter Beschriftung zur Orientierung, und ihm einzeln den passenden Ereignistyp zuweisen.",
                 "data": {
                     "vcard_file": "vCard-Datei"
                 }
@@ -243,6 +245,7 @@
         "error": {
             "name_required": "Bitte einen Namen eingeben.",
             "invalid_date": "Diese Tag/Monat/Jahr-Kombination ist kein gültiges Datum.",
+            "year_required": "Einmalige Ereignisse benötigen ein Jahr.",
             "invalid_csv": "Diese Datei konnte nicht als CSV gelesen werden. Prüfe Kodierung und Format.",
             "no_valid_rows": "Keine gültigen Zeilen in dieser Datei gefunden. Details zu übersprungenen Zeilen stehen im Log.",
             "invalid_ics": "Diese Datei konnte nicht als ICS-Kalender gelesen werden. Prüfe das Format.",
@@ -302,6 +305,10 @@
                 "name": "{name}",
                 "unit_of_measurement": "Tage"
             },
+            "one_time": {
+                "name": "{name}",
+                "unit_of_measurement": "Tage"
+            },
             "holiday": {
                 "name": "{name}",
                 "unit_of_measurement": "Tage"
@@ -331,6 +338,9 @@
             },
             "custom": {
                 "name": "Frei wählbare Ereignisse"
+            },
+            "one_time": {
+                "name": "Einmalige Ereignisse"
             },
             "holiday": {
                 "name": "Feiertage"

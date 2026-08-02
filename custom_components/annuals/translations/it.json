@@ -11,6 +11,7 @@
                 "pet_birthday": "Compleanno animale",
                 "work_anniversary": "Anniversario lavorativo",
                 "custom": "Personalizzato",
+                "one_time": "Evento occasionale",
                 "holiday": "Festività"
             }
         },
@@ -62,7 +63,7 @@
                     "type": "Tipo di evento",
                     "day": "Giorno",
                     "month": "Mese",
-                    "year": "Anno (lasciare vuoto se sconosciuto)",
+                    "year": "Anno (lasciare vuoto se sconosciuto; obbligatorio per gli eventi occasionali)",
                     "icon": "Sovrascrivi icona (opzionale)",
                     "vip": "VIP Annual"
                 }
@@ -76,7 +77,7 @@
                     "type": "Tipo di evento",
                     "day": "Giorno",
                     "month": "Mese",
-                    "year": "Anno (lasciare vuoto se sconosciuto)",
+                    "year": "Anno (lasciare vuoto se sconosciuto; obbligatorio per gli eventi occasionali)",
                     "icon": "Sovrascrivi icona (opzionale)",
                     "vip": "VIP Annual"
                 }
@@ -84,7 +85,8 @@
         },
         "error": {
             "name_required": "Inserisci un nome.",
-            "invalid_date": "Questa combinazione di giorno/mese/anno non è una data valida."
+            "invalid_date": "Questa combinazione di giorno/mese/anno non è una data valida.",
+            "year_required": "Gli eventi occasionali richiedono un anno."
         },
         "abort": {
             "hub_not_configurable": "L'hub Annuals non ha impostazioni proprie: contiene solo i calendari condivisi.",
@@ -103,21 +105,21 @@
                     "type": "Tipo di evento",
                     "day": "Giorno",
                     "month": "Mese",
-                    "year": "Anno (lasciare vuoto se sconosciuto)",
+                    "year": "Anno (lasciare vuoto se sconosciuto; obbligatorio per gli eventi occasionali)",
                     "icon": "Sovrascrivi icona (opzionale)",
                     "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "Importa eventi da CSV",
-                "description": "Colonne: name, type, day, month, year (opzionale), icon (opzionale), vip (opzionale), last_name (opzionale). «type» deve essere una di queste chiavi inglesi: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (sempre in inglese, indipendentemente dalla lingua impostata). «vip» accetta 1/true/yes/y/x (senza distinzione tra maiuscole e minuscole); lascia vuoto oppure ometti la colonna per un evento non VIP. Mantieni ogni colonna anche se un valore è vuoto - una riga senza virgola finale sposta a sinistra i valori successivi. Le righe non valide vengono ignorate e registrate.\n\nEsempio:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Müller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n```",
+                "description": "Colonne: name, type, day, month, year (opzionale, obbligatorio per one_time), icon (opzionale), vip (opzionale), last_name (opzionale). «type» deve essere una di queste chiavi inglesi: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (sempre in inglese, indipendentemente dalla lingua impostata). «vip» accetta 1/true/yes/y/x (senza distinzione tra maiuscole e minuscole); lascia vuoto oppure ometti la colonna per un evento non VIP. Mantieni ogni colonna anche se un valore è vuoto - una riga senza virgola finale sposta a sinistra i valori successivi. Le righe non valide vengono ignorate e registrate.\n\nEsempio:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nVacanza in famiglia,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "File CSV"
                 }
             },
             "import_ics": {
                 "title": "Importa eventi da calendario ICS",
-                "description": "Carica un file di calendario .ics - tipicamente un calendario «Compleanni» esportato da Apple Contatti, Google Contatti/Android o Outlook. Vengono lette solo le voci per l'intera giornata e senza eccezioni di ricorrenza; gli eventi con orario vengono ignorati. Nei passaggi successivi potrai verificare e correggere la suddivisione proposta tra nome e cognome (e scambiare nome/cognome per tutti in una sola volta) prima che venga importato qualcosa.",
+                "description": "Carica un file di calendario .ics - tipicamente un calendario esportato. Vengono lette solo le voci per l'intera giornata e senza eccezioni di ricorrenza; gli eventi con orario vengono ignorati. Nei passaggi successivi potrai verificare e correggere la suddivisione proposta tra nome e cognome (e scambiare nome/cognome per tutti in una sola volta) prima che venga importato qualcosa.",
                 "data": {
                     "ics_file": "File ICS"
                 }
@@ -132,14 +134,14 @@
             },
             "import_vcard": {
                 "title": "Importa compleanni da vCard",
-                "description": "Carica un file .vcf - tipicamente contatti esportati da Apple Contatti, Google Contatti/Android o Outlook. Vengono lette solo le voci con un compleanno impostato. Nome e cognome provengono dai campi del nome strutturato del contatto, non da una supposizione, e un compleanno senza anno impostato (come previsto dallo stesso standard vCard) viene mantenuto come sconosciuto invece di essere inventato. Nei passaggi successivi potrai verificare e correggere tutto (e scambiare nome/cognome per tutti in una sola volta) prima che venga importato qualcosa.",
+                "description": "Carica un file .vcf - tipicamente contatti esportati. Vengono lette solo le voci con un compleanno impostato. Nome e cognome provengono dai campi del nome strutturato del contatto, non da una supposizione, e un compleanno senza anno impostato (come previsto dallo stesso standard vCard) viene mantenuto come sconosciuto invece di essere inventato. Nei passaggi successivi potrai verificare e correggere tutto (e scambiare nome/cognome per tutti in una sola volta) prima che venga importato qualcosa.",
                 "data": {
                     "vcard_file": "File vCard"
                 }
             },
             "import_vcard_other_dates": {
                 "title": "Importa altre date da vCard",
-                "description": "Carica un file .vcf. Legge ogni data diversa dal compleanno: il campo standard «Anniversario», oltre a qualsiasi data con etichetta personalizzata che Apple/Google Contatti permette di aggiungere per ciascun contatto (ad es. «Anniversario», «Altro», o un'etichetta digitata da te). A differenza dei compleanni, queste non sono tutte dello stesso tipo di evento - nei passaggi successivi potrai verificare ciascuna, con l'etichetta rilevata mostrata come riferimento, e assegnarle individualmente il tipo di evento corretto.",
+                "description": "Carica un file .vcf. Legge ogni data diversa dal compleanno: il campo standard «Anniversario», oltre a qualsiasi data con etichetta personalizzata che la tua app dei contatti permette di aggiungere per ciascun contatto (ad es. «Anniversario», «Altro», o un'etichetta digitata da te). A differenza dei compleanni, queste non sono tutte dello stesso tipo di evento - nei passaggi successivi potrai verificare ciascuna, con l'etichetta rilevata mostrata come riferimento, e assegnarle individualmente il tipo di evento corretto.",
                 "data": {
                     "vcard_file": "File vCard"
                 }
@@ -243,6 +245,7 @@
         "error": {
             "name_required": "Inserisci un nome.",
             "invalid_date": "Questa combinazione di giorno/mese/anno non è una data valida.",
+            "year_required": "Gli eventi occasionali richiedono un anno.",
             "invalid_csv": "Impossibile leggere questo file come CSV. Controlla la codifica e il formato.",
             "no_valid_rows": "Nessuna riga valida trovata in questo file. Controlla il registro per i dettagli sulle righe ignorate.",
             "invalid_ics": "Impossibile leggere questo file come calendario ICS. Controlla il formato.",
@@ -302,6 +305,10 @@
                 "name": "{name}",
                 "unit_of_measurement": "giorni"
             },
+            "one_time": {
+                "name": "{name}",
+                "unit_of_measurement": "giorni"
+            },
             "holiday": {
                 "name": "{name}",
                 "unit_of_measurement": "giorni"
@@ -331,6 +338,9 @@
             },
             "custom": {
                 "name": "Eventi personalizzati"
+            },
+            "one_time": {
+                "name": "Eventi occasionali"
             },
             "holiday": {
                 "name": "Festività"

@@ -11,6 +11,7 @@
                 "pet_birthday": "Narozeniny mazlíčka",
                 "work_anniversary": "Pracovní výročí",
                 "custom": "Vlastní",
+                "one_time": "Jednorázová událost",
                 "holiday": "Svátek"
             }
         },
@@ -62,7 +63,7 @@
                     "type": "Typ události",
                     "day": "Den",
                     "month": "Měsíc",
-                    "year": "Rok (ponechte prázdné, pokud není znám)",
+                    "year": "Rok (ponechte prázdné, pokud není znám; u jednorázových událostí povinné)",
                     "icon": "Vlastní ikona (volitelné)",
                     "vip": "VIP Annual"
                 }
@@ -76,7 +77,7 @@
                     "type": "Typ události",
                     "day": "Den",
                     "month": "Měsíc",
-                    "year": "Rok (ponechte prázdné, pokud není znám)",
+                    "year": "Rok (ponechte prázdné, pokud není znám; u jednorázových událostí povinné)",
                     "icon": "Vlastní ikona (volitelné)",
                     "vip": "VIP Annual"
                 }
@@ -84,7 +85,8 @@
         },
         "error": {
             "name_required": "Zadejte jméno.",
-            "invalid_date": "Tato kombinace den/měsíc/rok není platné datum."
+            "invalid_date": "Tato kombinace den/měsíc/rok není platné datum.",
+            "year_required": "Jednorázové události vyžadují rok."
         },
         "abort": {
             "hub_not_configurable": "Hub Annuals nemá vlastní nastavení – obsahuje pouze sdílené kalendáře.",
@@ -103,21 +105,21 @@
                     "type": "Typ události",
                     "day": "Den",
                     "month": "Měsíc",
-                    "year": "Rok (ponechte prázdné, pokud není znám)",
+                    "year": "Rok (ponechte prázdné, pokud není znám; u jednorázových událostí povinné)",
                     "icon": "Vlastní ikona (volitelné)",
                     "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "Import událostí z CSV",
-                "description": "Sloupce: name, type, day, month, year (volitelné), icon (volitelné), vip (volitelné), last_name (volitelné). „type“ musí být jeden z těchto anglických klíčů: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (vždy anglicky, bez ohledu na nastavení jazyka). „vip“ přijímá 1/true/yes/y/x (nezáleží na velikosti písmen); ponechte prázdné nebo sloupec vynechte pro událost bez VIP statusu. Zachovejte všechny sloupce i při prázdné hodnotě – řádek bez koncové čárky posune následující hodnoty o jednu doleva. Neplatné řádky se přeskočí a zaznamenají do protokolu.\n\nPříklad:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Müller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n```",
+                "description": "Sloupce: name, type, day, month, year (volitelné, u one_time povinné), icon (volitelné), vip (volitelné), last_name (volitelné). „type“ musí být jeden z těchto anglických klíčů: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (vždy anglicky, bez ohledu na nastavení jazyka). „vip“ přijímá 1/true/yes/y/x (nezáleží na velikosti písmen); ponechte prázdné nebo sloupec vynechte pro událost bez VIP statusu. Zachovejte všechny sloupce i při prázdné hodnotě – řádek bez koncové čárky posune následující hodnoty o jednu doleva. Neplatné řádky se přeskočí a zaznamenají do protokolu.\n\nPříklad:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nRodinná dovolená,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "Soubor CSV"
                 }
             },
             "import_ics": {
                 "title": "Import událostí z kalendáře ICS",
-                "description": "Nahrajte soubor kalendáře .ics – obvykle exportovaný kalendář „Narozeniny“ z Apple Kontaktů, Google Kontaktů/Androidu nebo Outlooku. Načítají se pouze celodenní záznamy bez výjimek opakování; časované události se přeskočí. V dalších krocích můžete zkontrolovat a opravit navržené rozdělení jména (a najednou prohodit jméno/příjmení u všech), než se cokoli importuje.",
+                "description": "Nahrajte soubor kalendáře .ics – obvykle exportovaný kalendář. Načítají se pouze celodenní záznamy bez výjimek opakování; časované události se přeskočí. V dalších krocích můžete zkontrolovat a opravit navržené rozdělení jména (a najednou prohodit jméno/příjmení u všech), než se cokoli importuje.",
                 "data": {
                     "ics_file": "Soubor ICS"
                 }
@@ -132,14 +134,14 @@
             },
             "import_vcard": {
                 "title": "Import narozenin z vCard",
-                "description": "Nahrajte soubor .vcf – obvykle exportované kontakty z Apple Kontaktů, Google Kontaktů/Androidu nebo Outlooku. Načítají se pouze záznamy s nastaveným datem narození. Jméno a příjmení pochází ze strukturovaných polí jména kontaktu, nikoli z odhadu, a datum narození bez nastaveného roku (způsob, jakým to vyjadřuje samotný formát vCard) zůstane neznámé místo vymyšlené hodnoty. V dalších krocích můžete vše zkontrolovat a opravit (a najednou prohodit jméno/příjmení u všech), než se cokoli importuje.",
+                "description": "Nahrajte soubor .vcf – obvykle exportované kontakty. Načítají se pouze záznamy s nastaveným datem narození. Jméno a příjmení pochází ze strukturovaných polí jména kontaktu, nikoli z odhadu, a datum narození bez nastaveného roku (způsob, jakým to vyjadřuje samotný formát vCard) zůstane neznámé místo vymyšlené hodnoty. V dalších krocích můžete vše zkontrolovat a opravit (a najednou prohodit jméno/příjmení u všech), než se cokoli importuje.",
                 "data": {
                     "vcard_file": "Soubor vCard"
                 }
             },
             "import_vcard_other_dates": {
                 "title": "Import ostatních dat z vCard",
-                "description": "Nahrajte soubor .vcf. Načte se každé datum kromě narození: standardní pole „Výročí“ a také jakékoli vlastně pojmenované datum, které Apple/Google Kontakty umožňují u kontaktu přidat (např. „Výročí“, „Ostatní“ nebo vámi zadaný popisek). Na rozdíl od narozenin nejde vždy o stejný druh události – v dalších krocích můžete každý záznam zkontrolovat, s jeho rozpoznaným popiskem pro kontext, a přiřadit mu individuálně správný typ události.",
+                "description": "Nahrajte soubor .vcf. Načte se každé datum kromě narození: standardní pole „Výročí“ a také jakékoli vlastně pojmenované datum, které vaše aplikace pro kontakty umožňuje u kontaktu přidat (např. „Výročí“, „Ostatní“ nebo vámi zadaný popisek). Na rozdíl od narozenin nejde vždy o stejný druh události – v dalších krocích můžete každý záznam zkontrolovat, s jeho rozpoznaným popiskem pro kontext, a přiřadit mu individuálně správný typ události.",
                 "data": {
                     "vcard_file": "Soubor vCard"
                 }
@@ -243,6 +245,7 @@
         "error": {
             "name_required": "Zadejte jméno.",
             "invalid_date": "Tato kombinace den/měsíc/rok není platné datum.",
+            "year_required": "Jednorázové události vyžadují rok.",
             "invalid_csv": "Tento soubor se nepodařilo přečíst jako CSV. Zkontrolujte kódování a formát.",
             "no_valid_rows": "V tomto souboru nebyly nalezeny žádné platné řádky. Podrobnosti o přeskočených řádcích najdete v protokolu.",
             "invalid_ics": "Tento soubor se nepodařilo přečíst jako kalendář ICS. Zkontrolujte formát.",
@@ -302,6 +305,10 @@
                 "name": "{name}",
                 "unit_of_measurement": "dní"
             },
+            "one_time": {
+                "name": "{name}",
+                "unit_of_measurement": "dní"
+            },
             "holiday": {
                 "name": "{name}",
                 "unit_of_measurement": "dní"
@@ -331,6 +338,9 @@
             },
             "custom": {
                 "name": "Vlastní události"
+            },
+            "one_time": {
+                "name": "Jednorázové události"
             },
             "holiday": {
                 "name": "Svátky"

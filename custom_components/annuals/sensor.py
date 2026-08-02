@@ -33,6 +33,7 @@ from .const import (
     SCAN_INTERVAL_HOURS,
     TYPE_HOLIDAY,
     TYPE_ICONS,
+    TYPE_ONE_TIME,
 )
 from .dates import (
     days_until,
@@ -41,6 +42,7 @@ from .dates import (
     next_holiday_occurrence,
     next_occurrence,
     occurrence_number,
+    one_time_date,
     parse_thresholds,
 )
 
@@ -115,8 +117,20 @@ class AnnualEventSensor(SensorEntity):
         month: int = data[CONF_MONTH]
         year: int | None = data.get(CONF_YEAR)
 
-        occurrence = next_occurrence(month, day, today)
-        occurrence_num = occurrence_number(year, occurrence)
+        # A one-time event (see TYPE_ONE_TIME in const.py) never recurs - its
+        # "occurrence" is just the literal stored date, not the next yearly
+        # repeat next_occurrence() would compute, and occurrence_number/
+        # "important" (which both describe *which* repeat this is) simply
+        # don't apply. year is always set for this type (enforced in
+        # config_flow._validate_and_normalise), so the plain int() is safe.
+        if event_type == TYPE_ONE_TIME:
+            occurrence = one_time_date(int(year), month, day)
+            occurrence_num = None
+            important = False
+        else:
+            occurrence = next_occurrence(month, day, today)
+            occurrence_num = occurrence_number(year, occurrence)
+            important = is_important(occurrence_num, self._important_thresholds(event_type))
 
         self._attr_native_value = days_until(occurrence, today)
         self._attr_extra_state_attributes: dict[str, Any] = {
@@ -130,7 +144,7 @@ class AnnualEventSensor(SensorEntity):
             "month": month,
             "year": year,
             "vip": bool(data.get(CONF_VIP, False)),
-            "important": is_important(occurrence_num, self._important_thresholds(event_type)),
+            "important": important,
         }
 
     def _update_holiday_state(self, data: dict, today: date) -> None:

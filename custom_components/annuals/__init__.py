@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import date
 import functools
 import logging
 from pathlib import Path
@@ -14,7 +15,16 @@ from homeassistant.helpers.event import async_track_time_change
 from homeassistant.helpers.storage import Store
 from homeassistant.helpers.typing import ConfigType
 
-from .const import CONF_HUB, DATA_SENSORS, DOMAIN
+from .const import (
+    CONF_DAY,
+    CONF_EVENT_TYPE,
+    CONF_HUB,
+    CONF_MONTH,
+    CONF_YEAR,
+    DATA_SENSORS,
+    DOMAIN,
+    TYPE_ONE_TIME,
+)
 from .helpers import hub_title
 from .http import AnnualsExportCsvView
 from .services import async_register_services
@@ -50,11 +60,34 @@ def _platforms_for(config_entry: ConfigEntry) -> list[Platform]:
     return HUB_PLATFORMS if config_entry.data.get(CONF_HUB) else EVENT_PLATFORMS
 
 
-async def _async_refresh_all_sensors(hass: HomeAssistant, _now) -> None:
-    """Force every AnnualEventSensor to recompute "days until" right after
-    local midnight, instead of leaving yesterday's count showing until each
-    sensor's next hourly poll happens to land (up to nearly an hour late).
+async def _async_purge_expired_one_time_events(hass: HomeAssistant) -> None:
+    """Remove one-time event entries (see TYPE_ONE_TIME in const.py) once
+    their date is in the past. Unlike every other type, a one-time event
+    never recurs - once it's over there's nothing left for it to count down
+    to, so (unlike everything else in this integration) it's cleaned up
+    automatically instead of sticking around until manually removed.
     """
+    today = date.today()
+    for entry in list(hass.config_entries.async_entries(DOMAIN)):
+        data = entry.data
+        if data.get(CONF_EVENT_TYPE) != TYPE_ONE_TIME:
+            continue
+        occurrence = date(data[CONF_YEAR], data[CONF_MONTH], data[CONF_DAY])
+        if occurrence < today:
+            _LOGGER.info(
+                "Annuals: removing expired one-time event '%s' (%s)", entry.title, occurrence
+            )
+            await hass.config_entries.async_remove(entry.entry_id)
+
+
+async def _async_midnight_tasks(hass: HomeAssistant, _now) -> None:
+    """Runs once a day, a few seconds after local midnight (see async_setup
+    below): first removes any one-time events whose date just passed, then
+    forces every remaining AnnualEventSensor to recompute "days until" -
+    instead of leaving yesterday's count showing until each sensor's next
+    hourly poll happens to land (up to nearly an hour late).
+    """
+    await _async_purge_expired_one_time_events(hass)
     sensors = list(hass.data.get(DOMAIN, {}).get(DATA_SENSORS, ()))
     _LOGGER.debug("Annuals: midnight refresh of %d sensor(s)", len(sensors))
     for sensor in sensors:
@@ -70,19 +103,38 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     # (not a lambda) so HA's event helper still recognises this as a
     # coroutine function and awaits it, instead of firing-and-forgetting it.
     async_track_time_change(
-        hass, functools.partial(_async_refresh_all_sensors, hass), hour=0, minute=0, second=5
+        hass, functools.partial(_async_midnight_tasks, hass), hour=0, minute=0, second=5
     )
 
     frontend_path = Path(__file__).parent / "frontend" / "annuals-card.js"
+    version = int(frontend_path.stat().st_mtime)
     await hass.http.async_register_static_paths(
         [StaticPathConfig(FRONTEND_JS_URL, str(frontend_path), False)]
     )
-    # cache_headers=False above only omits an explicit Cache-Control header -
-    # browsers still apply heuristic caching from Last-Modified/ETag, so a
-    # stale copy can survive a reload after the card is updated. Busting the
-    # URL with the file's own mtime forces a fresh fetch whenever it changes
-    # (i.e. on every restart after an update).
-    version = int(frontend_path.stat().st_mtime)
+    # cache_headers=False omits an explicit Cache-Control header - browsers
+    # still apply heuristic caching from Last-Modified/ETag, so a stale copy
+    # can survive a reload after the card is updated. Busting the URL with
+    # the file's own mtime forces a fresh fetch whenever it changes (i.e. on
+    # every restart after an update).
+    #
+    # A tempting-looking "improvement" was tried here once: cache_headers=True
+    # for a long, aggressive max-age, reasoning that the "?v=" cache-buster
+    # below makes any URL content-immutable so aggressive caching is safe.
+    # That reasoning has a hole: `version` is only ever recomputed at HA
+    # startup (this function only runs on integration setup), not whenever
+    # the file on disk actually changes. If the file changes without an
+    # intervening restart - exactly what happens while iterating on this
+    # card, but also possible in the wild depending on how an update is
+    # applied - the URL does NOT change, and a long max-age then means the
+    # browser keeps serving the OLD cached content under that same URL for
+    # the entire max-age window, never even asking the server again on a
+    # normal reload. That is strictly worse than the plain heuristic-caching
+    # behavior this reverts to (which still revalidates against
+    # Last-Modified/ETag on a normal reload) - confirmed live: after that
+    # change, only a hard refresh (cache-bypassing) picked up a new version;
+    # a normal F5 kept re-showing stale content instead of even the usual
+    # "custom element doesn't exist" race, which is a worse failure mode
+    # than what this was trying to fix in the first place.
     frontend.add_extra_js_url(hass, f"{FRONTEND_JS_URL}?v={version}")
 
     # The cache-busting "?v=" above only takes effect on a browser tab's next

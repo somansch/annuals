@@ -11,6 +11,7 @@
                 "pet_birthday": "宠物生日",
                 "work_anniversary": "工作纪念日",
                 "custom": "自定义",
+                "one_time": "单次事件",
                 "holiday": "节假日"
             }
         },
@@ -62,7 +63,7 @@
                     "type": "事件类型",
                     "day": "日",
                     "month": "月",
-                    "year": "年份（未知可留空）",
+                    "year": "年份（未知可留空；单次事件必填）",
                     "icon": "自定义图标（可选）",
                     "vip": "VIP Annual"
                 }
@@ -76,7 +77,7 @@
                     "type": "事件类型",
                     "day": "日",
                     "month": "月",
-                    "year": "年份（未知可留空）",
+                    "year": "年份（未知可留空；单次事件必填）",
                     "icon": "自定义图标（可选）",
                     "vip": "VIP Annual"
                 }
@@ -84,7 +85,8 @@
         },
         "error": {
             "name_required": "请输入姓名。",
-            "invalid_date": "此日/月/年组合不是有效日期。"
+            "invalid_date": "此日/月/年组合不是有效日期。",
+            "year_required": "单次事件必须填写年份。"
         },
         "abort": {
             "hub_not_configurable": "Annuals 中心没有自身设置 —— 它只保存共享日历。",
@@ -103,21 +105,21 @@
                     "type": "事件类型",
                     "day": "日",
                     "month": "月",
-                    "year": "年份（未知可留空）",
+                    "year": "年份（未知可留空；单次事件必填）",
                     "icon": "自定义图标（可选）",
                     "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "从 CSV 导入事件",
-                "description": "列：name、type、day、month、year（可选）、icon（可选）、vip（可选）、last_name（可选）。“type”必须是以下英文键之一：birthday、anniversary、name_day、wedding_anniversary、memorial、pet_birthday、work_anniversary、custom（始终使用英文，与语言设置无关）。“vip”接受 1/true/yes/y/x（不区分大小写）；留空或省略该列表示非 VIP 事件。即使某个值为空，也要保留该列 —— 缺少末尾逗号会导致后面的值向左移位。无效行会被跳过并记录到日志中。\n\n示例：\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Müller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n```",
+                "description": "列：name、type、day、month、year（可选，单次事件必填）、icon（可选）、vip（可选）、last_name（可选）。“type”必须是以下英文键之一：birthday、anniversary、name_day、wedding_anniversary、memorial、pet_birthday、work_anniversary、custom、one_time（始终使用英文，与语言设置无关）。“vip”接受 1/true/yes/y/x（不区分大小写）；留空或省略该列表示非 VIP 事件。即使某个值为空，也要保留该列 —— 缺少末尾逗号会导致后面的值向左移位。无效行会被跳过并记录到日志中。\n\n示例：\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n家庭度假,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "CSV 文件"
                 }
             },
             "import_ics": {
                 "title": "从 ICS 日历导入事件",
-                "description": "上传一个 .ics 日历文件 —— 通常是从 Apple 通讯录、Google 通讯录/Android 或 Outlook 导出的“生日”日历。仅读取全天、非重复覆盖的条目；带时间的事件会被跳过。接下来的步骤中，你可以在导入前检查并更正建议的姓名拆分（并一次性为所有条目互换名字/姓氏）。",
+                "description": "上传一个 .ics 日历文件 —— 通常是导出的日历。仅读取全天、非重复覆盖的条目；带时间的事件会被跳过。接下来的步骤中，你可以在导入前检查并更正建议的姓名拆分（并一次性为所有条目互换名字/姓氏）。",
                 "data": {
                     "ics_file": "ICS 文件"
                 }
@@ -132,14 +134,14 @@
             },
             "import_vcard": {
                 "title": "从 vCard 导入生日",
-                "description": "上传一个 .vcf 文件 —— 通常是从 Apple 通讯录、Google 通讯录/Android 或 Outlook 导出的联系人。仅读取设置了生日的条目。姓名来自联系人的结构化姓名字段，而非猜测；未设置年份的生日（vCard 自身表达此意的方式）会保留为未知，而不会被臆造。接下来的步骤中，你可以检查并更正所有内容（并一次性为所有条目互换名字/姓氏），然后再导入。",
+                "description": "上传一个 .vcf 文件 —— 通常是导出的联系人。仅读取设置了生日的条目。姓名来自联系人的结构化姓名字段，而非猜测；未设置年份的生日（vCard 自身表达此意的方式）会保留为未知，而不会被臆造。接下来的步骤中，你可以检查并更正所有内容（并一次性为所有条目互换名字/姓氏），然后再导入。",
                 "data": {
                     "vcard_file": "vCard 文件"
                 }
             },
             "import_vcard_other_dates": {
                 "title": "从 vCard 导入其他日期",
-                "description": "上传一个 .vcf 文件。读取除生日以外的所有日期：标准的“纪念日”字段，以及 Apple/Google 通讯录允许为每个联系人添加的任何自定义标签日期（例如“纪念日”“其他”或你自己输入的标签）。与生日不同，这些日期并非同一类事件 —— 接下来的步骤会逐一显示每个日期检测到的标签作为参考，供你分别审核并指定正确的事件类型。",
+                "description": "上传一个 .vcf 文件。读取除生日以外的所有日期：标准的“纪念日”字段，以及你的通讯录应用允许为每个联系人添加的任何自定义标签日期（例如“纪念日”“其他”或你自己输入的标签）。与生日不同，这些日期并非同一类事件 —— 接下来的步骤会逐一显示每个日期检测到的标签作为参考，供你分别审核并指定正确的事件类型。",
                 "data": {
                     "vcard_file": "vCard 文件"
                 }
@@ -243,6 +245,7 @@
         "error": {
             "name_required": "请输入姓名。",
             "invalid_date": "此日/月/年组合不是有效日期。",
+            "year_required": "单次事件必须填写年份。",
             "invalid_csv": "无法将此文件读取为 CSV。请检查编码和格式。",
             "no_valid_rows": "此文件中未找到有效行。请查看日志了解被跳过行的详情。",
             "invalid_ics": "无法将此文件读取为 ICS 日历。请检查格式。",
@@ -302,6 +305,10 @@
                 "name": "{name}",
                 "unit_of_measurement": "天"
             },
+            "one_time": {
+                "name": "{name}",
+                "unit_of_measurement": "天"
+            },
             "holiday": {
                 "name": "{name}",
                 "unit_of_measurement": "天"
@@ -331,6 +338,9 @@
             },
             "custom": {
                 "name": "自定义事件"
+            },
+            "one_time": {
+                "name": "单次事件"
             },
             "holiday": {
                 "name": "节假日"

@@ -11,6 +11,7 @@
                 "pet_birthday": "Kæledyrs fødselsdag",
                 "work_anniversary": "Jubilæum på arbejdet",
                 "custom": "Tilpasset",
+                "one_time": "Engangsbegivenhed",
                 "holiday": "Helligdag"
             }
         },
@@ -62,7 +63,7 @@
                     "type": "Begivenhedstype",
                     "day": "Dag",
                     "month": "Måned",
-                    "year": "År (lad stå tomt hvis ukendt)",
+                    "year": "År (lad stå tomt hvis ukendt; påkrævet for engangsbegivenheder)",
                     "icon": "Tilsidesæt ikon (valgfrit)",
                     "vip": "VIP Annual"
                 }
@@ -76,7 +77,7 @@
                     "type": "Begivenhedstype",
                     "day": "Dag",
                     "month": "Måned",
-                    "year": "År (lad stå tomt hvis ukendt)",
+                    "year": "År (lad stå tomt hvis ukendt; påkrævet for engangsbegivenheder)",
                     "icon": "Tilsidesæt ikon (valgfrit)",
                     "vip": "VIP Annual"
                 }
@@ -84,7 +85,8 @@
         },
         "error": {
             "name_required": "Angiv et navn.",
-            "invalid_date": "Denne kombination af dag/måned/år er ikke en gyldig dato."
+            "invalid_date": "Denne kombination af dag/måned/år er ikke en gyldig dato.",
+            "year_required": "Engangsbegivenheder kræver et år."
         },
         "abort": {
             "hub_not_configurable": "Annuals-hubben har ingen egne indstillinger - den indeholder kun de delte kalendere.",
@@ -103,21 +105,21 @@
                     "type": "Begivenhedstype",
                     "day": "Dag",
                     "month": "Måned",
-                    "year": "År (lad stå tomt hvis ukendt)",
+                    "year": "År (lad stå tomt hvis ukendt; påkrævet for engangsbegivenheder)",
                     "icon": "Tilsidesæt ikon (valgfrit)",
                     "vip": "VIP Annual"
                 }
             },
             "import_csv": {
                 "title": "Importer begivenheder fra CSV",
-                "description": "Kolonner: name, type, day, month, year (valgfrit), icon (valgfrit), vip (valgfrit), last_name (valgfrit). \"type\" skal være en af følgende engelske nøgler: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom (altid på engelsk, uanset dit sprogvalg). \"vip\" accepterer 1/true/yes/y/x (der skelnes ikke mellem store/små bogstaver); lad stå tomt eller undlad kolonnen for en ikke-VIP-begivenhed. Behold alle kolonner, selv når en værdi er tom - en række uden afsluttende komma rykker de følgende værdier et trin til venstre. Ugyldige rækker springes over og logges.\n\nEksempel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Müller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n```",
+                "description": "Kolonner: name, type, day, month, year (valgfrit, påkrævet for one_time), icon (valgfrit), vip (valgfrit), last_name (valgfrit). \"type\" skal være en af følgende engelske nøgler: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (altid på engelsk, uanset dit sprogvalg). \"vip\" accepterer 1/true/yes/y/x (der skelnes ikke mellem store/små bogstaver); lad stå tomt eller undlad kolonnen for en ikke-VIP-begivenhed. Behold alle kolonner, selv når en værdi er tom - en række uden afsluttende komma rykker de følgende værdier et trin til venstre. Ugyldige rækker springes over og logges.\n\nEksempel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamilieferie,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "CSV-fil"
                 }
             },
             "import_ics": {
                 "title": "Importer begivenheder fra ICS-kalender",
-                "description": "Upload en .ics-kalenderfil - typisk en eksporteret \"Fødselsdage\"-kalender fra Apple Kontakter, Google Kontakter/Android eller Outlook. Kun heldags-poster uden gentagelses-tilsidesættelser læses; tidsangivne begivenheder springes over. De næste trin lader dig gennemgå og rette den foreslåede navnedeling (og bytte fornavn/efternavn for alle på én gang), før noget importeres.",
+                "description": "Upload en .ics-kalenderfil - typisk en eksporteret kalender. Kun heldags-poster uden gentagelses-tilsidesættelser læses; tidsangivne begivenheder springes over. De næste trin lader dig gennemgå og rette den foreslåede navnedeling (og bytte fornavn/efternavn for alle på én gang), før noget importeres.",
                 "data": {
                     "ics_file": "ICS-fil"
                 }
@@ -132,14 +134,14 @@
             },
             "import_vcard": {
                 "title": "Importer fødselsdage fra vCard",
-                "description": "Upload en .vcf-fil - typisk eksporterede kontakter fra Apple Kontakter, Google Kontakter/Android eller Outlook. Kun poster med en angivet fødselsdag læses. Fornavn/efternavn hentes fra kontaktens strukturerede navnefelter, ikke et gæt, og en fødselsdag uden angivet år (vCard's egen måde at udtrykke dette på) bevares som ukendt i stedet for at blive opfundet. De næste trin lader dig gennemgå og rette alt (og bytte fornavn/efternavn for alle på én gang), før noget importeres.",
+                "description": "Upload en .vcf-fil - typisk eksporterede kontakter. Kun poster med en angivet fødselsdag læses. Fornavn/efternavn hentes fra kontaktens strukturerede navnefelter, ikke et gæt, og en fødselsdag uden angivet år (vCard's egen måde at udtrykke dette på) bevares som ukendt i stedet for at blive opfundet. De næste trin lader dig gennemgå og rette alt (og bytte fornavn/efternavn for alle på én gang), før noget importeres.",
                 "data": {
                     "vcard_file": "vCard-fil"
                 }
             },
             "import_vcard_other_dates": {
                 "title": "Importer øvrige datoer fra vCard",
-                "description": "Upload en .vcf-fil. Læser alle datoer ud over fødselsdagen: standardfeltet \"Jubilæum\", samt enhver tilpasset mærket dato, som Apple/Google Kontakter lader dig tilføje pr. kontakt (f.eks. \"Jubilæum\", \"Andet\" eller en selvvalgt mærkat). I modsætning til fødselsdage er disse ikke alle af samme type begivenhed - de næste trin lader dig gennemgå hver enkelt, med dens registrerede mærkat vist som kontekst, og tildele den korrekte begivenhedstype individuelt.",
+                "description": "Upload en .vcf-fil. Læser alle datoer ud over fødselsdagen: standardfeltet \"Jubilæum\", samt enhver tilpasset mærket dato, som din kontakt-app lader dig tilføje pr. kontakt (f.eks. \"Jubilæum\", \"Andet\" eller en selvvalgt mærkat). I modsætning til fødselsdage er disse ikke alle af samme type begivenhed - de næste trin lader dig gennemgå hver enkelt, med dens registrerede mærkat vist som kontekst, og tildele den korrekte begivenhedstype individuelt.",
                 "data": {
                     "vcard_file": "vCard-fil"
                 }
@@ -243,6 +245,7 @@
         "error": {
             "name_required": "Angiv et navn.",
             "invalid_date": "Denne kombination af dag/måned/år er ikke en gyldig dato.",
+            "year_required": "Engangsbegivenheder kræver et år.",
             "invalid_csv": "Kunne ikke læse denne fil som CSV. Tjek kodning og format.",
             "no_valid_rows": "Ingen gyldige rækker fundet i denne fil. Se loggen for detaljer om sprungede rækker.",
             "invalid_ics": "Kunne ikke læse denne fil som en ICS-kalender. Tjek formatet.",
@@ -302,6 +305,10 @@
                 "name": "{name}",
                 "unit_of_measurement": "dage"
             },
+            "one_time": {
+                "name": "{name}",
+                "unit_of_measurement": "dage"
+            },
             "holiday": {
                 "name": "{name}",
                 "unit_of_measurement": "dage"
@@ -331,6 +338,9 @@
             },
             "custom": {
                 "name": "Tilpassede begivenheder"
+            },
+            "one_time": {
+                "name": "Engangsbegivenheder"
             },
             "holiday": {
                 "name": "Helligdage"

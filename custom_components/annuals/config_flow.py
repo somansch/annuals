@@ -38,9 +38,11 @@ from .const import (
     DOMAIN,
     EVENT_TYPES,
     HUB_UNIQUE_ID,
+    MILESTONE_EVENT_TYPES,
     TYPE_BIRTHDAY,
     TYPE_CUSTOM,
     TYPE_HOLIDAY,
+    TYPE_ONE_TIME,
     TYPE_WEDDING_ANNIVERSARY,
 )
 from .dates import _holiday_calendar, holiday_key_from_name
@@ -161,6 +163,14 @@ def _validate_and_normalise(user_input: dict) -> tuple[dict | None, dict[str, st
     year = user_input.get(CONF_YEAR)
     year = int(year) if year is not None else None
 
+    # Unlike every other type, a one-time event (see TYPE_ONE_TIME in
+    # const.py) has no "unknown year" concept - its whole point is a single,
+    # exact, fixed date, so the year field that's optional for every other
+    # type is mandatory here.
+    if user_input[CONF_EVENT_TYPE] == TYPE_ONE_TIME and year is None:
+        errors[CONF_YEAR] = "year_required"
+        return None, errors
+
     # Validate against the given year when known (so Feb 29 in a non-leap
     # year is rejected as the impossible date it is), or against a leap year
     # when unknown (so a yearless Feb 29 stays allowed).
@@ -246,6 +256,12 @@ def _parse_csv_rows(text: str) -> tuple[list[dict], list[str]]:
             errors.append(f"line {line_no}: invalid day/month/year")
             continue
 
+        # Same "year is mandatory" rule as the manual add-event form - see
+        # _validate_and_normalise.
+        if event_type == TYPE_ONE_TIME and year is None:
+            errors.append(f"line {line_no}: one-time events require a year")
+            continue
+
         rows.append(
             {
                 CONF_EVENT_NAME: name,
@@ -314,7 +330,7 @@ def _extract_year_from_text(text: str) -> int | None:
 
 
 def _split_name(name: str) -> tuple[str, str]:
-    """Split "Anna Maria Schmidt" into ("Anna Maria", "Schmidt") - split on the
+    """Split "Anna Maria Miller" into ("Anna Maria", "Miller") - split on the
     last space, since that's the only heuristic that works without knowing the
     actual number of given names. No space at all means "first name only".
     """
@@ -677,7 +693,7 @@ def _find_import_duplicate(
     1. Same day/month, and the combined name overlaps (substring either
        direction, not equality - deliberately looser than _import_unique_id's
        exact match, so it also catches e.g. an existing "Anna" matching a new
-       "Anna Schmidt" on the same day, a case the exact dedup would treat as
+       "Anna Miller" on the same day, a case the exact dedup would treat as
        unrelated and create as a genuine new entry).
     2. Regardless of day/month, an exact (case-insensitive) full-name match -
        catches the same person under a different date (a source calendar
@@ -910,7 +926,7 @@ def _build_holiday_rows(
 
 
 async def _entry_title(hass: HomeAssistant, data: dict) -> str:
-    """Type-prefixed entry title, e.g. "Geburtstag: Anna Müller" (or just
+    """Type-prefixed entry title, e.g. "Geburtstag: Anna Miller" (or just
     "Geburtstag: Anna" with no last name set) - the prefix makes the
     alphabetically-sorted entry list on the integration page group by type,
     and the search box match on any part of the name, first or last.
@@ -1681,7 +1697,9 @@ class AnnualsOptionsFlow(OptionsFlow):
                 "label": f"{country}" + (f" ({subdivision})" if subdivision else "")
                 + f" - {len(entries)}",
             }
-            for (country, subdivision), entries in sorted(groups.items())
+            for (country, subdivision), entries in sorted(
+                groups.items(), key=lambda item: (item[0][0], item[0][1] or "")
+            )
         ]
 
         errors: dict[str, str] = {}
@@ -1775,7 +1793,7 @@ class AnnualsOptionsFlow(OptionsFlow):
                     f"{CONF_IMPORTANT_THRESHOLDS}_{event_type}": user_input.get(
                         f"{CONF_IMPORTANT_THRESHOLDS}_{event_type}", ""
                     )
-                    for event_type in EVENT_TYPES
+                    for event_type in MILESTONE_EVENT_TYPES
                 },
             }
             # Commit the new options ourselves *before* scheduling reloads -
@@ -1804,7 +1822,7 @@ class AnnualsOptionsFlow(OptionsFlow):
                         )
                     },
                 ): str
-                for event_type in EVENT_TYPES
+                for event_type in MILESTONE_EVENT_TYPES
             }
         )
         return self.async_show_form(step_id="annual_settings", data_schema=schema)

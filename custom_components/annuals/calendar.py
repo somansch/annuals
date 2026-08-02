@@ -23,6 +23,7 @@ from .const import (
     TYPE_CUSTOM,
     TYPE_HOLIDAY,
     TYPE_ICONS,
+    TYPE_ONE_TIME,
 )
 from .dates import (
     holiday_occurrence_in_year,
@@ -30,6 +31,7 @@ from .dates import (
     next_occurrence,
     occurrence_in_year,
     occurrence_number,
+    one_time_date,
 )
 from .helpers import async_event_type_labels, full_name
 
@@ -92,7 +94,7 @@ class AnnualsTypeCalendar(CalendarEntity):
         # Year's Day - Holiday" would just repeat what the calendar itself
         # (its plural type name) already says, and they have no occurrence
         # number (see dates.py). Every other type still gets "name - type".
-        if self._event_type in (TYPE_CUSTOM, TYPE_HOLIDAY):
+        if self._event_type in (TYPE_CUSTOM, TYPE_ONE_TIME, TYPE_HOLIDAY):
             return name
         number = occurrence_number(entry.data.get(CONF_YEAR), occurrence)
         suffix = f" ({number})" if number is not None else ""
@@ -117,6 +119,14 @@ class AnnualsTypeCalendar(CalendarEntity):
                 data[CONF_HOLIDAY_KEY],
                 today,
             )
+        if data[CONF_EVENT_TYPE] == TYPE_ONE_TIME:
+            # Never wraps to "next year" like next_occurrence() does below -
+            # a one-time event simply has no next year. None once it's in
+            # the past, same as a holiday with no more occurrences; in
+            # practice this entry is removed entirely by the midnight purge
+            # (see __init__.py) before that ever shows up here.
+            occurrence = one_time_date(data[CONF_YEAR], data[CONF_MONTH], data[CONF_DAY])
+            return occurrence if occurrence >= today else None
         return next_occurrence(data[CONF_MONTH], data[CONF_DAY], today)
 
     @staticmethod
@@ -130,6 +140,10 @@ class AnnualsTypeCalendar(CalendarEntity):
                 data[CONF_HOLIDAY_KEY],
                 year,
             )
+        if data[CONF_EVENT_TYPE] == TYPE_ONE_TIME:
+            # Only ever occurs in its own stored year, unlike every other
+            # type which repeats in every year of a multi-year range query.
+            return one_time_date(data[CONF_YEAR], data[CONF_MONTH], data[CONF_DAY]) if data[CONF_YEAR] == year else None
         return occurrence_in_year(data[CONF_MONTH], data[CONF_DAY], year)
 
     def _compute_event(self) -> CalendarEvent | None:

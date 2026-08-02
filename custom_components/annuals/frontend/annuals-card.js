@@ -5,6 +5,18 @@
 (() => {
   const ENTITY_PREFIX = "sensor.annuals_";
 
+  // How often AnnualsCard re-fetches embedded external calendars' own
+  // events (see _startExternalEventsPolling) while it's on-screen, as a
+  // safety net alongside the entity-state fast-path in
+  // externalCalendarsSignature: Home Assistant's state machine silently
+  // skips writing (and firing state_changed for) a coordinator refresh that
+  // produces the same state/attributes as before, and a calendar entity's
+  // state/attributes only ever reflect its single current/next event - so
+  // deleting or editing any OTHER event in the window is invisible to pure
+  // state-change reactivity. 5 minutes balances "stale data doesn't linger
+  // long" against not hammering the calendar integration's own API.
+  const EXTERNAL_EVENTS_POLL_MS = 5 * 60 * 1000;
+
   const EVENT_TYPES = [
     "birthday",
     "anniversary",
@@ -14,6 +26,7 @@
     "pet_birthday",
     "work_anniversary",
     "custom",
+    "one_time",
     "holiday",
   ];
 
@@ -71,7 +84,14 @@
         pet_birthday: "Pet birthday",
         work_anniversary: "Work anniversary",
         custom: "Custom",
+        one_time: "One-time event",
         holiday: "Holiday",
+        // Fallback only - an embedded external calendar's own event.typeLabel
+        // (its source calendar's name, see buildExternalEvent) is always
+        // shown instead wherever a type label appears; this only surfaces
+        // where a bare type name is needed with no event context, e.g. the
+        // Colors -> Event Types row label.
+        calendar: "Calendar event",
       },
       // Plural forms for the editor's "Event types" checkbox grid, which is
       // a filter over a whole category of events (English adjectives like
@@ -86,7 +106,9 @@
         pet_birthday: "Pet birthdays",
         work_anniversary: "Work anniversaries",
         custom: "Custom",
+        one_time: "One-time events",
         holiday: "Holidays",
+        calendar: "Calendar events",
       },
       categories: {
         public: "Public",
@@ -159,6 +181,15 @@
         timelineShowDate: "Show date",
         timelineShowDateDesc:
           "Append the short calendar date in parentheses at the end, e.g. \"...is in 3 days (6 Aug)\". Hidden on the event's own day, since the sentence already ends \"...is today\" right before it.",
+        timelineShowTime: "Show time",
+        timelineShowTimeDesc:
+          "Append an external calendar event's own time range in the same parentheses, e.g. \"...is in 3 days (03:00 PM–04:00 PM)\". Only ever shown for a timed (non all-day) external calendar event. The time format follows your Home Assistant language.",
+        timelineShowLocation: "Show location",
+        timelineShowLocationDesc:
+          "Append an external calendar event's own location in the same parentheses. Only ever shown for an external calendar event that has one set.",
+        timelineShowDescription: "Show description",
+        timelineShowDescriptionDesc:
+          "Append an external calendar event's own description in the same parentheses. Only ever shown for an external calendar event that has one set.",
         moreAction: "\"More\" button",
         moreActionDesc:
           "What the timeline's bottom-right \"More\" button does. Typically a Navigate action pointing at a dashboard that shows the same events in the full List layout. Leave it on \"Nothing\" to hide the button.",
@@ -200,7 +231,7 @@
         visibilityCountrySuffix: "Holiday suffix",
         visibilityCountrySuffixDesc: "Append the country (and subdivision, if any) after the holiday's name/type, e.g. “Independence Day · US (UT)”",
         columnsHeading: "Row columns",
-        columnsDesc: "Add, remove, and reorder what each row shows. Custom text columns can mix free text with placeholders: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
+        columnsDesc: "Add, remove, and reorder what each row shows. Custom text columns can mix free text with placeholders: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
         columnTypeIcon: "Icon",
         columnTypeInfo: "Name + type",
         columnTypeName: "Name",
@@ -210,6 +241,26 @@
         columnTypeType: "Type",
         columnTypeText: "Custom text",
         columnTypeDate: "Date",
+        columnTypeTime: "Time",
+        columnTypeLocation: "Location",
+        columnTypeDescription: "Description",
+        columnTypeTimeDesc:
+          "Append the external calendar event's own time range, e.g. \"...03:00 PM–05:00 PM\". Only ever shown for a timed (non all-day) external calendar event.",
+        columnTypeLocationDesc:
+          "Append the external calendar event's own location. Only ever shown for an external calendar event that has one set.",
+        columnTypeDescriptionDesc:
+          "Append the external calendar event's own description. Only ever shown for an external calendar event that has one set.",
+        suffixLabel: "Suffix",
+        suffixGroupHolidayTitle: "Holidays only",
+        suffixGroupExternalTitle: "External calendars only",
+        suffixShowCalendarName: "Calendar name",
+        suffixShowCalendarNameDesc:
+          "Show the external calendar's own name (e.g. \"Personal\") here. Turn off once Time/Location/Description below already say enough on their own.",
+        externalCalendarsHeading: "External calendars",
+        externalCalendarsDesc:
+          "Embed one or more of your existing Home Assistant calendars alongside Annuals' own events - each one lands on its real day (and, for timed events, sorts by time of day within that day) instead of any \"next occurrence\" math. Add a Time/Location/Description column above to show those fields for these events.",
+        externalCalendarsLabel: "Calendars",
+        externalCalendarsLabelDesc: "Which calendar.* entities to embed.",
         columnAdd: "Add",
         columnMoveUp: "Move up",
         columnMoveDown: "Move down",
@@ -404,7 +455,9 @@
         pet_birthday: "Tiergeburtstag",
         work_anniversary: "Firmenjubiläum",
         custom: "Frei wählbar",
+        one_time: "Einmaliges Ereignis",
         holiday: "Feiertag",
+        calendar: "Kalenderereignis",
       },
       // Plural forms for the editor's "Ereignistypen"/"Feiertagskategorien"
       // checkbox grids, which are filters over a whole category of events
@@ -420,7 +473,9 @@
         pet_birthday: "Tiergeburtstage",
         work_anniversary: "Firmenjubiläen",
         custom: "Frei wählbar",
+        one_time: "Einmalige Ereignisse",
         holiday: "Feiertage",
+        calendar: "Kalenderereignisse",
       },
       categories: {
         public: "Gesetzlich",
@@ -511,6 +566,15 @@
         timelineShowDate: "Datum anzeigen",
         timelineShowDateDesc:
           "Hängt am Ende das Kurzdatum in Klammern an, z. B. „... ist in 3 Tagen (6. Aug.)“. Wird am Tag selbst ausgeblendet, da der Satz direkt davor schon mit „... ist heute“ endet.",
+        timelineShowTime: "Uhrzeit anzeigen",
+        timelineShowTimeDesc:
+          "Hängt die Uhrzeit (Zeitspanne) eines externen Kalenderereignisses in denselben Klammern an, z. B. „... ist in 3 Tagen (14:00–15:00)“. Nur bei einem zeitgebundenen (nicht ganztägigen) externen Kalenderereignis sichtbar. Das Zeitformat richtet sich nach der Sprache von Home Assistant.",
+        timelineShowLocation: "Ort anzeigen",
+        timelineShowLocationDesc:
+          "Hängt den Ort eines externen Kalenderereignisses in denselben Klammern an. Nur sichtbar, wenn das externe Kalenderereignis einen Ort hinterlegt hat.",
+        timelineShowDescription: "Beschreibung anzeigen",
+        timelineShowDescriptionDesc:
+          "Hängt die Beschreibung eines externen Kalenderereignisses in denselben Klammern an. Nur sichtbar, wenn das externe Kalenderereignis eine Beschreibung hinterlegt hat.",
         moreAction: "„Mehr“-Schaltfläche",
         moreActionDesc:
           "Was die Schaltfläche „Mehr“ unten rechts in der Timeline auslöst. Üblicherweise eine Navigations-Aktion zu einem Dashboard, das dieselben Ereignisse im vollständigen Listen-Layout zeigt. Bei „Nichts“ wird die Schaltfläche ausgeblendet.",
@@ -552,7 +616,7 @@
         visibilityCountrySuffix: "Feiertagssuffix",
         visibilityCountrySuffixDesc: "Land (und ggf. Bundesland/Provinz) hinter dem Namen/Typ des Feiertags anhängen, z. B. „Tag der Deutschen Einheit · DE (BY)“",
         columnsHeading: "Zeilenspalten",
-        columnsDesc: "Lege fest, was jede Zeile anzeigt, und in welcher Reihenfolge. Eigene Textspalten können freien Text mit Platzhaltern kombinieren: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
+        columnsDesc: "Lege fest, was jede Zeile anzeigt, und in welcher Reihenfolge. Eigene Textspalten können freien Text mit Platzhaltern kombinieren: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
         columnTypeIcon: "Icon",
         columnTypeInfo: "Name + Typ",
         columnTypeName: "Name",
@@ -562,6 +626,26 @@
         columnTypeType: "Typ",
         columnTypeText: "Freier Text",
         columnTypeDate: "Datum",
+        columnTypeTime: "Uhrzeit",
+        columnTypeLocation: "Ort",
+        columnTypeDescription: "Beschreibung",
+        columnTypeTimeDesc:
+          "Hängt die eigene Uhrzeit (Zeitspanne) des externen Kalenderereignisses an, z. B. „...03:00 PM–05:00 PM“. Nur bei einem zeitgebundenen (nicht ganztägigen) externen Kalenderereignis sichtbar.",
+        columnTypeLocationDesc:
+          "Hängt den eigenen Ort des externen Kalenderereignisses an. Nur sichtbar, wenn beim externen Kalenderereignis ein Ort hinterlegt ist.",
+        columnTypeDescriptionDesc:
+          "Hängt die eigene Beschreibung des externen Kalenderereignisses an. Nur sichtbar, wenn beim externen Kalenderereignis eine Beschreibung hinterlegt ist.",
+        suffixLabel: "Suffix",
+        suffixGroupHolidayTitle: "Nur Feiertage",
+        suffixGroupExternalTitle: "Nur externe Kalender",
+        suffixShowCalendarName: "Kalendername",
+        suffixShowCalendarNameDesc:
+          "Zeigt hier den eigenen Namen des externen Kalenders an (z. B. „Privat“). Ausschalten, sobald Uhrzeit/Ort/Beschreibung unten für sich schon genug aussagen.",
+        externalCalendarsHeading: "Externe Kalender",
+        externalCalendarsDesc:
+          "Binde einen oder mehrere deiner bestehenden Home-Assistant-Kalender neben den eigenen Annuals-Ereignissen ein - jedes landet an seinem tatsächlichen Tag (und bei zeitgebundenen Ereignissen sortiert nach Uhrzeit innerhalb dieses Tages) statt nach irgendeiner „nächstes Vorkommen“-Berechnung. Füge oben eine Spalte für Uhrzeit/Ort/Beschreibung hinzu, um diese Felder für solche Ereignisse anzuzeigen.",
+        externalCalendarsLabel: "Kalender",
+        externalCalendarsLabelDesc: "Welche calendar.*-Entitäten eingebunden werden sollen.",
         columnAdd: "Hinzufügen",
         columnMoveUp: "Nach oben",
         columnMoveDown: "Nach unten",
@@ -750,7 +834,9 @@
         pet_birthday: "Anniversaire d'animal",
         work_anniversary: "Anniversaire professionnel",
         custom: "Personnalisé",
+        one_time: "Événement ponctuel",
         holiday: "Jour férié",
+        calendar: "Événement de calendrier",
       },
       typesPlural: {
         birthday: "Anniversaires",
@@ -761,7 +847,9 @@
         pet_birthday: "Anniversaires d'animaux",
         work_anniversary: "Anniversaires professionnels",
         custom: "Personnalisé",
+        one_time: "Événements ponctuels",
         holiday: "Jours fériés",
+        calendar: "Événements de calendrier",
       },
       categories: {
         public: "Public",
@@ -852,6 +940,15 @@
         timelineShowDate: "Afficher la date",
         timelineShowDateDesc:
           "Ajoute la date courte entre parenthèses à la fin, par ex. « ... est dans 3 jours (6 août) ». Masquée le jour même, la phrase se terminant déjà juste avant par « ... est aujourd'hui ».",
+        timelineShowTime: "Afficher l'heure",
+        timelineShowTimeDesc:
+          "Ajoute la plage horaire propre à un événement de calendrier externe dans les mêmes parenthèses, par ex. « ... est dans 3 jours (14:00–15:00) ». Affiché uniquement pour un événement de calendrier externe à heure fixe (non journée entière). Le format de l'heure suit la langue de Home Assistant.",
+        timelineShowLocation: "Afficher le lieu",
+        timelineShowLocationDesc:
+          "Ajoute le lieu propre à un événement de calendrier externe dans les mêmes parenthèses. Affiché uniquement pour un événement de calendrier externe ayant un lieu défini.",
+        timelineShowDescription: "Afficher la description",
+        timelineShowDescriptionDesc:
+          "Ajoute la description propre à un événement de calendrier externe dans les mêmes parenthèses. Affiché uniquement pour un événement de calendrier externe ayant une description définie.",
         moreAction: "Bouton « Plus »",
         moreActionDesc:
           "Ce que fait le bouton « Plus » en bas à droite de la timeline. Généralement une action de navigation vers un tableau de bord affichant les mêmes événements dans le layout Liste complet. Laissez sur « Rien » pour masquer le bouton.",
@@ -893,7 +990,7 @@
         visibilityCountrySuffix: "Suffixe du jour férié",
         visibilityCountrySuffixDesc: "Ajouter le pays (et la subdivision, le cas échéant) après le nom/type du jour férié, par ex. « Fête nationale · FR (75) »",
         columnsHeading: "Colonnes de ligne",
-        columnsDesc: "Ajoutez, supprimez et réorganisez ce que chaque ligne affiche. Les colonnes de texte libre peuvent combiner du texte libre avec des espaces réservés : {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
+        columnsDesc: "Ajoutez, supprimez et réorganisez ce que chaque ligne affiche. Les colonnes de texte libre peuvent combiner du texte libre avec des espaces réservés : {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
         columnTypeIcon: "Icône",
         columnTypeInfo: "Nom + type",
         columnTypeName: "Nom",
@@ -903,6 +1000,26 @@
         columnTypeType: "Type",
         columnTypeText: "Texte libre",
         columnTypeDate: "Date",
+        columnTypeTime: "Heure",
+        columnTypeLocation: "Lieu",
+        columnTypeDescription: "Description",
+        columnTypeTimeDesc:
+          "Ajoute la propre plage horaire de l'événement du calendrier externe, par ex. « ...15:00–17:00 ». Affiché uniquement pour un événement de calendrier externe avec horaire (non journée entière).",
+        columnTypeLocationDesc:
+          "Ajoute le propre lieu de l'événement du calendrier externe. Affiché uniquement si l'événement du calendrier externe en a un défini.",
+        columnTypeDescriptionDesc:
+          "Ajoute la propre description de l'événement du calendrier externe. Affiché uniquement si l'événement du calendrier externe en a une définie.",
+        suffixLabel: "Suffixe",
+        suffixGroupHolidayTitle: "Jours fériés uniquement",
+        suffixGroupExternalTitle: "Calendriers externes uniquement",
+        suffixShowCalendarName: "Nom du calendrier",
+        suffixShowCalendarNameDesc:
+          "Affiche ici le propre nom du calendrier externe (par ex. « Personnel »). Désactivez une fois que Heure/Lieu/Description ci-dessous en disent déjà assez.",
+        externalCalendarsHeading: "Calendriers externes",
+        externalCalendarsDesc:
+          "Intégrez un ou plusieurs de vos calendriers Home Assistant existants aux côtés des propres événements d'Annuals - chacun apparaît à sa date réelle (et, pour les événements à heure fixe, trié par heure au sein de cette date) plutôt que selon un calcul de « prochaine occurrence ». Ajoutez une colonne Heure/Lieu/Description ci-dessus pour afficher ces champs pour ces événements.",
+        externalCalendarsLabel: "Calendriers",
+        externalCalendarsLabelDesc: "Quelles entités calendar.* intégrer.",
         columnAdd: "Ajouter",
         columnMoveUp: "Monter",
         columnMoveDown: "Descendre",
@@ -1090,7 +1207,9 @@
         pet_birthday: "Verjaardag huisdier",
         work_anniversary: "Werkjubileum",
         custom: "Aangepast",
+        one_time: "Eenmalig evenement",
         holiday: "Feestdag",
+        calendar: "Kalendergebeurtenis",
       },
       typesPlural: {
         birthday: "Verjaardagen",
@@ -1101,7 +1220,9 @@
         pet_birthday: "Verjaardagen huisdier",
         work_anniversary: "Werkjubilea",
         custom: "Aangepast",
+        one_time: "Eenmalige evenementen",
         holiday: "Feestdagen",
+        calendar: "Kalendergebeurtenissen",
       },
       categories: {
         public: "Nationaal",
@@ -1192,6 +1313,15 @@
         timelineShowDate: "Datum tonen",
         timelineShowDateDesc:
           "Voegt aan het einde de korte datum tussen haakjes toe, bijv. „... is over 3 dagen (6 aug)”. Verborgen op de dag zelf, omdat de zin daar al eindigt met „... is vandaag”.",
+        timelineShowTime: "Tijd tonen",
+        timelineShowTimeDesc:
+          "Voegt de eigen tijdspanne van een extern kalenderevenement toe in dezelfde haakjes, bijv. „... is over 3 dagen (14:00–15:00)”. Alleen getoond voor een extern kalenderevenement met een vaste tijd (niet de hele dag). De tijdnotatie volgt de taal van Home Assistant.",
+        timelineShowLocation: "Locatie tonen",
+        timelineShowLocationDesc:
+          "Voegt de eigen locatie van een extern kalenderevenement toe in dezelfde haakjes. Alleen getoond voor een extern kalenderevenement met een ingestelde locatie.",
+        timelineShowDescription: "Beschrijving tonen",
+        timelineShowDescriptionDesc:
+          "Voegt de eigen beschrijving van een extern kalenderevenement toe in dezelfde haakjes. Alleen getoond voor een extern kalenderevenement met een ingestelde beschrijving.",
         moreAction: "„Meer”-knop",
         moreActionDesc:
           "Wat de „Meer”-knop rechtsonder in de timeline doet. Meestal een navigatie-actie naar een dashboard dat dezelfde evenementen in het volledige Lijst-layout toont. Laat op „Niets” staan om de knop te verbergen.",
@@ -1233,7 +1363,7 @@
         visibilityCountrySuffix: "Feestdagsuffix",
         visibilityCountrySuffixDesc: "Voeg het land (en eventueel de deelstaat/provincie) toe na de naam/type van de feestdag, bijv. „Bevrijdingsdag · NL (NH)”",
         columnsHeading: "Rijkolommen",
-        columnsDesc: "Voeg toe, verwijder en herschik wat elke rij toont. Eigen tekstkolommen kunnen vrije tekst combineren met plaatshouders: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
+        columnsDesc: "Voeg toe, verwijder en herschik wat elke rij toont. Eigen tekstkolommen kunnen vrije tekst combineren met plaatshouders: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
         columnTypeIcon: "Icoon",
         columnTypeInfo: "Naam + type",
         columnTypeName: "Naam",
@@ -1243,6 +1373,26 @@
         columnTypeType: "Type",
         columnTypeText: "Eigen tekst",
         columnTypeDate: "Datum",
+        columnTypeTime: "Tijd",
+        columnTypeLocation: "Locatie",
+        columnTypeDescription: "Beschrijving",
+        columnTypeTimeDesc:
+          "Voegt het eigen tijdsbereik van de externe agenda-afspraak toe, bijv. „...15:00–17:00”. Wordt alleen getoond voor een afspraak met vaste tijd (niet de hele dag) in een externe agenda.",
+        columnTypeLocationDesc:
+          "Voegt de eigen locatie van de externe agenda-afspraak toe. Wordt alleen getoond als de externe agenda-afspraak er een heeft ingesteld.",
+        columnTypeDescriptionDesc:
+          "Voegt de eigen beschrijving van de externe agenda-afspraak toe. Wordt alleen getoond als de externe agenda-afspraak er een heeft ingesteld.",
+        suffixLabel: "Suffix",
+        suffixGroupHolidayTitle: "Alleen feestdagen",
+        suffixGroupExternalTitle: "Alleen externe kalenders",
+        suffixShowCalendarName: "Kalendernaam",
+        suffixShowCalendarNameDesc:
+          "Toont hier de eigen naam van de externe kalender (bijv. „Privé”). Zet dit uit zodra Tijd/Locatie/Beschrijving hieronder al genoeg zeggen.",
+        externalCalendarsHeading: "Externe kalenders",
+        externalCalendarsDesc:
+          "Neem een of meer van je bestaande Home Assistant-kalenders op naast de eigen evenementen van Annuals - elk komt op zijn werkelijke dag terecht (en, voor evenementen met een vaste tijd, gesorteerd op tijdstip binnen die dag) in plaats van enige „eerstvolgende gebeurtenis”-berekening. Voeg hierboven een kolom Tijd/Locatie/Beschrijving toe om deze velden voor deze evenementen te tonen.",
+        externalCalendarsLabel: "Kalenders",
+        externalCalendarsLabelDesc: "Welke calendar.*-entiteiten moeten worden opgenomen.",
         columnAdd: "Toevoegen",
         columnMoveUp: "Omhoog",
         columnMoveDown: "Omlaag",
@@ -1436,7 +1586,9 @@
         pet_birthday: "Urodziny zwierzaka",
         work_anniversary: "Jubileusz pracy",
         custom: "Inne",
+        one_time: "Wydarzenie jednorazowe",
         holiday: "Święto",
+        calendar: "Wydarzenie z kalendarza",
       },
       typesPlural: {
         birthday: "Urodziny",
@@ -1447,7 +1599,9 @@
         pet_birthday: "Urodziny zwierzaków",
         work_anniversary: "Jubileusze pracy",
         custom: "Inne",
+        one_time: "Wydarzenia jednorazowe",
         holiday: "Święta",
+        calendar: "Wydarzenia z kalendarza",
       },
       categories: {
         public: "Państwowe",
@@ -1538,6 +1692,15 @@
         timelineShowDate: "Pokaż datę",
         timelineShowDateDesc:
           "Dodaje na końcu krótką datę w nawiasie, np. „... jest za 3 dni (6 sie)”. Ukryte w dniu wydarzenia, ponieważ zdanie kończy się wtedy już słowami „... jest dzisiaj”.",
+        timelineShowTime: "Pokaż godzinę",
+        timelineShowTimeDesc:
+          "Dodaje w tym samym nawiasie zakres godzin własny zewnętrznego wydarzenia z kalendarza, np. „... jest za 3 dni (14:00–15:00)”. Pokazywane tylko dla zewnętrznego wydarzenia z kalendarza o określonej godzinie (nie całodniowego). Format godziny zależy od języka Home Assistant.",
+        timelineShowLocation: "Pokaż lokalizację",
+        timelineShowLocationDesc:
+          "Dodaje w tym samym nawiasie lokalizację własną zewnętrznego wydarzenia z kalendarza. Pokazywane tylko dla zewnętrznego wydarzenia z kalendarza, które ma ustawioną lokalizację.",
+        timelineShowDescription: "Pokaż opis",
+        timelineShowDescriptionDesc:
+          "Dodaje w tym samym nawiasie opis własny zewnętrznego wydarzenia z kalendarza. Pokazywane tylko dla zewnętrznego wydarzenia z kalendarza, które ma ustawiony opis.",
         moreAction: "Przycisk „Więcej”",
         moreActionDesc:
           "Co robi przycisk „Więcej” w prawym dolnym rogu osi czasu. Zwykle akcja nawigacji do pulpitu pokazującego te same wydarzenia w pełnym układzie Lista. Pozostaw „Nic”, aby ukryć przycisk.",
@@ -1579,7 +1742,7 @@
         visibilityCountrySuffix: "Sufiks święta",
         visibilityCountrySuffixDesc: "Dodaj kraj (i ewentualnie region) po nazwie/typie święta, np. „Święto Niepodległości · PL (MAZ)”",
         columnsHeading: "Kolumny wiersza",
-        columnsDesc: "Dodawaj, usuwaj i zmieniaj kolejność tego, co pokazuje każdy wiersz. Kolumny własnego tekstu mogą łączyć dowolny tekst z symbolami zastępczymi: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
+        columnsDesc: "Dodawaj, usuwaj i zmieniaj kolejność tego, co pokazuje każdy wiersz. Kolumny własnego tekstu mogą łączyć dowolny tekst z symbolami zastępczymi: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
         columnTypeIcon: "Ikona",
         columnTypeInfo: "Nazwa + typ",
         columnTypeName: "Nazwa",
@@ -1589,6 +1752,26 @@
         columnTypeType: "Typ",
         columnTypeText: "Własny tekst",
         columnTypeDate: "Data",
+        columnTypeTime: "Godzina",
+        columnTypeLocation: "Lokalizacja",
+        columnTypeDescription: "Opis",
+        columnTypeTimeDesc:
+          "Dodaje własny zakres czasu wydarzenia z kalendarza zewnętrznego, np. „...15:00–17:00”. Widoczne tylko dla wydarzenia z określoną godziną (nie całodniowego) w kalendarzu zewnętrznym.",
+        columnTypeLocationDesc:
+          "Dodaje własną lokalizację wydarzenia z kalendarza zewnętrznego. Widoczne tylko, gdy wydarzenie w kalendarzu zewnętrznym ma ustawioną lokalizację.",
+        columnTypeDescriptionDesc:
+          "Dodaje własny opis wydarzenia z kalendarza zewnętrznego. Widoczne tylko, gdy wydarzenie w kalendarzu zewnętrznym ma ustawiony opis.",
+        suffixLabel: "Sufiks",
+        suffixGroupHolidayTitle: "Tylko święta",
+        suffixGroupExternalTitle: "Tylko kalendarze zewnętrzne",
+        suffixShowCalendarName: "Nazwa kalendarza",
+        suffixShowCalendarNameDesc:
+          "Pokazuje tutaj własną nazwę kalendarza zewnętrznego (np. „Prywatny”). Wyłącz, gdy Godzina/Lokalizacja/Opis poniżej mówią już wystarczająco dużo.",
+        externalCalendarsHeading: "Kalendarze zewnętrzne",
+        externalCalendarsDesc:
+          "Osadź jeden lub więcej istniejących kalendarzy Home Assistant obok własnych wydarzeń Annuals - każde z nich trafia na swój rzeczywisty dzień (a wydarzenia z określoną godziną są w obrębie tego dnia sortowane według pory dnia) zamiast być obliczane według logiki „następnego wystąpienia”. Dodaj powyżej kolumnę Godzina/Lokalizacja/Opis, aby pokazać te pola dla tych wydarzeń.",
+        externalCalendarsLabel: "Kalendarze",
+        externalCalendarsLabelDesc: "Które encje calendar.* osadzić.",
         columnAdd: "Dodaj",
         columnMoveUp: "Przenieś w górę",
         columnMoveDown: "Przenieś w dół",
@@ -1776,7 +1959,9 @@
         pet_birthday: "Cumpleaños de mascota",
         work_anniversary: "Aniversario laboral",
         custom: "Personalizado",
+        one_time: "Evento puntual",
         holiday: "Festivo",
+        calendar: "Evento de calendario",
       },
       typesPlural: {
         birthday: "Cumpleaños",
@@ -1787,7 +1972,9 @@
         pet_birthday: "Cumpleaños de mascota",
         work_anniversary: "Aniversarios laborales",
         custom: "Personalizado",
+        one_time: "Eventos puntuales",
         holiday: "Festivos",
+        calendar: "Eventos de calendario",
       },
       categories: {
         public: "Público",
@@ -1878,6 +2065,15 @@
         timelineShowDate: "Mostrar fecha",
         timelineShowDateDesc:
           "Añade la fecha corta entre paréntesis al final, p. ej. «... es en 3 días (6 ago)». Se oculta el día del propio evento, ya que la frase ya termina justo antes con «... es hoy».",
+        timelineShowTime: "Mostrar hora",
+        timelineShowTimeDesc:
+          "Añade el rango horario propio de un evento de calendario externo en los mismos paréntesis, p. ej. «... es en 3 días (14:00–15:00)». Solo se muestra para un evento de calendario externo con hora (no de todo el día). El formato de la hora sigue el idioma de Home Assistant.",
+        timelineShowLocation: "Mostrar ubicación",
+        timelineShowLocationDesc:
+          "Añade la ubicación propia de un evento de calendario externo en los mismos paréntesis. Solo se muestra para un evento de calendario externo que tenga una ubicación establecida.",
+        timelineShowDescription: "Mostrar descripción",
+        timelineShowDescriptionDesc:
+          "Añade la descripción propia de un evento de calendario externo en los mismos paréntesis. Solo se muestra para un evento de calendario externo que tenga una descripción establecida.",
         moreAction: "Botón «Más»",
         moreActionDesc:
           "Qué hace el botón «Más» de la esquina inferior derecha de la timeline. Normalmente una acción de navegación hacia un panel que muestra los mismos eventos en el diseño Lista completo. Déjalo en «Nada» para ocultar el botón.",
@@ -1919,7 +2115,7 @@
         visibilityCountrySuffix: "Sufijo del festivo",
         visibilityCountrySuffixDesc: "Añadir el país (y la subdivisión, si la hay) tras el nombre/tipo del festivo, p. ej. «Día de la Hispanidad · ES (MD)»",
         columnsHeading: "Columnas de fila",
-        columnsDesc: "Añade, elimina y reordena lo que muestra cada fila. Las columnas de texto personalizado pueden combinar texto libre con marcadores de posición: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
+        columnsDesc: "Añade, elimina y reordena lo que muestra cada fila. Las columnas de texto personalizado pueden combinar texto libre con marcadores de posición: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
         columnTypeIcon: "Icono",
         columnTypeInfo: "Nombre + tipo",
         columnTypeName: "Nombre",
@@ -1929,6 +2125,26 @@
         columnTypeType: "Tipo",
         columnTypeText: "Texto personalizado",
         columnTypeDate: "Fecha",
+        columnTypeTime: "Hora",
+        columnTypeLocation: "Ubicación",
+        columnTypeDescription: "Descripción",
+        columnTypeTimeDesc:
+          "Añade el propio intervalo horario del evento del calendario externo, p. ej. «...15:00–17:00». Solo se muestra para un evento con hora (no de todo el día) de un calendario externo.",
+        columnTypeLocationDesc:
+          "Añade la propia ubicación del evento del calendario externo. Solo se muestra si el evento del calendario externo tiene una definida.",
+        columnTypeDescriptionDesc:
+          "Añade la propia descripción del evento del calendario externo. Solo se muestra si el evento del calendario externo tiene una definida.",
+        suffixLabel: "Sufijo",
+        suffixGroupHolidayTitle: "Solo festivos",
+        suffixGroupExternalTitle: "Solo calendarios externos",
+        suffixShowCalendarName: "Nombre del calendario",
+        suffixShowCalendarNameDesc:
+          "Muestra aquí el propio nombre del calendario externo (p. ej. «Personal»). Desactívalo cuando Hora/Ubicación/Descripción de abajo ya digan suficiente por sí solos.",
+        externalCalendarsHeading: "Calendarios externos",
+        externalCalendarsDesc:
+          "Incorpora uno o más de tus calendarios existentes de Home Assistant junto a los propios eventos de Annuals - cada uno aparece en su día real (y, en el caso de eventos con hora, se ordena por hora del día dentro de ese día) en lugar de seguir ningún cálculo de «próxima ocurrencia». Añade arriba una columna de Hora/Ubicación/Descripción para mostrar esos campos en estos eventos.",
+        externalCalendarsLabel: "Calendarios",
+        externalCalendarsLabelDesc: "Qué entidades calendar.* incorporar.",
         columnAdd: "Añadir",
         columnMoveUp: "Subir",
         columnMoveDown: "Bajar",
@@ -2116,7 +2332,9 @@
         pet_birthday: "Compleanno animale",
         work_anniversary: "Anniversario lavorativo",
         custom: "Personalizzato",
+        one_time: "Evento occasionale",
         holiday: "Festività",
+        calendar: "Evento del calendario",
       },
       typesPlural: {
         birthday: "Compleanni",
@@ -2127,7 +2345,9 @@
         pet_birthday: "Compleanni degli animali",
         work_anniversary: "Anniversari lavorativi",
         custom: "Personalizzato",
+        one_time: "Eventi occasionali",
         holiday: "Festività",
+        calendar: "Eventi del calendario",
       },
       categories: {
         public: "Pubblico",
@@ -2218,6 +2438,15 @@
         timelineShowDate: "Mostra data",
         timelineShowDateDesc:
           "Aggiunge la data breve tra parentesi alla fine, ad es. «...è tra 3 giorni (6 ago)». Nascosta nel giorno stesso, poiché la frase termina già subito prima con «...è oggi».",
+        timelineShowTime: "Mostra ora",
+        timelineShowTimeDesc:
+          "Aggiunge l'intervallo orario di un evento del calendario esterno nelle stesse parentesi, ad es. «...è tra 3 giorni (14:00–15:00)». Mostrato solo per un evento del calendario esterno con orario (non per l'intera giornata). Il formato dell'ora segue la lingua di Home Assistant.",
+        timelineShowLocation: "Mostra luogo",
+        timelineShowLocationDesc:
+          "Aggiunge il luogo di un evento del calendario esterno nelle stesse parentesi. Mostrato solo per un evento del calendario esterno che ne ha uno impostato.",
+        timelineShowDescription: "Mostra descrizione",
+        timelineShowDescriptionDesc:
+          "Aggiunge la descrizione di un evento del calendario esterno nelle stesse parentesi. Mostrato solo per un evento del calendario esterno che ne ha una impostata.",
         moreAction: "Pulsante «Altro»",
         moreActionDesc:
           "Cosa fa il pulsante «Altro» in basso a destra nella timeline. Tipicamente un'azione di navigazione verso una dashboard che mostra gli stessi eventi nel layout Lista completo. Lascialo su «Nulla» per nascondere il pulsante.",
@@ -2259,7 +2488,7 @@
         visibilityCountrySuffix: "Suffisso festività",
         visibilityCountrySuffixDesc: "Aggiunge il paese (ed eventualmente la suddivisione) dopo il nome/tipo della festività, ad es. «Festa della Repubblica · IT (RM)»",
         columnsHeading: "Colonne di riga",
-        columnsDesc: "Aggiungi, rimuovi e riordina ciò che ogni riga mostra. Le colonne di testo libero possono combinare testo libero con segnaposto: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
+        columnsDesc: "Aggiungi, rimuovi e riordina ciò che ogni riga mostra. Le colonne di testo libero possono combinare testo libero con segnaposto: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
         columnTypeIcon: "Icona",
         columnTypeInfo: "Nome + tipo",
         columnTypeName: "Nome",
@@ -2269,6 +2498,26 @@
         columnTypeType: "Tipo",
         columnTypeText: "Testo libero",
         columnTypeDate: "Data",
+        columnTypeTime: "Ora",
+        columnTypeLocation: "Luogo",
+        columnTypeDescription: "Descrizione",
+        columnTypeTimeDesc:
+          "Aggiunge la propria fascia oraria dell'evento del calendario esterno, ad es. «...15:00–17:00». Visibile solo per un evento con orario (non per l'intera giornata) di un calendario esterno.",
+        columnTypeLocationDesc:
+          "Aggiunge il proprio luogo dell'evento del calendario esterno. Visibile solo se l'evento del calendario esterno ne ha uno impostato.",
+        columnTypeDescriptionDesc:
+          "Aggiunge la propria descrizione dell'evento del calendario esterno. Visibile solo se l'evento del calendario esterno ne ha una impostata.",
+        suffixLabel: "Suffisso",
+        suffixGroupHolidayTitle: "Solo festività",
+        suffixGroupExternalTitle: "Solo calendari esterni",
+        suffixShowCalendarName: "Nome del calendario",
+        suffixShowCalendarNameDesc:
+          "Mostra qui il nome proprio del calendario esterno (ad es. «Personale»). Disattivalo quando Ora/Luogo/Descrizione qui sotto dicono già abbastanza da soli.",
+        externalCalendarsHeading: "Calendari esterni",
+        externalCalendarsDesc:
+          "Incorpora uno o più dei tuoi calendari di Home Assistant esistenti insieme agli eventi propri di Annuals - ciascuno compare nel suo giorno reale (e, per gli eventi con orario, viene ordinato in base all'ora all'interno di quel giorno) invece di seguire il calcolo della «prossima occorrenza». Aggiungi sopra una colonna Ora/Luogo/Descrizione per mostrare questi campi per tali eventi.",
+        externalCalendarsLabel: "Calendari",
+        externalCalendarsLabelDesc: "Quali entità calendar.* incorporare.",
         columnAdd: "Aggiungi",
         columnMoveUp: "Sposta su",
         columnMoveDown: "Sposta giù",
@@ -2456,7 +2705,9 @@
         pet_birthday: "Aniversário de animal de estimação",
         work_anniversary: "Aniversário de trabalho",
         custom: "Personalizado",
+        one_time: "Evento único",
         holiday: "Feriado",
+        calendar: "Evento do calendário",
       },
       typesPlural: {
         birthday: "Aniversários",
@@ -2467,7 +2718,9 @@
         pet_birthday: "Aniversários de animais de estimação",
         work_anniversary: "Aniversários de trabalho",
         custom: "Personalizado",
+        one_time: "Eventos únicos",
         holiday: "Feriados",
+        calendar: "Eventos do calendário",
       },
       categories: {
         public: "Público",
@@ -2558,6 +2811,15 @@
         timelineShowDate: "Mostrar data",
         timelineShowDateDesc:
           "Adiciona a data curta entre parênteses no final, ex.: \"...é em 3 dias (6 ago)\". Ocultada no próprio dia do evento, já que a frase já termina logo antes com \"...é hoje\".",
+        timelineShowTime: "Mostrar horário",
+        timelineShowTimeDesc:
+          "Adiciona o intervalo de horário próprio de um evento de calendário externo nos mesmos parênteses, ex.: \"...é em 3 dias (14:00–15:00)\". Exibido apenas para um evento de calendário externo com horário definido (não de dia inteiro). O formato de horário segue o idioma do Home Assistant.",
+        timelineShowLocation: "Mostrar local",
+        timelineShowLocationDesc:
+          "Adiciona o local próprio de um evento de calendário externo nos mesmos parênteses. Exibido apenas para um evento de calendário externo que tenha um local definido.",
+        timelineShowDescription: "Mostrar descrição",
+        timelineShowDescriptionDesc:
+          "Adiciona a descrição própria de um evento de calendário externo nos mesmos parênteses. Exibido apenas para um evento de calendário externo que tenha uma descrição definida.",
         moreAction: "Botão \"Mais\"",
         moreActionDesc:
           "O que o botão \"Mais\" no canto inferior direito da timeline faz. Normalmente uma ação de navegação para um painel que mostra os mesmos eventos no layout Lista completo. Deixe em \"Nada\" para ocultar o botão.",
@@ -2599,7 +2861,7 @@
         visibilityCountrySuffix: "Sufixo do feriado",
         visibilityCountrySuffixDesc: "Acrescenta o país (e a subdivisão, se houver) após o nome/tipo do feriado, por ex. \"Independência do Brasil · BR (SP)\"",
         columnsHeading: "Colunas da linha",
-        columnsDesc: "Adicione, remova e reorganize o que cada linha mostra. Colunas de texto personalizado podem combinar texto livre com espaços reservados: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
+        columnsDesc: "Adicione, remova e reorganize o que cada linha mostra. Colunas de texto personalizado podem combinar texto livre com espaços reservados: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
         columnTypeIcon: "Ícone",
         columnTypeInfo: "Nome + tipo",
         columnTypeName: "Nome",
@@ -2609,6 +2871,26 @@
         columnTypeType: "Tipo",
         columnTypeText: "Texto personalizado",
         columnTypeDate: "Data",
+        columnTypeTime: "Horário",
+        columnTypeLocation: "Local",
+        columnTypeDescription: "Descrição",
+        columnTypeTimeDesc:
+          "Adiciona o próprio intervalo de horário do evento do calendário externo, por ex. \"...15:00–17:00\". Exibido apenas para um evento com horário definido (não de dia inteiro) de um calendário externo.",
+        columnTypeLocationDesc:
+          "Adiciona o próprio local do evento do calendário externo. Exibido apenas se o evento do calendário externo tiver um local definido.",
+        columnTypeDescriptionDesc:
+          "Adiciona a própria descrição do evento do calendário externo. Exibido apenas se o evento do calendário externo tiver uma descrição definida.",
+        suffixLabel: "Sufixo",
+        suffixGroupHolidayTitle: "Somente feriados",
+        suffixGroupExternalTitle: "Somente calendários externos",
+        suffixShowCalendarName: "Nome do calendário",
+        suffixShowCalendarNameDesc:
+          "Exibe aqui o próprio nome do calendário externo (por ex. \"Pessoal\"). Desative assim que Horário/Local/Descrição abaixo já disserem o suficiente por si só.",
+        externalCalendarsHeading: "Calendários externos",
+        externalCalendarsDesc:
+          "Incorpore um ou mais dos seus calendários existentes do Home Assistant junto aos eventos próprios do Annuals - cada um aparece no seu dia real (e, no caso de eventos com horário, é ordenado pelo horário dentro desse dia) em vez de qualquer cálculo de \"próxima ocorrência\". Adicione uma coluna de Horário/Local/Descrição acima para exibir esses campos nesses eventos.",
+        externalCalendarsLabel: "Calendários",
+        externalCalendarsLabelDesc: "Quais entidades calendar.* incorporar.",
         columnAdd: "Adicionar",
         columnMoveUp: "Mover para cima",
         columnMoveDown: "Mover para baixo",
@@ -2801,7 +3083,9 @@
         pet_birthday: "День рождения питомца",
         work_anniversary: "Трудовой юбилей",
         custom: "Другое",
+        one_time: "Разовое событие",
         holiday: "Праздник",
+        calendar: "Событие календаря",
       },
       typesPlural: {
         birthday: "Дни рождения",
@@ -2812,7 +3096,9 @@
         pet_birthday: "Дни рождения питомцев",
         work_anniversary: "Трудовые юбилеи",
         custom: "Другое",
+        one_time: "Разовые события",
         holiday: "Праздники",
+        calendar: "События календаря",
       },
       categories: {
         public: "Государственный",
@@ -2903,6 +3189,15 @@
         timelineShowDate: "Показывать дату",
         timelineShowDateDesc:
           "Добавляет в конце краткую дату в скобках, напр. «...через 3 дня (6 авг.)». Скрывается в день самого события, так как перед этим предложение уже заканчивается словами «...сегодня».",
+        timelineShowTime: "Показывать время",
+        timelineShowTimeDesc:
+          "Добавляет в тех же скобках собственный временной диапазон события внешнего календаря, напр. «...через 3 дня (14:00–15:00)». Показывается только для событий внешнего календаря с указанным временем (не для событий на весь день). Формат времени зависит от языка Home Assistant.",
+        timelineShowLocation: "Показывать место",
+        timelineShowLocationDesc:
+          "Добавляет в тех же скобках собственное место события внешнего календаря. Показывается только для событий внешнего календаря, для которых оно указано.",
+        timelineShowDescription: "Показывать описание",
+        timelineShowDescriptionDesc:
+          "Добавляет в тех же скобках собственное описание события внешнего календаря. Показывается только для событий внешнего календаря, для которых оно указано.",
         moreAction: "Кнопка «Ещё»",
         moreActionDesc:
           "Что делает кнопка «Ещё» в правом нижнем углу таймлайна. Обычно действие перехода на дашборд, показывающий те же события в полном макете Список. Оставьте «Ничего», чтобы скрыть кнопку.",
@@ -2944,7 +3239,7 @@
         visibilityCountrySuffix: "Суффикс праздника",
         visibilityCountrySuffixDesc: "Добавлять страну (и регион, если есть) после названия/типа праздника, напр. «День России · RU (MOW)»",
         columnsHeading: "Столбцы строки",
-        columnsDesc: "Добавляйте, удаляйте и меняйте порядок того, что показывает каждая строка. Столбцы произвольного текста могут сочетать свободный текст с плейсхолдерами: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
+        columnsDesc: "Добавляйте, удаляйте и меняйте порядок того, что показывает каждая строка. Столбцы произвольного текста могут сочетать свободный текст с плейсхолдерами: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
         columnTypeIcon: "Значок",
         columnTypeInfo: "Имя + тип",
         columnTypeName: "Имя",
@@ -2954,6 +3249,26 @@
         columnTypeType: "Тип",
         columnTypeText: "Произвольный текст",
         columnTypeDate: "Дата",
+        columnTypeTime: "Время",
+        columnTypeLocation: "Место",
+        columnTypeDescription: "Описание",
+        columnTypeTimeDesc:
+          "Добавляет собственный временной диапазон события внешнего календаря, например «...15:00–17:00». Отображается только для события с указанным временем (не на весь день) во внешнем календаре.",
+        columnTypeLocationDesc:
+          "Добавляет собственное место события внешнего календаря. Отображается, только если у события внешнего календаря оно указано.",
+        columnTypeDescriptionDesc:
+          "Добавляет собственное описание события внешнего календаря. Отображается, только если у события внешнего календаря оно указано.",
+        suffixLabel: "Суффикс",
+        suffixGroupHolidayTitle: "Только праздники",
+        suffixGroupExternalTitle: "Только внешние календари",
+        suffixShowCalendarName: "Название календаря",
+        suffixShowCalendarNameDesc:
+          "Показывает здесь собственное название внешнего календаря (например, «Личный»). Отключите, когда время/место/описание ниже уже достаточно информативны.",
+        externalCalendarsHeading: "Внешние календари",
+        externalCalendarsDesc:
+          "Встраивайте один или несколько ваших существующих календарей Home Assistant вместе с собственными событиями Annuals — каждое из них попадает на свой реальный день (а события с указанным временем сортируются по времени суток внутри этого дня) вместо вычисления «следующего повторения». Добавьте выше столбец Время/Место/Описание, чтобы показывать эти поля для таких событий.",
+        externalCalendarsLabel: "Календари",
+        externalCalendarsLabelDesc: "Какие сущности calendar.* встраивать.",
         columnAdd: "Добавить",
         columnMoveUp: "Переместить вверх",
         columnMoveDown: "Переместить вниз",
@@ -3145,7 +3460,9 @@
         pet_birthday: "Husdjurets födelsedag",
         work_anniversary: "Arbetsjubileum",
         custom: "Anpassad",
+        one_time: "Engångshändelse",
         holiday: "Helgdag",
+        calendar: "Kalenderhändelse",
       },
       typesPlural: {
         birthday: "Födelsedagar",
@@ -3156,7 +3473,9 @@
         pet_birthday: "Husdjurens födelsedagar",
         work_anniversary: "Arbetsjubileer",
         custom: "Anpassad",
+        one_time: "Engångshändelser",
         holiday: "Helgdagar",
+        calendar: "Kalenderhändelser",
       },
       categories: {
         public: "Allmän",
@@ -3247,6 +3566,15 @@
         timelineShowDate: "Visa datum",
         timelineShowDateDesc:
           "Lägger till det korta datumet inom parentes i slutet, t.ex. \"...är om 3 dagar (6 aug)\". Döljs på själva dagen, eftersom meningen redan slutar med \"...är idag\" precis innan.",
+        timelineShowTime: "Visa tid",
+        timelineShowTimeDesc:
+          "Lägger till en extern kalenderhändelses eget tidsintervall inom samma parentes, t.ex. \"...är om 3 dagar (14:00–15:00)\". Visas endast för en tidsbestämd (icke heldags) extern kalenderhändelse. Tidsformatet följer Home Assistants språkinställning.",
+        timelineShowLocation: "Visa plats",
+        timelineShowLocationDesc:
+          "Lägger till en extern kalenderhändelses egen plats inom samma parentes. Visas endast för en extern kalenderhändelse som har en plats angiven.",
+        timelineShowDescription: "Visa beskrivning",
+        timelineShowDescriptionDesc:
+          "Lägger till en extern kalenderhändelses egen beskrivning inom samma parentes. Visas endast för en extern kalenderhändelse som har en beskrivning angiven.",
         moreAction: "\"Mer\"-knapp",
         moreActionDesc:
           "Vad knappen \"Mer\" längst ned till höger i tidslinjen gör. Vanligtvis en navigeringsåtgärd till en instrumentpanel som visar samma händelser i det fullständiga Lista-layouten. Lämna på \"Inget\" för att dölja knappen.",
@@ -3289,7 +3617,7 @@
         visibilityCountrySuffixDesc: "Lägg till landet (och ev. delstat/region) efter helgdagens namn/typ, t.ex. \"Nationaldagen · SE (AB)\"",
         columnsHeading: "Radkolumner",
         columnsDesc:
-          "Lägg till, ta bort och ändra ordning på vad varje rad visar. Egna textkolumner kan blanda fri text med platshållare: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
+          "Lägg till, ta bort och ändra ordning på vad varje rad visar. Egna textkolumner kan blanda fri text med platshållare: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
         columnTypeIcon: "Ikon",
         columnTypeInfo: "Namn + typ",
         columnTypeName: "Namn",
@@ -3299,6 +3627,26 @@
         columnTypeType: "Typ",
         columnTypeText: "Egen text",
         columnTypeDate: "Datum",
+        columnTypeTime: "Tid",
+        columnTypeLocation: "Plats",
+        columnTypeDescription: "Beskrivning",
+        columnTypeTimeDesc:
+          "Lägg till den externa kalenderhändelsens egen tidsperiod, t.ex. \"...03:00 PM–05:00 PM\". Visas bara för en tidsbestämd (icke heldags-) extern kalenderhändelse.",
+        columnTypeLocationDesc:
+          "Lägg till den externa kalenderhändelsens egen plats. Visas bara för en extern kalenderhändelse som har en plats angiven.",
+        columnTypeDescriptionDesc:
+          "Lägg till den externa kalenderhändelsens egen beskrivning. Visas bara för en extern kalenderhändelse som har en beskrivning angiven.",
+        suffixLabel: "Suffix",
+        suffixGroupHolidayTitle: "Endast helgdagar",
+        suffixGroupExternalTitle: "Endast externa kalendrar",
+        suffixShowCalendarName: "Kalendernamn",
+        suffixShowCalendarNameDesc:
+          "Visa den externa kalenderns eget namn här (t.ex. \"Privat\"). Stäng av när Tid/Plats/Beskrivning nedan redan säger tillräckligt på egen hand.",
+        externalCalendarsHeading: "Externa kalendrar",
+        externalCalendarsDesc:
+          "Bädda in en eller flera av dina befintliga Home Assistant-kalendrar tillsammans med Annuals egna händelser - var och en hamnar på sin verkliga dag (och, för tidsbestämda händelser, sorteras efter tid på dygnet inom den dagen) istället för någon beräkning av \"nästa förekomst\". Lägg till en kolumn för Tid/Plats/Beskrivning ovan för att visa dessa fält för dessa händelser.",
+        externalCalendarsLabel: "Kalendrar",
+        externalCalendarsLabelDesc: "Vilka calendar.*-entiteter som ska bäddas in.",
         columnAdd: "Lägg till",
         columnMoveUp: "Flytta upp",
         columnMoveDown: "Flytta ner",
@@ -3491,7 +3839,9 @@
         pet_birthday: "宠物生日",
         work_anniversary: "工作纪念日",
         custom: "自定义",
+        one_time: "一次性事件",
         holiday: "假日",
+        calendar: "日历事件",
       },
       // Chinese nouns don't inflect for plural, so typesPlural/categoriesPlural
       // simply reuse the same singular labels as types/categories below.
@@ -3504,7 +3854,9 @@
         pet_birthday: "宠物生日",
         work_anniversary: "工作纪念日",
         custom: "自定义",
+        one_time: "一次性事件",
         holiday: "假日",
+        calendar: "日历事件",
       },
       categories: {
         public: "公共",
@@ -3591,6 +3943,13 @@
         showHolidaySuffixDesc: "在节日名称后以括号附加其所属国家（及地区，如有），例如「Pioneer Day (US-UT)」。",
         timelineShowDate: "显示日期",
         timelineShowDateDesc: "在末尾以括号附加简短日期，例如「...还有 3 天（8月6日）」。当天会自动隐藏，因为句子前面已经以「...就在今天」结尾。",
+        timelineShowTime: "显示时间",
+        timelineShowTimeDesc:
+          "在同一括号内附加外部日历事件自身的时间范围，例如「...还有 3 天（14:00-15:00）」。仅在外部日历事件为定时（非全天）事件时显示。时间格式遵循 Home Assistant 的语言设置。",
+        timelineShowLocation: "显示地点",
+        timelineShowLocationDesc: "在同一括号内附加外部日历事件自身的地点。仅在该外部日历事件设置了地点时显示。",
+        timelineShowDescription: "显示描述",
+        timelineShowDescriptionDesc: "在同一括号内附加外部日历事件自身的描述。仅在该外部日历事件设置了描述时显示。",
         moreAction: "「更多」按钮",
         moreActionDesc:
           "时间轴右下角「更多」按钮的作用。通常是跳转到以完整列表布局显示相同事件的仪表盘的导航操作。留空为「无」可隐藏该按钮。",
@@ -3632,7 +3991,7 @@
         visibilityCountrySuffixDesc: "在节假日名称/类型后附加国家（及地区，如有），例如“国庆节 · CN (BJ)”",
         columnsHeading: "行列",
         columnsDesc:
-          "添加、删除并重新排列每行显示的内容。自定义文本列可以混合自由文本与占位符：{name}、{last_name}、{full_name}、{type}、{occurrence}、{when}、{date}、{country}。",
+          "添加、删除并重新排列每行显示的内容。自定义文本列可以混合自由文本与占位符：{name}、{last_name}、{full_name}、{type}、{occurrence}、{when}、{date}、{country}、{time}、{location}、{description}。",
         columnTypeIcon: "图标",
         columnTypeInfo: "名称 + 类型",
         columnTypeName: "名称",
@@ -3642,6 +4001,26 @@
         columnTypeType: "类型",
         columnTypeText: "自定义文本",
         columnTypeDate: "日期",
+        columnTypeTime: "时间",
+        columnTypeLocation: "地点",
+        columnTypeDescription: "描述",
+        columnTypeTimeDesc:
+          "附加外部日历事件自身的时间范围，例如「...03:00 PM-05:00 PM」。仅在外部日历事件为定时（非全天）事件时显示。",
+        columnTypeLocationDesc:
+          "附加外部日历事件自身的地点。仅在该外部日历事件设置了地点时显示。",
+        columnTypeDescriptionDesc:
+          "附加外部日历事件自身的描述。仅在该外部日历事件设置了描述时显示。",
+        suffixLabel: "后缀",
+        suffixGroupHolidayTitle: "仅限节假日",
+        suffixGroupExternalTitle: "仅限外部日历",
+        suffixShowCalendarName: "日历名称",
+        suffixShowCalendarNameDesc:
+          "在此显示外部日历自身的名称（例如「个人」）。一旦下方的时间/地点/描述已经足够说明，可关闭此项。",
+        externalCalendarsHeading: "外部日历",
+        externalCalendarsDesc:
+          "将一个或多个现有的 Home Assistant 日历与 Annuals 自身的事件一起嵌入 - 每个事件都会显示在其实际发生的日期（对于定时事件，还会在当天按时间排序），而不是套用任何「下一次发生」的计算。请在上方添加时间/地点/描述列，以显示这些事件的相应字段。",
+        externalCalendarsLabel: "日历",
+        externalCalendarsLabelDesc: "要嵌入哪些 calendar.* 实体。",
         columnAdd: "添加",
         columnMoveUp: "上移",
         columnMoveDown: "下移",
@@ -3831,7 +4210,9 @@
         pet_birthday: "Narozeniny mazlíčka",
         work_anniversary: "Pracovní výročí",
         custom: "Vlastní",
+        one_time: "Jednorázová událost",
         holiday: "Státní svátek",
+        calendar: "Kalendářní událost",
       },
       typesPlural: {
         birthday: "Narozeniny",
@@ -3842,7 +4223,9 @@
         pet_birthday: "Narozeniny mazlíčků",
         work_anniversary: "Pracovní výročí",
         custom: "Vlastní",
+        one_time: "Jednorázové události",
         holiday: "Státní svátky",
+        calendar: "Kalendářní události",
       },
       categories: {
         public: "Veřejný",
@@ -3933,6 +4316,15 @@
         timelineShowDate: "Zobrazit datum",
         timelineShowDateDesc:
           "Na konci přidá v závorce krátké datum, např. „...je za 3 dny (6. srp)“. V den samotné události je skryto, protože věta už těsně předtím končí slovy „...je dnes“.",
+        timelineShowTime: "Zobrazit čas",
+        timelineShowTimeDesc:
+          "Ve stejné závorce přidá vlastní časové rozmezí externí kalendářní události, např. „...je za 3 dny (14:00–15:00)“. Zobrazuje se pouze u časově vymezené (nikoli celodenní) externí kalendářní události. Formát času se řídí jazykem nastaveným v Home Assistant.",
+        timelineShowLocation: "Zobrazit místo",
+        timelineShowLocationDesc:
+          "Ve stejné závorce přidá vlastní místo externí kalendářní události. Zobrazuje se pouze u externí kalendářní události, která má místo nastaveno.",
+        timelineShowDescription: "Zobrazit popis",
+        timelineShowDescriptionDesc:
+          "Ve stejné závorce přidá vlastní popis externí kalendářní události. Zobrazuje se pouze u externí kalendářní události, která má popis nastaven.",
         moreAction: "Tlačítko „Více“",
         moreActionDesc:
           "Co dělá tlačítko „Více“ vpravo dole na časové ose. Obvykle akce navigace na řídicí panel zobrazující stejné události v plném rozvržení Seznam. Ponechte na „Nic“, chcete-li tlačítko skrýt.",
@@ -3975,7 +4367,7 @@
         visibilityCountrySuffixDesc: "Připojit zemi (a případně kraj) za název/typ svátku, např. „Den české státnosti · CZ (PR)“",
         columnsHeading: "Sloupce řádku",
         columnsDesc:
-          "Přidávejte, odebírejte a měňte pořadí toho, co každý řádek zobrazuje. Vlastní textové sloupce mohou kombinovat volný text se zástupnými symboly: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
+          "Přidávejte, odebírejte a měňte pořadí toho, co každý řádek zobrazuje. Vlastní textové sloupce mohou kombinovat volný text se zástupnými symboly: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
         columnTypeIcon: "Ikona",
         columnTypeInfo: "Jméno + typ",
         columnTypeName: "Jméno",
@@ -3985,6 +4377,26 @@
         columnTypeType: "Typ",
         columnTypeText: "Vlastní text",
         columnTypeDate: "Datum",
+        columnTypeTime: "Čas",
+        columnTypeLocation: "Místo",
+        columnTypeDescription: "Popis",
+        columnTypeTimeDesc:
+          "Přidá vlastní časové rozmezí externí kalendářní události, např. „...03:00 PM–05:00 PM“. Zobrazuje se pouze u časově vymezené (nikoli celodenní) externí kalendářní události.",
+        columnTypeLocationDesc:
+          "Přidá vlastní místo externí kalendářní události. Zobrazuje se pouze u externí kalendářní události, která má místo nastavené.",
+        columnTypeDescriptionDesc:
+          "Přidá vlastní popis externí kalendářní události. Zobrazuje se pouze u externí kalendářní události, která má popis nastavený.",
+        suffixLabel: "Přípona",
+        suffixGroupHolidayTitle: "Pouze svátky",
+        suffixGroupExternalTitle: "Pouze externí kalendáře",
+        suffixShowCalendarName: "Název kalendáře",
+        suffixShowCalendarNameDesc:
+          "Zobrazí zde vlastní název externího kalendáře (např. „Osobní“). Vypněte, jakmile níže uvedené Čas/Místo/Popis samy o sobě říkají dost.",
+        externalCalendarsHeading: "Externí kalendáře",
+        externalCalendarsDesc:
+          "Vloží jeden nebo více vašich stávajících kalendářů Home Assistant vedle vlastních událostí Annuals - každá skončí ve svém skutečném dni (a u časově vymezených událostí je v rámci daného dne seřazena podle času) místo jakéhokoli výpočtu „příštího výskytu“. Chcete-li u těchto událostí zobrazit pole čas/místo/popis, přidejte výše odpovídající sloupec.",
+        externalCalendarsLabel: "Kalendáře",
+        externalCalendarsLabelDesc: "Které entity calendar.* se mají vložit.",
         columnAdd: "Přidat",
         columnMoveUp: "Posunout nahoru",
         columnMoveDown: "Posunout dolů",
@@ -4175,7 +4587,9 @@
         pet_birthday: "Kjæledyrs bursdag",
         work_anniversary: "Arbeidsjubileum",
         custom: "Egendefinert",
+        one_time: "Engangshendelse",
         holiday: "Helligdag",
+        calendar: "Kalenderhendelse",
       },
       typesPlural: {
         birthday: "Bursdager",
@@ -4186,7 +4600,9 @@
         pet_birthday: "Kjæledyrs bursdager",
         work_anniversary: "Arbeidsjubileer",
         custom: "Egendefinert",
+        one_time: "Engangshendelser",
         holiday: "Helligdager",
+        calendar: "Kalenderhendelser",
       },
       categories: {
         public: "Offentlig",
@@ -4277,6 +4693,15 @@
         timelineShowDate: "Vis dato",
         timelineShowDateDesc:
           "Legger til den korte datoen i parentes til slutt, f.eks. «...er om 3 dager (6. aug)». Skjules på selve dagen, siden setningen allerede slutter med «...er i dag» rett før.",
+        timelineShowTime: "Vis klokkeslett",
+        timelineShowTimeDesc:
+          "Legger til en ekstern kalenderhendelses eget tidsrom i samme parentes, f.eks. «...er om 3 dager (14:00–15:00)». Vises bare for en tidsbestemt (ikke heldags) ekstern kalenderhendelse. Tidsformatet følger språkinnstillingen i Home Assistant.",
+        timelineShowLocation: "Vis sted",
+        timelineShowLocationDesc:
+          "Legger til en ekstern kalenderhendelses eget sted i samme parentes. Vises bare for en ekstern kalenderhendelse som har et sted angitt.",
+        timelineShowDescription: "Vis beskrivelse",
+        timelineShowDescriptionDesc:
+          "Legger til en ekstern kalenderhendelses egen beskrivelse i samme parentes. Vises bare for en ekstern kalenderhendelse som har en beskrivelse angitt.",
         moreAction: "«Mer»-knapp",
         moreActionDesc:
           "Hva «Mer»-knappen nederst til høyre i tidslinjen gjør. Vanligvis en navigasjonshandling til et dashbord som viser de samme hendelsene i det fulle Liste-layoutet. La stå på «Ingenting» for å skjule knappen.",
@@ -4319,7 +4744,7 @@
         visibilityCountrySuffixDesc: "Legg til landet (og eventuelt fylket) etter helligdagens navn/type, f.eks. «Grunnlovsdagen · NO (OSL)»",
         columnsHeading: "Radkolonner",
         columnsDesc:
-          "Legg til, fjern og endre rekkefølgen på det hver rad viser. Egendefinerte tekstkolonner kan blande fri tekst med plassholdere: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
+          "Legg til, fjern og endre rekkefølgen på det hver rad viser. Egendefinerte tekstkolonner kan blande fri tekst med plassholdere: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
         columnTypeIcon: "Ikon",
         columnTypeInfo: "Navn + type",
         columnTypeName: "Navn",
@@ -4329,6 +4754,26 @@
         columnTypeType: "Type",
         columnTypeText: "Egendefinert tekst",
         columnTypeDate: "Dato",
+        columnTypeTime: "Klokkeslett",
+        columnTypeLocation: "Sted",
+        columnTypeDescription: "Beskrivelse",
+        columnTypeTimeDesc:
+          "Legger til den eksterne kalenderhendelsens eget tidsrom, f.eks. «...03:00 PM–05:00 PM». Vises bare for en tidsbestemt (ikke heldags) ekstern kalenderhendelse.",
+        columnTypeLocationDesc:
+          "Legger til den eksterne kalenderhendelsens eget sted. Vises bare for en ekstern kalenderhendelse som har et sted angitt.",
+        columnTypeDescriptionDesc:
+          "Legger til den eksterne kalenderhendelsens egen beskrivelse. Vises bare for en ekstern kalenderhendelse som har en beskrivelse angitt.",
+        suffixLabel: "Suffiks",
+        suffixGroupHolidayTitle: "Kun helligdager",
+        suffixGroupExternalTitle: "Kun eksterne kalendere",
+        suffixShowCalendarName: "Kalendernavn",
+        suffixShowCalendarNameDesc:
+          "Vis den eksterne kalenderens eget navn her (f.eks. «Privat»). Slå av når Klokkeslett/Sted/Beskrivelse nedenfor allerede sier nok på egen hånd.",
+        externalCalendarsHeading: "Eksterne kalendere",
+        externalCalendarsDesc:
+          "Legg inn én eller flere av dine eksisterende Home Assistant-kalendere sammen med Annuals' egne hendelser - hver havner på sin faktiske dag (og for tidsbestemte hendelser sorteres den etter klokkeslett innenfor den dagen) i stedet for noen «neste forekomst»-beregning. Legg til en Klokkeslett-/Sted-/Beskrivelse-kolonne ovenfor for å vise disse feltene for disse hendelsene.",
+        externalCalendarsLabel: "Kalendere",
+        externalCalendarsLabelDesc: "Hvilke calendar.*-enheter som skal legges inn.",
         columnAdd: "Legg til",
         columnMoveUp: "Flytt opp",
         columnMoveDown: "Flytt ned",
@@ -4519,7 +4964,9 @@
         pet_birthday: "Kæledyrs fødselsdag",
         work_anniversary: "Jubilæum på arbejdet",
         custom: "Tilpasset",
+        one_time: "Engangsbegivenhed",
         holiday: "Helligdag",
+        calendar: "Kalenderbegivenhed",
       },
       typesPlural: {
         birthday: "Fødselsdage",
@@ -4530,7 +4977,9 @@
         pet_birthday: "Kæledyrs fødselsdage",
         work_anniversary: "Jubilæer på arbejdet",
         custom: "Tilpasset",
+        one_time: "Engangsbegivenheder",
         holiday: "Helligdage",
+        calendar: "Kalenderbegivenheder",
       },
       categories: {
         public: "Offentlig",
@@ -4621,6 +5070,15 @@
         timelineShowDate: "Vis dato",
         timelineShowDateDesc:
           "Tilføjer den korte dato i parentes til sidst, f.eks. „...er om 3 dage (6. aug)”. Skjules på selve dagen, da sætningen allerede lige inden slutter med „...er i dag”.",
+        timelineShowTime: "Vis klokkeslæt",
+        timelineShowTimeDesc:
+          "Tilføjer en ekstern kalenderbegivenheds eget tidsinterval i samme parentes, f.eks. „...er om 3 dage (14:00–15:00)”. Vises kun for en tidsbestemt (ikke heldags) ekstern kalenderbegivenhed. Tidsformatet følger sprogindstillingen i Home Assistant.",
+        timelineShowLocation: "Vis sted",
+        timelineShowLocationDesc:
+          "Tilføjer en ekstern kalenderbegivenheds eget sted i samme parentes. Vises kun for en ekstern kalenderbegivenhed, der har et sted angivet.",
+        timelineShowDescription: "Vis beskrivelse",
+        timelineShowDescriptionDesc:
+          "Tilføjer en ekstern kalenderbegivenheds egen beskrivelse i samme parentes. Vises kun for en ekstern kalenderbegivenhed, der har en beskrivelse angivet.",
         moreAction: "„Mere”-knap",
         moreActionDesc:
           "Hvad „Mere”-knappen nederst til højre i tidslinjen gør. Typisk en navigationshandling til et dashboard, der viser de samme begivenheder i det fulde Liste-layout. Lad den stå på „Intet” for at skjule knappen.",
@@ -4663,7 +5121,7 @@
         visibilityCountrySuffixDesc: "Tilføj landet (og evt. regionen) efter helligdagens navn/type, f.eks. \"Grundlovsdag · DK (84)\"",
         columnsHeading: "Rækkekolonner",
         columnsDesc:
-          "Tilføj, fjern og omorganiser hvad hver række viser. Brugerdefinerede tekstkolonner kan blande fri tekst med pladsholdere: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
+          "Tilføj, fjern og omorganiser hvad hver række viser. Brugerdefinerede tekstkolonner kan blande fri tekst med pladsholdere: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
         columnTypeIcon: "Ikon",
         columnTypeInfo: "Navn + type",
         columnTypeName: "Navn",
@@ -4673,6 +5131,26 @@
         columnTypeType: "Type",
         columnTypeText: "Brugerdefineret tekst",
         columnTypeDate: "Dato",
+        columnTypeTime: "Klokkeslæt",
+        columnTypeLocation: "Sted",
+        columnTypeDescription: "Beskrivelse",
+        columnTypeTimeDesc:
+          "Tilføjer den eksterne kalenderbegivenheds eget tidsinterval, f.eks. „...03:00 PM–05:00 PM”. Vises kun for en tidsbestemt (ikke heldags) ekstern kalenderbegivenhed.",
+        columnTypeLocationDesc:
+          "Tilføjer den eksterne kalenderbegivenheds eget sted. Vises kun for en ekstern kalenderbegivenhed, der har et sted angivet.",
+        columnTypeDescriptionDesc:
+          "Tilføjer den eksterne kalenderbegivenheds egen beskrivelse. Vises kun for en ekstern kalenderbegivenhed, der har en beskrivelse angivet.",
+        suffixLabel: "Suffiks",
+        suffixGroupHolidayTitle: "Kun helligdage",
+        suffixGroupExternalTitle: "Kun eksterne kalendere",
+        suffixShowCalendarName: "Kalendernavn",
+        suffixShowCalendarNameDesc:
+          "Vis den eksterne kalenders eget navn her (f.eks. „Privat”). Slå fra, når Klokkeslæt/Sted/Beskrivelse nedenfor allerede siger nok i sig selv.",
+        externalCalendarsHeading: "Eksterne kalendere",
+        externalCalendarsDesc:
+          "Indlejr en eller flere af dine eksisterende Home Assistant-kalendere sammen med Annuals' egne begivenheder - hver havner på sin faktiske dag (og for tidsbestemte begivenheder sorteres den efter klokkeslæt inden for den dag) i stedet for en „næste forekomst”-beregning. Tilføj en Klokkeslæt-/Sted-/Beskrivelse-kolonne ovenfor for at vise disse felter for disse begivenheder.",
+        externalCalendarsLabel: "Kalendere",
+        externalCalendarsLabelDesc: "Hvilke calendar.*-entiteter der skal indlejres.",
         columnAdd: "Tilføj",
         columnMoveUp: "Flyt op",
         columnMoveDown: "Flyt ned",
@@ -4869,7 +5347,9 @@
         pet_birthday: "Evcil hayvan doğum günü",
         work_anniversary: "İş yıl dönümü",
         custom: "Özel",
+        one_time: "Tek seferlik etkinlik",
         holiday: "Resmi tatil",
+        calendar: "Takvim etkinliği",
       },
       typesPlural: {
         birthday: "Doğum günleri",
@@ -4880,7 +5360,9 @@
         pet_birthday: "Evcil hayvan doğum günleri",
         work_anniversary: "İş yıl dönümleri",
         custom: "Özel",
+        one_time: "Tek seferlik etkinlikler",
         holiday: "Resmi tatiller",
+        calendar: "Takvim etkinlikleri",
       },
       categories: {
         public: "Resmi",
@@ -4971,6 +5453,15 @@
         timelineShowDate: "Tarihi göster",
         timelineShowDateDesc:
           "Sonuna parantez içinde kısa tarihi ekler, örn. \"...3 gün sonra (6 Ağu)\". Etkinliğin kendi gününde gizlenir, çünkü cümle bundan hemen önce zaten \"...bugün\" ile bitiyor.",
+        timelineShowTime: "Saati göster",
+        timelineShowTimeDesc:
+          "Harici bir takvim etkinliğinin kendi saat aralığını aynı parantez içine ekler, örn. \"...3 gün sonra (14:00–15:00)\". Yalnızca saatli (tüm gün olmayan) harici bir takvim etkinliği için gösterilir. Saat biçimi, Home Assistant dil ayarını izler.",
+        timelineShowLocation: "Konumu göster",
+        timelineShowLocationDesc:
+          "Harici bir takvim etkinliğinin kendi konumunu aynı parantez içine ekler. Yalnızca konumu ayarlanmış harici bir takvim etkinliği için gösterilir.",
+        timelineShowDescription: "Açıklamayı göster",
+        timelineShowDescriptionDesc:
+          "Harici bir takvim etkinliğinin kendi açıklamasını aynı parantez içine ekler. Yalnızca açıklaması ayarlanmış harici bir takvim etkinliği için gösterilir.",
         moreAction: "\"Daha fazla\" düğmesi",
         moreActionDesc:
           "Zaman çizelgesinin sağ alt köşesindeki \"Daha fazla\" düğmesinin ne yaptığı. Genellikle aynı etkinlikleri tam Liste düzeninde gösteren bir panoya yönlendiren bir gezinme eylemi. Düğmeyi gizlemek için \"Hiçbiri\" olarak bırakın.",
@@ -5013,7 +5504,7 @@
         visibilityCountrySuffixDesc: "Tatilin adının/türünün ardına ülkeyi (ve varsa bölgeyi) ekler, örn. \"Cumhuriyet Bayramı · TR (34)\"",
         columnsHeading: "Satır sütunları",
         columnsDesc:
-          "Her satırın gösterdiği içeriği ekleyin, kaldırın ve yeniden sıralayın. Özel metin sütunları serbest metni yer tutucularla karıştırabilir: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.",
+          "Her satırın gösterdiği içeriği ekleyin, kaldırın ve yeniden sıralayın. Özel metin sütunları serbest metni yer tutucularla karıştırabilir: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
         columnTypeIcon: "Simge",
         columnTypeInfo: "Ad + tür",
         columnTypeName: "Ad",
@@ -5023,6 +5514,26 @@
         columnTypeType: "Tür",
         columnTypeText: "Özel metin",
         columnTypeDate: "Tarih",
+        columnTypeTime: "Saat",
+        columnTypeLocation: "Konum",
+        columnTypeDescription: "Açıklama",
+        columnTypeTimeDesc:
+          "Harici takvim etkinliğinin kendi saat aralığını ekler, örn. \"...03:00 PM–05:00 PM\". Yalnızca saatli (tüm gün olmayan) harici bir takvim etkinliği için gösterilir.",
+        columnTypeLocationDesc:
+          "Harici takvim etkinliğinin kendi konumunu ekler. Yalnızca konumu ayarlanmış harici bir takvim etkinliği için gösterilir.",
+        columnTypeDescriptionDesc:
+          "Harici takvim etkinliğinin kendi açıklamasını ekler. Yalnızca açıklaması ayarlanmış harici bir takvim etkinliği için gösterilir.",
+        suffixLabel: "Ek",
+        suffixGroupHolidayTitle: "Yalnızca tatiller",
+        suffixGroupExternalTitle: "Yalnızca harici takvimler",
+        suffixShowCalendarName: "Takvim adı",
+        suffixShowCalendarNameDesc:
+          "Harici takvimin kendi adını burada gösterir (örn. \"Kişisel\"). Aşağıdaki Saat/Konum/Açıklama zaten yeterince açıklayıcı olduğunda kapatın.",
+        externalCalendarsHeading: "Harici takvimler",
+        externalCalendarsDesc:
+          "Mevcut Home Assistant takvimlerinizden birini veya birkaçını Annuals'ın kendi etkinlikleriyle birlikte katıştırın - her biri, herhangi bir \"sonraki tekrar\" hesaplaması yerine gerçek gününe düşer (ve saatli etkinlikler için o gün içinde saate göre sıralanır). Bu etkinlikler için bu alanları göstermek üzere yukarıya bir Saat/Konum/Açıklama sütunu ekleyin.",
+        externalCalendarsLabel: "Takvimler",
+        externalCalendarsLabelDesc: "Hangi calendar.* varlıklarının katıştırılacağı.",
         columnAdd: "Ekle",
         columnMoveUp: "Yukarı taşı",
         columnMoveDown: "Aşağı taşı",
@@ -5288,6 +5799,19 @@
       today_only: false,
       next_event_day_only: false,
       types: [],
+      // Existing HA calendar.* entities (Google/CalDAV/Local Calendar/...)
+      // whose own events should be merged in alongside the yearly-recurring
+      // Annuals ones, landing on their real day (and, for timed events,
+      // sorted by time-of-day within that day) rather than any "next
+      // occurrence" math - see buildExternalEvent(). Empty means none are
+      // embedded, same "opt-in, no restriction by default" meaning as an
+      // empty `types` above has for Annuals' own event types. Entirely
+      // independent of the `types`/`categories`/VIP/Important filters below,
+      // which describe Annuals-specific concepts that don't apply to an
+      // external calendar's events - only the day-window filters
+      // (days_ahead/days_past/soon_days/today_only/next_event_day_only)
+      // apply to both alike.
+      external_calendars: [],
       // Only meaningful for holiday-type events (see CATEGORY_ICONS in
       // const.py) - empty means "show every category", same semantics as
       // `types` above. Non-holiday events have no category and are never
@@ -5316,6 +5840,23 @@
       show_name_country: false,
       show_type_country: false,
       show_full_name_country: false,
+      // List layout, Row columns -> Type field's "External calendars" group
+      // - whether an external calendar event's own name (e.g. "Personal")
+      // fills the Type cell at all. Defaults to true (today's existing
+      // behavior, unlike the toggles below which all default to off/absent)
+      // since turning it off only makes sense once Time/Location/
+      // Description below already carry enough information on their own.
+      show_type_calendar_name: true,
+      // List layout, Row columns -> Type field's own sub-options (alongside
+      // the Holiday suffix toggle above) - append an external calendar
+      // event's own time/location/description into the Type cell, same " · "
+      // joining the Timeline layout's own Show time/location/description
+      // toggles use for their trailing parenthetical (see
+      // _timelineSentenceFragment). No effect on any Annuals event,
+      // including a one-time event, which has none of the three.
+      show_type_time: false,
+      show_type_location: false,
+      show_type_description: false,
       // Deliberately not defaulted to an array - "unset" (every dashboard
       // saved before this feature existed) must stay distinguishable from
       // "explicitly configured" so _row() can pick the right render path.
@@ -5371,6 +5912,15 @@
       // "...is today" right before it - repeating it as "(Today)" would be
       // redundant.
       timeline_show_date: false,
+      // Timeline layout only, under Layout -> Timeline -> Options: same
+      // trailing-parenthetical mechanism as timeline_show_date above, for
+      // an external calendar event's own time range/location/description -
+      // each is simply omitted from the parenthetical when the event has
+      // nothing to show there (an Annuals event, or an all-day/timeless
+      // external one) rather than leaving an empty " · " behind.
+      timeline_show_time: false,
+      timeline_show_location: false,
+      timeline_show_description: false,
       ...config,
       // Per icon-color-category (accent/today/soon) animation, keyed the
       // same way as colors.match_* so the same "which category is this
@@ -5615,6 +6165,128 @@
       sig += entityId + ":" + s.state + ":" + s.last_updated + ";";
     }
     return sig;
+  }
+
+  // Home Assistant's calendar REST API (GET /api/calendars/<entity_id>)
+  // represents an event boundary as a plain "YYYY-MM-DD" string for an
+  // all-day event, or a full ISO-8601 datetime string (with offset) for a
+  // timed one. A handful of calendar platforms have been seen returning the
+  // Google Calendar API's own {date: "..."}/{dateTime: "...", timeZone:
+  // "..."} nested shape instead - handled defensively here too, rather than
+  // assuming every integration matches HA's own REST format exactly.
+  function parseCalendarEventBoundary(value) {
+    if (value == null) return null;
+    if (typeof value === "object") {
+      if (value.date) return { date: new Date(`${value.date}T00:00:00`), allDay: true };
+      if (value.dateTime) return { date: new Date(value.dateTime), allDay: false };
+      return null;
+    }
+    if (typeof value !== "string") return null;
+    const allDay = /^\d{4}-\d{2}-\d{2}$/.test(value);
+    return { date: new Date(allDay ? `${value}T00:00:00` : value), allDay };
+  }
+
+  // One external calendar event (as returned by the REST call in
+  // AnnualsCard._fetchExternalEvents) reshaped into the same event object
+  // getEvents() builds for Annuals' own sensors, so both flow through the
+  // rest of this file - filtering, sorting, row/timeline rendering -
+  // completely unchanged. `days` is computed from the event's own start
+  // date (not any "next occurrence" concept, which only makes sense for a
+  // yearly-recurring Annuals event) - once negative or beyond the
+  // days_ahead/days_past window it configured, it's dropped the same way
+  // any other out-of-window event already is (see _filteredEvents).
+  function buildExternalEvent(raw, entityId, calendarName, calendarIcon, now) {
+    const startInfo = parseCalendarEventBoundary(raw.start);
+    if (!startInfo || Number.isNaN(startInfo.date.getTime())) return null;
+    const endInfo = parseCalendarEventBoundary(raw.end);
+    const today0 = new Date(now);
+    today0.setHours(0, 0, 0, 0);
+    const startDay0 = new Date(startInfo.date);
+    startDay0.setHours(0, 0, 0, 0);
+    const days = Math.round((startDay0 - today0) / 86400000);
+    return {
+      entityId: `${entityId}:${raw.uid || startInfo.date.toISOString()}`,
+      // The raw calendar.* entity id, distinct from the composite entityId
+      // above (which has the event's own uid appended) - needed to look up
+      // that specific calendar's own configured color for the Timeline dot
+      // (see timelineDotColor), since multiple embedded calendars each keep
+      // their own color rather than sharing TIMELINE_TYPE_COLORS.calendar.
+      calendarEntityId: entityId,
+      days,
+      name: raw.summary || calendarName,
+      lastName: "",
+      fullName: raw.summary || calendarName,
+      // Not one of Annuals' own EVENT_TYPES - never matched by the "Event
+      // types" filter grid or CSV/ICS/vCard import, purely an internal tag
+      // for icon/color lookups (see TIMELINE_TYPE_COLORS's "calendar" entry)
+      // and the strings.types["calendar"] fallback label below.
+      type: "calendar",
+      // Preferred over strings.types.calendar wherever a type label is
+      // shown (see _row/_timelineSentenceFragment) - the source calendar's
+      // own name reads far more usefully than a generic "Calendar event"
+      // label once more than one calendar is embedded.
+      typeLabel: calendarName,
+      icon: calendarIcon,
+      month: startInfo.date.getMonth() + 1,
+      day: startInfo.date.getDate(),
+      occurrence: null,
+      vip: false,
+      important: false,
+      category: undefined,
+      country: undefined,
+      subdivision: undefined,
+      isExternal: true,
+      allDay: startInfo.allDay,
+      startTime: startInfo.allDay ? null : startInfo.date,
+      endTime: endInfo && !endInfo.allDay ? endInfo.date : null,
+      location: raw.location || "",
+      description: raw.description || "",
+      // Secondary sort key within the same day (see _visibleEvents): every
+      // all-day/Annuals event sorts as -1 (before any timed one), timed
+      // events then sort earliest-first by minutes-since-midnight.
+      timeSortKey: startInfo.allDay ? -1 : startInfo.date.getHours() * 60 + startInfo.date.getMinutes(),
+    };
+  }
+
+  // Only the inputs that actually change what _fetchExternalEvents needs to
+  // (re)fetch - which calendars, the day window, and (bounded to only the
+  // handful of entities actually configured here, never "all entities" -
+  // that blanket-reactivity approach was an earlier bug) each configured
+  // calendar's own last_updated/state - so a fetch fires when one of those
+  // genuinely changed (or a new day has begun), not on every one of the
+  // many hass ticks that change nothing relevant.
+  //
+  // This entity check is a fast-path, not the primary fix for stale data:
+  // Home Assistant's state machine silently skips writing a new state at
+  // all when a coordinator refresh produces the same state string and
+  // attributes as before (no state_changed event, last_updated untouched).
+  // A calendar entity's state/attributes only ever reflect its single
+  // current/next event - deleting or editing any OTHER event in the window
+  // leaves both unchanged, so core dedupes the write and nothing here ever
+  // sees it. That gap is what a real user hit (deleted event stayed on the
+  // card until an unrelated full page reload) - it's closed instead by
+  // AnnualsCard's periodic _fetchExternalEvents poll (see
+  // _startExternalEventsPolling), which is time-based and doesn't depend on
+  // any entity's state changing at all.
+  function externalCalendarsSignature(config, hass) {
+    const calendars = Array.isArray(config.external_calendars) ? config.external_calendars : [];
+    const entityTicks = calendars
+      .map((id) => {
+        const state = hass && hass.states && hass.states[id];
+        return state ? `${id}:${state.last_updated}` : `${id}:?`;
+      })
+      .join(",");
+    return (
+      JSON.stringify(calendars) +
+      "|" +
+      new Date().toDateString() +
+      "|" +
+      (config.days_past || 0) +
+      "|" +
+      (config.days_ahead || 0) +
+      "|" +
+      entityTicks
+    );
   }
 
   // Mirrors dates.py's occurrence_in_year: Feb 29 falls back to Feb 28 in
@@ -6337,15 +7009,37 @@
     pet_birthday: "var(--green-color, #4caf50)",
     work_anniversary: "var(--blue-color, #2196f3)",
     custom: "var(--grey-color, #9e9e9e)",
+    one_time: "var(--amber-color, #ffb300)",
     holiday: "var(--teal-color, #009688)",
+    // Not one of const.py's ALL_EVENT_TYPES - every embedded external
+    // calendar's events share this one entry regardless of which calendar
+    // they came from (see buildExternalEvent), same as every other type
+    // here being a single color across however many events share it.
+    calendar: "var(--light-blue-color, #03a9f4)",
   };
   // Event type keys in the fixed order they're listed throughout the editor
   // (Event types filter grid, this new Colors -> EVENT TYPES section) -
   // shared so both stay in sync with TIMELINE_TYPE_COLORS above.
   const EVENT_TYPE_KEYS = Object.keys(TIMELINE_TYPE_COLORS);
-  function timelineDotColor(config, type) {
+  // colorName is only ever passed for an external calendar event (type
+  // "calendar") - an explicit per-type Colors override still wins if the
+  // user set one, but otherwise each embedded calendar uses its own
+  // configured "Calendar color" (HA's entity-settings dropdown, resolved
+  // asynchronously by _fetchCalendarColors since it isn't in hass.entities)
+  // rather than every embedded calendar sharing one flat
+  // TIMELINE_TYPE_COLORS.calendar value. The stored color is one of HA's
+  // standard Material color names ("pink", "green", ...) - the exact same
+  // `--<name>-color` theme variables TIMELINE_TYPE_COLORS' own per-type
+  // entries above already use, confirmed live (--calendar-color-pink is NOT
+  // a real theme variable and silently fell through to the fallback;
+  // --pink-color is).
+  function timelineDotColor(config, type, colorName) {
     const configured = config && config.colors && config.colors[`type_${type}`];
-    return configured || TIMELINE_TYPE_COLORS[type] || TIMELINE_TYPE_COLORS.custom;
+    if (configured) return configured;
+    if (type === "calendar" && colorName) {
+      return `var(--${colorName}-color, ${TIMELINE_TYPE_COLORS.calendar})`;
+    }
+    return TIMELINE_TYPE_COLORS[type] || TIMELINE_TYPE_COLORS.custom;
   }
   // Width of the ring drawn around each dot (see .timeline-dot's box-shadow).
   // Kept here because _buildTimeline needs it in JS too, to sit the Important
@@ -6356,12 +7050,33 @@
     constructor() {
       super();
       this.attachShadow({ mode: "open" });
+      // Populated asynchronously by _fetchExternalEvents (see set hass
+      // below) - empty until the first fetch resolves, same as any
+      // network-backed data has to start somewhere. Never read directly by
+      // _filteredEvents/_visibleEvents' callers except through that method.
+      this._externalEvents = [];
+      this._externalSignature = undefined;
+      // entity_id -> configured "Calendar color" name (see
+      // _fetchCalendarColors) - undefined until that resolves, same
+      // "starts empty, fills in asynchronously" shape as _externalEvents.
+      this._calendarColors = {};
+      this._calendarColorsKey = undefined;
     }
 
     setConfig(config) {
       this._config = defaultConfig(config);
       this._built = false;
       this._eventsSignature = undefined;
+      // Config-only edits (e.g. picking a calendar in the editor) don't
+      // necessarily change `hass` itself, so set hass() below won't
+      // necessarily re-run - force the next external-events check instead
+      // of waiting for one.
+      this._externalSignature = undefined;
+      this._calendarColorsKey = undefined;
+      if (this._hass) {
+        this._fetchExternalEvents();
+        this._fetchCalendarColors();
+      }
       this._render();
     }
 
@@ -6374,10 +7089,109 @@
       // untouched.
       const prevHass = this._hass;
       this._hass = hass;
+      // Cheap even when nothing changed - only actually fetches when the
+      // configured calendars, the day window, or the calendar day itself
+      // changed since the last check (see externalCalendarsSignature).
+      const extSignature = externalCalendarsSignature(this._config, hass);
+      if (extSignature !== this._externalSignature) {
+        this._externalSignature = extSignature;
+        this._fetchExternalEvents();
+      }
+      this._fetchCalendarColors();
       const signature = eventsSignature(hass);
       const langChanged = !prevHass || prevHass.language !== hass.language;
       if (this._built && !langChanged && signature === this._eventsSignature) return;
       this._eventsSignature = signature;
+      this._render();
+    }
+
+    // A calendar entity's own "Calendar color" (set in its entity settings
+    // dialog) lives in the entity registry's per-platform `options`, which
+    // the lightweight hass.entities collection this card reads everywhere
+    // else does NOT carry (confirmed live: hass.entities[id] has no
+    // `options` key at all, only entity_id/name/icon/....). Reading it
+    // needs an explicit registry fetch, same "starts empty, fills in
+    // asynchronously" shape _fetchExternalEvents already established for
+    // this card's other non-hass.states-backed data. Keyed by the
+    // calendars list alone (not the day window) since a color never
+    // depends on that.
+    async _fetchCalendarColors() {
+      const config = this._config;
+      const calendars = Array.isArray(config.external_calendars) ? config.external_calendars : [];
+      const key = JSON.stringify(calendars);
+      if (key === this._calendarColorsKey) return;
+      this._calendarColorsKey = key;
+      if (!calendars.length) {
+        this._calendarColors = {};
+        return;
+      }
+      const fetchId = (this._colorFetchId = (this._colorFetchId || 0) + 1);
+      const entries = await Promise.all(
+        calendars.map(async (entityId) => {
+          try {
+            const reg = await this._hass.callWS({ type: "config/entity_registry/get", entity_id: entityId });
+            return [entityId, reg?.options?.calendar?.color];
+          } catch (err) {
+            return [entityId, undefined];
+          }
+        })
+      );
+      if (fetchId !== this._colorFetchId) return;
+      this._calendarColors = Object.fromEntries(entries);
+      this._render();
+    }
+
+    // Fetches every configured external calendar's events, once, for a
+    // window wide enough to cover whatever days_ahead/days_past currently
+    // allow (capped at a year out when days_ahead is 0/unset, i.e.
+    // "unbounded" for Annuals' own events - an actual unbounded window isn't
+    // meaningful for a REST call, and a year covers every realistic
+    // days_ahead/soon_days setting). Failures for one calendar (e.g. a
+    // temporarily unavailable integration) never take down the others.
+    async _fetchExternalEvents() {
+      const config = this._config;
+      const calendars = Array.isArray(config.external_calendars) ? config.external_calendars : [];
+      const fetchId = (this._externalFetchId = (this._externalFetchId || 0) + 1);
+      if (!calendars.length) {
+        if (this._externalEvents.length) {
+          this._externalEvents = [];
+          this._render();
+        }
+        return;
+      }
+      const now = new Date();
+      const start = new Date(now);
+      start.setHours(0, 0, 0, 0);
+      start.setDate(start.getDate() - (config.days_past || 0));
+      const aheadDays = config.days_ahead && config.days_ahead > 0 ? config.days_ahead : 365;
+      const end = new Date(now);
+      end.setHours(0, 0, 0, 0);
+      end.setDate(end.getDate() + aheadDays + 1);
+      const results = await Promise.all(
+        calendars.map(async (entityId) => {
+          const state = this._hass.states[entityId];
+          if (!state) return [];
+          const calendarName = state.attributes.friendly_name || entityId;
+          const calendarIcon = state.attributes.icon || "mdi:calendar-blank";
+          try {
+            const raw = await this._hass.callApi(
+              "GET",
+              `calendars/${entityId}?start=${start.toISOString()}&end=${end.toISOString()}`
+            );
+            return (raw || [])
+              .map((ev) => buildExternalEvent(ev, entityId, calendarName, calendarIcon, now))
+              .filter(Boolean);
+          } catch (err) {
+            return [];
+          }
+        })
+      );
+      // A slower-to-resolve earlier fetch (e.g. the day window just grew)
+      // landing after a newer one already applied would otherwise flicker
+      // the list back to stale data - only the most recently started fetch
+      // is allowed to actually update anything.
+      if (fetchId !== this._externalFetchId) return;
+      this._externalEvents = results.flat();
       this._render();
     }
 
@@ -6402,6 +7216,11 @@
       if (e.days === 0) return true;
       const pastWindow = this._config.days_past || 0;
       if (pastWindow <= 0) return false;
+      // An external event's own `days` (see buildExternalEvent) is already
+      // its real, one-off offset from today - unlike an Annuals event's,
+      // there's no yearly-recurring month/day to re-derive a "days ago"
+      // figure from, so a negative e.days *is* that figure already.
+      if (e.isExternal) return e.days < 0 && e.days >= -pastWindow;
       const since = daysSincePrevOccurrence(e.month, e.day, now);
       return since > 0 && since <= pastWindow;
     }
@@ -6409,8 +7228,16 @@
     _filteredEvents() {
       const config = this._config;
       const now = new Date();
-      const all = getEvents(this._hass);
+      const all = [...getEvents(this._hass), ...this._externalEvents];
       let filtered = all.filter((e) => {
+        // `types`/`categories`/VIP/Important all describe Annuals-specific
+        // concepts (event type, holiday category, the manual VIP flag and
+        // computed Important milestone) that simply don't exist for an
+        // external calendar's own events - only the day-window filters
+        // below (today_only, and days_ahead/soon_days further down) apply
+        // to both alike, same as defaultConfig's external_calendars comment
+        // notes.
+        if (e.isExternal) return !config.today_only || e.days === 0;
         if (config.types && config.types.length && !config.types.includes(e.type)) return false;
         // Only holiday-type events carry a category at all (see getEvents) -
         // this never filters anything else out, same as `types` being
@@ -6456,7 +7283,11 @@
         .filter((e) => this._isRecent(e, now))
         .map((e) => ({
           ...e,
-          daysSince: e.days === 0 ? 0 : daysSincePrevOccurrence(e.month, e.day, now),
+          // Same isExternal branch as _isRecent above - an external event's
+          // own e.days is already signed, so "how many days ago" is simply
+          // its negation instead of daysSincePrevOccurrence's yearly-
+          // recurrence math.
+          daysSince: e.days === 0 ? 0 : e.isExternal ? -e.days : daysSincePrevOccurrence(e.month, e.day, now),
         }))
         .filter((e) => (e.daysSince === 0 ? showToday : showPast));
       // days_ahead only caps how far into the future upcoming events are
@@ -6477,7 +7308,19 @@
     _visibleEvents() {
       const { hero, upcoming } = this._filteredEvents();
       const sortKey = (e) => (e.daysSince !== undefined ? -e.daysSince : e.days);
-      return [...hero, ...upcoming].sort((a, b) => sortKey(a) - sortKey(b)).slice(0, this._config.count || 10);
+      return [...hero, ...upcoming]
+        .sort((a, b) => {
+          const dayDiff = sortKey(a) - sortKey(b);
+          if (dayDiff !== 0) return dayDiff;
+          // Same day - an external event's own time of day (see
+          // buildExternalEvent) decides order within it; every Annuals
+          // event (no time of day of its own) sorts as if it were an
+          // all-day event, i.e. before any timed external event that day.
+          const timeDiff = (a.timeSortKey ?? -1) - (b.timeSortKey ?? -1);
+          if (timeDiff !== 0) return timeDiff;
+          return (a.entityId || "").localeCompare(b.entityId || "");
+        })
+        .slice(0, this._config.count || 10);
     }
 
     // "when" text for the timeline layout - e.daysSince (attached in
@@ -6508,6 +7351,21 @@
         day: "numeric",
         month: "short",
       }).format(target);
+    }
+
+    // Time range ("14:00–15:00", or a single time with no dash when there's
+    // no end/it equals the start) for config.timeline_show_time - same
+    // formatting _row()'s own values.time uses, only ever non-null for a
+    // timed (non-all-day) external calendar event (see buildExternalEvent).
+    _timelineTimeText(e) {
+      if (!e.isExternal || e.allDay || !e.startTime) return null;
+      const timeFmt = new Intl.DateTimeFormat(this._hass.language || "en", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      const startStr = timeFmt.format(e.startTime);
+      const endStr = e.endTime ? timeFmt.format(e.endTime) : "";
+      return endStr && endStr !== startStr ? `${startStr}–${endStr}` : startStr;
     }
 
     // VIP/Important flags for one event, resolved against this card's usual
@@ -6667,12 +7525,26 @@
           : "";
       const baseName = config.timeline_show_full_name && e.fullName ? e.fullName : e.name;
       const displayName = `${baseName}${holidaySuffix}`;
-      // Layout -> Timeline -> Options: "Show date" appends " (<short date>)"
-      // at the very end of the sentence - null on the event's own day (see
+      // Layout -> Timeline -> Options: "Show date"/"Show time"/"Show
+      // location"/"Show description" each contribute their own piece (any
+      // combination of which can be on at once) to one shared trailing
+      // parenthetical, e.g. "...is in 3 days (6 Aug, 14:00–15:00 · Home ·
+      // Weekly sync)" - rather than a separate "(...)" per toggle, which
+      // would read as a run of disconnected parens instead of one
+      // parenthetical remark. Date is null on the event's own day (see
       // _timelineDateText), since the sentence already ends "...is today"
-      // right before it.
+      // right before it; time/location/description are simply never shown
+      // for anything but a timed external calendar event (see
+      // buildExternalEvent) regardless of their own toggle.
       const timelineDateText = config.timeline_show_date ? this._timelineDateText(e) : null;
-      const dateSuffix = timelineDateText ? ` (${timelineDateText})` : "";
+      const timelineTimeText = config.timeline_show_time ? this._timelineTimeText(e) : null;
+      const timelineLocationText = config.timeline_show_location && e.isExternal ? e.location : null;
+      const timelineDescriptionText =
+        config.timeline_show_description && e.isExternal ? e.description : null;
+      const parenParts = [timelineDateText, timelineTimeText, timelineLocationText, timelineDescriptionText].filter(
+        (part) => part
+      );
+      const dateSuffix = parenParts.length ? ` (${parenParts.join(" · ")})` : "";
       if (!(config.show_badge !== false && occurrence != null)) {
         const tmpl =
           (isPast ? strings.timelineSentenceSimplePast : strings.timelineSentenceSimple) || "{name} is {when}";
@@ -6774,7 +7646,7 @@
 
         const mainIcon = document.createElement("ha-icon");
         mainIcon.setAttribute("icon", ev.icon);
-        mainIcon.style.color = timelineDotColor(config, ev.type);
+        mainIcon.style.color = timelineDotColor(config, ev.type, this._calendarColors?.[ev.calendarEntityId]);
         // Animated via a wrapping span, not the icon itself - the icon
         // already carries its own inline transform (translateY, set below by
         // _alignTimelineIconToText), and a CSS animation targeting the same
@@ -6968,7 +7840,7 @@
           // Filling the circle with the VIP badge color itself instead
           // (always red by default, regardless of event type) was the bug
           // report this fixed.
-          circle.style.background = timelineDotColor(config, e.type);
+          circle.style.background = timelineDotColor(config, e.type, this._calendarColors?.[e.calendarEntityId]);
           const vipIcon = document.createElement("ha-icon");
           vipIcon.setAttribute("icon", badges.vip.icon);
           // Explicit inline color, not just the CARD_STYLE default
@@ -7000,7 +7872,7 @@
           // the edge rather than sitting in the circle.
           this._fitTimelineIcon(vipIcon, circle, { target: size * 0.94, fitBy: "both" });
         } else {
-          circle.style.background = timelineDotColor(config, e.type);
+          circle.style.background = timelineDotColor(config, e.type, this._calendarColors?.[e.calendarEntityId]);
         }
         dotWrap.appendChild(circle);
 
@@ -7123,7 +7995,7 @@
         moreBtn.textContent = strings.timelineMore || "More";
         moreBtn.addEventListener("click", (ev) => {
           ev.stopPropagation();
-          this._handleRowAction(moreAction, nextGroup[0].entityId);
+          this._handleRowAction(moreAction, this._actionEntityId(nextGroup[0]));
         });
         footer.appendChild(moreBtn);
       }
@@ -7146,7 +8018,7 @@
         iconWrap.className = "timeline-list-icon-wrap";
         const icon = document.createElement("ha-icon");
         icon.setAttribute("icon", e.icon);
-        icon.style.color = timelineDotColor(config, e.type);
+        icon.style.color = timelineDotColor(config, e.type, this._calendarColors?.[e.calendarEntityId]);
         // Same wrap-for-animation reasoning as the header icon above.
         const listAnimClass = this._timelineAnimClass(e, config);
         if (listAnimClass) {
@@ -7204,14 +8076,30 @@
       return wrap;
     }
 
+    // Starts the external-events poll timer (see EXTERNAL_EVENTS_POLL_MS)
+    // for as long as this card instance is actually on a dashboard -
+    // paired with disconnectedCallback below so navigating away (or the
+    // card being removed/replaced) doesn't leave an orphaned timer running
+    // forever in the background.
+    connectedCallback() {
+      if (this._externalPollTimer) return;
+      this._externalPollTimer = window.setInterval(() => {
+        if (this._hass) this._fetchExternalEvents();
+      }, EXTERNAL_EVENTS_POLL_MS);
+    }
+
     // Cleans up the one document-level click listener _buildTimeline adds
-    // (see above) once this card is removed from a dashboard - otherwise it
-    // would linger on `document` forever, since nothing else ever removes
-    // it.
+    // (see above) and the external-events poll timer from connectedCallback
+    // once this card is removed from a dashboard - otherwise both would
+    // linger forever, since nothing else ever removes them.
     disconnectedCallback() {
       if (this._timelineOutsideClickHandler) {
         document.removeEventListener("click", this._timelineOutsideClickHandler);
         this._timelineOutsideClickHandler = null;
+      }
+      if (this._externalPollTimer) {
+        window.clearInterval(this._externalPollTimer);
+        this._externalPollTimer = undefined;
       }
     }
 
@@ -7243,7 +8131,15 @@
       const matchClass = config.colors[`match_${colorCategory}`] ? ` match-${colorCategory}-text` : "";
       div.className =
         "row" + (highlightClass ? ` ${highlightClass}` : "") + matchClass + (iconVisible ? "" : " icon-hidden");
-      let typeLabel = strings.types[e.type] || e.type;
+      // An external calendar event's own typeLabel (its source calendar's
+      // name - see buildExternalEvent) always wins over the generic
+      // strings.types.calendar fallback, the same way its name already
+      // reads more usefully than a plain "Calendar event" label would once
+      // more than one calendar is embedded.
+      // "External calendars" group's "Calendar name" toggle - only ever
+      // gates an external event's own typeLabel (the embedded calendar's
+      // name), never Annuals' own type labels.
+      let typeLabel = e.isExternal && config.show_type_calendar_name === false ? "" : e.typeLabel || strings.types[e.type] || e.type;
       // Holidays share one generic "Holiday" type label otherwise, which
       // doesn't distinguish a public holiday from a school break - the
       // category (already driving the row's icon - see CATEGORY_ICONS in
@@ -7295,17 +8191,58 @@
       const badgeClass = config.colors.badge_background === false ? "badge no-background" : "badge";
 
       const nameText = countrySuffix && config.show_name_country ? `${e.name} · ${countrySuffix}` : e.name;
-      const typeText =
-        countrySuffix && config.show_type_country ? `${typeLabel} · ${countrySuffix}` : typeLabel;
       const fullNameSuffixedText =
         countrySuffix && config.show_full_name_country ? `${e.fullName} · ${countrySuffix}` : e.fullName;
 
+      // Time/location/description only ever come from an external calendar
+      // event (see buildExternalEvent) - empty string for every Annuals
+      // event, same as e.g. last_name already is for a holiday. An all-day
+      // external event has no time of day to show either. A single time
+      // (no dash) when there's no end time, or the end equals the start.
+      let timeText = "";
+      if (e.isExternal && !e.allDay && e.startTime) {
+        const timeFmt = new Intl.DateTimeFormat(this._hass.language || "en", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        const startStr = timeFmt.format(e.startTime);
+        const endStr = e.endTime ? timeFmt.format(e.endTime) : "";
+        timeText = endStr && endStr !== startStr ? `${startStr}–${endStr}` : startStr;
+      }
+      const locationText = e.location || "";
+      const descriptionText = e.description || "";
+
+      // Settings -> Display -> Row columns: "Time"/"Location"/"Description"
+      // sub-options under the Type field (alongside its existing "Holiday
+      // suffix" toggle) - append into the same Type cell, joined the same
+      // " · " way the Timeline layout's own trailing parenthetical joins
+      // whichever of its own Show time/location/description toggles are on
+      // (see _timelineSentenceFragment). Only ever non-empty for an
+      // external calendar event, same as the values.time/location/
+      // description fields above - a no-op for every Annuals event,
+      // including a one-time event, which carries none of the three.
+      const typeExtras = [];
+      if (countrySuffix && config.show_type_country) typeExtras.push(countrySuffix);
+      if (config.show_type_time && timeText) typeExtras.push(timeText);
+      if (config.show_type_location && locationText) typeExtras.push(locationText);
+      if (config.show_type_description && descriptionText) typeExtras.push(descriptionText);
+      // typeLabel can be "" when show_type_calendar_name is off - in that
+      // case the extras stand on their own instead of leading with a
+      // dangling " · ".
+      const typeText = typeExtras.length
+        ? typeLabel
+          ? `${typeLabel} · ${typeExtras.join(" · ")}`
+          : typeExtras.join(" · ")
+        : typeLabel;
+
       // Shared value set for "text" column templates ({name}/{last_name}/
-      // {full_name}/{type}/{occurrence}/{when}/{date}/{country}) - reuses
-      // everything already computed above instead of recomputing per
-      // column. last_name/full_name are simply empty/first-name-only for
-      // holiday events and any event added before the field existed - see
-      // getEvents() above and sensor.py.
+      // {full_name}/{type}/{occurrence}/{when}/{date}/{country}/{time}/
+      // {location}/{description}) - reuses everything already computed
+      // above instead of recomputing per column. last_name/full_name are
+      // simply empty/first-name-only for holiday events and any event
+      // added before the field existed - see getEvents() above and
+      // sensor.py; time/location/description are empty for every non-
+      // external event the same way.
       const values = {
         name: e.name,
         last_name: e.lastName,
@@ -7315,6 +8252,9 @@
         when,
         date: dateText,
         country: countrySuffix,
+        time: timeText,
+        location: locationText,
+        description: descriptionText,
       };
 
       // config.columns is only ever set once a user has actually opened the
@@ -7366,8 +8306,20 @@
           identityShown = true;
       }
 
-      this._wireRowActions(div, config, e.entityId);
+      this._wireRowActions(div, config, this._actionEntityId(e));
       return div;
+    }
+
+    // An external calendar event's own "entityId" (see buildExternalEvent)
+    // is a synthetic `${calendarEntityId}:${uid}` composite used internally
+    // to keep every event row unique for sorting/rendering - it was never a
+    // real registered entity, so pointing a row action (more-info, toggle,
+    // ...) at it always fails ("This entity is unavailable"). Row actions on
+    // an external event should target the real calendar.* entity behind it
+    // instead; an Annuals-native event's entityId is already a real entity
+    // and passes through unchanged.
+    _actionEntityId(e) {
+      return e && e.isExternal ? e.calendarEntityId : e && e.entityId;
     }
 
     // Tap and (separately) press-and-hold on a row each run their own
@@ -7605,6 +8557,29 @@
               ? dateText.charAt(0).toLowerCase() + dateText.slice(1)
               : dateText.charAt(0).toUpperCase() + dateText.slice(1);
           return dateEl;
+        }
+        // Time/location/description share the Custom text column's styling
+        // (.text-col) same as Date above, and are simply empty for any
+        // non-external event (see _row's values.time/location/description) -
+        // rendering an empty div rather than hiding the column entirely,
+        // consistent with every other column type here.
+        case "time": {
+          const timeEl = document.createElement("div");
+          timeEl.className = "text-col";
+          timeEl.textContent = values.time || "";
+          return timeEl;
+        }
+        case "location": {
+          const locationEl = document.createElement("div");
+          locationEl.className = "text-col";
+          locationEl.textContent = values.location || "";
+          return locationEl;
+        }
+        case "description": {
+          const descriptionEl = document.createElement("div");
+          descriptionEl.className = "text-col";
+          descriptionEl.textContent = values.description || "";
+          return descriptionEl;
         }
         default:
           // Unknown column type (e.g. a newer card version's config loaded
@@ -7963,11 +8938,25 @@
       color: inherit;
       font: inherit;
     }
-    .column-suffix-list {
+    .column-suffix-groups {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 6px 0 0 68px;
+    }
+    .column-suffix-group {
       display: flex;
       flex-direction: column;
       gap: 6px;
-      margin: 4px 0 0 68px;
+      padding-left: 10px;
+      border-left: 2px solid var(--divider-color, rgba(127, 127, 127, 0.3));
+    }
+    .column-suffix-group-header {
+      font-size: 0.72em;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      opacity: 0.55;
     }
     .column-suffix-toggle {
       display: flex;
@@ -7976,6 +8965,9 @@
       font-size: 0.8em;
       white-space: nowrap;
       opacity: 0.85;
+    }
+    .column-suffix-toggle .tooltip-anchor ha-icon {
+      --mdc-icon-size: 14px;
     }
     .column-add-row {
       display: flex;
@@ -8534,6 +9526,26 @@
       `;
     }
 
+    // Same .field-col/.field-label/.action-selector-slot markup as
+    // _actionSelectorSplitHtml above, just one full-width field instead of
+    // a pair side by side - used for the external-calendars entity picker
+    // (see _upgradeEntitySelector), which has nothing to sit next to.
+    _actionSelectorFieldHtml(key) {
+      return `
+        <div class="field-col">
+          <div class="field-label">
+            <span class="label-text"></span>
+            <span class="tooltip-anchor" data-tooltip="">
+              <ha-icon icon="mdi:information-outline"></ha-icon>
+            </span>
+          </div>
+          <div class="field-input-row">
+            <div class="action-selector-slot" data-action-slot="${key}"></div>
+          </div>
+        </div>
+      `;
+    }
+
     // Renders HA's own native "what should this do" action-config selector
     // (More info / Navigate / URL / Perform action / Toggle / Assist /
     // Nothing) via the same already-loaded-by-the-frontend ha-selector
@@ -8566,6 +9578,56 @@
       if (!selector) return;
       selector.hass = this._hass;
       if (JSON.stringify(selector.value) !== JSON.stringify(value)) selector.value = value;
+    }
+
+    // Native multi-entity picker (ha-selector's "entity" selector with
+    // multiple: true and a domain filter) for external_calendars - same
+    // already-loaded ha-selector component _upgradeActionSelector above
+    // relies on, reused here with a different selector shape/config key.
+    // Synced and read back through the very same _syncActionSelector/
+    // this._actionSelectors bookkeeping as the action selectors, since both
+    // just need "assign hass, diff-and-set value" on every render.
+    // Annuals' own calendar.annuals_* entities would be nonsensical to embed
+    // as an "external" calendar (their events already appear via the
+    // Annuals-native pipeline), so they're dropped from the picker's
+    // suggestion list entirely. A calendar the user already added does NOT
+    // belong in this list too, despite also having "nothing left to offer a
+    // second time" - ha-selector's own multi-entity picker already omits
+    // whatever is in its current value from its suggestions on its own, and
+    // unlike that built-in omission, exclude_entities here turns out to
+    // ALSO affect how an already-selected chip renders (it showed as
+    // "Unknown entity selected" for a perfectly valid, still-selected
+    // calendar during live testing) - so including already-added entities
+    // here actively breaks the picker rather than just being redundant.
+    _calendarExcludeEntities() {
+      return Object.keys(this._hass.states || {}).filter((id) => id.startsWith("calendar.annuals_"));
+    }
+
+    _upgradeEntitySelector(body, key, label, desc, domain) {
+      const col = body.querySelector(`[data-action-slot="${key}"]`).closest(".field-col");
+      col.querySelector(".label-text").textContent = label;
+      col.querySelector(".tooltip-anchor").dataset.tooltip = desc;
+      const slot = col.querySelector(`[data-action-slot="${key}"]`);
+      if (!customElements.get("ha-selector")) return;
+      const selector = document.createElement("ha-selector");
+      selector.hass = this._hass;
+      // exclude_entities is a sibling of filter on ha-selector's entity
+      // config, not nested inside it - nesting it under filter (an earlier
+      // version of this) silently does nothing, since ha-selector's own
+      // EntityFilter type has no such key and just ignores it.
+      const excludeEntities = key === "external_calendars" ? this._calendarExcludeEntities() : undefined;
+      selector.selector = { entity: { multiple: true, filter: { domain }, exclude_entities: excludeEntities } };
+      selector.value = Array.isArray(this._config[key]) ? this._config[key] : [];
+      selector.style.display = "block";
+      selector.style.width = "100%";
+      selector.addEventListener("value-changed", (ev) => {
+        ev.stopPropagation();
+        this._config = defaultConfig({ ...this._config, [key]: ev.detail.value || [] });
+        this._emit();
+      });
+      slot.appendChild(selector);
+      this._actionSelectors = this._actionSelectors || {};
+      this._actionSelectors[key] = selector;
     }
 
     _buildGeneralBody(strings) {
@@ -8688,6 +9750,25 @@
       } else {
         this._categoriesRowEl = null;
       }
+
+      const calendarsHeading = document.createElement("div");
+      calendarsHeading.className = "section-heading";
+      calendarsHeading.textContent = strings.editor.externalCalendarsHeading;
+      body.appendChild(calendarsHeading);
+      const calendarsDesc = document.createElement("div");
+      calendarsDesc.className = "columns-desc";
+      calendarsDesc.textContent = strings.editor.externalCalendarsDesc;
+      body.appendChild(calendarsDesc);
+      const calendarsRow = document.createElement("div");
+      calendarsRow.innerHTML = this._actionSelectorFieldHtml("external_calendars");
+      body.appendChild(calendarsRow);
+      this._upgradeEntitySelector(
+        body,
+        "external_calendars",
+        strings.editor.externalCalendarsLabel,
+        strings.editor.externalCalendarsLabelDesc,
+        "calendar"
+      );
 
       return body;
     }
@@ -8820,6 +9901,14 @@
         el.checked = allCategoriesChecked || categories.includes(el.dataset.category);
       });
       this._updateCategoriesRowVisibility();
+      this._syncActionSelector("external_calendars", this._config.external_calendars || []);
+      const calendarSelector = this._actionSelectors && this._actionSelectors.external_calendars;
+      if (calendarSelector) {
+        const excludeEntities = this._calendarExcludeEntities();
+        if (JSON.stringify(calendarSelector.selector?.entity?.exclude_entities) !== JSON.stringify(excludeEntities)) {
+          calendarSelector.selector = { entity: { multiple: true, filter: { domain: "calendar" }, exclude_entities: excludeEntities } };
+        }
+      }
     }
 
     _buildPeriodBody(strings) {
@@ -9794,6 +10883,9 @@
         badge: strings.editor.colorBadge,
         when: strings.editor.colorWhen,
         date: strings.editor.columnTypeDate || "Date",
+        time: strings.editor.columnTypeTime || "Time",
+        location: strings.editor.columnTypeLocation || "Location",
+        description: strings.editor.columnTypeDescription || "Description",
         text: strings.editor.columnTypeText || "Custom text",
       };
       return map[type] || type;
@@ -9812,7 +10904,7 @@
       desc.className = "columns-desc";
       desc.textContent =
         strings.editor.columnsDesc ||
-        "Add, remove, and reorder what each row shows. Custom text columns can mix free text with placeholders: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}.";
+        "Add, remove, and reorder what each row shows. Custom text columns can mix free text with placeholders: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.";
       section.appendChild(desc);
 
       const list = document.createElement("div");
@@ -9834,6 +10926,9 @@
           <option value="badge"></option>
           <option value="when"></option>
           <option value="date"></option>
+          <option value="time"></option>
+          <option value="location"></option>
+          <option value="description"></option>
           <option value="text"></option>
         </select>
         <button type="button" class="preset-btn" data-column-add>
@@ -9898,9 +10993,14 @@
       return section;
     }
 
-    _columnRowHtml(col, index, strings) {
-      const isText = col.type === "text";
-      const suffixKeys =
+    // Expands a column's suffixable fields (e.g. "info" -> name+type) into
+    // one toggle entry per checkbox actually rendered - the "type" field
+    // alone gets 4 (Holiday suffix/Time/Location/Description) since Full
+    // name+type/Name+type/bare Type are the only columns where the user
+    // asked for Time/Location/Description sub-options; name/full_name keep
+    // their single Holiday-suffix toggle as before.
+    _suffixToggleEntries(col) {
+      const fieldKeys =
         col.type === "info"
           ? ["name", "type"]
           : col.type === "full_name_type"
@@ -9912,6 +11012,170 @@
                 : col.type === "type"
                   ? ["type"]
                   : [];
+      const entries = [];
+      fieldKeys.forEach((key) => {
+        const configKey =
+          key === "name" ? "show_name_country" : key === "full_name" ? "show_full_name_country" : "show_type_country";
+        // "Holidays only" - only ever has an effect on an imported holiday
+        // event, regardless of which field it's attached to.
+        entries.push({ toggleKey: key, configKey, fieldKey: key, kind: "country", group: "holiday" });
+        if (key === "type") {
+          // "External calendars" - only ever has an effect on an embedded
+          // external calendar's own event, never on any Annuals event.
+          entries.push({
+            toggleKey: "type_calendar_name",
+            configKey: "show_type_calendar_name",
+            fieldKey: key,
+            kind: "calendar_name",
+            group: "external",
+          });
+          entries.push({
+            toggleKey: "type_time",
+            configKey: "show_type_time",
+            fieldKey: key,
+            kind: "time",
+            group: "external",
+          });
+          entries.push({
+            toggleKey: "type_location",
+            configKey: "show_type_location",
+            fieldKey: key,
+            kind: "location",
+            group: "external",
+          });
+          entries.push({
+            toggleKey: "type_description",
+            configKey: "show_type_description",
+            fieldKey: key,
+            kind: "description",
+            group: "external",
+          });
+        }
+      });
+      return { entries, multiField: fieldKeys.length > 1 };
+    }
+
+    // Time/Location/Description/Calendar name toggles only ever apply to the
+    // "type" field, so unlike the country-suffix toggle they never need a
+    // "(Type)"-style disambiguation suffix on their label.
+    _suffixToggleLabel(entry, multiField, strings) {
+      if (entry.kind === "calendar_name") return strings.editor.suffixShowCalendarName || "Calendar name";
+      if (entry.kind === "time") return strings.editor.columnTypeTime || "Time";
+      if (entry.kind === "location") return strings.editor.columnTypeLocation || "Location";
+      if (entry.kind === "description") return strings.editor.columnTypeDescription || "Description";
+      // Just "Suffix", not "Holiday suffix" - the group is now already
+      // titled "Holidays only" (see _suffixGroupHtml), so repeating
+      // "Holiday" on every toggle inside it would be redundant.
+      return multiField
+        ? `${strings.editor.suffixLabel || "Suffix"} (${
+            entry.fieldKey === "name"
+              ? strings.editor.columnTypeName || "Name"
+              : entry.fieldKey === "full_name"
+                ? strings.editor.columnTypeFullName || "Full name"
+                : strings.editor.columnTypeSubtitle || "Type"
+          })`
+        : strings.editor.suffixLabel || "Suffix";
+    }
+
+    // Per-toggle "i" tooltip text - both groups' toggles get one now (the
+    // "Holidays only" group reuses visibilityCountrySuffixDesc, which
+    // already carries a concrete example like "Independence Day · US (UT)").
+    _suffixToggleDesc(entry, strings) {
+      if (entry.kind === "country") {
+        return (
+          strings.editor.visibilityCountrySuffixDesc ||
+          "Append the country (and subdivision, if any) after the holiday's name/type, e.g. “Independence Day · US (UT)”"
+        );
+      }
+      if (entry.kind === "calendar_name") {
+        return (
+          strings.editor.suffixShowCalendarNameDesc ||
+          "Show the external calendar's own name (e.g. \"Personal\") here. Turn off once Time/Location/Description below already say enough on their own."
+        );
+      }
+      if (entry.kind === "time") {
+        return (
+          strings.editor.columnTypeTimeDesc ||
+          "Append the external calendar event's own time range, e.g. \"...03:00 PM–05:00 PM\". Only ever shown for a timed (non all-day) external calendar event."
+        );
+      }
+      if (entry.kind === "location") {
+        return (
+          strings.editor.columnTypeLocationDesc ||
+          "Append the external calendar event's own location. Only ever shown for an external calendar event that has one set."
+        );
+      }
+      if (entry.kind === "description") {
+        return (
+          strings.editor.columnTypeDescriptionDesc ||
+          "Append the external calendar event's own description. Only ever shown for an external calendar event that has one set."
+        );
+      }
+      return "";
+    }
+
+    // Shared by the initial render (_columnRowHtml) and both
+    // _renderColumnsList refresh paths - sets the two group headers' titles
+    // plus every toggle's checked state/label/tooltip, and (only when a
+    // fresh row was just built, never on the label-only refresh path) wires
+    // up each checkbox's change listener.
+    _syncSuffixToggles(row, col, strings, attachListeners) {
+      const { entries: suffixEntries, multiField } = this._suffixToggleEntries(col);
+      const holidayTitle = row.querySelector('[data-suffix-group="holiday"] .suffix-group-title');
+      if (holidayTitle) holidayTitle.textContent = strings.editor.suffixGroupHolidayTitle || "Holidays only";
+      const externalTitle = row.querySelector('[data-suffix-group="external"] .suffix-group-title');
+      if (externalTitle) externalTitle.textContent = strings.editor.suffixGroupExternalTitle || "External calendars";
+      suffixEntries.forEach((entry) => {
+        const cb = row.querySelector(`[data-col-suffix="${entry.toggleKey}"]`);
+        if (!cb) return;
+        cb.checked = this._config[entry.configKey] === true;
+        const wrap = cb.closest(".column-suffix-toggle");
+        wrap.querySelector(".suffix-label").textContent = this._suffixToggleLabel(entry, multiField, strings);
+        const tooltip = wrap.querySelector(".tooltip-anchor");
+        if (tooltip) tooltip.dataset.tooltip = this._suffixToggleDesc(entry, strings);
+        if (attachListeners) {
+          cb.addEventListener("change", () => {
+            this._config = defaultConfig({ ...this._config, [entry.configKey]: cb.checked });
+            this._emit();
+          });
+        }
+      });
+    }
+
+    // One <group> block (a header + its own toggles) - every toggle in
+    // both groups now gets its own "i" tooltip-anchor.
+    _suffixGroupHtml(entries, groupKey) {
+      if (!entries.length) return "";
+      return `
+        <div class="column-suffix-group" data-suffix-group="${groupKey}">
+          <div class="column-suffix-group-header">
+            <span class="suffix-group-title"></span>
+          </div>
+          ${entries
+            .map(
+              (entry) => `
+                <div class="column-suffix-toggle">
+                  <label class="toggle">
+                    <input type="checkbox" data-col-suffix="${entry.toggleKey}">
+                    <span class="track"></span>
+                  </label>
+                  <span class="suffix-label"></span>
+                  <span class="tooltip-anchor" data-tooltip="">
+                    <ha-icon icon="mdi:information-outline"></ha-icon>
+                  </span>
+                </div>
+              `
+            )
+            .join("")}
+        </div>
+      `;
+    }
+
+    _columnRowHtml(col, index, strings) {
+      const isText = col.type === "text";
+      const { entries: suffixEntries } = this._suffixToggleEntries(col);
+      const holidayEntries = suffixEntries.filter((e) => e.group === "holiday");
+      const externalEntries = suffixEntries.filter((e) => e.group === "external");
       return `
         <div class="column-row" data-col-index="${index}">
           <div class="column-row-main">
@@ -9928,22 +11192,11 @@
             </button>
           </div>
           ${
-            suffixKeys.length
+            suffixEntries.length
               ? `
-                <div class="column-suffix-list">
-                  ${suffixKeys
-                    .map(
-                      (key) => `
-                        <div class="column-suffix-toggle">
-                          <label class="toggle">
-                            <input type="checkbox" data-col-suffix="${key}">
-                            <span class="track"></span>
-                          </label>
-                          <span class="suffix-label"></span>
-                        </div>
-                      `
-                    )
-                    .join("")}
+                <div class="column-suffix-groups">
+                  ${this._suffixGroupHtml(holidayEntries, "holiday")}
+                  ${this._suffixGroupHtml(externalEntries, "external")}
                 </div>
               `
               : ""
@@ -9992,40 +11245,7 @@
             }
           }
 
-          const suffixKeys =
-            col.type === "info"
-              ? ["name", "type"]
-              : col.type === "full_name_type"
-                ? ["full_name", "type"]
-                : col.type === "name"
-                  ? ["name"]
-                  : col.type === "full_name"
-                    ? ["full_name"]
-                    : col.type === "type"
-                      ? ["type"]
-                      : [];
-          suffixKeys.forEach((key) => {
-            const configKey =
-              key === "name"
-                ? "show_name_country"
-                : key === "full_name"
-                  ? "show_full_name_country"
-                  : "show_type_country";
-            const cb = row.querySelector(`[data-col-suffix="${key}"]`);
-            if (!cb) return;
-            cb.checked = this._config[configKey] === true;
-            const labelEl = cb.closest(".column-suffix-toggle").querySelector(".suffix-label");
-            labelEl.textContent =
-              suffixKeys.length > 1
-                ? `${strings.editor.visibilityCountrySuffix || "Holiday suffix"} (${
-                    key === "name"
-                      ? strings.editor.columnTypeName || "Name"
-                      : key === "full_name"
-                        ? strings.editor.columnTypeFullName || "Full name"
-                        : strings.editor.columnTypeSubtitle || "Type"
-                  })`
-                : strings.editor.visibilityCountrySuffix || "Holiday suffix";
-          });
+          this._syncSuffixToggles(row, col, strings, false);
         });
         return;
       }
@@ -10077,44 +11297,7 @@
           });
         }
 
-        const suffixKeys =
-          col.type === "info"
-            ? ["name", "type"]
-            : col.type === "full_name_type"
-              ? ["full_name", "type"]
-              : col.type === "name"
-                ? ["name"]
-                : col.type === "full_name"
-                  ? ["full_name"]
-                  : col.type === "type"
-                    ? ["type"]
-                    : [];
-        suffixKeys.forEach((key) => {
-          const configKey =
-            key === "name"
-              ? "show_name_country"
-              : key === "full_name"
-                ? "show_full_name_country"
-                : "show_type_country";
-          const cb = row.querySelector(`[data-col-suffix="${key}"]`);
-          if (!cb) return;
-          cb.checked = this._config[configKey] === true;
-          const labelEl = cb.closest(".column-suffix-toggle").querySelector(".suffix-label");
-          labelEl.textContent =
-            suffixKeys.length > 1
-              ? `${strings.editor.visibilityCountrySuffix || "Holiday suffix"} (${
-                  key === "name"
-                    ? strings.editor.columnTypeName || "Name"
-                    : key === "full_name"
-                      ? strings.editor.columnTypeFullName || "Full name"
-                      : strings.editor.columnTypeSubtitle || "Type"
-                })`
-              : strings.editor.visibilityCountrySuffix || "Holiday suffix";
-          cb.addEventListener("change", () => {
-            this._config = defaultConfig({ ...this._config, [configKey]: cb.checked });
-            this._emit();
-          });
-        });
+        this._syncSuffixToggles(row, col, strings, true);
       });
     }
 
@@ -10648,8 +11831,8 @@
       body.appendChild(optionsHeading);
       const optionsRows = document.createElement("div");
       optionsRows.innerHTML = this._visibilityTwoColHtml(
-        ["timeline_show_full_name", "timeline_show_date"],
-        ["show_holiday_suffix"]
+        ["timeline_show_full_name", "timeline_show_date", "timeline_show_time"],
+        ["show_holiday_suffix", "timeline_show_location", "timeline_show_description"]
       );
       body.appendChild(optionsRows);
       const fullNameToggle = optionsRows.querySelector('input[data-visibility="timeline_show_full_name"]');
@@ -10674,6 +11857,30 @@
       dateRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.timelineShowDateDesc;
       dateToggle.addEventListener("change", () => {
         this._config = defaultConfig({ ...this._config, timeline_show_date: dateToggle.checked });
+        this._emit();
+      });
+      const timeToggle = optionsRows.querySelector('input[data-visibility="timeline_show_time"]');
+      const timeRow = timeToggle.closest(".toggle-row");
+      timeRow.querySelector(".label-text").textContent = strings.editor.timelineShowTime;
+      timeRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.timelineShowTimeDesc;
+      timeToggle.addEventListener("change", () => {
+        this._config = defaultConfig({ ...this._config, timeline_show_time: timeToggle.checked });
+        this._emit();
+      });
+      const locationToggle = optionsRows.querySelector('input[data-visibility="timeline_show_location"]');
+      const locationRow = locationToggle.closest(".toggle-row");
+      locationRow.querySelector(".label-text").textContent = strings.editor.timelineShowLocation;
+      locationRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.timelineShowLocationDesc;
+      locationToggle.addEventListener("change", () => {
+        this._config = defaultConfig({ ...this._config, timeline_show_location: locationToggle.checked });
+        this._emit();
+      });
+      const descriptionToggle = optionsRows.querySelector('input[data-visibility="timeline_show_description"]');
+      const descriptionRow = descriptionToggle.closest(".toggle-row");
+      descriptionRow.querySelector(".label-text").textContent = strings.editor.timelineShowDescription;
+      descriptionRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.timelineShowDescriptionDesc;
+      descriptionToggle.addEventListener("change", () => {
+        this._config = defaultConfig({ ...this._config, timeline_show_description: descriptionToggle.checked });
         this._emit();
       });
 
@@ -10716,6 +11923,14 @@
       if (suffixToggle) suffixToggle.checked = this._config.show_holiday_suffix === true;
       const dateToggle = this.shadowRoot.querySelector('input[data-visibility="timeline_show_date"]');
       if (dateToggle) dateToggle.checked = this._config.timeline_show_date === true;
+      const timeToggle = this.shadowRoot.querySelector('input[data-visibility="timeline_show_time"]');
+      if (timeToggle) timeToggle.checked = this._config.timeline_show_time === true;
+      const locationToggle = this.shadowRoot.querySelector('input[data-visibility="timeline_show_location"]');
+      if (locationToggle) locationToggle.checked = this._config.timeline_show_location === true;
+      const descriptionToggle = this.shadowRoot.querySelector(
+        'input[data-visibility="timeline_show_description"]'
+      );
+      if (descriptionToggle) descriptionToggle.checked = this._config.timeline_show_description === true;
     }
 
     // Hides whichever of this card's Layout fields the *current* layout

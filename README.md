@@ -19,6 +19,8 @@ Typical reasons to use it:
 - **Import a whole country's public holidays** in a few clicks, categorized (public, bank, school breaks, religious, ...).
 - **Highlight the ones that matter most** - flag close family as **VIP** so they always stand out, and let round-number milestones (18th, 30th, 50th, ...) mark themselves as **Important** automatically, both on the bundled dashboard card and in your own automations.
 - **Bring in a whole contact list at once** via CSV, ICS calendar, or vCard import, instead of adding entries one by one.
+- **Count down to a single dated thing that won't recur** - a booked vacation, an appointment, a delivery date - with a **one-time event**, which cleans itself up automatically the day after it passes.
+- **See everything in one place** - embed your existing Home Assistant calendars (Google, CalDAV, Local Calendar, ...) alongside Annuals' own events in the same dashboard card, as a row list, a compact one-line sentence, or a horizontal timeline.
 
 Annuals tracks yearly-recurring events - birthdays, holidays, anniversaries, name days, wedding anniversaries, memorials, or anything custom - and reports, for each one, how many days until its next occurrence and which occurrence number that will be (e.g. someone's 30th birthday).
 
@@ -39,6 +41,7 @@ Annuals tracks yearly-recurring events - birthdays, holidays, anniversaries, nam
 - [Leap years](#leap-years)
 - [Created entities](#created-entities)
 - [Automation examples](#automation-examples)
+- [Countdown for one-time events](#countdown-for-one-time-events)
 - [Native Calendar card](#native-calendar-card)
 - [Custom dashboard card](#custom-dashboard-card)
 - [Installation](#installation)
@@ -56,9 +59,9 @@ The first time you go to **Settings → Devices & Services → Add Integration �
 |---|---|
 | **Name** | Whose event this is (e.g. "Anna"). Becomes the entry's title and the entity name (together with Last name, if set). |
 | **Last name** | Optional, not offered for holidays. Lets you keep first and last name separate - e.g. use just the first name for a compact card, or the full name elsewhere. Exposed as the `last_name` and `full_name` (first + last, or just first if no last name is set) sensor attributes, and as `{last_name}`/`{full_name}` placeholders and dedicated column types in the [custom dashboard card](#custom-dashboard-card). |
-| **Event type** | One of the eight types below - each gets a matching icon and its own aggregate calendar. |
+| **Event type** | One of the nine types below - each gets a matching icon and its own aggregate calendar. |
 | **Day** / **Month** | The recurring date. Deliberately separate fields instead of a date picker - a picker would make you click back month by month to reach a birth year like 1970. |
-| **Year** | Optional. Type it directly (one keystroke instead of a picker). Leave empty when unknown - the `occurrence_number` attribute is then hidden, since it can't be computed without a starting year. |
+| **Year** | Optional for every type except **One-time event**, where it's required (see below). Type it directly (one keystroke instead of a picker). Leave empty when unknown - the `occurrence_number` attribute is then hidden, since it can't be computed without a starting year. |
 | **Icon override** | Optional. Home Assistant's native icon picker. Leave empty to use the type's default icon. |
 | **VIP annual** | Optional, off by default. Marks this one event as VIP - independent of type or occurrence number, e.g. a close family member's birthday you always want to stand out. Purely a display flag: the [custom dashboard card](#custom-dashboard-card) below can filter to VIP-only and show a distinct badge. |
 
@@ -72,8 +75,11 @@ The first time you go to **Settings → Devices & Services → Add Integration �
 | Pet birthday | `mdi:paw` |
 | Work anniversary | `mdi:briefcase` |
 | Custom | `mdi:calendar-heart` |
+| One-time event | `mdi:timer-sand` |
 
-There's a 9th type, **Holiday**, but it isn't offered in this form - it has no single day/month/year of its own (a public holiday's date shifts by country and year), so it's only ever created via [Importing public holidays](#importing-public-holidays) below.
+**One-time event** is different from every other type: it never recurs, so its Year is required (not optional), and there's no occurrence number or Annual Settings milestone for it. Once its date has passed, it's automatically deleted the following midnight - no manual cleanup needed. It's meant for a single dated thing you want a countdown to, e.g. a booked family vacation, that has no reason to stick around once it's over.
+
+There's a 10th type, **Holiday**, but it isn't offered in this form - it has no single day/month/year of its own (a public holiday's date shifts by country and year), so it's only ever created via [Importing public holidays](#importing-public-holidays) below.
 
 To edit or remove an event afterwards, find its entry under **Settings → Devices & Services → Annuals**, and use **Configure** (edit) or the "⋮" menu (delete).
 
@@ -125,9 +131,9 @@ The file needs a header row with these columns:
 | Column | Required | Description |
 |---|---|---|
 | `name` | Yes | Whose event this is. |
-| `type` | Yes | One of the internal English keys, not case-sensitive: `birthday`, `anniversary`, `name_day`, `wedding_anniversary`, `memorial`, `pet_birthday`, `work_anniversary`, `custom`. Always English, regardless of your language setting - translated labels aren't accepted here. |
+| `type` | Yes | One of the internal English keys, not case-sensitive: `birthday`, `anniversary`, `name_day`, `wedding_anniversary`, `memorial`, `pet_birthday`, `work_anniversary`, `custom`, `one_time`. Always English, regardless of your language setting - translated labels aren't accepted here. |
 | `day`, `month` | Yes | The recurring date. |
-| `year` | No | Leave empty if unknown. |
+| `year` | No, except required for `one_time` | Leave empty if unknown - not allowed for `one_time` rows, see [Adding an event](#adding-an-event) above. |
 | `icon` | No | An MDI icon name (e.g. `mdi:cake-variant`) to override the type's default. |
 | `vip` | No | Accepts `1`/`true`/`yes`/`y`/`x` (case-insensitive) to mark the event VIP. Leave empty or omit the column otherwise. |
 | `last_name` | No | Kept separate from `name` - see [Adding an event](#adding-an-event) above. |
@@ -140,6 +146,7 @@ Anna,birthday,12,4,1988,,,Miller
 Max,pet_birthday,3,9,2020,mdi:dog,,
 Acme Corp,work_anniversary,1,7,2015,,,
 Test Custom,custom,1,1,,mdi:test-tube,1,
+Family Vacation,one_time,15,7,2026,mdi:airplane,,
 ```
 
 Re-importing the same CSV later - e.g. a centrally maintained file synced on a schedule - does not create duplicate events. Each row is matched against existing entries by type + day/month + name (not year or last_name, so correcting a wrong birth year or filling in a previously-missing last name still matches the same person); a match updates that event's data in place instead of adding a second one. This only applies to CSV-imported events - manually added events are never touched or matched by a later import.
@@ -187,7 +194,7 @@ Like CSV import, re-running this later for the same calendar updates exactly-mat
 Find the **"Annuals Settings" hub entry**, click **Configure**, and pick **"Import events" → "vCard"** - this first opens a choice between two branches:
 
 - **Import birthdays** - the wizard is identical to ICS import - upload, then settings (swap first/last name, pick the event type), then the paginated review with editable name/date, duplicate detection, the "create as new vs. update existing" choice, and the "Go back" field. Only contacts with a birthday set are read - everything else is skipped.
-- **Import other dates (anniversaries, ...)** - reads every date on a contact *except* the birthday: the standard "Anniversary" field, plus any custom-labelled date Apple/Google Contacts lets you add per contact (e.g. "Anniversary", "Other", or a label typed in by hand). Since these aren't all the same kind of event, there's no single event type to pick up front - the settings step only offers the name-swap toggle, and each entry in review gets its own event type selector, defaulting to Wedding anniversary for anything labelled "Anniversary" and Custom otherwise (the detected label is shown alongside each entry so a wrong guess is easy to spot and correct).
+- **Import other dates (anniversaries, ...)** - reads every date on a contact *except* the birthday: the standard "Anniversary" field, plus any custom-labelled date your contacts app lets you add per contact (e.g. "Anniversary", "Other", or a label typed in by hand). Since these aren't all the same kind of event, there's no single event type to pick up front - the settings step only offers the name-swap toggle, and each entry in review gets its own event type selector, defaulting to Wedding anniversary for anything labelled "Anniversary" and Custom otherwise (the detected label is shown alongside each entry so a wrong guess is easy to spot and correct).
 
 Re-running either branch later for the same contacts/dates updates exactly-matching entries in place, same as ICS/CSV import.
 
@@ -267,22 +274,22 @@ Each event you add is its own config entry, titled `<Type>: <Name>` (e.g. "Birth
 | Entity | Description |
 |---|---|
 | `sensor.annuals_<type>_<name>` | One per event. State is the number of days until its next occurrence; the display name is the translated, type-prefixed event name (e.g. "Birthday Anna"). The `<type>` in the entity_id keeps two events sharing a name (e.g. a birthday and a wedding anniversary) from colliding, and applies to every type including "Custom". |
-| `calendar.annuals_<type>` | One per event *type* (nine total, including Holiday), named in the plural (e.g. "Birthdays"), aggregating every event of that type across all your entries - open it from the built-in Calendar dashboard. |
+| `calendar.annuals_<type>` | One per event *type* (ten total, including Holiday), named in the plural (e.g. "Birthdays"), aggregating every event of that type across all your entries - open it from the built-in Calendar dashboard. |
 
 Attributes on each event's sensor:
 
 | Attribute | Description |
 |---|---|
 | `state` | Days until the next occurrence. |
-| `type` | One of `birthday`, `anniversary`, `name_day`, `wedding_anniversary`, `memorial`, `pet_birthday`, `work_anniversary`, `custom`, `holiday`. |
+| `type` | One of `birthday`, `anniversary`, `name_day`, `wedding_anniversary`, `memorial`, `pet_birthday`, `work_anniversary`, `custom`, `one_time`, `holiday`. |
 | `name` | The plain name as entered (e.g. "Anna"), without the type prefix baked into the entity's display name - handy for building sentences on a dashboard. |
 | `last_name` | The **Last name** field as entered, or an empty string if not set. Always an empty string for `holiday` events. |
 | `full_name` | `name` + `last_name` (e.g. "Anna Miller"), or just `name` if no last name was set. Always equal to `name` for `holiday` events. |
-| `next_date` | Date (ISO format) of the next occurrence. |
-| `occurrence_number` | Which occurrence the next date will be (e.g. `30` for a 30th birthday) - `null` when no year was entered. Always `null` for `holiday` events. |
-| `day`, `month`, `year` | The event's date as entered (`year` is `null` when unknown). Not applicable to `holiday` events - see `next_date` instead, since a public holiday's date shifts by year. |
+| `next_date` | Date (ISO format) of the next occurrence - for `one_time` events, its fixed, non-recurring date, handy for building a countdown display. |
+| `occurrence_number` | Which occurrence the next date will be (e.g. `30` for a 30th birthday) - `null` when no year was entered. Always `null` for `holiday` and `one_time` events, since neither recurs in a way "occurrence number" applies to. |
+| `day`, `month`, `year` | The event's date as entered (`year` is `null` when unknown - always set for `one_time` events, see [Adding an event](#adding-an-event) above). Not applicable to `holiday` events - see `next_date` instead, since a public holiday's date shifts by year. |
 | `vip` | `true` if the **VIP annual** flag is set on this event, `false` otherwise. |
-| `important` | `true` if the upcoming occurrence number matches one of that type's milestones in [Annual Settings](#annual-settings-automatic-milestones), `false` otherwise (always `false` when no year was entered, since there's no occurrence number to check). |
+| `important` | `true` if the upcoming occurrence number matches one of that type's milestones in [Annual Settings](#annual-settings-automatic-milestones), `false` otherwise (always `false` when no year was entered, since there's no occurrence number to check - always `false` for `one_time` events for the same reason). |
 | `category`, `country`, `subdivision` | `holiday` events only - the imported holiday's category (see [Importing public holidays](#importing-public-holidays)), country code, and subdivision code (empty if none was chosen). `null`/absent on every other type. |
 
 Attributes on each per-type calendar (standard Home Assistant calendar entity attributes, reflecting whichever event is current or comes up next for that type):
@@ -290,7 +297,7 @@ Attributes on each per-type calendar (standard Home Assistant calendar entity at
 | Attribute | Description |
 |---|---|
 | `state` | `on` when today falls within one of this type's events (an all-day event, so this is `on` for the whole day), `off` otherwise. |
-| `message` | The event summary shown in the calendar, e.g. "Anna - Birthday (26)" (just "Anna" for Custom events, since restating "Custom" would be redundant). |
+| `message` | The event summary shown in the calendar, e.g. "Anna - Birthday (26)" (just the name for Custom and One-time events, since restating the type or an always-`null` occurrence number would be redundant). |
 | `all_day` | Always `true` - events are stored as whole days, not specific times. |
 | `start_time`, `end_time` | The event's date, formatted as `YYYY-MM-DD HH:MM:SS` (start at midnight, end the next midnight). |
 | `location`, `description` | Always empty - not currently populated. |
@@ -359,14 +366,47 @@ automation:
 
 Adjust the `"7"` in the second example to match however far ahead you want the reminder, and add a second `repeat` block (or duplicate the automation) if you want more than one lead time.
 
+## Countdown for one-time events
+
+<img src="docs/one-time-examples.png" alt="A badge, a Tile card, and a Markdown card all showing the same one-time event countdown" width="45%">
+
+A one-time event's sensor (`state` = days left, plus `full_name` and `next_date` attributes) works with Home Assistant's own built-in cards - no custom card needed. Three ways to show it, from smallest to most flexible:
+
+- **Badge/chip** (top of a view or a Heading card) - **Settings** (pencil icon) → **Add badge** → pick the event's sensor. Shows its icon, name, and "X days" as a small pill.
+- **Tile card** - add a card, pick the sensor; the suggested Tile card shows the same thing as a small stand-alone card.
+- **Markdown card** - for a full sentence that adapts as the countdown reaches zero (e.g. "Still 3 days to go" → "Starts tomorrow!" → "Today's the day! 🎉"):
+
+<details>
+<summary>YAML</summary>
+
+```yaml
+type: markdown
+content: >
+  ## 🌴 {{ state_attr('sensor.annuals_one_time_vacation', 'full_name') }}
+
+  {% set days = states('sensor.annuals_one_time_vacation') | int(0) %}
+  {% if days == 0 %}
+  **Today's the day!** 🎉
+  {% elif days == 1 %}
+  Starts **tomorrow**!
+  {% else %}
+  Still **{{ days }} days** to go
+  {% endif %}
+
+  📅 {{ state_attr('sensor.annuals_one_time_vacation', 'next_date') }}
+```
+
+</details>
+
+Swap `sensor.annuals_one_time_vacation` for your own one-time event's entity ID to reuse any of these as-is.
+
 ## Native Calendar card
-
-<img src="docs/calendars.png" alt="The eight per-type calendars" width="50%">
-
-<img src="docs/calendars-2.png" alt="Calendar event detail view" width="25%">
 
 Add a **Calendar card** pointed at one or more of the `calendar.annuals_<type>` entities for a native calendar view:
 
+<img src="docs/calendars.png" alt="The eight per-type calendars" width="75%">
+
+**Annuals' own `calendar.annuals_*` entities work exactly like any other Home Assistant calendar** - drop them into the native Calendar card above, or into any other custom card that supports calendar entities. **Or flip it around:** use Annuals' own dashboard card below, and pull in your *existing* calendars (Google, CalDAV, Local Calendar, ...) alongside Annuals' events in the same card - see [External calendars](#external-calendars).
 
 ## Custom dashboard card
 
@@ -386,25 +426,42 @@ The editor is split into two tabs - **Settings** (general settings, which event 
 
 ### Row columns
 
-Each row's layout is fully configurable from Layout → Display → **Row columns**: add, remove, and reorder as many columns as you like, choosing from Icon, Name, Last name, Full name, Type, Name + Type, Full name + Type, Occurrence, Countdown, Date, or free-form **Custom text**. **Date** shows the next occurrence in short calendar form without a year (e.g. "3 Aug", localized to your profile language) - or "Today" once it's actually today, same as the Countdown column does. A custom text column mixes any text you like with placeholders - `{name}`, `{last_name}`, `{full_name}`, `{type}`, `{occurrence}`, `{when}`, `{date}`, `{country}` - so a row can read as one continuous sentence instead of a fixed table layout, e.g. turning "Anna · Birthday · 30 · Today" into "🎉 Anna turns 30 today! 🎉". The default arrangement (before you change anything) is **Icon, Full name + Type, Occurrence, Countdown**.
+Each row's layout is fully configurable from Layout → Display → **Row columns**: add, remove, and reorder as many columns as you like, choosing from Icon, Name, Last name, Full name, Type, Name + Type, Full name + Type, Occurrence, Countdown, Date, Time, Location, Description, or free-form **Custom text**. **Date** shows the next occurrence in short calendar form without a year (e.g. "3 Aug", localized to your profile language) - or "Today" once it's actually today, same as the Countdown column does. **Time**, **Location**, and **Description** only ever show anything for an [embedded external calendar event](#external-calendars) - they render empty for every Annuals event, which has none of the three. A custom text column mixes any text you like with placeholders - `{name}`, `{last_name}`, `{full_name}`, `{type}`, `{occurrence}`, `{when}`, `{date}`, `{country}`, `{time}`, `{location}`, `{description}` - so a row can read as one continuous sentence instead of a fixed table layout, e.g. turning "Anna · Birthday · 30 · Today" into "🎉 Anna turns 30 today! 🎉". The default arrangement (before you change anything) is **Icon, Full name + Type, Occurrence, Countdown**.
 
-**Name flexibility for non-holiday events:** set a Last name on an event (Adding an event, above) to get first/last name apart - e.g. a **Name** column showing just "Anna" for a compact card, and a separate **Full name** column ("Anna Miller") elsewhere. Both Colors and Fonts have dedicated rows for Last name and Full name, right next to Name. **Name + Type** and **Full name + Type** columns each get their own pair of **Holiday suffix** toggles (one for the name/full name, one for the type) - same as the standalone Name/Full name/Type columns - to append the imported country (+ subdivision) for holiday rows, e.g. "· US (UT)".
+**Name flexibility for non-holiday events:** set a Last name on an event (Adding an event, above) to get first/last name apart - e.g. a **Name** column showing just "Anna" for a compact card, and a separate **Full name** column ("Anna Miller") elsewhere. Both Colors and Fonts have dedicated rows for Last name and Full name, right next to Name.
+
+Any column that includes a Type field - the standalone **Type** column, or the combined **Name + Type**/**Full name + Type** - shows its extra options grouped under two headings:
+- **Holidays only**: a **Suffix** toggle per name field (Name/Full name/Type on the combined columns, just Type on the standalone one) that appends the imported country (+ subdivision) for holiday rows, e.g. "· US (UT)".
+- **External calendars only**: **Calendar name** (on by default - the source calendar's own name filling the Type cell), **Time**, **Location**, and **Description** - each only ever has an effect on an [embedded external calendar event](#external-calendars); every Annuals event, including a one-time event, ignores them. Turn **Calendar name** off once Time/Location/Description already say enough on their own, e.g. "10:00 AM–10:45 AM · YMCA Pool · Level 2" instead of "Personal · 10:00 AM–10:45 AM · YMCA Pool · Level 2". Joined the same " · " way as everything else on this card.
+
+Every toggle in both groups has its own "i" tooltip explaining exactly what it does.
 
 Turning on **Compact** mode removes the spacing between columns, centers the row, and equalizes the weight/opacity of every field - meant for exactly that sentence-style layout. Switching it on immediately swaps the columns to **Icon, Full name, Occurrence, Type, Countdown, Date**, with a plain space column automatically inserted before each of the last five so nothing runs together with no gap - a starting point you're still free to add, remove, or reorder from there. Switching Compact back off resets the columns to the standard (non-compact) default above. This is also how to build a small "today only" card: duplicate the card, turn on the **Today only** filter (Settings), reduce the columns to a single custom-text one, and enable Compact:
 
 <img src="docs/birthday_small_animated.gif" alt="Compact today-only birthday card" width="40%">
 
+### External calendars
+
+Settings → Events → **External calendars** lets you embed one or more of your existing Home Assistant `calendar.*` entities (Google, CalDAV, a Local Calendar helper, another integration's calendar, ...) alongside Annuals' own events, in the same card. Unlike an Annuals event, an external calendar event lands on its own real date - not a yearly-recurring "next occurrence" - and, within a day it shares with other events, sorts by its own time of day (all-day events first, then timed events earliest-first); an Annuals event has no time of day of its own and always sorts as if it were all-day.
+
+Pick any number of calendars from the entity picker; each one's events within the card's configured day window (`days_ahead`/`days_past`/`soon_days`, same as everything else) are pulled in automatically - no import step, no separate entry, and no effect on Annuals' own `types`/`categories`/VIP/Important filters, which simply don't apply to a calendar event. To also show a calendar event's own time range, location, or description:
+
+- **List layout**: add a **Time**, **Location**, and/or **Description** column ([Row columns](#row-columns) above), or use the same three toggles inline on the Type field itself (see the **External calendars only** group above) - either way, they render empty for every non-calendar event.
+- **Timeline layout**: turn on **Show time** / **Show location** / **Show description** (Layout → Timeline → Options) - each appends into the same trailing parenthetical **Show date** already uses, e.g. "...is in 3 days (03:00 PM–04:00 PM · Home · Weekly sync)". All four are independent toggles; any combination (or none) can be on at once.
+
+A calendar event's icon comes from the source calendar's own icon. Its dot/text color follows that specific calendar's own **Calendar color** - each embedded calendar keeps its own color rather than sharing one. Its "type" text - wherever a row or Timeline sentence would otherwise show one - is the source calendar's own name by default, e.g. "Team meeting - Family", the same way an Annuals event shows "Anna - Birthday" (turn this off with the **Calendar name** toggle above once Time/Location/Description already say enough).
+
 ### Timeline layout
 
 **Layout style** (Layout → Display) switches the whole card from the classic row list to a **Timeline**: a compact horizontal axis with a dot per visible event (sized and positioned by how close it is to today), a header sentence for whichever day is soonest/most recent, and a "Details" toggle that expands the full chronological list. Handy for a narrow Sections-view column where a full row list doesn't fit.
 
-<img src="docs/annuals-card-timeline-example-1.png" alt="Timeline layout, collapsed" width="60%">
+<img src="docs/annuals-card-timeline-example-1.png" alt="Timeline layout, collapsed" width="45%">
 
 Tapping **Details** expands the same axis into the full chronological list, oldest to furthest out:
 
 <img src="docs/annuals-card-timeline-example-2.png" alt="Timeline layout, expanded Details list" width="45%">
 
-- **Options** (Layout → Timeline): **Show full name** shows each event's full name (first + last) instead of just the first name, everywhere the layout uses a name - the header, a dot's tooltip, and the expandable list. **Show date** appends the short calendar date in parentheses at the very end, e.g. "...is in 3 days (6 Aug)" - left off on the event's own day, since the sentence there already ends "...is today". **Show holiday suffix** appends the imported country (+ subdivision) after a holiday's name, e.g. "Pioneer Day (US-UT)".
+- **Options** (Layout → Timeline): **Show full name** shows each event's full name (first + last) instead of just the first name, everywhere the layout uses a name - the header, a dot's tooltip, and the expandable list. **Show date** appends the short calendar date in parentheses at the very end, e.g. "...is in 3 days (6 Aug)" - left off on the event's own day, since the sentence there already ends "...is today". **Show holiday suffix** appends the imported country (+ subdivision) after a holiday's name, e.g. "Pioneer Day (US-UT)". **Show time** / **Show location** / **Show description** each append an [embedded external calendar event's](#external-calendars) own time range/location/description into that same trailing parenthetical - see there for details.
 - **Timeline line / Divider line**: the axis's own width, style (solid/dashed/dotted), and color, and the same three for the vertical line marking the boundary between past and future events (only drawn once past events are visible).
 - **Colors** tab adds Header, Tooltip, List (Details), and Details/More button rows (only shown while Timeline is the active layout style), plus an **Event types** section listing every event type (Birthdays, Anniversaries, Name days, …) with its own color - this drives that type's dot and icon color on the axis, header, and list, replacing the built-in default palette.
 - The footer's **"More" button** (next to "Details") runs its own configurable action - typically a Navigate action pointing at a dashboard using the full List layout - and is hidden entirely while left on "Nothing".
@@ -427,9 +484,9 @@ Clicking or tapping a row used to always open its more-info dialog - that's stil
 
 ### Example configurations
 
-A plain, unstyled card - just the defaults, letting the row highlighting (today/soon) and your Home Assistant theme do the work:
+A plain, unstyled card - just the defaults, letting the row highlighting (today/soon) and your Home Assistant theme do the work. Two existing Home Assistant calendars ("Personal" and "Kids") are embedded alongside Annuals' own events, with their own time/location/description shown instead of the calendar's name:
 
-<img src="docs/annuals-card-example-1.png" alt="Annuals card, default styling" width="60%">
+<img src="docs/annuals-card-example-1.png" alt="Annuals card, default styling" width="50%">
 
 <details>
 <summary>YAML</summary>
@@ -443,6 +500,9 @@ days_ahead: 0
 days_past: 0
 soon_days: 7
 types: []
+external_calendars:
+  - calendar.personal
+  - calendar.kids
 categories: []
 show_past: true
 show_today: true
@@ -455,6 +515,10 @@ show_name: true
 show_name_country: false
 show_type: true
 show_type_country: false
+show_type_calendar_name: false
+show_type_time: true
+show_type_location: true
+show_type_description: true
 show_badge: true
 show_when: true
 show_vip_badge: true
@@ -467,7 +531,7 @@ important_badge_icon: mdi:exclamation-thick
 
 A fully styled card - custom colors per row element, bold/uppercase/underlined fonts, highlight tints for past/today/soon, custom VIP/Important badge icons and colors, and a translucent background image:
 
-<img src="docs/annuals-card-example-2.png" alt="Annuals card, fully styled" width="60%">
+<img src="docs/annuals-card-example-2.png" alt="Annuals card, fully styled" width="50%">
 
 <details>
 <summary>YAML</summary>
