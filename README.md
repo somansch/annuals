@@ -16,7 +16,7 @@ Typical reasons to use it:
 - **Never miss a birthday or anniversary again** - get a notification the morning of, or a heads-up a week before a milestone, using your existing notification setup (mobile app, Alexa, TTS, whatever you already have).
 - **Know at a glance which occurrence it is** - "Anna turns 30" instead of just "Anna's birthday", computed automatically from the year you entered once.
 - **Track more than birthdays** - holidays, name days, wedding anniversaries, memorials, pet birthdays, work anniversaries, or anything custom, each with its own icon and aggregate calendar.
-- **Import a whole country's public holidays** in a few clicks, categorized (public, bank, school breaks, religious, ...) and kept up to date on re-import.
+- **Import a whole country's public holidays** in a few clicks, categorized (public, bank, school breaks, religious, ...).
 - **Highlight the ones that matter most** - flag close family as **VIP** so they always stand out, and let round-number milestones (18th, 30th, 50th, ...) mark themselves as **Important** automatically, both on the bundled dashboard card and in your own automations.
 - **Bring in a whole contact list at once** via CSV, ICS calendar, or vCard import, instead of adding entries one by one.
 
