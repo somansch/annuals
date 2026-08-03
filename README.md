@@ -1,4 +1,4 @@
-# <img src="custom_components/annuals/brand/icon.png" width="40" height="40" align="top"> Annuals Integration for Home Assistant - more than birthdays/holidays only
+# <img src="https://raw.githubusercontent.com/somansch/annuals/main/custom_components/annuals/brand/icon.png" width="40" height="40" align="top"> Annuals Integration for Home Assistant - more than birthdays/holidays only
 
 [![GitHub release](https://img.shields.io/github/v/release/somansch/annuals)](https://github.com/somansch/annuals/releases/latest)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/default)
@@ -6,7 +6,7 @@
 
 **Available languages:** English, Deutsch, Français, Nederlands, Polski, Español, Italiano, Português (Brasil), Русский, Svenska, 简体中文, Čeština, Norsk bokmål, Dansk, Türkçe
 
-<img src="docs/annuals-card-summary.png" alt="List, Timeline, and Compact layouts side by side" width="45%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-summary.png" alt="List, Timeline, and Compact layouts side by side" width="45%">
 
 ## Overview
 
@@ -27,6 +27,17 @@ Annuals tracks yearly-recurring events - birthdays, holidays, anniversaries, nam
 **Architecture note:** each event is its own config entry, the same pattern Home Assistant uses for "helper"-style integrations (Generic Thermostat, Threshold, Derivative, ...). This means finding and editing a specific event later doesn't need a custom picker inside this integration - **Settings → Devices & Services** already has a search box, and clicking an entry's **Configure** opens that one event's form pre-filled, ready to edit.
 
 **Questions, feedback, or just want to see what others are doing with it?** Join the discussion on the [Home Assistant Community thread](https://community.home-assistant.io/t/annuals-more-than-just-a-birthday-tracker/1017120).
+
+## Quick start
+
+1. **Install** via [HACS](#hacs-recommended) (or [manually](#manual)), then restart Home Assistant.
+2. **Settings → Devices & Services → Add Integration → "Annuals"** - this only sets up the shared "Annuals Settings" hub, no event form yet ([First-time setup](#first-time-setup)).
+3. Open the new **"Annuals"** tile and click **Add entry** to create your first event - a name, a type (e.g. Birthday), and a day/month (year optional) ([Adding an event](#adding-an-event)). Repeat for each event, bring in a whole list at once via [CSV](#importing-events-from-a-csv-file), [ICS](#importing-events-from-an-ics-calendar), or [vCard](#importing-events-from-a-vcard-vcf-file) import, or add a country's public [holidays](#importing-public-holidays).
+4. Add the events to a dashboard, either way:
+   - Drop the created `calendar.annuals_*` entities into the [native Calendar card](#native-calendar-card) or any other existing card that supports calendar entities.
+   - Or use the [custom dashboard card](#custom-dashboard-card) for a purpose-built list/compact/timeline view, and optionally add your already-existing calendars there too ([External calendars](#external-calendars)).
+
+That's the whole setup - everything below covers the individual features and options in more depth.
 
 ## Quick links
 
@@ -89,7 +100,7 @@ To add many events at once instead of one at a time see [Annuals Settings](#annu
 
 A handful of cross-event tools - milestone thresholds, bulk import/export, and bulk removal - live in one place, separate from any single event: the **"Annuals Settings" hub entry**, created during [first-time setup](#first-time-setup). Find it under **Settings → Devices & Services → Annuals** and click **Configure**:
 
-<img src="docs/annuals-settings-summary.png" alt="Annuals Settings hub menu" width="45%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-settings-summary.png" alt="Annuals Settings hub menu" width="45%">
 
 ### Annual Settings (automatic milestones)
 
@@ -101,7 +112,7 @@ Both `vip` and `important` are exposed as sensor attributes (see [Created entiti
 
 ### Import events
 
-<img src="docs/annuals-settings-import.png" alt="Import events source picker" width="45%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-settings-import.png" alt="Import events source picker" width="45%">
 
 Pick a source to import from - useful for bringing in a whole contact list, calendar, or country's holidays at once instead of adding events one by one:
 
@@ -368,7 +379,7 @@ Adjust the `"7"` in the second example to match however far ahead you want the r
 
 ## Countdown for one-time events
 
-<img src="docs/one-time-examples.png" alt="A badge, a Tile card, and a Markdown card all showing the same one-time event countdown" width="45%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/one-time-examples.png" alt="A badge, a Tile card, and a Markdown card all showing the same one-time event countdown" width="45%">
 
 A one-time event's sensor (`state` = days left, plus `full_name` and `next_date` attributes) works with Home Assistant's own built-in cards - no custom card needed. Three ways to show it, from smallest to most flexible:
 
@@ -404,7 +415,7 @@ Swap `sensor.annuals_one_time_vacation` for your own one-time event's entity ID 
 
 Add a **Calendar card** pointed at one or more of the `calendar.annuals_<type>` entities for a native calendar view:
 
-<img src="docs/calendars.png" alt="The eight per-type calendars" width="75%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/calendars.png" alt="The eight per-type calendars" width="75%">
 
 **Annuals' own `calendar.annuals_*` entities work exactly like any other Home Assistant calendar** - drop them into the native Calendar card above, or into any other custom card that supports calendar entities. **Or flip it around:** use Annuals' own dashboard card below, and pull in your *existing* calendars (Google, CalDAV, Local Calendar, ...) alongside Annuals' events in the same card - see [External calendars](#external-calendars).
 
@@ -416,11 +427,11 @@ The card's own UI text (not the integration's entities/config-flow, which follow
 
 A List card, a Timeline card, and a Compact one-line card, side by side - all the same integration, three different layouts:
 
-<img src="docs/annuals-card-summary.png" alt="List, Timeline, and Compact layouts side by side" width="90%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-summary.png" alt="List, Timeline, and Compact layouts side by side" width="90%">
 
 ### The visual editor
 
-<img src="docs/annuals-card-editor.png" alt="Annuals card visual editor" width="45%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-editor.png" alt="Annuals card visual editor" width="45%">
 
 The editor is split into two tabs - **Settings** (general settings, which event types to include, and the days-ahead/days-past/soon-threshold time window) and **Layout** (display/row columns, fonts, colors, icons, card background, and timeline) - each further grouped into collapsible sections so the form stays manageable even with this many options.
 
@@ -438,7 +449,7 @@ Every toggle in both groups has its own "i" tooltip explaining exactly what it d
 
 Turning on **Compact** mode removes the spacing between columns, centers the row, and equalizes the weight/opacity of every field - meant for exactly that sentence-style layout. Switching it on immediately swaps the columns to **Icon, Full name, Occurrence, Type, Countdown, Date**, with a plain space column automatically inserted before each of the last five so nothing runs together with no gap - a starting point you're still free to add, remove, or reorder from there. Switching Compact back off resets the columns to the standard (non-compact) default above. This is also how to build a small "today only" card: duplicate the card, turn on the **Today only** filter (Settings), reduce the columns to a single custom-text one, and enable Compact:
 
-<img src="docs/birthday_small_animated.gif" alt="Compact today-only birthday card" width="40%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/birthday_small_animated.gif" alt="Compact today-only birthday card" width="40%">
 
 ### External calendars
 
@@ -455,11 +466,11 @@ A calendar event's icon comes from the source calendar's own icon. Its dot/text 
 
 **Layout style** (Layout → Display) switches the whole card from the classic row list to a **Timeline**: a compact horizontal axis with a dot per visible event (sized and positioned by how close it is to today), a header sentence for whichever day is soonest/most recent, and a "Details" toggle that expands the full chronological list. Handy for a narrow Sections-view column where a full row list doesn't fit.
 
-<img src="docs/annuals-card-timeline-example-1.png" alt="Timeline layout, collapsed" width="45%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-timeline-example-1.png" alt="Timeline layout, collapsed" width="45%">
 
 Tapping **Details** expands the same axis into the full chronological list, oldest to furthest out:
 
-<img src="docs/annuals-card-timeline-example-2.png" alt="Timeline layout, expanded Details list" width="45%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-timeline-example-2.png" alt="Timeline layout, expanded Details list" width="45%">
 
 - **Options** (Layout → Timeline): **Show full name** shows each event's full name (first + last) instead of just the first name, everywhere the layout uses a name - the header, a dot's tooltip, and the expandable list. **Show date** appends the short calendar date in parentheses at the very end, e.g. "...is in 3 days (6 Aug)" - left off on the event's own day, since the sentence there already ends "...is today". **Show holiday suffix** appends the imported country (+ subdivision) after a holiday's name, e.g. "Pioneer Day (US-UT)". **Show time** / **Show location** / **Show description** each append an [embedded external calendar event's](#external-calendars) own time range/location/description into that same trailing parenthetical - see there for details.
 - **Timeline line / Divider line**: the axis's own width, style (solid/dashed/dotted), and color, and the same three for the vertical line marking the boundary between past and future events (only drawn once past events are visible).
@@ -470,13 +481,13 @@ VIP/Important badges get their own Timeline-specific badge colors (Colors tab), 
 
 Everything above - per-event-type dot colors, header/tooltip/list fonts and colors, icons - is just as themeable as the classic List layout:
 
-<img src="docs/annuals-card-timeline-example-3.gif" alt="Timeline layout with custom fonts, colors, and event type colors" width="45%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-timeline-example-3.gif" alt="Timeline layout with custom fonts, colors, and event type colors" width="45%">
 
 ### Icon animations
 
 An **Icons** tab in Layout lets you give each of the three icon colors - Default, Today, Soon - a looping animation: Pulse, Bounce, Shake, Spin, or Flash. Handy for making today's or upcoming events stand out at a glance:
 
-<img src="docs/holiday_small_animated.gif" alt="Pulsing icon animation on an upcoming holiday" width="40%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/holiday_small_animated.gif" alt="Pulsing icon animation on an upcoming holiday" width="40%">
 
 ### Row click/tap behavior
 
@@ -486,7 +497,7 @@ Clicking or tapping a row used to always open its more-info dialog - that's stil
 
 A plain, unstyled card - just the defaults, letting the row highlighting (today/soon) and your Home Assistant theme do the work. Two existing Home Assistant calendars ("Personal" and "Kids") are embedded alongside Annuals' own events, with their own time/location/description shown instead of the calendar's name:
 
-<img src="docs/annuals-card-example-1.png" alt="Annuals card, default styling" width="50%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-example-1.png" alt="Annuals card, default styling" width="50%">
 
 <details>
 <summary>YAML</summary>
@@ -531,7 +542,7 @@ important_badge_icon: mdi:exclamation-thick
 
 A fully styled card - custom colors per row element, bold/uppercase/underlined fonts, highlight tints for past/today/soon, custom VIP/Important badge icons and colors, and a translucent background image:
 
-<img src="docs/annuals-card-example-2.png" alt="Annuals card, fully styled" width="50%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-example-2.png" alt="Annuals card, fully styled" width="50%">
 
 <details>
 <summary>YAML</summary>
