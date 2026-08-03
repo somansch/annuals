@@ -190,6 +190,12 @@
         timelineShowDescription: "Show description",
         timelineShowDescriptionDesc:
           "Append an external calendar event's own description in the same parentheses. Only ever shown for an external calendar event that has one set.",
+        timelineHeaderMaxEvents: "Max events per day",
+        timelineHeaderMaxEventsDesc:
+          "Caps how many header lines a single day of tied events contributes, e.g. 3 birthdays on the same day. Extra events for that day still get their own dot on the axis, just without a header line. Leave empty for no limit.",
+        timelineHeaderMinEvents: "Always show N upcoming",
+        timelineHeaderMinEventsDesc:
+          "Always shows at least this many header lines, pulling in further upcoming (or, once those run out, further recent-past) days beyond the very next one if needed - each still capped by \"max events per day\" above. Leave empty (or 0) to only show the very next day's own events.",
         moreAction: "\"More\" button",
         moreActionDesc:
           "What the timeline's bottom-right \"More\" button does. Typically a Navigate action pointing at a dashboard that shows the same events in the full List layout. Leave it on \"Nothing\" to hide the button.",
@@ -575,6 +581,12 @@
         timelineShowDescription: "Beschreibung anzeigen",
         timelineShowDescriptionDesc:
           "Hängt die Beschreibung eines externen Kalenderereignisses in denselben Klammern an. Nur sichtbar, wenn das externe Kalenderereignis eine Beschreibung hinterlegt hat.",
+        timelineHeaderMaxEvents: "Max. Ereignisse pro Tag",
+        timelineHeaderMaxEventsDesc:
+          "Begrenzt, wie viele Kopfzeilen ein einzelner Tag mit zeitgleichen Ereignissen beisteuert, z. B. 3 Geburtstage am selben Tag. Weitere Ereignisse dieses Tages bekommen trotzdem einen eigenen Punkt auf der Achse, nur keine eigene Kopfzeile mehr. Leer lassen für keine Begrenzung.",
+        timelineHeaderMinEvents: "Immer N kommende anzeigen",
+        timelineHeaderMinEventsDesc:
+          "Zeigt immer mindestens so viele Kopfzeilen, indem bei Bedarf weitere kommende (oder, falls die aufgebraucht sind, weitere kürzlich vergangene) Tage über den nächsten hinaus einbezogen werden - jeder davon weiterhin begrenzt durch „max. Ereignisse pro Tag“ oben. Leer lassen (oder 0) zeigt nur die Ereignisse des nächsten Tages.",
         moreAction: "„Mehr“-Schaltfläche",
         moreActionDesc:
           "Was die Schaltfläche „Mehr“ unten rechts in der Timeline auslöst. Üblicherweise eine Navigations-Aktion zu einem Dashboard, das dieselben Ereignisse im vollständigen Listen-Layout zeigt. Bei „Nichts“ wird die Schaltfläche ausgeblendet.",
@@ -949,6 +961,12 @@
         timelineShowDescription: "Afficher la description",
         timelineShowDescriptionDesc:
           "Ajoute la description propre à un événement de calendrier externe dans les mêmes parenthèses. Affiché uniquement pour un événement de calendrier externe ayant une description définie.",
+        timelineHeaderMaxEvents: "Max. événements par jour",
+        timelineHeaderMaxEventsDesc:
+          "Limite le nombre de lignes d'en-tête qu'un seul jour avec des événements simultanés peut fournir, par ex. 3 anniversaires le même jour. Les événements supplémentaires de ce jour reçoivent quand même leur propre point sur l'axe, mais sans ligne d'en-tête. Laissez vide pour aucune limite.",
+        timelineHeaderMinEvents: "Toujours afficher N événements à venir",
+        timelineHeaderMinEventsDesc:
+          "Affiche toujours au moins ce nombre de lignes d'en-tête, en incluant si nécessaire d'autres jours à venir (ou, une fois ceux-ci épuisés, d'autres jours récents passés) au-delà du tout prochain - chacun restant limité par « max. événements par jour » ci-dessus. Laissez vide (ou 0) pour n'afficher que les événements du tout prochain jour.",
         moreAction: "Bouton « Plus »",
         moreActionDesc:
           "Ce que fait le bouton « Plus » en bas à droite de la timeline. Généralement une action de navigation vers un tableau de bord affichant les mêmes événements dans le layout Liste complet. Laissez sur « Rien » pour masquer le bouton.",
@@ -1322,6 +1340,12 @@
         timelineShowDescription: "Beschrijving tonen",
         timelineShowDescriptionDesc:
           "Voegt de eigen beschrijving van een extern kalenderevenement toe in dezelfde haakjes. Alleen getoond voor een extern kalenderevenement met een ingestelde beschrijving.",
+        timelineHeaderMaxEvents: "Max. evenementen per dag",
+        timelineHeaderMaxEventsDesc:
+          "Beperkt hoeveel kopregels één dag met gelijktijdige evenementen bijdraagt, bijv. 3 verjaardagen op dezelfde dag. Extra evenementen van die dag krijgen nog steeds hun eigen punt op de as, maar zonder eigen kopregel. Laat leeg voor geen limiet.",
+        timelineHeaderMinEvents: "Altijd N komende tonen",
+        timelineHeaderMinEventsDesc:
+          "Toont altijd minstens dit aantal kopregels, door indien nodig verdere komende (of, zodra die op zijn, verdere recent verstreken) dagen naast de eerstvolgende erbij te betrekken - elk nog steeds beperkt door „max. evenementen per dag” hierboven. Laat leeg (of 0) om alleen de evenementen van de eerstvolgende dag te tonen.",
         moreAction: "„Meer”-knop",
         moreActionDesc:
           "Wat de „Meer”-knop rechtsonder in de timeline doet. Meestal een navigatie-actie naar een dashboard dat dezelfde evenementen in het volledige Lijst-layout toont. Laat op „Niets” staan om de knop te verbergen.",
@@ -1701,6 +1725,12 @@
         timelineShowDescription: "Pokaż opis",
         timelineShowDescriptionDesc:
           "Dodaje w tym samym nawiasie opis własny zewnętrznego wydarzenia z kalendarza. Pokazywane tylko dla zewnętrznego wydarzenia z kalendarza, które ma ustawiony opis.",
+        timelineHeaderMaxEvents: "Maks. wydarzeń dziennie",
+        timelineHeaderMaxEventsDesc:
+          "Ogranicza, ile linii nagłówka może dostarczyć jeden dzień z jednoczesnymi wydarzeniami, np. 3 urodziny tego samego dnia. Dodatkowe wydarzenia tego dnia nadal otrzymują własną kropkę na osi, tylko bez własnej linii nagłówka. Pozostaw puste, aby nie ustawiać limitu.",
+        timelineHeaderMinEvents: "Zawsze pokazuj N nadchodzących",
+        timelineHeaderMinEventsDesc:
+          "Zawsze pokazuje co najmniej tyle linii nagłówka, w razie potrzeby uwzględniając kolejne nadchodzące (lub, gdy te się skończą, kolejne niedawno minione) dni poza najbliższym - każdy nadal ograniczony przez „maks. wydarzeń dziennie” powyżej. Pozostaw puste (lub 0), aby pokazywać tylko wydarzenia najbliższego dnia.",
         moreAction: "Przycisk „Więcej”",
         moreActionDesc:
           "Co robi przycisk „Więcej” w prawym dolnym rogu osi czasu. Zwykle akcja nawigacji do pulpitu pokazującego te same wydarzenia w pełnym układzie Lista. Pozostaw „Nic”, aby ukryć przycisk.",
@@ -2074,6 +2104,12 @@
         timelineShowDescription: "Mostrar descripción",
         timelineShowDescriptionDesc:
           "Añade la descripción propia de un evento de calendario externo en los mismos paréntesis. Solo se muestra para un evento de calendario externo que tenga una descripción establecida.",
+        timelineHeaderMaxEvents: "Máx. eventos por día",
+        timelineHeaderMaxEventsDesc:
+          "Limita cuántas líneas de encabezado puede aportar un solo día con eventos simultáneos, p. ej. 3 cumpleaños el mismo día. Los eventos adicionales de ese día siguen recibiendo su propio punto en el eje, solo que sin línea de encabezado propia. Déjelo vacío para no aplicar límite.",
+        timelineHeaderMinEvents: "Mostrar siempre N próximos",
+        timelineHeaderMinEventsDesc:
+          "Muestra siempre al menos esta cantidad de líneas de encabezado, incorporando si es necesario más días próximos (o, una vez agotados estos, más días recientes pasados) más allá del siguiente inmediato - cada uno sigue limitado por «máx. eventos por día» arriba. Déjelo vacío (o 0) para mostrar solo los eventos del día siguiente inmediato.",
         moreAction: "Botón «Más»",
         moreActionDesc:
           "Qué hace el botón «Más» de la esquina inferior derecha de la timeline. Normalmente una acción de navegación hacia un panel que muestra los mismos eventos en el diseño Lista completo. Déjalo en «Nada» para ocultar el botón.",
@@ -2447,6 +2483,12 @@
         timelineShowDescription: "Mostra descrizione",
         timelineShowDescriptionDesc:
           "Aggiunge la descrizione di un evento del calendario esterno nelle stesse parentesi. Mostrato solo per un evento del calendario esterno che ne ha una impostata.",
+        timelineHeaderMaxEvents: "Max eventi al giorno",
+        timelineHeaderMaxEventsDesc:
+          "Limita quante righe di intestazione può fornire un singolo giorno con eventi contemporanei, ad es. 3 compleanni nello stesso giorno. Gli eventi aggiuntivi di quel giorno ricevono comunque un proprio punto sull'asse, solo senza una riga di intestazione propria. Lascia vuoto per nessun limite.",
+        timelineHeaderMinEvents: "Mostra sempre N imminenti",
+        timelineHeaderMinEventsDesc:
+          "Mostra sempre almeno questo numero di righe di intestazione, includendo se necessario ulteriori giorni imminenti (o, una volta esauriti, ulteriori giorni recenti passati) oltre il prossimo immediato - ciascuno comunque limitato da «max eventi al giorno» sopra. Lascia vuoto (o 0) per mostrare solo gli eventi del giorno immediatamente successivo.",
         moreAction: "Pulsante «Altro»",
         moreActionDesc:
           "Cosa fa il pulsante «Altro» in basso a destra nella timeline. Tipicamente un'azione di navigazione verso una dashboard che mostra gli stessi eventi nel layout Lista completo. Lascialo su «Nulla» per nascondere il pulsante.",
@@ -2820,6 +2862,12 @@
         timelineShowDescription: "Mostrar descrição",
         timelineShowDescriptionDesc:
           "Adiciona a descrição própria de um evento de calendário externo nos mesmos parênteses. Exibido apenas para um evento de calendário externo que tenha uma descrição definida.",
+        timelineHeaderMaxEvents: "Máx. de eventos por dia",
+        timelineHeaderMaxEventsDesc:
+          "Limita quantas linhas de cabeçalho um único dia com eventos simultâneos pode contribuir, ex.: 3 aniversários no mesmo dia. Eventos adicionais desse dia ainda recebem seu próprio ponto no eixo, só que sem linha de cabeçalho própria. Deixe em branco para não haver limite.",
+        timelineHeaderMinEvents: "Sempre mostrar N próximos",
+        timelineHeaderMinEventsDesc:
+          "Sempre mostra pelo menos esse número de linhas de cabeçalho, incluindo, se necessário, mais dias futuros (ou, quando esses se esgotarem, mais dias recentes passados) além do próximo imediato - cada um ainda limitado por \"máx. de eventos por dia\" acima. Deixe em branco (ou 0) para mostrar apenas os eventos do dia imediatamente seguinte.",
         moreAction: "Botão \"Mais\"",
         moreActionDesc:
           "O que o botão \"Mais\" no canto inferior direito da timeline faz. Normalmente uma ação de navegação para um painel que mostra os mesmos eventos no layout Lista completo. Deixe em \"Nada\" para ocultar o botão.",
@@ -3198,6 +3246,12 @@
         timelineShowDescription: "Показывать описание",
         timelineShowDescriptionDesc:
           "Добавляет в тех же скобках собственное описание события внешнего календаря. Показывается только для событий внешнего календаря, для которых оно указано.",
+        timelineHeaderMaxEvents: "Макс. событий в день",
+        timelineHeaderMaxEventsDesc:
+          "Ограничивает, сколько строк заголовка может дать один день с одновременными событиями, напр. 3 дня рождения в один день. Дополнительные события этого дня всё равно получают свою точку на оси, просто без отдельной строки заголовка. Оставьте пустым, чтобы не задавать ограничение.",
+        timelineHeaderMinEvents: "Всегда показывать N ближайших",
+        timelineHeaderMinEventsDesc:
+          "Всегда показывает не менее этого количества строк заголовка, при необходимости включая дополнительные предстоящие (а если они закончились - недавние прошедшие) дни помимо самого ближайшего - каждый из них по-прежнему ограничен параметром «макс. событий в день» выше. Оставьте пустым (или 0), чтобы показывать только события самого ближайшего дня.",
         moreAction: "Кнопка «Ещё»",
         moreActionDesc:
           "Что делает кнопка «Ещё» в правом нижнем углу таймлайна. Обычно действие перехода на дашборд, показывающий те же события в полном макете Список. Оставьте «Ничего», чтобы скрыть кнопку.",
@@ -3575,6 +3629,12 @@
         timelineShowDescription: "Visa beskrivning",
         timelineShowDescriptionDesc:
           "Lägger till en extern kalenderhändelses egen beskrivning inom samma parentes. Visas endast för en extern kalenderhändelse som har en beskrivning angiven.",
+        timelineHeaderMaxEvents: "Max antal händelser per dag",
+        timelineHeaderMaxEventsDesc:
+          "Begränsar hur många rubrikrader en enskild dag med sammanfallande händelser bidrar med, t.ex. 3 födelsedagar samma dag. Ytterligare händelser den dagen får ändå en egen punkt på axeln, bara utan egen rubrikrad. Lämna tomt för ingen begränsning.",
+        timelineHeaderMinEvents: "Visa alltid N kommande",
+        timelineHeaderMinEventsDesc:
+          "Visar alltid minst så många rubrikrader, genom att vid behov inkludera ytterligare kommande (eller, när de tar slut, ytterligare nyligen passerade) dagar utöver nästa dag - var och en fortfarande begränsad av \"max antal händelser per dag\" ovan. Lämna tomt (eller 0) för att bara visa nästa dags egna händelser.",
         moreAction: "\"Mer\"-knapp",
         moreActionDesc:
           "Vad knappen \"Mer\" längst ned till höger i tidslinjen gör. Vanligtvis en navigeringsåtgärd till en instrumentpanel som visar samma händelser i det fullständiga Lista-layouten. Lämna på \"Inget\" för att dölja knappen.",
@@ -3950,6 +4010,10 @@
         timelineShowLocationDesc: "在同一括号内附加外部日历事件自身的地点。仅在该外部日历事件设置了地点时显示。",
         timelineShowDescription: "显示描述",
         timelineShowDescriptionDesc: "在同一括号内附加外部日历事件自身的描述。仅在该外部日历事件设置了描述时显示。",
+        timelineHeaderMaxEvents: "每天最多事件数",
+        timelineHeaderMaxEventsDesc: "限制同一天并列事件所能提供的标题行数，例如同一天有 3 个生日。超出上限的事件仍会在轴上显示各自的圆点，只是没有单独的标题行。留空表示不限制。",
+        timelineHeaderMinEvents: "始终显示 N 个即将到来的事件",
+        timelineHeaderMinEventsDesc: "始终至少显示这么多标题行，必要时会将下一天之外的更多即将到来（或用完后，更多近期已过去）的日期也纳入 - 每天仍受上面「每天最多事件数」的限制。留空（或 0）表示只显示下一天自身的事件。",
         moreAction: "「更多」按钮",
         moreActionDesc:
           "时间轴右下角「更多」按钮的作用。通常是跳转到以完整列表布局显示相同事件的仪表盘的导航操作。留空为「无」可隐藏该按钮。",
@@ -4325,6 +4389,12 @@
         timelineShowDescription: "Zobrazit popis",
         timelineShowDescriptionDesc:
           "Ve stejné závorce přidá vlastní popis externí kalendářní události. Zobrazuje se pouze u externí kalendářní události, která má popis nastaven.",
+        timelineHeaderMaxEvents: "Max. počet událostí za den",
+        timelineHeaderMaxEventsDesc:
+          "Omezuje, kolik řádků záhlaví přispěje jeden den se současně probíhajícími událostmi, např. 3 narozeniny ve stejný den. Další události daného dne přesto dostanou vlastní tečku na ose, jen bez vlastního řádku záhlaví. Ponechte prázdné pro neomezený počet.",
+        timelineHeaderMinEvents: "Vždy zobrazit N nadcházejících",
+        timelineHeaderMinEventsDesc:
+          "Vždy zobrazí alespoň tolik řádků záhlaví, přičemž v případě potřeby zahrne další nadcházející (nebo, pokud dojdou, další nedávno uplynulé) dny nad rámec toho úplně nejbližšího - každý z nich stále omezen výše uvedeným „max. počtem událostí za den“. Ponechte prázdné (nebo 0), chcete-li zobrazit pouze události úplně nejbližšího dne.",
         moreAction: "Tlačítko „Více“",
         moreActionDesc:
           "Co dělá tlačítko „Více“ vpravo dole na časové ose. Obvykle akce navigace na řídicí panel zobrazující stejné události v plném rozvržení Seznam. Ponechte na „Nic“, chcete-li tlačítko skrýt.",
@@ -4702,6 +4772,12 @@
         timelineShowDescription: "Vis beskrivelse",
         timelineShowDescriptionDesc:
           "Legger til en ekstern kalenderhendelses egen beskrivelse i samme parentes. Vises bare for en ekstern kalenderhendelse som har en beskrivelse angitt.",
+        timelineHeaderMaxEvents: "Maks hendelser per dag",
+        timelineHeaderMaxEventsDesc:
+          "Begrenser hvor mange overskriftslinjer én enkelt dag med samtidige hendelser bidrar med, f.eks. 3 bursdager samme dag. Ytterligere hendelser den dagen får likevel sin egen prikk på aksen, bare uten egen overskriftslinje. La stå tomt for ingen grense.",
+        timelineHeaderMinEvents: "Vis alltid N kommende",
+        timelineHeaderMinEventsDesc:
+          "Viser alltid minst så mange overskriftslinjer, ved å ved behov inkludere flere kommende (eller, når de tar slutt, flere nylig passerte) dager utover den aller nærmeste - hver av dem fortsatt begrenset av «maks hendelser per dag» ovenfor. La stå tomt (eller 0) for å bare vise den aller nærmeste dagens egne hendelser.",
         moreAction: "«Mer»-knapp",
         moreActionDesc:
           "Hva «Mer»-knappen nederst til høyre i tidslinjen gjør. Vanligvis en navigasjonshandling til et dashbord som viser de samme hendelsene i det fulle Liste-layoutet. La stå på «Ingenting» for å skjule knappen.",
@@ -5079,6 +5155,12 @@
         timelineShowDescription: "Vis beskrivelse",
         timelineShowDescriptionDesc:
           "Tilføjer en ekstern kalenderbegivenheds egen beskrivelse i samme parentes. Vises kun for en ekstern kalenderbegivenhed, der har en beskrivelse angivet.",
+        timelineHeaderMaxEvents: "Maks. antal begivenheder pr. dag",
+        timelineHeaderMaxEventsDesc:
+          "Begrænser, hvor mange overskriftslinjer én enkelt dag med sammenfaldende begivenheder bidrager med, f.eks. 3 fødselsdage samme dag. Yderligere begivenheder den dag får stadig deres egen prik på aksen, blot uden egen overskriftslinje. Lad stå tomt for ingen grænse.",
+        timelineHeaderMinEvents: "Vis altid N kommende",
+        timelineHeaderMinEventsDesc:
+          "Viser altid mindst så mange overskriftslinjer ved om nødvendigt at inddrage yderligere kommende (eller, når de slipper op, yderligere for nylig overståede) dage ud over selve den nærmeste - hver af dem stadig begrænset af „maks. antal begivenheder pr. dag” ovenfor. Lad stå tomt (eller 0) for kun at vise selve den nærmeste dags egne begivenheder.",
         moreAction: "„Mere”-knap",
         moreActionDesc:
           "Hvad „Mere”-knappen nederst til højre i tidslinjen gør. Typisk en navigationshandling til et dashboard, der viser de samme begivenheder i det fulde Liste-layout. Lad den stå på „Intet” for at skjule knappen.",
@@ -5462,6 +5544,12 @@
         timelineShowDescription: "Açıklamayı göster",
         timelineShowDescriptionDesc:
           "Harici bir takvim etkinliğinin kendi açıklamasını aynı parantez içine ekler. Yalnızca açıklaması ayarlanmış harici bir takvim etkinliği için gösterilir.",
+        timelineHeaderMaxEvents: "Gün başına maks. etkinlik",
+        timelineHeaderMaxEventsDesc:
+          "Aynı güne denk gelen etkinliklerin kaç başlık satırı oluşturacağını sınırlar, örn. aynı gün 3 doğum günü. Bu sınırı aşan etkinlikler yine de eksende kendi noktasını alır, sadece kendi başlık satırı olmaz. Sınır olmaması için boş bırakın.",
+        timelineHeaderMinEvents: "Her zaman N yaklaşan göster",
+        timelineHeaderMinEventsDesc:
+          "Gerekirse bir sonraki günün ötesinde daha fazla yaklaşan (veya bunlar tükenirse, daha fazla yakın zamanda geçmiş) günü de dahil ederek her zaman en az bu kadar başlık satırı gösterir - her biri yine de yukarıdaki \"gün başına maks. etkinlik\" ile sınırlıdır. Yalnızca bir sonraki günün kendi etkinliklerini göstermek için boş (veya 0) bırakın.",
         moreAction: "\"Daha fazla\" düğmesi",
         moreActionDesc:
           "Zaman çizelgesinin sağ alt köşesindeki \"Daha fazla\" düğmesinin ne yaptığı. Genellikle aynı etkinlikleri tam Liste düzeninde gösteren bir panoya yönlendiren bir gezinme eylemi. Düğmeyi gizlemek için \"Hiçbiri\" olarak bırakın.",
@@ -5921,6 +6009,20 @@
       timeline_show_time: false,
       timeline_show_location: false,
       timeline_show_description: false,
+      // Timeline layout only, under Layout -> Timeline -> Options: caps how
+      // many header lines a single tied day contributes (see _buildTimeline's
+      // header-building loop) - empty/0 means no cap, same as before this
+      // option existed. Further events tied for a capped day still get their
+      // own axis dot, just without a header line, same as any other day.
+      timeline_header_max_events: "",
+      // Timeline layout only, under Layout -> Timeline -> Options: the
+      // header always shows at least this many lines, pulling in additional
+      // upcoming (or, once exhausted, additional recent-past) days beyond
+      // the first tied day if needed - each further day still respects
+      // timeline_header_max_events above. Empty/0 means no minimum, i.e.
+      // only the first tied day's own events show, same as before this
+      // option existed.
+      timeline_header_min_events: "",
       ...config,
       // Per icon-color-category (accent/today/soon) animation, keyed the
       // same way as colors.match_* so the same "which category is this
@@ -7617,15 +7719,36 @@
       // just the first one _visibleEvents happened to sort first - two
       // events landing on the same day are equally deserving of a header
       // line, and showing only one made the other's own tooltip the only
-      // place its text ever appeared. No cap on how many share that day; the
-      // header is normal in-flow content, so the card simply grows taller to
-      // fit however many lines that takes. "First" always means events[0] -
+      // place its text ever appeared. "First" always means events[0] -
       // _visibleEvents already sorts oldest-past-first, so this is the
       // oldest recent-past event whenever one is visible at all, and falls
       // back to today/the soonest upcoming event exactly as before once no
       // past events are shown.
       const minAxisDays = axisDaysOf(events[0]);
-      const nextGroup = events.filter((e) => axisDaysOf(e) === minAxisDays);
+
+      // timeline_header_max_events (Layout -> Timeline -> Options) caps how
+      // many lines *one* day contributes - without it, a day with a dozen
+      // tied events would make the header that tall. timeline_header_min_events
+      // instead widens the header *across* days, pulling in further days
+      // (each still subject to the same per-day cap) until at least that many
+      // lines are shown in total - useful for always seeing "what's coming
+      // up next" at a glance instead of just today's/the soonest day's own
+      // events. Both default to unset (0), which reproduces the original,
+      // uncapped single-day behavior exactly.
+      const maxPerDay = parseInt(config.timeline_header_max_events, 10) || 0;
+      const minTotal = Math.max(1, parseInt(config.timeline_header_min_events, 10) || 0);
+      const nextGroup = [];
+      for (let i = 0; i < events.length && nextGroup.length < minTotal; ) {
+        const dayVal = axisDaysOf(events[i]);
+        let dayGroup = [];
+        while (i < events.length && axisDaysOf(events[i]) === dayVal) {
+          dayGroup.push(events[i]);
+          i++;
+        }
+        if (maxPerDay > 0 && dayGroup.length > maxPerDay) dayGroup = dayGroup.slice(0, maxPerDay);
+        nextGroup.push(...dayGroup);
+      }
+      const inHeader = (e) => nextGroup.includes(e);
       const header = document.createElement("div");
       header.className = "timeline-header";
       nextGroup.forEach((ev) => {
@@ -7906,10 +8029,11 @@
           });
         }
 
-        // The next event's own details already sit in the header above it -
-        // clicking its dot would just show the same thing again in a
-        // tooltip, so only every later dot gets the click handler.
-        if (!isNext) {
+        // An event already described in the header above (see nextGroup)
+        // has nothing new to show in a tooltip - clicking its dot would
+        // just repeat the same text, so only a dot outside the header gets
+        // the click handler.
+        if (!inHeader(e)) {
           dotWrap.addEventListener("click", (ev) => {
             // Stopped so the document-level "click outside" listener above
             // doesn't immediately close the tooltip this same click just
@@ -9011,6 +9135,7 @@
        Zeroing it here leaves only the container's own margin, matching the
        single-row .toggle-row case exactly. */
     .field-row-split .toggle-row:last-child { margin-bottom: 0; }
+    .field-row-split .field-row:last-child { margin-bottom: 0; }
     /* Marks a row as a dependent sub-option of the one above it (e.g. the
        background color for a "show background" toggle) - indented, smaller,
        with a left border so it visually reads as nested rather than a peer
@@ -11793,6 +11918,37 @@
       const body = document.createElement("div");
       body.className = "timeline-config-body";
 
+      const headerHeading = document.createElement("div");
+      headerHeading.className = "section-heading";
+      headerHeading.textContent = strings.editor.timelineHeaderLabel;
+      body.appendChild(headerHeading);
+      const headerCountWrap = document.createElement("div");
+      headerCountWrap.innerHTML = `
+        <div class="field-row-split">
+          <div class="field-col">
+            ${this._fieldRowHtml("timeline_header_max_events", "number", "", 'min="0" max="50"')}
+          </div>
+          <div class="field-col">
+            ${this._fieldRowHtml("timeline_header_min_events", "number", "", 'min="0" max="50"')}
+          </div>
+        </div>
+      `;
+      body.appendChild(headerCountWrap);
+      this._wireFieldRow(
+        headerCountWrap,
+        "timeline_header_max_events",
+        strings.editor.timelineHeaderMaxEvents,
+        strings.editor.timelineHeaderMaxEventsDesc,
+        (v) => (v === "" ? "" : parseInt(v, 10))
+      );
+      this._wireFieldRow(
+        headerCountWrap,
+        "timeline_header_min_events",
+        strings.editor.timelineHeaderMinEvents,
+        strings.editor.timelineHeaderMinEventsDesc,
+        (v) => (v === "" ? "" : parseInt(v, 10))
+      );
+
       const lineHeading = document.createElement("div");
       lineHeading.className = "section-heading";
       lineHeading.textContent = strings.editor.timelineLineHeading;
@@ -11931,6 +12087,8 @@
         'input[data-visibility="timeline_show_description"]'
       );
       if (descriptionToggle) descriptionToggle.checked = this._config.timeline_show_description === true;
+      this._syncFieldRow("timeline_header_max_events", this._config.timeline_header_max_events);
+      this._syncFieldRow("timeline_header_min_events", this._config.timeline_header_min_events);
     }
 
     // Hides whichever of this card's Layout fields the *current* layout

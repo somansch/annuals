@@ -2,6 +2,15 @@
 
 All notable changes to this integration are documented here.
 
+## v2.6.1
+
+### Added
+- **Timeline header options** (Layout → Timeline → Header): **Max events per day** caps how many header lines a single day of tied events contributes - anything beyond the cap still gets its own dot on the axis, just without a header line. **Always show N upcoming** always shows at least that many header lines in total, pulling in further days beyond the very next one if needed. Both optional; leave either empty for the original, uncapped single-day behavior.
+- **Quick start** section added near the top of the README, summarizing the fastest path from install to first dashboard card.
+
+### Fixed
+- **README images not rendering in HACS**: every `<img>` used a repo-relative path (e.g. `docs/...png`), which GitHub's own viewer resolves but HACS's own README renderer does not. Switched to absolute `raw.githubusercontent.com` URLs.
+
 ## v2.6.0
 
 ### Added
