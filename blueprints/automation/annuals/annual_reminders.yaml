@@ -283,8 +283,11 @@ blueprint:
           name: Media players to announce on (optional)
           description: >-
             If set, speaks the notification title and message on these
-            players via the TTS engine above, for each due reminder. Leave
-            empty to skip TTS entirely.
+            players via the TTS engine above, for each due reminder - one
+            announcement after another (each waits for the player to finish,
+            up to 20s, before the next starts), never overlapping even if
+            several reminders are due the same day. Leave empty to skip TTS
+            entirely.
           default: []
           selector:
             entity:
@@ -494,6 +497,25 @@ action:
                               media_player_entity_id: "{{ repeat.item }}"
                               message: "{{ rendered_title }}. {{ rendered_message }}"
                             continue_on_error: true
+                          # tts.speak itself returns as soon as playback
+                          # *starts*, not once it's finished - with several
+                          # due reminders in the same daily check, the next
+                          # one's tts.speak would otherwise fire while this
+                          # one is still playing, which (depending on the
+                          # player) either cuts this announcement off or gets
+                          # ignored outright because the player's still busy.
+                          # The short delay is just a buffer for playback to
+                          # actually begin before checking; the wait_template
+                          # then blocks until the player's genuinely done (or
+                          # up to 20s, so one unresponsive player can't hang
+                          # the rest of the automation) before moving on to
+                          # the next reminder's announcement.
+                          - delay:
+                              seconds: 1
+                          - wait_template: >-
+                              {{ is_state(repeat.item, 'idle') or is_state(repeat.item, 'paused') }}
+                            timeout: "00:00:20"
+                            continue_on_timeout: true
                 - if:
                     - condition: template
                       value_template: "{{ notify_devices | length > 0 }}"
