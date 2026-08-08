@@ -2,7 +2,7 @@
 
 [![GitHub release](https://img.shields.io/github/v/release/somansch/annuals)](https://github.com/somansch/annuals/releases/latest)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/default)
-[![License](https://img.shields.io/github/license/somansch/annuals)](LICENSE)
+[![License](https://img.shields.io/github/license/somansch/annuals)](https://github.com/somansch/annuals/blob/main/LICENSE)
 
 **Available languages:** English, Deutsch, Français, Nederlands, Polski, Español, Italiano, Português (Brasil), Русский, Svenska, 简体中文, Čeština, Norsk bokmål, Dansk, Türkçe
 
@@ -13,7 +13,7 @@
 Keeping track of birthdays, holidays, anniversaries, and other yearly dates usually means either a separate app you have to remember to check, or a calendar entry that just says "Anna's birthday" without telling you it's her 30th this year. Annuals brings that into Home Assistant instead, so it can show up on your dashboard, feed your existing notification automations, and answer "how many days until X, and which one is it" without any manual bookkeeping each year.
 
 Typical reasons to use it:
-- **Never miss a birthday or anniversary again** - get a notification the morning of, or a heads-up a week before a milestone, using your existing notification setup (mobile app, Alexa, TTS, whatever you already have).
+- **Never miss a birthday or anniversary again** - get a notification the morning of, or a heads-up a week before a milestone, using your existing notification setup (mobile app, Alexa, TTS, whatever you already have) or the bundled [reminder blueprint](#blueprint-upcoming-event-reminders), which sets that up for you with no YAML.
 - **Know at a glance which occurrence it is** - "Anna turns 30" instead of just "Anna's birthday", computed automatically from the year you entered once.
 - **Track more than birthdays** - holidays, name days, wedding anniversaries, memorials, pet birthdays, work anniversaries, or anything custom, each with its own icon and aggregate calendar.
 - **Import a whole country's public holidays** in a few clicks, categorized (public, bank, school breaks, religious, ...).
@@ -36,6 +36,7 @@ Annuals tracks yearly-recurring events - birthdays, holidays, anniversaries, nam
 4. Add the events to a dashboard, either way:
    - Drop the created `calendar.annuals_*` entities into the [native Calendar card](#native-calendar-card) or any other existing card that supports calendar entities.
    - Or use the [custom dashboard card](#custom-dashboard-card) for a purpose-built list/compact/timeline view, and optionally add your already-existing calendars there too ([External calendars](#external-calendars)).
+5. Want to be reminded ahead of time instead of just looking it up? Import the bundled [reminder blueprint](#blueprint-upcoming-event-reminders) and create an automation from it - no YAML required.
 
 That's the whole setup - everything below covers the individual features and options in more depth.
 
@@ -216,7 +217,7 @@ Find the **"Annuals Settings" hub entry** under **Settings → Devices & Service
 The wizard is two steps:
 
 1. **Country** - pick from the full list the `holidays` library supports.
-2. For that country: an optional **state/province** (leave empty for national holidays only; picking one adds that region's own holidays on top), **categories** (which ones are offered depends entirely on what that country's holiday data provides - e.g. `public`, `bank`, `school`, `catholic` - see the table below), and **language** for the holiday names (also country-dependent).
+2. For that country: whether to import each holiday's **actual date**, its practically-**observed date** (many countries shift a holiday that falls on a weekend to a nearby weekday - e.g. a Saturday US federal holiday is observed the preceding Friday), or both as separate events (actual only, by default) - an optional **state/province** (leave empty for national holidays only; picking one adds that region's own holidays on top), **categories** (which ones are offered depends entirely on what that country's holiday data provides - e.g. `public`, `bank`, `school`, `catholic` - see the table below), and **language** for the holiday names (also country-dependent).
 
 | Category | Meaning |
 |---|---|
@@ -226,10 +227,14 @@ The wizard is two steps:
 | School | School holidays/breaks (often multi-day, e.g. summer break) |
 | Optional | Optional/discretionary holidays |
 | Unofficial | Observed but not legally mandated |
+| De facto | Practically observed nationwide, without formal legal status (e.g. Switzerland, Sweden) |
 | Half day | Half-day holiday |
 | Armed forces | Military-specific observances |
 | Workday | A working day despite falling near a holiday (make-up day) |
-| Catholic / Christian / Orthodox / Jewish / Islamic / Hindu / Buddhist | Religious observances |
+| Catholic / Christian / Protestant / Orthodox / Hebrew / Islamic / Hindu / Sabian / Yazidi | Religious observances |
+| Albanian / Armenian / Bosnian / Roma / Serbian / Turkish / Vlach | Ethnic/minority community observances (mostly North Macedonia's multi-ethnic calendar) |
+
+Which categories are offered for a given country depends entirely on what that country's `holidays` library data provides - most only ever expose Public (and maybe Bank/School); the ethnic and minority-specific ones above are rare, country-specific exceptions.
 
 A multi-day category like school holidays (e.g. a 6-week summer break) is imported as a single event on its first day, not one event per day.
 
@@ -293,15 +298,18 @@ Attributes on each event's sensor:
 |---|---|
 | `state` | Days until the next occurrence. |
 | `type` | One of `birthday`, `anniversary`, `name_day`, `wedding_anniversary`, `memorial`, `pet_birthday`, `work_anniversary`, `custom`, `one_time`, `holiday`. |
+| `type_label` | The type above, translated into Home Assistant's configured server language (e.g. "Birthday"/"Geburtstag") - handy for building sentences without hardcoding your own per-type labels. |
 | `name` | The plain name as entered (e.g. "Anna"), without the type prefix baked into the entity's display name - handy for building sentences on a dashboard. |
 | `last_name` | The **Last name** field as entered, or an empty string if not set. Always an empty string for `holiday` events. |
 | `full_name` | `name` + `last_name` (e.g. "Anna Miller"), or just `name` if no last name was set. Always equal to `name` for `holiday` events. |
 | `next_date` | Date (ISO format) of the next occurrence - for `one_time` events, its fixed, non-recurring date, handy for building a countdown display. |
 | `occurrence_number` | Which occurrence the next date will be (e.g. `30` for a 30th birthday) - `null` when no year was entered. Always `null` for `holiday` and `one_time` events, since neither recurs in a way "occurrence number" applies to. |
+| `reminder_message` | A ready-made, translated countdown phrase for `state`, e.g. "in 7 days", "Tomorrow", or "Today" - same language as `type_label`. |
 | `day`, `month`, `year` | The event's date as entered (`year` is `null` when unknown - always set for `one_time` events, see [Adding an event](#adding-an-event) above). Not applicable to `holiday` events - see `next_date` instead, since a public holiday's date shifts by year. |
 | `vip` | `true` if the **VIP annual** flag is set on this event, `false` otherwise. |
 | `important` | `true` if the upcoming occurrence number matches one of that type's milestones in [Annual Settings](#annual-settings-automatic-milestones), `false` otherwise (always `false` when no year was entered, since there's no occurrence number to check - always `false` for `one_time` events for the same reason). |
-| `category`, `country`, `subdivision` | `holiday` events only - the imported holiday's category (see [Importing public holidays](#importing-public-holidays)), country code, and subdivision code (empty if none was chosen). `null`/absent on every other type. |
+| `category`, `country`, `subdivision`, `holiday_key` | `holiday` events only - the imported holiday's category (see [Importing public holidays](#importing-public-holidays)), country code, subdivision code (empty if none was chosen), and its stable identity key (e.g. "New Year's Day") used to match its actual/observed counterpart. `null`/absent on every other type. |
+| `observed` | `holiday` events only - `true` if this entity tracks the holiday's practically-observed (weekend-shifted) date rather than its literal one, see [Importing public holidays](#importing-public-holidays). `false`/absent on every other type. |
 
 Attributes on each per-type calendar (standard Home Assistant calendar entity attributes, reflecting whichever event is current or comes up next for that type):
 
@@ -314,6 +322,27 @@ Attributes on each per-type calendar (standard Home Assistant calendar entity at
 | `location`, `description` | Always empty - not currently populated. |
 
 ## Automation examples
+
+### Blueprint: Upcoming Event Reminders
+
+A ready-to-use automation [blueprint](blueprints/automation/annuals/annual_reminders.yaml) covers the common "remind me ahead of time" case without writing any YAML yourself:
+
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fsomansch%2Fannuals%2Fmain%2Fblueprints%2Fautomation%2Fannuals%2Fannual_reminders.yaml)
+
+- **Target** either a hand-picked list of events, or every event of a chosen type (e.g. all birthdays) - no need to list entities one by one or update the automation when you add a new event.
+- **Filter** by VIP and/or Important, each independently set to "must be" or "must NOT be" - and when both are active, choose whether they need to match together (AND) or either is enough (OR).
+- **Multiple lead times** in one go, e.g. `7,1,0` for a week before, the day before, and the day itself - each is a one-time ping, not a repeating nag.
+- **Notify anywhere**, each its own collapsible section - mix and match freely:
+  - **Mobile App Notify**: push to one or more devices via the Companion App, each with a tappable "Done" button.
+  - **Notifications**: show up in Home Assistant's own notification bell, and/or keep a dashboard status helper (`input_text`) updated for a Markdown/Entity card.
+  - **Text-to-Speech Announcement**: speak the reminder on one or more media players via any TTS engine - several due reminders the same day are announced one after another, never overlapping.
+  - **Custom Actions**: anything else with the normal action editor - email/SMTP, WhatsApp/Telegram/Signal/ntfy, whatever.
+- **Customizable text**: the notification title and message are templates you can edit, with variables for the event's name, type, occurrence number, days until, and more - the event type and countdown phrase (`{{ ev_type }}`, `{{ reminder_message }}`) come pre-translated into Home Assistant's configured language.
+- **Optional to-do list tracking**: each due reminder becomes an item on a to-do list of your choice, using the rendered notification title as its text - due date/time and description are set automatically from the event's own date and the notification message, so there's nothing extra to fill in. Completing it (from the list, or via the mobile notification's "Done" button) resolves the reminder for good: once checked off, that event is skipped by every channel above too, not recreated by a later lead time or a manual re-run.
+
+See the blueprint's own field descriptions (visible when creating an automation from it) for the full details on each option.
+
+### Roll your own
 
 Since `vip` and `important` are plain sensor attributes, they're just as usable in your own automations as on the dashboard card. Both examples below use a daily **time trigger** plus a `repeat: for_each` action, rather than a `state` trigger on one specific entity - that way they keep working as-is no matter how many events you add or remove later, without listing every `sensor.annuals_*` entity by hand. Replace `notify.notify` with your own notify target (e.g. `notify.mobile_app_your_phone`).
 
@@ -421,7 +450,7 @@ Add a **Calendar card** pointed at one or more of the `calendar.annuals_<type>` 
 
 ## Custom dashboard card
 
-Annuals bundles its own Lovelace card (`custom:annuals-card`) - no separate frontend package to install via HACS, it ships with the integration and registers itself automatically. Add it to a dashboard the normal way (search for "Annuals Card" in the card picker) and configure it entirely through its visual editor, no YAML required: which event categories to show, the time window, VIP/Important filters, per-field colors and fonts, highlight tinting for past/today/soon rows, and an optional card background image or color.
+Annuals bundles its own Lovelace card (`custom:annuals-card`) - no separate frontend package to install via HACS, it ships with the integration and registers itself automatically. Add it to a dashboard the normal way (search for "Annuals Card" in the card picker) and configure it entirely through its visual editor, no YAML required: which event categories to show, whether to show a holiday's actual date and/or its observed (shifted) date if you imported both (or a **"Prefer observed date"** toggle that merges an actual/observed pair into one clean entry - drops the "(observed)" suffix and hides the actual duplicate), the time window, VIP/Important filters, per-field colors and fonts, highlight tinting for past/today/soon rows, and an optional card background image or color.
 
 The card's own UI text (not the integration's entities/config-flow, which follow your server's language setting) follows **your personal profile language** - Settings → People → your user → Language - and is available in the same 15 languages as the rest of the integration.
 
@@ -516,6 +545,8 @@ external_calendars:
   - calendar.personal
   - calendar.kids
 categories: []
+holiday_date_variants:
+  - actual
 show_past: true
 show_today: true
 show_soon: true
@@ -565,6 +596,8 @@ types:
   - work_anniversary
   - custom
 categories: []
+holiday_date_variants:
+  - actual
 show_past: true
 show_today: true
 show_soon: true
