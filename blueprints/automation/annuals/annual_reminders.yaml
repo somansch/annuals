@@ -253,14 +253,18 @@ blueprint:
             rendered Notification title above as its text and the rendered
             Notification message as its description - one already open for
             the same event, or already marked completed for it, is never
-            duplicated on a later daily check (so once you've checked it
-            off, it's gone for good - it won't come back on the next
-            reminder threshold for the same event), and completing the item
-            (from the list, or via the notification's "Done" button) is what
-            actually resolves the reminder. Its due date/time is set
-            automatically too: the event's own actual date, at the time of
-            day set under "Notification time" above. Leave empty to just get
-            a plain notification with no "Done" button and no tracking.
+            duplicated on a later daily check. Once an event's item is
+            marked completed (from the list, or via the notification's
+            "Done" button), that's treated as fully resolved: every channel
+            below (Mobile App Notify, Notifications, Text-to-Speech,
+            Custom Actions) skips it too, not just the to-do list itself -
+            so a later reminder threshold for the same event, or re-running
+            the automation manually, won't push/speak/notify about it again.
+            Its due date/time is set automatically too: the event's own
+            actual date, at the time of day set under "Notification time"
+            above. Leave empty to just get a plain notification with no
+            "Done" button and no tracking (and no such skipping, since
+            there's no completed-status to check).
           default: ""
           selector:
             entity:
@@ -396,6 +400,11 @@ action:
                     rendered_message: !input notify_message
                 - variables:
                     summary: "{{ rendered_title }}"
+                    # Only ever True when a to-do list is set below *and* an
+                    # already-completed item matching this event's summary
+                    # is found there - stays False (never blocks anything)
+                    # when to-do tracking isn't used at all.
+                    todo_already_done: false
                 - if:
                     - condition: template
                       value_template: "{{ todo_list != '' }}"
@@ -413,11 +422,18 @@ action:
                       target:
                         entity_id: "{{ todo_list }}"
                       response_variable: existing_items
+                    - variables:
+                        matching_items: >-
+                          {{ existing_items[todo_list]['items']
+                             | selectattr('summary', 'eq', summary) | list }}
+                        todo_already_done: >-
+                          {{ existing_items[todo_list]['items']
+                             | selectattr('summary', 'eq', summary)
+                             | selectattr('status', 'eq', 'completed')
+                             | list | length > 0 }}
                     - if:
                         - condition: template
-                          value_template: >-
-                            {{ (existing_items[todo_list]['items']
-                                | selectattr('summary', 'eq', summary) | list | length) == 0 }}
+                          value_template: "{{ matching_items | length == 0 }}"
                       then:
                         - action: todo.add_item
                           target:
@@ -431,9 +447,16 @@ action:
                             # exactly when the event happens, at whatever
                             # time of day the daily check itself runs.
                             due_datetime: "{{ state_attr(ent, 'next_date') ~ ' ' ~ notify_time }}"
+                # Every channel below is additionally gated on `not
+                # todo_already_done` - once you've checked an event's to-do
+                # off, it's resolved; there's no point still pushing/
+                # announcing/speaking a reminder for it just because another
+                # of its reminder_days thresholds (or a re-run on the same
+                # day) happens to match too. Without a to-do list configured,
+                # todo_already_done is always False, so nothing here changes.
                 - if:
                     - condition: template
-                      value_template: "{{ show_in_notifications }}"
+                      value_template: "{{ show_in_notifications and not todo_already_done }}"
                   then:
                     - action: persistent_notification.create
                       data:
@@ -443,7 +466,7 @@ action:
                       continue_on_error: true
                 - if:
                     - condition: template
-                      value_template: "{{ dashboard_helper != '' }}"
+                      value_template: "{{ dashboard_helper != '' and not todo_already_done }}"
                   then:
                     - action: input_text.set_value
                       target:
@@ -485,7 +508,8 @@ action:
                       continue_on_error: true
                 - if:
                     - condition: template
-                      value_template: "{{ tts_media_players | length > 0 and tts_engine != '' }}"
+                      value_template: >-
+                        {{ tts_media_players | length > 0 and tts_engine != '' and not todo_already_done }}
                   then:
                     - repeat:
                         for_each: "{{ tts_media_players }}"
@@ -504,21 +528,30 @@ action:
                           # one is still playing, which (depending on the
                           # player) either cuts this announcement off or gets
                           # ignored outright because the player's still busy.
-                          # The short delay is just a buffer for playback to
-                          # actually begin before checking; the wait_template
-                          # then blocks until the player's genuinely done (or
-                          # up to 20s, so one unresponsive player can't hang
-                          # the rest of the automation) before moving on to
-                          # the next reminder's announcement.
-                          - delay:
-                              seconds: 1
-                          - wait_template: >-
-                              {{ is_state(repeat.item, 'idle') or is_state(repeat.item, 'paused') }}
+                          # A single wait for "idle/paused" right after
+                          # issuing the command is itself racy - the player
+                          # can easily still show its *previous* idle state
+                          # for a moment while this announcement is only just
+                          # starting (cloud TTS especially can take a couple
+                          # of seconds to synthesize), so that check would
+                          # pass immediately and let the next announcement
+                          # fire before this one even began - exactly the
+                          # overlapping/jumbled audio this is fixing. Waiting
+                          # for "playing" *first* (confirms this specific
+                          # announcement actually started) before waiting for
+                          # it to end again is what avoids that; either wait
+                          # gives up after its own timeout so one
+                          # unresponsive player can't hang the rest of the
+                          # automation.
+                          - wait_template: "{{ is_state(repeat.item, 'playing') }}"
+                            timeout: "00:00:10"
+                            continue_on_timeout: true
+                          - wait_template: "{{ not is_state(repeat.item, 'playing') }}"
                             timeout: "00:00:20"
                             continue_on_timeout: true
                 - if:
                     - condition: template
-                      value_template: "{{ notify_devices | length > 0 }}"
+                      value_template: "{{ notify_devices | length > 0 and not todo_already_done }}"
                   then:
                     - repeat:
                         for_each: "{{ notify_devices }}"
@@ -532,9 +565,13 @@ action:
                                 actions: >-
                                   {{ [{"action": "annuals_reminder_done|" ~ todo_list ~ "|" ~ summary, "title": "Done"}] if todo_list != '' else [] }}
                             continue_on_error: true
-                - alias: Run additional actions
-                  choose: []
-                  default: !input user_actions
+                - if:
+                    - condition: template
+                      value_template: "{{ not todo_already_done }}"
+                  then:
+                    - alias: Run additional actions
+                      choose: []
+                      default: !input user_actions
       # A notification's "Done" button was tapped - mark the matching to-do
       # item complete. The action id carries the to-do list + item summary
       # it belongs to, since the fired event itself doesn't.
