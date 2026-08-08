@@ -18,6 +18,7 @@ from .const import (
     CONF_EVENT_NAME,
     CONF_EVENT_TYPE,
     CONF_HOLIDAY_KEY,
+    CONF_HOLIDAY_OBSERVED,
     CONF_HUB,
     CONF_ICON,
     CONF_IMPORTANT_THRESHOLDS,
@@ -27,7 +28,9 @@ from .const import (
     CONF_SUBDIVISION,
     CONF_VIP,
     CONF_YEAR,
+    DATA_REMINDER_STRINGS,
     DATA_SENSORS,
+    DATA_TYPE_LABELS,
     DEFAULT_IMPORTANT_THRESHOLDS,
     DOMAIN,
     SCAN_INTERVAL_HOURS,
@@ -38,6 +41,7 @@ from .const import (
 from .dates import (
     days_until,
     holiday_display_name,
+    holiday_key_from_name,
     is_important,
     next_holiday_occurrence,
     next_occurrence,
@@ -71,6 +75,18 @@ class AnnualEventSensor(SensorEntity):
         data = config_entry.data
         event_type: str = data[CONF_EVENT_TYPE]
         name: str = data[CONF_EVENT_NAME]
+        if event_type == TYPE_HOLIDAY:
+            # A holiday's static, never-changing identity label - always
+            # holiday_key_from_name(name) (so any accidental "(observed)"/
+            # "(estimated)" suffix baked into an older import self-heals),
+            # with " (observed)" appended back on only for entries that
+            # deliberately track the shifted date (see CONF_HOLIDAY_OBSERVED
+            # and dates.holiday_occurrence_in_year) - never left to whatever
+            # suffix happened to be present in the import year, which would
+            # drift year to year for a plain-date entry and stay permanently
+            # wrong either way once frozen into config_entry.data.
+            base_name = holiday_key_from_name(name)
+            name = f"{base_name} (observed)" if data.get(CONF_HOLIDAY_OBSERVED, False) else base_name
         self._name = name
         # Empty for TYPE_HOLIDAY (never offered on that form) and for any
         # event added before this field existed - never touches
@@ -132,9 +148,11 @@ class AnnualEventSensor(SensorEntity):
             occurrence_num = occurrence_number(year, occurrence)
             important = is_important(occurrence_num, self._important_thresholds(event_type))
 
-        self._attr_native_value = days_until(occurrence, today)
+        days = days_until(occurrence, today)
+        self._attr_native_value = days
         self._attr_extra_state_attributes: dict[str, Any] = {
             "type": event_type,
+            "type_label": self._type_label(event_type),
             "name": self._name,
             "last_name": self._last_name,
             "full_name": f"{self._name} {self._last_name}".strip() if self._last_name else self._name,
@@ -145,6 +163,7 @@ class AnnualEventSensor(SensorEntity):
             "year": year,
             "vip": bool(data.get(CONF_VIP, False)),
             "important": important,
+            "reminder_message": self._reminder_message(days),
         }
 
     def _update_holiday_state(self, data: dict, today: date) -> None:
@@ -158,8 +177,11 @@ class AnnualEventSensor(SensorEntity):
         category: str = data[CONF_CATEGORY]
         holiday_key: str = data[CONF_HOLIDAY_KEY]
         language: str | None = data.get(CONF_LANGUAGE)
+        observed: bool = data.get(CONF_HOLIDAY_OBSERVED, False)
 
-        occurrence = next_holiday_occurrence(country, subdivision, category, holiday_key, today)
+        occurrence = next_holiday_occurrence(
+            country, subdivision, category, holiday_key, today, observed
+        )
         name = self._name
         if occurrence is not None:
             name = (
@@ -167,18 +189,46 @@ class AnnualEventSensor(SensorEntity):
                 or self._name
             )
 
-        self._attr_native_value = days_until(occurrence, today) if occurrence is not None else None
+        days = days_until(occurrence, today) if occurrence is not None else None
+        self._attr_native_value = days
         self._attr_extra_state_attributes: dict[str, Any] = {
             "type": TYPE_HOLIDAY,
+            "type_label": self._type_label(TYPE_HOLIDAY),
             "name": name,
             "next_date": occurrence.isoformat() if occurrence is not None else None,
             "occurrence_number": None,
             "country": country,
             "subdivision": subdivision,
             "category": category,
+            "holiday_key": holiday_key,
             "vip": bool(data.get(CONF_VIP, False)),
             "important": False,
+            "observed": observed,
+            "reminder_message": self._reminder_message(days),
         }
+
+    def _type_label(self, event_type: str) -> str:
+        """This event type's translated label - see DATA_TYPE_LABELS/
+        helpers.async_event_type_labels, cached at integration setup since
+        the lookup itself is async and this method isn't.
+        """
+        labels: dict[str, str] = self._hass_ref.data.get(DOMAIN, {}).get(DATA_TYPE_LABELS, {})
+        return labels.get(event_type, event_type.replace("_", " ").title())
+
+    def _reminder_message(self, days: int | None) -> str | None:
+        """A translated "days until" countdown phrase (see DATA_REMINDER_STRINGS/
+        helpers.async_reminder_strings) - None only when there's no
+        occurrence to count down to at all (a holiday that didn't resolve
+        this update, see _update_holiday_state).
+        """
+        if days is None:
+            return None
+        strings: dict[str, str] = self._hass_ref.data.get(DOMAIN, {}).get(DATA_REMINDER_STRINGS, {})
+        if days == 0:
+            return strings.get("today", "Today")
+        if days == 1:
+            return strings.get("tomorrow", "Tomorrow")
+        return strings.get("in_days", "in {days} days").format(days=days)
 
     def _important_thresholds(self, event_type: str) -> set[int]:
         """The "Annual Settings" milestone list for this event's type, read

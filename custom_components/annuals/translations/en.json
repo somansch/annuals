@@ -1,5 +1,10 @@
 {
     "title": "Annuals",
+    "reminder": {
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "in_days": "in {days} days"
+    },
     "selector": {
         "event_type": {
             "options": {
@@ -48,7 +53,18 @@
                 "hebrew": "Jewish",
                 "islamic": "Islamic",
                 "hindu": "Hindu",
-                "buddhist": "Buddhist"
+                "buddhist": "Buddhist",
+                "de_facto": "De facto",
+                "protestant": "Protestant",
+                "sabian": "Sabian",
+                "yazidi": "Yazidi",
+                "albanian": "Albanian",
+                "armenian": "Armenian",
+                "bosnian": "Bosnian",
+                "roma": "Roma",
+                "serbian": "Serbian",
+                "turkish": "Turkish",
+                "vlach": "Vlach"
             }
         }
     },
@@ -210,9 +226,14 @@
                 "title": "Import holidays - {country}",
                 "description": "Leave the subdivision empty for national holidays only - a state/province adds its own regional holidays on top. Categories and language depend on what this country's holiday data provides. Multi-day categories like school holidays are represented as one event on their first day.",
                 "data": {
+                    "include_actual": "Import the actual date",
+                    "include_observed": "Import the observed (shifted) date",
                     "subdivision": "Subdivision (state/province, optional)",
                     "categories": "Categories",
                     "language": "Language for holiday names"
+                },
+                "data_description": {
+                    "include_observed": "This country's holidays are sometimes shifted to a nearby weekday when they fall on a weekend (e.g. observed the Friday before or Monday after) - import that shifted date too, as a separate event."
                 }
             },
             "remove_holidays": {

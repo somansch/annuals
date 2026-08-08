@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 from datetime import date, datetime, timedelta
+from functools import lru_cache
 import io
 import logging
 import re
@@ -24,6 +25,7 @@ from .const import (
     CONF_EVENT_NAME,
     CONF_EVENT_TYPE,
     CONF_HOLIDAY_KEY,
+    CONF_HOLIDAY_OBSERVED,
     CONF_HUB,
     CONF_ICON,
     CONF_IMPORTANT_THRESHOLDS,
@@ -45,7 +47,7 @@ from .const import (
     TYPE_ONE_TIME,
     TYPE_WEDDING_ANNIVERSARY,
 )
-from .dates import _holiday_calendar, holiday_key_from_name
+from .dates import _holiday_calendar, holiday_key_from_name, holiday_occurrence_in_year
 from .helpers import async_event_type_labels, export_csv_text, full_name, hub_title
 from .http import EXPORT_CSV_URL
 
@@ -59,6 +61,14 @@ _CSV_REQUIRED_COLUMNS = {"name", "type", "day", "month"}
 # stored as-is on a config entry; each imported entry gets exactly one
 # CONF_CATEGORY (see _build_holiday_rows).
 FORM_CATEGORIES = "categories"
+
+# Form-only field names for the "which date(s) to import" toggles in the
+# holiday-import options step - each ends up as CONF_HOLIDAY_OBSERVED (False/
+# True respectively) on the entries the two toggles produce, not stored under
+# these names themselves. Default mirrors what every entry imported before
+# this feature existed already behaved like: the literal date only.
+FORM_INCLUDE_ACTUAL = "include_actual"
+FORM_INCLUDE_OBSERVED = "include_observed"
 
 # Every 2-letter country code the `holidays` library supports - it also
 # registers 3-letter ISO 3166-1 alpha-3 aliases for the same countries, which
@@ -736,14 +746,20 @@ def _import_unique_id(data: dict) -> str:
     Holidays are keyed on country + subdivision + category + holiday_key
     instead - re-running "Import public holidays" for the same
     country/subdivision is what needs to be idempotent there (e.g. to pick
-    up a newly-legislated holiday), not correcting a typo.
+    up a newly-legislated holiday), not correcting a typo. The observed-date
+    variant (see CONF_HOLIDAY_OBSERVED) gets an extra ":observed" suffix so
+    it's a distinct entry from its literal-date counterpart rather than
+    updating it in place - the literal-date key deliberately stays exactly
+    as it was before that field existed, so re-importing after upgrading
+    still matches every already-imported holiday instead of duplicating it.
     """
     if data[CONF_EVENT_TYPE] == TYPE_HOLIDAY:
         subdivision_key = (data.get(CONF_SUBDIVISION) or "").casefold()
-        return (
+        base = (
             f"holiday:{data[CONF_COUNTRY]}:{subdivision_key}:"
             f"{data[CONF_CATEGORY]}:{data[CONF_HOLIDAY_KEY]}"
         )
+        return f"{base}:observed" if data.get(CONF_HOLIDAY_OBSERVED, False) else base
     # Keyed on the first/only name alone, not full_name() - deliberately,
     # so that adding a last name to a row that was already being synced
     # without one (or correcting it) still matches and updates the same
@@ -771,6 +787,7 @@ def _validate_and_normalise_holiday(user_input: dict) -> tuple[dict | None, dict
         CONF_CATEGORY: category,
         CONF_LANGUAGE: user_input.get(CONF_LANGUAGE) or None,
         CONF_HOLIDAY_KEY: holiday_key,
+        CONF_HOLIDAY_OBSERVED: bool(user_input.get(CONF_HOLIDAY_OBSERVED, False)),
         CONF_ICON: (user_input.get(CONF_ICON) or "").strip(),
         CONF_VIP: bool(user_input.get(CONF_VIP, False)),
     }
@@ -797,22 +814,69 @@ def _default_language(cls) -> str | None:
     return cls.default_language if cls.default_language in languages else languages[0]
 
 
-def _needs_holiday_options_step(country_code: str) -> bool:
-    """Whether the country has more than one meaningful subdivision/category/
-    language choice - if not, skip straight to importing with the defaults
-    instead of showing a form with nothing real to decide.
+# How many upcoming years to check when deciding whether a country/holiday
+# ever has a distinct observed occurrence at all (see
+# _country_supports_observed/_holiday_has_observed_variant below) - long
+# enough to cover every weekday alignment a "shifted to the nearest weekday"
+# rule could produce (a 7-year cycle would suffice on its own, but leap
+# years drift that by a day every 4th year, so this doubles it for margin),
+# short enough that checking every holiday during an import stays fast.
+_OBSERVED_CHECK_YEARS = 12
+
+
+@lru_cache(maxsize=64)
+def _country_supports_observed(country_code: str) -> bool:
+    """Whether this country's holiday data ever produces a distinct
+    "(observed)"/"(estimated)" occurrence at all, in any of its categories -
+    many countries have no such concept (e.g. Germany's statutory holidays
+    are never shifted for falling on a weekend), in which case offering the
+    "observed" import toggle would only ever create permanently-identical,
+    pointless duplicate entities (see _build_holiday_rows). There's no
+    simple lookup for this in the `holidays` library - checked empirically,
+    the same way dates.holiday_key_from_name's suffix-stripping is itself
+    just a fact about that library's output rather than something it
+    documents per country.
     """
     cls = _country_class(country_code)
-    return (
-        bool(cls.subdivisions)
-        or len(cls.supported_categories) > 1
-        or len(cls.supported_languages) > 1
-    )
+    this_year = date.today().year
+    for category in cls.supported_categories or (_default_category(cls),):
+        for year in range(this_year, this_year + _OBSERVED_CHECK_YEARS):
+            calendar = _holiday_calendar(country_code, None, category, year, None)
+            if any(name != holiday_key_from_name(name) for name in calendar.values()):
+                return True
+    return False
+
+
+def _holiday_has_observed_variant(
+    country: str, subdivision: str | None, category: str, key: str, from_year: int
+) -> bool:
+    """Whether this *specific* holiday ever has a distinct observed
+    occurrence, checked the same way as _country_supports_observed above but
+    per-key - a country can support observed shifting in general while a
+    given holiday (e.g. one already fixed to a weekday, like "third Monday
+    of January") never actually needs it. Used to skip creating a
+    same-forever, pointless "(observed)" duplicate entity for that one
+    holiday even when the user opted in to observed dates overall.
+    """
+    for year in range(from_year, from_year + _OBSERVED_CHECK_YEARS):
+        actual = holiday_occurrence_in_year(country, subdivision, category, key, year, False)
+        observed = holiday_occurrence_in_year(country, subdivision, category, key, year, True)
+        if actual != observed:
+            return True
+    return False
 
 
 def _holiday_options_schema(country_code: str) -> vol.Schema:
     cls = _country_class(country_code)
     fields: dict = {}
+    # Actual vs. observed is only a real choice when this country's holiday
+    # data ever produces a distinct observed occurrence at all - otherwise
+    # "actual" is the only possible outcome anyway (see
+    # _async_finish_holiday_import's include_actual default of True), so
+    # asking would just be a pointless toggle with one meaningful position.
+    if _country_supports_observed(country_code):
+        fields[vol.Required(FORM_INCLUDE_ACTUAL, default=True)] = selector({"boolean": {}})
+        fields[vol.Required(FORM_INCLUDE_OBSERVED, default=False)] = selector({"boolean": {}})
     if cls.subdivisions:
         fields[vol.Optional(CONF_SUBDIVISION)] = selector(
             {"select": {"options": list(cls.subdivisions), "mode": "dropdown"}}
@@ -835,7 +899,12 @@ def _holiday_options_schema(country_code: str) -> vol.Schema:
 
 
 def _build_holiday_rows(
-    country: str, subdivision: str | None, categories: list[str], language: str | None
+    country: str,
+    subdivision: str | None,
+    categories: list[str],
+    language: str | None,
+    include_actual: bool = True,
+    include_observed: bool = False,
 ) -> list[dict]:
     """One row per distinct holiday across the given category(ies), for the
     current year.
@@ -881,6 +950,15 @@ def _build_holiday_rows(
     which uses whatever language was actually requested. Both come from the
     same underlying dates so they always describe the same holiday, even
     though matching happens by date, not by name.
+
+    `include_actual`/`include_observed` independently control whether each
+    resolved holiday produces a row tracking its literal date, its
+    practically-observed (weekend-shifted) date, or both as two separate
+    entries - see CONF_HOLIDAY_OBSERVED and dates.holiday_occurrence_in_year.
+    The observed row's name always gets " (observed)" appended to the same
+    base identity, regardless of whether *this particular* import year
+    happens to have a shift for it - so the label stays stable across years
+    instead of depending on the accident of which year the import ran in.
     """
     year = date.today().year
     # occurrence date -> (category, holiday_key, display_name)
@@ -894,10 +972,27 @@ def _build_holiday_rows(
             else default_cal
         )
 
+        # Picking the chronologically earliest occurrence per key is right
+        # for multi-day category runs (see docstring), but wrong for a
+        # holiday whose "(observed)"/"(estimated)" shifted date happens to
+        # fall *before* its own real date in this particular year (e.g. a
+        # Saturday US federal holiday is observed the preceding Friday) -
+        # that would otherwise import the suffixed name as the permanent,
+        # never-updated CONF_EVENT_NAME. The plain (unsuffixed) occurrence
+        # always wins when both exist, regardless of date order; "earliest"
+        # only decides ties between two occurrences of the same suffix-ness.
         earliest_by_key: dict[str, date] = {}
         for occurrence, default_name in default_cal.items():
             key = holiday_key_from_name(default_name)
-            if key not in earliest_by_key or occurrence < earliest_by_key[key]:
+            is_plain = default_name == key
+            current = earliest_by_key.get(key)
+            if current is None:
+                earliest_by_key[key] = occurrence
+                continue
+            current_is_plain = default_cal[current] == key
+            if is_plain and not current_is_plain:
+                earliest_by_key[key] = occurrence
+            elif is_plain == current_is_plain and occurrence < current:
                 earliest_by_key[key] = occurrence
 
         for key, occurrence in earliest_by_key.items():
@@ -909,19 +1004,26 @@ def _build_holiday_rows(
 
     rows: list[dict] = []
     for category, key, display_name in chosen.values():
-        rows.append(
-            {
-                CONF_EVENT_NAME: display_name,
-                CONF_EVENT_TYPE: TYPE_HOLIDAY,
-                CONF_COUNTRY: country,
-                CONF_SUBDIVISION: subdivision,
-                CONF_CATEGORY: category,
-                CONF_LANGUAGE: language,
-                CONF_HOLIDAY_KEY: key,
-                CONF_ICON: "",
-                CONF_VIP: False,
-            }
-        )
+        common = {
+            CONF_EVENT_TYPE: TYPE_HOLIDAY,
+            CONF_COUNTRY: country,
+            CONF_SUBDIVISION: subdivision,
+            CONF_CATEGORY: category,
+            CONF_LANGUAGE: language,
+            CONF_HOLIDAY_KEY: key,
+            CONF_ICON: "",
+            CONF_VIP: False,
+        }
+        if include_actual:
+            rows.append({**common, CONF_EVENT_NAME: display_name, CONF_HOLIDAY_OBSERVED: False})
+        # Skip a same-forever, pointless "(observed)" duplicate for a
+        # holiday that never actually shifts (see _holiday_has_observed_variant) -
+        # even a country that supports observed dates in general can still
+        # have individual holidays fixed to a weekday that never needs one.
+        if include_observed and _holiday_has_observed_variant(country, subdivision, category, key, year):
+            rows.append(
+                {**common, CONF_EVENT_NAME: f"{display_name} (observed)", CONF_HOLIDAY_OBSERVED: True}
+            )
     return rows
 
 
@@ -1594,20 +1696,13 @@ class AnnualsOptionsFlow(OptionsFlow):
     async def async_step_import_holidays(self, user_input=None):
         """Step 1 of importing public holidays: pick a country.
 
-        Skips straight to importing with sensible defaults when that
-        country has no subdivisions and only one category/language to begin
-        with (nothing left to actually choose) - otherwise continues to
-        async_step_import_holidays_options for those.
+        Always continues to async_step_import_holidays_options - even a
+        country with no subdivisions and only one category/language still
+        has the actual/observed-date toggles to decide on there.
         """
         if user_input is not None:
-            country = user_input[CONF_COUNTRY]
-            self._holiday_country = country
-            if _needs_holiday_options_step(country):
-                return await self.async_step_import_holidays_options()
-            cls = _country_class(country)
-            return await self._async_finish_holiday_import(
-                country, None, [_default_category(cls)], _default_language(cls)
-            )
+            self._holiday_country = user_input[CONF_COUNTRY]
+            return await self.async_step_import_holidays_options()
 
         return self.async_show_form(
             step_id="import_holidays",
@@ -1618,22 +1713,24 @@ class AnnualsOptionsFlow(OptionsFlow):
                     )
                 }
             ),
-            # Most countries have a follow-up options step, so this shows
-            # "Next" rather than "OK" - the few that skip straight to
-            # importing (no subdivisions/extra categories/languages) are the
-            # exception, not worth a separate always-wrong label for either case.
             last_step=False,
         )
 
     async def async_step_import_holidays_options(self, user_input=None):
-        """Step 2 (only shown when relevant): subdivision/categories/language."""
+        """Step 2: actual/observed-date toggles, plus subdivision/categories/
+        language when the country has more than one meaningful choice there.
+        """
         country = self._holiday_country
         if user_input is not None:
             cls = _country_class(country)
             subdivision = user_input.get(CONF_SUBDIVISION) or None
             categories = user_input.get(FORM_CATEGORIES) or [_default_category(cls)]
             language = user_input.get(CONF_LANGUAGE) or _default_language(cls)
-            return await self._async_finish_holiday_import(country, subdivision, categories, language)
+            include_actual = user_input.get(FORM_INCLUDE_ACTUAL, True)
+            include_observed = user_input.get(FORM_INCLUDE_OBSERVED, False)
+            return await self._async_finish_holiday_import(
+                country, subdivision, categories, language, include_actual, include_observed
+            )
 
         return self.async_show_form(
             step_id="import_holidays_options",
@@ -1643,10 +1740,16 @@ class AnnualsOptionsFlow(OptionsFlow):
         )
 
     async def _async_finish_holiday_import(
-        self, country: str, subdivision: str | None, categories: list[str], language: str | None
+        self,
+        country: str,
+        subdivision: str | None,
+        categories: list[str],
+        language: str | None,
+        include_actual: bool = True,
+        include_observed: bool = False,
     ):
         rows = await self.hass.async_add_executor_job(
-            _build_holiday_rows, country, subdivision, categories, language
+            _build_holiday_rows, country, subdivision, categories, language, include_actual, include_observed
         )
         # Awaited sequentially - see the matching comment in async_step_import_csv
         # on why fire-and-forget (async_create_task) here would race the

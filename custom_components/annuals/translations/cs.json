@@ -1,5 +1,10 @@
 {
     "title": "Annuals",
+    "reminder": {
+        "today": "Dnes",
+        "tomorrow": "Zítra",
+        "in_days": "za {days} dní"
+    },
     "selector": {
         "event_type": {
             "options": {
@@ -12,7 +17,7 @@
                 "work_anniversary": "Pracovní výročí",
                 "custom": "Vlastní",
                 "one_time": "Jednorázová událost",
-                "holiday": "Svátek"
+                "holiday": "Státní svátek"
             }
         },
         "month": {
@@ -48,7 +53,18 @@
                 "hebrew": "Židovský",
                 "islamic": "Islámský",
                 "hindu": "Hinduistický",
-                "buddhist": "Buddhistický"
+                "buddhist": "Buddhistický",
+                "de_facto": "De facto",
+                "protestant": "Protestantská",
+                "sabian": "Sabejská",
+                "yazidi": "Jezídská",
+                "albanian": "Albánská",
+                "armenian": "Arménská",
+                "bosnian": "Bosenská",
+                "roma": "Romská",
+                "serbian": "Srbská",
+                "turkish": "Turecká",
+                "vlach": "Vlašská"
             }
         }
     },
@@ -210,9 +226,14 @@
                 "title": "Import svátků - {country}",
                 "description": "Ponechte oblast prázdnou pro pouze celostátní svátky - kraj/provincie přidá své vlastní regionální svátky. Kategorie a jazyk závisí na tom, co poskytují data o svátcích dané země. Vícedenní kategorie, jako jsou školní prázdniny, jsou reprezentovány jako jedna událost v jejich první den.",
                 "data": {
+                    "include_actual": "Importovat skutečné datum",
+                    "include_observed": "Importovat náhradní (posunuté) datum",
                     "subdivision": "Oblast (kraj/provincie, volitelné)",
                     "categories": "Kategorie",
                     "language": "Jazyk názvů svátků"
+                },
+                "data_description": {
+                    "include_observed": "Svátky této země bývají někdy nahrazeny sousedním pracovním dnem, pokud připadnou na víkend (např. nahrazeno předchozím pátkem nebo následujícím pondělím) - importujte i toto náhradní datum jako samostatnou událost."
                 }
             },
             "remove_holidays": {
@@ -343,7 +364,7 @@
                 "name": "Jednorázové události"
             },
             "holiday": {
-                "name": "Svátky"
+                "name": "Státní svátky"
             }
         }
     }

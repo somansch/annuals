@@ -1,5 +1,10 @@
 {
     "title": "Annuals",
+    "reminder": {
+        "today": "Bugün",
+        "tomorrow": "Yarın",
+        "in_days": "{days} gün sonra"
+    },
     "selector": {
         "event_type": {
             "options": {
@@ -48,7 +53,18 @@
                 "hebrew": "Yahudi",
                 "islamic": "İslami",
                 "hindu": "Hindu",
-                "buddhist": "Budist"
+                "buddhist": "Budist",
+                "de_facto": "Fiili",
+                "protestant": "Protestan",
+                "sabian": "Sabii",
+                "yazidi": "Ezidi",
+                "albanian": "Arnavut",
+                "armenian": "Ermeni",
+                "bosnian": "Boşnak",
+                "roma": "Roman",
+                "serbian": "Sırp",
+                "turkish": "Türk",
+                "vlach": "Ulah"
             }
         }
     },
@@ -210,9 +226,14 @@
                 "title": "Tatilleri içe aktar - {country}",
                 "description": "Yalnızca ulusal tatiller için alt bölgeyi boş bırakın - bir eyalet/il kendi bölgesel tatillerini ekler. Kategoriler ve dil, bu ülkenin tatil verilerinin sağladığı şeye bağlıdır. Okul tatili gibi çok günlü kategoriler, ilk günlerinde tek bir etkinlik olarak temsil edilir.",
                 "data": {
+                    "include_actual": "Gerçek tarihi içe aktar",
+                    "include_observed": "Kaydırılmış (telafi) tarihi içe aktar",
                     "subdivision": "Alt bölge (eyalet/il, isteğe bağlı)",
                     "categories": "Kategoriler",
                     "language": "Tatil adları için dil"
+                },
+                "data_description": {
+                    "include_observed": "Bu ülkenin tatilleri hafta sonuna denk geldiğinde bazen yakın bir iş gününe kaydırılır (örn. önceki Cuma veya sonraki Pazartesi) - bu kaydırılmış tarihi de ayrı bir etkinlik olarak içe aktarın."
                 }
             },
             "remove_holidays": {

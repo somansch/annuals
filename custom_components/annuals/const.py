@@ -94,13 +94,25 @@ CONF_SUBDIVISION = "subdivision"
 CONF_CATEGORY = "category"
 CONF_LANGUAGE = "language"
 CONF_HOLIDAY_KEY = "holiday_key"
+# Whether this entry tracks a holiday's practically-observed (weekend-shifted)
+# date rather than its literal one - see dates.holiday_occurrence_in_year.
+# Absent (.get(..., False)) on every entry imported before this field
+# existed, which is exactly the "literal date" behaviour they already had.
+CONF_HOLIDAY_OBSERVED = "holiday_observed"
 
-# Icon per `holidays` library category - covers the category names actually
-# seen across supported countries (public/bank/government/school/optional/
-# unofficial/half_day/armed_forces/workday/catholic, plus a few more religious
-# ones some countries expose). Falls back to TYPE_ICONS[TYPE_HOLIDAY] for any
-# category not listed here, so an unrecognised or future category never
-# errors - it just gets the generic flag icon instead of a specific one.
+# Icon per `holidays` library category - every category value the library
+# defines across its entire country set, confirmed exhaustively (not
+# guessed) by scanning `holidays.countries`' supported_categories at
+# 2026-08-08: mostly public/bank/government/school-type categories, plus a
+# handful of religious ones (some countries), and - only for North Macedonia
+# (albanian/bosnian/roma/serbian/turkish/vlach), Iraq (sabian/yazidi),
+# Switzerland/Sweden (de_facto), Austria (protestant), Argentina (armenian) -
+# ethnic/minority-specific ones. Falls back to TYPE_ICONS[TYPE_HOLIDAY] for
+# any category not listed here (defensive only - the list above should
+# already be exhaustive; re-run the same scan if the `holidays` dependency
+# is ever upgraded and a country's categories change), and the frontend
+# additionally falls back to a humanized version of the raw value instead of
+# ever showing a blank or untranslated label (see annuals-card.js).
 CATEGORY_ICONS = {
     "public": "mdi:flag-variant",
     "bank": "mdi:bank",
@@ -108,16 +120,26 @@ CATEGORY_ICONS = {
     "school": "mdi:school",
     "optional": "mdi:calendar-question",
     "unofficial": "mdi:calendar-remove",
+    "de_facto": "mdi:calendar-check-outline",
     "half_day": "mdi:clock-time-four",
     "armed_forces": "mdi:shield-star",
     "workday": "mdi:briefcase-clock",
     "catholic": "mdi:cross",
     "christian": "mdi:cross",
+    "protestant": "mdi:book-cross",
     "orthodox": "mdi:cross-outline",
     "hebrew": "mdi:star-david",
     "islamic": "mdi:mosque",
     "hindu": "mdi:om",
-    "buddhist": "mdi:flower-lotus",
+    "sabian": "mdi:water-outline",
+    "yazidi": "mdi:star-four-points-outline",
+    "albanian": "mdi:account-group",
+    "armenian": "mdi:account-group",
+    "bosnian": "mdi:account-group",
+    "roma": "mdi:account-group",
+    "serbian": "mdi:account-group",
+    "turkish": "mdi:account-group",
+    "vlach": "mdi:account-group",
 }
 
 # Recomputed hourly regardless, but a poll landing e.g. 23:50 would otherwise
@@ -130,6 +152,14 @@ SCAN_INTERVAL_HOURS = 1
 # recompute "days until" right after local midnight instead of waiting for
 # their next hourly poll.
 DATA_SENSORS = "sensors"
+
+# hass.data[DOMAIN][DATA_TYPE_LABELS] / [DATA_REMINDER_STRINGS] - cached once
+# per HA run (see __init__.py's async_setup_entry, populated before any
+# sensor is constructed) since the translation lookup itself is async and
+# AnnualEventSensor._update_state/_update_holiday_state below are sync -
+# reused for the "type_label"/"reminder_message" sensor attributes.
+DATA_TYPE_LABELS = "type_labels"
+DATA_REMINDER_STRINGS = "reminder_strings"
 
 # Hub-entry options key prefix for the per-type "important" occurrence-number
 # thresholds ("Annual Settings"), e.g. "important_thresholds_birthday". Kept

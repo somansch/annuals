@@ -1,5 +1,10 @@
 {
     "title": "Annuals",
+    "reminder": {
+        "today": "Heute",
+        "tomorrow": "Morgen",
+        "in_days": "in {days} Tagen"
+    },
     "selector": {
         "event_type": {
             "options": {
@@ -48,7 +53,18 @@
                 "hebrew": "Jüdisch",
                 "islamic": "Islamisch",
                 "hindu": "Hinduistisch",
-                "buddhist": "Buddhistisch"
+                "buddhist": "Buddhistisch",
+                "de_facto": "De facto",
+                "protestant": "Protestantisch",
+                "sabian": "Sabäisch",
+                "yazidi": "Jesidisch",
+                "albanian": "Albanisch",
+                "armenian": "Armenisch",
+                "bosnian": "Bosnisch",
+                "roma": "Roma",
+                "serbian": "Serbisch",
+                "turkish": "Türkisch",
+                "vlach": "Vlachisch"
             }
         }
     },
@@ -210,9 +226,14 @@
                 "title": "Feiertage importieren - {country}",
                 "description": "Bundesland/Provinz leer lassen für nur landesweite Feiertage - eine Auswahl fügt eigene regionale Feiertage hinzu. Kategorien und Sprache hängen davon ab, was für dieses Land verfügbar ist. Mehrtägige Kategorien wie Schulferien werden als ein Ereignis am ersten Tag dargestellt.",
                 "data": {
+                    "include_actual": "Tatsächliches Datum importieren",
+                    "include_observed": "Nachgeholtes (verschobenes) Datum importieren",
                     "subdivision": "Bundesland/Provinz (optional)",
                     "categories": "Kategorien",
                     "language": "Sprache der Feiertagsnamen"
+                },
+                "data_description": {
+                    "include_observed": "Feiertage dieses Landes werden manchmal auf einen nahegelegenen Wochentag verschoben, wenn sie auf ein Wochenende fallen (z. B. am Freitag davor oder Montag danach nachgeholt) - importiere dieses nachgeholte Datum zusätzlich als eigenes Ereignis."
                 }
             },
             "remove_holidays": {

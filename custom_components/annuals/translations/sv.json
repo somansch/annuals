@@ -1,5 +1,10 @@
 {
     "title": "Annuals",
+    "reminder": {
+        "today": "Idag",
+        "tomorrow": "Imorgon",
+        "in_days": "om {days} dagar"
+    },
     "selector": {
         "event_type": {
             "options": {
@@ -48,7 +53,18 @@
                 "hebrew": "Judisk",
                 "islamic": "Islamisk",
                 "hindu": "Hinduisk",
-                "buddhist": "Buddhistisk"
+                "buddhist": "Buddhistisk",
+                "de_facto": "De facto",
+                "protestant": "Protestantisk",
+                "sabian": "Sabeisk",
+                "yazidi": "Jazidisk",
+                "albanian": "Albansk",
+                "armenian": "Armenisk",
+                "bosnian": "Bosnisk",
+                "roma": "Romsk",
+                "serbian": "Serbisk",
+                "turkish": "Turkisk",
+                "vlach": "Vlakisk"
             }
         }
     },
@@ -210,9 +226,14 @@
                 "title": "Importera helgdagar - {country}",
                 "description": "Lämna delregionen tom för endast nationella helgdagar - ett län/provins lägger till sina egna regionala helgdagar. Kategorier och språk beror på vad detta lands helgdagsdata tillhandahåller. Flerdagskategorier som skollov representeras som en händelse på den första dagen.",
                 "data": {
+                    "include_actual": "Importera det faktiska datumet",
+                    "include_observed": "Importera det observerade (flyttade) datumet",
                     "subdivision": "Delregion (län/provins, valfritt)",
                     "categories": "Kategorier",
                     "language": "Språk för helgdagsnamn"
+                },
+                "data_description": {
+                    "include_observed": "Detta lands helgdagar flyttas ibland till en närliggande vardag när de infaller på en helg (t.ex. observerad fredagen innan eller måndagen efter) - importera även detta flyttade datum som en separat händelse."
                 }
             },
             "remove_holidays": {

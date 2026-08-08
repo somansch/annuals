@@ -123,27 +123,100 @@ def _holiday_calendar(
 
 
 def holiday_occurrence_in_year(
-    country: str, subdivision: str | None, category: str, holiday_key: str, year: int
+    country: str,
+    subdivision: str | None,
+    category: str,
+    holiday_key: str,
+    year: int,
+    observed: bool = False,
 ) -> date | None:
     """This holiday's date in the given year, or None if it doesn't occur
     that year (rare, but a real possibility - not every holiday is observed
     every single year in every source).
+
+    A statutory holiday can have two distinct dates in the same year: its
+    literal, unshifted date (e.g. Independence Day is always July 4th) and,
+    when that date falls on a weekend, a nearby weekday it's practically
+    observed on instead (the `holidays` library appends "(observed)"/
+    "(estimated)" to the name for that second date - see _NAME_SUFFIXES).
+    `observed=False` (the default) always resolves to the literal date;
+    `observed=True` resolves to the shifted date in years it exists, falling
+    back to the same literal date in years it doesn't (a holiday that always
+    falls on a weekday has nothing to shift), so an "observed" entity never
+    goes without a next occurrence. Lunar/Hijri-calendar holidays that are
+    *always* shown "(estimated)" (no literal variant ever exists) resolve
+    the same regardless of `observed`, since there's only the one date.
     """
-    calendar = _holiday_calendar(country, subdivision, category, year, None)
-    matches = [d for d, name in calendar.items() if holiday_key_from_name(name) == holiday_key]
-    return min(matches) if matches else None
+    plain: date | None = None
+    for occurrence, name in _holiday_calendar(country, subdivision, category, year, None).items():
+        if holiday_key_from_name(name) == holiday_key and name == holiday_key_from_name(name):
+            if plain is None or occurrence < plain:
+                plain = occurrence
+
+    shifted: date | None = None
+    if plain is not None:
+        # A shift for *this* occurrence always lands within a handful of
+        # days of its own literal date (a weekend nudge, never a different
+        # year's holiday) - search the neighbouring years too, not just
+        # `year`'s own calendar dict, since the shift can cross a
+        # calendar-year boundary in either direction. New Year's Day is the
+        # case that needs this: when the *following* Jan 1 falls on a
+        # Saturday, the `holidays` library backs its observed shift up into
+        # December of the *previous* year - so e.g. year=2027's own
+        # calendar dict contains both 2027's literal Jan 1 (a Friday,
+        # unshifted) *and* the unrelated observed shift of 2028's Jan 1
+        # (Dec 31, 2027), while year=2028's dict never contains that shift
+        # at all (Dec 31 numerically belongs to 2027). Naively treating
+        # "the first suffixed entry found in this year's dict" as this
+        # occurrence's shift - the previous approach - would then either
+        # pair 2027's actual with a shift that isn't really its own, or
+        # miss 2028's real shift entirely. Filtering by proximity to
+        # `plain` instead of by which year's dict the entry happened to
+        # land in fixes both.
+        best: tuple[int, date] | None = None
+        for neighbour_year in (year - 1, year, year + 1):
+            for occurrence, name in _holiday_calendar(
+                country, subdivision, category, neighbour_year, None
+            ).items():
+                if holiday_key_from_name(name) != holiday_key or name == holiday_key_from_name(name):
+                    continue
+                delta = abs((occurrence - plain).days)
+                if delta <= 6 and (best is None or delta < best[0]):
+                    best = (delta, occurrence)
+        if best is not None:
+            shifted = best[1]
+    else:
+        # Estimated-only holiday (lunar/Hijri) - the name is always
+        # suffixed, so there's no unsuffixed "plain" entry to anchor a
+        # proximity search on; just use whatever's in this year's dict.
+        for occurrence, name in _holiday_calendar(country, subdivision, category, year, None).items():
+            if holiday_key_from_name(name) == holiday_key:
+                if shifted is None or occurrence < shifted:
+                    shifted = occurrence
+
+    if observed:
+        return shifted if shifted is not None else plain
+    return plain if plain is not None else shifted
 
 
 def next_holiday_occurrence(
-    country: str, subdivision: str | None, category: str, holiday_key: str, today: date
+    country: str,
+    subdivision: str | None,
+    category: str,
+    holiday_key: str,
+    today: date,
+    observed: bool = False,
 ) -> date | None:
-    """The next occurrence of this holiday on or after today.
+    """The next occurrence of this holiday on or after today - see
+    holiday_occurrence_in_year for what `observed` selects between.
 
     None only if the holiday isn't found in any of the next few years -
     e.g. it was legislated away - since that can't be assumed impossible.
     """
     for year in (today.year, today.year + 1, today.year + 2):
-        occurrence = holiday_occurrence_in_year(country, subdivision, category, holiday_key, year)
+        occurrence = holiday_occurrence_in_year(
+            country, subdivision, category, holiday_key, year, observed
+        )
         if occurrence is not None and occurrence >= today:
             return occurrence
     return None

@@ -1,5 +1,10 @@
 {
     "title": "Annuals",
+    "reminder": {
+        "today": "Hoy",
+        "tomorrow": "Mañana",
+        "in_days": "en {days} días"
+    },
     "selector": {
         "event_type": {
             "options": {
@@ -48,7 +53,18 @@
                 "hebrew": "Judío",
                 "islamic": "Islámico",
                 "hindu": "Hindú",
-                "buddhist": "Budista"
+                "buddhist": "Budista",
+                "de_facto": "De facto",
+                "protestant": "Protestante",
+                "sabian": "Sabea",
+                "yazidi": "Yazidí",
+                "albanian": "Albanesa",
+                "armenian": "Armenia",
+                "bosnian": "Bosnia",
+                "roma": "Romaní",
+                "serbian": "Serbia",
+                "turkish": "Turca",
+                "vlach": "Valaca"
             }
         }
     },
@@ -210,9 +226,14 @@
                 "title": "Importar festivos - {country}",
                 "description": "Deja la subdivisión vacía para solo festivos nacionales - una comunidad/provincia añade sus propios festivos regionales. Las categorías y el idioma dependen de lo que ofrezcan los datos de festivos de ese país. Las categorías de varios días, como las vacaciones escolares, se representan como un evento el primer día.",
                 "data": {
+                    "include_actual": "Importar la fecha real",
+                    "include_observed": "Importar la fecha observada (trasladada)",
                     "subdivision": "Subdivisión (comunidad/provincia, opcional)",
                     "categories": "Categorías",
                     "language": "Idioma de los nombres de los festivos"
+                },
+                "data_description": {
+                    "include_observed": "Los festivos de este país a veces se trasladan a un día laborable cercano cuando caen en fin de semana (p. ej. observado el viernes anterior o el lunes siguiente) - importa también esa fecha trasladada como un evento separado."
                 }
             },
             "remove_holidays": {

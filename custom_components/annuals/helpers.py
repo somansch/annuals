@@ -101,6 +101,34 @@ async def async_event_type_labels(hass: HomeAssistant) -> dict[str, str]:
     }
 
 
+async def async_reminder_strings(hass: HomeAssistant) -> dict[str, str]:
+    """Localized phrases for a "days until" countdown, in the server's
+    language - exposed as each event sensor's "reminder_message" attribute
+    (see sensor.py) so the bundled "Upcoming Event Reminders" blueprint's
+    notifications/to-do items read naturally instead of always in English.
+    Deliberately mirrors the exact wording the frontend card's own
+    STRINGS.today/inDay/inDays already use per language (annuals-card.js),
+    so the two stay consistent - but that JS object lives only in the
+    browser and can't be read from here, so the same phrases are kept a
+    second time as real translations/<lang>.json strings instead.
+
+    Only distinguishes "today"/"tomorrow" (singular) from every other count
+    (formatted into "in_days") - a simplified two-form split rather than
+    each language's full CLDR plural rules (Polish/Russian/Czech, notably,
+    have more than two forms), the same trade-off the card's own strings
+    already make.
+    """
+    translations = await translation.async_get_translations(
+        hass, hass.config.language, "reminder", {DOMAIN}
+    )
+    prefix = f"component.{DOMAIN}.reminder."
+    return {
+        "today": translations.get(f"{prefix}today", "Today"),
+        "tomorrow": translations.get(f"{prefix}tomorrow", "Tomorrow"),
+        "in_days": translations.get(f"{prefix}in_days", "in {days} days"),
+    }
+
+
 # The hub entry's title ("Annuals Settings") deliberately keeps "Annuals"
 # untranslated (it's the product name) with only the second word localized.
 # That single word isn't a config-flow-rendered string, so it lives here as a

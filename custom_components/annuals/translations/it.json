@@ -1,5 +1,10 @@
 {
     "title": "Annuals",
+    "reminder": {
+        "today": "Oggi",
+        "tomorrow": "Domani",
+        "in_days": "tra {days} giorni"
+    },
     "selector": {
         "event_type": {
             "options": {
@@ -48,7 +53,18 @@
                 "hebrew": "Ebraica",
                 "islamic": "Islamica",
                 "hindu": "Induista",
-                "buddhist": "Buddista"
+                "buddhist": "Buddista",
+                "de_facto": "De facto",
+                "protestant": "Protestante",
+                "sabian": "Sabea",
+                "yazidi": "Yazida",
+                "albanian": "Albanese",
+                "armenian": "Armena",
+                "bosnian": "Bosniaca",
+                "roma": "Rom",
+                "serbian": "Serba",
+                "turkish": "Turca",
+                "vlach": "Valacca"
             }
         }
     },
@@ -210,9 +226,14 @@
                 "title": "Importa festività - {country}",
                 "description": "Lascia vuota la suddivisione per le sole festività nazionali - una regione/provincia aggiunge le proprie festività regionali. Categorie e lingua dipendono da ciò che i dati di questo paese forniscono. Le categorie pluri-giornaliere, come le vacanze scolastiche, sono rappresentate come un singolo evento nel loro primo giorno.",
                 "data": {
+                    "include_actual": "Importa la data effettiva",
+                    "include_observed": "Importa la data osservata (spostata)",
                     "subdivision": "Suddivisione (regione/provincia, opzionale)",
                     "categories": "Categorie",
                     "language": "Lingua dei nomi delle festività"
+                },
+                "data_description": {
+                    "include_observed": "Le festività di questo paese vengono a volte spostate a un giorno feriale vicino quando cadono di weekend (es. osservata il venerdì precedente o il lunedì successivo) - importa anche questa data spostata come evento separato."
                 }
             },
             "remove_holidays": {

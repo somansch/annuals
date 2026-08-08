@@ -16,6 +16,7 @@ from .const import (
     CONF_DAY,
     CONF_EVENT_TYPE,
     CONF_HOLIDAY_KEY,
+    CONF_HOLIDAY_OBSERVED,
     CONF_MONTH,
     CONF_SUBDIVISION,
     CONF_YEAR,
@@ -118,6 +119,7 @@ class AnnualsTypeCalendar(CalendarEntity):
                 data[CONF_CATEGORY],
                 data[CONF_HOLIDAY_KEY],
                 today,
+                data.get(CONF_HOLIDAY_OBSERVED, False),
             )
         if data[CONF_EVENT_TYPE] == TYPE_ONE_TIME:
             # Never wraps to "next year" like next_occurrence() does below -
@@ -139,6 +141,7 @@ class AnnualsTypeCalendar(CalendarEntity):
                 data[CONF_CATEGORY],
                 data[CONF_HOLIDAY_KEY],
                 year,
+                data.get(CONF_HOLIDAY_OBSERVED, False),
             )
         if data[CONF_EVENT_TYPE] == TYPE_ONE_TIME:
             # Only ever occurs in its own stored year, unlike every other

@@ -17,15 +17,21 @@ from homeassistant.helpers.typing import ConfigType
 
 from .const import (
     CONF_DAY,
+    CONF_EVENT_NAME,
     CONF_EVENT_TYPE,
+    CONF_HOLIDAY_OBSERVED,
     CONF_HUB,
     CONF_MONTH,
     CONF_YEAR,
+    DATA_REMINDER_STRINGS,
     DATA_SENSORS,
+    DATA_TYPE_LABELS,
     DOMAIN,
+    TYPE_HOLIDAY,
     TYPE_ONE_TIME,
 )
-from .helpers import hub_title
+from .dates import holiday_key_from_name
+from .helpers import async_event_type_labels, async_reminder_strings, full_name, hub_title
 from .http import AnnualsExportCsvView
 from .services import async_register_services
 
@@ -166,7 +172,17 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Set up one Annuals entry (an event, or the shared hub)."""
-    hass.data.setdefault(DOMAIN, {})
+    domain_data = hass.data.setdefault(DOMAIN, {})
+
+    # Both cached once per HA run, whichever entry happens to set up first
+    # (hub or event) - see DATA_TYPE_LABELS/DATA_REMINDER_STRINGS in const.py
+    # for why this must happen before the platform forward below, which is
+    # what actually constructs AnnualEventSensor (sync, can't await these
+    # itself).
+    if DATA_TYPE_LABELS not in domain_data:
+        domain_data[DATA_TYPE_LABELS] = await async_event_type_labels(hass)
+    if DATA_REMINDER_STRINGS not in domain_data:
+        domain_data[DATA_REMINDER_STRINGS] = await async_reminder_strings(hass)
 
     if config_entry.data.get(CONF_HUB):
         # Migrates hub entries created before the "Annuals Settings" title
@@ -174,6 +190,8 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         new_title = hub_title(hass)
         if config_entry.title != new_title:
             hass.config_entries.async_update_entry(config_entry, title=new_title)
+    elif config_entry.data.get(CONF_EVENT_TYPE) == TYPE_HOLIDAY:
+        await _async_migrate_holiday_name(hass, config_entry)
 
     await hass.config_entries.async_forward_entry_setups(
         config_entry, _platforms_for(config_entry)
@@ -183,6 +201,31 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         _async_ensure_hub(hass)
 
     return True
+
+
+async def _async_migrate_holiday_name(hass: HomeAssistant, config_entry: ConfigEntry) -> None:
+    """Correct a holiday entry's stored name/title if it was frozen wrong.
+
+    Before CONF_HOLIDAY_OBSERVED existed, a holiday's CONF_EVENT_NAME could
+    permanently bake in a "(observed)"/"(estimated)" suffix that only
+    happened to be there in the year it was imported (see
+    config_flow._build_holiday_rows) - sensor.py's own AnnualEventSensor
+    already self-heals its *displayed* friendly_name from this every time
+    it's constructed, but config_entry.data itself (and anything else that
+    reads CONF_EVENT_NAME directly, like the calendar entity's event summary
+    and this entry's own title - see calendar.py's full_name() use and
+    config_flow._entry_title) needs the stored value corrected once, here,
+    rather than on every read.
+    """
+    data = config_entry.data
+    base_name = holiday_key_from_name(data[CONF_EVENT_NAME])
+    correct_name = f"{base_name} (observed)" if data.get(CONF_HOLIDAY_OBSERVED, False) else base_name
+    if correct_name == data[CONF_EVENT_NAME]:
+        return
+    new_data = {**data, CONF_EVENT_NAME: correct_name}
+    labels = await async_event_type_labels(hass)
+    new_title = f"{labels[TYPE_HOLIDAY]}: {full_name(new_data)}"
+    hass.config_entries.async_update_entry(config_entry, data=new_data, title=new_title)
 
 
 def _async_ensure_hub(hass: HomeAssistant) -> None:

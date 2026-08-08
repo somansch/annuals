@@ -1,5 +1,10 @@
 {
     "title": "Annuals",
+    "reminder": {
+        "today": "Aujourd'hui",
+        "tomorrow": "Demain",
+        "in_days": "dans {days} jours"
+    },
     "selector": {
         "event_type": {
             "options": {
@@ -48,7 +53,18 @@
                 "hebrew": "Juif",
                 "islamic": "Islamique",
                 "hindu": "Hindou",
-                "buddhist": "Bouddhiste"
+                "buddhist": "Bouddhiste",
+                "de_facto": "De facto",
+                "protestant": "Protestant",
+                "sabian": "Sabéenne",
+                "yazidi": "Yézidie",
+                "albanian": "Albanaise",
+                "armenian": "Arménienne",
+                "bosnian": "Bosniaque",
+                "roma": "Rom",
+                "serbian": "Serbe",
+                "turkish": "Turque",
+                "vlach": "Valaque"
             }
         }
     },
@@ -210,9 +226,14 @@
                 "title": "Importer des jours fériés - {country}",
                 "description": "Laissez la subdivision vide pour les jours fériés nationaux uniquement - une région/province ajoute ses propres jours fériés régionaux. Les catégories et la langue dépendent de ce que fournissent les données de ce pays. Les catégories sur plusieurs jours, comme les vacances scolaires, sont représentées par un seul événement le premier jour.",
                 "data": {
+                    "include_actual": "Importer la date réelle",
+                    "include_observed": "Importer la date observée (décalée)",
                     "subdivision": "Subdivision (région/province, optionnel)",
                     "categories": "Catégories",
                     "language": "Langue des noms de jours fériés"
+                },
+                "data_description": {
+                    "include_observed": "Les jours fériés de ce pays sont parfois décalés vers un jour ouvré proche lorsqu'ils tombent un week-end (ex. observé le vendredi précédent ou le lundi suivant) - importez aussi cette date décalée comme événement distinct."
                 }
             },
             "remove_holidays": {

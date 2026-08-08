@@ -1,5 +1,10 @@
 {
     "title": "Annuals",
+    "reminder": {
+        "today": "今天",
+        "tomorrow": "明天",
+        "in_days": "{days} 天后"
+    },
     "selector": {
         "event_type": {
             "options": {
@@ -48,7 +53,18 @@
                 "hebrew": "犹太教",
                 "islamic": "伊斯兰教",
                 "hindu": "印度教",
-                "buddhist": "佛教"
+                "buddhist": "佛教",
+                "de_facto": "事实上",
+                "protestant": "新教",
+                "sabian": "萨比教",
+                "yazidi": "雅兹迪教",
+                "albanian": "阿尔巴尼亚",
+                "armenian": "亚美尼亚",
+                "bosnian": "波斯尼亚",
+                "roma": "罗姆",
+                "serbian": "塞尔维亚",
+                "turkish": "土耳其",
+                "vlach": "弗拉赫"
             }
         }
     },
@@ -210,9 +226,14 @@
                 "title": "导入节假日 - {country}",
                 "description": "细分地区留空则仅导入全国性节假日 —— 选择州/省会额外添加其地区性节假日。类别和语言取决于该国家/地区的节假日数据提供的内容。像学校假期这样的多日类别会在第一天表示为一个事件。",
                 "data": {
+                    "include_actual": "导入实际日期",
+                    "include_observed": "导入顺延（调休）日期",
                     "subdivision": "细分地区（州/省，可选）",
                     "categories": "类别",
                     "language": "节假日名称的语言"
+                },
+                "data_description": {
+                    "include_observed": "该国家/地区的节假日在落在周末时有时会顺延到附近的工作日（例如提前到之前的周五或顺延到之后的周一）—— 也将该顺延日期作为独立事件导入。"
                 }
             },
             "remove_holidays": {

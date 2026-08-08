@@ -5,6 +5,17 @@
 (() => {
   const ENTITY_PREFIX = "sensor.annuals_";
 
+  // Last-resort label for a holiday `category` value with no translation -
+  // covers a category the `holidays` library adds after this card's own
+  // per-language dictionaries were last updated (see CATEGORY_ICONS in
+  // const.py, which documents the exhaustive list as of when it was last
+  // checked) - "de_facto" -> "De facto", "half_day" -> "Half day", so it
+  // always reads as a plausible label instead of a raw snake_case string.
+  function _humanizeCategory(value) {
+    const words = String(value).split("_");
+    return words[0].charAt(0).toUpperCase() + words[0].slice(1) + (words.length > 1 ? " " + words.slice(1).join(" ") : "");
+  }
+
   // How often AnnualsCard re-fetches embedded external calendars' own
   // events (see _startExternalEventsPolling) while it's on-screen, as a
   // safety net alongside the entity-state fast-path in
@@ -126,7 +137,17 @@
         hebrew: "Jewish",
         islamic: "Islamic",
         hindu: "Hindu",
-        buddhist: "Buddhist",
+        de_facto: "De facto",
+        protestant: "Protestant",
+        sabian: "Sabian",
+        yazidi: "Yazidi",
+        albanian: "Albanian",
+        armenian: "Armenian",
+        bosnian: "Bosnian",
+        roma: "Roma",
+        serbian: "Serbian",
+        turkish: "Turkish",
+        vlach: "Vlach",
       },
       editor: {
         title: "Card title",
@@ -149,6 +170,14 @@
         typesDesc: "Only show the checked event types",
         categories: "Holiday categories",
         categoriesDesc: "Only show holidays in the checked categories (other event types are unaffected)",
+        holidayDates: "Holiday date",
+        holidayDatesDesc:
+          "A holiday that falls on a weekend is often practically observed on a nearby weekday instead (see the integration's \"Import holidays\" step) - choose which of the imported date(s) to show here.",
+        holidayDateActual: "Actual",
+        holidayDateObserved: "Observed",
+        holidayMergeObserved: "Prefer observed date",
+        holidayMergeObservedDesc:
+          "When a holiday has both an actual and an observed entity, show only the observed one (without the \"(observed)\" label) and hide the actual duplicate - handy for a clean list of the days actually off.",
         showAll: "Show All",
         hideAll: "Hide All",
         layoutStyleLabel: "Layout style",
@@ -499,7 +528,17 @@
         hebrew: "Jüdisch",
         islamic: "Islamisch",
         hindu: "Hinduistisch",
-        buddhist: "Buddhistisch",
+        de_facto: "De facto",
+        protestant: "Protestantisch",
+        sabian: "Sabäisch",
+        yazidi: "Jesidisch",
+        albanian: "Albanisch",
+        armenian: "Armenisch",
+        bosnian: "Bosnisch",
+        roma: "Roma",
+        serbian: "Serbisch",
+        turkish: "Türkisch",
+        vlach: "Vlachisch",
       },
       categoriesPlural: {
         public: "Gesetzliche",
@@ -517,7 +556,17 @@
         hebrew: "Jüdische",
         islamic: "Islamische",
         hindu: "Hinduistische",
-        buddhist: "Buddhistische",
+        de_facto: "De facto",
+        protestant: "Protestantische",
+        sabian: "Sabäische",
+        yazidi: "Jesidische",
+        albanian: "Albanische",
+        armenian: "Armenische",
+        bosnian: "Bosnische",
+        roma: "Roma",
+        serbian: "Serbische",
+        turkish: "Türkische",
+        vlach: "Vlachische",
       },
       editor: {
         title: "Kartentitel",
@@ -540,6 +589,14 @@
         typesDesc: "Nur die angehakten Ereignistypen anzeigen",
         categories: "Feiertagskategorien",
         categoriesDesc: "Nur Feiertage der angehakten Kategorien anzeigen (andere Ereignistypen sind davon nicht betroffen)",
+        holidayDates: "Feiertagsdatum",
+        holidayDatesDesc:
+          "Ein Feiertag, der auf ein Wochenende fällt, wird in der Praxis oft an einem nahegelegenen Wochentag nachgeholt (siehe den Import-Schritt \"Feiertage importieren\" der Integration) - wähle hier, welche(s) importierte(n) Datum/Daten angezeigt werden soll(en).",
+        holidayDateActual: "Tatsächlich",
+        holidayDateObserved: "Nachgeholt",
+        holidayMergeObserved: "Nachgeholtes Datum bevorzugen",
+        holidayMergeObservedDesc:
+          "Wenn ein Feiertag sowohl eine tatsächliche als auch eine nachgeholte Entität hat, wird nur die nachgeholte angezeigt (ohne den Zusatz „(observed)“) und das tatsächliche Duplikat ausgeblendet - praktisch für eine saubere Liste der wirklich freien Tage.",
         showAll: "Alle anzeigen",
         hideAll: "Alle ausblenden",
         layoutStyleLabel: "Kartenlayout",
@@ -879,7 +936,17 @@
         hebrew: "Juif",
         islamic: "Islamique",
         hindu: "Hindou",
-        buddhist: "Bouddhiste",
+        de_facto: "De facto",
+        protestant: "Protestant",
+        sabian: "Sabéenne",
+        yazidi: "Yézidie",
+        albanian: "Albanaise",
+        armenian: "Arménienne",
+        bosnian: "Bosniaque",
+        roma: "Rom",
+        serbian: "Serbe",
+        turkish: "Turque",
+        vlach: "Valaque",
       },
       categoriesPlural: {
         public: "Publics",
@@ -897,7 +964,17 @@
         hebrew: "Juifs",
         islamic: "Islamiques",
         hindu: "Hindous",
-        buddhist: "Bouddhistes",
+        de_facto: "De facto",
+        protestant: "Protestants",
+        sabian: "Sabéennes",
+        yazidi: "Yézidies",
+        albanian: "Albanaises",
+        armenian: "Arméniennes",
+        bosnian: "Bosniaques",
+        roma: "Roms",
+        serbian: "Serbes",
+        turkish: "Turques",
+        vlach: "Valaques",
       },
       editor: {
         title: "Titre de la carte",
@@ -920,6 +997,14 @@
         typesDesc: "N'afficher que les types cochés",
         categories: "Catégories de jours fériés",
         categoriesDesc: "N'afficher que les jours fériés des catégories cochées (les autres types d'événements ne sont pas concernés)",
+        holidayDates: "Date du jour férié",
+        holidayDatesDesc:
+          "Un jour férié tombant un week-end est souvent déplacé dans la pratique sur un jour ouvré proche (voir l'étape \"Importer des jours fériés\" de l'intégration) - choisissez ici quelle(s) date(s) importée(s) afficher.",
+        holidayDateActual: "Réelle",
+        holidayDateObserved: "Observée",
+        holidayMergeObserved: "Préférer la date observée",
+        holidayMergeObservedDesc:
+          "Lorsqu'un jour férié a à la fois une entité réelle et une entité observée, seule l'observée est affichée (sans le libellé « (observed) ») et le doublon réel est masqué - pratique pour une liste propre des jours réellement chômés.",
         showAll: "Tout afficher",
         hideAll: "Tout masquer",
         layoutStyleLabel: "Style de mise en page",
@@ -1258,7 +1343,17 @@
         hebrew: "Joods",
         islamic: "Islamitisch",
         hindu: "Hindoeïstisch",
-        buddhist: "Boeddhistisch",
+        de_facto: "De facto",
+        protestant: "Protestants",
+        sabian: "Sabisch",
+        yazidi: "Jezidisch",
+        albanian: "Albanees",
+        armenian: "Armeens",
+        bosnian: "Bosnisch",
+        roma: "Roma",
+        serbian: "Servisch",
+        turkish: "Turks",
+        vlach: "Vlachs",
       },
       categoriesPlural: {
         public: "Nationale",
@@ -1276,7 +1371,17 @@
         hebrew: "Joodse",
         islamic: "Islamitische",
         hindu: "Hindoeïstische",
-        buddhist: "Boeddhistische",
+        de_facto: "De facto",
+        protestant: "Protestantse",
+        sabian: "Sabische",
+        yazidi: "Jezidische",
+        albanian: "Albanese",
+        armenian: "Armeense",
+        bosnian: "Bosnische",
+        roma: "Roma",
+        serbian: "Servische",
+        turkish: "Turkse",
+        vlach: "Vlachische",
       },
       editor: {
         title: "Kaarttitel",
@@ -1299,6 +1404,14 @@
         typesDesc: "Toon alleen de aangevinkte evenementtypes",
         categories: "Feestdagcategorieën",
         categoriesDesc: "Toon alleen feestdagen uit de aangevinkte categorieën (andere evenementtypes blijven onaangetast)",
+        holidayDates: "Feestdagdatum",
+        holidayDatesDesc:
+          "Een feestdag die in het weekend valt, wordt in de praktijk vaak op een nabije werkdag waargenomen (zie de importstap \"Feestdagen importeren\" van de integratie) - kies hier welke geïmporteerde datum/data getoond wordt/worden.",
+        holidayDateActual: "Werkelijk",
+        holidayDateObserved: "Waargenomen",
+        holidayMergeObserved: "Waargenomen datum voorkeur",
+        holidayMergeObservedDesc:
+          "Als een feestdag zowel een werkelijke als een waargenomen entiteit heeft, wordt alleen de waargenomen getoond (zonder het label \"(observed)\") en het werkelijke duplicaat verborgen - handig voor een schone lijst van daadwerkelijk vrije dagen.",
         showAll: "Alles tonen",
         hideAll: "Alles verbergen",
         layoutStyleLabel: "Kaartlayout",
@@ -1643,7 +1756,17 @@
         hebrew: "Żydowskie",
         islamic: "Islamskie",
         hindu: "Hinduskie",
-        buddhist: "Buddyjskie",
+        de_facto: "De facto",
+        protestant: "Protestanckie",
+        sabian: "Sabejskie",
+        yazidi: "Jazydzkie",
+        albanian: "Albańskie",
+        armenian: "Ormiańskie",
+        bosnian: "Bośniackie",
+        roma: "Romskie",
+        serbian: "Serbskie",
+        turkish: "Tureckie",
+        vlach: "Wołoskie",
       },
       categoriesPlural: {
         public: "Święta państwowe",
@@ -1661,7 +1784,17 @@
         hebrew: "Święta żydowskie",
         islamic: "Święta islamskie",
         hindu: "Święta hinduskie",
-        buddhist: "Święta buddyjskie",
+        de_facto: "Święta de facto",
+        protestant: "Święta protestanckie",
+        sabian: "Święta sabejskie",
+        yazidi: "Święta jazydzkie",
+        albanian: "Święta albańskie",
+        armenian: "Święta ormiańskie",
+        bosnian: "Święta bośniackie",
+        roma: "Święta romskie",
+        serbian: "Święta serbskie",
+        turkish: "Święta tureckie",
+        vlach: "Święta wołoskie",
       },
       editor: {
         title: "Tytuł karty",
@@ -1684,6 +1817,14 @@
         typesDesc: "Pokazuj tylko zaznaczone typy wydarzeń",
         categories: "Kategorie świąt",
         categoriesDesc: "Pokazuj tylko święta z zaznaczonych kategorii (inne typy wydarzeń pozostają bez zmian)",
+        holidayDates: "Data święta",
+        holidayDatesDesc:
+          "Święto wypadające w weekend jest w praktyce często obchodzone w najbliższy dzień roboczy (zobacz krok \"Importuj święta\" integracji) - wybierz tutaj, którą zaimportowaną datę (daty) pokazywać.",
+        holidayDateActual: "Rzeczywista",
+        holidayDateObserved: "Zastępcza",
+        holidayMergeObserved: "Preferuj datę zastępczą",
+        holidayMergeObservedDesc:
+          "Gdy święto ma zarówno rzeczywistą, jak i zastępczą jednostkę, pokazywana jest tylko zastępcza (bez etykiety „(observed)”), a rzeczywisty duplikat jest ukrywany - przydatne dla czystej listy faktycznie wolnych dni.",
         showAll: "Pokaż wszystko",
         hideAll: "Ukryj wszystko",
         layoutStyleLabel: "Układ karty",
@@ -2022,7 +2163,17 @@
         hebrew: "Judío",
         islamic: "Islámico",
         hindu: "Hindú",
-        buddhist: "Budista",
+        de_facto: "De facto",
+        protestant: "Protestante",
+        sabian: "Sabea",
+        yazidi: "Yazidí",
+        albanian: "Albanesa",
+        armenian: "Armenia",
+        bosnian: "Bosnia",
+        roma: "Romaní",
+        serbian: "Serbia",
+        turkish: "Turca",
+        vlach: "Valaca",
       },
       categoriesPlural: {
         public: "Públicos",
@@ -2040,7 +2191,17 @@
         hebrew: "Judíos",
         islamic: "Islámicos",
         hindu: "Hindúes",
-        buddhist: "Budistas",
+        de_facto: "De facto",
+        protestant: "Protestantes",
+        sabian: "Sabeas",
+        yazidi: "Yazidíes",
+        albanian: "Albanesas",
+        armenian: "Armenias",
+        bosnian: "Bosnias",
+        roma: "Romaníes",
+        serbian: "Serbias",
+        turkish: "Turcas",
+        vlach: "Valacas",
       },
       editor: {
         title: "Título de la tarjeta",
@@ -2063,6 +2224,14 @@
         typesDesc: "Mostrar solo los tipos de evento marcados",
         categories: "Categorías de festivos",
         categoriesDesc: "Mostrar solo los festivos de las categorías marcadas (los demás tipos de evento no se ven afectados)",
+        holidayDates: "Fecha del festivo",
+        holidayDatesDesc:
+          "Un festivo que cae en fin de semana suele trasladarse en la práctica a un día laborable cercano (ver el paso \"Importar festivos\" de la integración) - elige aquí qué fecha(s) importada(s) mostrar.",
+        holidayDateActual: "Real",
+        holidayDateObserved: "Observada",
+        holidayMergeObserved: "Preferir fecha observada",
+        holidayMergeObservedDesc:
+          "Cuando un festivo tiene tanto una entidad real como una observada, se muestra solo la observada (sin la etiqueta \"(observed)\") y se oculta el duplicado real - útil para una lista limpia de los días realmente libres.",
         showAll: "Mostrar todo",
         hideAll: "Ocultar todo",
         layoutStyleLabel: "Estilo de diseño",
@@ -2401,7 +2570,17 @@
         hebrew: "Ebraico",
         islamic: "Islamico",
         hindu: "Indù",
-        buddhist: "Buddista",
+        de_facto: "De facto",
+        protestant: "Protestante",
+        sabian: "Sabea",
+        yazidi: "Yazida",
+        albanian: "Albanese",
+        armenian: "Armena",
+        bosnian: "Bosniaca",
+        roma: "Rom",
+        serbian: "Serba",
+        turkish: "Turca",
+        vlach: "Valacca",
       },
       categoriesPlural: {
         public: "Pubbliche",
@@ -2419,7 +2598,17 @@
         hebrew: "Ebraiche",
         islamic: "Islamiche",
         hindu: "Indù",
-        buddhist: "Buddiste",
+        de_facto: "De facto",
+        protestant: "Protestanti",
+        sabian: "Sabee",
+        yazidi: "Yazide",
+        albanian: "Albanesi",
+        armenian: "Armene",
+        bosnian: "Bosniache",
+        roma: "Rom",
+        serbian: "Serbe",
+        turkish: "Turche",
+        vlach: "Valacche",
       },
       editor: {
         title: "Titolo della scheda",
@@ -2442,6 +2631,14 @@
         typesDesc: "Mostra solo i tipi di evento selezionati",
         categories: "Categorie di festività",
         categoriesDesc: "Mostra solo le festività delle categorie selezionate (gli altri tipi di evento non sono interessati)",
+        holidayDates: "Data della festività",
+        holidayDatesDesc:
+          "Una festività che cade di weekend viene spesso spostata nella pratica a un giorno feriale vicino (vedi il passaggio \"Importa festività\" dell'integrazione) - scegli qui quale data importata mostrare.",
+        holidayDateActual: "Effettiva",
+        holidayDateObserved: "Osservata",
+        holidayMergeObserved: "Preferisci data osservata",
+        holidayMergeObservedDesc:
+          "Quando una festività ha sia un'entità effettiva che una osservata, viene mostrata solo quella osservata (senza l'etichetta \"(observed)\") e il duplicato effettivo viene nascosto - utile per un elenco pulito dei giorni effettivamente liberi.",
         showAll: "Mostra tutto",
         hideAll: "Nascondi tutto",
         layoutStyleLabel: "Stile del layout",
@@ -2780,7 +2977,17 @@
         hebrew: "Judaico",
         islamic: "Islâmico",
         hindu: "Hindu",
-        buddhist: "Budista",
+        de_facto: "De facto",
+        protestant: "Protestante",
+        sabian: "Sabeana",
+        yazidi: "Yazidi",
+        albanian: "Albanesa",
+        armenian: "Armênia",
+        bosnian: "Bósnia",
+        roma: "Romani",
+        serbian: "Sérvia",
+        turkish: "Turca",
+        vlach: "Valáquia",
       },
       categoriesPlural: {
         public: "Públicos",
@@ -2798,7 +3005,17 @@
         hebrew: "Judaicos",
         islamic: "Islâmicos",
         hindu: "Hindus",
-        buddhist: "Budistas",
+        de_facto: "De facto",
+        protestant: "Protestantes",
+        sabian: "Sabeanas",
+        yazidi: "Yazidis",
+        albanian: "Albanesas",
+        armenian: "Armênias",
+        bosnian: "Bósnias",
+        roma: "Romanis",
+        serbian: "Sérvias",
+        turkish: "Turcas",
+        vlach: "Valáquias",
       },
       editor: {
         title: "Título do cartão",
@@ -2821,6 +3038,14 @@
         typesDesc: "Mostrar apenas os tipos de evento marcados",
         categories: "Categorias de feriados",
         categoriesDesc: "Mostrar apenas feriados das categorias marcadas (os outros tipos de evento não são afetados)",
+        holidayDates: "Data do feriado",
+        holidayDatesDesc:
+          "Um feriado que cai em um fim de semana costuma ser observado na prática em um dia útil próximo (veja a etapa \"Importar feriados\" da integração) - escolha aqui qual(is) data(s) importada(s) mostrar.",
+        holidayDateActual: "Real",
+        holidayDateObserved: "Observada",
+        holidayMergeObserved: "Preferir data observada",
+        holidayMergeObservedDesc:
+          "Quando um feriado tem tanto uma entidade real quanto uma observada, mostra apenas a observada (sem o rótulo \"(observed)\") e oculta o duplicado real - útil para uma lista limpa dos dias realmente de folga.",
         showAll: "Mostrar tudo",
         hideAll: "Ocultar tudo",
         layoutStyleLabel: "Estilo de layout",
@@ -3164,7 +3389,17 @@
         hebrew: "Иудейский",
         islamic: "Исламский",
         hindu: "Индуистский",
-        buddhist: "Буддийский",
+        de_facto: "Де-факто",
+        protestant: "Протестантская",
+        sabian: "Сабийская",
+        yazidi: "Езидская",
+        albanian: "Албанская",
+        armenian: "Армянская",
+        bosnian: "Боснийская",
+        roma: "Цыганская",
+        serbian: "Сербская",
+        turkish: "Турецкая",
+        vlach: "Влахская",
       },
       categoriesPlural: {
         public: "Государственные",
@@ -3182,7 +3417,17 @@
         hebrew: "Иудейские",
         islamic: "Исламские",
         hindu: "Индуистские",
-        buddhist: "Буддийские",
+        de_facto: "Де-факто",
+        protestant: "Протестантские",
+        sabian: "Сабийские",
+        yazidi: "Езидские",
+        albanian: "Албанские",
+        armenian: "Армянские",
+        bosnian: "Боснийские",
+        roma: "Цыганские",
+        serbian: "Сербские",
+        turkish: "Турецкие",
+        vlach: "Влахские",
       },
       editor: {
         title: "Заголовок карточки",
@@ -3205,6 +3450,14 @@
         typesDesc: "Показывать только отмеченные типы событий",
         categories: "Категории праздников",
         categoriesDesc: "Показывать только праздники отмеченных категорий (остальные типы событий не затрагиваются)",
+        holidayDates: "Дата праздника",
+        holidayDatesDesc:
+          "Праздник, выпадающий на выходные, на практике часто отмечается в ближайший рабочий день (см. шаг интеграции \"Импорт праздников\") - выберите здесь, какую импортированную дату(ы) показывать.",
+        holidayDateActual: "Фактическая",
+        holidayDateObserved: "Перенесённая",
+        holidayMergeObserved: "Предпочитать перенесённую дату",
+        holidayMergeObservedDesc:
+          "Если у праздника есть и фактическая, и перенесённая сущность, показывается только перенесённая (без метки «(observed)»), а фактический дубликат скрывается — удобно для чистого списка действительно выходных дней.",
         showAll: "Показать все",
         hideAll: "Скрыть все",
         layoutStyleLabel: "Стиль макета",
@@ -3547,7 +3800,17 @@
         hebrew: "Judisk",
         islamic: "Islamisk",
         hindu: "Hinduisk",
-        buddhist: "Buddhistisk",
+        de_facto: "De facto",
+        protestant: "Protestantisk",
+        sabian: "Sabeisk",
+        yazidi: "Jazidisk",
+        albanian: "Albansk",
+        armenian: "Armenisk",
+        bosnian: "Bosnisk",
+        roma: "Romsk",
+        serbian: "Serbisk",
+        turkish: "Turkisk",
+        vlach: "Vlakisk",
       },
       categoriesPlural: {
         public: "Allmänna",
@@ -3565,7 +3828,17 @@
         hebrew: "Judiska",
         islamic: "Islamiska",
         hindu: "Hinduiska",
-        buddhist: "Buddhistiska",
+        de_facto: "De facto",
+        protestant: "Protestantiska",
+        sabian: "Sabeiska",
+        yazidi: "Jazidiska",
+        albanian: "Albanska",
+        armenian: "Armeniska",
+        bosnian: "Bosniska",
+        roma: "Romska",
+        serbian: "Serbiska",
+        turkish: "Turkiska",
+        vlach: "Vlakiska",
       },
       editor: {
         title: "Kortets titel",
@@ -3588,6 +3861,14 @@
         typesDesc: "Visa endast markerade händelsetyper",
         categories: "Helgdagskategorier",
         categoriesDesc: "Visa endast helgdagar i de markerade kategorierna (övriga händelsetyper påverkas inte)",
+        holidayDates: "Helgdagsdatum",
+        holidayDatesDesc:
+          "En helgdag som infaller på en helg flyttas i praktiken ofta till en närliggande vardag (se integrationens steg \"Importera helgdagar\") - välj här vilket/vilka importerade datum som ska visas.",
+        holidayDateActual: "Faktiskt",
+        holidayDateObserved: "Observerat",
+        holidayMergeObserved: "Föredra observerat datum",
+        holidayMergeObservedDesc:
+          "När en helgdag har både en faktisk och en observerad entitet visas endast den observerade (utan etiketten \"(observed)\") och den faktiska dubbletten döljs - praktiskt för en ren lista över faktiskt lediga dagar.",
         showAll: "Visa alla",
         hideAll: "Dölj alla",
         layoutStyleLabel: "Kortlayout",
@@ -3934,7 +4215,17 @@
         hebrew: "犹太教",
         islamic: "伊斯兰教",
         hindu: "印度教",
-        buddhist: "佛教",
+        de_facto: "事实上",
+        protestant: "新教",
+        sabian: "萨比教",
+        yazidi: "雅兹迪教",
+        albanian: "阿尔巴尼亚",
+        armenian: "亚美尼亚",
+        bosnian: "波斯尼亚",
+        roma: "罗姆",
+        serbian: "塞尔维亚",
+        turkish: "土耳其",
+        vlach: "弗拉赫",
       },
       categoriesPlural: {
         public: "公共",
@@ -3952,7 +4243,17 @@
         hebrew: "犹太教",
         islamic: "伊斯兰教",
         hindu: "印度教",
-        buddhist: "佛教",
+        de_facto: "事实上",
+        protestant: "新教",
+        sabian: "萨比教",
+        yazidi: "雅兹迪教",
+        albanian: "阿尔巴尼亚",
+        armenian: "亚美尼亚",
+        bosnian: "波斯尼亚",
+        roma: "罗姆",
+        serbian: "塞尔维亚",
+        turkish: "土耳其",
+        vlach: "弗拉赫",
       },
       editor: {
         title: "卡片标题",
@@ -3975,6 +4276,14 @@
         typesDesc: "仅显示已勾选的事件类型",
         categories: "节假日类别",
         categoriesDesc: "仅显示已勾选类别的节假日（其他事件类型不受影响）",
+        holidayDates: "节假日日期",
+        holidayDatesDesc:
+          "落在周末的节假日实际中常会顺延到附近的工作日（参见集成的“导入节假日”步骤）——在此选择要显示哪个已导入的日期。",
+        holidayDateActual: "实际日期",
+        holidayDateObserved: "顺延日期",
+        holidayMergeObserved: "优先显示顺延日期",
+        holidayMergeObservedDesc:
+          "当某节假日同时存在实际和顺延两个实体时，只显示顺延的（不带“(observed)”标签），并隐藏实际的重复项——便于生成一份干净的实际休息日列表。",
         showAll: "全部显示",
         hideAll: "全部隐藏",
         layoutStyleLabel: "布局样式",
@@ -4307,7 +4616,17 @@
         hebrew: "Židovský",
         islamic: "Islámský",
         hindu: "Hinduistický",
-        buddhist: "Buddhistický",
+        de_facto: "De facto",
+        protestant: "Protestantská",
+        sabian: "Sabejská",
+        yazidi: "Jezídská",
+        albanian: "Albánská",
+        armenian: "Arménská",
+        bosnian: "Bosenská",
+        roma: "Romská",
+        serbian: "Srbská",
+        turkish: "Turecká",
+        vlach: "Vlašská",
       },
       categoriesPlural: {
         public: "Veřejné",
@@ -4325,7 +4644,17 @@
         hebrew: "Židovské",
         islamic: "Islámské",
         hindu: "Hinduistické",
-        buddhist: "Buddhistické",
+        de_facto: "De facto",
+        protestant: "Protestantské",
+        sabian: "Sabejské",
+        yazidi: "Jezídské",
+        albanian: "Albánské",
+        armenian: "Arménské",
+        bosnian: "Bosenské",
+        roma: "Romské",
+        serbian: "Srbské",
+        turkish: "Turecké",
+        vlach: "Vlašské",
       },
       editor: {
         title: "Název karty",
@@ -4348,6 +4677,14 @@
         typesDesc: "Zobrazit pouze zaškrtnuté typy událostí",
         categories: "Kategorie svátků",
         categoriesDesc: "Zobrazit pouze svátky ze zaškrtnutých kategorií (ostatní typy událostí nejsou ovlivněny)",
+        holidayDates: "Datum svátku",
+        holidayDatesDesc:
+          "Svátek připadající na víkend bývá v praxi nahrazen sousedním pracovním dnem (viz krok integrace \"Import svátků\") - vyberte zde, které importované datum(y) zobrazit.",
+        holidayDateActual: "Skutečné",
+        holidayDateObserved: "Náhradní",
+        holidayMergeObserved: "Upřednostnit náhradní datum",
+        holidayMergeObservedDesc:
+          "Pokud má svátek jak skutečnou, tak náhradní entitu, zobrazí se pouze náhradní (bez označení „(observed)“) a skutečný duplikát se skryje - užitečné pro čistý seznam skutečně volných dnů.",
         showAll: "Zobrazit vše",
         hideAll: "Skrýt vše",
         layoutStyleLabel: "Styl rozvržení",
@@ -4690,7 +5027,17 @@
         hebrew: "Jødisk",
         islamic: "Islamsk",
         hindu: "Hinduistisk",
-        buddhist: "Buddhistisk",
+        de_facto: "De facto",
+        protestant: "Protestantisk",
+        sabian: "Sabeisk",
+        yazidi: "Jesidisk",
+        albanian: "Albansk",
+        armenian: "Armensk",
+        bosnian: "Bosnisk",
+        roma: "Romsk",
+        serbian: "Serbisk",
+        turkish: "Tyrkisk",
+        vlach: "Vlakisk",
       },
       categoriesPlural: {
         public: "Offentlige",
@@ -4708,7 +5055,17 @@
         hebrew: "Jødiske",
         islamic: "Islamske",
         hindu: "Hinduistiske",
-        buddhist: "Buddhistiske",
+        de_facto: "De facto",
+        protestant: "Protestantiske",
+        sabian: "Sabeiske",
+        yazidi: "Jesidiske",
+        albanian: "Albanske",
+        armenian: "Armenske",
+        bosnian: "Bosniske",
+        roma: "Romske",
+        serbian: "Serbiske",
+        turkish: "Tyrkiske",
+        vlach: "Vlakiske",
       },
       editor: {
         title: "Korttittel",
@@ -4731,6 +5088,14 @@
         typesDesc: "Vis bare de avkryssede hendelsestypene",
         categories: "Helligdagskategorier",
         categoriesDesc: "Vis bare helligdager i de avkryssede kategoriene (andre hendelsestyper påvirkes ikke)",
+        holidayDates: "Helligdagsdato",
+        holidayDatesDesc:
+          "En helligdag som faller i helgen blir i praksis ofte flyttet til en nærliggende ukedag (se integrasjonens \"Importer helligdager\"-steg) - velg her hvilken importert dato som skal vises.",
+        holidayDateActual: "Faktisk",
+        holidayDateObserved: "Observert",
+        holidayMergeObserved: "Foretrekk observert dato",
+        holidayMergeObservedDesc:
+          "Når en helligdag har både en faktisk og en observert enhet, vises kun den observerte (uten etiketten \"(observed)\") og den faktiske duplikaten skjules - praktisk for en ren liste over faktiske fridager.",
         showAll: "Vis alle",
         hideAll: "Skjul alle",
         layoutStyleLabel: "Kortlayout",
@@ -5073,7 +5438,17 @@
         hebrew: "Jødisk",
         islamic: "Islamisk",
         hindu: "Hinduistisk",
-        buddhist: "Buddhistisk",
+        de_facto: "De facto",
+        protestant: "Protestantisk",
+        sabian: "Sabæisk",
+        yazidi: "Jesidisk",
+        albanian: "Albansk",
+        armenian: "Armensk",
+        bosnian: "Bosnisk",
+        roma: "Romani",
+        serbian: "Serbisk",
+        turkish: "Tyrkisk",
+        vlach: "Vlakisk",
       },
       categoriesPlural: {
         public: "Offentlige",
@@ -5091,7 +5466,17 @@
         hebrew: "Jødiske",
         islamic: "Islamiske",
         hindu: "Hinduistiske",
-        buddhist: "Buddhistiske",
+        de_facto: "De facto",
+        protestant: "Protestantiske",
+        sabian: "Sabæiske",
+        yazidi: "Jesidiske",
+        albanian: "Albanske",
+        armenian: "Armenske",
+        bosnian: "Bosniske",
+        roma: "Romani",
+        serbian: "Serbiske",
+        turkish: "Tyrkiske",
+        vlach: "Vlakiske",
       },
       editor: {
         title: "Korttitel",
@@ -5114,6 +5499,14 @@
         typesDesc: "Vis kun de afkrydsede begivenhedstyper",
         categories: "Helligdagskategorier",
         categoriesDesc: "Vis kun helligdage i de afkrydsede kategorier (andre begivenhedstyper påvirkes ikke)",
+        holidayDates: "Helligdagsdato",
+        holidayDatesDesc:
+          "En helligdag, der falder i en weekend, bliver i praksis ofte rykket til en nærliggende hverdag (se integrationens trin \"Importer helligdage\") - vælg her hvilken importeret dato der skal vises.",
+        holidayDateActual: "Faktisk",
+        holidayDateObserved: "Erstattet",
+        holidayMergeObserved: "Foretræk observeret dato",
+        holidayMergeObservedDesc:
+          "Når en helligdag har både en faktisk og en observeret enhed, vises kun den observerede (uden mærket \"(observed)\"), og det faktiske duplikat skjules - praktisk til en ren liste over faktiske fridage.",
         showAll: "Vis alle",
         hideAll: "Skjul alle",
         layoutStyleLabel: "Kortlayout",
@@ -5462,7 +5855,17 @@
         hebrew: "Yahudi",
         islamic: "İslami",
         hindu: "Hindu",
-        buddhist: "Budist",
+        de_facto: "Fiili",
+        protestant: "Protestan",
+        sabian: "Sabii",
+        yazidi: "Ezidi",
+        albanian: "Arnavut",
+        armenian: "Ermeni",
+        bosnian: "Boşnak",
+        roma: "Roman",
+        serbian: "Sırp",
+        turkish: "Türk",
+        vlach: "Ulah",
       },
       categoriesPlural: {
         public: "Resmi tatiller",
@@ -5480,7 +5883,17 @@
         hebrew: "Yahudi tatiller",
         islamic: "İslami tatiller",
         hindu: "Hindu tatiller",
-        buddhist: "Budist tatiller",
+        de_facto: "Fiili tatiller",
+        protestant: "Protestan tatiller",
+        sabian: "Sabii tatiller",
+        yazidi: "Ezidi tatiller",
+        albanian: "Arnavut tatiller",
+        armenian: "Ermeni tatiller",
+        bosnian: "Boşnak tatiller",
+        roma: "Roman tatiller",
+        serbian: "Sırp tatiller",
+        turkish: "Türk tatiller",
+        vlach: "Ulah tatiller",
       },
       editor: {
         title: "Kart başlığı",
@@ -5503,6 +5916,14 @@
         typesDesc: "Yalnızca işaretli etkinlik türlerini göster",
         categories: "Tatil kategorileri",
         categoriesDesc: "Yalnızca işaretli kategorilerdeki tatilleri göster (diğer etkinlik türleri etkilenmez)",
+        holidayDates: "Tatil tarihi",
+        holidayDatesDesc:
+          "Hafta sonuna denk gelen bir tatil, uygulamada genellikle yakın bir iş gününde kutlanır (entegrasyonun \"Tatilleri içe aktar\" adımına bakın) - burada içe aktarılan hangi tarih(ler)in gösterileceğini seçin.",
+        holidayDateActual: "Gerçek",
+        holidayDateObserved: "Kaydırılmış",
+        holidayMergeObserved: "Gözlemlenen tarihi tercih et",
+        holidayMergeObservedDesc:
+          "Bir tatilin hem gerçek hem de gözlemlenen bir varlığı olduğunda, yalnızca gözlemlenen gösterilir (\"(observed)\" etiketi olmadan) ve gerçek kopya gizlenir - gerçekten tatil olan günlerin temiz bir listesi için kullanışlıdır.",
         showAll: "Tümünü göster",
         hideAll: "Tümünü gizle",
         layoutStyleLabel: "Düzen stili",
@@ -5905,6 +6326,24 @@
       // `types` above. Non-holiday events have no category and are never
       // filtered by this.
       categories: [],
+      // Only meaningful for holiday-type events that carry an `observed`
+      // attribute (see sensor.py/CONF_HOLIDAY_OBSERVED) - unlike `categories`
+      // above, this deliberately does NOT default to "show everything": the
+      // vast majority of imports only ever include the actual-date variant,
+      // so defaulting to both would show nothing extra for them while
+      // surprising anyone who does import both with doubled-up entries by
+      // default.
+      holiday_date_variants: ["actual"],
+      // Independent of holiday_date_variants above (and overrides it for
+      // holiday-type events specifically - see _filteredEvents): for a
+      // holiday imported as both actual and observed, show only the
+      // observed one, with its "(observed)" label stripped, and hide the
+      // actual duplicate entirely; a holiday with only an actual entity
+      // (the common case) is unaffected. Lets someone who imported both
+      // show a single clean "days off" list without manually juggling the
+      // two checkboxes above or seeing the suffix on the handful of years
+      // a date actually shifts.
+      holiday_merge_observed: false,
       show_past: true,
       show_today: true,
       show_soon: true,
@@ -6225,11 +6664,31 @@
       events.push({
         entityId,
         days,
-        name: state.attributes.name || state.attributes.friendly_name || entityId,
+        // Holidays are the one type where "name" and friendly_name can
+        // legitimately disagree: the "name" attribute is re-resolved live
+        // every update from that specific year's calendar data (see
+        // sensor.py's _update_holiday_state), while friendly_name is the
+        // entity's stable, always-correctly-"(observed)"-suffixed identity
+        // (see AnnualEventSensor.__init__) - preferring friendly_name here
+        // (for both `name` and the `fullName` fallback below, since nothing
+        // else reads `name` before `fullName` takes over as the actually-
+        // displayed title) is what keeps an actual/observed pair of
+        // entities from rendering as two identical-looking rows in a year
+        // neither happens to differ (e.g. Labor Day, always a Monday,
+        // never actually shifts).
+        name:
+          state.attributes.type === "holiday"
+            ? state.attributes.friendly_name || state.attributes.name || entityId
+            : state.attributes.name || state.attributes.friendly_name || entityId,
         // Empty for holiday events (no last_name attribute at all - see
         // sensor.py) and for any event added before this field existed.
         lastName: state.attributes.last_name || "",
-        fullName: state.attributes.full_name || state.attributes.name || state.attributes.friendly_name || entityId,
+        fullName:
+          state.attributes.full_name ||
+          (state.attributes.type === "holiday"
+            ? state.attributes.friendly_name || state.attributes.name
+            : state.attributes.name || state.attributes.friendly_name) ||
+          entityId,
         type: state.attributes.type || "custom",
         icon: state.attributes.icon || "mdi:calendar-star",
         month: state.attributes.month,
@@ -6239,6 +6698,20 @@
         vip: state.attributes.vip === true,
         important: state.attributes.important === true,
         category: state.attributes.category,
+        // Only present on holiday-type events (see sensor.py) - whether this
+        // entity tracks the holiday's practically-observed (weekend-shifted)
+        // date rather than its literal one. undefined for every other type,
+        // never filtered by the actual/observed toggles below (same "doesn't
+        // apply" pattern as `category`).
+        observed: state.attributes.observed,
+        // Only present on holiday-type events - identifies "the same
+        // holiday" across its actual/observed entity pair (see sensor.py's
+        // CONF_HOLIDAY_KEY) regardless of display name, which the
+        // holiday_merge_observed feature matches on (combined with country/
+        // subdivision/category, since the key alone isn't guaranteed unique
+        // across those - see config_flow._import_unique_id for the same
+        // composite identity used on the backend).
+        holidayKey: state.attributes.holiday_key,
         country: state.attributes.country,
         subdivision: state.attributes.subdivision,
       });
@@ -7351,6 +7824,20 @@
           !config.categories.includes(e.category)
         )
           return false;
+        // Same "doesn't apply outside holidays" shape as `categories` above -
+        // e.observed is only ever set (true/false) on holiday-type events.
+        // Skipped entirely in merge mode, which applies its own actual/
+        // observed logic below instead (see holiday_merge_observed in
+        // defaultConfig) rather than this raw pair of checkboxes.
+        if (
+          e.type === "holiday" &&
+          !config.holiday_merge_observed &&
+          config.holiday_date_variants &&
+          config.holiday_date_variants.length
+        ) {
+          const variant = e.observed ? "observed" : "actual";
+          if (!config.holiday_date_variants.includes(variant)) return false;
+        }
         // e.days is always the sensor's "days until next occurrence" (never
         // negative - it jumps forward the day after an event), so this is
         // simply "only the events landing exactly today".
@@ -7366,6 +7853,27 @@
         }
         return true;
       });
+      // Merge mode (see holiday_merge_observed in defaultConfig): for each
+      // holiday imported as both actual and observed, drop the actual one
+      // and strip the "(observed)" suffix off the surviving observed one -
+      // a holiday with only an actual entity (no observed counterpart
+      // present here at all) passes through untouched. Matched by country +
+      // subdivision + category + holidayKey together, the same composite
+      // identity config_flow._import_unique_id uses on the backend, since
+      // holidayKey alone isn't guaranteed unique across countries/categories.
+      if (config.holiday_merge_observed) {
+        const matchKey = (e) => `${e.country}|${e.subdivision || ""}|${e.category}|${e.holidayKey}`;
+        const observedKeys = new Set(
+          filtered.filter((e) => e.type === "holiday" && e.observed === true).map(matchKey)
+        );
+        filtered = filtered
+          .filter((e) => !(e.type === "holiday" && e.observed === false && observedKeys.has(matchKey(e))))
+          .map((e) =>
+            e.type === "holiday" && e.observed === true
+              ? { ...e, name: e.name.replace(/ \(observed\)$/, ""), fullName: e.fullName.replace(/ \(observed\)$/, "") }
+              : e
+          );
+      }
       // "Only next event day" - once every other filter above has been
       // applied, keep only whichever events share the single soonest
       // `days` value (today if any event falls today, otherwise the
@@ -7657,7 +8165,7 @@
       }
       let typeLabel = strings.types[e.type] || e.type;
       if (e.type === "holiday" && e.category) {
-        typeLabel = `${typeLabel} (${(strings.categories || {})[e.category] || e.category})`;
+        typeLabel = `${typeLabel} (${(strings.categories || {})[e.category] || _humanizeCategory(e.category)})`;
       }
       // German nouns stay capitalized wherever they sit in the sentence;
       // only English (and any other language not opting in) lowercases the
@@ -8269,7 +8777,7 @@
       // category (already driving the row's icon - see CATEGORY_ICONS in
       // const.py) is appended so it's visible as text too.
       if (e.type === "holiday" && e.category) {
-        typeLabel = `${typeLabel} (${(strings.categories || {})[e.category] || e.category})`;
+        typeLabel = `${typeLabel} (${(strings.categories || {})[e.category] || _humanizeCategory(e.category)})`;
       }
       // Country (+ subdivision), useful once more than one country/region is
       // imported at once - opt-in per show_name_country/show_type_country
@@ -9373,6 +9881,12 @@
       gap: 12px;
       margin-bottom: 16px;
     }
+    /* The explicit display:flex above beats the UA stylesheet's
+       [hidden]{display:none} on specificity ties, so setting .hidden = true
+       on a .toggle-row (e.g. holiday_merge_observed's row) would silently
+       do nothing without this override - unlike .field-row elsewhere in
+       this file, which sets no display and so never needs one. */
+    .toggle-row[hidden] { display: none; }
     .toggle-row .field-label { margin-bottom: 0; }
     /* Margin matches the 16px bottom-margin every row/column-group around it
        already uses, and every row's own top margin is 0 (only bottom is
@@ -9855,7 +10369,7 @@
           values: categories,
           dataAttr: "category",
           valueLabel: (value) =>
-            (strings.categoriesPlural || {})[value] || (strings.categories || {})[value] || value,
+            (strings.categoriesPlural || {})[value] || (strings.categories || {})[value] || _humanizeCategory(value),
           showAllText: strings.editor.showAll || "Show All",
           hideAllText: strings.editor.hideAll || "Hide All",
           onChange: (checked) => {
@@ -9871,9 +10385,62 @@
           },
         });
         body.appendChild(this._categoriesRowEl);
+        // Actual/observed only matters once at least one holiday exists -
+        // same gate as the categories row above (both hide/show together).
+        this._holidayDateRowEl = this._buildToggleGridRow({
+          labelText: strings.editor.holidayDates,
+          tooltipText: strings.editor.holidayDatesDesc,
+          values: ["actual", "observed"],
+          // All-lowercase, single-word attr name (unlike a camelCase one)
+          // deliberately - this HTML is built via a template string/innerHTML
+          // (see _buildToggleGridRow), and the browser lowercases attribute
+          // names on parse, so a camelCase "holidayDate" would silently
+          // become "holidaydate" in the DOM while `dataset[dataAttr]` still
+          // looked up the camelCase key - same trap `category`/`type` above
+          // already avoid by being single lowercase words.
+          dataAttr: "holidaydate",
+          valueLabel: (value) =>
+            value === "observed" ? strings.editor.holidayDateObserved : strings.editor.holidayDateActual,
+          showAllText: strings.editor.showAll || "Show All",
+          hideAllText: strings.editor.hideAll || "Hide All",
+          onChange: (checked) => {
+            this._config = defaultConfig({ ...this._config, holiday_date_variants: checked });
+            this._emit();
+            if (checked.length === 1 && checked[0] === NONE_SELECTED) {
+              this._disableHolidayType();
+            }
+          },
+        });
+        body.appendChild(this._holidayDateRowEl);
+
+        // A third, independent way to resolve the actual/observed choice -
+        // see holiday_merge_observed in defaultConfig - built from the same
+        // generic toggle-row markup the "Time period" section's today_only/
+        // next_event_day_only toggles use, rather than _buildToggleGridRow
+        // (that helper is for multi-value Show All/Hide All grids, not a
+        // single independent on/off switch like this one).
+        const mergeWrapper = document.createElement("div");
+        mergeWrapper.innerHTML = this._visibilityTwoColHtml(["holiday_merge_observed"], []);
+        this._holidayMergeRowEl = mergeWrapper.querySelector(
+          'input[data-visibility="holiday_merge_observed"]'
+        ).closest(".toggle-row");
+        const mergeLabelEl = this._holidayMergeRowEl.querySelector(".label-text");
+        if (mergeLabelEl) mergeLabelEl.textContent = strings.editor.holidayMergeObserved;
+        const mergeTooltipEl = this._holidayMergeRowEl.querySelector(".tooltip-anchor");
+        if (mergeTooltipEl) mergeTooltipEl.dataset.tooltip = strings.editor.holidayMergeObservedDesc;
+        const mergeToggleEl = this._holidayMergeRowEl.querySelector(
+          'input[data-visibility="holiday_merge_observed"]'
+        );
+        mergeToggleEl.addEventListener("change", () => {
+          this._config = defaultConfig({ ...this._config, holiday_merge_observed: mergeToggleEl.checked });
+          this._emit();
+        });
+        body.appendChild(mergeWrapper);
         this._updateCategoriesRowVisibility();
       } else {
         this._categoriesRowEl = null;
+        this._holidayDateRowEl = null;
+        this._holidayMergeRowEl = null;
       }
 
       const calendarsHeading = document.createElement("div");
@@ -9926,9 +10493,35 @@
     }
 
     _updateCategoriesRowVisibility() {
+      const hidden = !this._holidayTypeEnabled();
       if (this._categoriesRowEl) {
-        this._categoriesRowEl.hidden = !this._holidayTypeEnabled();
+        this._categoriesRowEl.hidden = hidden;
       }
+      // The actual/observed choice - both the variant grid and the merge
+      // toggle - only makes sense once at least one currently-loaded holiday
+      // entity actually has an observed counterpart; a country like Germany
+      // (see _country_supports_observed in config_flow.py) never produces
+      // one, so there's nothing here to choose between or merge. Any future
+      // toggle that's similarly holiday/observed-specific should fold into
+      // this same "hidden" expression rather than get its own gate.
+      const observedHidden = hidden || !this._anyObservedHolidayEntityExists();
+      if (this._holidayDateRowEl) {
+        this._holidayDateRowEl.hidden = observedHidden;
+      }
+      if (this._holidayMergeRowEl) {
+        this._holidayMergeRowEl.hidden = observedHidden;
+      }
+    }
+
+    // Whether any currently-loaded holiday sensor has an observed
+    // counterpart at all - see _updateCategoriesRowVisibility above.
+    _anyObservedHolidayEntityExists() {
+      if (!this._hass) return false;
+      for (const entityId in this._hass.states) {
+        if (!entityId.startsWith("sensor.annuals_holiday_")) continue;
+        if (this._hass.states[entityId].attributes.observed === true) return true;
+      }
+      return false;
     }
 
     // Shared builder for the "Event types" / "Holiday categories" rows: a
@@ -10025,6 +10618,18 @@
       this.shadowRoot.querySelectorAll(".events-body input[data-category]").forEach((el) => {
         el.checked = allCategoriesChecked || categories.includes(el.dataset.category);
       });
+      // Unlike categories/types above, an empty array here is never stored
+      // as "all" - defaultConfig always fills in at least ["actual"] - so
+      // this only ever reflects exactly what's checked, no "all means empty"
+      // special case to account for.
+      const holidayDateVariants = this._config.holiday_date_variants || ["actual"];
+      this.shadowRoot.querySelectorAll(".events-body input[data-holidaydate]").forEach((el) => {
+        el.checked = holidayDateVariants.includes(el.dataset.holidaydate);
+      });
+      const mergeToggle = this.shadowRoot.querySelector(
+        '.events-body input[data-visibility="holiday_merge_observed"]'
+      );
+      if (mergeToggle) mergeToggle.checked = this._config.holiday_merge_observed === true;
       this._updateCategoriesRowVisibility();
       this._syncActionSelector("external_calendars", this._config.external_calendars || []);
       const calendarSelector = this._actionSelectors && this._actionSelectors.external_calendars;
