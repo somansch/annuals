@@ -1,10 +1,5 @@
 {
     "title": "Annuals",
-    "reminder": {
-        "today": "Сегодня",
-        "tomorrow": "Завтра",
-        "in_days": "через {days} дн."
-    },
     "selector": {
         "event_type": {
             "options": {

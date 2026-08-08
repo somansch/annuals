@@ -101,32 +101,49 @@ async def async_event_type_labels(hass: HomeAssistant) -> dict[str, str]:
     }
 
 
-async def async_reminder_strings(hass: HomeAssistant) -> dict[str, str]:
-    """Localized phrases for a "days until" countdown, in the server's
-    language - exposed as each event sensor's "reminder_message" attribute
-    (see sensor.py) so the bundled "Upcoming Event Reminders" blueprint's
-    notifications/to-do items read naturally instead of always in English.
-    Deliberately mirrors the exact wording the frontend card's own
-    STRINGS.today/inDay/inDays already use per language (annuals-card.js),
-    so the two stay consistent - but that JS object lives only in the
-    browser and can't be read from here, so the same phrases are kept a
-    second time as real translations/<lang>.json strings instead.
+# Localized phrases for a "days until" countdown, per language - deliberately
+# mirrors the exact wording the frontend card's own STRINGS.today/inDay/
+# inDays already use (annuals-card.js), so the two stay consistent. Kept as a
+# plain code-side table rather than real translations/<lang>.json strings:
+# hassfest's schema only accepts a fixed set of top-level categories there
+# ("selector", "config", "options", ... - see the other tables in this file
+# for those), and rejects anything else (confirmed live - a "reminder"
+# category failed CI with "extra keys not allowed"), so this data has nowhere
+# else to live short of hardcoding it.
+#
+# Only distinguishes "today"/"tomorrow" (singular) from every other count
+# (formatted into "in_days") - a simplified two-form split rather than each
+# language's full CLDR plural rules (Polish/Russian/Czech, notably, have more
+# than two forms), the same trade-off the card's own strings already make.
+_REMINDER_STRINGS: dict[str, dict[str, str]] = {
+    "en": {"today": "Today", "tomorrow": "Tomorrow", "in_days": "in {days} days"},
+    "de": {"today": "Heute", "tomorrow": "Morgen", "in_days": "in {days} Tagen"},
+    "fr": {"today": "Aujourd'hui", "tomorrow": "Demain", "in_days": "dans {days} jours"},
+    "nl": {"today": "Vandaag", "tomorrow": "Morgen", "in_days": "over {days} dagen"},
+    "pl": {"today": "Dzisiaj", "tomorrow": "Jutro", "in_days": "za {days} dni"},
+    "es": {"today": "Hoy", "tomorrow": "Mañana", "in_days": "en {days} días"},
+    "it": {"today": "Oggi", "tomorrow": "Domani", "in_days": "tra {days} giorni"},
+    "pt-BR": {"today": "Hoje", "tomorrow": "Amanhã", "in_days": "em {days} dias"},
+    "ru": {"today": "Сегодня", "tomorrow": "Завтра", "in_days": "через {days} дн."},
+    "sv": {"today": "Idag", "tomorrow": "Imorgon", "in_days": "om {days} dagar"},
+    "zh-Hans": {"today": "今天", "tomorrow": "明天", "in_days": "{days} 天后"},
+    "cs": {"today": "Dnes", "tomorrow": "Zítra", "in_days": "za {days} dní"},
+    "nb": {"today": "I dag", "tomorrow": "I morgen", "in_days": "om {days} dager"},
+    "da": {"today": "I dag", "tomorrow": "I morgen", "in_days": "om {days} dage"},
+    "tr": {"today": "Bugün", "tomorrow": "Yarın", "in_days": "{days} gün sonra"},
+}
 
-    Only distinguishes "today"/"tomorrow" (singular) from every other count
-    (formatted into "in_days") - a simplified two-form split rather than
-    each language's full CLDR plural rules (Polish/Russian/Czech, notably,
-    have more than two forms), the same trade-off the card's own strings
-    already make.
+
+async def async_reminder_strings(hass: HomeAssistant) -> dict[str, str]:
+    """This "days until" countdown's phrases in the server's language - see
+    _REMINDER_STRINGS above - exposed as each event sensor's
+    "reminder_message" attribute (see sensor.py) so the bundled "Upcoming
+    Event Reminders" blueprint's notifications/to-do items read naturally
+    instead of always in English. Still `async def` (despite doing no I/O
+    now) to match async_event_type_labels' signature, since both are called
+    the same way in __init__.py.
     """
-    translations = await translation.async_get_translations(
-        hass, hass.config.language, "reminder", {DOMAIN}
-    )
-    prefix = f"component.{DOMAIN}.reminder."
-    return {
-        "today": translations.get(f"{prefix}today", "Today"),
-        "tomorrow": translations.get(f"{prefix}tomorrow", "Tomorrow"),
-        "in_days": translations.get(f"{prefix}in_days", "in {days} days"),
-    }
+    return _REMINDER_STRINGS.get(hass.config.language, _REMINDER_STRINGS["en"])
 
 
 # The hub entry's title ("Annuals Settings") deliberately keeps "Annuals"

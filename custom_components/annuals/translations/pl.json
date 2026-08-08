@@ -1,10 +1,5 @@
 {
     "title": "Annuals",
-    "reminder": {
-        "today": "Dzisiaj",
-        "tomorrow": "Jutro",
-        "in_days": "za {days} dni"
-    },
     "selector": {
         "event_type": {
             "options": {

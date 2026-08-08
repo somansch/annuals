@@ -1,10 +1,5 @@
 {
     "title": "Annuals",
-    "reminder": {
-        "today": "I dag",
-        "tomorrow": "I morgen",
-        "in_days": "om {days} dage"
-    },
     "selector": {
         "event_type": {
             "options": {

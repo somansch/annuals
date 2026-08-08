@@ -1,10 +1,5 @@
 {
     "title": "Annuals",
-    "reminder": {
-        "today": "Hoy",
-        "tomorrow": "Mañana",
-        "in_days": "en {days} días"
-    },
     "selector": {
         "event_type": {
             "options": {

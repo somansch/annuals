@@ -1,10 +1,5 @@
 {
     "title": "Annuals",
-    "reminder": {
-        "today": "今天",
-        "tomorrow": "明天",
-        "in_days": "{days} 天后"
-    },
     "selector": {
         "event_type": {
             "options": {
