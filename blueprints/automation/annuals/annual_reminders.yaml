@@ -1,0 +1,532 @@
+blueprint:
+  name: Annuals - Upcoming Event Reminders
+  description: |-
+    ![Annuals logo](https://raw.githubusercontent.com/somansch/annuals/main/blueprints/automation/annuals/logo_small.png)
+
+    # Annuals - Upcoming Event Reminders
+
+    Checks your Annuals events once a day and reminds you before birthdays, anniversaries and more are due - multi-channel, fully customizable, and to-do-list aware.
+
+    **🎯 Target**
+    - Pick specific events, or every event of a chosen type
+    - Filter by VIP and/or Important, with AND / OR / "must NOT be" logic
+
+    **⏰ Schedule**
+    - Remind at one or more "days before" thresholds in a single automation
+    - Each threshold only ever fires once - no repeat nagging
+
+    **🔔 Notify** - each a separate section below, mix and match freely
+    - **Notification Content** - one shared, fully customizable title & message template, used by every channel below
+    - **Mobile App Notify** - push to one or more phones, each with a tappable "Done" button
+    - **Notifications** - Home Assistant's own notification bell, and/or a dashboard status helper (Markdown/Entity card)
+    - **Text-to-Speech Announcement** - speak the reminder on one or more media players
+    - **Custom Actions** - anything else via the normal action editor - email, WhatsApp/Telegram/Signal/ntfy, and more
+
+    **✅ To-do tracking**
+    - Each due reminder can become an item on a to-do list of your choice
+    - Completing it there, or tapping "Done" on the notification, both resolve it
+
+    <details>
+    <summary><b>Available template variables</b> (for the notification title/message and any additional actions)</summary>
+
+    - `{{ ev_name }}` - the event's name (name + last name combined)
+    - `{{ ev_type }}` - the event type, translated into your HA's configured language, e.g. "Birthday"/"Geburtstag" (15 languages translated, see Annuals readme)
+    - `{{ occurrence }}` - the occurrence number, e.g. "30"
+    - `{{ days_until }}` - number of days until the event, e.g. "7"
+    - `{{ reminder_message }}` - a ready-made, translated countdown phrase, e.g. "in 7 days (#30)", "Tomorrow" or "Today"
+    - `{{ summary }}` - the rendered Notification title (see below) - also what becomes the to-do list item text; only available in the message and any additional actions, not in the title template itself
+    - `{{ ent }}` - the event's entity id
+
+    </details>
+  domain: automation
+  author: somansch
+  source_url: https://github.com/somansch/annuals/blob/main/blueprints/automation/annuals/annual_reminders.yaml
+  input:
+    events:
+      name: Events to remind about
+      icon: mdi:calendar-star
+      collapsed: true
+      input:
+        target_entities:
+          name: Specific events
+          description: >-
+            Pick one or more Annuals event sensors directly. Leave empty to
+            target every event of the type chosen below instead.
+          default: []
+          selector:
+            entity:
+              multiple: true
+              filter:
+                integration: annuals
+                domain: sensor
+        target_type:
+          name: Event type
+          description: >-
+            Only used when "Specific events" above is left empty - every Annuals
+            event of this type is checked instead of a hand-picked list.
+          default: ""
+          selector:
+            select:
+              mode: dropdown
+              options:
+                - label: "(none - use Specific events above)"
+                  value: ""
+                - label: Birthday
+                  value: birthday
+                - label: Anniversary
+                  value: anniversary
+                - label: Name day
+                  value: name_day
+                - label: Wedding anniversary
+                  value: wedding_anniversary
+                - label: Memorial
+                  value: memorial
+                - label: Pet birthday
+                  value: pet_birthday
+                - label: Work anniversary
+                  value: work_anniversary
+                - label: Custom
+                  value: custom
+                - label: One-time event
+                  value: one_time
+                - label: Holiday
+                  value: holiday
+    filters:
+      name: Filters
+      icon: mdi:filter-variant
+      collapsed: true
+      input:
+        vip_filter:
+          name: VIP
+          description: Whether a reminded event must (not) be flagged VIP.
+          default: ignore
+          selector:
+            select:
+              mode: dropdown
+              options:
+                - label: "Ignore (no VIP filter)"
+                  value: ignore
+                - label: Must be VIP
+                  value: "yes"
+                - label: Must NOT be VIP
+                  value: "no"
+        important_filter:
+          name: Important
+          description: >-
+            Whether a reminded event must (not) currently be flagged
+            Important (a milestone occurrence this year).
+          default: ignore
+          selector:
+            select:
+              mode: dropdown
+              options:
+                - label: "Ignore (no Important filter)"
+                  value: ignore
+                - label: Must be Important
+                  value: "yes"
+                - label: Must NOT be Important
+                  value: "no"
+        filter_logic:
+          name: Combine VIP & Important as
+          description: >-
+            Only relevant when both VIP and Important above are set to
+            something other than "Ignore" - require both conditions to
+            match (AND) or either one (OR).
+          default: and
+          selector:
+            select:
+              mode: dropdown
+              options:
+                - label: "AND - both must match"
+                  value: and
+                - label: "OR - either one matches"
+                  value: or
+    schedule:
+      name: Reminder schedule
+      icon: mdi:clock-outline
+      collapsed: true
+      input:
+        notify_time:
+          name: Notification time
+          description: Time of day the daily check runs and any due reminders are sent.
+          default: "09:00:00"
+          selector:
+            time: {}
+        reminder_days:
+          name: Remind this many days before
+          description: >-
+            Comma-separated "days until" values to remind on, e.g. "7,1,0" reminds
+            a week before, the day before, and on the day itself. An event's own
+            countdown only ever matches one of these once a day, so each is a
+            one-time ping, not a repeating nag.
+          default: "7,1,0"
+          selector:
+            text: {}
+    notification_content:
+      name: Notification Content
+      icon: mdi:pencil-outline
+      collapsed: true
+      input:
+        notify_title:
+          name: Notification title
+          description: >-
+            Template for the notification's title, evaluated per due
+            reminder - shared by every channel below (Mobile App Notify,
+            Notifications, Text-to-Speech Announcement), and also what
+            becomes the to-do list item's text if a to-do list is set below.
+            Duplicate items on a later daily check are matched against this
+            rendered text, so keep it something reasonably stable per event
+            (e.g. avoid the countdown itself, which changes daily - that
+            already belongs in the message below). See the blueprint
+            description above for the full list of available variables.
+          default: "{{ ev_name }} - {{ ev_type }}"
+          selector:
+            template: {}
+        notify_message:
+          name: Notification message
+          description: >-
+            Template for the notification's body text, evaluated per due
+            reminder - shared by every channel below (Mobile App Notify,
+            Notifications, Text-to-Speech Announcement).
+          default: "{{ reminder_message }}"
+          selector:
+            template: {}
+    mobile_app_notify:
+      name: Mobile App Notify
+      icon: mdi:cellphone-message
+      collapsed: true
+      input:
+        notify_devices:
+          name: Devices with "Done" button (optional)
+          description: >-
+            One or more devices to push to via the Home Assistant Companion
+            App, each with a tappable "Done" button - the only way to
+            resolve a reminder directly from the notification itself. Leave
+            empty to skip mobile push entirely. Title/message text is set
+            above under "Notification Content".
+          default: []
+          selector:
+            device:
+              multiple: true
+              filter:
+                integration: mobile_app
+    ha_notifications:
+      name: Notifications
+      icon: mdi:bell-ring-outline
+      collapsed: true
+      input:
+        show_in_notifications:
+          name: Show in Home Assistant's notification bell
+          description: >-
+            Creates a persistent notification for each due reminder, visible
+            in Home Assistant's own notification bell (top right of the UI).
+            Re-checking the same event updates it instead of piling up
+            duplicates.
+          default: false
+          selector:
+            boolean: {}
+        dashboard_helper:
+          name: Dashboard status helper (optional)
+          description: >-
+            An input_text helper to keep updated with due reminders, so you
+            can show it on a dashboard (Markdown or Entity card) instead of
+            (or in addition to) the options above. Shows only today's due
+            reminder(s) as timestamped "title - message" lines (one below
+            the other, if more than one is due the same day) - reset the
+            moment the first reminder of a new day comes in, so it never
+            keeps showing an older day's, and capped to this specific
+            helper's own configured max length if a day's reminders run
+            longer than that. Leave empty to skip this.
+          default: ""
+          selector:
+            entity:
+              domain: input_text
+    todo_tracking:
+      name: To-do Tracking
+      icon: mdi:checkbox-marked-circle-outline
+      collapsed: true
+      input:
+        todo_list:
+          name: To-do list (optional)
+          description: >-
+            If set, each due reminder becomes an item here, using the
+            rendered Notification title above as its text and the rendered
+            Notification message as its description - one already open for
+            the same event, or already marked completed for it, is never
+            duplicated on a later daily check (so once you've checked it
+            off, it's gone for good - it won't come back on the next
+            reminder threshold for the same event), and completing the item
+            (from the list, or via the notification's "Done" button) is what
+            actually resolves the reminder. Its due date/time is set
+            automatically too: the event's own actual date, at the time of
+            day set under "Notification time" above. Leave empty to just get
+            a plain notification with no "Done" button and no tracking.
+          default: ""
+          selector:
+            entity:
+              domain: todo
+    tts_announcement:
+      name: Text-to-Speech Announcement
+      icon: mdi:account-voice
+      collapsed: true
+      input:
+        tts_engine:
+          name: TTS engine (required if media players are picked below)
+          description: >-
+            The text-to-speech engine entity to announce with (e.g. Google
+            Translate, Piper, Home Assistant Cloud).
+          default: ""
+          selector:
+            entity:
+              domain: tts
+        tts_media_players:
+          name: Media players to announce on (optional)
+          description: >-
+            If set, speaks the notification title and message on these
+            players via the TTS engine above, for each due reminder. Leave
+            empty to skip TTS entirely.
+          default: []
+          selector:
+            entity:
+              multiple: true
+              domain: media_player
+    custom_actions:
+      name: Custom Actions
+      icon: mdi:cog-play-outline
+      collapsed: true
+      input:
+        user_actions:
+          name: Additional actions (optional)
+          description: >-
+            Run any further actions you like for each due reminder - e.g. an
+            email/SMTP notify service, WhatsApp/Telegram/Signal/ntfy, or
+            anything else. Built with the normal action editor, so use its
+            templating help - see the blueprint description above for the
+            available variables.
+          default: []
+          selector:
+            action: {}
+
+mode: queued
+max: 10
+
+trigger:
+  - platform: time
+    at: !input notify_time
+    id: daily_check
+  - platform: event
+    event_type: mobile_app_notification_action
+    id: done_pressed
+
+variables:
+  target_entities: !input target_entities
+  target_type: !input target_type
+  vip_filter: !input vip_filter
+  important_filter: !input important_filter
+  filter_logic: !input filter_logic
+  reminder_days: !input reminder_days
+  notify_time: !input notify_time
+  notify_devices: !input notify_devices
+  show_in_notifications: !input show_in_notifications
+  dashboard_helper: !input dashboard_helper
+  tts_engine: !input tts_engine
+  tts_media_players: !input tts_media_players
+  todo_list: !input todo_list
+  reminder_days_list: "{{ reminder_days.split(',') | map('trim') | map('int') | list }}"
+  matched_entities: >-
+    {{ target_entities if target_entities | length > 0 else
+       (states.sensor
+         | selectattr('entity_id', 'match', '^sensor\\.annuals_')
+         | selectattr('attributes.type', 'defined')
+         | selectattr('attributes.type', 'eq', target_type)
+         | map(attribute='entity_id') | list
+       if target_type else []) }}
+
+action:
+  - choose:
+      # Daily pass: notify for every matched event that's due today at one
+      # of the configured thresholds, per the VIP/Important filters.
+      - conditions: "{{ trigger.id == 'daily_check' }}"
+        sequence:
+          - repeat:
+              for_each: "{{ matched_entities }}"
+              sequence:
+                - variables:
+                    ent: "{{ repeat.item }}"
+                    days_until: "{{ states(ent) | int(999) }}"
+                    is_vip: "{{ state_attr(ent, 'vip') | bool(false) }}"
+                    is_important: "{{ state_attr(ent, 'important') | bool(false) }}"
+                    vip_match: "{{ true if vip_filter == 'ignore' else (is_vip if vip_filter == 'yes' else not is_vip) }}"
+                    important_match: "{{ true if important_filter == 'ignore' else (is_important if important_filter == 'yes' else not is_important) }}"
+                    filter_match: >-
+                      {{ (vip_match or important_match)
+                         if (vip_filter != 'ignore' and important_filter != 'ignore' and filter_logic == 'or')
+                         else (vip_match and important_match) }}
+                    ev_name: "{{ state_attr(ent, 'full_name') or state_attr(ent, 'name') }}"
+                    # Both already translated into Home Assistant's
+                    # configured language server-side (see the "type_label"/
+                    # "reminder_message" attributes in sensor.py, and their
+                    # "reminder"/"selector.event_type" translation strings) -
+                    # not built here from the raw "type" attribute or from
+                    # days_until, so every language gets the same phrasing
+                    # the rest of the integration (calendar summaries, the
+                    # dashboard card) already uses, instead of blueprint-only
+                    # English text.
+                    ev_type: "{{ state_attr(ent, 'type_label') }}"
+                    occurrence: "{{ state_attr(ent, 'occurrence_number') }}"
+                - condition: template
+                  value_template: "{{ days_until in reminder_days_list and filter_match }}"
+                - variables:
+                    reminder_message: >-
+                      {{ state_attr(ent, 'reminder_message') }}{{ ' (#' ~ occurrence ~ ')' if occurrence else '' }}
+                # notify_title/notify_message are user-configurable templates
+                # (blueprint inputs) - rendering them here, as a variables
+                # step, evaluates them in this iteration's context (ev_name,
+                # reminder_message, etc. all in scope) exactly once, so both
+                # the dashboard line and the mobile push below use the same
+                # already-rendered text. `summary` (the to-do item text) is
+                # then just an alias for the rendered title - see "Notification
+                # title"'s description and the to-do_tracking section below -
+                # computed after it rather than from its own separate template.
+                - variables:
+                    rendered_title: !input notify_title
+                    rendered_message: !input notify_message
+                - variables:
+                    summary: "{{ rendered_title }}"
+                - if:
+                    - condition: template
+                      value_template: "{{ todo_list != '' }}"
+                  then:
+                    # No `status` filter here - deliberately fetches items in
+                    # *every* status (needs_action and completed alike), not
+                    # just the open ones, so a matching item that's already
+                    # been checked off still counts as "exists" below. Once
+                    # someone's marked it done, it must never come back, even
+                    # if another of this same event's reminder_days
+                    # thresholds fires later (e.g. both the "7" and "1"
+                    # thresholds due) - matching purely on the title is
+                    # enough here, no need to also inspect status per item.
+                    - action: todo.get_items
+                      target:
+                        entity_id: "{{ todo_list }}"
+                      response_variable: existing_items
+                    - if:
+                        - condition: template
+                          value_template: >-
+                            {{ (existing_items[todo_list]['items']
+                                | selectattr('summary', 'eq', summary) | list | length) == 0 }}
+                      then:
+                        - action: todo.add_item
+                          target:
+                            entity_id: "{{ todo_list }}"
+                          data:
+                            item: "{{ summary }}"
+                            description: "{{ rendered_message }}"
+                            # The event's own actual date (not today's check
+                            # date), combined with "Notification time" above
+                            # for the time portion - so the to-do item is due
+                            # exactly when the event happens, at whatever
+                            # time of day the daily check itself runs.
+                            due_datetime: "{{ state_attr(ent, 'next_date') ~ ' ' ~ notify_time }}"
+                - if:
+                    - condition: template
+                      value_template: "{{ show_in_notifications }}"
+                  then:
+                    - action: persistent_notification.create
+                      data:
+                        title: "{{ rendered_title }}"
+                        message: "{{ rendered_message }}"
+                        notification_id: "annuals_reminder_{{ ent }}"
+                      continue_on_error: true
+                - if:
+                    - condition: template
+                      value_template: "{{ dashboard_helper != '' }}"
+                  then:
+                    - action: input_text.set_value
+                      target:
+                        entity_id: "{{ dashboard_helper }}"
+                      data:
+                        # Every line is stamped with today's date (not just
+                        # the time, like before) specifically so it can be
+                        # checked here: if the helper's current content
+                        # doesn't start with today's date, it's left over
+                        # from an earlier day (or empty) and gets replaced
+                        # outright instead of appended to - so this always
+                        # shows only today's reminder(s), never yesterday's
+                        # (or older) still lingering. A second reminder due
+                        # later the *same* day still appends below the
+                        # first, same as before.
+                        value: >-
+                          {% set current = states(dashboard_helper) %}
+                          {% set today_str = now().strftime('%Y-%m-%d') %}
+                          {% set is_today = current not in ('', 'unknown', 'unavailable') and current.startswith(today_str) %}
+                          {# The helper's own configured max length (input_text
+                             defaults to 100, not 255 - hardcoding 255 here
+                             let a combined value exceeding the *real* limit
+                             pass local validation, get rejected outright by
+                             input_text.set_value, and silently leave the old
+                             value in place, since this step has
+                             continue_on_error - always reading the entity's
+                             actual "max" attribute instead is what avoids
+                             that. #}
+                          {% set max_len = state_attr(dashboard_helper, 'max') | int(100) %}
+                          {# A plain "\n" alone renders as nothing but a
+                             space in Markdown (it takes a blank line, or two
+                             trailing spaces, to force an actual line break)
+                             - "  \n" is that Markdown hard-break syntax, so
+                             each event still visibly starts its own line on
+                             a Markdown card, not just in the raw state
+                             string. #}
+                          {{ ((current ~ '  \n' if is_today else '')
+                              ~ today_str ~ ' ' ~ now().strftime('%H:%M') ~ ' - ' ~ rendered_title ~ ' - ' ~ rendered_message)[-max_len:] }}
+                      continue_on_error: true
+                - if:
+                    - condition: template
+                      value_template: "{{ tts_media_players | length > 0 and tts_engine != '' }}"
+                  then:
+                    - repeat:
+                        for_each: "{{ tts_media_players }}"
+                        sequence:
+                          - action: tts.speak
+                            target:
+                              entity_id: "{{ tts_engine }}"
+                            data:
+                              media_player_entity_id: "{{ repeat.item }}"
+                              message: "{{ rendered_title }}. {{ rendered_message }}"
+                            continue_on_error: true
+                - if:
+                    - condition: template
+                      value_template: "{{ notify_devices | length > 0 }}"
+                  then:
+                    - repeat:
+                        for_each: "{{ notify_devices }}"
+                        sequence:
+                          - action: >-
+                              notify.mobile_app_{{ device_attr(repeat.item, 'name') | slugify }}
+                            data:
+                              title: "{{ rendered_title }}"
+                              message: "{{ rendered_message }}"
+                              data:
+                                actions: >-
+                                  {{ [{"action": "annuals_reminder_done|" ~ todo_list ~ "|" ~ summary, "title": "Done"}] if todo_list != '' else [] }}
+                            continue_on_error: true
+                - alias: Run additional actions
+                  choose: []
+                  default: !input user_actions
+      # A notification's "Done" button was tapped - mark the matching to-do
+      # item complete. The action id carries the to-do list + item summary
+      # it belongs to, since the fired event itself doesn't.
+      - conditions: >-
+          {{ trigger.id == 'done_pressed'
+             and (trigger.event.data.action | default('')).startswith('annuals_reminder_done|') }}
+        sequence:
+          - variables:
+              action_parts: "{{ trigger.event.data.action.split('|') }}"
+              done_todo_list: "{{ action_parts[1] }}"
+              done_summary: "{{ action_parts[2] }}"
+          - action: todo.update_item
+            target:
+              entity_id: "{{ done_todo_list }}"
+            data:
+              item: "{{ done_summary }}"
+              status: completed
