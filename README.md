@@ -470,8 +470,6 @@ Each row's layout is fully configurable from Layout → Display → **Row column
 
 **Tap countdown for date** (same section, off by default) makes the Countdown column tappable: tapping swaps "in 2 days" for the event's actual date ("Mon, 3 Aug 2026"), tapping again swaps back - the same way Home Assistant's own activity feed toggles a relative time for an exact one. The rest of the row keeps triggering its usual [tap/hold action](#row-clicktap-behavior). The [Timeline layout](#timeline-layout) has its own equivalent under Layout → Timeline → Options, applying to the countdown at the end of its sentence.
 
-<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-switch-date-view.gif" alt="Tapping a row's countdown to swap it for the actual date, and back" width="45%">
-
 **Name flexibility for non-holiday events:** set a Last name on an event (Adding an event, above) to get first/last name apart - e.g. a **Name** column showing just "Anna" for a compact card, and a separate **Full name** column ("Anna Miller") elsewhere. Both Colors and Fonts have dedicated rows for Last name and Full name, right next to Name.
 
 Any column that includes a Type field - the standalone **Type** column, or the combined **Name + Type**/**Full name + Type** - shows its extra options grouped under two headings:
