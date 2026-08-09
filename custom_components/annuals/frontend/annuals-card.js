@@ -306,6 +306,11 @@
         columnsCompactDesc: "Remove the spacing between columns, center the row, and make every field match in weight and opacity - useful when the columns form one continuous sentence.",
         visibilityBadgeDesc: "Show the occurrence number badge",
         visibilityWhenDesc: "Show the countdown (e.g. “in 3 days”)",
+        whenClickShowsDate: "Tap countdown for date",
+        whenClickShowsDateDesc:
+          "Tapping a row's countdown swaps it for the event's actual date (e.g. \"Mon, 3 Aug 2026\"), tapping again swaps back - the row's own tap/hold action still works everywhere else in the row.",
+        timelineWhenClickShowsDateDesc:
+          "Tapping the countdown at the end of a sentence (\"...is in 2 days\") swaps just that part for the event's actual date (e.g. \"Mon, 3 Aug 2026\"), tapping again swaps back - in the header, a dot's tooltip, and the expanded list alike.",
         visibilityVipOnly: "VIP only",
         visibilityVipOnlyDesc: "Only show events flagged as “VIP Annual”",
         visibilityImportantOnly: "Important only",
@@ -725,6 +730,11 @@
         columnsCompactDesc: "Entfernt den Abstand zwischen den Spalten, zentriert die Zeile und gleicht Schriftstärke und Deckkraft aller Felder an - nützlich, wenn die Spalten einen zusammenhängenden Satz ergeben.",
         visibilityBadgeDesc: "Jubiläums-Badge anzeigen",
         visibilityWhenDesc: "Zeitangabe (Countdown) anzeigen",
+        whenClickShowsDate: "Datum per Klick auf Countdown",
+        whenClickShowsDateDesc:
+          "Ein Klick auf den Countdown einer Zeile zeigt stattdessen das tatsächliche Datum (z. B. „Mo., 3. Aug. 2026“), ein erneuter Klick schaltet zurück - die Tipp-/Halte-Aktion der Zeile funktioniert im Rest der Zeile weiterhin.",
+        timelineWhenClickShowsDateDesc:
+          "Ein Klick auf die Zeitangabe am Satzende („... ist in 2 Tagen“) zeigt nur an dieser Stelle das tatsächliche Datum (z. B. „Mo., 3. Aug. 2026“), ein erneuter Klick schaltet zurück - in der Kopfzeile, im Tooltip eines Punkts und in der ausgeklappten Liste gleichermaßen.",
         visibilityVipOnly: "Nur VIP",
         visibilityVipOnlyDesc: "Nur als „VIP Annual“ markierte Ereignisse anzeigen",
         visibilityImportantOnly: "Nur Important",
@@ -1133,6 +1143,11 @@
         columnsCompactDesc: "Supprime l'espace entre les colonnes, centre la ligne, et harmonise la graisse et l'opacité de tous les champs - utile lorsque les colonnes forment une seule phrase continue.",
         visibilityBadgeDesc: "Afficher le badge du numéro d'occurrence",
         visibilityWhenDesc: "Afficher le compte à rebours (par ex. « dans 3 jours »)",
+        whenClickShowsDate: "Date au clic sur le compte à rebours",
+        whenClickShowsDateDesc:
+          "Cliquer sur le compte à rebours d'une ligne affiche à la place la date réelle (par ex. « lun. 3 août 2026 »), un nouveau clic revient en arrière - l'action tap/appui long de la ligne continue de fonctionner ailleurs dans la ligne.",
+        timelineWhenClickShowsDateDesc:
+          "Cliquer sur le compte à rebours en fin de phrase (« ... dans 2 jours ») affiche à cet endroit la date réelle (par ex. « lun. 3 août 2026 »), un nouveau clic revient en arrière - dans l'en-tête, l'infobulle d'un point et la liste dépliée.",
         visibilityVipOnly: "VIP uniquement",
         visibilityVipOnlyDesc: "N'afficher que les événements marqués « VIP Annual »",
         visibilityImportantOnly: "Important uniquement",
@@ -1540,6 +1555,11 @@
         columnsCompactDesc: "Verwijdert de ruimte tussen de kolommen, centreert de rij, en laat alle velden overeenkomen in dikte en dekking - handig wanneer de kolommen één doorlopende zin vormen.",
         visibilityBadgeDesc: "Toon het badge met het jubileumnummer",
         visibilityWhenDesc: "Toon het aftellen (bijv. „over 3 dagen”)",
+        whenClickShowsDate: "Datum bij klik op aftelling",
+        whenClickShowsDateDesc:
+          "Klikken op het aftellen van een rij toont in plaats daarvan de werkelijke datum (bijv. „ma 3 aug 2026”), nogmaals klikken schakelt terug - de tik-/houdactie van de rij werkt elders in de rij gewoon door.",
+        timelineWhenClickShowsDateDesc:
+          "Klikken op het aftellen aan het eind van een zin („... is over 2 dagen”) toont alleen daar de werkelijke datum (bijv. „ma 3 aug 2026”), nogmaals klikken schakelt terug - in de koptekst, de tooltip van een punt en de uitgeklapte lijst.",
         visibilityVipOnly: "Alleen VIP",
         visibilityVipOnlyDesc: "Toon alleen evenementen gemarkeerd als „VIP Annual”",
         visibilityImportantOnly: "Alleen Important",
@@ -1953,6 +1973,11 @@
         columnsCompactDesc: "Usuwa odstępy między kolumnami, wyśrodkowuje wiersz i ujednolica grubość oraz krycie wszystkich pól - przydatne, gdy kolumny tworzą jedno spójne zdanie.",
         visibilityBadgeDesc: "Pokaż odznakę numeru wystąpienia",
         visibilityWhenDesc: "Pokaż odliczanie (np. „za 3 dni”)",
+        whenClickShowsDate: "Data po kliknięciu odliczania",
+        whenClickShowsDateDesc:
+          "Kliknięcie odliczania w wierszu pokazuje zamiast niego rzeczywistą datę (np. „pon, 3 sie 2026”), ponowne kliknięcie przywraca odliczanie - akcja dotknięcia/przytrzymania wiersza nadal działa w pozostałej części wiersza.",
+        timelineWhenClickShowsDateDesc:
+          "Kliknięcie odliczania na końcu zdania („... za 2 dni”) pokazuje w tym miejscu rzeczywistą datę (np. „pon, 3 sie 2026”), ponowne kliknięcie przywraca odliczanie - w nagłówku, dymku punktu i rozwiniętej liście.",
         visibilityVipOnly: "Tylko VIP",
         visibilityVipOnlyDesc: "Pokaż tylko wydarzenia oznaczone jako „VIP Annual”",
         visibilityImportantOnly: "Tylko Important",
@@ -2360,6 +2385,11 @@
         columnsCompactDesc: "Elimina el espacio entre columnas, centra la fila y iguala el grosor y la opacidad de todos los campos - útil cuando las columnas forman una sola frase continua.",
         visibilityBadgeDesc: "Mostrar la insignia del número de ocurrencia",
         visibilityWhenDesc: "Mostrar la cuenta atrás (p. ej. «en 3 días»)",
+        whenClickShowsDate: "Fecha al pulsar la cuenta atrás",
+        whenClickShowsDateDesc:
+          "Pulsar la cuenta atrás de una fila muestra en su lugar la fecha real (p. ej. «lun, 3 ago 2026»), pulsar de nuevo la restaura - la acción de pulsación/mantener de la fila sigue funcionando en el resto de la fila.",
+        timelineWhenClickShowsDateDesc:
+          "Pulsar la cuenta atrás al final de la frase («... en 2 días») muestra ahí la fecha real (p. ej. «lun, 3 ago 2026»), pulsar de nuevo la restaura - en el encabezado, en el tooltip de un punto y en la lista desplegada.",
         visibilityVipOnly: "Solo VIP",
         visibilityVipOnlyDesc: "Mostrar solo eventos marcados como «VIP Annual»",
         visibilityImportantOnly: "Solo Important",
@@ -2767,6 +2797,11 @@
         columnsCompactDesc: "Rimuove lo spazio tra le colonne, centra la riga e uniforma spessore e opacità di tutti i campi - utile quando le colonne formano un'unica frase continua.",
         visibilityBadgeDesc: "Mostra il badge del numero di occorrenza",
         visibilityWhenDesc: "Mostra il conto alla rovescia (ad es. «tra 3 giorni»)",
+        whenClickShowsDate: "Data al clic sul conto alla rovescia",
+        whenClickShowsDateDesc:
+          "Fare clic sul conto alla rovescia di una riga mostra invece la data effettiva (ad es. «lun 3 ago 2026»), un altro clic ripristina - l'azione tocco/pressione della riga continua a funzionare nel resto della riga.",
+        timelineWhenClickShowsDateDesc:
+          "Fare clic sul conto alla rovescia a fine frase («... tra 2 giorni») mostra lì la data effettiva (ad es. «lun 3 ago 2026»), un altro clic ripristina - nell'intestazione, nel tooltip di un punto e nell'elenco espanso.",
         visibilityVipOnly: "Solo VIP",
         visibilityVipOnlyDesc: "Mostra solo eventi contrassegnati come «VIP Annual»",
         visibilityImportantOnly: "Solo Important",
@@ -3174,6 +3209,11 @@
         columnsCompactDesc: "Remove o espaçamento entre as colunas, centraliza a linha e uniformiza a espessura e a opacidade de todos os campos - útil quando as colunas formam uma única frase contínua.",
         visibilityBadgeDesc: "Mostrar o selo do número de ocorrência",
         visibilityWhenDesc: "Mostrar a contagem regressiva (por ex. \"em 3 dias\")",
+        whenClickShowsDate: "Data ao clicar na contagem regressiva",
+        whenClickShowsDateDesc:
+          "Clicar na contagem regressiva de uma linha mostra a data real (por ex. \"seg, 3 de ago de 2026\"), clicar novamente volta atrás - a ação de toque/pressionar da linha continua funcionando no resto da linha.",
+        timelineWhenClickShowsDateDesc:
+          "Clicar na contagem regressiva no fim da frase (\"... em 2 dias\") mostra ali a data real (por ex. \"seg, 3 de ago de 2026\"), clicar novamente volta atrás - no cabeçalho, na dica de um ponto e na lista expandida.",
         visibilityVipOnly: "Apenas VIP",
         visibilityVipOnlyDesc: "Mostrar apenas eventos marcados como \"VIP Annual\"",
         visibilityImportantOnly: "Apenas Important",
@@ -3586,6 +3626,11 @@
         columnsCompactDesc: "Убирает промежутки между столбцами, центрирует строку и выравнивает толщину и прозрачность всех полей - полезно, когда столбцы образуют одно связное предложение.",
         visibilityBadgeDesc: "Показывать значок номера события",
         visibilityWhenDesc: "Показывать обратный отсчёт (напр. «через 3 дня»)",
+        whenClickShowsDate: "Дата по клику на отсчёт",
+        whenClickShowsDateDesc:
+          "Клик по обратному отсчёту в строке показывает вместо него фактическую дату (напр. «пн, 3 авг. 2026 г.»), повторный клик возвращает отсчёт - действие нажатия/удержания строки по-прежнему работает в остальной части строки.",
+        timelineWhenClickShowsDateDesc:
+          "Клик по обратному отсчёту в конце фразы («... через 2 дня») показывает в этом месте фактическую дату (напр. «пн, 3 авг. 2026 г.»), повторный клик возвращает отсчёт - в заголовке, во всплывающей подсказке точки и в развёрнутом списке.",
         visibilityVipOnly: "Только VIP",
         visibilityVipOnlyDesc: "Показывать только события, отмеченные как «VIP Annual»",
         visibilityImportantOnly: "Только Important",
@@ -3999,6 +4044,11 @@
           "Tar bort mellanrummet mellan kolumnerna, centrerar raden och gör vikt och opacitet lika för alla fält - användbart när kolumnerna bildar en sammanhängande mening.",
         visibilityBadgeDesc: "Visa märket för händelsenumret",
         visibilityWhenDesc: "Visa nedräkningen (t.ex. \"om 3 dagar\")",
+        whenClickShowsDate: "Datum vid klick på nedräkning",
+        whenClickShowsDateDesc:
+          "Att klicka på en rads nedräkning visar i stället det faktiska datumet (t.ex. \"mån 3 aug. 2026\"), ett nytt klick växlar tillbaka - radens tryck-/hållåtgärd fungerar fortfarande i resten av raden.",
+        timelineWhenClickShowsDateDesc:
+          "Att klicka på nedräkningen i slutet av meningen (\"... om 2 dagar\") visar där det faktiska datumet (t.ex. \"mån 3 aug. 2026\"), ett nytt klick växlar tillbaka - i rubriken, i en punkts tooltip och i den utfällda listan.",
         visibilityVipOnly: "Endast VIP",
         visibilityVipOnlyDesc: "Visa endast händelser markerade som \"VIP Annual\"",
         visibilityImportantOnly: "Endast Important",
@@ -4405,6 +4455,11 @@
           "移除各列之间的间距，使该行居中，并让所有字段的粗细和不透明度保持一致——适用于各列组成一个连贯句子的情况。",
         visibilityBadgeDesc: "显示周年数徽章",
         visibilityWhenDesc: "显示倒计时（例如“3 天后”）",
+        whenClickShowsDate: "点击倒计时显示日期",
+        whenClickShowsDateDesc:
+          "点击某行的倒计时会改为显示实际日期（例如“2026年8月3日 周一”），再次点击可切换回来 - 该行的点按/长按操作在行内其他位置仍然有效。",
+        timelineWhenClickShowsDateDesc:
+          "点击句尾的倒计时（“……在 2 天后”）会仅在该处显示实际日期（例如“2026年8月3日 周一”），再次点击可切换回来 - 在标题行、圆点的提示框和展开列表中均适用。",
         visibilityVipOnly: "仅 VIP",
         visibilityVipOnlyDesc: "仅显示标记为“VIP Annual”的事件",
         visibilityImportantOnly: "仅 Important",
@@ -4815,6 +4870,11 @@
           "Odstraní mezery mezi sloupci, vystředí řádek a sjednotí váhu a krytí všech polí - užitečné, když sloupce tvoří jednu souvislou větu.",
         visibilityBadgeDesc: "Zobrazit odznak čísla výročí",
         visibilityWhenDesc: "Zobrazit odpočet (např. „za 3 dny“)",
+        whenClickShowsDate: "Datum po kliknutí na odpočet",
+        whenClickShowsDateDesc:
+          "Kliknutí na odpočet v řádku zobrazí místo něj skutečné datum (např. „po 3. 8. 2026“), dalším kliknutím se přepne zpět - akce klepnutí/podržení řádku ve zbytku řádku funguje dál.",
+        timelineWhenClickShowsDateDesc:
+          "Kliknutí na odpočet na konci věty („... za 2 dny“) zobrazí na tomto místě skutečné datum (např. „po 3. 8. 2026“), dalším kliknutím se přepne zpět - v záhlaví, v bublině bodu i v rozbaleném seznamu.",
         visibilityVipOnly: "Pouze VIP",
         visibilityVipOnlyDesc: "Zobrazit pouze události označené jako „VIP Annual“",
         visibilityImportantOnly: "Pouze Important",
@@ -5226,6 +5286,11 @@
           "Fjerner mellomrommet mellom kolonnene, sentrerer raden og gjør vekt og opasitet lik for alle felt - nyttig når kolonnene danner én sammenhengende setning.",
         visibilityBadgeDesc: "Vis merket for jubileumsnummeret",
         visibilityWhenDesc: "Vis nedtellingen (f.eks. «om 3 dager»)",
+        whenClickShowsDate: "Dato ved klikk på nedtelling",
+        whenClickShowsDateDesc:
+          "Klikk på en rads nedtelling viser i stedet den faktiske datoen (f.eks. «man. 3. aug. 2026»), et nytt klikk bytter tilbake - radens trykk-/holdehandling virker fortsatt ellers i raden.",
+        timelineWhenClickShowsDateDesc:
+          "Klikk på nedtellingen sist i setningen («... om 2 dager») viser den faktiske datoen der (f.eks. «man. 3. aug. 2026»), et nytt klikk bytter tilbake - i overskriften, i en prikks verktøytips og i den utvidede listen.",
         visibilityVipOnly: "Kun VIP",
         visibilityVipOnlyDesc: "Vis bare hendelser merket som «VIP Annual»",
         visibilityImportantOnly: "Kun Important",
@@ -5637,6 +5702,11 @@
           "Fjerner mellemrummet mellem kolonnerne, centrerer rækken og gør vægt og opacitet ens for alle felter - nyttigt når kolonnerne danner én sammenhængende sætning.",
         visibilityBadgeDesc: "Vis mærket for jubilæumsnummeret",
         visibilityWhenDesc: "Vis nedtællingen (f.eks. \"om 3 dage\")",
+        whenClickShowsDate: "Dato ved klik på nedtælling",
+        whenClickShowsDateDesc:
+          "Klik på en rækkes nedtælling viser i stedet den faktiske dato (f.eks. \"man. 3. aug. 2026\"), et nyt klik skifter tilbage - rækkens tryk-/holdhandling virker stadig i resten af rækken.",
+        timelineWhenClickShowsDateDesc:
+          "Klik på nedtællingen sidst i sætningen (\"... om 2 dage\") viser den faktiske dato dér (f.eks. \"man. 3. aug. 2026\"), et nyt klik skifter tilbage - i overskriften, i en priks værktøjstip og i den udfoldede liste.",
         visibilityVipOnly: "Kun VIP",
         visibilityVipOnlyDesc: "Vis kun begivenheder markeret som \"VIP Annual\"",
         visibilityImportantOnly: "Kun Important",
@@ -6054,6 +6124,11 @@
           "Sütunlar arasındaki boşluğu kaldırır, satırı ortalar ve tüm alanların kalınlık ve saydamlığını eşitler - sütunların tek bir cümle oluşturduğu durumlarda kullanışlıdır.",
         visibilityBadgeDesc: "Tekrar numarası rozetini göster",
         visibilityWhenDesc: "Geri sayımı göster (örn. \"3 gün sonra\")",
+        whenClickShowsDate: "Geri sayıma tıklayınca tarih",
+        whenClickShowsDateDesc:
+          "Bir satırın geri sayımına tıklamak onun yerine gerçek tarihi gösterir (örn. \"3 Ağu 2026 Pzt\"), tekrar tıklamak geri döndürür - satırın kendi dokunma/basılı tutma eylemi satırın geri kalanında çalışmaya devam eder.",
+        timelineWhenClickShowsDateDesc:
+          "Cümlenin sonundaki geri sayıma tıklamak orada gerçek tarihi gösterir (örn. \"3 Ağu 2026 Pzt\"), tekrar tıklamak geri döndürür - başlıkta, bir noktanın ipucunda ve genişletilmiş listede.",
         visibilityVipOnly: "Yalnızca VIP",
         visibilityVipOnlyDesc: "Yalnızca \"VIP Annual\" olarak işaretlenmiş etkinlikleri göster",
         visibilityImportantOnly: "Yalnızca Important",
@@ -6356,6 +6431,13 @@
       show_type: true,
       show_badge: true,
       show_when: true,
+      // Tapping the countdown ("in 2 days") swaps it for the event's actual
+      // date, and tapping again swaps back - mirrors how Home Assistant's
+      // own activity feed toggles a relative time for an exact one. Off by
+      // default: the countdown cell currently just triggers the row's
+      // tap_action like the rest of the row does, and silently taking that
+      // over would change existing dashboards' click behavior.
+      when_click_shows_date: false,
       show_vip_only: false,
       show_important_only: false,
       show_vip_badge: true,
@@ -6448,6 +6530,15 @@
       timeline_show_time: false,
       timeline_show_location: false,
       timeline_show_description: false,
+      // The timeline's counterpart to when_click_shows_date above - tapping
+      // the sentence's trailing countdown ("...is in 2 days") swaps just
+      // that word for the event's actual date, and back again. Kept a
+      // separate option rather than reusing the list layout's one, since
+      // each layout's toggle sits in (and is only reachable from) its own
+      // section of the editor - Row columns vs. Timeline -> Options - and
+      // a dashboard can be configured for one layout while previewing the
+      // other.
+      timeline_when_click_shows_date: false,
       // Timeline layout only, under Layout -> Timeline -> Options: caps how
       // many header lines a single tied day contributes (see _buildTimeline's
       // header-building loop) - empty/0 means no cap, same as before this
@@ -7174,6 +7265,22 @@
       text-transform: var(--annuals-row-when-transform, none);
       text-decoration: var(--annuals-row-when-decoration, none);
       letter-spacing: var(--annuals-row-when-spacing, normal);
+    }
+    /* Only set when when_click_shows_date is on (see _buildColumnCell) -
+       the countdown is plain text otherwise, so it must not advertise
+       itself as clickable unless the toggle is actually wired up. */
+    .when-toggle {
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    /* The timeline's own equivalent - an inline span inside the sentence
+       (header, dot tooltip and expanded list all share it), so unlike
+       .when-toggle above it must not become a block of its own. */
+    .timeline-when-toggle {
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
     }
     /* Free-form "text" column (see _buildColumnCell) - sized to its own
        content rather than flexing to fill the row: a custom text column is
@@ -7963,6 +8070,25 @@
       }).format(target);
     }
 
+    // Full, unambiguous date ("Mon, 3 Aug 2026") for the timeline's own
+    // click-to-toggle countdown (see timeline_when_click_shows_date) - the
+    // longer counterpart to _timelineDateText's short "6 Aug", and unlike
+    // it never null: tapping the countdown must always have something to
+    // swap in, including on the event's own day, where the sentence's
+    // "...is today" is exactly what you'd tap to find out *which* day.
+    _timelineFullDateText(e) {
+      const isPast = e.daysSince !== undefined && e.daysSince > 0;
+      const target = new Date();
+      target.setHours(0, 0, 0, 0);
+      target.setDate(target.getDate() + (isPast ? -e.daysSince : e.days));
+      return new Intl.DateTimeFormat(this._hass.language || "en", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }).format(target);
+    }
+
     // Time range ("14:00–15:00", or a single time with no dash when there's
     // no end/it equals the start) for config.timeline_show_time - same
     // formatting _row()'s own values.time uses, only ever non-null for a
@@ -8117,6 +8243,45 @@
       // start), so unlike _row()'s version of this same countdown text, it
       // always needs the lowercased "...is today"/"...ist heute" form here.
       const when = whenRaw.charAt(0).toLowerCase() + whenRaw.slice(1);
+      // The list layout's click-to-toggle countdown, for the timeline's own
+      // sentence (see timeline_when_click_shows_date in defaultConfig).
+      // Needs its own node rather than being inlined into the surrounding
+      // text like every other placeholder, since only that one word is
+      // clickable - hence appendTemplate below splitting on {when} instead
+      // of a plain string replace. Every place the sentence is used (header
+      // line, dot tooltip, expanded list) gets it, each with its own
+      // independent toggle state.
+      const fullDate = this._timelineFullDateText(e);
+      const whenNode = () => {
+        if (!config.timeline_when_click_shows_date) return document.createTextNode(when);
+        const span = document.createElement("span");
+        span.className = "timeline-when-toggle";
+        span.textContent = when;
+        let showingDate = false;
+        // stopPropagation so toggling inside a dot's tooltip doesn't also
+        // reach the document-level outside-click handler that closes it
+        // (see _timelineOutsideClickHandler), or the expand button/dot
+        // handlers wrapping the other two placements.
+        span.addEventListener("click", (ev) => {
+          ev.stopPropagation();
+          showingDate = !showingDate;
+          span.textContent = showingDate ? fullDate : when;
+        });
+        return span;
+      };
+      // Appends one template string, rendering {when} as whenNode() above
+      // and letting `fill` substitute every other placeholder. Splitting on
+      // the *template* (before any substitution) keeps a literal "{when}"
+      // that happens to appear in an event's own name/location/description
+      // from being mistaken for the placeholder.
+      const appendTemplate = (tmpl, fill) => {
+        const parts = String(tmpl || "").split("{when}");
+        frag.appendChild(document.createTextNode(fill(parts[0])));
+        for (let i = 1; i < parts.length; i++) {
+          frag.appendChild(whenNode());
+          frag.appendChild(document.createTextNode(fill(parts[i])));
+        }
+      };
       // Same adjustment _row() makes for its own badge number: once an
       // event's date has passed, e.occurrence already counts *next* year's
       // occurrence (the sensor jumped forward the day after the event), so
@@ -8158,9 +8323,8 @@
       if (!(config.show_badge !== false && occurrence != null)) {
         const tmpl =
           (isPast ? strings.timelineSentenceSimplePast : strings.timelineSentenceSimple) || "{name} is {when}";
-        frag.appendChild(
-          document.createTextNode(tmpl.replace("{name}", displayName).replace("{when}", when) + dateSuffix)
-        );
+        appendTemplate(tmpl, (s) => s.replace("{name}", displayName));
+        frag.appendChild(document.createTextNode(dateSuffix));
         return frag;
       }
       let typeLabel = strings.types[e.type] || e.type;
@@ -8183,14 +8347,15 @@
         "{possessive} {ordinal}{sup} {type} is {when}";
       const [before, after] = tmpl.split("{sup}");
       const fill = (s) =>
-        (s || "").replace("{possessive}", possessive).replace("{ordinal}", num).replace("{type}", typeText).replace("{when}", when);
-      frag.appendChild(document.createTextNode(fill(before)));
+        (s || "").replace("{possessive}", possessive).replace("{ordinal}", num).replace("{type}", typeText);
+      appendTemplate(before, fill);
       if (sup) {
         const supEl = document.createElement("sup");
         supEl.textContent = sup;
         frag.appendChild(supEl);
       }
-      frag.appendChild(document.createTextNode(fill(after) + dateSuffix));
+      appendTemplate(after, fill);
+      frag.appendChild(document.createTextNode(dateSuffix));
       return frag;
     }
 
@@ -8803,16 +8968,26 @@
       // with whatever the countdown column says. "Today" instead of the
       // literal date once it's actually today, same as the countdown does.
       let dateText;
+      // Same occurrence as dateText, but always a real date (never the
+      // "Today" word) and in a fuller form - see ctx.fullDateText below.
+      const occurrenceDate = new Date();
+      occurrenceDate.setHours(0, 0, 0, 0);
+      occurrenceDate.setDate(
+        occurrenceDate.getDate() + (isRecent && e.daysSince > 0 ? -e.daysSince : e.days)
+      );
+      const fullDateText = new Intl.DateTimeFormat(this._hass.language || "en", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }).format(occurrenceDate);
       if (e.days === 0) {
         dateText = strings.today;
       } else {
-        const target = new Date();
-        target.setHours(0, 0, 0, 0);
-        target.setDate(target.getDate() + (isRecent && e.daysSince > 0 ? -e.daysSince : e.days));
         dateText = new Intl.DateTimeFormat(this._hass.language || "en", {
           day: "numeric",
           month: "short",
-        }).format(target);
+        }).format(occurrenceDate);
       }
       // occurrence_number always describes the *next* occurrence - once an
       // event's date has passed (daysSince > 0), the sensor has already
@@ -8912,6 +9087,13 @@
         // real formatted date like "Aug 3" starts with the month name and
         // must always stay capitalized regardless of position.
         dateIsToday: e.days === 0,
+        // Full, unambiguous date ("Mon, 3 Aug 2026") for the click-to-toggle
+        // countdown (see when_click_shows_date in defaultConfig) - a longer
+        // format than the Date column's own short "3 Aug", since the whole
+        // point of tapping is to see exactly which day it is, weekday and
+        // year included, rather than a second abbreviated form of what the
+        // countdown already said.
+        fullDateText: fullDateText,
       };
       // Countdown ("when") reads as the sentence's opening word ("In 2
       // days, Anna has her birthday") only until the event's identity has
@@ -9156,9 +9338,31 @@
           // instead, so its case is forced to match regardless of how the
           // underlying translation string itself happens to be cased.
           const text = values.when || "";
-          whenEl.textContent = whenLeading
+          const countdownText = whenLeading
             ? text.charAt(0).toUpperCase() + text.slice(1)
             : text.charAt(0).toLowerCase() + text.slice(1);
+          whenEl.textContent = countdownText;
+          // Click-to-toggle between the countdown and the actual date, the
+          // same way Home Assistant's own activity feed swaps "2 days ago"
+          // for a timestamp (see when_click_shows_date in defaultConfig).
+          // Purely visual and per-row - nothing is persisted, so it resets
+          // on the next re-render, exactly like HA's own does.
+          if (config.when_click_shows_date) {
+            whenEl.classList.add("when-toggle");
+            let showingDate = false;
+            // stopPropagation (plus the pointerdown/contextmenu twins) keeps
+            // this click from also reaching the row itself, which would
+            // otherwise fire tap_action/hold_action at the same time - the
+            // toggle has to be able to coexist with a row action, since
+            // tap_action defaults to "more-info" on every card.
+            whenEl.addEventListener("pointerdown", (ev) => ev.stopPropagation());
+            whenEl.addEventListener("contextmenu", (ev) => ev.stopPropagation());
+            whenEl.addEventListener("click", (ev) => {
+              ev.stopPropagation();
+              showingDate = !showingDate;
+              whenEl.textContent = showingDate ? ctx.fullDateText : countdownText;
+            });
+          }
           return whenEl;
         }
         case "text": {
@@ -11495,6 +11699,10 @@
         const toggle = this.shadowRoot.querySelector(`input[data-highlight="${key}"]`);
         if (toggle) toggle.checked = map[key] === true;
       }
+      const whenClickToggle = this.shadowRoot.querySelector(
+        '.display-body input[data-visibility="when_click_shows_date"]'
+      );
+      if (whenClickToggle) whenClickToggle.checked = config.when_click_shows_date === true;
       this._syncColorSwatch("highlight_past", config.colors.highlight_past || "", "var(--secondary-text-color)");
       this._syncColorSwatch(
         "highlight_today",
@@ -12086,7 +12294,31 @@
       // _applyLayoutStyleVisibility can just hide/show it like every other
       // layout-specific field, instead of this body needing its own special
       // case for it.
-      body.appendChild(this._buildColumnsSection(strings));
+      const columnsSection = this._buildColumnsSection(strings);
+      // Appended *inside* the Row columns section, not next to it: it
+      // configures what that section's own Countdown column does when
+      // tapped (see when_click_shows_date in defaultConfig), and being a
+      // child means _applyLayoutStyleVisibility's existing
+      // ".columns-section" rule hides it along with the rest of the section
+      // in the timeline layout - where there are no row columns at all, and
+      // the timeline's own equivalent (timeline_when_click_shows_date)
+      // lives under Timeline -> Options instead.
+      const whenToggleWrap = document.createElement("div");
+      whenToggleWrap.innerHTML = this._visibilityTwoColHtml(["when_click_shows_date"], []);
+      const whenToggleRow = whenToggleWrap
+        .querySelector('input[data-visibility="when_click_shows_date"]')
+        .closest(".toggle-row");
+      const whenToggleLabel = whenToggleRow.querySelector(".label-text");
+      if (whenToggleLabel) whenToggleLabel.textContent = strings.editor.whenClickShowsDate;
+      const whenToggleTip = whenToggleRow.querySelector(".tooltip-anchor");
+      if (whenToggleTip) whenToggleTip.dataset.tooltip = strings.editor.whenClickShowsDateDesc;
+      const whenToggleInput = whenToggleRow.querySelector('input[data-visibility="when_click_shows_date"]');
+      whenToggleInput.addEventListener("change", () => {
+        this._config = defaultConfig({ ...this._config, when_click_shows_date: whenToggleInput.checked });
+        this._emit();
+      });
+      columnsSection.appendChild(whenToggleWrap);
+      body.appendChild(columnsSection);
 
       const visLabels = {
         past: [strings.editor.visibilityPast, strings.editor.visibilityPastDesc],
@@ -12592,7 +12824,7 @@
       body.appendChild(optionsHeading);
       const optionsRows = document.createElement("div");
       optionsRows.innerHTML = this._visibilityTwoColHtml(
-        ["timeline_show_full_name", "timeline_show_date", "timeline_show_time"],
+        ["timeline_show_full_name", "timeline_show_date", "timeline_show_time", "timeline_when_click_shows_date"],
         ["show_holiday_suffix", "timeline_show_location", "timeline_show_description"]
       );
       body.appendChild(optionsRows);
@@ -12618,6 +12850,19 @@
       dateRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.timelineShowDateDesc;
       dateToggle.addEventListener("change", () => {
         this._config = defaultConfig({ ...this._config, timeline_show_date: dateToggle.checked });
+        this._emit();
+      });
+      const tlWhenClickToggle = optionsRows.querySelector(
+        'input[data-visibility="timeline_when_click_shows_date"]'
+      );
+      const tlWhenClickRow = tlWhenClickToggle.closest(".toggle-row");
+      tlWhenClickRow.querySelector(".label-text").textContent = strings.editor.whenClickShowsDate;
+      tlWhenClickRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.timelineWhenClickShowsDateDesc;
+      tlWhenClickToggle.addEventListener("change", () => {
+        this._config = defaultConfig({
+          ...this._config,
+          timeline_when_click_shows_date: tlWhenClickToggle.checked,
+        });
         this._emit();
       });
       const timeToggle = optionsRows.querySelector('input[data-visibility="timeline_show_time"]');
@@ -12686,6 +12931,12 @@
       if (dateToggle) dateToggle.checked = this._config.timeline_show_date === true;
       const timeToggle = this.shadowRoot.querySelector('input[data-visibility="timeline_show_time"]');
       if (timeToggle) timeToggle.checked = this._config.timeline_show_time === true;
+      const tlWhenClickToggle = this.shadowRoot.querySelector(
+        'input[data-visibility="timeline_when_click_shows_date"]'
+      );
+      if (tlWhenClickToggle) {
+        tlWhenClickToggle.checked = this._config.timeline_when_click_shows_date === true;
+      }
       const locationToggle = this.shadowRoot.querySelector('input[data-visibility="timeline_show_location"]');
       if (locationToggle) locationToggle.checked = this._config.timeline_show_location === true;
       const descriptionToggle = this.shadowRoot.querySelector(

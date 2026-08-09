@@ -2,6 +2,11 @@
 
 All notable changes to this integration are documented here.
 
+## v2.7.1
+
+### Added
+- **Tap the countdown to see the actual date** - a new dashboard card option (off by default) that makes the countdown tappable: tapping swaps "in 2 days" for the event's real date ("Mon, 3 Aug 2026"), tapping again swaps back, the same way Home Assistant's own activity feed toggles a relative time for an exact one. Available for both layouts, each with its own toggle: **Layout → Display → Row columns** for the List layout's Countdown column (the rest of the row keeps triggering its usual tap/hold action), and **Layout → Timeline → Options** for the countdown at the end of the Timeline's sentence (in the header, a dot's tooltip, and the expanded list alike). The Timeline's version also works on the event's own day, where the sentence otherwise just reads "...is today".
+
 ## v2.7.0
 
 ### Added
