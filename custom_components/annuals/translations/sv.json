@@ -241,16 +241,28 @@
             },
             "annual_settings": {
                 "title": "Annual Inställningar",
-                "description": "Kommaseparerade jubileumsnummer som automatiskt markerar en händelse av den typen som \"Important\", t.ex. \"18,21,30,40,50\". Lämna ett fält tomt för att inaktivera detta för den typen.",
-                "data": {
-                    "important_thresholds_birthday": "Födelsedag",
-                    "important_thresholds_anniversary": "Årsdag",
-                    "important_thresholds_name_day": "Namnsdag",
-                    "important_thresholds_wedding_anniversary": "Bröllopsdag",
-                    "important_thresholds_memorial": "Dödsdag",
-                    "important_thresholds_pet_birthday": "Husdjurets födelsedag",
-                    "important_thresholds_work_anniversary": "Arbetsjubileum",
-                    "important_thresholds_custom": "Anpassad"
+                "sections": {
+                    "important_events": {
+                        "name": "❗ Viktiga händelser",
+                        "description": "Kommaseparerade jubileumsnummer som automatiskt markerar en händelse av den typen som \"Important\", t.ex. \"18,21,30,40,50\". Lämna ett fält tomt för att inaktivera detta för den typen.",
+                        "data": {
+                            "important_thresholds_birthday": "Födelsedag",
+                            "important_thresholds_anniversary": "Årsdag",
+                            "important_thresholds_name_day": "Namnsdag",
+                            "important_thresholds_wedding_anniversary": "Bröllopsdag",
+                            "important_thresholds_memorial": "Dödsdag",
+                            "important_thresholds_pet_birthday": "Husdjurets födelsedag",
+                            "important_thresholds_work_anniversary": "Arbetsjubileum",
+                            "important_thresholds_custom": "Anpassad"
+                        }
+                    },
+                    "todo": {
+                        "name": "📍 Uppgiftslistor",
+                        "description": "Öppna uppgifter på dessa listor märker en händelse: varje händelsesensor får då ett attribut ”todo” - sant så länge minst en ännu öppen uppgift är matchad till den, annars falskt - för dina egna automationer, mallar och instrumentpaneler. Matchningen sker först på förfallodatum och därefter på om uppgiftens text nämner händelsen (fullständigt namn, namn, typ, ordningsnummer); en uppgift som passar två händelser lika bra lämnas omatchad. Lämna tomt för att stänga av. Fristående från kortets egen inställning med samma namn.",
+                        "data": {
+                            "todo_lists": "Uppgiftslistor"
+                        }
+                    }
                 }
             },
             "delete_all": {

@@ -25,6 +25,7 @@ from .const import (
     CONF_YEAR,
     DATA_REMINDER_STRINGS,
     DATA_SENSORS,
+    DATA_TODO_UNSUB,
     DATA_TYPE_LABELS,
     DOMAIN,
     TYPE_HOLIDAY,
@@ -34,6 +35,11 @@ from .dates import holiday_key_from_name
 from .helpers import async_event_type_labels, async_reminder_strings, full_name, hub_title
 from .http import AnnualsExportCsvView
 from .services import async_register_services
+from .todo_match import (
+    async_refresh_todo_matches,
+    async_request_todo_refresh,
+    async_setup_todo_tracking,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -98,6 +104,9 @@ async def _async_midnight_tasks(hass: HomeAssistant, _now) -> None:
     _LOGGER.debug("Annuals: midnight refresh of %d sensor(s)", len(sensors))
     for sensor in sensors:
         sensor.async_schedule_update_ha_state(force_refresh=True)
+    # After the sensors, not before: the to-do match gates on each event's
+    # next_date (see todo_match.py), which is exactly what just rolled over.
+    await async_refresh_todo_matches(hass)
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
@@ -197,8 +206,14 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         config_entry, _platforms_for(config_entry)
     )
 
-    if not config_entry.data.get(CONF_HUB):
+    if config_entry.data.get(CONF_HUB):
+        async_setup_todo_tracking(hass)
+    else:
         _async_ensure_hub(hass)
+        # A newly set-up event may already have an open to-do waiting for it
+        # (a restart, an import, a single added entry) - debounced, so a
+        # bulk import asks once rather than once per entry.
+        async_request_todo_refresh(hass)
 
     return True
 
@@ -250,6 +265,10 @@ def _async_ensure_hub(hass: HomeAssistant) -> None:
 
 async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Unload one Annuals entry."""
+    if config_entry.data.get(CONF_HUB):
+        unsub = hass.data.get(DOMAIN, {}).pop(DATA_TODO_UNSUB, None)
+        if unsub is not None:
+            unsub()
     return await hass.config_entries.async_unload_platforms(
         config_entry, _platforms_for(config_entry)
     )

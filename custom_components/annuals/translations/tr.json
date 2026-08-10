@@ -241,16 +241,28 @@
             },
             "annual_settings": {
                 "title": "Annual Ayarları",
-                "description": "O etkinlik türü için bir etkinliği otomatik olarak \"Important\" olarak işaretleyen, virgülle ayrılmış yıl dönümü sayıları, örn. \"18,21,30,40,50\". O tür için bunu devre dışı bırakmak üzere bir alanı boş bırakın.",
-                "data": {
-                    "important_thresholds_birthday": "Doğum günü",
-                    "important_thresholds_anniversary": "Yıl dönümü",
-                    "important_thresholds_name_day": "İsim günü",
-                    "important_thresholds_wedding_anniversary": "Evlilik yıl dönümü",
-                    "important_thresholds_memorial": "Ölüm yıl dönümü",
-                    "important_thresholds_pet_birthday": "Evcil hayvan doğum günü",
-                    "important_thresholds_work_anniversary": "İş yıl dönümü",
-                    "important_thresholds_custom": "Özel"
+                "sections": {
+                    "important_events": {
+                        "name": "❗ Önemli etkinlikler",
+                        "description": "O etkinlik türü için bir etkinliği otomatik olarak \"Important\" olarak işaretleyen, virgülle ayrılmış yıl dönümü sayıları, örn. \"18,21,30,40,50\". O tür için bunu devre dışı bırakmak üzere bir alanı boş bırakın.",
+                        "data": {
+                            "important_thresholds_birthday": "Doğum günü",
+                            "important_thresholds_anniversary": "Yıl dönümü",
+                            "important_thresholds_name_day": "İsim günü",
+                            "important_thresholds_wedding_anniversary": "Evlilik yıl dönümü",
+                            "important_thresholds_memorial": "Ölüm yıl dönümü",
+                            "important_thresholds_pet_birthday": "Evcil hayvan doğum günü",
+                            "important_thresholds_work_anniversary": "İş yıl dönümü",
+                            "important_thresholds_custom": "Özel"
+                        }
+                    },
+                    "todo": {
+                        "name": "📍 Yapılacak listeleri",
+                        "description": "Bu listelerdeki açık öğeler bir etkinliği işaretler: her etkinlik sensörü böylece bir «todo» özniteliği taşır - kendisine hâlâ açık en az bir öğe eşleştirildiği sürece true, aksi hâlde false - kendi otomasyonlarınız, şablonlarınız ve panolarınız için. Eşleştirme önce bitiş tarihine, sonra öğenin metninin etkinliği anıp anmadığına göre yapılır (tam ad, ad, tür, kaçıncı olduğu); iki etkinliğe aynı ölçüde uyan bir öğe eşleştirilmeden bırakılır. Kapatmak için boş bırakın. Pano kartındaki aynı adlı ayardan bağımsızdır.",
+                        "data": {
+                            "todo_lists": "Yapılacak listeleri"
+                        }
+                    }
                 }
             },
             "delete_all": {

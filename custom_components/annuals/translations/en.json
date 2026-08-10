@@ -241,16 +241,28 @@
             },
             "annual_settings": {
                 "title": "Annual Settings",
-                "description": "Comma-separated occurrence numbers that get an event automatically marked \"Important\" for that event type, e.g. \"18,21,30,40,50\". Leave a field empty to disable this for that type.",
-                "data": {
-                    "important_thresholds_birthday": "Birthday",
-                    "important_thresholds_anniversary": "Anniversary",
-                    "important_thresholds_name_day": "Name day",
-                    "important_thresholds_wedding_anniversary": "Wedding anniversary",
-                    "important_thresholds_memorial": "Memorial",
-                    "important_thresholds_pet_birthday": "Pet birthday",
-                    "important_thresholds_work_anniversary": "Work anniversary",
-                    "important_thresholds_custom": "Custom"
+                "sections": {
+                    "important_events": {
+                        "name": "❗ Important events",
+                        "description": "Comma-separated occurrence numbers that get an event automatically marked \"Important\" for that event type, e.g. \"18,21,30,40,50\". Leave a field empty to disable this for that type.",
+                        "data": {
+                            "important_thresholds_birthday": "Birthday",
+                            "important_thresholds_anniversary": "Anniversary",
+                            "important_thresholds_name_day": "Name day",
+                            "important_thresholds_wedding_anniversary": "Wedding anniversary",
+                            "important_thresholds_memorial": "Memorial",
+                            "important_thresholds_pet_birthday": "Pet birthday",
+                            "important_thresholds_work_anniversary": "Work anniversary",
+                            "important_thresholds_custom": "Custom"
+                        }
+                    },
+                    "todo": {
+                        "name": "📍 To-do lists",
+                        "description": "Open items on these lists mark an event: every event sensor then carries a \"todo\" attribute - true while at least one still-open item is matched to it, false otherwise - for your own automations, templates, and dashboards. An item is matched by its due date first, then by whether its own text names the event (full name, name, type, occurrence number); an item that fits two events equally well is left unmatched. Leave empty to switch this off. Separate from the dashboard card's own to-do list setting.",
+                        "data": {
+                            "todo_lists": "To-do lists"
+                        }
+                    }
                 }
             },
             "delete_all": {

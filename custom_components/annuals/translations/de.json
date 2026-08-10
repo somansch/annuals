@@ -241,16 +241,28 @@
             },
             "annual_settings": {
                 "title": "Annual Einstellung",
-                "description": "Kommagetrennte Jubiläumszahlen, bei denen ein Ereignis dieses Typs automatisch als „Important“ markiert wird, z. B. „18,21,30,40,50“. Ein Feld leer lassen, um dies für diesen Typ zu deaktivieren.",
-                "data": {
-                    "important_thresholds_birthday": "Geburtstag",
-                    "important_thresholds_anniversary": "Jahrestag",
-                    "important_thresholds_name_day": "Namenstag",
-                    "important_thresholds_wedding_anniversary": "Hochzeitstag",
-                    "important_thresholds_memorial": "Todestag",
-                    "important_thresholds_pet_birthday": "Tiergeburtstag",
-                    "important_thresholds_work_anniversary": "Firmenjubiläum",
-                    "important_thresholds_custom": "Frei wählbar"
+                "sections": {
+                    "important_events": {
+                        "name": "❗ Important Events",
+                        "description": "Kommagetrennte Jubiläumszahlen, bei denen ein Ereignis dieses Typs automatisch als „Important“ markiert wird, z. B. „18,21,30,40,50“. Ein Feld leer lassen, um dies für diesen Typ zu deaktivieren.",
+                        "data": {
+                            "important_thresholds_birthday": "Geburtstag",
+                            "important_thresholds_anniversary": "Jahrestag",
+                            "important_thresholds_name_day": "Namenstag",
+                            "important_thresholds_wedding_anniversary": "Hochzeitstag",
+                            "important_thresholds_memorial": "Todestag",
+                            "important_thresholds_pet_birthday": "Tiergeburtstag",
+                            "important_thresholds_work_anniversary": "Firmenjubiläum",
+                            "important_thresholds_custom": "Frei wählbar"
+                        }
+                    },
+                    "todo": {
+                        "name": "📍 To-do-Listen",
+                        "description": "Offene Einträge auf diesen Listen markieren ein Ereignis: Jeder Ereignis-Sensor erhält dann ein Attribut \"todo\" - true, solange ihm mindestens ein noch offener Eintrag zugeordnet ist, sonst false - für eigene Automationen, Templates und Dashboards. Die Zuordnung erfolgt zuerst über das Fälligkeitsdatum, dann darüber, ob der Eintragstext das Ereignis nennt (vollständiger Name, Name, Typ, Nummer der Wiederholung); ein Eintrag, der zu zwei Ereignissen gleich gut passt, bleibt unzugeordnet. Leer lassen, um die Funktion abzuschalten. Unabhängig von der gleichnamigen Einstellung der Dashboard-Karte.",
+                        "data": {
+                            "todo_lists": "To-do-Listen"
+                        }
+                    }
                 }
             },
             "delete_all": {

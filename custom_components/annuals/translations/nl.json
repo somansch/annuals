@@ -241,16 +241,28 @@
             },
             "annual_settings": {
                 "title": "Annual Instellingen",
-                "description": "Kommagescheiden lijst van jubileumgetallen waarbij een evenement van dat type automatisch als „Important” wordt gemarkeerd, bijv. „18,21,30,40,50”. Laat een veld leeg om dit voor dat type uit te schakelen.",
-                "data": {
-                    "important_thresholds_birthday": "Verjaardag",
-                    "important_thresholds_anniversary": "Jaardag",
-                    "important_thresholds_name_day": "Naamdag",
-                    "important_thresholds_wedding_anniversary": "Trouwdag",
-                    "important_thresholds_memorial": "Sterfdag",
-                    "important_thresholds_pet_birthday": "Verjaardag huisdier",
-                    "important_thresholds_work_anniversary": "Werkjubileum",
-                    "important_thresholds_custom": "Aangepast"
+                "sections": {
+                    "important_events": {
+                        "name": "❗ Belangrijke evenementen",
+                        "description": "Kommagescheiden lijst van jubileumgetallen waarbij een evenement van dat type automatisch als „Important” wordt gemarkeerd, bijv. „18,21,30,40,50”. Laat een veld leeg om dit voor dat type uit te schakelen.",
+                        "data": {
+                            "important_thresholds_birthday": "Verjaardag",
+                            "important_thresholds_anniversary": "Jaardag",
+                            "important_thresholds_name_day": "Naamdag",
+                            "important_thresholds_wedding_anniversary": "Trouwdag",
+                            "important_thresholds_memorial": "Sterfdag",
+                            "important_thresholds_pet_birthday": "Verjaardag huisdier",
+                            "important_thresholds_work_anniversary": "Werkjubileum",
+                            "important_thresholds_custom": "Aangepast"
+                        }
+                    },
+                    "todo": {
+                        "name": "📍 Takenlijsten",
+                        "description": "Openstaande taken op deze lijsten markeren een evenement: elke evenementsensor krijgt dan een attribuut \"todo\" - true zolang er minstens één nog openstaande taak aan gekoppeld is, anders false - voor je eigen automatiseringen, templates en dashboards. Koppeling gebeurt eerst op vervaldatum en daarna op de vraag of de tekst van de taak het evenement noemt (volledige naam, naam, type, volgnummer); een taak die even goed bij twee evenementen past blijft ongekoppeld. Laat leeg om dit uit te schakelen. Los van de gelijknamige instelling van de dashboardkaart.",
+                        "data": {
+                            "todo_lists": "Takenlijsten"
+                        }
+                    }
                 }
             },
             "delete_all": {

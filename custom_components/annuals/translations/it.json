@@ -241,16 +241,28 @@
             },
             "annual_settings": {
                 "title": "Annual Impostazioni",
-                "description": "Numeri di occorrenza separati da virgole che contrassegnano automaticamente un evento come «Important» per quel tipo, ad es. «18,21,30,40,50». Lascia un campo vuoto per disattivare questa funzione per quel tipo.",
-                "data": {
-                    "important_thresholds_birthday": "Compleanno",
-                    "important_thresholds_anniversary": "Anniversario",
-                    "important_thresholds_name_day": "Onomastico",
-                    "important_thresholds_wedding_anniversary": "Anniversario di matrimonio",
-                    "important_thresholds_memorial": "Anniversario della morte",
-                    "important_thresholds_pet_birthday": "Compleanno animale",
-                    "important_thresholds_work_anniversary": "Anniversario lavorativo",
-                    "important_thresholds_custom": "Personalizzato"
+                "sections": {
+                    "important_events": {
+                        "name": "❗ Eventi importanti",
+                        "description": "Numeri di occorrenza separati da virgole che contrassegnano automaticamente un evento come «Important» per quel tipo, ad es. «18,21,30,40,50». Lascia un campo vuoto per disattivare questa funzione per quel tipo.",
+                        "data": {
+                            "important_thresholds_birthday": "Compleanno",
+                            "important_thresholds_anniversary": "Anniversario",
+                            "important_thresholds_name_day": "Onomastico",
+                            "important_thresholds_wedding_anniversary": "Anniversario di matrimonio",
+                            "important_thresholds_memorial": "Anniversario della morte",
+                            "important_thresholds_pet_birthday": "Compleanno animale",
+                            "important_thresholds_work_anniversary": "Anniversario lavorativo",
+                            "important_thresholds_custom": "Personalizzato"
+                        }
+                    },
+                    "todo": {
+                        "name": "📍 Elenchi attività",
+                        "description": "Le attività aperte di questi elenchi contrassegnano un evento: ogni sensore evento riceve allora un attributo «todo» - vero finché gli è abbinata almeno un'attività ancora aperta, falso altrimenti - per le tue automazioni, i tuoi template e le tue dashboard. L'abbinamento avviene prima per data di scadenza e poi in base al fatto che il testo dell'attività nomini l'evento (nome completo, nome, tipo, numero dell'occorrenza); un'attività che si adatta ugualmente bene a due eventi resta non abbinata. Lascia vuoto per disattivare. Indipendente dall'omonima impostazione della scheda della dashboard.",
+                        "data": {
+                            "todo_lists": "Elenchi attività"
+                        }
+                    }
                 }
             },
             "delete_all": {

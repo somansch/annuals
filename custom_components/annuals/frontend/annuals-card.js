@@ -57,6 +57,9 @@
       dayAgo: "Yesterday",
       daysAgo: (n) => `${n} days ago`,
       noEvents: "No upcoming events",
+      todoCompleteConfirm: 'Mark "{item}" as completed?',
+      todoCompleteConfirmMultiple: "Mark all {count} to-do items for this event as completed?",
+      todoCompleteFailed: "Could not complete this to-do item.",
       // Timeline layout only (see _timelineSentenceFragment) - one sentence
       // template shared by every event type, so it doesn't need a
       // "birthday"/"anniversary"/"holiday"-specific variant. {sup} becomes a
@@ -259,6 +262,10 @@
         tapActionDesc: "What happens when a row is tapped or clicked",
         holdAction: "Hold action",
         holdActionDesc: "What happens when a row is pressed and held",
+        cardLanguage: "Language",
+        cardLanguageDesc:
+          "Pins this card to one language for everyone who sees it, instead of following each viewer's own profile language. Affects the card's own text and its date formatting alike - not the event names themselves, which come from the integration. This editor keeps following your own language either way.",
+        cardLanguageAuto: "Automatic",
         visibilityIcon: "Icon",
         visibilityIconDesc: "Show the type icon in front of each row",
         visibilityNameDesc: "Show the event name",
@@ -296,6 +303,14 @@
           "Embed one or more of your existing Home Assistant calendars alongside Annuals' own events - each one lands on its real day (and, for timed events, sorts by time of day within that day) instead of any \"next occurrence\" math. Add a Time/Location/Description column above to show those fields for these events.",
         externalCalendarsLabel: "Calendars",
         externalCalendarsLabelDesc: "Which calendar.* entities to embed.",
+        todoHeading: "To-dos",
+        todoDesc:
+          "Mark each event that still has an open to-do item - typically the list the bundled reminder blueprint writes to. Items are matched to an event by their due date first, then by whatever the item's text says about it (full name, name, type, occurrence number), so an item mentioning the event wins over one that only shares its date; an item that fits two events equally well is left unmatched. Matching events get a small badge on their icon, in both layouts - see Highlight for its icon and color.",
+        todoListsLabel: "To-do lists",
+        todoListsLabelDesc: "Which todo.* entities to search. Leave empty to turn the feature off.",
+        todoCompleteFromCard: "Complete from card",
+        todoCompleteFromCardDesc:
+          "Clicking the icon of a badged event asks for confirmation and then marks all of that event's open to-do items completed - on the timeline too, including the events revealed by expanding the list. Turn off to leave the badge as a read-only marker.",
         columnAdd: "Add",
         columnMoveUp: "Move up",
         columnMoveDown: "Move down",
@@ -316,12 +331,22 @@
         visibilityImportantOnly: "Important only",
         visibilityImportantOnlyDesc:
           "Only show events automatically flagged as important (configured under Annual Settings in the integration)",
+        visibilityTodoOnly: "Open to-dos only",
+        visibilityTodoOnlyDesc:
+          "Only show events that still have an open to-do item (see To-dos under Settings → Events). Narrows the two filters above rather than joining them: with VIP only also on, this shows the VIP events that still have something to do.",
         vipBadgeIcon: "VIP badge icon",
         vipBadgeIconDesc: "MDI icon shown as a small badge on the icon of VIP-flagged events",
         vipBadgeIconPlaceholder: "mdi:star",
         importantBadgeIcon: "Important badge icon",
         importantBadgeIconDesc: "MDI icon shown as a small badge on the icon of events automatically flagged as important",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
+        todoBadgeIcon: "To-do badge icon",
+        todoBadgeIconDesc:
+          "MDI icon shown as a small badge on the icon of events with a still-open to-do item (see To-dos under Events)",
+        todoBadgeColorList: "Badge color (List)",
+        todoBadgeColorListDesc: "Color of that badge in the List layout - defaults to the theme's red",
+        todoBadgeColorTimeline: "Badge color (Timeline)",
+        todoBadgeColorTimelineDesc: "Color of that badge in the Timeline layout - defaults to the theme's red",
         highlightHeading: "Highlight",
         highlightPast: "Past events",
         highlightPastDesc: "Tint the row background for events that already happened",
@@ -335,18 +360,17 @@
         highlightVipDesc: "Show a badge on the icon of VIP-flagged events",
         highlightImportant: "Important events",
         highlightImportantDesc: "Show a badge on the icon of events automatically flagged as important",
+        highlightTodo: "To-do tasks",
+        highlightTodoDesc: "Show a badge on the icon of events with a still-open to-do item",
         vipBadgeColorList: "Badge color (List)",
-        vipBadgeColorListDesc:
-          "Color of the VIP star badge in the List layout's corner badge, in the Timeline layout's header, and in its expandable Details list.",
+        vipBadgeColorListDesc: "Color of that badge in the List layout - defaults to the theme's red",
         vipBadgeColorTimeline: "Badge color (Timeline)",
-        vipBadgeColorTimelineDesc:
-          "Color of the VIP star icon on the Timeline layout's axis dots specifically. Only shown while Layout style is set to Timeline.",
+        vipBadgeColorTimelineDesc: "Color of that badge in the Timeline layout - defaults to white",
         importantBadgeColorList: "Badge color (List)",
-        importantBadgeColorListDesc:
-          "Color of the Important exclamation-mark badge in the List layout's corner badge, in the Timeline layout's header, and in its expandable Details list.",
+        importantBadgeColorListDesc: "Color of that badge in the List layout - defaults to the theme's amber",
         importantBadgeColorTimeline: "Badge color (Timeline)",
         importantBadgeColorTimelineDesc:
-          "Color of the Important exclamation-mark icon on the Timeline layout's axis dots specifically. Only shown while Layout style is set to Timeline.",
+          "Color of that badge in the Timeline layout - defaults to the theme's amber",
         colors: "Colors",
         cardBackgroundTabTitle: "Card Background",
         cardBackgroundEnable: "Show background",
@@ -470,6 +494,9 @@
       dayAgo: "Gestern",
       daysAgo: (n) => `vor ${n} Tagen`,
       noEvents: "Keine anstehenden Ereignisse",
+      todoCompleteConfirm: '„{item}“ als erledigt markieren?',
+      todoCompleteConfirmMultiple: "Alle {count} To-do-Einträge dieses Ereignisses als erledigt markieren?",
+      todoCompleteFailed: "Dieser To-do-Eintrag konnte nicht abgehakt werden.",
       // Genitiv ohne Apostroph ("Kevins Geburtstag") - nur bei einem
       // Namen, der bereits auf einen Zischlaut endet, bleibt es beim bloßen
       // Apostroph ("Klaus' Geburtstag"), statt ein zusätzliches "s"
@@ -683,6 +710,10 @@
         tapActionDesc: "Was passiert, wenn eine Zeile angetippt oder angeklickt wird",
         holdAction: "Aktion beim Gedrückthalten",
         holdActionDesc: "Was passiert, wenn eine Zeile gedrückt gehalten wird",
+        cardLanguage: "Sprache",
+        cardLanguageDesc:
+          "Legt diese Karte für alle Betrachter auf eine Sprache fest, statt der jeweiligen Profilsprache zu folgen. Betrifft die Texte der Karte und die Datumsformatierung gleichermaßen - nicht die Ereignisnamen selbst, die aus der Integration kommen. Dieser Editor folgt in jedem Fall weiterhin deiner eigenen Sprache.",
+        cardLanguageAuto: "Automatisch",
         visibilityIcon: "Icon",
         visibilityIconDesc: "Symbol vor jeder Zeile anzeigen",
         visibilityNameDesc: "Namen des Ereignisses anzeigen",
@@ -720,6 +751,14 @@
           "Binde einen oder mehrere deiner bestehenden Home-Assistant-Kalender neben den eigenen Annuals-Ereignissen ein - jedes landet an seinem tatsächlichen Tag (und bei zeitgebundenen Ereignissen sortiert nach Uhrzeit innerhalb dieses Tages) statt nach irgendeiner „nächstes Vorkommen“-Berechnung. Füge oben eine Spalte für Uhrzeit/Ort/Beschreibung hinzu, um diese Felder für solche Ereignisse anzuzeigen.",
         externalCalendarsLabel: "Kalender",
         externalCalendarsLabelDesc: "Welche calendar.*-Entitäten eingebunden werden sollen.",
+        todoHeading: "To-dos",
+        todoDesc:
+          "Markiert Ereignisse, zu denen es noch ein offenes To-do gibt - typischerweise die Liste, in die der mitgelieferte Erinnerungs-Blueprint schreibt. Die Zuordnung erfolgt zuerst über das Fälligkeitsdatum, danach über das, was im Text des Eintrags steht (vollständiger Name, Name, Typ, Nummer des Vorkommens) - ein Eintrag, der das Ereignis nennt, gewinnt also gegen einen, der nur das Datum teilt; passt ein Eintrag auf zwei Ereignisse gleich gut, bleibt er ohne Zuordnung. Passende Ereignisse erhalten in beiden Layouts ein kleines Badge auf ihrem Icon - Symbol und Farbe unter „Hervorheben“.",
+        todoListsLabel: "To-do-Listen",
+        todoListsLabelDesc: "Welche todo.*-Entitäten durchsucht werden. Leer lassen, um die Funktion abzuschalten.",
+        todoCompleteFromCard: "Von der Karte abhaken",
+        todoCompleteFromCardDesc:
+          "Ein Klick auf das Icon eines markierten Ereignisses fragt nach und markiert dann alle offenen To-dos dieses Ereignisses als erledigt - auch in der Timeline, einschließlich der Ereignisse, die erst beim Ausklappen sichtbar werden. Ausschalten, um das Badge nur als Anzeige zu belassen.",
         columnAdd: "Hinzufügen",
         columnMoveUp: "Nach oben",
         columnMoveDown: "Nach unten",
@@ -740,6 +779,9 @@
         visibilityImportantOnly: "Nur Important",
         visibilityImportantOnlyDesc:
           "Nur automatisch als wichtig markierte Ereignisse anzeigen (einstellbar unter Annual Settings in der Integration)",
+        visibilityTodoOnly: "Nur offene To-dos",
+        visibilityTodoOnlyDesc:
+          "Nur Ereignisse anzeigen, die noch ein offenes To-do haben (siehe To-dos unter Einstellungen → Ereignisse). Schränkt die beiden Filter darüber weiter ein, statt sich mit ihnen zu vereinen: zusammen mit „Nur VIP“ werden die VIP-Ereignisse gezeigt, bei denen noch etwas zu tun ist.",
         vipBadgeIcon: "VIP-Badge-Icon",
         vipBadgeIconDesc: "MDI-Icon, das als kleines Badge auf dem Icon von VIP-Ereignissen angezeigt wird",
         vipBadgeIconPlaceholder: "mdi:star",
@@ -747,6 +789,13 @@
         importantBadgeIconDesc:
           "MDI-Icon, das als kleines Badge auf dem Icon von automatisch als wichtig markierten Ereignissen angezeigt wird",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
+        todoBadgeIcon: "To-do-Badge-Icon",
+        todoBadgeIconDesc:
+          "MDI-Icon, das als kleines Badge auf dem Icon von Ereignissen mit einem noch offenen To-do angezeigt wird (siehe To-dos unter Ereignisse)",
+        todoBadgeColorList: "Badge-Farbe (Liste)",
+        todoBadgeColorListDesc: "Farbe dieses Badges im Listen-Layout - standardmäßig das Rot des Themes",
+        todoBadgeColorTimeline: "Badge-Farbe (Timeline)",
+        todoBadgeColorTimelineDesc: "Farbe dieses Badges im Timeline-Layout - standardmäßig das Rot des Themes",
         highlightHeading: "Hervorheben",
         highlightPast: "Vergangene Ereignisse",
         highlightPastDesc: "Zeilenhintergrund für bereits vergangene Ereignisse einfärben",
@@ -760,18 +809,17 @@
         highlightVipDesc: "Badge auf dem Icon von VIP-Ereignissen anzeigen",
         highlightImportant: "Important Events",
         highlightImportantDesc: "Badge auf dem Icon von automatisch als wichtig markierten Ereignissen anzeigen",
+        highlightTodo: "To-do Tasks",
+        highlightTodoDesc: "Badge auf dem Icon von Ereignissen mit einem noch offenen To-do anzeigen",
         vipBadgeColorList: "Badge-Farbe (Liste)",
-        vipBadgeColorListDesc:
-          "Farbe des VIP-Sterns im Eck-Badge des Listen-Layouts, im Header des Timeline-Layouts und in dessen aufklappbarer Liste.",
+        vipBadgeColorListDesc: "Farbe dieses Badges im Listen-Layout - standardmäßig das Rot des Themes",
         vipBadgeColorTimeline: "Badge-Farbe (Timeline)",
-        vipBadgeColorTimelineDesc:
-          "Farbe des VIP-Sterns speziell auf den Achsenpunkten des Timeline-Layouts. Nur sichtbar, wenn als Kartenlayout „Timeline“ ausgewählt ist.",
+        vipBadgeColorTimelineDesc: "Farbe dieses Badges im Timeline-Layout - standardmäßig Weiß",
         importantBadgeColorList: "Badge-Farbe (Liste)",
-        importantBadgeColorListDesc:
-          "Farbe des Important-Ausrufezeichens im Eck-Badge des Listen-Layouts, im Header des Timeline-Layouts und in dessen aufklappbarer Liste.",
+        importantBadgeColorListDesc: "Farbe dieses Badges im Listen-Layout - standardmäßig das Bernstein des Themes",
         importantBadgeColorTimeline: "Badge-Farbe (Timeline)",
         importantBadgeColorTimelineDesc:
-          "Farbe des Important-Ausrufezeichens speziell auf den Achsenpunkten des Timeline-Layouts. Nur sichtbar, wenn als Kartenlayout „Timeline“ ausgewählt ist.",
+          "Farbe dieses Badges im Timeline-Layout - standardmäßig das Bernstein des Themes",
         colors: "Farben",
         cardBackgroundTabTitle: "Kartenhintergrund",
         cardBackgroundEnable: "Hintergrund anzeigen",
@@ -895,6 +943,9 @@
       dayAgo: "Hier",
       daysAgo: (n) => `il y a ${n} jours`,
       noEvents: "Aucun événement à venir",
+      todoCompleteConfirm: 'Marquer « {item} » comme terminé ?',
+      todoCompleteConfirmMultiple: "Marquer les {count} tâches de cet événement comme terminées ?",
+      todoCompleteFailed: "Impossible de terminer cette tâche.",
       possessive: (name) => name,
       ordinalParts: (n) => (n === 1 ? { num: "1", sup: "er" } : { num: `${n}`, sup: "e" }),
       timelineSentence: "{ordinal}{sup} {type} de {possessive} est {when}",
@@ -1096,6 +1147,10 @@
         tapActionDesc: "Ce qui se passe lorsqu'une ligne est touchée ou cliquée",
         holdAction: "Action à l'appui long",
         holdActionDesc: "Ce qui se passe lorsqu'une ligne est maintenue appuyée",
+        cardLanguage: "Langue",
+        cardLanguageDesc:
+          "Fixe cette carte à une seule langue pour tous ceux qui la voient, au lieu de suivre la langue du profil de chacun. Affecte aussi bien le texte de la carte que le format des dates - pas les noms des événements eux-mêmes, qui viennent de l'intégration. Cet éditeur continue de suivre votre propre langue dans tous les cas.",
+        cardLanguageAuto: "Automatique",
         visibilityIcon: "Icône",
         visibilityIconDesc: "Afficher l'icône du type devant chaque ligne",
         visibilityNameDesc: "Afficher le nom de l'événement",
@@ -1133,6 +1188,14 @@
           "Intégrez un ou plusieurs de vos calendriers Home Assistant existants aux côtés des propres événements d'Annuals - chacun apparaît à sa date réelle (et, pour les événements à heure fixe, trié par heure au sein de cette date) plutôt que selon un calcul de « prochaine occurrence ». Ajoutez une colonne Heure/Lieu/Description ci-dessus pour afficher ces champs pour ces événements.",
         externalCalendarsLabel: "Calendriers",
         externalCalendarsLabelDesc: "Quelles entités calendar.* intégrer.",
+        todoHeading: "Tâches",
+        todoDesc:
+          "Signale les événements ayant encore une tâche ouverte - généralement la liste dans laquelle écrit le blueprint de rappel fourni. L'association se fait d'abord par la date d'échéance, puis par ce que dit le texte de la tâche (nom complet, nom, type, numéro d'occurrence) : une tâche qui nomme l'événement l'emporte sur une qui ne partage que la date ; une tâche convenant aussi bien à deux événements reste non associée. Les événements concernés reçoivent un petit badge sur leur icône, dans les deux dispositions - voir Mise en évidence pour son icône et sa couleur.",
+        todoListsLabel: "Listes de tâches",
+        todoListsLabelDesc: "Quelles entités todo.* consulter. Laisser vide pour désactiver la fonction.",
+        todoCompleteFromCard: "Terminer depuis la carte",
+        todoCompleteFromCardDesc:
+          "Cliquer sur l'icône d'un événement badgé demande confirmation puis marque toutes ses tâches ouvertes comme terminées - sur la chronologie aussi, y compris les événements révélés en dépliant la liste. Désactivez pour laisser le badge en simple indication.",
         columnAdd: "Ajouter",
         columnMoveUp: "Monter",
         columnMoveDown: "Descendre",
@@ -1153,12 +1216,22 @@
         visibilityImportantOnly: "Important uniquement",
         visibilityImportantOnlyDesc:
           "N'afficher que les événements automatiquement marqués comme importants (configuré sous Annual Paramètres dans l'intégration)",
+        visibilityTodoOnly: "Tâches ouvertes uniquement",
+        visibilityTodoOnlyDesc:
+          "N'afficher que les événements ayant encore une tâche ouverte (voir Tâches sous Paramètres → Événements). Restreint les deux filtres ci-dessus au lieu de s'y ajouter : avec « VIP uniquement » également actif, cela montre les événements VIP pour lesquels il reste quelque chose à faire.",
         vipBadgeIcon: "Icône du badge VIP",
         vipBadgeIconDesc: "Icône MDI affichée en petit badge sur l'icône des événements marqués VIP",
         vipBadgeIconPlaceholder: "mdi:star",
         importantBadgeIcon: "Icône du badge Important",
         importantBadgeIconDesc: "Icône MDI affichée en petit badge sur l'icône des événements automatiquement marqués comme importants",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
+        todoBadgeIcon: "Icône du badge de tâche",
+        todoBadgeIconDesc:
+          "Icône MDI affichée comme petit badge sur l'icône des événements ayant encore une tâche ouverte (voir Tâches sous Événements)",
+        todoBadgeColorList: "Couleur du badge (Liste)",
+        todoBadgeColorListDesc: "Couleur de ce badge dans la disposition Liste - par défaut le rouge du thème",
+        todoBadgeColorTimeline: "Couleur du badge (Timeline)",
+        todoBadgeColorTimelineDesc: "Couleur de ce badge dans la disposition Chronologie - par défaut le rouge du thème",
         highlightHeading: "Mise en évidence",
         highlightPast: "Événements passés",
         highlightPastDesc: "Teinter le fond de la ligne pour les événements déjà passés",
@@ -1172,18 +1245,17 @@
         highlightVipDesc: "Afficher un badge sur l'icône des événements marqués VIP",
         highlightImportant: "Événements importants",
         highlightImportantDesc: "Afficher un badge sur l'icône des événements automatiquement marqués comme importants",
+        highlightTodo: "Tâches à faire",
+        highlightTodoDesc: "Afficher un badge sur l'icône des événements ayant encore une tâche ouverte",
         vipBadgeColorList: "Couleur du badge (Liste)",
-        vipBadgeColorListDesc:
-          "Couleur du badge étoile VIP dans le badge d'angle du layout Liste, dans l'en-tête du layout Timeline, et dans sa liste Détails dépliable.",
+        vipBadgeColorListDesc: "Couleur de ce badge dans la disposition Liste - par défaut le rouge du thème",
         vipBadgeColorTimeline: "Couleur du badge (Timeline)",
-        vipBadgeColorTimelineDesc:
-          "Couleur de l'icône étoile VIP spécifiquement sur les points de l'axe du layout Timeline. Affiché uniquement lorsque le style de mise en page est réglé sur Timeline.",
+        vipBadgeColorTimelineDesc: "Couleur de ce badge dans la disposition Chronologie - par défaut le blanc",
         importantBadgeColorList: "Couleur du badge (Liste)",
-        importantBadgeColorListDesc:
-          "Couleur du badge point d'exclamation Important dans le badge d'angle du layout Liste, dans l'en-tête du layout Timeline, et dans sa liste Détails dépliable.",
+        importantBadgeColorListDesc: "Couleur de ce badge dans la disposition Liste - par défaut l'ambre du thème",
         importantBadgeColorTimeline: "Couleur du badge (Timeline)",
         importantBadgeColorTimelineDesc:
-          "Couleur de l'icône point d'exclamation Important spécifiquement sur les points de l'axe du layout Timeline. Affiché uniquement lorsque le style de mise en page est réglé sur Timeline.",
+          "Couleur de ce badge dans la disposition Chronologie - par défaut l'ambre du thème",
         colors: "Couleurs",
         cardBackgroundTabTitle: "Fond de carte",
         cardBackgroundEnable: "Afficher le fond",
@@ -1307,6 +1379,9 @@
       dayAgo: "Gisteren",
       daysAgo: (n) => `${n} dagen geleden`,
       noEvents: "Geen aankomende evenementen",
+      todoCompleteConfirm: '„{item}” als voltooid markeren?',
+      todoCompleteConfirmMultiple: "Alle {count} taken van dit evenement als voltooid markeren?",
+      todoCompleteFailed: "Kon dit taakitem niet voltooien.",
       possessive: (name) => (/[sxz]$/i.test(name) ? `${name}'` : `${name}s`),
       ordinalParts: (n) => ({ num: `${n}e`, sup: "" }),
       timelineSentence: "{possessive} {ordinal}{sup} {type} is {when}",
@@ -1508,6 +1583,10 @@
         tapActionDesc: "Wat er gebeurt als op een rij wordt getikt of geklikt",
         holdAction: "Actie bij ingedrukt houden",
         holdActionDesc: "Wat er gebeurt als een rij ingedrukt wordt gehouden",
+        cardLanguage: "Taal",
+        cardLanguageDesc:
+          "Zet deze kaart voor iedereen die hem ziet vast op één taal, in plaats van de profieltaal van elke kijker te volgen. Geldt zowel voor de tekst van de kaart als voor de datumopmaak - niet voor de namen van de evenementen zelf, die uit de integratie komen. Deze editor blijft hoe dan ook je eigen taal volgen.",
+        cardLanguageAuto: "Automatisch",
         visibilityIcon: "Icoon",
         visibilityIconDesc: "Toon het type-icoon vóór elke rij",
         visibilityNameDesc: "Toon de naam van het evenement",
@@ -1545,6 +1624,14 @@
           "Neem een of meer van je bestaande Home Assistant-kalenders op naast de eigen evenementen van Annuals - elk komt op zijn werkelijke dag terecht (en, voor evenementen met een vaste tijd, gesorteerd op tijdstip binnen die dag) in plaats van enige „eerstvolgende gebeurtenis”-berekening. Voeg hierboven een kolom Tijd/Locatie/Beschrijving toe om deze velden voor deze evenementen te tonen.",
         externalCalendarsLabel: "Kalenders",
         externalCalendarsLabelDesc: "Welke calendar.*-entiteiten moeten worden opgenomen.",
+        todoHeading: "Taken",
+        todoDesc:
+          "Markeert gebeurtenissen met een nog openstaande taak - meestal de lijst waarin de meegeleverde herinneringsblueprint schrijft. Koppeling gebeurt eerst op vervaldatum en daarna op wat de tekst van de taak zegt (volledige naam, naam, type, volgnummer): een taak die de gebeurtenis noemt wint van een die alleen de datum deelt; een taak die even goed bij twee gebeurtenissen past blijft ongekoppeld. Passende gebeurtenissen krijgen in beide indelingen een kleine badge op hun pictogram - zie Markeren voor pictogram en kleur.",
+        todoListsLabel: "Takenlijsten",
+        todoListsLabelDesc: "Welke todo.*-entiteiten doorzocht worden. Leeg laten om de functie uit te schakelen.",
+        todoCompleteFromCard: "Voltooien vanaf de kaart",
+        todoCompleteFromCardDesc:
+          "Klikken op een vakje in de Taak-kolom vraagt om bevestiging en markeert het item daarna als voltooid. Uitschakelen om de vakjes alleen als markering te laten staan.",
         columnAdd: "Toevoegen",
         columnMoveUp: "Omhoog",
         columnMoveDown: "Omlaag",
@@ -1565,12 +1652,22 @@
         visibilityImportantOnly: "Alleen Important",
         visibilityImportantOnlyDesc:
           "Toon alleen evenementen die automatisch als belangrijk zijn gemarkeerd (in te stellen onder Annual Instellingen in de integratie)",
+        visibilityTodoOnly: "Alleen open taken",
+        visibilityTodoOnlyDesc:
+          "Toon alleen evenementen met een nog openstaande taak (zie Taken onder Instellingen → Evenementen). Beperkt de twee filters hierboven in plaats van zich ermee te verenigen: met ook „Alleen VIP“ aan worden de VIP-evenementen getoond waarvoor nog iets te doen is.",
         vipBadgeIcon: "VIP-badge-icoon",
         vipBadgeIconDesc: "MDI-icoon dat als klein badge op het icoon van VIP-evenementen wordt getoond",
         vipBadgeIconPlaceholder: "mdi:star",
         importantBadgeIcon: "Important-badge-icoon",
         importantBadgeIconDesc: "MDI-icoon dat als klein badge op het icoon van automatisch als belangrijk gemarkeerde evenementen wordt getoond",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
+        todoBadgeIcon: "Taakbadge-pictogram",
+        todoBadgeIconDesc:
+          "MDI-pictogram dat als kleine badge op het pictogram van evenementen met een nog openstaande taak wordt getoond (zie Taken onder Evenementen)",
+        todoBadgeColorList: "Badgekleur (Lijst)",
+        todoBadgeColorListDesc: "Kleur van die badge in de Lijst-indeling - standaard het rood van het thema",
+        todoBadgeColorTimeline: "Badgekleur (Timeline)",
+        todoBadgeColorTimelineDesc: "Kleur van die badge in de Tijdlijn-indeling - standaard het rood van het thema",
         highlightHeading: "Markeren",
         highlightPast: "Vergane evenementen",
         highlightPastDesc: "Rijachtergrond inkleuren voor evenementen die al zijn geweest",
@@ -1584,18 +1681,17 @@
         highlightVipDesc: "Toon een badge op het icoon van VIP-evenementen",
         highlightImportant: "Belangrijke evenementen",
         highlightImportantDesc: "Toon een badge op het icoon van automatisch als belangrijk gemarkeerde evenementen",
+        highlightTodo: "Taken",
+        highlightTodoDesc: "Toon een badge op het icoon van evenementen met een nog openstaande taak",
         vipBadgeColorList: "Badgekleur (Lijst)",
-        vipBadgeColorListDesc:
-          "Kleur van het VIP-sterbadge in het hoekbadge van het Lijst-layout, in de kop van het Timeline-layout, en in de uitklapbare Details-lijst.",
+        vipBadgeColorListDesc: "Kleur van die badge in de Lijst-indeling - standaard het rood van het thema",
         vipBadgeColorTimeline: "Badgekleur (Timeline)",
-        vipBadgeColorTimelineDesc:
-          "Kleur van het VIP-stericoon specifiek op de aspunten van het Timeline-layout. Alleen zichtbaar wanneer Kaartlayout is ingesteld op Timeline.",
+        vipBadgeColorTimelineDesc: "Kleur van die badge in de Tijdlijn-indeling - standaard wit",
         importantBadgeColorList: "Badgekleur (Lijst)",
-        importantBadgeColorListDesc:
-          "Kleur van het Important-uitroeptekenbadge in het hoekbadge van het Lijst-layout, in de kop van het Timeline-layout, en in de uitklapbare Details-lijst.",
+        importantBadgeColorListDesc: "Kleur van die badge in de Lijst-indeling - standaard het amber van het thema",
         importantBadgeColorTimeline: "Badgekleur (Timeline)",
         importantBadgeColorTimelineDesc:
-          "Kleur van het Important-uitroepteken-icoon specifiek op de aspunten van het Timeline-layout. Alleen zichtbaar wanneer Kaartlayout is ingesteld op Timeline.",
+          "Kleur van die badge in de Tijdlijn-indeling - standaard het amber van het thema",
         colors: "Kleuren",
         cardBackgroundTabTitle: "Kaartachtergrond",
         cardBackgroundEnable: "Achtergrond tonen",
@@ -1719,6 +1815,9 @@
       dayAgo: "Wczoraj",
       daysAgo: (n) => `${n} dni temu`,
       noEvents: "Brak nadchodzących wydarzeń",
+      todoCompleteConfirm: 'Oznaczyć „{item}” jako ukończone?',
+      todoCompleteConfirmMultiple: "Oznaczyć wszystkie {count} zadania tego wydarzenia jako ukończone?",
+      todoCompleteFailed: "Nie udało się ukończyć tego zadania.",
       // Polska odmiana przez przypadki nie daje się bezpiecznie zastosować do
       // dowolnie wpisanych imion, dlatego zamiast dopasowywać przypadek,
       // zdanie budowane jest w formie neutralnej "Imię: N. typ — kiedy" -
@@ -1926,6 +2025,10 @@
         tapActionDesc: "Co się dzieje po dotknięciu lub kliknięciu wiersza",
         holdAction: "Akcja przytrzymania",
         holdActionDesc: "Co się dzieje po przytrzymaniu wiersza",
+        cardLanguage: "Język",
+        cardLanguageDesc:
+          "Ustawia tę kartę na jeden język dla wszystkich, którzy ją widzą, zamiast podążać za językiem profilu każdego z nich. Dotyczy zarówno tekstów karty, jak i formatu dat - nie dotyczy samych nazw wydarzeń, które pochodzą z integracji. Ten edytor i tak nadal używa Twojego własnego języka.",
+        cardLanguageAuto: "Automatycznie",
         visibilityIcon: "Ikona",
         visibilityIconDesc: "Pokaż ikonę typu przed każdym wierszem",
         visibilityNameDesc: "Pokaż nazwę wydarzenia",
@@ -1963,6 +2066,14 @@
           "Osadź jeden lub więcej istniejących kalendarzy Home Assistant obok własnych wydarzeń Annuals - każde z nich trafia na swój rzeczywisty dzień (a wydarzenia z określoną godziną są w obrębie tego dnia sortowane według pory dnia) zamiast być obliczane według logiki „następnego wystąpienia”. Dodaj powyżej kolumnę Godzina/Lokalizacja/Opis, aby pokazać te pola dla tych wydarzeń.",
         externalCalendarsLabel: "Kalendarze",
         externalCalendarsLabelDesc: "Które encje calendar.* osadzić.",
+        todoHeading: "Zadania",
+        todoDesc:
+          "Oznacza wydarzenia z wciąż otwartym zadaniem - zwykle z listy, do której zapisuje dołączony blueprint przypomnień. Dopasowanie następuje najpierw po terminie, a potem po tym, co mówi treść zadania (pełne imię, imię, typ, numer wystąpienia): zadanie wymieniające wydarzenie wygrywa z takim, które dzieli tylko datę; zadanie pasujące równie dobrze do dwóch wydarzeń pozostaje nieprzypisane. Pasujące wydarzenia otrzymują małą plakietkę przy ikonie, w obu układach - ikonę i kolor ustawisz w sekcji Wyróżnienie.",
+        todoListsLabel: "Listy zadań",
+        todoListsLabelDesc: "Które encje todo.* przeszukiwać. Pozostaw puste, aby wyłączyć funkcję.",
+        todoCompleteFromCard: "Odhaczanie z karty",
+        todoCompleteFromCardDesc:
+          "Kliknięcie ikony oznaczonego wydarzenia prosi o potwierdzenie, a następnie oznacza wszystkie jego otwarte zadania jako ukończone - także na osi czasu, łącznie z wydarzeniami widocznymi dopiero po rozwinięciu. Wyłącz, aby plakietka pozostała tylko oznaczeniem.",
         columnAdd: "Dodaj",
         columnMoveUp: "Przenieś w górę",
         columnMoveDown: "Przenieś w dół",
@@ -1983,12 +2094,22 @@
         visibilityImportantOnly: "Tylko Important",
         visibilityImportantOnlyDesc:
           "Pokaż tylko wydarzenia automatycznie oznaczone jako ważne (konfigurowane w Annual Ustawienia w integracji)",
+        visibilityTodoOnly: "Tylko otwarte zadania",
+        visibilityTodoOnlyDesc:
+          "Pokaż tylko wydarzenia z wciąż otwartym zadaniem (zobacz Zadania w Ustawienia → Wydarzenia). Zawęża oba filtry powyżej, zamiast się z nimi łączyć: przy włączonym również „Tylko VIP“ pokazuje wydarzenia VIP, przy których zostało jeszcze coś do zrobienia.",
         vipBadgeIcon: "Ikona odznaki VIP",
         vipBadgeIconDesc: "Ikona MDI pokazywana jako mała odznaka na ikonie wydarzeń oznaczonych VIP",
         vipBadgeIconPlaceholder: "mdi:star",
         importantBadgeIcon: "Ikona odznaki Important",
         importantBadgeIconDesc: "Ikona MDI pokazywana jako mała odznaka na ikonie wydarzeń automatycznie oznaczonych jako ważne",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
+        todoBadgeIcon: "Ikona plakietki zadania",
+        todoBadgeIconDesc:
+          "Ikona MDI pokazywana jako mała plakietka przy ikonie wydarzeń z wciąż otwartym zadaniem (zobacz Zadania w sekcji Wydarzenia)",
+        todoBadgeColorList: "Kolor odznaki (Lista)",
+        todoBadgeColorListDesc: "Kolor tej plakietki w układzie Lista - domyślnie czerwień motywu",
+        todoBadgeColorTimeline: "Kolor odznaki (Timeline)",
+        todoBadgeColorTimelineDesc: "Kolor tej plakietki w układzie Oś czasu - domyślnie czerwień motywu",
         highlightHeading: "Wyróżnienie",
         highlightPast: "Minione wydarzenia",
         highlightPastDesc: "Zabarw tło wiersza dla wydarzeń, które już się odbyły",
@@ -2002,18 +2123,16 @@
         highlightVipDesc: "Pokaż odznakę na ikonie wydarzeń oznaczonych VIP",
         highlightImportant: "Wydarzenia ważne",
         highlightImportantDesc: "Pokaż odznakę na ikonie wydarzeń automatycznie oznaczonych jako ważne",
+        highlightTodo: "Zadania do zrobienia",
+        highlightTodoDesc: "Pokaż odznakę na ikonie wydarzeń z wciąż otwartym zadaniem",
         vipBadgeColorList: "Kolor odznaki (Lista)",
-        vipBadgeColorListDesc:
-          "Kolor odznaki gwiazdki VIP w odznace narożnej układu Lista, w nagłówku układu Timeline i na jego rozwijanej liście Szczegóły.",
+        vipBadgeColorListDesc: "Kolor tej plakietki w układzie Lista - domyślnie czerwień motywu",
         vipBadgeColorTimeline: "Kolor odznaki (Timeline)",
-        vipBadgeColorTimelineDesc:
-          "Kolor ikony gwiazdki VIP konkretnie na punktach osi układu Timeline. Widoczne tylko, gdy Układ karty jest ustawiony na Timeline.",
+        vipBadgeColorTimelineDesc: "Kolor tej plakietki w układzie Oś czasu - domyślnie biel",
         importantBadgeColorList: "Kolor odznaki (Lista)",
-        importantBadgeColorListDesc:
-          "Kolor odznaki wykrzyknika Important w odznace narożnej układu Lista, w nagłówku układu Timeline i na jego rozwijanej liście Szczegóły.",
+        importantBadgeColorListDesc: "Kolor tej plakietki w układzie Lista - domyślnie bursztyn motywu",
         importantBadgeColorTimeline: "Kolor odznaki (Timeline)",
-        importantBadgeColorTimelineDesc:
-          "Kolor ikony wykrzyknika Important konkretnie na punktach osi układu Timeline. Widoczne tylko, gdy Układ karty jest ustawiony na Timeline.",
+        importantBadgeColorTimelineDesc: "Kolor tej plakietki w układzie Oś czasu - domyślnie bursztyn motywu",
         colors: "Kolory",
         cardBackgroundTabTitle: "Tło karty",
         cardBackgroundEnable: "Pokaż tło",
@@ -2137,6 +2256,9 @@
       dayAgo: "Ayer",
       daysAgo: (n) => `hace ${n} días`,
       noEvents: "No hay próximos eventos",
+      todoCompleteConfirm: '¿Marcar «{item}» como completada?',
+      todoCompleteConfirmMultiple: "¿Marcar las {count} tareas de este evento como completadas?",
+      todoCompleteFailed: "No se pudo completar esta tarea.",
       possessive: (name) => name,
       ordinalParts: (n) => ({ num: `${n}º`, sup: "" }),
       timelineSentence: "{ordinal}{sup} {type} de {possessive} es {when}",
@@ -2338,6 +2460,10 @@
         tapActionDesc: "Qué ocurre al tocar o hacer clic en una fila",
         holdAction: "Acción al mantener pulsado",
         holdActionDesc: "Qué ocurre al mantener pulsada una fila",
+        cardLanguage: "Idioma",
+        cardLanguageDesc:
+          "Fija esta tarjeta en un solo idioma para todos los que la vean, en lugar de seguir el idioma del perfil de cada uno. Afecta tanto al texto de la tarjeta como al formato de las fechas, no a los nombres de los eventos, que vienen de la integración. Este editor sigue usando tu propio idioma en cualquier caso.",
+        cardLanguageAuto: "Automático",
         visibilityIcon: "Icono",
         visibilityIconDesc: "Mostrar el icono de tipo delante de cada fila",
         visibilityNameDesc: "Mostrar el nombre del evento",
@@ -2375,6 +2501,14 @@
           "Incorpora uno o más de tus calendarios existentes de Home Assistant junto a los propios eventos de Annuals - cada uno aparece en su día real (y, en el caso de eventos con hora, se ordena por hora del día dentro de ese día) en lugar de seguir ningún cálculo de «próxima ocurrencia». Añade arriba una columna de Hora/Ubicación/Descripción para mostrar esos campos en estos eventos.",
         externalCalendarsLabel: "Calendarios",
         externalCalendarsLabelDesc: "Qué entidades calendar.* incorporar.",
+        todoHeading: "Tareas",
+        todoDesc:
+          "Señala los eventos con una tarea aún pendiente; normalmente la lista en la que escribe el blueprint de recordatorios incluido. La asociación se hace primero por la fecha de vencimiento y después por lo que diga el texto de la tarea (nombre completo, nombre, tipo, número de ocurrencia): una tarea que menciona el evento gana a otra que solo comparte la fecha; una tarea que encaja igual de bien en dos eventos queda sin asociar. Los eventos coincidentes reciben una pequeña insignia en su icono, en ambos diseños; consulta Resaltado para su icono y color.",
+        todoListsLabel: "Listas de tareas",
+        todoListsLabelDesc: "Qué entidades todo.* se consultan. Déjalo vacío para desactivar la función.",
+        todoCompleteFromCard: "Completar desde la tarjeta",
+        todoCompleteFromCardDesc:
+          "Al pulsar el icono de un evento con insignia se pide confirmación y luego se marcan como completadas todas sus tareas pendientes, también en la línea de tiempo, incluidos los eventos que solo aparecen al desplegarla. Desactívalo para dejar la insignia como simple indicación.",
         columnAdd: "Añadir",
         columnMoveUp: "Subir",
         columnMoveDown: "Bajar",
@@ -2395,12 +2529,22 @@
         visibilityImportantOnly: "Solo Important",
         visibilityImportantOnlyDesc:
           "Mostrar solo eventos marcados automáticamente como importantes (configurado en Annual Ajustes en la integración)",
+        visibilityTodoOnly: "Solo tareas pendientes",
+        visibilityTodoOnlyDesc:
+          "Mostrar solo los eventos que aún tienen una tarea pendiente (ver Tareas en Ajustes → Eventos). Restringe los dos filtros de arriba en lugar de sumarse a ellos: con «Solo VIP» también activo, muestra los eventos VIP en los que aún queda algo por hacer.",
         vipBadgeIcon: "Icono de la insignia VIP",
         vipBadgeIconDesc: "Icono MDI mostrado como pequeña insignia en el icono de los eventos marcados como VIP",
         vipBadgeIconPlaceholder: "mdi:star",
         importantBadgeIcon: "Icono de la insignia Important",
         importantBadgeIconDesc: "Icono MDI mostrado como pequeña insignia en el icono de los eventos marcados automáticamente como importantes",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
+        todoBadgeIcon: "Icono de la insignia de tarea",
+        todoBadgeIconDesc:
+          "Icono MDI mostrado como pequeña insignia sobre el icono de los eventos con una tarea aún pendiente (ver Tareas en Eventos)",
+        todoBadgeColorList: "Color de la insignia (Lista)",
+        todoBadgeColorListDesc: "Color de esa insignia en el diseño Lista; por defecto el rojo del tema",
+        todoBadgeColorTimeline: "Color de la insignia (Timeline)",
+        todoBadgeColorTimelineDesc: "Color de esa insignia en el diseño Línea de tiempo; por defecto el rojo del tema",
         highlightHeading: "Resaltado",
         highlightPast: "Eventos pasados",
         highlightPastDesc: "Teñir el fondo de la fila para eventos que ya han ocurrido",
@@ -2414,18 +2558,17 @@
         highlightVipDesc: "Mostrar una insignia en el icono de los eventos marcados como VIP",
         highlightImportant: "Eventos importantes",
         highlightImportantDesc: "Mostrar una insignia en el icono de los eventos marcados automáticamente como importantes",
+        highlightTodo: "Tareas pendientes",
+        highlightTodoDesc: "Mostrar una insignia en el icono de los eventos con una tarea aún pendiente",
         vipBadgeColorList: "Color de la insignia (Lista)",
-        vipBadgeColorListDesc:
-          "Color de la insignia de estrella VIP en la insignia de esquina del diseño Lista, en el encabezado del diseño Timeline y en su lista Detalles desplegable.",
+        vipBadgeColorListDesc: "Color de esa insignia en el diseño Lista; por defecto el rojo del tema",
         vipBadgeColorTimeline: "Color de la insignia (Timeline)",
-        vipBadgeColorTimelineDesc:
-          "Color del icono de estrella VIP específicamente en los puntos del eje del diseño Timeline. Solo se muestra cuando el Estilo de diseño está configurado como Timeline.",
+        vipBadgeColorTimelineDesc: "Color de esa insignia en el diseño Línea de tiempo; por defecto el blanco",
         importantBadgeColorList: "Color de la insignia (Lista)",
-        importantBadgeColorListDesc:
-          "Color de la insignia de signo de exclamación Important en la insignia de esquina del diseño Lista, en el encabezado del diseño Timeline y en su lista Detalles desplegable.",
+        importantBadgeColorListDesc: "Color de esa insignia en el diseño Lista; por defecto el ámbar del tema",
         importantBadgeColorTimeline: "Color de la insignia (Timeline)",
         importantBadgeColorTimelineDesc:
-          "Color del icono de signo de exclamación Important específicamente en los puntos del eje del diseño Timeline. Solo se muestra cuando el Estilo de diseño está configurado como Timeline.",
+          "Color de esa insignia en el diseño Línea de tiempo; por defecto el ámbar del tema",
         colors: "Colores",
         cardBackgroundTabTitle: "Fondo de la tarjeta",
         cardBackgroundEnable: "Mostrar fondo",
@@ -2549,6 +2692,9 @@
       dayAgo: "Ieri",
       daysAgo: (n) => `${n} giorni fa`,
       noEvents: "Nessun evento in arrivo",
+      todoCompleteConfirm: 'Contrassegnare «{item}» come completata?',
+      todoCompleteConfirmMultiple: "Contrassegnare tutte le {count} attività di questo evento come completate?",
+      todoCompleteFailed: "Impossibile completare questa attività.",
       possessive: (name) => name,
       ordinalParts: (n) => ({ num: `${n}°`, sup: "" }),
       timelineSentence: "{ordinal}{sup} {type} di {possessive} è {when}",
@@ -2750,6 +2896,10 @@
         tapActionDesc: "Cosa succede quando si tocca o si fa clic su una riga",
         holdAction: "Azione alla pressione prolungata",
         holdActionDesc: "Cosa succede quando si tiene premuta una riga",
+        cardLanguage: "Lingua",
+        cardLanguageDesc:
+          "Fissa questa scheda su una sola lingua per chiunque la veda, invece di seguire la lingua del profilo di ciascuno. Riguarda sia i testi della scheda sia il formato delle date - non i nomi degli eventi, che arrivano dall'integrazione. Questo editor continua comunque a seguire la tua lingua.",
+        cardLanguageAuto: "Automatico",
         visibilityIcon: "Icona",
         visibilityIconDesc: "Mostra l'icona del tipo davanti a ogni riga",
         visibilityNameDesc: "Mostra il nome dell'evento",
@@ -2787,6 +2937,14 @@
           "Incorpora uno o più dei tuoi calendari di Home Assistant esistenti insieme agli eventi propri di Annuals - ciascuno compare nel suo giorno reale (e, per gli eventi con orario, viene ordinato in base all'ora all'interno di quel giorno) invece di seguire il calcolo della «prossima occorrenza». Aggiungi sopra una colonna Ora/Luogo/Descrizione per mostrare questi campi per tali eventi.",
         externalCalendarsLabel: "Calendari",
         externalCalendarsLabelDesc: "Quali entità calendar.* incorporare.",
+        todoHeading: "Attività",
+        todoDesc:
+          "Contrassegna gli eventi con un'attività ancora aperta - di norma l'elenco su cui scrive il blueprint di promemoria incluso. L'abbinamento avviene prima per data di scadenza e poi per quanto dice il testo dell'attività (nome completo, nome, tipo, numero dell'occorrenza): un'attività che nomina l'evento prevale su una che ne condivide solo la data; un'attività che si adatta ugualmente bene a due eventi resta non abbinata. Gli eventi corrispondenti ricevono un piccolo badge sull'icona, in entrambi i layout - vedi Evidenziazione per icona e colore.",
+        todoListsLabel: "Elenchi attività",
+        todoListsLabelDesc: "Quali entità todo.* consultare. Lascia vuoto per disattivare la funzione.",
+        todoCompleteFromCard: "Completa dalla scheda",
+        todoCompleteFromCardDesc:
+          "Facendo clic sull'icona di un evento con badge viene chiesta conferma e poi tutte le sue attività aperte vengono contrassegnate come completate - anche nella timeline, inclusi gli eventi visibili solo espandendola. Disattiva per lasciare il badge come semplice indicazione.",
         columnAdd: "Aggiungi",
         columnMoveUp: "Sposta su",
         columnMoveDown: "Sposta giù",
@@ -2807,12 +2965,22 @@
         visibilityImportantOnly: "Solo Important",
         visibilityImportantOnlyDesc:
           "Mostra solo eventi contrassegnati automaticamente come importanti (configurabile in Annual Impostazioni nell'integrazione)",
+        visibilityTodoOnly: "Solo attività aperte",
+        visibilityTodoOnlyDesc:
+          "Mostra solo gli eventi che hanno ancora un'attività aperta (vedi Attività in Impostazioni → Eventi). Restringe i due filtri sopra invece di unirsi a loro: con anche «Solo VIP» attivo, mostra gli eventi VIP per cui resta qualcosa da fare.",
         vipBadgeIcon: "Icona badge VIP",
         vipBadgeIconDesc: "Icona MDI mostrata come piccolo badge sull'icona degli eventi contrassegnati come VIP",
         vipBadgeIconPlaceholder: "mdi:star",
         importantBadgeIcon: "Icona badge Important",
         importantBadgeIconDesc: "Icona MDI mostrata come piccolo badge sull'icona degli eventi contrassegnati automaticamente come importanti",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
+        todoBadgeIcon: "Icona del badge attività",
+        todoBadgeIconDesc:
+          "Icona MDI mostrata come piccolo badge sull'icona degli eventi con un'attività ancora aperta (vedi Attività in Eventi)",
+        todoBadgeColorList: "Colore del badge (Lista)",
+        todoBadgeColorListDesc: "Colore di quel badge nel layout Elenco - per impostazione predefinita il rosso del tema",
+        todoBadgeColorTimeline: "Colore del badge (Timeline)",
+        todoBadgeColorTimelineDesc: "Colore di quel badge nel layout Timeline - per impostazione predefinita il rosso del tema",
         highlightHeading: "Evidenziazione",
         highlightPast: "Eventi passati",
         highlightPastDesc: "Colora lo sfondo della riga per gli eventi già trascorsi",
@@ -2826,18 +2994,18 @@
         highlightVipDesc: "Mostra un badge sull'icona degli eventi contrassegnati come VIP",
         highlightImportant: "Eventi importanti",
         highlightImportantDesc: "Mostra un badge sull'icona degli eventi contrassegnati automaticamente come importanti",
+        highlightTodo: "Attività da fare",
+        highlightTodoDesc: "Mostra un badge sull'icona degli eventi con un'attività ancora aperta",
         vipBadgeColorList: "Colore del badge (Lista)",
-        vipBadgeColorListDesc:
-          "Colore del badge a stella VIP nel badge d'angolo del layout Lista, nell'intestazione del layout Timeline e nel suo elenco Dettagli espandibile.",
+        vipBadgeColorListDesc: "Colore di quel badge nel layout Elenco - per impostazione predefinita il rosso del tema",
         vipBadgeColorTimeline: "Colore del badge (Timeline)",
-        vipBadgeColorTimelineDesc:
-          "Colore dell'icona a stella VIP specificamente sui punti dell'asse del layout Timeline. Mostrato solo quando lo Stile del layout è impostato su Timeline.",
+        vipBadgeColorTimelineDesc: "Colore di quel badge nel layout Timeline - per impostazione predefinita il bianco",
         importantBadgeColorList: "Colore del badge (Lista)",
         importantBadgeColorListDesc:
-          "Colore del badge punto esclamativo Important nel badge d'angolo del layout Lista, nell'intestazione del layout Timeline e nel suo elenco Dettagli espandibile.",
+          "Colore di quel badge nel layout Elenco - per impostazione predefinita l'ambra del tema",
         importantBadgeColorTimeline: "Colore del badge (Timeline)",
         importantBadgeColorTimelineDesc:
-          "Colore dell'icona punto esclamativo Important specificamente sui punti dell'asse del layout Timeline. Mostrato solo quando lo Stile del layout è impostato su Timeline.",
+          "Colore di quel badge nel layout Timeline - per impostazione predefinita l'ambra del tema",
         colors: "Colori",
         cardBackgroundTabTitle: "Sfondo scheda",
         cardBackgroundEnable: "Mostra sfondo",
@@ -2961,6 +3129,9 @@
       dayAgo: "Ontem",
       daysAgo: (n) => `${n} dias atrás`,
       noEvents: "Nenhum evento próximo",
+      todoCompleteConfirm: 'Marcar "{item}" como concluída?',
+      todoCompleteConfirmMultiple: "Marcar todas as {count} tarefas deste evento como concluídas?",
+      todoCompleteFailed: "Não foi possível concluir esta tarefa.",
       possessive: (name) => name,
       ordinalParts: (n) => ({ num: `${n}º`, sup: "" }),
       timelineSentence: "{ordinal}{sup} {type} de {possessive} é {when}",
@@ -3162,6 +3333,10 @@
         tapActionDesc: "O que acontece ao tocar ou clicar em uma linha",
         holdAction: "Ação ao pressionar e segurar",
         holdActionDesc: "O que acontece ao pressionar e segurar uma linha",
+        cardLanguage: "Idioma",
+        cardLanguageDesc:
+          "Fixa este cartão em um único idioma para todos que o virem, em vez de seguir o idioma de perfil de cada um. Afeta tanto o texto do cartão quanto a formatação das datas - não os nomes dos eventos, que vêm da integração. Este editor continua seguindo o seu próprio idioma de qualquer forma.",
+        cardLanguageAuto: "Automático",
         visibilityIcon: "Ícone",
         visibilityIconDesc: "Mostrar o ícone do tipo antes de cada linha",
         visibilityNameDesc: "Mostrar o nome do evento",
@@ -3199,6 +3374,14 @@
           "Incorpore um ou mais dos seus calendários existentes do Home Assistant junto aos eventos próprios do Annuals - cada um aparece no seu dia real (e, no caso de eventos com horário, é ordenado pelo horário dentro desse dia) em vez de qualquer cálculo de \"próxima ocorrência\". Adicione uma coluna de Horário/Local/Descrição acima para exibir esses campos nesses eventos.",
         externalCalendarsLabel: "Calendários",
         externalCalendarsLabelDesc: "Quais entidades calendar.* incorporar.",
+        todoHeading: "Tarefas",
+        todoDesc:
+          "Sinaliza os eventos com uma tarefa ainda em aberto - normalmente a lista em que o blueprint de lembretes incluído escreve. A associação é feita primeiro pela data de vencimento e depois pelo que o texto da tarefa diz (nome completo, nome, tipo, número da ocorrência): uma tarefa que menciona o evento vence outra que só compartilha a data; uma tarefa que serve igualmente bem a dois eventos fica sem associação. Os eventos correspondentes recebem um pequeno selo no ícone, nos dois layouts - veja Destaque para o ícone e a cor.",
+        todoListsLabel: "Listas de tarefas",
+        todoListsLabelDesc: "Quais entidades todo.* consultar. Deixe vazio para desativar o recurso.",
+        todoCompleteFromCard: "Concluir pelo cartão",
+        todoCompleteFromCardDesc:
+          "Clicar no ícone de um evento sinalizado pede confirmação e depois marca todas as suas tarefas em aberto como concluídas - também na linha do tempo, incluindo os eventos que só aparecem ao expandi-la. Desative para deixar o selo apenas como indicação.",
         columnAdd: "Adicionar",
         columnMoveUp: "Mover para cima",
         columnMoveDown: "Mover para baixo",
@@ -3219,12 +3402,22 @@
         visibilityImportantOnly: "Apenas Important",
         visibilityImportantOnlyDesc:
           "Mostrar apenas eventos marcados automaticamente como importantes (configurável em Annual Configurações na integração)",
+        visibilityTodoOnly: "Apenas tarefas em aberto",
+        visibilityTodoOnlyDesc:
+          "Mostrar apenas os eventos que ainda têm uma tarefa em aberto (veja Tarefas em Configurações → Eventos). Restringe os dois filtros acima em vez de se juntar a eles: com «Apenas VIP» também ativo, mostra os eventos VIP em que ainda há algo a fazer.",
         vipBadgeIcon: "Ícone do selo VIP",
         vipBadgeIconDesc: "Ícone MDI mostrado como um pequeno selo no ícone de eventos marcados como VIP",
         vipBadgeIconPlaceholder: "mdi:star",
         importantBadgeIcon: "Ícone do selo Important",
         importantBadgeIconDesc: "Ícone MDI mostrado como um pequeno selo no ícone de eventos marcados automaticamente como importantes",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
+        todoBadgeIcon: "Ícone do selo de tarefa",
+        todoBadgeIconDesc:
+          "Ícone MDI mostrado como pequeno selo sobre o ícone dos eventos com uma tarefa ainda em aberto (veja Tarefas em Eventos)",
+        todoBadgeColorList: "Cor do selo (Lista)",
+        todoBadgeColorListDesc: "Cor desse selo no layout Lista - por padrão o vermelho do tema",
+        todoBadgeColorTimeline: "Cor do selo (Timeline)",
+        todoBadgeColorTimelineDesc: "Cor desse selo no layout Linha do tempo - por padrão o vermelho do tema",
         highlightHeading: "Destaque",
         highlightPast: "Eventos passados",
         highlightPastDesc: "Colorir o fundo da linha para eventos que já aconteceram",
@@ -3238,18 +3431,16 @@
         highlightVipDesc: "Mostrar um selo no ícone de eventos marcados como VIP",
         highlightImportant: "Eventos importantes",
         highlightImportantDesc: "Mostrar um selo no ícone de eventos marcados automaticamente como importantes",
+        highlightTodo: "Tarefas em aberto",
+        highlightTodoDesc: "Mostrar um selo no ícone de eventos com uma tarefa ainda em aberto",
         vipBadgeColorList: "Cor do selo (Lista)",
-        vipBadgeColorListDesc:
-          "Cor do selo de estrela VIP no selo de canto do layout Lista, no cabeçalho do layout Timeline e na sua lista Detalhes expansível.",
+        vipBadgeColorListDesc: "Cor desse selo no layout Lista - por padrão o vermelho do tema",
         vipBadgeColorTimeline: "Cor do selo (Timeline)",
-        vipBadgeColorTimelineDesc:
-          "Cor do ícone de estrela VIP especificamente nos pontos do eixo do layout Timeline. Mostrado apenas quando o Estilo de layout está definido como Timeline.",
+        vipBadgeColorTimelineDesc: "Cor desse selo no layout Linha do tempo - por padrão o branco",
         importantBadgeColorList: "Cor do selo (Lista)",
-        importantBadgeColorListDesc:
-          "Cor do selo de ponto de exclamação Important no selo de canto do layout Lista, no cabeçalho do layout Timeline e na sua lista Detalhes expansível.",
+        importantBadgeColorListDesc: "Cor desse selo no layout Lista - por padrão o âmbar do tema",
         importantBadgeColorTimeline: "Cor do selo (Timeline)",
-        importantBadgeColorTimelineDesc:
-          "Cor do ícone de ponto de exclamação Important especificamente nos pontos do eixo do layout Timeline. Mostrado apenas quando o Estilo de layout está definido como Timeline.",
+        importantBadgeColorTimelineDesc: "Cor desse selo no layout Linha do tempo - por padrão o âmbar do tema",
         colors: "Cores",
         cardBackgroundTabTitle: "Fundo do cartão",
         cardBackgroundEnable: "Mostrar fundo",
@@ -3373,6 +3564,9 @@
       dayAgo: "Вчера",
       daysAgo: (n) => `${n} дн. назад`,
       noEvents: "Нет ближайших событий",
+      todoCompleteConfirm: 'Отметить «{item}» как выполненное?',
+      todoCompleteConfirmMultiple: "Отметить все задачи этого события ({count}) как выполненные?",
+      todoCompleteFailed: "Не удалось выполнить эту задачу.",
       // Русское склонение по падежам нельзя безопасно применить к
       // произвольно введённым именам, поэтому вместо родительного падежа
       // используется нейтральная форма «Имя: N. тип — когда» - она одинаково
@@ -3579,6 +3773,10 @@
         tapActionDesc: "Что происходит при нажатии или клике на строку",
         holdAction: "Действие при удержании",
         holdActionDesc: "Что происходит при удержании строки нажатой",
+        cardLanguage: "Язык",
+        cardLanguageDesc:
+          "Закрепляет за этой карточкой один язык для всех, кто её видит, вместо того чтобы следовать языку профиля каждого. Касается и текстов карточки, и формата дат - но не самих названий событий, которые приходят из интеграции. Этот редактор в любом случае остаётся на вашем языке.",
+        cardLanguageAuto: "Автоматически",
         visibilityIcon: "Значок",
         visibilityIconDesc: "Показывать значок типа перед каждой строкой",
         visibilityNameDesc: "Показывать имя события",
@@ -3616,6 +3814,14 @@
           "Встраивайте один или несколько ваших существующих календарей Home Assistant вместе с собственными событиями Annuals — каждое из них попадает на свой реальный день (а события с указанным временем сортируются по времени суток внутри этого дня) вместо вычисления «следующего повторения». Добавьте выше столбец Время/Место/Описание, чтобы показывать эти поля для таких событий.",
         externalCalendarsLabel: "Календари",
         externalCalendarsLabelDesc: "Какие сущности calendar.* встраивать.",
+        todoHeading: "Задачи",
+        todoDesc:
+          "Отмечает события, у которых есть невыполненная задача - обычно это список, в который пишет входящий в комплект блюпринт напоминаний. Сопоставление идёт сначала по сроку, затем по тому, что написано в тексте задачи (полное имя, имя, тип, номер по счёту): задача, называющая событие, побеждает ту, что совпадает лишь по дате; задача, одинаково подходящая двум событиям, остаётся без привязки. Подходящие события получают небольшой значок поверх иконки в обоих макетах - иконку и цвет см. в разделе «Выделение».",
+        todoListsLabel: "Списки задач",
+        todoListsLabelDesc: "Какие сущности todo.* просматривать. Оставьте пустым, чтобы отключить функцию.",
+        todoCompleteFromCard: "Отмечать с карточки",
+        todoCompleteFromCardDesc:
+          "Клик по иконке отмеченного события запрашивает подтверждение и затем отмечает все его невыполненные задачи как выполненные - в том числе на шкале времени, включая события, видимые только после разворачивания. Отключите, чтобы значок оставался просто индикатором.",
         columnAdd: "Добавить",
         columnMoveUp: "Переместить вверх",
         columnMoveDown: "Переместить вниз",
@@ -3636,12 +3842,22 @@
         visibilityImportantOnly: "Только Important",
         visibilityImportantOnlyDesc:
           "Показывать только события, автоматически отмеченные как важные (настраивается в Annual Настройки в интеграции)",
+        visibilityTodoOnly: "Только с открытыми задачами",
+        visibilityTodoOnlyDesc:
+          "Показывать только события, у которых осталась невыполненная задача (см. «Задачи» в разделе Настройки → События). Сужает два фильтра выше, а не объединяется с ними: вместе с «Только VIP» показывает VIP-события, по которым ещё есть что сделать.",
         vipBadgeIcon: "Значок VIP-бейджа",
         vipBadgeIconDesc: "Значок MDI, показываемый как небольшой бейдж на значке событий, отмеченных как VIP",
         vipBadgeIconPlaceholder: "mdi:star",
         importantBadgeIcon: "Значок бейджа Important",
         importantBadgeIconDesc: "Значок MDI, показываемый как небольшой бейдж на значке событий, автоматически отмеченных как важные",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
+        todoBadgeIcon: "Значок задачи",
+        todoBadgeIconDesc:
+          "Иконка MDI, показываемая небольшим значком поверх иконки событий с невыполненной задачей (см. «Задачи» в разделе «События»)",
+        todoBadgeColorList: "Цвет бейджа (Список)",
+        todoBadgeColorListDesc: "Цвет этого значка в макете «Список» - по умолчанию красный цвет темы",
+        todoBadgeColorTimeline: "Цвет бейджа (Timeline)",
+        todoBadgeColorTimelineDesc: "Цвет этого значка в макете «Шкала времени» - по умолчанию красный цвет темы",
         highlightHeading: "Выделение",
         highlightPast: "Прошедшие события",
         highlightPastDesc: "Окрашивать фон строки для уже прошедших событий",
@@ -3655,18 +3871,17 @@
         highlightVipDesc: "Показывать бейдж на значке событий, отмеченных как VIP",
         highlightImportant: "Важные события",
         highlightImportantDesc: "Показывать бейдж на значке событий, автоматически отмеченных как важные",
+        highlightTodo: "Задачи",
+        highlightTodoDesc: "Показывать бейдж на значке событий с невыполненной задачей",
         vipBadgeColorList: "Цвет бейджа (Список)",
-        vipBadgeColorListDesc:
-          "Цвет VIP-бейджа со звездой в угловом бейдже макета Список, в заголовке макета Timeline и в его раскрываемом списке Подробнее.",
+        vipBadgeColorListDesc: "Цвет этого значка в макете «Список» - по умолчанию красный цвет темы",
         vipBadgeColorTimeline: "Цвет бейджа (Timeline)",
-        vipBadgeColorTimelineDesc:
-          "Цвет значка звезды VIP именно на точках оси макета Timeline. Отображается только когда Стиль макета установлен на Timeline.",
+        vipBadgeColorTimelineDesc: "Цвет этого значка в макете «Шкала времени» - по умолчанию белый",
         importantBadgeColorList: "Цвет бейджа (Список)",
-        importantBadgeColorListDesc:
-          "Цвет бейджа с восклицательным знаком Important в угловом бейдже макета Список, в заголовке макета Timeline и в его раскрываемом списке Подробнее.",
+        importantBadgeColorListDesc: "Цвет этого значка в макете «Список» - по умолчанию янтарный цвет темы",
         importantBadgeColorTimeline: "Цвет бейджа (Timeline)",
         importantBadgeColorTimelineDesc:
-          "Цвет значка восклицательного знака Important именно на точках оси макета Timeline. Отображается только когда Стиль макета установлен на Timeline.",
+          "Цвет этого значка в макете «Шкала времени» - по умолчанию янтарный цвет темы",
         colors: "Цвета",
         cardBackgroundTabTitle: "Фон карточки",
         cardBackgroundEnable: "Показывать фон",
@@ -3790,6 +4005,9 @@
       dayAgo: "Igår",
       daysAgo: (n) => `för ${n} dagar sedan`,
       noEvents: "Inga kommande händelser",
+      todoCompleteConfirm: 'Markera "{item}" som klar?',
+      todoCompleteConfirmMultiple: "Markera alla {count} uppgifter för den här händelsen som klara?",
+      todoCompleteFailed: "Kunde inte slutföra den här uppgiften.",
       possessive: (name) => (/[sxz]$/i.test(name) ? `${name}'` : `${name}s`),
       ordinalParts: (n) => {
         const teen = n % 100 >= 10 && n % 100 <= 12;
@@ -3995,6 +4213,10 @@
         tapActionDesc: "Vad som händer när en rad trycks eller klickas",
         holdAction: "Åtgärd vid tryck och håll",
         holdActionDesc: "Vad som händer när en rad trycks och hålls in",
+        cardLanguage: "Språk",
+        cardLanguageDesc:
+          "Låser det här kortet till ett språk för alla som ser det, i stället för att följa varje betraktares egen profilspråk. Gäller både kortets text och dess datumformat - inte händelsernas namn, som kommer från integrationen. Den här redigeraren följer ditt eget språk oavsett.",
+        cardLanguageAuto: "Automatiskt",
         visibilityIcon: "Ikon",
         visibilityIconDesc: "Visa typikonen framför varje rad",
         visibilityNameDesc: "Visa händelsens namn",
@@ -4033,6 +4255,14 @@
           "Bädda in en eller flera av dina befintliga Home Assistant-kalendrar tillsammans med Annuals egna händelser - var och en hamnar på sin verkliga dag (och, för tidsbestämda händelser, sorteras efter tid på dygnet inom den dagen) istället för någon beräkning av \"nästa förekomst\". Lägg till en kolumn för Tid/Plats/Beskrivning ovan för att visa dessa fält för dessa händelser.",
         externalCalendarsLabel: "Kalendrar",
         externalCalendarsLabelDesc: "Vilka calendar.*-entiteter som ska bäddas in.",
+        todoHeading: "Uppgifter",
+        todoDesc:
+          "Märker händelser som har en ännu öppen uppgift - vanligtvis den lista som den medföljande påminnelse-blueprinten skriver till. Matchningen sker först på förfallodatum och därefter på vad uppgiftens text säger (fullständigt namn, namn, typ, ordningsnummer): en uppgift som nämner händelsen vinner över en som bara delar datum; en uppgift som passar två händelser lika bra lämnas omatchad. Matchande händelser får en liten bricka på sin ikon, i båda layouterna - se Markering för ikon och färg.",
+        todoListsLabel: "Uppgiftslistor",
+        todoListsLabelDesc: "Vilka todo.*-entiteter som genomsöks. Lämna tomt för att stänga av funktionen.",
+        todoCompleteFromCard: "Slutför från kortet",
+        todoCompleteFromCardDesc:
+          "Att klicka på ikonen för en märkt händelse ber om bekräftelse och markerar sedan alla dess öppna uppgifter som klara - även på tidslinjen, inklusive händelser som syns först när den fälls ut. Stäng av för att låta brickan vara enbart en markering.",
         columnAdd: "Lägg till",
         columnMoveUp: "Flytta upp",
         columnMoveDown: "Flytta ner",
@@ -4054,12 +4284,22 @@
         visibilityImportantOnly: "Endast Important",
         visibilityImportantOnlyDesc:
           "Visa endast händelser som automatiskt markerats som viktiga (ställs in under Annual Inställningar i integrationen)",
+        visibilityTodoOnly: "Endast öppna uppgifter",
+        visibilityTodoOnlyDesc:
+          "Visa endast händelser som fortfarande har en öppen uppgift (se Uppgifter under Inställningar → Händelser). Smalnar av de två filtren ovan i stället för att slås ihop med dem: med även ”Endast VIP” på visas de VIP-händelser som fortfarande har något kvar att göra.",
         vipBadgeIcon: "VIP-märkesikon",
         vipBadgeIconDesc: "MDI-ikon som visas som ett litet märke på ikonen för VIP-markerade händelser",
         vipBadgeIconPlaceholder: "mdi:star",
         importantBadgeIcon: "Important-märkesikon",
         importantBadgeIconDesc: "MDI-ikon som visas som ett litet märke på ikonen för händelser som automatiskt markerats som viktiga",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
+        todoBadgeIcon: "Ikon för uppgiftsbricka",
+        todoBadgeIconDesc:
+          "MDI-ikon som visas som en liten bricka på ikonen för händelser med en ännu öppen uppgift (se Uppgifter under Händelser)",
+        todoBadgeColorList: "Märkesfärg (Lista)",
+        todoBadgeColorListDesc: "Färgen på den brickan i Lista-layouten - som standard temats röda färg",
+        todoBadgeColorTimeline: "Märkesfärg (Timeline)",
+        todoBadgeColorTimelineDesc: "Färgen på den brickan i Tidslinje-layouten - som standard temats röda färg",
         highlightHeading: "Markering",
         highlightPast: "Tidigare händelser",
         highlightPastDesc: "Färga radens bakgrund för händelser som redan inträffat",
@@ -4073,18 +4313,17 @@
         highlightVipDesc: "Visa ett märke på ikonen för VIP-markerade händelser",
         highlightImportant: "Viktiga händelser",
         highlightImportantDesc: "Visa ett märke på ikonen för händelser som automatiskt markerats som viktiga",
+        highlightTodo: "Öppna uppgifter",
+        highlightTodoDesc: "Visa ett märke på ikonen för händelser med en ännu öppen uppgift",
         vipBadgeColorList: "Märkesfärg (Lista)",
-        vipBadgeColorListDesc:
-          "Färg på VIP-stjärnmärket i Lista-layoutens hörnmärke, i Timeline-layoutens rubrik och i dess utfällbara Detaljer-lista.",
+        vipBadgeColorListDesc: "Färgen på den brickan i Lista-layouten - som standard temats röda färg",
         vipBadgeColorTimeline: "Märkesfärg (Timeline)",
-        vipBadgeColorTimelineDesc:
-          "Färg på VIP-stjärnikonen specifikt på Timeline-layoutens axelpunkter. Visas endast när Kortlayout är inställd på Timeline.",
+        vipBadgeColorTimelineDesc: "Färgen på den brickan i Tidslinje-layouten - som standard vitt",
         importantBadgeColorList: "Märkesfärg (Lista)",
-        importantBadgeColorListDesc:
-          "Färg på Important-utropsteckenmärket i Lista-layoutens hörnmärke, i Timeline-layoutens rubrik och i dess utfällbara Detaljer-lista.",
+        importantBadgeColorListDesc: "Färgen på den brickan i Lista-layouten - som standard temats bärnstensfärg",
         importantBadgeColorTimeline: "Märkesfärg (Timeline)",
         importantBadgeColorTimelineDesc:
-          "Färg på Important-utropsteckenikonen specifikt på Timeline-layoutens axelpunkter. Visas endast när Kortlayout är inställd på Timeline.",
+          "Färgen på den brickan i Tidslinje-layouten - som standard temats bärnstensfärg",
         colors: "Färger",
         cardBackgroundTabTitle: "Kortbakgrund",
         cardBackgroundEnable: "Visa bakgrund",
@@ -4210,6 +4449,9 @@
       dayAgo: "昨天",
       daysAgo: (n) => `${n} 天前`,
       noEvents: "没有即将到来的事件",
+      todoCompleteConfirm: "将“{item}”标记为已完成？",
+      todoCompleteConfirmMultiple: "将此事件的全部 {count} 项待办标记为已完成？",
+      todoCompleteFailed: "无法完成此待办事项。",
       // "when" 本身（今天/明天/N 天后/N 天前）已经表达了时态，因此过去和未来
       // 使用同一模板即可，无需单独的过去式版本。
       possessive: (name) => `${name}的`,
@@ -4406,6 +4648,10 @@
         tapActionDesc: "点击或单击某行时执行的操作",
         holdAction: "长按操作",
         holdActionDesc: "长按某行时执行的操作",
+        cardLanguage: "语言",
+        cardLanguageDesc:
+          "将此卡片固定为一种语言，对所有查看者都一样，而不再跟随各自的个人资料语言。同时影响卡片文本和日期格式——不影响事件名称本身，那来自集成。无论如何，此编辑器仍跟随你自己的语言。",
+        cardLanguageAuto: "自动",
         visibilityIcon: "图标",
         visibilityIconDesc: "在每行前显示类型图标",
         visibilityNameDesc: "显示事件名称",
@@ -4444,6 +4690,14 @@
           "将一个或多个现有的 Home Assistant 日历与 Annuals 自身的事件一起嵌入 - 每个事件都会显示在其实际发生的日期（对于定时事件，还会在当天按时间排序），而不是套用任何「下一次发生」的计算。请在上方添加时间/地点/描述列，以显示这些事件的相应字段。",
         externalCalendarsLabel: "日历",
         externalCalendarsLabelDesc: "要嵌入哪些 calendar.* 实体。",
+        todoHeading: "待办事项",
+        todoDesc:
+          "标记出仍有未完成待办事项的事件——通常就是随附的提醒蓝图写入的那个列表。匹配先按到期日期，再按待办文本中的内容（全名、名字、类型、第几次）：提到该事件的待办优先于仅日期相同的待办；若某个待办同样适合两个事件，则不会被分配。匹配到的事件会在两种布局下于图标上显示一个小徽标——其图标与颜色可在“高亮”区域设置。",
+        todoListsLabel: "待办列表",
+        todoListsLabelDesc: "要搜索哪些 todo.* 实体。留空即关闭此功能。",
+        todoCompleteFromCard: "在卡片中完成",
+        todoCompleteFromCardDesc:
+          "点击带徽标事件的图标会先请求确认，然后将该事件的所有未完成待办标记为已完成——时间轴中同样适用，包括展开后才显示的事件。关闭后徽标仅作为标识显示。",
         columnAdd: "添加",
         columnMoveUp: "上移",
         columnMoveDown: "下移",
@@ -4465,12 +4719,21 @@
         visibilityImportantOnly: "仅 Important",
         visibilityImportantOnlyDesc:
           "仅显示自动标记为重要的事件（可在集成的 Annual 设置中配置）",
+        visibilityTodoOnly: "仅未完成待办",
+        visibilityTodoOnlyDesc:
+          "仅显示仍有未完成待办的事件（见“设置 → 事件”下的“待办事项”）。它是在上面两个筛选之上进一步收窄，而不是与它们取并集：同时开启“仅 VIP”时，显示的是仍有待办的 VIP 事件。",
         vipBadgeIcon: "VIP 徽章图标",
         vipBadgeIconDesc: "在被标记为 VIP 的事件图标上显示的小徽章 MDI 图标",
         vipBadgeIconPlaceholder: "mdi:star",
         importantBadgeIcon: "Important 徽章图标",
         importantBadgeIconDesc: "在自动标记为重要的事件图标上显示的小徽章 MDI 图标",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
+        todoBadgeIcon: "待办徽标图标",
+        todoBadgeIconDesc: "在仍有未完成待办的事件图标上显示为小徽标的 MDI 图标（见“事件”下的“待办事项”）",
+        todoBadgeColorList: "徽章颜色（列表）",
+        todoBadgeColorListDesc: "该徽标在列表布局中的颜色——默认使用主题的红色",
+        todoBadgeColorTimeline: "徽章颜色（时间轴）",
+        todoBadgeColorTimelineDesc: "该徽标在时间轴布局中的颜色——默认使用主题的红色",
         highlightHeading: "高亮",
         highlightPast: "过去的事件",
         highlightPastDesc: "为已发生的事件的行背景着色",
@@ -4484,14 +4747,16 @@
         highlightVipDesc: "在标记为 VIP 的事件图标上显示徽章",
         highlightImportant: "重要事件",
         highlightImportantDesc: "在自动标记为重要的事件图标上显示徽章",
+        highlightTodo: "待办任务",
+        highlightTodoDesc: "在仍有未完成待办的事件图标上显示徽章",
         vipBadgeColorList: "徽章颜色（列表）",
-        vipBadgeColorListDesc: "列表布局角标中的 VIP 星形徽章、时间轴布局标题行以及其可展开详情列表中的 VIP 星形颜色。",
+        vipBadgeColorListDesc: "该徽章在列表布局中的颜色——默认使用主题的红色",
         vipBadgeColorTimeline: "徽章颜色（时间轴）",
-        vipBadgeColorTimelineDesc: "专门用于时间轴布局轴上圆点的 VIP 星形图标颜色。仅当布局样式设置为时间轴时显示。",
+        vipBadgeColorTimelineDesc: "该徽章在时间轴布局中的颜色——默认使用白色",
         importantBadgeColorList: "徽章颜色（列表）",
-        importantBadgeColorListDesc: "列表布局角标中的 Important 感叹号徽章、时间轴布局标题行以及其可展开详情列表中的 Important 感叹号颜色。",
+        importantBadgeColorListDesc: "该徽章在列表布局中的颜色——默认使用主题的琥珀色",
         importantBadgeColorTimeline: "徽章颜色（时间轴）",
-        importantBadgeColorTimelineDesc: "专门用于时间轴布局轴上圆点的 Important 感叹号图标颜色。仅当布局样式设置为时间轴时显示。",
+        importantBadgeColorTimelineDesc: "该徽章在时间轴布局中的颜色——默认使用主题的琥珀色",
         colors: "颜色",
         cardBackgroundTabTitle: "卡片背景",
         cardBackgroundEnable: "显示背景",
@@ -4615,6 +4880,9 @@
       dayAgo: "Včera",
       daysAgo: (n) => `před ${n} dny`,
       noEvents: "Žádné nadcházející události",
+      todoCompleteConfirm: 'Označit „{item}“ jako dokončené?',
+      todoCompleteConfirmMultiple: "Označit všechny úkoly této události ({count}) jako dokončené?",
+      todoCompleteFailed: "Tento úkol se nepodařilo dokončit.",
       // Skloňování libovolně zadaných jmen podle pádů nelze bezpečně
       // provést automaticky, proto se místo genitivu používá neutrální
       // tvar "Jméno: N. typ — kdy" - stejný tvar funguje pro minulé i
@@ -4821,6 +5089,10 @@
         tapActionDesc: "Co se stane při klepnutí nebo kliknutí na řádek",
         holdAction: "Akce při podržení",
         holdActionDesc: "Co se stane při podržení řádku",
+        cardLanguage: "Jazyk",
+        cardLanguageDesc:
+          "Zafixuje tuto kartu na jeden jazyk pro všechny, kdo ji vidí, místo aby sledovala jazyk profilu každého z nich. Týká se textů karty i formátu dat - nikoli názvů samotných událostí, které pocházejí z integrace. Tento editor se v každém případě dál řídí vaším vlastním jazykem.",
+        cardLanguageAuto: "Automaticky",
         visibilityIcon: "Ikona",
         visibilityIconDesc: "Zobrazit ikonu typu před každým řádkem",
         visibilityNameDesc: "Zobrazit jméno události",
@@ -4859,6 +5131,14 @@
           "Vloží jeden nebo více vašich stávajících kalendářů Home Assistant vedle vlastních událostí Annuals - každá skončí ve svém skutečném dni (a u časově vymezených událostí je v rámci daného dne seřazena podle času) místo jakéhokoli výpočtu „příštího výskytu“. Chcete-li u těchto událostí zobrazit pole čas/místo/popis, přidejte výše odpovídající sloupec.",
         externalCalendarsLabel: "Kalendáře",
         externalCalendarsLabelDesc: "Které entity calendar.* se mají vložit.",
+        todoHeading: "Úkoly",
+        todoDesc:
+          "Označuje události, které mají dosud otevřený úkol - obvykle ze seznamu, do kterého zapisuje přiložený blueprint připomínek. Přiřazení probíhá nejprve podle termínu a poté podle toho, co říká text úkolu (celé jméno, jméno, typ, pořadové číslo): úkol, který událost jmenuje, vyhrává nad tím, který sdílí jen datum; úkol, který se stejně dobře hodí ke dvěma událostem, zůstane nepřiřazený. Odpovídající události dostanou v obou rozvrženích malý odznak na ikoně - jeho ikonu a barvu najdete v části Zvýraznění.",
+        todoListsLabel: "Seznamy úkolů",
+        todoListsLabelDesc: "Které entity todo.* prohledávat. Ponechte prázdné pro vypnutí funkce.",
+        todoCompleteFromCard: "Dokončit z karty",
+        todoCompleteFromCardDesc:
+          "Kliknutí na ikonu označené události vyžádá potvrzení a poté označí všechny její otevřené úkoly jako dokončené - i na časové ose, včetně událostí, které se zobrazí až po rozbalení. Vypněte, aby odznak zůstal pouze označením.",
         columnAdd: "Přidat",
         columnMoveUp: "Posunout nahoru",
         columnMoveDown: "Posunout dolů",
@@ -4880,12 +5160,22 @@
         visibilityImportantOnly: "Pouze Important",
         visibilityImportantOnlyDesc:
           "Zobrazit pouze události automaticky označené jako důležité (nastavuje se v Annual Nastavení integrace)",
+        visibilityTodoOnly: "Pouze otevřené úkoly",
+        visibilityTodoOnlyDesc:
+          "Zobrazit pouze události, které mají dosud otevřený úkol (viz Úkoly v Nastavení → Události). Zužuje oba filtry výše, místo aby se s nimi spojoval: se zapnutým „Pouze VIP“ ukáže VIP události, u kterých ještě něco zbývá udělat.",
         vipBadgeIcon: "Ikona VIP odznaku",
         vipBadgeIconDesc: "Ikona MDI zobrazená jako malý odznak na ikoně událostí označených jako VIP",
         vipBadgeIconPlaceholder: "mdi:star",
         importantBadgeIcon: "Ikona odznaku Important",
         importantBadgeIconDesc: "Ikona MDI zobrazená jako malý odznak na ikoně událostí automaticky označených jako důležité",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
+        todoBadgeIcon: "Ikona odznaku úkolu",
+        todoBadgeIconDesc:
+          "Ikona MDI zobrazená jako malý odznak na ikoně událostí s dosud otevřeným úkolem (viz Úkoly v části Události)",
+        todoBadgeColorList: "Barva odznaku (Seznam)",
+        todoBadgeColorListDesc: "Barva tohoto odznaku v rozvržení Seznam - ve výchozím stavu červená z motivu",
+        todoBadgeColorTimeline: "Barva odznaku (Timeline)",
+        todoBadgeColorTimelineDesc: "Barva tohoto odznaku v rozvržení Časová osa - ve výchozím stavu červená z motivu",
         highlightHeading: "Zvýraznění",
         highlightPast: "Minulé události",
         highlightPastDesc: "Obarvit pozadí řádku pro události, které již proběhly",
@@ -4899,18 +5189,18 @@
         highlightVipDesc: "Zobrazit odznak na ikoně událostí označených jako VIP",
         highlightImportant: "Důležité události",
         highlightImportantDesc: "Zobrazit odznak na ikoně událostí automaticky označených jako důležité",
+        highlightTodo: "Otevřené úkoly",
+        highlightTodoDesc: "Zobrazit odznak na ikoně událostí s dosud otevřeným úkolem",
         vipBadgeColorList: "Barva odznaku (Seznam)",
-        vipBadgeColorListDesc:
-          "Barva hvězdičkového odznaku VIP v rohovém odznaku rozvržení Seznam, v záhlaví rozvržení Timeline a v jeho rozbalovacím seznamu Podrobnosti.",
+        vipBadgeColorListDesc: "Barva tohoto odznaku v rozvržení Seznam - ve výchozím stavu červená z motivu",
         vipBadgeColorTimeline: "Barva odznaku (Timeline)",
-        vipBadgeColorTimelineDesc:
-          "Barva ikony hvězdičky VIP konkrétně na bodech osy rozvržení Timeline. Zobrazí se pouze při nastavení Stylu rozvržení na Timeline.",
+        vipBadgeColorTimelineDesc: "Barva tohoto odznaku v rozvržení Časová osa - ve výchozím stavu bílá",
         importantBadgeColorList: "Barva odznaku (Seznam)",
         importantBadgeColorListDesc:
-          "Barva odznaku s vykřičníkem Important v rohovém odznaku rozvržení Seznam, v záhlaví rozvržení Timeline a v jeho rozbalovacím seznamu Podrobnosti.",
+          "Barva tohoto odznaku v rozvržení Seznam - ve výchozím stavu jantarová z motivu",
         importantBadgeColorTimeline: "Barva odznaku (Timeline)",
         importantBadgeColorTimelineDesc:
-          "Barva ikony vykřičníku Important konkrétně na bodech osy rozvržení Timeline. Zobrazí se pouze při nastavení Stylu rozvržení na Timeline.",
+          "Barva tohoto odznaku v rozvržení Časová osa - ve výchozím stavu jantarová z motivu",
         colors: "Barvy",
         cardBackgroundTabTitle: "Pozadí karty",
         cardBackgroundEnable: "Zobrazit pozadí",
@@ -5036,6 +5326,9 @@
       dayAgo: "I går",
       daysAgo: (n) => `for ${n} dager siden`,
       noEvents: "Ingen kommende hendelser",
+      todoCompleteConfirm: 'Merke «{item}» som fullført?',
+      todoCompleteConfirmMultiple: "Merke alle {count} oppgavene for denne hendelsen som fullført?",
+      todoCompleteFailed: "Kunne ikke fullføre denne oppgaven.",
       possessive: (name) => (/[sxz]$/i.test(name) ? `${name}'` : `${name}s`),
       ordinalParts: (n) => ({ num: `${n}.`, sup: "" }),
       timelineSentence: "{possessive} {ordinal}{sup} {type} er {when}",
@@ -5237,6 +5530,10 @@
         tapActionDesc: "Hva som skjer når en rad trykkes eller klikkes",
         holdAction: "Handling ved trykk og hold",
         holdActionDesc: "Hva som skjer når en rad trykkes og holdes inne",
+        cardLanguage: "Språk",
+        cardLanguageDesc:
+          "Låser dette kortet til ett språk for alle som ser det, i stedet for å følge hver enkelt seers profilspråk. Gjelder både kortets tekst og datoformatet - ikke navnene på hendelsene selv, som kommer fra integrasjonen. Denne redigereren følger uansett ditt eget språk.",
+        cardLanguageAuto: "Automatisk",
         visibilityIcon: "Ikon",
         visibilityIconDesc: "Vis typeikonet foran hver rad",
         visibilityNameDesc: "Vis hendelsens navn",
@@ -5275,6 +5572,14 @@
           "Legg inn én eller flere av dine eksisterende Home Assistant-kalendere sammen med Annuals' egne hendelser - hver havner på sin faktiske dag (og for tidsbestemte hendelser sorteres den etter klokkeslett innenfor den dagen) i stedet for noen «neste forekomst»-beregning. Legg til en Klokkeslett-/Sted-/Beskrivelse-kolonne ovenfor for å vise disse feltene for disse hendelsene.",
         externalCalendarsLabel: "Kalendere",
         externalCalendarsLabelDesc: "Hvilke calendar.*-enheter som skal legges inn.",
+        todoHeading: "Oppgaver",
+        todoDesc:
+          "Merker hendelser som har en ennå åpen oppgave - vanligvis listen som den medfølgende påminnelses-blueprinten skriver til. Tilordningen skjer først etter forfallsdato og deretter etter hva oppgavens tekst sier (fullt navn, navn, type, nummer i rekken): en oppgave som nevner hendelsen vinner over en som bare deler dato; en oppgave som passer like godt til to hendelser forblir utilordnet. Hendelser med treff får et lite merke på ikonet sitt, i begge oppsett - se Fremheving for ikon og farge.",
+        todoListsLabel: "Oppgavelister",
+        todoListsLabelDesc: "Hvilke todo.*-enheter som gjennomsøkes. La stå tom for å slå av funksjonen.",
+        todoCompleteFromCard: "Fullfør fra kortet",
+        todoCompleteFromCardDesc:
+          "Å klikke på ikonet til en merket hendelse ber om bekreftelse og merker deretter alle dens åpne oppgaver som fullført - også på tidslinjen, inkludert hendelser som først blir synlige når den utvides. Slå av for å la merket bare være en markering.",
         columnAdd: "Legg til",
         columnMoveUp: "Flytt opp",
         columnMoveDown: "Flytt ned",
@@ -5296,12 +5601,22 @@
         visibilityImportantOnly: "Kun Important",
         visibilityImportantOnlyDesc:
           "Vis bare hendelser som automatisk er merket som viktige (angis under Annual Innstillinger i integrasjonen)",
+        visibilityTodoOnly: "Bare åpne oppgaver",
+        visibilityTodoOnlyDesc:
+          "Vis bare hendelser som fortsatt har en åpen oppgave (se Oppgaver under Innstillinger → Hendelser). Snevrer inn de to filtrene over i stedet for å slås sammen med dem: med «Bare VIP» også på vises de VIP-hendelsene som fortsatt har noe å gjøre.",
         vipBadgeIcon: "VIP-merkeikon",
         vipBadgeIconDesc: "MDI-ikon vist som et lite merke på ikonet til VIP-merkede hendelser",
         vipBadgeIconPlaceholder: "mdi:star",
         importantBadgeIcon: "Important-merkeikon",
         importantBadgeIconDesc: "MDI-ikon vist som et lite merke på ikonet til hendelser som automatisk er merket som viktige",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
+        todoBadgeIcon: "Ikon for oppgavemerke",
+        todoBadgeIconDesc:
+          "MDI-ikon som vises som et lite merke på ikonet til hendelser med en ennå åpen oppgave (se Oppgaver under Hendelser)",
+        todoBadgeColorList: "Merkefarge (Liste)",
+        todoBadgeColorListDesc: "Fargen på dette merket i Liste-oppsettet - som standard temaets røde farge",
+        todoBadgeColorTimeline: "Merkefarge (Timeline)",
+        todoBadgeColorTimelineDesc: "Fargen på dette merket i Tidslinje-oppsettet - som standard temaets røde farge",
         highlightHeading: "Fremheving",
         highlightPast: "Tidligere hendelser",
         highlightPastDesc: "Fargelegg radbakgrunnen for hendelser som allerede har skjedd",
@@ -5315,18 +5630,17 @@
         highlightVipDesc: "Vis et merke på ikonet til VIP-merkede hendelser",
         highlightImportant: "Viktige hendelser",
         highlightImportantDesc: "Vis et merke på ikonet til hendelser som automatisk er merket som viktige",
+        highlightTodo: "Åpne oppgaver",
+        highlightTodoDesc: "Vis et merke på ikonet til hendelser med en ennå åpen oppgave",
         vipBadgeColorList: "Merkefarge (Liste)",
-        vipBadgeColorListDesc:
-          "Farge på VIP-stjernemerket i hjørnemerket til Liste-layoutet, i overskriften til Timeline-layoutet og i dets utvidbare Detaljer-liste.",
+        vipBadgeColorListDesc: "Fargen på dette merket i Liste-oppsettet - som standard temaets røde farge",
         vipBadgeColorTimeline: "Merkefarge (Timeline)",
-        vipBadgeColorTimelineDesc:
-          "Farge på VIP-stjerneikonet spesifikt på akse-punktene til Timeline-layoutet. Vises kun når Kortlayout er satt til Timeline.",
+        vipBadgeColorTimelineDesc: "Fargen på dette merket i Tidslinje-oppsettet - som standard hvitt",
         importantBadgeColorList: "Merkefarge (Liste)",
-        importantBadgeColorListDesc:
-          "Farge på Important-utropstegnmerket i hjørnemerket til Liste-layoutet, i overskriften til Timeline-layoutet og i dets utvidbare Detaljer-liste.",
+        importantBadgeColorListDesc: "Fargen på dette merket i Liste-oppsettet - som standard temaets ravfarge",
         importantBadgeColorTimeline: "Merkefarge (Timeline)",
         importantBadgeColorTimelineDesc:
-          "Farge på Important-utropstegnikonet spesifikt på akse-punktene til Timeline-layoutet. Vises kun når Kortlayout er satt til Timeline.",
+          "Fargen på dette merket i Tidslinje-oppsettet - som standard temaets ravfarge",
         colors: "Farger",
         cardBackgroundTabTitle: "Kortbakgrunn",
         cardBackgroundEnable: "Vis bakgrunn",
@@ -5452,6 +5766,9 @@
       dayAgo: "I går",
       daysAgo: (n) => `for ${n} dage siden`,
       noEvents: "Ingen kommende begivenheder",
+      todoCompleteConfirm: 'Markér "{item}" som fuldført?',
+      todoCompleteConfirmMultiple: "Markér alle {count} opgaver for denne begivenhed som fuldført?",
+      todoCompleteFailed: "Denne opgave kunne ikke fuldføres.",
       possessive: (name) => (/[sxz]$/i.test(name) ? `${name}'` : `${name}s`),
       ordinalParts: (n) => ({ num: `${n}.`, sup: "" }),
       timelineSentence: "{possessive} {ordinal}{sup} {type} er {when}",
@@ -5653,6 +5970,10 @@
         tapActionDesc: "Hvad der sker, når en række trykkes eller klikkes",
         holdAction: "Handling ved tryk og hold",
         holdActionDesc: "Hvad der sker, når en række trykkes og holdes nede",
+        cardLanguage: "Sprog",
+        cardLanguageDesc:
+          "Låser dette kort til ét sprog for alle, der ser det, i stedet for at følge den enkelte seers profilsprog. Gælder både kortets tekst og datoformatet - ikke selve begivenhedernes navne, som kommer fra integrationen. Denne editor følger under alle omstændigheder dit eget sprog.",
+        cardLanguageAuto: "Automatisk",
         visibilityIcon: "Ikon",
         visibilityIconDesc: "Vis typeikonet foran hver række",
         visibilityNameDesc: "Vis begivenhedens navn",
@@ -5691,6 +6012,14 @@
           "Indlejr en eller flere af dine eksisterende Home Assistant-kalendere sammen med Annuals' egne begivenheder - hver havner på sin faktiske dag (og for tidsbestemte begivenheder sorteres den efter klokkeslæt inden for den dag) i stedet for en „næste forekomst”-beregning. Tilføj en Klokkeslæt-/Sted-/Beskrivelse-kolonne ovenfor for at vise disse felter for disse begivenheder.",
         externalCalendarsLabel: "Kalendere",
         externalCalendarsLabelDesc: "Hvilke calendar.*-entiteter der skal indlejres.",
+        todoHeading: "Opgaver",
+        todoDesc:
+          "Markerer begivenheder, der har en stadig åben opgave - typisk den liste, som den medfølgende påmindelses-blueprint skriver til. Tilknytningen sker først via forfaldsdatoen og derefter via det, opgavens tekst siger (fulde navn, navn, type, nummer i rækken): en opgave, der nævner begivenheden, vinder over en, der kun deler dato; en opgave, der passer lige godt til to begivenheder, forbliver utilknyttet. Matchende begivenheder får et lille mærke på deres ikon i begge layouts - se Fremhævning for ikon og farve.",
+        todoListsLabel: "Opgavelister",
+        todoListsLabelDesc: "Hvilke todo.*-entiteter der gennemsøges. Lad stå tom for at slå funktionen fra.",
+        todoCompleteFromCard: "Fuldfør fra kortet",
+        todoCompleteFromCardDesc:
+          "Klik på ikonet for en markeret begivenhed beder om bekræftelse og markerer derefter alle dens åbne opgaver som fuldført - også på tidslinjen, inklusive de begivenheder, der først bliver synlige, når den foldes ud. Slå fra for at lade mærket være en ren markering.",
         columnAdd: "Tilføj",
         columnMoveUp: "Flyt op",
         columnMoveDown: "Flyt ned",
@@ -5712,12 +6041,22 @@
         visibilityImportantOnly: "Kun Important",
         visibilityImportantOnlyDesc:
           "Vis kun begivenheder, der automatisk er markeret som vigtige (indstilles under Annual Indstillinger i integrationen)",
+        visibilityTodoOnly: "Kun åbne opgaver",
+        visibilityTodoOnlyDesc:
+          "Vis kun begivenheder, der stadig har en åben opgave (se Opgaver under Indstillinger → Begivenheder). Indsnævrer de to filtre ovenfor i stedet for at blive slået sammen med dem: med «Kun VIP» også slået til vises de VIP-begivenheder, hvor der stadig er noget at gøre.",
         vipBadgeIcon: "VIP-mærkeikon",
         vipBadgeIconDesc: "MDI-ikon vist som et lille mærke på ikonet for VIP-markerede begivenheder",
         vipBadgeIconPlaceholder: "mdi:star",
         importantBadgeIcon: "Important-mærkeikon",
         importantBadgeIconDesc: "MDI-ikon vist som et lille mærke på ikonet for begivenheder, der automatisk er markeret som vigtige",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
+        todoBadgeIcon: "Ikon for opgavemærke",
+        todoBadgeIconDesc:
+          "MDI-ikon, der vises som et lille mærke på ikonet for begivenheder med en stadig åben opgave (se Opgaver under Begivenheder)",
+        todoBadgeColorList: "Mærkefarve (Liste)",
+        todoBadgeColorListDesc: "Farven på det mærke i Liste-layoutet - som standard temaets røde farve",
+        todoBadgeColorTimeline: "Mærkefarve (Timeline)",
+        todoBadgeColorTimelineDesc: "Farven på det mærke i Tidslinje-layoutet - som standard temaets røde farve",
         highlightHeading: "Fremhævning",
         highlightPast: "Tidligere begivenheder",
         highlightPastDesc: "Farvelæg rækkebaggrunden for begivenheder, der allerede er sket",
@@ -5731,18 +6070,17 @@
         highlightVipDesc: "Vis et mærke på ikonet for VIP-markerede begivenheder",
         highlightImportant: "Vigtige begivenheder",
         highlightImportantDesc: "Vis et mærke på ikonet for begivenheder, der automatisk er markeret som vigtige",
+        highlightTodo: "Åbne opgaver",
+        highlightTodoDesc: "Vis et mærke på ikonet for begivenheder med en stadig åben opgave",
         vipBadgeColorList: "Mærkefarve (Liste)",
-        vipBadgeColorListDesc:
-          "Farve på VIP-stjernemærket i Liste-layoutets hjørnemærke, i Timeline-layoutets overskrift og i dets udvidelige Detaljer-liste.",
+        vipBadgeColorListDesc: "Farven på det mærke i Liste-layoutet - som standard temaets røde farve",
         vipBadgeColorTimeline: "Mærkefarve (Timeline)",
-        vipBadgeColorTimelineDesc:
-          "Farve på VIP-stjerneikonet specifikt på Timeline-layoutets akse-punkter. Vises kun når Kortlayout er sat til Timeline.",
+        vipBadgeColorTimelineDesc: "Farven på det mærke i Tidslinje-layoutet - som standard hvid",
         importantBadgeColorList: "Mærkefarve (Liste)",
-        importantBadgeColorListDesc:
-          "Farve på Important-udråbstegnsmærket i Liste-layoutets hjørnemærke, i Timeline-layoutets overskrift og i dets udvidelige Detaljer-liste.",
+        importantBadgeColorListDesc: "Farven på det mærke i Liste-layoutet - som standard temaets ravfarve",
         importantBadgeColorTimeline: "Mærkefarve (Timeline)",
         importantBadgeColorTimelineDesc:
-          "Farve på Important-udråbstegnsikonet specifikt på Timeline-layoutets akse-punkter. Vises kun når Kortlayout er sat til Timeline.",
+          "Farven på det mærke i Tidslinje-layoutet - som standard temaets ravfarve",
         colors: "Farver",
         cardBackgroundTabTitle: "Kortbaggrund",
         cardBackgroundEnable: "Vis baggrund",
@@ -5868,6 +6206,9 @@
       dayAgo: "Dün",
       daysAgo: (n) => `${n} gün önce`,
       noEvents: "Yaklaşan etkinlik yok",
+      todoCompleteConfirm: '"{item}" tamamlandı olarak işaretlensin mi?',
+      todoCompleteConfirmMultiple: "Bu etkinliğin {count} yapılacak öğesinin tümü tamamlandı olarak işaretlensin mi?",
+      todoCompleteFailed: "Bu yapılacak öğesi tamamlanamadı.",
       // Türkçedeki iyelik eki (-'nin/-'nın/-'nün/-'nun) ünlü uyumuna göre
       // değişir ve rastgele girilen isimlere güvenli biçimde
       // uygulanamayacağından, cümle bunun yerine "İsim: N. tür — ne zaman"
@@ -6075,6 +6416,10 @@
         tapActionDesc: "Bir satıra dokunulduğunda veya tıklandığında ne olacağı",
         holdAction: "Basılı tutma eylemi",
         holdActionDesc: "Bir satır basılı tutulduğunda ne olacağı",
+        cardLanguage: "Dil",
+        cardLanguageDesc:
+          "Bu kartı, her izleyicinin kendi profil dilini takip etmek yerine, onu görecek herkes için tek bir dile sabitler. Hem kartın metnini hem de tarih biçimini etkiler - etkinliklerin adlarını değil, onlar entegrasyondan gelir. Bu düzenleyici her hâlükârda kendi dilinizi izlemeye devam eder.",
+        cardLanguageAuto: "Otomatik",
         visibilityIcon: "Simge",
         visibilityIconDesc: "Her satırın önünde tür simgesini göster",
         visibilityNameDesc: "Etkinlik adını göster",
@@ -6113,6 +6458,14 @@
           "Mevcut Home Assistant takvimlerinizden birini veya birkaçını Annuals'ın kendi etkinlikleriyle birlikte katıştırın - her biri, herhangi bir \"sonraki tekrar\" hesaplaması yerine gerçek gününe düşer (ve saatli etkinlikler için o gün içinde saate göre sıralanır). Bu etkinlikler için bu alanları göstermek üzere yukarıya bir Saat/Konum/Açıklama sütunu ekleyin.",
         externalCalendarsLabel: "Takvimler",
         externalCalendarsLabelDesc: "Hangi calendar.* varlıklarının katıştırılacağı.",
+        todoHeading: "Yapılacaklar",
+        todoDesc:
+          "Hâlâ açık bir yapılacak öğesi olan etkinlikleri işaretler - genellikle birlikte gelen hatırlatma blueprint'inin yazdığı liste. Eşleştirme önce bitiş tarihine, sonra öğenin metninde yazanlara (tam ad, ad, tür, kaçıncı olduğu) göre yapılır: etkinliği adıyla anan bir öğe, yalnızca tarihi paylaşan bir öğeye üstün gelir; iki etkinliğe aynı ölçüde uyan bir öğe eşleştirilmeden bırakılır. Eşleşen etkinlikler her iki düzende de simgelerinin üzerinde küçük bir rozet alır - simgesi ve rengi için Vurgulama bölümüne bakın.",
+        todoListsLabel: "Yapılacak listeleri",
+        todoListsLabelDesc: "Hangi todo.* varlıklarının aranacağı. Özelliği kapatmak için boş bırakın.",
+        todoCompleteFromCard: "Karttan tamamla",
+        todoCompleteFromCardDesc:
+          "Rozetli bir etkinliğin simgesine tıklamak önce onay ister, ardından o etkinliğin tüm açık yapılacak öğelerini tamamlandı olarak işaretler - zaman çizelgesinde de, yalnızca genişletildiğinde görünen etkinlikler dahil. Rozetin yalnızca gösterge olarak kalması için kapatın.",
         columnAdd: "Ekle",
         columnMoveUp: "Yukarı taşı",
         columnMoveDown: "Aşağı taşı",
@@ -6134,12 +6487,22 @@
         visibilityImportantOnly: "Yalnızca Important",
         visibilityImportantOnlyDesc:
           "Yalnızca otomatik olarak önemli işaretlenmiş etkinlikleri göster (entegrasyondaki Annual Ayarları altından yapılandırılır)",
+        visibilityTodoOnly: "Yalnızca açık görevler",
+        visibilityTodoOnlyDesc:
+          "Yalnızca hâlâ açık bir yapılacak öğesi olan etkinlikleri göster (Ayarlar → Etkinlikler altındaki Yapılacaklar'a bakın). Yukarıdaki iki filtreyle birleşmek yerine onları daraltır: «Yalnızca VIP» de açıkken, hâlâ yapılacak bir şeyi olan VIP etkinlikleri gösterir.",
         vipBadgeIcon: "VIP rozet simgesi",
         vipBadgeIconDesc: "VIP olarak işaretlenmiş etkinliklerin simgesinde küçük bir rozet olarak gösterilen MDI simgesi",
         vipBadgeIconPlaceholder: "mdi:star",
         importantBadgeIcon: "Important rozet simgesi",
         importantBadgeIconDesc: "Otomatik olarak önemli işaretlenmiş etkinliklerin simgesinde küçük bir rozet olarak gösterilen MDI simgesi",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
+        todoBadgeIcon: "Yapılacak rozeti simgesi",
+        todoBadgeIconDesc:
+          "Hâlâ açık bir yapılacak öğesi olan etkinliklerin simgesinde küçük bir rozet olarak gösterilen MDI simgesi (Etkinlikler altındaki Yapılacaklar'a bakın)",
+        todoBadgeColorList: "Rozet rengi (Liste)",
+        todoBadgeColorListDesc: "Bu rozetin Liste düzenindeki rengi - varsayılan olarak temanın kırmızısı",
+        todoBadgeColorTimeline: "Rozet rengi (Timeline)",
+        todoBadgeColorTimelineDesc: "Bu rozetin Zaman çizelgesi düzenindeki rengi - varsayılan olarak temanın kırmızısı",
         highlightHeading: "Vurgulama",
         highlightPast: "Geçmiş etkinlikler",
         highlightPastDesc: "Zaten gerçekleşmiş etkinlikler için satır arka planını renklendir",
@@ -6153,18 +6516,17 @@
         highlightVipDesc: "VIP olarak işaretlenmiş etkinliklerin simgesinde bir rozet göster",
         highlightImportant: "Önemli etkinlikler",
         highlightImportantDesc: "Otomatik olarak önemli işaretlenmiş etkinliklerin simgesinde bir rozet göster",
+        highlightTodo: "Açık görevler",
+        highlightTodoDesc: "Hâlâ açık bir yapılacak öğesi olan etkinliklerin simgesinde bir rozet göster",
         vipBadgeColorList: "Rozet rengi (Liste)",
-        vipBadgeColorListDesc:
-          "Liste düzeninin köşe rozetindeki, Timeline düzeninin başlığındaki ve genişletilebilir Ayrıntılar listesindeki VIP yıldız rozetinin rengi.",
+        vipBadgeColorListDesc: "Bu rozetin Liste düzenindeki rengi - varsayılan olarak temanın kırmızısı",
         vipBadgeColorTimeline: "Rozet rengi (Timeline)",
-        vipBadgeColorTimelineDesc:
-          "Özellikle Timeline düzeninin eksen noktalarındaki VIP yıldız simgesinin rengi. Yalnızca Düzen stili Timeline olarak ayarlandığında gösterilir.",
+        vipBadgeColorTimelineDesc: "Bu rozetin Zaman çizelgesi düzenindeki rengi - varsayılan olarak beyaz",
         importantBadgeColorList: "Rozet rengi (Liste)",
-        importantBadgeColorListDesc:
-          "Liste düzeninin köşe rozetindeki, Timeline düzeninin başlığındaki ve genişletilebilir Ayrıntılar listesindeki Important ünlem işareti rozetinin rengi.",
+        importantBadgeColorListDesc: "Bu rozetin Liste düzenindeki rengi - varsayılan olarak temanın kehribar rengi",
         importantBadgeColorTimeline: "Rozet rengi (Timeline)",
         importantBadgeColorTimelineDesc:
-          "Özellikle Timeline düzeninin eksen noktalarındaki Important ünlem işareti simgesinin rengi. Yalnızca Düzen stili Timeline olarak ayarlandığında gösterilir.",
+          "Bu rozetin Zaman çizelgesi düzenindeki rengi - varsayılan olarak temanın kehribar rengi",
         colors: "Renkler",
         cardBackgroundTabTitle: "Kart Arka Planı",
         cardBackgroundEnable: "Arka planı göster",
@@ -6284,13 +6646,42 @@
     },
   };
 
+  // Every language the card itself is translated into, as BCP-47 codes -
+  // derived from STRINGS rather than listed again, so adding a language
+  // can't forget to offer it in the editor's Language dropdown. Sorted for
+  // the dropdown's sake; STRINGS' own key order is historical.
+  const CARD_LANGUAGES = Object.keys(STRINGS).sort();
+
+  // The "follow the viewer" choice in the editor's Language dropdown. A
+  // named value rather than "" because ha-selector's select renders an
+  // empty-string option with no label at all - it looked like a blank,
+  // half-width dropdown. Never a key in STRINGS, so cardLocale falls
+  // through to the viewer's own language on its own; "" (every dashboard
+  // saved before this existed) does too.
+  const LANGUAGE_AUTO = "auto";
+
   // The card's own UI strings follow the *viewing user's* profile language
   // (hass.language) - deliberately not hass.config.language (the server
   // language), which is what the integration's backend translations use for
   // entity/config-flow text instead.
-  function t(hass) {
-    const lang = (hass && hass.language) || "en";
-    return STRINGS[lang] || STRINGS.en;
+  //
+  // Unless the card overrides it: `language` in the card's own config pins
+  // it to one of CARD_LANGUAGES for every viewer alike (see defaultConfig),
+  // for a dashboard that should read the same no matter whose profile is
+  // looking at it. Empty (the default) keeps the per-viewer behavior.
+  function cardLocale(hass, config) {
+    const pinned = config && config.language;
+    if (pinned && STRINGS[pinned]) return pinned;
+    return (hass && hass.language) || "en";
+  }
+
+  // config is deliberately omitted by the editor's own call sites: pinning
+  // the *card* to a language someone else's dashboard should read in is the
+  // point, but pinning the editor to it would leave whoever set it staring
+  // at a configuration form in a language they may not read - with only the
+  // dropdown's own language codes to find their way back out.
+  function t(hass, config) {
+    return STRINGS[cardLocale(hass, config)] || STRINGS.en;
   }
 
   // Seeds the "Row columns" editor's list the first time it's opened for a
@@ -6372,6 +6763,11 @@
     return {
       title: "",
       show_title: true,
+      // One of CARD_LANGUAGES, pinning every string and date on this card to
+      // that language for every viewer alike. LANGUAGE_AUTO (the default) -
+      // like the "" every dashboard saved before this existed has - keeps
+      // the original behavior: each viewer sees their own profile language.
+      language: LANGUAGE_AUTO,
       // "list" is every dashboard saved before this feature existed - the
       // classic icon/name/type/badge/when row list, untouched. "timeline"
       // is the new compact horizontal-axis layout (see _buildTimeline).
@@ -6396,6 +6792,22 @@
       // (days_ahead/days_past/soon_days/today_only/next_event_day_only)
       // apply to both alike.
       external_calendars: [],
+      // Existing HA todo.* lists to search for each event's own still-open
+      // to-do items - typically whichever list the bundled "Upcoming Event
+      // Reminders" blueprint writes its reminders to. Empty (the default)
+      // means the whole feature is off and nothing is fetched at all.
+      // Explicitly picked rather than "every todo.* entity", so an
+      // unrelated shopping list can't produce surprise matches - a to-do
+      // item carries no reference to the event it belongs to, so matching
+      // is inherently heuristic (see matchTodoItems).
+      todo_lists: [],
+      // Whether clicking an event's to-do indicator on the card offers to
+      // complete that item (after a confirmation prompt - completing is
+      // destructive enough that a stray tap shouldn't do it silently).
+      // Defaults on: someone who went to the trouble of picking a to-do
+      // list above is the same person who'd want to tick items off there.
+      // Turning it off leaves the indicator as a read-only marker.
+      todo_complete_from_card: true,
       // Only meaningful for holiday-type events (see CATEGORY_ICONS in
       // const.py) - empty means "show every category", same semantics as
       // `types` above. Non-holiday events have no category and are never
@@ -6440,10 +6852,19 @@
       when_click_shows_date: false,
       show_vip_only: false,
       show_important_only: false,
+      // Unlike the two above, which combine as OR with each other, this one
+      // narrows whatever they leave (see _filteredEvents) - "the VIP events
+      // that still have something to do", not "VIP or has a to-do".
+      show_todo_only: false,
       show_vip_badge: true,
       show_important_badge: true,
+      show_todo_badge: true,
       vip_badge_icon: "mdi:star",
       important_badge_icon: "mdi:exclamation-thick",
+      // Marks an event that still has an open to-do item (see
+      // matchTodoItems) - configurable in the same Highlight section, and
+      // with the same show-toggle, as the two above.
+      todo_badge_icon: "mdi:pin",
       // Holidays only - appends the imported country (+ subdivision) to the
       // name/type text instead of the old hover-only tooltip.
       show_name_country: false,
@@ -6603,6 +7024,13 @@
         // silently affected the other layout too.
         vip_badge_timeline: "",
         important_badge_timeline: "",
+        // Same list/timeline split as the two pairs above, for the to-do
+        // badge. Both default to the theme's own error color (see the
+        // .todo-badge CSS), so an unconfigured badge is simply "red" in
+        // whatever the active theme calls red, rather than a hardcoded one
+        // that clashes with a custom theme.
+        todo_badge: "",
+        todo_badge_timeline: "",
         // Timeline layout only (see Layout -> Timeline in the editor and
         // _buildTimeline) - the header sentence above the axis, each dot's
         // click tooltip, and the expandable chronological list, styled
@@ -6781,9 +7209,20 @@
             : state.attributes.name || state.attributes.friendly_name) ||
           entityId,
         type: state.attributes.type || "custom",
+        // The type's own translated label (see sensor.py) - undefined on an
+        // event whose integration predates it. Only used for to-do matching
+        // (see matchTodoItems), which compares against text a person/the
+        // reminder blueprint wrote in their own language, so the raw `type`
+        // key above would rarely match anything there.
+        typeLabel: state.attributes.type_label,
         icon: state.attributes.icon || "mdi:calendar-star",
         month: state.attributes.month,
         day: state.attributes.day,
+        // ISO date (YYYY-MM-DD) of the next occurrence - the anchor to-do
+        // matching keys off (see matchTodoItems). Already accounts for the
+        // yearly roll-over, so it points at *next* year's date once this
+        // year's has passed, exactly like `days` does.
+        nextDate: state.attributes.next_date,
         occurrence:
           state.attributes.occurrence_number == null ? null : state.attributes.occurrence_number,
         vip: state.attributes.vip === true,
@@ -6953,6 +7392,90 @@
       "|" +
       entityTicks
     );
+  }
+
+  // Same idea as externalCalendarsSignature above, for the configured to-do
+  // lists: which lists, plus each one's own state/last_updated. A todo
+  // entity's *state* is its open-item count, so ticking an item off (here
+  // or in any other UI) changes it and re-fetches - and last_updated covers
+  // edits that leave the count alone. No day-window part: to-do items are
+  // matched by their own due date against each event's next occurrence
+  // (see matchTodoItems), not fetched per window.
+  function todoListsSignature(config, hass) {
+    const lists = Array.isArray(config.todo_lists) ? config.todo_lists : [];
+    const entityTicks = lists
+      .map((id) => {
+        const state = hass && hass.states && hass.states[id];
+        return state ? `${id}:${state.state}:${state.last_updated}` : `${id}:?`;
+      })
+      .join(",");
+    return JSON.stringify(lists) + "|" + entityTicks;
+  }
+
+  // Which still-open to-do items belong to which event.
+  //
+  // A to-do item carries no reference to the event that produced it - the
+  // reminder blueprint writes a user-editable title template and a due date,
+  // and nothing else - so this is a heuristic, applied in the order the
+  // metadata is trustworthy:
+  //
+  //   1. Next date (mandatory) - the item's own due date must fall on the
+  //      event's next occurrence. The blueprint sets exactly that, and it's
+  //      the one field a person is unlikely to retype by hand, so anything
+  //      that doesn't line up here is simply not this event's item.
+  //   2..5. Full name, name, type label, occurrence number - each looked for
+  //      in the item's text, scored highest-first. These only ever *rank*
+  //      candidates that already passed the date gate; they never rescue an
+  //      item whose date doesn't match.
+  //
+  // Ranking (rather than plain filtering) is what keeps two events sharing a
+  // date apart: an item mentioning "Anna" scores higher for Anna's event
+  // than for the other one that day, so each item is handed to its single
+  // best-scoring event instead of showing up under both. A date-only match
+  // (score 0) still counts - it's the only thing left when someone wrote a
+  // title mentioning nothing about the event - but loses to any event the
+  // text actually names.
+  function matchTodoItems(events, todoItems) {
+    const byEntity = new Map(events.map((e) => [e.entityId, []]));
+    if (!todoItems.length) return byEntity;
+    // null when the date gate fails, otherwise how well the rest of the
+    // event's metadata is echoed in the item's own text.
+    const scoreFor = (event, dueDate, haystack) => {
+      if (!event.nextDate || event.nextDate !== dueDate) return null;
+      let score = 0;
+      if (event.fullName && haystack.includes(event.fullName.toLowerCase())) score += 8;
+      if (event.name && haystack.includes(event.name.toLowerCase())) score += 4;
+      if (event.typeLabel && haystack.includes(event.typeLabel.toLowerCase())) score += 2;
+      // Word-boundary matched, so occurrence 30 isn't "found" inside a 2030
+      // in the text.
+      if (event.occurrence != null && new RegExp(`\\b${event.occurrence}\\b`).test(haystack)) score += 1;
+      return score;
+    };
+    for (const item of todoItems) {
+      if (!item.dueDate) continue;
+      const haystack = `${item.summary || ""} ${item.description || ""}`.toLowerCase();
+      let best = null;
+      let tied = false;
+      for (const event of events) {
+        const score = scoreFor(event, item.dueDate, haystack);
+        if (score == null) continue;
+        if (!best || score > best.score) {
+          best = { score, entityId: event.entityId };
+          tied = false;
+        } else if (score === best.score) {
+          tied = true;
+        }
+      }
+      // A tie means the item fits two events equally well - typically two
+      // events sharing a date, with the item's text naming neither ("Buy a
+      // gift", due that day). Showing it under an arbitrary one of them
+      // would look like a definite answer to a question the data can't
+      // answer, so it's shown under neither; naming the event in the item
+      // is what resolves it. A lone event on that date still matches on the
+      // date alone - there's nothing ambiguous about it.
+      if (best && !tied) byEntity.get(best.entityId).push(item);
+    }
+    return byEntity;
   }
 
   // Mirrors dates.py's occurrence_in_year: Feb 29 falls back to Feb 28 in
@@ -7130,6 +7653,35 @@
          unconfigured Important badge and an unconfigured "soon" tint match
          out of the box. */
       background: var(--annuals-important-badge-color, var(--annuals-soon-color, var(--warning-color)));
+    }
+    /* Third corner badge on the row icon, for an event with a still-open
+       to-do item. Sits bottom-right, the one corner the VIP (top-right) and
+       Important (top-left) badges leave free, so all three can show at once
+       without overlapping. Deliberately not colored via its own config
+       variable - unlike VIP/Important, this isn't a property of the event
+       the user assigned, just a transient "something's outstanding" hint. */
+    .todo-badge {
+      position: absolute;
+      bottom: -4px;
+      right: -6px;
+      --mdc-icon-size: 12px;
+      width: 14px;
+      height: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      /* Unlike the VIP/Important badges, the glyph itself is colored rather
+         than sitting on a colored disc - a pin reads as a pin only when its
+         own shape is visible. The disc behind it is just the card's own
+         background, so it stays legible on top of the event icon. */
+      color: var(--annuals-todo-badge-color, var(--error-color));
+      background: var(--ha-card-background, var(--card-background-color, #fff));
+    }
+    /* Only when completing from the card is enabled - the badged icon is a
+       plain marker otherwise and must not look interactive. */
+    .icon-wrap-actionable {
+      cursor: pointer;
     }
     /* "Match text" per icon category - when enabled in the editor, every
        text element in a matching row takes on that category's icon color,
@@ -7419,6 +7971,13 @@
       top: -4px;
       right: -4px;
     }
+    /* Bottom-right, the corner Important (top-left) and VIP (top-right)
+       leave free, same arrangement as the list layout's .todo-badge. */
+    .timeline-header-badge-todo {
+      bottom: -4px;
+      right: -4px;
+      color: var(--annuals-todo-badge-timeline-color, var(--error-color));
+    }
     .timeline-header .sentence {
       font-size: var(--annuals-timeline-header-size, 13px);
       font-weight: var(--annuals-timeline-header-weight, normal);
@@ -7447,16 +8006,18 @@
       /* height and .line's top are set inline (see _buildTimeline) - they
          grow to fit whichever same-day cluster on the axis has the most
          events, since those stack vertically instead of overlapping.
-         margin-left reserves room for the leftmost dot's own Important
-         glyph, which extends further left than the dot itself (see
-         .timeline-dot-important) - without it, a dot sitting at the
-         axis's own 0% (the furthest-back past event, or day 0 with no past
+         The side margins reserve room for the outermost dots' own adjacent
+         glyphs, which extend past the dot itself - Important to the left
+         (see .timeline-dot-important), the to-do pin to the right (see
+         .timeline-dot-todo). Without them, a dot sitting at the axis's own
+         0% or 100% (the furthest-back past event, or day 0 with no past
          events at all) could have that glyph clipped against ha-card's own
          16px padding, since the worst case (radius + ring + glyph width at
          MAX_SIZE) runs a couple pixels past that on its own. */
       position: relative;
       height: 34px;
       margin-left: 20px;
+      margin-right: 20px;
     }
     /* Rendered as a top border on a 0-height box, not a filled background -
        border-style is what lets Layout -> Timeline's line-style option
@@ -7488,10 +8049,10 @@
       border-left-color: var(--annuals-timeline-divider-color, var(--divider-color, rgba(128, 128, 128, 0.4)));
     }
     /* Each event is a small group (the circle plus, for Important events, an
-       adjacent glyph to its left) positioned as one unit - top/left are set
-       inline (see _buildTimeline), left placing the *circle* at its
-       days-until position regardless of whether an Important glyph extends
-       further left. */
+       adjacent glyph to its left, and for events with an open to-do, a pin
+       to its right) positioned as one unit - top/left are set inline (see
+       _buildTimeline), left placing the *circle* at its days-until position
+       regardless of whether either glyph extends past it. */
     .timeline-dot-wrap {
       position: absolute;
       transform: translate(-50%, -50%);
@@ -7542,6 +8103,24 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    /* The to-do pin is the mirror image of .timeline-dot-important: same
+       sizing and same flush-against-the-ring placement, on the circle's
+       right so the two can sit on one dot without colliding. */
+    .timeline-dot-todo {
+      position: absolute;
+      top: 50%;
+      left: 100%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Set here rather than inline (unlike the VIP/Important glyphs, whose
+       color has a per-badge fallback resolved in JS) - this one's fallback
+       is a plain theme color the cascade can express on its own. */
+    .timeline-dot-todo ha-icon {
+      color: var(--annuals-todo-badge-timeline-color, var(--error-color));
     }
     .timeline-tip {
       /* left/top/width are set inline per-tooltip (see _buildTimeline), so
@@ -7672,6 +8251,13 @@
       top: -4px;
       right: -4px;
     }
+    /* Same free corner (bottom-right) and same color source as the header's
+       own to-do badge - the two contexts render the identical marker. */
+    .timeline-list-badge-todo {
+      bottom: -4px;
+      right: -4px;
+      color: var(--annuals-todo-badge-timeline-color, var(--error-color));
+    }
   `;
 
   // One accent color per event type, used only by the timeline layout to
@@ -7743,6 +8329,11 @@
       // "starts empty, fills in asynchronously" shape as _externalEvents.
       this._calendarColors = {};
       this._calendarColorsKey = undefined;
+      // Same "starts empty, fills in asynchronously" shape as
+      // _externalEvents - open to-do items across every configured list (see
+      // _fetchTodoItems), before they're matched to individual events.
+      this._todoItems = [];
+      this._todoSignature = undefined;
     }
 
     setConfig(config) {
@@ -7755,9 +8346,11 @@
       // of waiting for one.
       this._externalSignature = undefined;
       this._calendarColorsKey = undefined;
+      this._todoSignature = undefined;
       if (this._hass) {
         this._fetchExternalEvents();
         this._fetchCalendarColors();
+        this._fetchTodoItems();
       }
       this._render();
     }
@@ -7780,6 +8373,11 @@
         this._fetchExternalEvents();
       }
       this._fetchCalendarColors();
+      const todoSignature = todoListsSignature(this._config, hass);
+      if (todoSignature !== this._todoSignature) {
+        this._todoSignature = todoSignature;
+        this._fetchTodoItems();
+      }
       const signature = eventsSignature(hass);
       const langChanged = !prevHass || prevHass.language !== hass.language;
       if (this._built && !langChanged && signature === this._eventsSignature) return;
@@ -7877,6 +8475,58 @@
       this._render();
     }
 
+    // Every still-open item across the configured to-do lists, normalised to
+    // what matchTodoItems needs. Only needs_action items are fetched at all:
+    // the card shows an event's *outstanding* to-dos, and leaving completed
+    // ones out is also what makes ticking one off simply remove it here.
+    //
+    // `due` comes back as either a date ("2026-08-09") or a full datetime -
+    // only the date part matters, since an event's own next occurrence is a
+    // whole day, and the blueprint's time-of-day component just mirrors
+    // whenever the reminder happened to run.
+    async _fetchTodoItems() {
+      const config = this._config;
+      const lists = Array.isArray(config.todo_lists) ? config.todo_lists : [];
+      const fetchId = (this._todoFetchId = (this._todoFetchId || 0) + 1);
+      if (!lists.length) {
+        if (this._todoItems.length) {
+          this._todoItems = [];
+          this._render();
+        }
+        return;
+      }
+      const results = await Promise.all(
+        lists.map(async (entityId) => {
+          if (!this._hass.states[entityId]) return [];
+          try {
+            const res = await this._hass.callWS({
+              type: "call_service",
+              domain: "todo",
+              service: "get_items",
+              service_data: { status: "needs_action" },
+              target: { entity_id: entityId },
+              return_response: true,
+            });
+            const items = (res && res.response && res.response[entityId] && res.response[entityId].items) || [];
+            return items.map((item) => ({
+              uid: item.uid,
+              listEntityId: entityId,
+              summary: item.summary || "",
+              description: item.description || "",
+              dueDate: (item.due || "").slice(0, 10) || null,
+            }));
+          } catch (err) {
+            // One unavailable/misconfigured list must never take down the
+            // others, same as a failing calendar in _fetchExternalEvents.
+            return [];
+          }
+        })
+      );
+      if (fetchId !== this._todoFetchId) return;
+      this._todoItems = results.flat();
+      this._render();
+    }
+
     getCardSize() {
       if (!this._hass || !this._config) return 3;
       return 1 + this._visibleEvents().length;
@@ -7889,6 +8539,17 @@
 
     static getStubConfig() {
       return defaultConfig({});
+    }
+
+    // The open to-do items matched to one event, as far as the badge is
+    // concerned - empty whenever the badge is switched off, which is what
+    // suppresses it, and its tap-to-complete wiring, everywhere it would
+    // otherwise be drawn. The "Open to-dos only" filter reads
+    // _todoByEntity directly instead: hiding the badge shouldn't quietly
+    // change which events the card shows.
+    _todoBadgeItems(entityId) {
+      if (this._config.show_todo_badge === false) return [];
+      return (this._todoByEntity && this._todoByEntity.get(entityId)) || [];
     }
 
     // "hero" = today's events, plus (if days_past > 0) events whose
@@ -7911,7 +8572,28 @@
       const config = this._config;
       const now = new Date();
       const all = [...getEvents(this._hass), ...this._externalEvents];
+      // Matched once per render rather than per row/dot, since the scoring
+      // compares every item against every event (see matchTodoItems) and
+      // the filter below plus both layouts all need the same result.
+      // Deliberately matched against `all` rather than the surviving
+      // events: an item that fits a filtered-out event just as well is a
+      // genuine tie, and hiding that event shouldn't quietly hand the item
+      // to its runner-up.
+      this._todoByEntity = matchTodoItems(all, this._todoItems);
       let filtered = all.filter((e) => {
+        // Checked ahead of the isExternal short-circuit below, and so the
+        // one Annuals-side filter that does apply to an external calendar
+        // event: it can't ever carry an open to-do (matchTodoItems needs a
+        // next_date, which only an Annuals sensor has), so "only events
+        // with something left to do" has to drop it rather than wave it
+        // through. Narrows whatever the VIP/Important pair further down
+        // leaves, rather than joining their OR - "VIP only" plus this one
+        // means the VIP events that still have something to do, not
+        // everything that is either.
+        if (config.show_todo_only) {
+          const todos = this._todoByEntity.get(e.entityId);
+          if (!todos || !todos.length) return false;
+        }
         // `types`/`categories`/VIP/Important all describe Annuals-specific
         // concepts (event type, holiday category, the manual VIP flag and
         // computed Important milestone) that simply don't exist for an
@@ -8052,6 +8734,14 @@
       return e.days === 0 ? strings.today : e.days === 1 ? strings.inDay : strings.inDays(e.days);
     }
 
+    // The locale every date/time on this card is formatted in - the card's
+    // pinned Language if one is set, the viewing user's own otherwise (see
+    // cardLocale). Kept in step with the UI strings on purpose: a card
+    // reading Spanish shouldn't render its dates in German.
+    _locale() {
+      return cardLocale(this._hass, this._config);
+    }
+
     // Short calendar date ("6 Aug") for config.timeline_show_date - same
     // day-offset math and Intl.DateTimeFormat call as _row()'s own dateText,
     // kept separate since the timeline reads its offset off e.daysSince/
@@ -8064,7 +8754,7 @@
       const target = new Date();
       target.setHours(0, 0, 0, 0);
       target.setDate(target.getDate() + (isPast ? -e.daysSince : e.days));
-      return new Intl.DateTimeFormat(this._hass.language || "en", {
+      return new Intl.DateTimeFormat(this._locale(), {
         day: "numeric",
         month: "short",
       }).format(target);
@@ -8081,7 +8771,7 @@
       const target = new Date();
       target.setHours(0, 0, 0, 0);
       target.setDate(target.getDate() + (isPast ? -e.daysSince : e.days));
-      return new Intl.DateTimeFormat(this._hass.language || "en", {
+      return new Intl.DateTimeFormat(this._locale(), {
         weekday: "short",
         day: "numeric",
         month: "short",
@@ -8095,7 +8785,7 @@
     // timed (non-all-day) external calendar event (see buildExternalEvent).
     _timelineTimeText(e) {
       if (!e.isExternal || e.allDay || !e.startTime) return null;
-      const timeFmt = new Intl.DateTimeFormat(this._hass.language || "en", {
+      const timeFmt = new Intl.DateTimeFormat(this._locale(), {
         hour: "2-digit",
         minute: "2-digit",
       });
@@ -8153,8 +8843,8 @@
     }
 
     // Scales one of the timeline's badge glyphs (VIP star / Important
-    // exclamation) to a target size in real pixels, and optionally sizes its
-    // container to the glyph's own width.
+    // exclamation / to-do pin) to a target size in real pixels, and
+    // optionally sizes its container to the glyph's own width.
     //
     // Every icon fills its 24x24 viewBox differently - mdi:star's path spans
     // 20x19 of it, mdi:exclamation-thick's only 4x18 - so a fixed
@@ -8474,6 +9164,17 @@
           star.style.color = `var(${badges.vip.colorVar}, ${badges.vip.fallback})`;
           headerIcons.appendChild(star);
         }
+        // The timeline's counterpart to the list layout's own to-do badge
+        // (see the "icon" case in _buildColumnCell), on the same icon and
+        // with the same tap-to-complete behaviour.
+        const headerTodos = this._todoBadgeItems(ev.entityId);
+        if (headerTodos.length) {
+          const todoMark = document.createElement("ha-icon");
+          todoMark.className = "timeline-header-badge timeline-header-badge-todo";
+          todoMark.setAttribute("icon", config.todo_badge_icon || "mdi:pin");
+          headerIcons.appendChild(todoMark);
+          this._wireTodoCompleteTarget(headerIcons, headerTodos, config);
+        }
         row.appendChild(headerIcons);
 
         const sentence = document.createElement("div");
@@ -8702,6 +9403,33 @@
           });
         }
 
+        // Mirror of the Important glyph above, on the dot's right - see
+        // .timeline-dot-todo. Marker only: the dot's own click opens the
+        // tooltip, so completing from here would fight that handler (the
+        // header and Details list badges are the tappable ones).
+        const dotTodos = this._todoBadgeItems(e.entityId);
+        if (dotTodos.length) {
+          const pin = document.createElement("div");
+          pin.className = "timeline-dot-todo";
+          pin.style.marginLeft = `${TIMELINE_DOT_RING}px`;
+          const pinIcon = document.createElement("ha-icon");
+          pinIcon.setAttribute("icon", config.todo_badge_icon || "mdi:pin");
+          pinIcon.style.display = "flex";
+          pinIcon.style.alignItems = "center";
+          pinIcon.style.justifyContent = "center";
+          pinIcon.style.width = `${size}px`;
+          pinIcon.style.height = `${size}px`;
+          pinIcon.style.setProperty("--mdc-icon-size", `${size}px`);
+          pin.style.width = `${Math.round(size * 0.4)}px`;
+          pin.appendChild(pinIcon);
+          dotWrap.appendChild(pin);
+          this._fitTimelineIcon(pinIcon, pin, {
+            target: size,
+            fitBy: "height",
+            fitContainerWidth: true,
+          });
+        }
+
         // An event already described in the header above (see nextGroup)
         // has nothing new to show in a tooltip - clicking its dot would
         // just repeat the same text, so only a dot outside the header gets
@@ -8842,6 +9570,18 @@
           star.style.color = `var(${badges.vip.colorVar}, ${badges.vip.fallback})`;
           iconWrap.appendChild(star);
         }
+        // The expanded list shows events the header never mentions, so its
+        // icons need the same badge and the same tap-to-complete as the
+        // header's own - otherwise an event's outstanding to-do would be
+        // invisible (and unreachable) for anything but the very next day.
+        const listTodos = this._todoBadgeItems(e.entityId);
+        if (listTodos.length) {
+          const todoMark = document.createElement("ha-icon");
+          todoMark.className = "timeline-list-badge timeline-list-badge-todo";
+          todoMark.setAttribute("icon", config.todo_badge_icon || "mdi:pin");
+          iconWrap.appendChild(todoMark);
+          this._wireTodoCompleteTarget(iconWrap, listTodos, config);
+        }
 
         const text = document.createElement("span");
         text.appendChild(this._timelineSentenceFragment(e, strings, config));
@@ -8936,7 +9676,18 @@
       // "External calendars" group's "Calendar name" toggle - only ever
       // gates an external event's own typeLabel (the embedded calendar's
       // name), never Annuals' own type labels.
-      let typeLabel = e.isExternal && config.show_type_calendar_name === false ? "" : e.typeLabel || strings.types[e.type] || e.type;
+      //
+      // An Annuals event carries a typeLabel too (its type_label attribute,
+      // read for to-do matching), but that one is translated into the
+      // *server's* language, while everything this card renders follows the
+      // viewer's own profile language - so it must never be used here.
+      let typeLabel;
+      if (e.isExternal) {
+        typeLabel =
+          config.show_type_calendar_name === false ? "" : e.typeLabel || strings.types[e.type] || e.type;
+      } else {
+        typeLabel = strings.types[e.type] || e.type;
+      }
       // Holidays share one generic "Holiday" type label otherwise, which
       // doesn't distinguish a public holiday from a school break - the
       // category (already driving the row's icon - see CATEGORY_ICONS in
@@ -8975,7 +9726,7 @@
       occurrenceDate.setDate(
         occurrenceDate.getDate() + (isRecent && e.daysSince > 0 ? -e.daysSince : e.days)
       );
-      const fullDateText = new Intl.DateTimeFormat(this._hass.language || "en", {
+      const fullDateText = new Intl.DateTimeFormat(this._locale(), {
         weekday: "short",
         day: "numeric",
         month: "short",
@@ -8984,7 +9735,7 @@
       if (e.days === 0) {
         dateText = strings.today;
       } else {
-        dateText = new Intl.DateTimeFormat(this._hass.language || "en", {
+        dateText = new Intl.DateTimeFormat(this._locale(), {
           day: "numeric",
           month: "short",
         }).format(occurrenceDate);
@@ -9001,6 +9752,10 @@
       const fullNameSuffixedText =
         countrySuffix && config.show_full_name_country ? `${e.fullName} · ${countrySuffix}` : e.fullName;
 
+      // This event's still-open to-do items (see matchTodoItems), empty
+      // whenever no to-do list is configured at all.
+      const todos = this._todoBadgeItems(e.entityId);
+
       // Time/location/description only ever come from an external calendar
       // event (see buildExternalEvent) - empty string for every Annuals
       // event, same as e.g. last_name already is for a holiday. An all-day
@@ -9008,7 +9763,7 @@
       // (no dash) when there's no end time, or the end equals the start.
       let timeText = "";
       if (e.isExternal && !e.allDay && e.startTime) {
-        const timeFmt = new Intl.DateTimeFormat(this._hass.language || "en", {
+        const timeFmt = new Intl.DateTimeFormat(this._locale(), {
           hour: "2-digit",
           minute: "2-digit",
         });
@@ -9094,6 +9849,7 @@
         // year included, rather than a second abbreviated form of what the
         // countdown already said.
         fullDateText: fullDateText,
+        todos,
       };
       // Countdown ("when") reads as the sentence's opening word ("In 2
       // days, Anna has her birthday") only until the event's identity has
@@ -9134,6 +9890,77 @@
     // and passes through unchanged.
     _actionEntityId(e) {
       return e && e.isExternal ? e.calendarEntityId : e && e.entityId;
+    }
+
+    // Turns an element carrying the to-do badge (a list row's icon, a
+    // timeline header/list icon) into the "complete this event's to-dos"
+    // target. Shared by both layouts so the gesture, its guards and its
+    // confirmation stay identical everywhere the badge can appear.
+    _wireTodoCompleteTarget(el, todos, config) {
+      if (config.todo_complete_from_card === false) return;
+      el.classList.add("icon-wrap-actionable");
+      // Same propagation guards the countdown toggle needs: without them a
+      // tap here would also run the row's tap_action (and a slow one its
+      // hold_action), or - on the timeline - reach the dot/expand handlers
+      // wrapping it.
+      el.addEventListener("pointerdown", (ev) => ev.stopPropagation());
+      el.addEventListener("contextmenu", (ev) => ev.stopPropagation());
+      el.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        this._completeTodoItems(todos);
+      });
+    }
+
+    // Marks every still-open to-do item matched to one event completed,
+    // after asking. All of them rather than one: the badge says "this event
+    // has something outstanding", so clearing it should clear exactly what
+    // it was reporting - completing only the first would leave the badge
+    // sitting there looking like the tap did nothing.
+    //
+    // Asking first because this isn't undoable from the card (the items drop
+    // straight out of the "still open" fetch, see _fetchTodoItems) and the
+    // icon is otherwise an entirely safe thing to tap. Uses the browser's own
+    // confirm(): a custom card can't reliably open Home Assistant's own
+    // confirmation dialog from inside its shadow DOM without depending on
+    // frontend internals that aren't part of any stable API.
+    async _completeTodoItems(todos) {
+      if (!todos || !todos.length) return;
+      const strings = t(this._hass, this._config);
+      const question =
+        todos.length === 1
+          ? (strings.todoCompleteConfirm || 'Mark "{item}" as completed?').replace(
+              "{item}",
+              todos[0].summary || ""
+            )
+          : (strings.todoCompleteConfirmMultiple || "Mark {count} to-do items as completed?").replace(
+              "{count}",
+              String(todos.length)
+            );
+      if (!window.confirm(question)) return;
+      try {
+        // Sequential rather than Promise.all: these all hit the same to-do
+        // list, and some integrations behind todo.* handle a burst of
+        // concurrent writes to one list poorly.
+        for (const item of todos) {
+          await this._hass.callService(
+            "todo",
+            "update_item",
+            { item: item.uid, status: "completed" },
+            { entity_id: item.listEntityId }
+          );
+        }
+      } catch (err) {
+        // Surfaced rather than swallowed: unlike a failed background fetch,
+        // this was a deliberate action whose result the person is watching
+        // for, and the icon would otherwise just silently keep its badge.
+        window.alert(strings.todoCompleteFailed || "Could not complete this to-do item.");
+      }
+      // The todo entity's own state (its open-item count) changing is what
+      // normally triggers a refetch via todoListsSignature - refetching here
+      // too means the badge disappears immediately rather than on whichever
+      // hass tick happens to carry that change. Also runs after a failure,
+      // so a partially-applied batch still reconciles.
+      this._fetchTodoItems();
     }
 
     // Tap and (separately) press-and-hold on a row each run their own
@@ -9273,6 +10100,18 @@
             ${e.vip && config.show_vip_badge !== false ? `<ha-icon class="vip-badge" icon="${config.vip_badge_icon || "mdi:star"}"></ha-icon>` : ""}
             ${e.important && config.show_important_badge !== false ? `<ha-icon class="important-badge" icon="${config.important_badge_icon || "mdi:exclamation-thick"}"></ha-icon>` : ""}
           `;
+          // A third corner badge, on the same icon, once this event has any
+          // still-open to-do item (see matchTodoItems). The icon it sits on
+          // is also what completes those items when tapped - the badge is
+          // deliberately small (a marker, not a target), so the whole icon
+          // is the hit area rather than the badge itself.
+          if (ctx.todos.length) {
+            const todoBadge = document.createElement("ha-icon");
+            todoBadge.className = "todo-badge";
+            todoBadge.setAttribute("icon", config.todo_badge_icon || "mdi:pin");
+            wrap.appendChild(todoBadge);
+            this._wireTodoCompleteTarget(wrap, ctx.todos, config);
+          }
           return wrap;
         }
         case "info": {
@@ -9426,7 +10265,7 @@
 
     _render() {
       if (!this._hass || !this._config) return;
-      const strings = t(this._hass);
+      const strings = t(this._hass, this._config);
       const config = this._config;
 
       if (!this._built) {
@@ -9479,6 +10318,10 @@
           "--annuals-important-badge-timeline-color",
           config.colors.important_badge_timeline
         );
+      if (config.colors.todo_badge)
+        card.style.setProperty("--annuals-todo-badge-color", config.colors.todo_badge);
+      if (config.colors.todo_badge_timeline)
+        card.style.setProperty("--annuals-todo-badge-timeline-color", config.colors.todo_badge_timeline);
       if (config.colors.timeline_header)
         card.style.setProperty("--annuals-timeline-header-color", config.colors.timeline_header);
       if (config.colors.timeline_tooltip)
@@ -9580,6 +10423,8 @@
 
       // Which categories get a highlighted row background is controlled
       // independently per-row in _row() (highlight_past/today/soon).
+      // _todoByEntity is filled in by _filteredEvents() below, which needs
+      // the match to apply the "Open to-dos only" filter - see there.
       const combined = this._visibleEvents();
       if (!combined.length) {
         const empty = document.createElement("div");
@@ -9730,6 +10575,11 @@
       margin: -4px 0 12px;
     }
     .columns-list { margin-bottom: 10px; }
+    /* The to-do list picker is the one entity selector immediately followed
+       by a toggle rather than by a section heading, so it has nothing to
+       inherit its bottom spacing from - 16px matches what .toggle-row and
+       every other field/section block around it already use. */
+    .todo-lists-row { margin-bottom: 16px; }
     .column-row {
       border: 1px solid var(--divider-color, #e0e0e0);
       border-radius: 8px;
@@ -9942,6 +10792,14 @@
       row-gap: 8px;
       gap: 8px;
     }
+    /* ha-selector shrink-fits to whatever its current value reads as - so a
+       row of them lines up at a different width per field, and per language
+       ("More info" vs "Automatique (langue du lecteur)"). Stretching the
+       slot instead pins every one of them to its own column's width, which
+       is the only way they stay identical to each other. Measured live:
+       without this, the Tap action and Language dropdowns in the same grid
+       came out 124px and 254px wide. */
+    .field-input-row > .action-selector-slot { flex: 1; min-width: 0; }
     .field-input-row > .toggle-group { flex-basis: 100%; justify-content: flex-end; margin-top: 4px; }
     .field-input-row > .field-toggles {
       flex-basis: 100%;
@@ -10389,6 +11247,43 @@
       `;
     }
 
+    // One labelled field taking a single column of a two-column split row,
+    // with the other column left empty - for a field that belongs in the
+    // same grid as its neighbours above but has nothing to pair with.
+    _halfWidthSelectRowHtml(key) {
+      return `
+        <div class="field-row-split">
+          ${this._actionSelectorFieldHtml(key)}
+          <div class="field-col"></div>
+        </div>
+      `;
+    }
+
+    // Fills one of those slots with a plain dropdown, the same ha-selector
+    // component (and therefore the same look) the action selectors below
+    // use - just a select instead of a ui_action.
+    _upgradeSelectField(body, key, label, desc, options) {
+      const col = body.querySelector(`[data-action-slot="${key}"]`).closest(".field-col");
+      col.querySelector(".label-text").textContent = label;
+      col.querySelector(".tooltip-anchor").dataset.tooltip = desc;
+      const slot = col.querySelector(`[data-action-slot="${key}"]`);
+      if (!customElements.get("ha-selector")) return;
+      const selector = document.createElement("ha-selector");
+      selector.hass = this._hass;
+      selector.selector = { select: { options, mode: "dropdown" } };
+      selector.value = this._config[key] || LANGUAGE_AUTO;
+      selector.style.display = "block";
+      selector.style.width = "100%";
+      selector.addEventListener("value-changed", (ev) => {
+        ev.stopPropagation();
+        this._config = defaultConfig({ ...this._config, [key]: ev.detail.value || LANGUAGE_AUTO });
+        this._emit();
+      });
+      slot.appendChild(selector);
+      this._selectFields = this._selectFields || {};
+      this._selectFields[key] = selector;
+    }
+
     // Renders HA's own native "what should this do" action-config selector
     // (More info / Navigate / URL / Perform action / Toggle / Assist /
     // Nothing) via the same already-loaded-by-the-frontend ha-selector
@@ -10479,7 +11374,12 @@
       body.innerHTML =
         this._fieldRowHtml("title", "text", strings.editor.titlePlaceholder) +
         this._visibilityRowHtml("hide_title") +
-        this._actionSelectorSplitHtml(["tap_action", "hold_action"]);
+        this._actionSelectorSplitHtml(["tap_action", "hold_action"]) +
+        // A split row with an empty second column rather than a plain
+        // full-width one, so this dropdown gets exactly the same column
+        // width as Tap action directly above it instead of stretching
+        // across both.
+        this._halfWidthSelectRowHtml("language");
       this._wireFieldRow(body, "title", strings.editor.title, strings.editor.titleDesc, (v) => v);
 
       // Inverted on purpose - this toggle lives right under the title field
@@ -10512,6 +11412,16 @@
         { action: "none" }
       );
 
+      // "" first, and labelled rather than left blank, so the default reads
+      // as a deliberate choice ("follow the viewer") instead of an empty
+      // dropdown. Everything after it is the plain BCP-47 code, which needs
+      // no translating and is what someone picking a language here is
+      // looking for.
+      this._upgradeSelectField(body, "language", strings.editor.cardLanguage, strings.editor.cardLanguageDesc, [
+        { value: LANGUAGE_AUTO, label: strings.editor.cardLanguageAuto },
+        ...CARD_LANGUAGES.map((code) => ({ value: code, label: code })),
+      ]);
+
       return body;
     }
 
@@ -10521,6 +11431,8 @@
       if (hideToggle) hideToggle.checked = this._config.show_title === false;
       this._syncActionSelector("tap_action", this._config.tap_action || { action: "more-info" });
       this._syncActionSelector("hold_action", this._config.hold_action || { action: "none" });
+      const languageSelect = (this._selectFields || {}).language;
+      if (languageSelect) languageSelect.value = this._config.language || LANGUAGE_AUTO;
     }
 
     _buildEventsBody(strings) {
@@ -10646,6 +11558,45 @@
         this._holidayDateRowEl = null;
         this._holidayMergeRowEl = null;
       }
+
+      // Same shape as External calendars below - another opt-in data source
+      // this card reads that isn't one of its own entities (see
+      // _fetchTodoItems), so it belongs in the same Events section rather
+      // than under Layout, which is only ever about presentation. It comes
+      // first because it annotates the card's own events, while external
+      // calendars add foreign ones.
+      const todoHeading = document.createElement("div");
+      todoHeading.className = "section-heading";
+      todoHeading.textContent = strings.editor.todoHeading;
+      body.appendChild(todoHeading);
+      const todoDesc = document.createElement("div");
+      todoDesc.className = "columns-desc";
+      todoDesc.textContent = strings.editor.todoDesc;
+      body.appendChild(todoDesc);
+      const todoRow = document.createElement("div");
+      todoRow.className = "todo-lists-row";
+      todoRow.innerHTML = this._actionSelectorFieldHtml("todo_lists");
+      body.appendChild(todoRow);
+      this._upgradeEntitySelector(
+        body,
+        "todo_lists",
+        strings.editor.todoListsLabel,
+        strings.editor.todoListsLabelDesc,
+        "todo"
+      );
+      const todoCompleteWrap = document.createElement("div");
+      todoCompleteWrap.innerHTML = this._visibilityTwoColHtml(["todo_complete_from_card"], []);
+      const todoCompleteRow = todoCompleteWrap
+        .querySelector('input[data-visibility="todo_complete_from_card"]')
+        .closest(".toggle-row");
+      todoCompleteRow.querySelector(".label-text").textContent = strings.editor.todoCompleteFromCard;
+      todoCompleteRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.todoCompleteFromCardDesc;
+      const todoCompleteInput = todoCompleteRow.querySelector('input[data-visibility="todo_complete_from_card"]');
+      todoCompleteInput.addEventListener("change", () => {
+        this._config = defaultConfig({ ...this._config, todo_complete_from_card: todoCompleteInput.checked });
+        this._emit();
+      });
+      body.appendChild(todoCompleteWrap);
 
       const calendarsHeading = document.createElement("div");
       calendarsHeading.className = "section-heading";
@@ -10843,6 +11794,11 @@
           calendarSelector.selector = { entity: { multiple: true, filter: { domain: "calendar" }, exclude_entities: excludeEntities } };
         }
       }
+      this._syncActionSelector("todo_lists", this._config.todo_lists || []);
+      const todoCompleteToggle = this.shadowRoot.querySelector(
+        '.events-body input[data-visibility="todo_complete_from_card"]'
+      );
+      if (todoCompleteToggle) todoCompleteToggle.checked = this._config.todo_complete_from_card !== false;
     }
 
     _buildPeriodBody(strings) {
@@ -11694,8 +12650,9 @@
         soon: config.highlight_soon,
         vip: config.show_vip_badge !== false,
         important: config.show_important_badge !== false,
+        todo: config.show_todo_badge !== false,
       };
-      for (const key of ["past", "today", "soon", "vip", "important"]) {
+      for (const key of ["past", "today", "soon", "vip", "important", "todo"]) {
         const toggle = this.shadowRoot.querySelector(`input[data-highlight="${key}"]`);
         if (toggle) toggle.checked = map[key] === true;
       }
@@ -11731,12 +12688,24 @@
         config.colors.important_badge_timeline || "",
         "var(--annuals-soon-color, var(--warning-color))"
       );
+      // Both to-do swatches preview the theme's own error color, which is
+      // what an unset badge actually renders in - in both layouts, unlike
+      // the VIP pair above, since the pin is drawn as a colored glyph on the
+      // card background rather than on top of a colored dot.
+      this._syncColorSwatch("todo_badge", config.colors.todo_badge || "", "var(--error-color)");
+      this._syncColorSwatch(
+        "todo_badge_timeline",
+        config.colors.todo_badge_timeline || "",
+        "var(--error-color)"
+      );
+      this._syncIconField("todo_badge_icon", config.todo_badge_icon || "");
       const visMap = {
         past: config.show_past !== false,
         today: config.show_today !== false,
         soon: config.show_soon !== false,
         vip_only: config.show_vip_only === true,
         important_only: config.show_important_only === true,
+        todo_only: config.show_todo_only === true,
         columns_compact: config.columns_compact === true,
       };
       for (const key of Object.keys(visMap)) {
@@ -12284,7 +13253,10 @@
       // (right under the title text field, as "Hide"), and which fields
       // appear per row - and in what order - is the "Spalten" section
       // below instead of a fixed icon/name/type/badge/when grid.
-      visRows.innerHTML = this._visibilityTwoColHtml(["past", "today", "soon"], ["vip_only", "important_only"]);
+      visRows.innerHTML = this._visibilityTwoColHtml(
+        ["past", "today", "soon"],
+        ["vip_only", "important_only", "todo_only"]
+      );
       body.appendChild(visRows);
 
       // Row columns only apply to the classic list layout - the timeline
@@ -12326,6 +13298,7 @@
         soon: [strings.editor.visibilitySoon, strings.editor.visibilitySoonDesc],
         vip_only: [strings.editor.visibilityVipOnly, strings.editor.visibilityVipOnlyDesc],
         important_only: [strings.editor.visibilityImportantOnly, strings.editor.visibilityImportantOnlyDesc],
+        todo_only: [strings.editor.visibilityTodoOnly, strings.editor.visibilityTodoOnlyDesc],
       };
       const visConfigKeys = {
         past: "show_past",
@@ -12333,6 +13306,7 @@
         soon: "show_soon",
         vip_only: "show_vip_only",
         important_only: "show_important_only",
+        todo_only: "show_todo_only",
       };
       for (const key of Object.keys(visConfigKeys)) {
         const row = body.querySelector(`input[data-visibility="${key}"]`).closest(".toggle-row");
@@ -12380,7 +13354,11 @@
           true
         ) +
         this._colorRowHtml("important_badge", strings.editor.colorPlaceholder, { sub: true }) +
-        this._colorRowHtml("important_badge_timeline", strings.editor.colorPlaceholder, { sub: true });
+        this._colorRowHtml("important_badge_timeline", strings.editor.colorPlaceholder, { sub: true }) +
+        this._highlightRowHtml("todo") +
+        this._fieldRowHtml("todo_badge_icon", "text", "mdi:pin", "", true) +
+        this._colorRowHtml("todo_badge", strings.editor.colorPlaceholder, { sub: true }) +
+        this._colorRowHtml("todo_badge_timeline", strings.editor.colorPlaceholder, { sub: true });
       body.appendChild(rows);
 
       const labels = {
@@ -12389,6 +13367,7 @@
         soon: [strings.editor.highlightSoon, strings.editor.highlightSoonDesc],
         vip: [strings.editor.highlightVip, strings.editor.highlightVipDesc],
         important: [strings.editor.highlightImportant, strings.editor.highlightImportantDesc],
+        todo: [strings.editor.highlightTodo, strings.editor.highlightTodoDesc],
       };
       const configKeys = {
         past: "highlight_past",
@@ -12396,8 +13375,9 @@
         soon: "highlight_soon",
         vip: "show_vip_badge",
         important: "show_important_badge",
+        todo: "show_todo_badge",
       };
-      for (const key of ["past", "today", "soon", "vip", "important"]) {
+      for (const key of ["past", "today", "soon", "vip", "important", "todo"]) {
         const row = body.querySelector(`input[data-highlight="${key}"]`).closest(".toggle-row");
         const [label, desc] = labels[key];
         row.querySelector(".label-text").textContent = label;
@@ -12476,6 +13456,29 @@
         "important_badge_timeline",
         strings.editor.importantBadgeColorTimeline,
         strings.editor.importantBadgeColorTimelineDesc,
+        "colors"
+      );
+
+      this._wireFieldRow(
+        body,
+        "todo_badge_icon",
+        strings.editor.todoBadgeIcon,
+        strings.editor.todoBadgeIconDesc,
+        (v) => v
+      );
+      this._upgradeIconField(body, "todo_badge_icon");
+      this._wireColorRow(
+        body,
+        "todo_badge",
+        strings.editor.todoBadgeColorList,
+        strings.editor.todoBadgeColorListDesc,
+        "colors"
+      );
+      this._wireColorRow(
+        body,
+        "todo_badge_timeline",
+        strings.editor.todoBadgeColorTimeline,
+        strings.editor.todoBadgeColorTimelineDesc,
         "colors"
       );
 
@@ -13028,15 +14031,16 @@
         const colorInput = this.shadowRoot.querySelector(`.display-body input[data-color="highlight_${key}"]`);
         setRowHidden(colorInput, isTimeline);
       }
-      // VIP/Important icon fields apply to both layouts (the list layout's
-      // corner badges, the timeline's dot/list glyphs), and so does the List
-      // layout's own Badge Color field now - it's always visible regardless
-      // of layout_style, same as the icon fields, so it can be configured
-      // ahead of switching back to List. Only the Timeline's own Badge Color
-      // field (vip_badge_timeline/important_badge_timeline) stays
-      // timeline-only, since it has nothing to color while List is active.
-      for (const key of ["vip_badge_timeline", "important_badge_timeline"]) {
-        setRowHidden(this.shadowRoot.querySelector(`.display-body input[data-color="${key}"]`), !isTimeline);
+      // The VIP/Important/To-do icon fields apply to both layouts (the list
+      // layout's corner badges, the timeline's dot/list glyphs), so they
+      // stay put. Their two Badge Color fields don't: each colors one
+      // layout only, so only the active layout's field is shown.
+      for (const key of ["vip_badge", "important_badge", "todo_badge"]) {
+        setRowHidden(this.shadowRoot.querySelector(`.display-body input[data-color="${key}"]`), isTimeline);
+        setRowHidden(
+          this.shadowRoot.querySelector(`.display-body input[data-color="${key}_timeline"]`),
+          !isTimeline
+        );
       }
 
       // Row columns has nothing to configure in the timeline layout either

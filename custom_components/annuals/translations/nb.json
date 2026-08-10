@@ -241,16 +241,28 @@
             },
             "annual_settings": {
                 "title": "Annual Innstillinger",
-                "description": "Kommaseparerte jubileumstall som automatisk markerer en hendelse av den typen som «Important», f.eks. «18,21,30,40,50». La et felt stå tomt for å slå dette av for den typen.",
-                "data": {
-                    "important_thresholds_birthday": "Bursdag",
-                    "important_thresholds_anniversary": "Jubileum",
-                    "important_thresholds_name_day": "Navnedag",
-                    "important_thresholds_wedding_anniversary": "Bryllupsdag",
-                    "important_thresholds_memorial": "Minnedag",
-                    "important_thresholds_pet_birthday": "Kjæledyrs bursdag",
-                    "important_thresholds_work_anniversary": "Arbeidsjubileum",
-                    "important_thresholds_custom": "Egendefinert"
+                "sections": {
+                    "important_events": {
+                        "name": "❗ Viktige hendelser",
+                        "description": "Kommaseparerte jubileumstall som automatisk markerer en hendelse av den typen som «Important», f.eks. «18,21,30,40,50». La et felt stå tomt for å slå dette av for den typen.",
+                        "data": {
+                            "important_thresholds_birthday": "Bursdag",
+                            "important_thresholds_anniversary": "Jubileum",
+                            "important_thresholds_name_day": "Navnedag",
+                            "important_thresholds_wedding_anniversary": "Bryllupsdag",
+                            "important_thresholds_memorial": "Minnedag",
+                            "important_thresholds_pet_birthday": "Kjæledyrs bursdag",
+                            "important_thresholds_work_anniversary": "Arbeidsjubileum",
+                            "important_thresholds_custom": "Egendefinert"
+                        }
+                    },
+                    "todo": {
+                        "name": "📍 Oppgavelister",
+                        "description": "Åpne oppgaver på disse listene merker en hendelse: hver hendelsessensor får da et attributt «todo» - sant så lenge minst én ennå åpen oppgave er tilordnet den, ellers usant - til dine egne automasjoner, maler og dashbord. Tilordningen skjer først etter forfallsdato og deretter etter om oppgavens tekst nevner hendelsen (fullt navn, navn, type, nummer i rekken); en oppgave som passer like godt til to hendelser forblir utilordnet. La stå tom for å slå av. Uavhengig av dashbordkortets egen innstilling med samme navn.",
+                        "data": {
+                            "todo_lists": "Oppgavelister"
+                        }
+                    }
                 }
             },
             "delete_all": {

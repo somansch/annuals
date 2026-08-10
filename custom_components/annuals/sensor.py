@@ -30,6 +30,7 @@ from .const import (
     CONF_YEAR,
     DATA_REMINDER_STRINGS,
     DATA_SENSORS,
+    DATA_TODO_MATCHES,
     DATA_TYPE_LABELS,
     DEFAULT_IMPORTANT_THRESHOLDS,
     DOMAIN,
@@ -164,6 +165,7 @@ class AnnualEventSensor(SensorEntity):
             "vip": bool(data.get(CONF_VIP, False)),
             "important": important,
             "reminder_message": self._reminder_message(days),
+            "todo": self._has_open_todo(),
         }
 
     def _update_holiday_state(self, data: dict, today: date) -> None:
@@ -205,6 +207,7 @@ class AnnualEventSensor(SensorEntity):
             "important": False,
             "observed": observed,
             "reminder_message": self._reminder_message(days),
+            "todo": self._has_open_todo(),
         }
 
     def _type_label(self, event_type: str) -> str:
@@ -229,6 +232,19 @@ class AnnualEventSensor(SensorEntity):
         if days == 1:
             return strings.get("tomorrow", "Tomorrow")
         return strings.get("in_days", "in {days} days").format(days=days)
+
+    def _has_open_todo(self) -> bool:
+        """Whether an open to-do item is currently matched to this event.
+
+        A plain lookup into the map todo_match.async_refresh_todo_matches
+        leaves behind, for the same reason as _type_label above: the matching
+        itself needs an async service call, this attribute build doesn't.
+        Always False while no to-do lists are configured in Annuals Settings
+        (see CONF_TODO_LISTS), which is also the state before the first
+        refresh has run.
+        """
+        matched: set[str] = self._hass_ref.data.get(DOMAIN, {}).get(DATA_TODO_MATCHES) or set()
+        return self.entity_id in matched
 
     def _important_thresholds(self, event_type: str) -> set[int]:
         """The "Annual Settings" milestone list for this event's type, read

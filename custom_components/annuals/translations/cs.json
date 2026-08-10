@@ -241,16 +241,28 @@
             },
             "annual_settings": {
                 "title": "Annual Nastavení",
-                "description": "Čárkami oddělená čísla výročí, při kterých se událost daného typu automaticky označí jako „Important“, např. „18,21,30,40,50“. Ponechte pole prázdné, chcete-li to pro daný typ vypnout.",
-                "data": {
-                    "important_thresholds_birthday": "Narozeniny",
-                    "important_thresholds_anniversary": "Výročí",
-                    "important_thresholds_name_day": "Svátek",
-                    "important_thresholds_wedding_anniversary": "Výročí svatby",
-                    "important_thresholds_memorial": "Výročí úmrtí",
-                    "important_thresholds_pet_birthday": "Narozeniny mazlíčka",
-                    "important_thresholds_work_anniversary": "Pracovní výročí",
-                    "important_thresholds_custom": "Vlastní"
+                "sections": {
+                    "important_events": {
+                        "name": "❗ Důležité události",
+                        "description": "Čárkami oddělená čísla výročí, při kterých se událost daného typu automaticky označí jako „Important“, např. „18,21,30,40,50“. Ponechte pole prázdné, chcete-li to pro daný typ vypnout.",
+                        "data": {
+                            "important_thresholds_birthday": "Narozeniny",
+                            "important_thresholds_anniversary": "Výročí",
+                            "important_thresholds_name_day": "Svátek",
+                            "important_thresholds_wedding_anniversary": "Výročí svatby",
+                            "important_thresholds_memorial": "Výročí úmrtí",
+                            "important_thresholds_pet_birthday": "Narozeniny mazlíčka",
+                            "important_thresholds_work_anniversary": "Pracovní výročí",
+                            "important_thresholds_custom": "Vlastní"
+                        }
+                    },
+                    "todo": {
+                        "name": "📍 Seznamy úkolů",
+                        "description": "Otevřené položky na těchto seznamech označují událost: každý senzor události pak nese atribut „todo“ - true, dokud je k němu přiřazena alespoň jedna dosud otevřená položka, jinak false - pro vaše vlastní automatizace, šablony a nástěnky. Přiřazení probíhá nejprve podle termínu a poté podle toho, zda text úkolu událost jmenuje (celé jméno, jméno, typ, pořadové číslo); úkol, který se stejně dobře hodí ke dvěma událostem, zůstane nepřiřazený. Ponechte prázdné pro vypnutí. Nezávislé na stejnojmenném nastavení karty na nástěnce.",
+                        "data": {
+                            "todo_lists": "Seznamy úkolů"
+                        }
+                    }
                 }
             },
             "delete_all": {

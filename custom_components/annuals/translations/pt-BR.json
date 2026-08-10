@@ -241,16 +241,28 @@
             },
             "annual_settings": {
                 "title": "Annual Configurações",
-                "description": "Números de ocorrência separados por vírgula que marcam automaticamente um evento desse tipo como \"Important\", por exemplo \"18,21,30,40,50\". Deixe um campo vazio para desativar isso para esse tipo.",
-                "data": {
-                    "important_thresholds_birthday": "Aniversário",
-                    "important_thresholds_anniversary": "Data comemorativa",
-                    "important_thresholds_name_day": "Dia do nome",
-                    "important_thresholds_wedding_anniversary": "Aniversário de casamento",
-                    "important_thresholds_memorial": "Aniversário de falecimento",
-                    "important_thresholds_pet_birthday": "Aniversário de animal de estimação",
-                    "important_thresholds_work_anniversary": "Aniversário de trabalho",
-                    "important_thresholds_custom": "Personalizado"
+                "sections": {
+                    "important_events": {
+                        "name": "❗ Eventos importantes",
+                        "description": "Números de ocorrência separados por vírgula que marcam automaticamente um evento desse tipo como \"Important\", por exemplo \"18,21,30,40,50\". Deixe um campo vazio para desativar isso para esse tipo.",
+                        "data": {
+                            "important_thresholds_birthday": "Aniversário",
+                            "important_thresholds_anniversary": "Data comemorativa",
+                            "important_thresholds_name_day": "Dia do nome",
+                            "important_thresholds_wedding_anniversary": "Aniversário de casamento",
+                            "important_thresholds_memorial": "Aniversário de falecimento",
+                            "important_thresholds_pet_birthday": "Aniversário de animal de estimação",
+                            "important_thresholds_work_anniversary": "Aniversário de trabalho",
+                            "important_thresholds_custom": "Personalizado"
+                        }
+                    },
+                    "todo": {
+                        "name": "📍 Listas de tarefas",
+                        "description": "As tarefas em aberto destas listas sinalizam um evento: cada sensor de evento passa a ter um atributo \"todo\" - verdadeiro enquanto houver ao menos uma tarefa ainda em aberto associada a ele, falso caso contrário - para suas próprias automações, templates e painéis. A associação é feita primeiro pela data de vencimento e depois pelo fato de o texto da tarefa mencionar o evento (nome completo, nome, tipo, número da ocorrência); uma tarefa que serve igualmente bem a dois eventos fica sem associação. Deixe vazio para desativar. Independente da configuração de mesmo nome do cartão do painel.",
+                        "data": {
+                            "todo_lists": "Listas de tarefas"
+                        }
+                    }
                 }
             },
             "delete_all": {

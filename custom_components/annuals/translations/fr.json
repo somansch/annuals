@@ -241,16 +241,28 @@
             },
             "annual_settings": {
                 "title": "Annual Paramètres",
-                "description": "Numéros d'occurrence séparés par des virgules qui marquent automatiquement un événement comme « Important » pour ce type, par ex. « 18,21,30,40,50 ». Laissez un champ vide pour désactiver cela pour ce type.",
-                "data": {
-                    "important_thresholds_birthday": "Anniversaire",
-                    "important_thresholds_anniversary": "Date commémorative",
-                    "important_thresholds_name_day": "Fête",
-                    "important_thresholds_wedding_anniversary": "Anniversaire de mariage",
-                    "important_thresholds_memorial": "Commémoration",
-                    "important_thresholds_pet_birthday": "Anniversaire d'animal",
-                    "important_thresholds_work_anniversary": "Anniversaire professionnel",
-                    "important_thresholds_custom": "Personnalisé"
+                "sections": {
+                    "important_events": {
+                        "name": "❗ Événements importants",
+                        "description": "Numéros d'occurrence séparés par des virgules qui marquent automatiquement un événement comme « Important » pour ce type, par ex. « 18,21,30,40,50 ». Laissez un champ vide pour désactiver cela pour ce type.",
+                        "data": {
+                            "important_thresholds_birthday": "Anniversaire",
+                            "important_thresholds_anniversary": "Date commémorative",
+                            "important_thresholds_name_day": "Fête",
+                            "important_thresholds_wedding_anniversary": "Anniversaire de mariage",
+                            "important_thresholds_memorial": "Commémoration",
+                            "important_thresholds_pet_birthday": "Anniversaire d'animal",
+                            "important_thresholds_work_anniversary": "Anniversaire professionnel",
+                            "important_thresholds_custom": "Personnalisé"
+                        }
+                    },
+                    "todo": {
+                        "name": "📍 Listes de tâches",
+                        "description": "Les tâches ouvertes de ces listes marquent un événement : chaque capteur d'événement porte alors un attribut « todo » - vrai tant qu'au moins une tâche encore ouverte lui est associée, faux sinon - pour vos propres automatisations, modèles et tableaux de bord. L'association se fait d'abord par la date d'échéance, puis selon que le texte de la tâche nomme l'événement (nom complet, nom, type, numéro d'occurrence) ; une tâche convenant aussi bien à deux événements reste non associée. Laissez vide pour désactiver. Indépendant du réglage du même nom de la carte de tableau de bord.",
+                        "data": {
+                            "todo_lists": "Listes de tâches"
+                        }
+                    }
                 }
             },
             "delete_all": {

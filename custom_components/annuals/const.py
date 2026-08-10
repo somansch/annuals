@@ -161,11 +161,38 @@ DATA_SENSORS = "sensors"
 DATA_TYPE_LABELS = "type_labels"
 DATA_REMINDER_STRINGS = "reminder_strings"
 
+# hass.data[DOMAIN][DATA_TODO_MATCHES] - {sensor entity_id: True} for every
+# event that currently has at least one open to-do item matched to it (see
+# todo_match.py). Read synchronously by AnnualEventSensor._update_state for
+# its "todo" attribute, for the same reason as the two caches above: the
+# matching itself needs an async service call, the attribute build doesn't.
+# Absent/missing entity_id simply means False.
+DATA_TODO_MATCHES = "todo_matches"
+
+# hass.data[DOMAIN][DATA_TODO_UNSUB] - the state-change listener currently
+# watching the configured to-do lists, so reconfiguring them (or unloading
+# the hub) can detach the old one before attaching a new one.
+DATA_TODO_UNSUB = "todo_unsub"
+
+# hass.data[DOMAIN][DATA_TODO_DEBOUNCER] - coalesces refresh requests, since
+# setting up config entries is bursty (a holiday import creates dozens back
+# to back) and each full re-match reads every configured list.
+DATA_TODO_DEBOUNCER = "todo_debouncer"
+
 # Hub-entry options key prefix for the per-type "important" occurrence-number
 # thresholds ("Annual Settings"), e.g. "important_thresholds_birthday". Kept
 # per-type since a milestone like "25" means something different for a
 # birthday than for a work anniversary.
 CONF_IMPORTANT_THRESHOLDS = "important_thresholds"
+
+# Hub-entry options key holding the todo.* entity ids whose open items feed
+# the "todo" sensor attribute (see todo_match.py). Hub-level rather than
+# per-event: the attribute belongs to the sensor, which every dashboard and
+# automation shares. Deliberately separate from the dashboard card's own
+# `todo_lists` card option, which the card needs anyway to fetch the items
+# it offers to tick off - the two are usually set to the same lists, but
+# neither depends on the other.
+CONF_TODO_LISTS = "todo_lists"
 
 # Sensible starting milestones per event type, shown pre-filled in the
 # "Annual Settings" options step and fully user-editable from there. Round

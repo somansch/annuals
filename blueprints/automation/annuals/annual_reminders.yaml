@@ -8,7 +8,7 @@ blueprint:
     Checks your Annuals events once a day and reminds you before birthdays, anniversaries and more are due - multi-channel, fully customizable, and to-do-list aware.
 
     **🎯 Target**
-    - Pick specific events, or every event of a chosen type
+    - Pick specific events, or every event of one or more chosen types
     - Filter by VIP and/or Important, with AND / OR / "must NOT be" logic
 
     **⏰ Schedule**
@@ -60,17 +60,18 @@ blueprint:
                 integration: annuals
                 domain: sensor
         target_type:
-          name: Event type
+          name: Event types
           description: >-
-            Only used when "Specific events" above is left empty - every Annuals
-            event of this type is checked instead of a hand-picked list.
-          default: ""
+            Only used when "Specific events" above is left empty - every
+            Annuals event of these types is checked instead of a hand-picked
+            list. Pick as many as you like; leaving this empty is what makes
+            "Specific events" above apply instead.
+          default: []
           selector:
             select:
+              multiple: true
               mode: dropdown
               options:
-                - label: "(none - use Specific events above)"
-                  value: ""
                 - label: Birthday
                   value: birthday
                 - label: Anniversary
@@ -340,14 +341,21 @@ variables:
   tts_media_players: !input tts_media_players
   todo_list: !input todo_list
   reminder_days_list: "{{ reminder_days.split(',') | map('trim') | map('int') | list }}"
+  # "Event types" is a multi-select, but it used to be a single-choice
+  # dropdown storing a plain string (and "" for "none") - an automation
+  # created back then still has that shape, so it's normalised to a list
+  # here rather than silently matching nothing after the blueprint updates.
+  target_types: >-
+    {{ target_type if target_type is iterable and target_type is not string
+       else ([target_type] if target_type else []) }}
   matched_entities: >-
     {{ target_entities if target_entities | length > 0 else
        (states.sensor
          | selectattr('entity_id', 'match', '^sensor\\.annuals_')
          | selectattr('attributes.type', 'defined')
-         | selectattr('attributes.type', 'eq', target_type)
+         | selectattr('attributes.type', 'in', target_types)
          | map(attribute='entity_id') | list
-       if target_type else []) }}
+       if target_types | length > 0 else []) }}
 
 action:
   - choose:

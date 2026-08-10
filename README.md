@@ -20,6 +20,7 @@ Typical reasons to use it:
 - **Highlight the ones that matter most** - flag close family as **VIP** so they always stand out, and let round-number milestones (18th, 30th, 50th, ...) mark themselves as **Important** automatically, both on the bundled dashboard card and in your own automations.
 - **Bring in a whole contact list at once** via CSV, ICS calendar, or vCard import, instead of adding entries one by one.
 - **Count down to a single dated thing that won't recur** - a booked vacation, an appointment, a delivery date - with a **one-time event**, which cleans itself up automatically the day after it passes.
+- **See what's still left to do** - point the card at your to-do lists and any event with an open item gets a pin badge on its icon, which you can click to tick the item off ([To-dos](#to-dos)).
 - **See everything in one place** - embed your existing Home Assistant calendars (Google, CalDAV, Local Calendar, ...) alongside Annuals' own events in the same dashboard card, as a row list, a compact one-line sentence, or a horizontal timeline.
 
 Annuals tracks yearly-recurring events - birthdays, holidays, anniversaries, name days, wedding anniversaries, memorials, or anything custom - and reports, for each one, how many days until its next occurrence and which occurrence number that will be (e.g. someone's 30th birthday).
@@ -44,18 +45,27 @@ That's the whole setup - everything below covers the individual features and opt
 
 - [First-time setup](#first-time-setup)
 - [Adding an event](#adding-an-event)
-- [Annuals Settings](#annuals-settings) (milestones, import, export, remove, delete all)
-- [Importing events from a CSV file](#importing-events-from-a-csv-file)
-- [Importing events from an ICS calendar](#importing-events-from-an-ics-calendar)
-- [Importing events from a vCard (.vcf) file](#importing-events-from-a-vcard-vcf-file)
-- [Importing public holidays](#importing-public-holidays)
-- [Exporting events to CSV](#exporting-events-to-csv)
+- [Annuals Settings](#annuals-settings) (milestones, to-do lists, import, export, remove, delete all)
+  - [Importing events from a CSV file](#importing-events-from-a-csv-file)
+  - [Importing events from an ICS calendar](#importing-events-from-an-ics-calendar)
+  - [Importing events from a vCard (.vcf) file](#importing-events-from-a-vcard-vcf-file)
+  - [Importing public holidays](#importing-public-holidays)
+  - [Exporting events to CSV](#exporting-events-to-csv)
 - [Leap years](#leap-years)
 - [Created entities](#created-entities)
 - [Automation examples](#automation-examples)
 - [Countdown for one-time events](#countdown-for-one-time-events)
 - [Native Calendar card](#native-calendar-card)
 - [Custom dashboard card](#custom-dashboard-card)
+  - [The visual editor](#the-visual-editor)
+  - [Row columns](#row-columns)
+  - [To-dos](#to-dos)
+  - [External calendars](#external-calendars)
+  - [Timeline layout](#timeline-layout)
+  - [Icon animations](#icon-animations)
+  - [Row click/tap behavior](#row-clicktap-behavior)
+  - [Example configurations](#example-configurations)
+  - [Theming with CSS variables](#theming-with-css-variables)
 - [Installation](#installation)
 - [Help and Contribution](#help-and-contribution)
 
@@ -99,7 +109,7 @@ To add many events at once instead of one at a time see [Annuals Settings](#annu
 
 ## Annuals Settings
 
-A handful of cross-event tools - milestone thresholds, bulk import/export, and bulk removal - live in one place, separate from any single event: the **"Annuals Settings" hub entry**, created during [first-time setup](#first-time-setup). Find it under **Settings → Devices & Services → Annuals** and click **Configure**:
+A handful of cross-event tools - milestone thresholds, to-do list matching, bulk import/export, and bulk removal - live in one place, separate from any single event: the **"Annuals Settings" hub entry**, created during [first-time setup](#first-time-setup). Find it under **Settings → Devices & Services → Annuals** and click **Configure**:
 
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-settings-summary.png" alt="Annuals Settings hub menu" width="45%">
 
@@ -110,6 +120,10 @@ Beyond the manual **VIP annual** flag ([Adding an event](#adding-an-event) above
 Each event type gets its own comma-separated list of occurrence numbers (e.g. `18,21,30,40,50,60,65,70,75,80,85,90,95,100` for birthdays) that come pre-filled with sensible cultural defaults - round numbers plus the traditional "special" birthdays, 5-year steps for work anniversaries, and so on. Edit a field to change its milestones, or clear it entirely to disable "Important" detection for that type. Name day and Custom events have no cultural convention, so they default to empty (never automatically "Important") unless you set your own list.
 
 Both `vip` and `important` are exposed as sensor attributes (see [Created entities](#created-entities) below) and both feed into the [custom dashboard card](#custom-dashboard-card)'s filters and badges - VIP is a manual, permanent flag on one event; Important is automatic and only true in the specific year a milestone is reached.
+
+The same form ends with a **To-do lists** field, which picks the `todo.*` lists whose still-open items should mark an event. Every event sensor then carries a `todo` attribute (see [Created entities](#created-entities)) - `true` while at least one open item is matched to it, `false` otherwise - so a template, automation, or any other card can react to "this event still has something to do" without going through the Annuals card. An item is matched the same way the [dashboard card](#to-dos) matches it: by its due date first, then by whether its own text names the event (full name, name, type, occurrence number), with an item that fits two events equally well left unmatched. The attribute updates whenever one of the picked lists changes, and again after midnight when each event's next date rolls over; leave the field empty to switch it off, and `todo` is simply `false` everywhere.
+
+This field is deliberately separate from the dashboard card's own **To-dos** option: this one is server-side and shared by everything that reads the sensor, while the card's is per-card and also hands it the items themselves, which it needs to offer ticking them off. They're usually set to the same lists, but neither requires the other.
 
 ### Import events
 
@@ -306,6 +320,7 @@ Attributes on each event's sensor:
 | `occurrence_number` | Which occurrence the next date will be (e.g. `30` for a 30th birthday) - `null` when no year was entered. Always `null` for `holiday` and `one_time` events, since neither recurs in a way "occurrence number" applies to. |
 | `reminder_message` | A ready-made, translated countdown phrase for `state`, e.g. "in 7 days", "Tomorrow", or "Today" - same language as `type_label`. |
 | `day`, `month`, `year` | The event's date as entered (`year` is `null` when unknown - always set for `one_time` events, see [Adding an event](#adding-an-event) above). Not applicable to `holiday` events - see `next_date` instead, since a public holiday's date shifts by year. |
+| `todo` | `true` if a still-open item on one of the to-do lists picked under [Annual Settings](#annual-settings-automatic-milestones) is currently matched to this event, `false` otherwise (and always `false` while no list is picked). |
 | `vip` | `true` if the **VIP annual** flag is set on this event, `false` otherwise. |
 | `important` | `true` if the upcoming occurrence number matches one of that type's milestones in [Annual Settings](#annual-settings-automatic-milestones), `false` otherwise (always `false` when no year was entered, since there's no occurrence number to check - always `false` for `one_time` events for the same reason). |
 | `category`, `country`, `subdivision`, `holiday_key` | `holiday` events only - the imported holiday's category (see [Importing public holidays](#importing-public-holidays)), country code, subdivision code (empty if none was chosen), and its stable identity key (e.g. "New Year's Day") used to match its actual/observed counterpart. `null`/absent on every other type. |
@@ -329,7 +344,7 @@ A ready-to-use automation [blueprint](blueprints/automation/annuals/annual_remin
 
 [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fsomansch%2Fannuals%2Fmain%2Fblueprints%2Fautomation%2Fannuals%2Fannual_reminders.yaml)
 
-- **Target** either a hand-picked list of events, or every event of a chosen type (e.g. all birthdays) - no need to list entities one by one or update the automation when you add a new event.
+- **Target** either a hand-picked list of events, or every event of one or more chosen types (e.g. all birthdays and wedding anniversaries) - no need to list entities one by one or update the automation when you add a new event.
 - **Filter** by VIP and/or Important, each independently set to "must be" or "must NOT be" - and when both are active, choose whether they need to match together (AND) or either is enough (OR).
 - **Multiple lead times** in one go, e.g. `7,1,0` for a week before, the day before, and the day itself - each is a one-time ping, not a repeating nag.
 - **Notify anywhere**, each its own collapsible section - mix and match freely:
@@ -338,7 +353,7 @@ A ready-to-use automation [blueprint](blueprints/automation/annuals/annual_remin
   - **Text-to-Speech Announcement**: speak the reminder on one or more media players via any TTS engine - several due reminders the same day are announced one after another, never overlapping.
   - **Custom Actions**: anything else with the normal action editor - email/SMTP, WhatsApp/Telegram/Signal/ntfy, whatever.
 - **Customizable text**: the notification title and message are templates you can edit, with variables for the event's name, type, occurrence number, days until, and more - the event type and countdown phrase (`{{ ev_type }}`, `{{ reminder_message }}`) come pre-translated into Home Assistant's configured language.
-- **Optional to-do list tracking**: each due reminder becomes an item on a to-do list of your choice, using the rendered notification title as its text - due date/time and description are set automatically from the event's own date and the notification message, so there's nothing extra to fill in. Completing it (from the list, or via the mobile notification's "Done" button) resolves the reminder for good: once checked off, that event is skipped by every channel above too, not recreated by a later lead time or a manual re-run.
+- **Optional to-do list tracking**: each due reminder becomes an item on a to-do list of your choice, using the rendered notification title as its text - due date/time and description are set automatically from the event's own date and the notification message, so there's nothing extra to fill in. Completing it (from the list, via the mobile notification's "Done" button, or straight from the [dashboard card](#to-dos)) resolves the reminder for good: once checked off, that event is skipped by every channel above too, not recreated by a later lead time or a manual re-run.
 
 See the blueprint's own field descriptions (visible when creating an automation from it) for the full details on each option.
 
@@ -454,6 +469,8 @@ Annuals bundles its own Lovelace card (`custom:annuals-card`) - no separate fron
 
 The card's own UI text (not the integration's entities/config-flow, which follow your server's language setting) follows **your personal profile language** - Settings → People → your user → Language - and is available in the same 15 languages as the rest of the integration.
 
+To override that per card, set **Language** (Settings → General) to one of those 15 language codes: the card then reads the same for everyone who sees it, no matter whose profile is looking at it - useful for a wall-mounted tablet, a shared household dashboard, or simply a card you want in a specific language. It covers the card's own text and its date/time formatting together, so the two never end up in different languages. Left on **Automatic**, each viewer keeps seeing their own language, exactly as before. The card *editor* always stays in your own profile language, so pinning a card to a language you don't read never leaves you stuck in a form you can't find your way back out of.
+
 A List card, a Timeline card, and a Compact one-line card, side by side - all the same integration, three different layouts:
 
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-summary.png" alt="List, Timeline, and Compact layouts side by side" width="90%">
@@ -482,6 +499,28 @@ Turning on **Compact** mode removes the spacing between columns, centers the row
 
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/birthday_small_animated.gif" alt="Compact today-only birthday card" width="40%">
 
+### To-dos
+
+Settings → Events → **To-dos** points the card at one or more of your existing `todo.*` lists. Every event that still has an open item on one of them gets a small pin badge on its icon - a reminder that there's something left to do about it, right where you're already looking:
+
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-todo-tasks.png" alt="To-do pin badges in the List and Timeline layouts" width="90%">
+
+Nothing has to be linked up by hand. The card works out which item belongs to which event itself:
+
+- **Due date first**, always. An item with no due date, or one due on a different day than the event, is never matched - no matter what its text says.
+- **Then the item's own text**, scoring the event's **full name**, **name**, **type**, and **occurrence number** in that order. So "Buy Anna Miller a gift" beats a plain "Buy a gift" that only happens to share the date.
+- **A tie is left alone.** If an item fits two events on that day equally well, it's matched to neither rather than guessed at - the badge only ever appears where the card is actually sure.
+
+This pairs naturally with the bundled [reminder blueprint](#blueprint-upcoming-event-reminders)'s optional to-do tracking, which already writes the event's date and name into each item - but hand-written items work exactly as well, as long as the due date is right.
+
+**Complete from card** (on by default, same section): clicking a badged event's icon asks for confirmation and then marks all of that event's open items as completed. Works on the row icon in the List layout, and on the header icon and the expanded Details list in the [Timeline layout](#timeline-layout). Turn it off to leave the badge as a pure indicator. The badge on a Timeline axis dot is display-only either way, since clicking a dot already opens its tooltip.
+
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-todo-tasks.gif" alt="Clicking a badged event's icon to complete its to-do item from the card" width="45%">
+
+**Open to-dos only** (Layout → Display → **Show / Hide**) turns the same matching into a filter: only events that still have an open item are shown. It narrows the neighboring **VIP only** / **Important only** toggles rather than joining them - those two combine with each other as "either", and this one then applies on top, so all three on means "the VIP or Important events that still have something to do". An embedded [external calendar](#external-calendars) event never carries a to-do the card can see, so it's filtered out too while this is on.
+
+The badge's icon and colors live with the other badges under Layout → Colors → **Highlight**: a **To-do tasks** on/off toggle, the MDI icon to use (`mdi:pin` by default), and separate List/Timeline colors (the theme's red by default) - exactly the same set of controls VIP and Important have.
+
 ### External calendars
 
 Settings → Events → **External calendars** lets you embed one or more of your existing Home Assistant `calendar.*` entities (Google, CalDAV, a Local Calendar helper, another integration's calendar, ...) alongside Annuals' own events, in the same card. Unlike an Annuals event, an external calendar event lands on its own real date - not a yearly-recurring "next occurrence" - and, within a day it shares with other events, sorts by its own time of day (all-day events first, then timed events earliest-first); an Annuals event has no time of day of its own and always sorts as if it were all-day.
@@ -509,7 +548,7 @@ Tapping **Details** expands the same axis into the full chronological list, olde
 - **"More" button** (Layout → Timeline): the footer button next to "Details" runs its own configurable action - typically a Navigate action pointing at a dashboard using the full List layout - and is hidden entirely while left on "Nothing".
 - **Colors** tab (Layout → Colors) adds Header, Tooltip, List (Details), and Details/More button rows (only shown while Timeline is the active layout style), plus an **Event types** section listing every event type (Birthdays, Anniversaries, Name days, …) with its own color - this drives that type's dot and icon color on the axis, header, and list, replacing the built-in default palette.
 
-VIP/Important badges get their own Timeline-specific badge colors (Colors tab), independent from the List layout's own badge colors, since the two layouts render them differently (a star/exclamation glyph on the dot itself here, versus a corner badge on the row icon in List).
+VIP, Important, and [to-do](#to-dos) badges each get their own Timeline-specific badge color (Colors tab → Highlight), independent from the List layout's own, since the two layouts render them differently: here a VIP star replaces the dot itself, while an Important exclamation mark sits immediately left of it and a to-do pin immediately right - versus a corner badge on the row icon in List. Only the active layout's color field is shown, since each one colors exactly one layout.
 
 Everything above - per-event-type dot colors, header/tooltip/list fonts and colors, icons - is just as themeable as the classic List layout:
 
@@ -687,12 +726,13 @@ To theme every Annuals card at once, add these under a theme's `styles` (or set 
 | `--annuals-highlight-soon-color` | Row tint for "soon" events | `--annuals-soon-color` |
 | `--annuals-vip-badge-color` | VIP badge background color | `--error-color` |
 | `--annuals-important-badge-color` | Important badge background color | `--annuals-soon-color` |
+| `--annuals-todo-badge-color` | [To-do](#to-dos) pin badge color on the row icon | `--error-color` |
 | `--annuals-title-size` | Card title font size | `1.2em` |
 | `--annuals-row-name-size` / `-row-type-size` / `-row-badge-size` / `-row-when-size` / `-row-text-size` | Per-field row font sizes (`-row-text-size` is for custom text columns) | inherit |
 | `--annuals-title-weight` / `-style` / `-transform` / `-decoration` / `-spacing` | Card title bold/italic/uppercase/underline/letter-spacing | normal |
 | `--annuals-row-name-weight` / `-row-type-weight` / `-row-badge-weight` / `-row-when-weight` / `-row-text-weight` (+ matching `-style`/`-transform`/`-decoration`/`-spacing`) | Same style options per row field, including custom text columns | normal |
 | `--annuals-bg-color` / `-bg-image` / `-bg-size` / `-bg-repeat` / `-bg-opacity` | Card background color/image/behavior/opacity | transparent / none |
-| `--annuals-vip-badge-timeline-color` / `--annuals-important-badge-timeline-color` | Timeline layout only - VIP star / Important exclamation glyph color on the axis dots | white / `--annuals-soon-color` |
+| `--annuals-vip-badge-timeline-color` / `--annuals-important-badge-timeline-color` / `--annuals-todo-badge-timeline-color` | Timeline layout only - VIP star / Important exclamation / [to-do](#to-dos) pin glyph color, on the axis dots and in the header and expandable list | white / `--annuals-soon-color` / `--error-color` |
 | `--annuals-timeline-header-color` / `-timeline-tooltip-color` / `-timeline-list-color` / `-timeline-button-color` | Timeline layout only - header sentence, dot tooltip, expandable list, and Details/More button text colors | inherit / `--secondary-text-color` |
 | `--annuals-timeline-header-size` / `-timeline-tooltip-size` / `-timeline-list-size` / `-timeline-button-size` (+ matching `-weight`/`-style`/`-transform`/`-decoration`/`-spacing`) | Timeline layout only - same four fields' font size/style | inherit / normal |
 | `--annuals-timeline-line-color` / `-width` / `-style` and `-timeline-divider-color` / `-width` / `-style` | Timeline layout only - the horizontal axis line and the vertical past/future divider | `--divider-color` / `4px` / solid |

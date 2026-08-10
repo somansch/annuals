@@ -241,16 +241,28 @@
             },
             "annual_settings": {
                 "title": "Annual 设置",
-                "description": "用逗号分隔的周年数字，事件达到该周年数时会自动被标记为“Important”，例如“18,21,30,40,50”。留空该类型的字段可禁用此功能。",
-                "data": {
-                    "important_thresholds_birthday": "生日",
-                    "important_thresholds_anniversary": "纪念日",
-                    "important_thresholds_name_day": "命名日",
-                    "important_thresholds_wedding_anniversary": "结婚纪念日",
-                    "important_thresholds_memorial": "忌日",
-                    "important_thresholds_pet_birthday": "宠物生日",
-                    "important_thresholds_work_anniversary": "工作纪念日",
-                    "important_thresholds_custom": "自定义"
+                "sections": {
+                    "important_events": {
+                        "name": "❗ 重要事件",
+                        "description": "用逗号分隔的周年数字，事件达到该周年数时会自动被标记为“Important”，例如“18,21,30,40,50”。留空该类型的字段可禁用此功能。",
+                        "data": {
+                            "important_thresholds_birthday": "生日",
+                            "important_thresholds_anniversary": "纪念日",
+                            "important_thresholds_name_day": "命名日",
+                            "important_thresholds_wedding_anniversary": "结婚纪念日",
+                            "important_thresholds_memorial": "忌日",
+                            "important_thresholds_pet_birthday": "宠物生日",
+                            "important_thresholds_work_anniversary": "工作纪念日",
+                            "important_thresholds_custom": "自定义"
+                        }
+                    },
+                    "todo": {
+                        "name": "📍 待办列表",
+                        "description": "这些列表中未完成的条目会标记事件：每个事件传感器随后会带有一个“todo”属性——只要有至少一个仍未完成的条目与之匹配即为 true，否则为 false——可用于你自己的自动化、模板和仪表板。匹配先按到期日期，再看条目文本是否提到该事件（全名、名字、类型、第几次）；若某个条目同样适合两个事件，则不会被分配。留空即关闭此功能。这与仪表板卡片中的同名设置相互独立。",
+                        "data": {
+                            "todo_lists": "待办列表"
+                        }
+                    }
                 }
             },
             "delete_all": {

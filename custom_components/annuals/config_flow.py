@@ -13,6 +13,7 @@ import vobject
 import voluptuous as vol
 
 from homeassistant.components.file_upload import process_uploaded_file
+from homeassistant.data_entry_flow import section
 from homeassistant.components.http.auth import async_sign_path
 from homeassistant.config_entries import ConfigEntry, SOURCE_IMPORT, ConfigFlow, OptionsFlow
 from homeassistant.core import HomeAssistant, callback
@@ -34,6 +35,7 @@ from .const import (
     CONF_LAST_NAME,
     CONF_MONTH,
     CONF_SUBDIVISION,
+    CONF_TODO_LISTS,
     CONF_VIP,
     CONF_YEAR,
     DEFAULT_IMPORTANT_THRESHOLDS,
@@ -50,6 +52,7 @@ from .const import (
 from .dates import _holiday_calendar, holiday_key_from_name, holiday_occurrence_in_year
 from .helpers import async_event_type_labels, export_csv_text, full_name, hub_title
 from .http import EXPORT_CSV_URL
+from .todo_match import async_setup_todo_tracking
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -61,6 +64,14 @@ _CSV_REQUIRED_COLUMNS = {"name", "type", "day", "month"}
 # stored as-is on a config entry; each imported entry gets exactly one
 # CONF_CATEGORY (see _build_holiday_rows).
 FORM_CATEGORIES = "categories"
+
+# Form-only section names grouping the "Annual Settings" step's two unrelated
+# halves under their own heading and explanation. Like FORM_CATEGORIES above
+# these are never stored: the payload they nest is flattened straight back
+# out (see async_step_annual_settings), so the option keys themselves are
+# unchanged and no migration is needed.
+_SECTION_IMPORTANT_EVENTS = "important_events"
+_SECTION_TODO = "todo"
 
 # Form-only field names for the "which date(s) to import" toggles in the
 # holiday-import options step - each ends up as CONF_HOLIDAY_OBSERVED (False/
@@ -1880,10 +1891,18 @@ class AnnualsOptionsFlow(OptionsFlow):
 
     async def async_step_annual_settings(self, user_input=None):
         """Per-type "important" occurrence-number milestones (e.g. round
-        birthdays, work anniversaries) - hub-level, so they apply to every
-        event of that type at once rather than being set per event.
+        birthdays, work anniversaries), plus the to-do lists feeding each
+        sensor's "todo" attribute - all hub-level, so they apply to every
+        event at once rather than being set per event.
         """
         if user_input is not None:
+            # The form is split into two labelled sections (see the schema
+            # below), so the payload arrives nested one level deep - flattened
+            # straight back out here, since the stored option keys are
+            # deliberately unchanged and existing entries must keep working
+            # without a migration.
+            important = user_input.get(_SECTION_IMPORTANT_EVENTS) or {}
+            todo = user_input.get(_SECTION_TODO) or {}
             # Every field is always rendered (never conditionally hidden), so
             # a key missing from user_input means the user cleared that text
             # box - the frontend omits emptied optional string fields from
@@ -1893,11 +1912,15 @@ class AnnualsOptionsFlow(OptionsFlow):
             new_options = {
                 **self.config_entry.options,
                 **{
-                    f"{CONF_IMPORTANT_THRESHOLDS}_{event_type}": user_input.get(
+                    f"{CONF_IMPORTANT_THRESHOLDS}_{event_type}": important.get(
                         f"{CONF_IMPORTANT_THRESHOLDS}_{event_type}", ""
                     )
                     for event_type in MILESTONE_EVENT_TYPES
                 },
+                # Same "missing means cleared" reading as the fields above -
+                # an emptied entity selector is omitted from the payload
+                # rather than submitted as an empty list.
+                CONF_TODO_LISTS: todo.get(CONF_TODO_LISTS, []),
             }
             # Commit the new options ourselves *before* scheduling reloads -
             # returning CREATE_ENTRY only applies "data" to config_entry.options
@@ -1906,6 +1929,10 @@ class AnnualsOptionsFlow(OptionsFlow):
             # thresholds, leaving "important" unchanged until the next hourly
             # poll happened to run after the real options had landed.
             self.hass.config_entries.async_update_entry(self.config_entry, options=new_options)
+            # Likewise before the reloads, and only after the options are
+            # committed: this re-reads the selection to re-attach its
+            # listener and rebuild the matches (see todo_match.py).
+            async_setup_todo_tracking(self.hass)
             for entry in self.hass.config_entries.async_entries(DOMAIN):
                 if not entry.data.get(CONF_HUB):
                     self.hass.config_entries.async_schedule_reload(entry.entry_id)
@@ -1914,18 +1941,46 @@ class AnnualsOptionsFlow(OptionsFlow):
             # anything - belt and suspenders, not required for correctness.
             return self.async_create_entry(title="", data=new_options)
 
+        # Two sections rather than one flat list of fields: the milestone
+        # thresholds and the to-do lists are unrelated settings that happen
+        # to share this form, and each needs its own heading and explanation
+        # right above the fields it describes. Both are left expanded -
+        # they're the entire content of this step, so collapsing either would
+        # hide the thing the user came here for.
         schema = vol.Schema(
             {
-                vol.Optional(
-                    f"{CONF_IMPORTANT_THRESHOLDS}_{event_type}",
-                    description={
-                        "suggested_value": self.config_entry.options.get(
-                            f"{CONF_IMPORTANT_THRESHOLDS}_{event_type}",
-                            DEFAULT_IMPORTANT_THRESHOLDS.get(event_type, ""),
-                        )
-                    },
-                ): str
-                for event_type in MILESTONE_EVENT_TYPES
+                vol.Required(_SECTION_IMPORTANT_EVENTS): section(
+                    vol.Schema(
+                        {
+                            vol.Optional(
+                                f"{CONF_IMPORTANT_THRESHOLDS}_{event_type}",
+                                description={
+                                    "suggested_value": self.config_entry.options.get(
+                                        f"{CONF_IMPORTANT_THRESHOLDS}_{event_type}",
+                                        DEFAULT_IMPORTANT_THRESHOLDS.get(event_type, ""),
+                                    )
+                                },
+                            ): str
+                            for event_type in MILESTONE_EVENT_TYPES
+                        }
+                    ),
+                    {"collapsed": False},
+                ),
+                vol.Required(_SECTION_TODO): section(
+                    vol.Schema(
+                        {
+                            vol.Optional(
+                                CONF_TODO_LISTS,
+                                description={
+                                    "suggested_value": self.config_entry.options.get(
+                                        CONF_TODO_LISTS, []
+                                    )
+                                },
+                            ): selector({"entity": {"domain": "todo", "multiple": True}})
+                        }
+                    ),
+                    {"collapsed": False},
+                ),
             }
         )
         return self.async_show_form(step_id="annual_settings", data_schema=schema)

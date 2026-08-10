@@ -241,16 +241,28 @@
             },
             "annual_settings": {
                 "title": "Annual Indstillinger",
-                "description": "Kommaseparerede jubilæumstal, som automatisk markerer en begivenhed af den type som \"Important\", f.eks. \"18,21,30,40,50\". Lad et felt stå tomt for at deaktivere dette for den type.",
-                "data": {
-                    "important_thresholds_birthday": "Fødselsdag",
-                    "important_thresholds_anniversary": "Mærkedag",
-                    "important_thresholds_name_day": "Navnedag",
-                    "important_thresholds_wedding_anniversary": "Bryllupsdag",
-                    "important_thresholds_memorial": "Mindedag",
-                    "important_thresholds_pet_birthday": "Kæledyrs fødselsdag",
-                    "important_thresholds_work_anniversary": "Jubilæum på arbejdet",
-                    "important_thresholds_custom": "Tilpasset"
+                "sections": {
+                    "important_events": {
+                        "name": "❗ Vigtige begivenheder",
+                        "description": "Kommaseparerede jubilæumstal, som automatisk markerer en begivenhed af den type som \"Important\", f.eks. \"18,21,30,40,50\". Lad et felt stå tomt for at deaktivere dette for den type.",
+                        "data": {
+                            "important_thresholds_birthday": "Fødselsdag",
+                            "important_thresholds_anniversary": "Mærkedag",
+                            "important_thresholds_name_day": "Navnedag",
+                            "important_thresholds_wedding_anniversary": "Bryllupsdag",
+                            "important_thresholds_memorial": "Mindedag",
+                            "important_thresholds_pet_birthday": "Kæledyrs fødselsdag",
+                            "important_thresholds_work_anniversary": "Jubilæum på arbejdet",
+                            "important_thresholds_custom": "Tilpasset"
+                        }
+                    },
+                    "todo": {
+                        "name": "📍 Opgavelister",
+                        "description": "Åbne opgaver på disse lister markerer en begivenhed: hver begivenhedssensor får så et attribut «todo» - sandt så længe mindst én stadig åben opgave er tilknyttet den, ellers falsk - til dine egne automatiseringer, skabeloner og dashboards. Tilknytningen sker først via forfaldsdatoen og derefter via, om opgavens tekst nævner begivenheden (fulde navn, navn, type, nummer i rækken); en opgave, der passer lige godt til to begivenheder, forbliver utilknyttet. Lad stå tom for at slå fra. Uafhængigt af dashboardkortets egen indstilling af samme navn.",
+                        "data": {
+                            "todo_lists": "Opgavelister"
+                        }
+                    }
                 }
             },
             "delete_all": {

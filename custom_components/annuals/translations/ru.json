@@ -241,16 +241,28 @@
             },
             "annual_settings": {
                 "title": "Annual Настройки",
-                "description": "Разделённые запятыми номера годовщин, при которых событие этого типа автоматически помечается как «Important», например «18,21,30,40,50». Оставьте поле пустым, чтобы отключить это для данного типа.",
-                "data": {
-                    "important_thresholds_birthday": "День рождения",
-                    "important_thresholds_anniversary": "Годовщина",
-                    "important_thresholds_name_day": "Именины",
-                    "important_thresholds_wedding_anniversary": "Годовщина свадьбы",
-                    "important_thresholds_memorial": "День памяти",
-                    "important_thresholds_pet_birthday": "День рождения питомца",
-                    "important_thresholds_work_anniversary": "Трудовой юбилей",
-                    "important_thresholds_custom": "Другое"
+                "sections": {
+                    "important_events": {
+                        "name": "❗ Важные события",
+                        "description": "Разделённые запятыми номера годовщин, при которых событие этого типа автоматически помечается как «Important», например «18,21,30,40,50». Оставьте поле пустым, чтобы отключить это для данного типа.",
+                        "data": {
+                            "important_thresholds_birthday": "День рождения",
+                            "important_thresholds_anniversary": "Годовщина",
+                            "important_thresholds_name_day": "Именины",
+                            "important_thresholds_wedding_anniversary": "Годовщина свадьбы",
+                            "important_thresholds_memorial": "День памяти",
+                            "important_thresholds_pet_birthday": "День рождения питомца",
+                            "important_thresholds_work_anniversary": "Трудовой юбилей",
+                            "important_thresholds_custom": "Другое"
+                        }
+                    },
+                    "todo": {
+                        "name": "📍 Списки задач",
+                        "description": "Невыполненные пункты этих списков отмечают событие: у каждого сенсора события появится атрибут «todo» - true, пока к нему привязана хотя бы одна ещё невыполненная задача, иначе false - для ваших автоматизаций, шаблонов и панелей. Сопоставление идёт сначала по сроку, затем по тому, называет ли текст задачи событие (полное имя, имя, тип, номер по счёту); задача, одинаково подходящая двум событиям, остаётся без привязки. Оставьте пустым, чтобы отключить. Не связано с одноимённой настройкой карточки на панели.",
+                        "data": {
+                            "todo_lists": "Списки задач"
+                        }
+                    }
                 }
             },
             "delete_all": {
