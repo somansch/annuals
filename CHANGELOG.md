@@ -2,6 +2,11 @@
 
 All notable changes to this integration are documented here.
 
+## v2.8.1-beta.1
+
+### Fixed
+- **List layout columns didn't line up between rows** ([#4](https://github.com/somansch/annuals/issues/4)) - each row measured its own cells independently, so a column only appeared to line up while every row's content happened to be about equally wide. A longer countdown or date on one row left less room for the name/type cells next to it, pushing that row's remaining columns a few pixels off from the row above. Most visible after switching to a language with longer words, which is how it was reported, and worse the more columns a card shows. The whole list now shares one set of column tracks (CSS subgrid), so every column is measured once, across all rows. Compact mode is deliberately unchanged - it's a centered, wrapping sentence rather than a table - and browsers without subgrid keep the previous layout.
+
 ## v2.8.0
 
 ### Added

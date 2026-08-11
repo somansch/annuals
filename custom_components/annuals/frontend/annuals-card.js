@@ -6696,6 +6696,38 @@
     { id: "when", type: "when" },
   ];
 
+  // The column types that absorb a row's leftover width - the ones naming
+  // the event, which are also the only ones long enough to want it. Every
+  // other column is sized to its own content instead.
+  const GROWING_COLUMN_TYPES = new Set([
+    "name",
+    "last_name",
+    "full_name",
+    "type",
+    "info",
+    "full_name_type",
+  ]);
+
+  // One grid track per configured column, shared by every row (see
+  // .list.is-columns in CARD_STYLE).
+  //
+  // This is what keeps a column at one x across the whole list. Sizing each
+  // row on its own - which a per-row flex layout does by definition - lines
+  // the columns up only while every row's cells happen to be about equally
+  // wide, and drifts apart as soon as they aren't: a longer countdown or
+  // date on one row leaves less room for the growing cells next to it, so
+  // that row's remaining columns sit further left than the row above.
+  // Reported as "column alignment broke when language changed" (issue #4),
+  // because switching to a language with longer words is exactly what turns
+  // a coincidental match into a visible mismatch.
+  function rowColumnTemplate(config) {
+    const columns = Array.isArray(config.columns) ? config.columns : DEFAULT_COLUMNS;
+    return columns
+      .filter((col) => col && typeof col === "object")
+      .map((col) => (GROWING_COLUMN_TYPES.has(col.type) ? "minmax(0, 1fr)" : "auto"))
+      .join(" ");
+  }
+
   // Applied the moment "Compact (no gaps, centered)" is switched on (see the
   // compactToggle handler in _buildColumnsSection) - Icon, Full name,
   // Occurrence, Type, Countdown, Date, each of the latter five preceded by
@@ -7556,6 +7588,31 @@
       gap: 12px;
       padding: 6px 12px 6px 4px;
       border-radius: 8px;
+    }
+    /* One shared set of column tracks for the whole list, so a column keeps
+       the same width - and therefore the same x - on every row (see
+       rowColumnTemplate). Each row stays a real box rather than being
+       flattened into the grid with display:contents, so it keeps its own
+       background tint, hover state and rounded corners.
+
+       Behind @supports because subgrid is what makes this work at all: the
+       rows, not the list, are what actually holds the cells. Without it the
+       flex layout above simply stays in place, exactly as before. */
+    @supports (grid-template-columns: subgrid) {
+      .list.is-columns {
+        display: grid;
+        grid-template-columns: var(--annuals-row-template);
+        column-gap: 12px;
+      }
+      .list.is-columns > .row {
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-column: 1 / -1;
+        /* The row's own padding shifts its tracks in from the list's by a
+           fixed amount - identically for every row, which is all the
+           alignment needs. */
+        align-items: center;
+      }
     }
     /* With the icon hidden (see icon_visibility), the row's left padding
        otherwise stays at the icon column's much narrower 4px, so the first
@@ -10419,6 +10476,11 @@
 
       const listEl = this.shadowRoot.querySelector(".list");
       listEl.classList.toggle("columns-compact", config.columns_compact === true);
+      // Cleared here rather than only set in the list branch below - the
+      // timeline and the "no events" placeholder are single children that
+      // must not be laid out against the previous render's column tracks.
+      listEl.classList.remove("is-columns");
+      listEl.style.removeProperty("--annuals-row-template");
       listEl.innerHTML = "";
 
       // Which categories get a highlighted row background is controlled
@@ -10434,6 +10496,19 @@
       } else if (config.layout_style === "timeline") {
         listEl.appendChild(this._buildTimeline(combined, strings));
       } else {
+        // Every row renders exactly one cell per configured column (see
+        // _row), so the whole list can share one set of column tracks -
+        // which is what actually makes the columns line up with each other
+        // (see .list.is-columns).
+        //
+        // Except in Compact mode, which is deliberately not a table: it
+        // centers each row and lets it wrap as one running sentence (see
+        // .list.columns-compact), so pinning its fields to shared columns
+        // would be the opposite of what it's for.
+        if (config.columns_compact !== true) {
+          listEl.classList.add("is-columns");
+          listEl.style.setProperty("--annuals-row-template", rowColumnTemplate(config));
+        }
         combined.forEach((e) => listEl.appendChild(this._row(e, strings)));
       }
     }
