@@ -263,6 +263,12 @@
         holdAction: "Hold action",
         holdActionDesc: "What happens when a row is pressed and held",
         cardLanguage: "Language",
+        dateFormat: "Date format",
+        dateFormatDesc:
+          "How the Date column writes an event's date - each option is shown as the date itself, so you can see what you are picking. Also applies to the {date} placeholder in a Custom text column and to the Timeline's \"Show date\". The full date behind a tapped countdown always stays spelled out, whatever is chosen here.",
+        dateShowToday: "Say \"Today\"",
+        dateShowTodayDesc:
+          "On the event's own day, write \"Today\" instead of that day's date. Turn off for a card that should read as a plain date list.",
         cardLanguageDesc:
           "Pins this card to one language for everyone who sees it, instead of following each viewer's own profile language. Affects the card's own text and its date formatting alike - not the event names themselves, which come from the integration. This editor keeps following your own language either way.",
         cardLanguageAuto: "Automatic",
@@ -711,6 +717,12 @@
         holdAction: "Aktion beim Gedrückthalten",
         holdActionDesc: "Was passiert, wenn eine Zeile gedrückt gehalten wird",
         cardLanguage: "Sprache",
+        dateFormat: "Datumsformat",
+        dateFormatDesc:
+          "Wie die Datums-Spalte das Datum eines Ereignisses schreibt - jede Option wird als das Datum selbst angezeigt, du siehst also direkt, was du wählst. Gilt ebenso für den Platzhalter {date} in einer Freitext-Spalte und für „Datum anzeigen“ in der Timeline. Das vollständige Datum hinter einem angetippten Countdown bleibt immer ausgeschrieben.",
+        dateShowToday: "„Heute“ schreiben",
+        dateShowTodayDesc:
+          "Am Tag des Ereignisses „Heute“ statt des Datums schreiben. Ausschalten für eine Karte, die sich wie eine reine Datumsliste lesen soll.",
         cardLanguageDesc:
           "Legt diese Karte für alle Betrachter auf eine Sprache fest, statt der jeweiligen Profilsprache zu folgen. Betrifft die Texte der Karte und die Datumsformatierung gleichermaßen - nicht die Ereignisnamen selbst, die aus der Integration kommen. Dieser Editor folgt in jedem Fall weiterhin deiner eigenen Sprache.",
         cardLanguageAuto: "Automatisch",
@@ -1148,6 +1160,12 @@
         holdAction: "Action à l'appui long",
         holdActionDesc: "Ce qui se passe lorsqu'une ligne est maintenue appuyée",
         cardLanguage: "Langue",
+        dateFormat: "Format de date",
+        dateFormatDesc:
+          "Comment la colonne Date écrit la date d'un événement - chaque option est affichée sous forme de date, vous voyez donc directement ce que vous choisissez. S'applique aussi au paramètre {date} d'une colonne de texte libre et à « Afficher la date » de la chronologie. La date complète derrière un compte à rebours tapé reste toujours écrite en entier.",
+        dateShowToday: "Écrire « Aujourd'hui »",
+        dateShowTodayDesc:
+          "Le jour même de l'événement, écrire « Aujourd'hui » au lieu de la date. Désactivez pour une carte qui doit se lire comme une simple liste de dates.",
         cardLanguageDesc:
           "Fixe cette carte à une seule langue pour tous ceux qui la voient, au lieu de suivre la langue du profil de chacun. Affecte aussi bien le texte de la carte que le format des dates - pas les noms des événements eux-mêmes, qui viennent de l'intégration. Cet éditeur continue de suivre votre propre langue dans tous les cas.",
         cardLanguageAuto: "Automatique",
@@ -1584,6 +1602,12 @@
         holdAction: "Actie bij ingedrukt houden",
         holdActionDesc: "Wat er gebeurt als een rij ingedrukt wordt gehouden",
         cardLanguage: "Taal",
+        dateFormat: "Datumnotatie",
+        dateFormatDesc:
+          "Hoe de Datum-kolom de datum van een evenement schrijft - elke optie wordt als de datum zelf getoond, dus je ziet meteen wat je kiest. Geldt ook voor de plaatsaanduiding {date} in een vrije-tekstkolom en voor \"Datum tonen\" op de tijdlijn. De volledige datum achter een aangetikte aftelling blijft altijd voluit geschreven.",
+        dateShowToday: "\"Vandaag\" schrijven",
+        dateShowTodayDesc:
+          "Op de dag van het evenement zelf \"Vandaag\" schrijven in plaats van de datum. Zet uit voor een kaart die als een gewone datumlijst moet lezen.",
         cardLanguageDesc:
           "Zet deze kaart voor iedereen die hem ziet vast op één taal, in plaats van de profieltaal van elke kijker te volgen. Geldt zowel voor de tekst van de kaart als voor de datumopmaak - niet voor de namen van de evenementen zelf, die uit de integratie komen. Deze editor blijft hoe dan ook je eigen taal volgen.",
         cardLanguageAuto: "Automatisch",
@@ -2026,6 +2050,12 @@
         holdAction: "Akcja przytrzymania",
         holdActionDesc: "Co się dzieje po przytrzymaniu wiersza",
         cardLanguage: "Język",
+        dateFormat: "Format daty",
+        dateFormatDesc:
+          "Jak kolumna Data zapisuje datę wydarzenia - każda opcja jest pokazana jako sama data, więc od razu widać, co się wybiera. Dotyczy też symbolu {date} w kolumnie tekstu własnego oraz „Pokaż datę” na osi czasu. Pełna data pod dotkniętym odliczaniem zawsze pozostaje zapisana w całości.",
+        dateShowToday: "Pisz „Dzisiaj”",
+        dateShowTodayDesc:
+          "W dniu wydarzenia pisz „Dzisiaj” zamiast daty. Wyłącz, jeśli karta ma się czytać jak zwykła lista dat.",
         cardLanguageDesc:
           "Ustawia tę kartę na jeden język dla wszystkich, którzy ją widzą, zamiast podążać za językiem profilu każdego z nich. Dotyczy zarówno tekstów karty, jak i formatu dat - nie dotyczy samych nazw wydarzeń, które pochodzą z integracji. Ten edytor i tak nadal używa Twojego własnego języka.",
         cardLanguageAuto: "Automatycznie",
@@ -2461,6 +2491,12 @@
         holdAction: "Acción al mantener pulsado",
         holdActionDesc: "Qué ocurre al mantener pulsada una fila",
         cardLanguage: "Idioma",
+        dateFormat: "Formato de fecha",
+        dateFormatDesc:
+          "Cómo escribe la columna Fecha la fecha de un evento: cada opción se muestra como la fecha misma, así que ves directamente lo que eliges. Se aplica también al marcador {date} de una columna de texto libre y a «Mostrar fecha» de la línea de tiempo. La fecha completa tras pulsar la cuenta atrás siempre se mantiene escrita por extenso.",
+        dateShowToday: "Escribir «Hoy»",
+        dateShowTodayDesc:
+          "El día del evento, escribir «Hoy» en lugar de la fecha. Desactívalo para una tarjeta que deba leerse como una simple lista de fechas.",
         cardLanguageDesc:
           "Fija esta tarjeta en un solo idioma para todos los que la vean, en lugar de seguir el idioma del perfil de cada uno. Afecta tanto al texto de la tarjeta como al formato de las fechas, no a los nombres de los eventos, que vienen de la integración. Este editor sigue usando tu propio idioma en cualquier caso.",
         cardLanguageAuto: "Automático",
@@ -2897,6 +2933,12 @@
         holdAction: "Azione alla pressione prolungata",
         holdActionDesc: "Cosa succede quando si tiene premuta una riga",
         cardLanguage: "Lingua",
+        dateFormat: "Formato data",
+        dateFormatDesc:
+          "Come la colonna Data scrive la data di un evento: ogni opzione è mostrata come la data stessa, così vedi subito cosa stai scegliendo. Vale anche per il segnaposto {date} in una colonna di testo libero e per «Mostra data» della timeline. La data completa dietro un conto alla rovescia toccato resta sempre scritta per esteso.",
+        dateShowToday: "Scrivere «Oggi»",
+        dateShowTodayDesc:
+          "Nel giorno dell'evento scrivere «Oggi» invece della data. Disattiva per una scheda che debba leggersi come un semplice elenco di date.",
         cardLanguageDesc:
           "Fissa questa scheda su una sola lingua per chiunque la veda, invece di seguire la lingua del profilo di ciascuno. Riguarda sia i testi della scheda sia il formato delle date - non i nomi degli eventi, che arrivano dall'integrazione. Questo editor continua comunque a seguire la tua lingua.",
         cardLanguageAuto: "Automatico",
@@ -3334,6 +3376,12 @@
         holdAction: "Ação ao pressionar e segurar",
         holdActionDesc: "O que acontece ao pressionar e segurar uma linha",
         cardLanguage: "Idioma",
+        dateFormat: "Formato de fecha",
+        dateFormatDesc:
+          "Cómo escribe la columna Fecha la fecha de un evento: cada opción se muestra como la fecha misma, así que ves directamente lo que eliges. Se aplica también al marcador {date} de una columna de texto libre y a «Mostrar fecha» de la línea de tiempo. La fecha completa tras pulsar la cuenta atrás siempre se mantiene escrita por extenso.",
+        dateShowToday: "Escribir «Hoy»",
+        dateShowTodayDesc:
+          "El día del evento, escribir «Hoy» en lugar de la fecha. Desactívalo para una tarjeta que deba leerse como una simple lista de fechas.",
         cardLanguageDesc:
           "Fixa este cartão em um único idioma para todos que o virem, em vez de seguir o idioma de perfil de cada um. Afeta tanto o texto do cartão quanto a formatação das datas - não os nomes dos eventos, que vêm da integração. Este editor continua seguindo o seu próprio idioma de qualquer forma.",
         cardLanguageAuto: "Automático",
@@ -3774,6 +3822,12 @@
         holdAction: "Действие при удержании",
         holdActionDesc: "Что происходит при удержании строки нажатой",
         cardLanguage: "Язык",
+        dateFormat: "Формат даты",
+        dateFormatDesc:
+          "Как столбец «Дата» записывает дату события - каждый вариант показан самой датой, так что сразу видно, что выбираешь. Действует и на подстановку {date} в столбце произвольного текста, и на «Показывать дату» на шкале времени. Полная дата за нажатым обратным отсчётом всегда остаётся выписанной целиком.",
+        dateShowToday: "Писать «Сегодня»",
+        dateShowTodayDesc:
+          "В день самого события писать «Сегодня» вместо даты. Отключите, если карточка должна читаться как обычный список дат.",
         cardLanguageDesc:
           "Закрепляет за этой карточкой один язык для всех, кто её видит, вместо того чтобы следовать языку профиля каждого. Касается и текстов карточки, и формата дат - но не самих названий событий, которые приходят из интеграции. Этот редактор в любом случае остаётся на вашем языке.",
         cardLanguageAuto: "Автоматически",
@@ -4214,6 +4268,12 @@
         holdAction: "Åtgärd vid tryck och håll",
         holdActionDesc: "Vad som händer när en rad trycks och hålls in",
         cardLanguage: "Språk",
+        dateFormat: "Datumformat",
+        dateFormatDesc:
+          "Hur Datum-kolumnen skriver en händelses datum - varje alternativ visas som datumet självt, så du ser direkt vad du väljer. Gäller även platshållaren {date} i en fritextkolumn och tidslinjens ”Visa datum”. Det fullständiga datumet bakom en tryckt nedräkning skrivs alltid ut i sin helhet.",
+        dateShowToday: "Skriv ”Idag”",
+        dateShowTodayDesc:
+          "På händelsens egen dag, skriv ”Idag” i stället för datumet. Stäng av för ett kort som ska läsas som en ren datumlista.",
         cardLanguageDesc:
           "Låser det här kortet till ett språk för alla som ser det, i stället för att följa varje betraktares egen profilspråk. Gäller både kortets text och dess datumformat - inte händelsernas namn, som kommer från integrationen. Den här redigeraren följer ditt eget språk oavsett.",
         cardLanguageAuto: "Automatiskt",
@@ -4649,6 +4709,12 @@
         holdAction: "长按操作",
         holdActionDesc: "长按某行时执行的操作",
         cardLanguage: "语言",
+        dateFormat: "日期格式",
+        dateFormatDesc:
+          "“日期”列如何书写事件的日期——每个选项都以日期本身呈现，因此你能直接看到自己选的是什么。同样适用于自定义文本列中的 {date} 占位符，以及时间轴的“显示日期”。点击倒计时后显示的完整日期始终保持完整写法。",
+        dateShowToday: "写“今天”",
+        dateShowTodayDesc:
+          "在事件当天写“今天”而不是日期。若希望卡片读起来像一份纯日期清单，可关闭此项。",
         cardLanguageDesc:
           "将此卡片固定为一种语言，对所有查看者都一样，而不再跟随各自的个人资料语言。同时影响卡片文本和日期格式——不影响事件名称本身，那来自集成。无论如何，此编辑器仍跟随你自己的语言。",
         cardLanguageAuto: "自动",
@@ -5090,6 +5156,12 @@
         holdAction: "Akce při podržení",
         holdActionDesc: "Co se stane při podržení řádku",
         cardLanguage: "Jazyk",
+        dateFormat: "Formát data",
+        dateFormatDesc:
+          "Jak sloupec Datum zapisuje datum události - každá možnost je zobrazena jako samotné datum, takže hned vidíte, co vybíráte. Platí i pro zástupný text {date} ve sloupci s vlastním textem a pro „Zobrazit datum“ na časové ose. Úplné datum za klepnutým odpočtem zůstává vždy vypsané celé.",
+        dateShowToday: "Psát „Dnes“",
+        dateShowTodayDesc:
+          "V den samotné události psát „Dnes“ místo data. Vypněte pro kartu, která se má číst jako prostý seznam dat.",
         cardLanguageDesc:
           "Zafixuje tuto kartu na jeden jazyk pro všechny, kdo ji vidí, místo aby sledovala jazyk profilu každého z nich. Týká se textů karty i formátu dat - nikoli názvů samotných událostí, které pocházejí z integrace. Tento editor se v každém případě dál řídí vaším vlastním jazykem.",
         cardLanguageAuto: "Automaticky",
@@ -5531,6 +5603,12 @@
         holdAction: "Handling ved trykk og hold",
         holdActionDesc: "Hva som skjer når en rad trykkes og holdes inne",
         cardLanguage: "Språk",
+        dateFormat: "Datumformat",
+        dateFormatDesc:
+          "Hur Datum-kolumnen skriver en händelses datum - varje alternativ visas som datumet självt, så du ser direkt vad du väljer. Gäller även platshållaren {date} i en fritextkolumn och tidslinjens ”Visa datum”. Det fullständiga datumet bakom en tryckt nedräkning skrivs alltid ut i sin helhet.",
+        dateShowToday: "Skriv ”Idag”",
+        dateShowTodayDesc:
+          "På händelsens egen dag, skriv ”Idag” i stället för datumet. Stäng av för ett kort som ska läsas som en ren datumlista.",
         cardLanguageDesc:
           "Låser dette kortet til ett språk for alle som ser det, i stedet for å følge hver enkelt seers profilspråk. Gjelder både kortets tekst og datoformatet - ikke navnene på hendelsene selv, som kommer fra integrasjonen. Denne redigereren følger uansett ditt eget språk.",
         cardLanguageAuto: "Automatisk",
@@ -5971,6 +6049,12 @@
         holdAction: "Handling ved tryk og hold",
         holdActionDesc: "Hvad der sker, når en række trykkes og holdes nede",
         cardLanguage: "Sprog",
+        dateFormat: "Datoformat",
+        dateFormatDesc:
+          "Hvordan Dato-kolonnen skriver en begivenheds dato - hver mulighed vises som selve datoen, så du ser direkte, hvad du vælger. Gælder også pladsholderen {date} i en fritekstkolonne og tidslinjens «Vis dato». Den fuldstændige dato bag en trykket nedtælling står altid skrevet helt ud.",
+        dateShowToday: "Skriv «I dag»",
+        dateShowTodayDesc:
+          "På begivenhedens egen dag skrives «I dag» i stedet for datoen. Slå fra for et kort, der skal læses som en ren datoliste.",
         cardLanguageDesc:
           "Låser dette kort til ét sprog for alle, der ser det, i stedet for at følge den enkelte seers profilsprog. Gælder både kortets tekst og datoformatet - ikke selve begivenhedernes navne, som kommer fra integrationen. Denne editor følger under alle omstændigheder dit eget sprog.",
         cardLanguageAuto: "Automatisk",
@@ -6417,6 +6501,12 @@
         holdAction: "Basılı tutma eylemi",
         holdActionDesc: "Bir satır basılı tutulduğunda ne olacağı",
         cardLanguage: "Dil",
+        dateFormat: "Tarih biçimi",
+        dateFormatDesc:
+          "Tarih sütununun bir etkinliğin tarihini nasıl yazacağı - her seçenek tarihin kendisi olarak gösterilir, böylece neyi seçtiğinizi doğrudan görürsünüz. Serbest metin sütunundaki {date} yer tutucusu ve zaman çizelgesinin «Tarihi göster» seçeneği için de geçerlidir. Dokunulan geri sayımın ardındaki tam tarih her zaman açık yazılmış kalır.",
+        dateShowToday: "«Bugün» yaz",
+        dateShowTodayDesc:
+          "Etkinliğin kendi gününde tarih yerine «Bugün» yaz. Kartın düz bir tarih listesi gibi okunmasını istiyorsanız kapatın.",
         cardLanguageDesc:
           "Bu kartı, her izleyicinin kendi profil dilini takip etmek yerine, onu görecek herkes için tek bir dile sabitler. Hem kartın metnini hem de tarih biçimini etkiler - etkinliklerin adlarını değil, onlar entegrasyondan gelir. Bu düzenleyici her hâlükârda kendi dilinizi izlemeye devam eder.",
         cardLanguageAuto: "Otomatik",
@@ -6696,6 +6786,58 @@
     { id: "when", type: "when" },
   ];
 
+  // Every way the Date column (and the Timeline's "Show date", and the
+  // {date} placeholder) can render an event's own date. Deliberately
+  // Intl.DateTimeFormat option sets rather than format strings: the order of
+  // day and month, the separators, the month's spelling and whether it takes
+  // a trailing dot all differ per language, and Intl already knows all of
+  // that for the 15 this card speaks. A "DD.MM." pattern would only ever be
+  // right for whoever typed it.
+  //
+  // "auto_year" is the odd one out and has no Intl equivalent: it drops the
+  // year for dates in the current year and keeps it otherwise, since on a
+  // card full of yearly-recurring events the year is noise right up until
+  // the one entry where it's the whole point (a one-time event two years
+  // out, or an event that just crossed the new year).
+  const DATE_FORMATS = {
+    short: { day: "numeric", month: "short" },
+    auto_year: { day: "numeric", month: "short", year: "numeric" },
+    weekday_short: { weekday: "short", day: "numeric", month: "short" },
+    numeric: { day: "numeric", month: "numeric" },
+    numeric_year: { day: "numeric", month: "numeric", year: "numeric" },
+    long: { day: "numeric", month: "long", year: "numeric" },
+    weekday: { weekday: "long" },
+    // Same options as the tap-to-reveal full date (see _row/_timelineWhenNode)
+    // - offered here too for a card that wants that level of detail without
+    // anyone having to tap for it.
+    full: { weekday: "short", day: "numeric", month: "short", year: "numeric" },
+  };
+
+  const DATE_FORMAT_KEYS = Object.keys(DATE_FORMATS);
+
+  // Formats one event date in one of DATE_FORMATS. Unknown/missing keys fall
+  // back to "short", which is what every card saved before this option
+  // existed renders as.
+  function formatEventDate(date, format, locale) {
+    const options = DATE_FORMATS[format] || DATE_FORMATS.short;
+    if (format === "auto_year" && date.getFullYear() === new Date().getFullYear()) {
+      return new Intl.DateTimeFormat(locale, DATE_FORMATS.short).format(date);
+    }
+    return new Intl.DateTimeFormat(locale, options).format(date);
+  }
+
+  // The date the editor's Date format dropdown previews every option with.
+  // Today's day and month, but next year: a date in the *current* year would
+  // render "auto_year" identically to "short" (that's the whole point of
+  // that option), leaving two entries in the dropdown looking the same with
+  // no way to tell which does what.
+  function dateFormatSampleDate() {
+    const sample = new Date();
+    sample.setHours(0, 0, 0, 0);
+    sample.setFullYear(sample.getFullYear() + 1);
+    return sample;
+  }
+
   // The column types that absorb a row's leftover width - the ones naming
   // the event, which are also the only ones long enough to want it. Every
   // other column is sized to its own content instead.
@@ -6795,6 +6937,15 @@
     return {
       title: "",
       show_title: true,
+      // One of DATE_FORMATS, driving the Date column, the {date} placeholder
+      // and the Timeline's "Show date" together. "short" is what every card
+      // saved before this option existed already rendered.
+      date_format: "short",
+      // Whether the Date column says "Today" on the event's own day instead
+      // of that day's date. On by default - it's the older behavior, and the
+      // word is more useful than the date for the one row it applies to -
+      // but a card meant to read as a date table can turn it off.
+      date_show_today: true,
       // One of CARD_LANGUAGES, pinning every string and date on this card to
       // that language for every viewer alike. LANGUAGE_AUTO (the default) -
       // like the "" every dashboard saved before this existed has - keeps
@@ -8799,6 +8950,16 @@
       return cardLocale(this._hass, this._config);
     }
 
+    // The card's configured Date format (see DATE_FORMATS), shared by the
+    // Date column, the {date} placeholder and the Timeline's "Show date" -
+    // all three are the same piece of information in different places, so
+    // they follow one setting rather than three. The tap-to-reveal full
+    // date deliberately doesn't: its whole job is to spell the day out
+    // unambiguously, whatever the columns are set to.
+    _formatEventDate(date) {
+      return formatEventDate(date, this._config.date_format, this._locale());
+    }
+
     // Short calendar date ("6 Aug") for config.timeline_show_date - same
     // day-offset math and Intl.DateTimeFormat call as _row()'s own dateText,
     // kept separate since the timeline reads its offset off e.daysSince/
@@ -8811,10 +8972,7 @@
       const target = new Date();
       target.setHours(0, 0, 0, 0);
       target.setDate(target.getDate() + (isPast ? -e.daysSince : e.days));
-      return new Intl.DateTimeFormat(this._locale(), {
-        day: "numeric",
-        month: "short",
-      }).format(target);
+      return this._formatEventDate(target);
     }
 
     // Full, unambiguous date ("Mon, 3 Aug 2026") for the timeline's own
@@ -9789,13 +9947,10 @@
         month: "short",
         year: "numeric",
       }).format(occurrenceDate);
-      if (e.days === 0) {
+      if (e.days === 0 && config.date_show_today !== false) {
         dateText = strings.today;
       } else {
-        dateText = new Intl.DateTimeFormat(this._locale(), {
-          day: "numeric",
-          month: "short",
-        }).format(occurrenceDate);
+        dateText = this._formatEventDate(occurrenceDate);
       }
       // occurrence_number always describes the *next* occurrence - once an
       // event's date has passed (daysSince > 0), the sensor has already
@@ -9898,7 +10053,10 @@
         // case should follow its position in the row, same as Countdown - a
         // real formatted date like "Aug 3" starts with the month name and
         // must always stay capitalized regardless of position.
-        dateIsToday: e.days === 0,
+        // "the cell literally says Today", not "the event is today" - with
+        // date_show_today off, an event on its own day renders a real
+        // formatted date, which must keep its capital just like any other.
+        dateIsToday: e.days === 0 && config.date_show_today !== false,
         // Full, unambiguous date ("Mon, 3 Aug 2026") for the click-to-toggle
         // countdown (see when_click_shows_date in defaultConfig) - a longer
         // format than the Date column's own short "3 Aug", since the whole
@@ -11322,22 +11480,10 @@
       `;
     }
 
-    // One labelled field taking a single column of a two-column split row,
-    // with the other column left empty - for a field that belongs in the
-    // same grid as its neighbours above but has nothing to pair with.
-    _halfWidthSelectRowHtml(key) {
-      return `
-        <div class="field-row-split">
-          ${this._actionSelectorFieldHtml(key)}
-          <div class="field-col"></div>
-        </div>
-      `;
-    }
-
-    // Fills one of those slots with a plain dropdown, the same ha-selector
-    // component (and therefore the same look) the action selectors below
-    // use - just a select instead of a ui_action.
-    _upgradeSelectField(body, key, label, desc, options) {
+    // Fills one of _actionSelectorSplitHtml's slots with a plain dropdown -
+    // the same ha-selector component (and therefore the same look and width)
+    // the action selectors below use, just a select instead of a ui_action.
+    _upgradeSelectField(body, key, label, desc, options, fallback) {
       const col = body.querySelector(`[data-action-slot="${key}"]`).closest(".field-col");
       col.querySelector(".label-text").textContent = label;
       col.querySelector(".tooltip-anchor").dataset.tooltip = desc;
@@ -11346,12 +11492,12 @@
       const selector = document.createElement("ha-selector");
       selector.hass = this._hass;
       selector.selector = { select: { options, mode: "dropdown" } };
-      selector.value = this._config[key] || LANGUAGE_AUTO;
+      selector.value = this._config[key] || fallback;
       selector.style.display = "block";
       selector.style.width = "100%";
       selector.addEventListener("value-changed", (ev) => {
         ev.stopPropagation();
-        this._config = defaultConfig({ ...this._config, [key]: ev.detail.value || LANGUAGE_AUTO });
+        this._config = defaultConfig({ ...this._config, [key]: ev.detail.value || fallback });
         this._emit();
       });
       slot.appendChild(selector);
@@ -11450,11 +11596,10 @@
         this._fieldRowHtml("title", "text", strings.editor.titlePlaceholder) +
         this._visibilityRowHtml("hide_title") +
         this._actionSelectorSplitHtml(["tap_action", "hold_action"]) +
-        // A split row with an empty second column rather than a plain
-        // full-width one, so this dropdown gets exactly the same column
-        // width as Tap action directly above it instead of stretching
-        // across both.
-        this._halfWidthSelectRowHtml("language");
+        this._actionSelectorSplitHtml(["date_format", "language"]) +
+        // Directly under the Date format dropdown it belongs to, in the
+        // same left-hand column.
+        this._visibilityTwoColHtml(["date_show_today"], []);
       this._wireFieldRow(body, "title", strings.editor.title, strings.editor.titleDesc, (v) => v);
 
       // Inverted on purpose - this toggle lives right under the title field
@@ -11487,17 +11632,61 @@
         { action: "none" }
       );
 
+      this._upgradeSelectField(
+        body,
+        "date_format",
+        strings.editor.dateFormat,
+        strings.editor.dateFormatDesc,
+        this._dateFormatOptions(),
+        "short"
+      );
+
+      const todayRow = body
+        .querySelector('input[data-visibility="date_show_today"]')
+        .closest(".toggle-row");
+      todayRow.querySelector(".label-text").textContent = strings.editor.dateShowToday;
+      todayRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.dateShowTodayDesc;
+      const todayToggle = todayRow.querySelector('input[data-visibility="date_show_today"]');
+      todayToggle.addEventListener("change", () => {
+        this._config = defaultConfig({ ...this._config, date_show_today: todayToggle.checked });
+        this._emit();
+      });
+
       // "" first, and labelled rather than left blank, so the default reads
       // as a deliberate choice ("follow the viewer") instead of an empty
       // dropdown. Everything after it is the plain BCP-47 code, which needs
       // no translating and is what someone picking a language here is
       // looking for.
-      this._upgradeSelectField(body, "language", strings.editor.cardLanguage, strings.editor.cardLanguageDesc, [
-        { value: LANGUAGE_AUTO, label: strings.editor.cardLanguageAuto },
-        ...CARD_LANGUAGES.map((code) => ({ value: code, label: code })),
-      ]);
+      this._upgradeSelectField(
+        body,
+        "language",
+        strings.editor.cardLanguage,
+        strings.editor.cardLanguageDesc,
+        [
+          { value: LANGUAGE_AUTO, label: strings.editor.cardLanguageAuto },
+          ...CARD_LANGUAGES.map((code) => ({ value: code, label: code })),
+        ],
+        LANGUAGE_AUTO
+      );
 
       return body;
+    }
+
+    // Each option is labelled with the sample date rendered in that very
+    // format - no format names to translate 15 times, and it shows the
+    // actual result rather than a description of it.
+    //
+    // Deliberately the *card's* locale, not the editor's own: this dropdown
+    // is a preview of what the card will render, so it has to follow the
+    // Language field sitting next to it. Everything else in this editor
+    // stays in the viewer's own profile language (see t()).
+    _dateFormatOptions() {
+      const sample = dateFormatSampleDate();
+      const locale = cardLocale(this._hass, this._config);
+      return DATE_FORMAT_KEYS.map((key) => ({
+        value: key,
+        label: formatEventDate(sample, key, locale),
+      }));
     }
 
     _syncGeneralInputs() {
@@ -11508,6 +11697,19 @@
       this._syncActionSelector("hold_action", this._config.hold_action || { action: "none" });
       const languageSelect = (this._selectFields || {}).language;
       if (languageSelect) languageSelect.value = this._config.language || LANGUAGE_AUTO;
+      const dateFormatSelect = (this._selectFields || {}).date_format;
+      if (dateFormatSelect) {
+        // Rebuilt rather than just re-selected: the option *labels* are the
+        // preview, so they have to be re-rendered when the card's Language
+        // changes. Reassigning .selector re-renders the dropdown, which
+        // drops its value - hence setting it back straight after.
+        dateFormatSelect.selector = {
+          select: { options: this._dateFormatOptions(), mode: "dropdown" },
+        };
+        dateFormatSelect.value = this._config.date_format || "short";
+      }
+      const todayToggle = this.shadowRoot.querySelector('input[data-visibility="date_show_today"]');
+      if (todayToggle) todayToggle.checked = this._config.date_show_today !== false;
     }
 
     _buildEventsBody(strings) {

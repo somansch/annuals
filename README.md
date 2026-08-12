@@ -57,6 +57,7 @@ That's the whole setup - everything below covers the individual features and opt
 - [Countdown for one-time events](#countdown-for-one-time-events)
 - [Native Calendar card](#native-calendar-card)
 - [Custom dashboard card](#custom-dashboard-card)
+  - [Date format](#date-format)
   - [The visual editor](#the-visual-editor)
   - [Row columns](#row-columns)
   - [To-dos](#to-dos)
@@ -471,6 +472,27 @@ The card's own UI text (not the integration's entities/config-flow, which follow
 
 To override that per card, set **Language** (Settings → General) to one of those 15 language codes: the card then reads the same for everyone who sees it, no matter whose profile is looking at it - useful for a wall-mounted tablet, a shared household dashboard, or simply a card you want in a specific language. It covers the card's own text and its date/time formatting together, so the two never end up in different languages. Left on **Automatic**, each viewer keeps seeing their own language, exactly as before. The card *editor* always stays in your own profile language, so pinning a card to a language you don't read never leaves you stuck in a form you can't find your way back out of.
 
+### Date format
+
+**Date format** (Settings → General) decides how the [Date column](#row-columns) writes an event's date. Eight options, each listed in the dropdown as an actual date rather than a name, so you pick by looking at the result:
+
+| Option | en-US | de |
+|---|---|---|
+| Short (default) | Aug 11 | 11. Aug. |
+| Short, year when needed | Aug 11 / Aug 11, 2027 | 11. Aug. / 11. Aug. 2027 |
+| Short with weekday | Wed, Aug 11 | Mi., 11. Aug. |
+| Numeric | 8/11 | 11.8. |
+| Numeric with year | 8/11/2027 | 11.8.2027 |
+| Long | August 11, 2027 | 11. August 2027 |
+| Weekday only | Wednesday | Mittwoch |
+| Full | Wed, Aug 11, 2027 | Mi., 11. Aug. 2027 |
+
+Day/month order, separators and month spelling come from the browser's own locale data, so every one of the 15 languages gets its own conventions without you configuring anything. The second option adds the year only for dates outside the current year - handy on a card of yearly-recurring events, where the year is noise right up until the one entry it isn't (a [one-time event](#countdown-for-one-time-events) two years out, or an event that just crossed the new year).
+
+The same setting drives the `{date}` placeholder in [Custom text columns](#row-columns) and the [Timeline layout](#timeline-layout)'s **Show date**, so one card reads consistently. The full date revealed by tapping a countdown is deliberately left out of it: its job is to spell the day out unambiguously, whatever the columns are set to.
+
+**Say "Today"** (right below) controls whether the Date column writes "Today" instead of the date on an event's own day. On by default; turn it off for a card meant to read as a plain date list.
+
 A List card, a Timeline card, and a Compact one-line card, side by side - all the same integration, three different layouts:
 
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-summary.png" alt="List, Timeline, and Compact layouts side by side" width="90%">
@@ -483,7 +505,7 @@ The editor is split into two tabs - **Settings** (general settings, which event 
 
 ### Row columns
 
-Each row's layout is fully configurable from Layout → Display → **Row columns**: add, remove, and reorder as many columns as you like, choosing from Icon, Name, Last name, Full name, Type, Name + Type, Full name + Type, Occurrence, Countdown, Date, Time, Location, Description, or free-form **Custom text**. **Date** shows the next occurrence in short calendar form without a year (e.g. "3 Aug", localized to your profile language) - or "Today" once it's actually today, same as the Countdown column does. **Time**, **Location**, and **Description** only ever show anything for an [embedded external calendar event](#external-calendars) - they render empty for every Annuals event, which has none of the three. A custom text column mixes any text you like with placeholders - `{name}`, `{last_name}`, `{full_name}`, `{type}`, `{occurrence}`, `{when}`, `{date}`, `{country}`, `{time}`, `{location}`, `{description}` - so a row can read as one continuous sentence instead of a fixed table layout, e.g. turning "Anna · Birthday · 30 · Today" into "🎉 Anna turns 30 today! 🎉". The default arrangement (before you change anything) is **Icon, Full name + Type, Occurrence, Countdown**.
+Each row's layout is fully configurable from Layout → Display → **Row columns**: add, remove, and reorder as many columns as you like, choosing from Icon, Name, Last name, Full name, Type, Name + Type, Full name + Type, Occurrence, Countdown, Date, Time, Location, Description, or free-form **Custom text**. **Date** shows the next occurrence in whichever of the eight formats **Date format** is set to (see [Date format](#date-format) below) - or "Today" once it's actually today, same as the Countdown column does. **Time**, **Location**, and **Description** only ever show anything for an [embedded external calendar event](#external-calendars) - they render empty for every Annuals event, which has none of the three. A custom text column mixes any text you like with placeholders - `{name}`, `{last_name}`, `{full_name}`, `{type}`, `{occurrence}`, `{when}`, `{date}`, `{country}`, `{time}`, `{location}`, `{description}` - so a row can read as one continuous sentence instead of a fixed table layout, e.g. turning "Anna · Birthday · 30 · Today" into "🎉 Anna turns 30 today! 🎉". The default arrangement (before you change anything) is **Icon, Full name + Type, Occurrence, Countdown**.
 
 **Tap countdown for date** (same section, off by default) makes the Countdown column tappable: tapping swaps "in 2 days" for the event's actual date ("Mon, 3 Aug 2026"), tapping again swaps back - the same way Home Assistant's own activity feed toggles a relative time for an exact one. The rest of the row keeps triggering its usual [tap/hold action](#row-clicktap-behavior). The [Timeline layout](#timeline-layout) has its own equivalent under Layout → Timeline → Options, applying to the countdown at the end of its sentence.
 

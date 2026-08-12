@@ -2,7 +2,11 @@
 
 All notable changes to this integration are documented here.
 
-## v2.8.1-beta.1
+## v2.8.1
+
+### Added
+- **Date format** (Settings → General) - the Date column is no longer fixed to a short day-and-month date. Eight formats to pick from, each listed in the dropdown as an actual date rather than a name, so you see what you're choosing: `Aug 11`, `Aug 11, 2027`, `Wed, Aug 11`, `8/11`, `8/11/2027`, `August 11, 2027`, `Wednesday`, and `Wed, Aug 11, 2027`. All of them are rendered by the browser's own locale data, so each of the 15 languages gets its own day/month order, separators and month spelling automatically. The second option only adds the year for dates outside the current year - useful on a card of yearly events where the year is noise until the one entry it isn't. The setting also drives the `{date}` placeholder in Custom text columns and the Timeline's **Show date**; the full date behind a tapped countdown stays spelled out regardless.
+- **Say "Today"** (same section) - the Date column writes "Today" instead of the date on an event's own day. That's still the default; turning it off makes the column read as a plain date list.
 
 ### Fixed
 - **List layout columns didn't line up between rows** ([#4](https://github.com/somansch/annuals/issues/4)) - each row measured its own cells independently, so a column only appeared to line up while every row's content happened to be about equally wide. A longer countdown or date on one row left less room for the name/type cells next to it, pushing that row's remaining columns a few pixels off from the row above. Most visible after switching to a language with longer words, which is how it was reported, and worse the more columns a card shows. The whole list now shares one set of column tracks (CSS subgrid), so every column is measured once, across all rows. Compact mode is deliberately unchanged - it's a centered, wrapping sentence rather than a table - and browsers without subgrid keep the previous layout.
