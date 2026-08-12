@@ -599,40 +599,13 @@ A plain, unstyled card - just the defaults, letting the row highlighting (today/
 
 ```yaml
 type: custom:annuals-card
-title: ""
-show_title: true
-count: 10
-days_ahead: 0
-days_past: 0
-soon_days: 7
-types: []
 external_calendars:
   - calendar.personal
   - calendar.kids
-categories: []
-holiday_date_variants:
-  - actual
-show_past: true
-show_today: true
-show_soon: true
-highlight_past: true
-highlight_today: true
-highlight_soon: false
-show_icon: true
-show_name: true
-show_name_country: false
-show_type: true
-show_type_country: false
 show_type_calendar_name: false
 show_type_time: true
 show_type_location: true
 show_type_description: true
-show_badge: true
-show_when: true
-show_vip_badge: true
-show_important_badge: true
-vip_badge_icon: mdi:star
-important_badge_icon: mdi:exclamation-thick
 ```
 
 </details>
@@ -647,7 +620,6 @@ A fully styled card - custom colors per row element, bold/uppercase/underlined f
 ```yaml
 type: custom:annuals-card
 title: 🎉
-show_title: true
 count: 12
 days_ahead: 10
 days_past: 2
@@ -660,22 +632,8 @@ types:
   - pet_birthday
   - work_anniversary
   - custom
-categories: []
-holiday_date_variants:
-  - actual
-show_past: true
-show_today: true
-show_soon: true
-highlight_past: true
-highlight_today: true
 highlight_soon: true
-show_icon: true
-show_name: true
 show_type: false
-show_badge: true
-show_when: true
-show_vip_badge: true
-show_important_badge: true
 vip_badge_icon: mdi:account-star
 important_badge_icon: mdi:account-alert
 colors:
@@ -719,7 +677,7 @@ background:
 
 </details>
 
-Both are set through the visual editor above - shown here as YAML just to make the full option set easy to scan and copy. Every field left at its default (`""`, `false`, or omitted) in these examples inherits from your Home Assistant theme, per the CSS variables below.
+Both are set through the visual editor above - shown here as YAML just to make what each card actually changes easy to scan and copy. Every option not listed sits at its default, which is why the first card is six lines: the card only stores what you change. Anything left at its default inherits from your Home Assistant theme, per the CSS variables below.
 
 ### Theming with CSS variables
 
