@@ -263,6 +263,7 @@
         holdAction: "Hold action",
         holdActionDesc: "What happens when a row is pressed and held",
         cardLanguage: "Language",
+        missingLanguage: "Missing your language?",
         dateFormat: "Date format",
         dateFormatDesc:
           "How the Date column writes an event's date - each option is shown as the date itself, so you can see what you are picking. Also applies to the {date} placeholder in a Custom text column and to the Timeline's \"Show date\". The full date behind a tapped countdown always stays spelled out, whatever is chosen here.",
@@ -423,6 +424,16 @@
         colorBadge: "Occurrence",
         colorWhen: "Countdown",
         colorText: "Custom text",
+        colorDate: "Date",
+        colorCalendar: "Calendar fields",
+        colorDateDesc:
+          "Text color for the Date column",
+        colorCalendarDesc:
+          "Text color for the Time, Location and Description columns - external calendar events only",
+        fontDateDesc:
+          "Font size for the Date column (see Row columns in Layout -> Display)",
+        fontCalendarDesc:
+          "Font size for the Time, Location and Description columns - external calendar events only",
         cardTitleColorDesc: "Text color for the card's own title",
         colorNameDesc: "Text color for the event name",
         colorLastName: "Last name",
@@ -717,6 +728,7 @@
         holdAction: "Aktion beim Gedrückthalten",
         holdActionDesc: "Was passiert, wenn eine Zeile gedrückt gehalten wird",
         cardLanguage: "Sprache",
+        missingLanguage: "Deine Sprache fehlt?",
         dateFormat: "Datumsformat",
         dateFormatDesc:
           "Wie die Datums-Spalte das Datum eines Ereignisses schreibt - jede Option wird als das Datum selbst angezeigt, du siehst also direkt, was du wählst. Gilt ebenso für den Platzhalter {date} in einer Freitext-Spalte und für „Datum anzeigen“ in der Timeline. Das vollständige Datum hinter einem angetippten Countdown bleibt immer ausgeschrieben.",
@@ -878,6 +890,16 @@
         colorBadge: "Jubiläum",
         colorWhen: "Countdown",
         colorText: "Freier Text",
+        colorDate: "Datum",
+        colorCalendar: "Kalenderfelder",
+        colorDateDesc:
+          "Textfarbe für die Datums-Spalte",
+        colorCalendarDesc:
+          "Textfarbe für die Spalten Zeit, Ort und Beschreibung - nur für Ereignisse aus externen Kalendern",
+        fontDateDesc:
+          "Schriftgröße für die Datums-Spalte (siehe Zeilenspalten unter Layout -> Anzeige)",
+        fontCalendarDesc:
+          "Schriftgröße für die Spalten Zeit, Ort und Beschreibung - nur für Ereignisse aus externen Kalendern",
         cardTitleColorDesc: "Textfarbe für den Kartentitel",
         colorNameDesc: "Textfarbe für den Namen des Ereignisses",
         colorLastName: "Nachname",
@@ -1160,6 +1182,7 @@
         holdAction: "Action à l'appui long",
         holdActionDesc: "Ce qui se passe lorsqu'une ligne est maintenue appuyée",
         cardLanguage: "Langue",
+        missingLanguage: "Votre langue manque ?",
         dateFormat: "Format de date",
         dateFormatDesc:
           "Comment la colonne Date écrit la date d'un événement - chaque option est affichée sous forme de date, vous voyez donc directement ce que vous choisissez. S'applique aussi au paramètre {date} d'une colonne de texte libre et à « Afficher la date » de la chronologie. La date complète derrière un compte à rebours tapé reste toujours écrite en entier.",
@@ -1320,6 +1343,16 @@
         colorBadge: "Occurrence",
         colorWhen: "Compte à rebours",
         colorText: "Texte libre",
+        colorDate: "Date",
+        colorCalendar: "Champs de calendrier",
+        colorDateDesc:
+          "Couleur du texte de la colonne Date",
+        colorCalendarDesc:
+          "Couleur du texte des colonnes Heure, Lieu et Description - uniquement pour les événements de calendriers externes",
+        fontDateDesc:
+          "Taille de police de la colonne Date (voir Colonnes de ligne sous Disposition -> Affichage)",
+        fontCalendarDesc:
+          "Taille de police des colonnes Heure, Lieu et Description - uniquement pour les événements de calendriers externes",
         cardTitleColorDesc: "Couleur du texte pour le titre propre de la carte",
         colorNameDesc: "Couleur du texte pour le nom de l'événement",
         colorLastName: "Nom de famille",
@@ -1602,6 +1635,7 @@
         holdAction: "Actie bij ingedrukt houden",
         holdActionDesc: "Wat er gebeurt als een rij ingedrukt wordt gehouden",
         cardLanguage: "Taal",
+        missingLanguage: "Ontbreekt jouw taal?",
         dateFormat: "Datumnotatie",
         dateFormatDesc:
           "Hoe de Datum-kolom de datum van een evenement schrijft - elke optie wordt als de datum zelf getoond, dus je ziet meteen wat je kiest. Geldt ook voor de plaatsaanduiding {date} in een vrije-tekstkolom en voor \"Datum tonen\" op de tijdlijn. De volledige datum achter een aangetikte aftelling blijft altijd voluit geschreven.",
@@ -1762,6 +1796,16 @@
         colorBadge: "Jubileum",
         colorWhen: "Aftellen",
         colorText: "Eigen tekst",
+        colorDate: "Datum",
+        colorCalendar: "Agendavelden",
+        colorDateDesc:
+          "Tekstkleur voor de Datum-kolom",
+        colorCalendarDesc:
+          "Tekstkleur voor de kolommen Tijd, Locatie en Beschrijving - alleen voor evenementen uit externe agenda's",
+        fontDateDesc:
+          "Lettergrootte voor de Datum-kolom (zie Rijkolommen onder Layout -> Weergave)",
+        fontCalendarDesc:
+          "Lettergrootte voor de kolommen Tijd, Locatie en Beschrijving - alleen voor evenementen uit externe agenda's",
         cardTitleColorDesc: "Tekstkleur voor de eigen titel van de kaart",
         colorNameDesc: "Tekstkleur voor de naam van het evenement",
         colorLastName: "Achternaam",
@@ -2050,6 +2094,7 @@
         holdAction: "Akcja przytrzymania",
         holdActionDesc: "Co się dzieje po przytrzymaniu wiersza",
         cardLanguage: "Język",
+        missingLanguage: "Brakuje Twojego języka?",
         dateFormat: "Format daty",
         dateFormatDesc:
           "Jak kolumna Data zapisuje datę wydarzenia - każda opcja jest pokazana jako sama data, więc od razu widać, co się wybiera. Dotyczy też symbolu {date} w kolumnie tekstu własnego oraz „Pokaż datę” na osi czasu. Pełna data pod dotkniętym odliczaniem zawsze pozostaje zapisana w całości.",
@@ -2209,6 +2254,16 @@
         colorBadge: "Wystąpienie",
         colorWhen: "Odliczanie",
         colorText: "Własny tekst",
+        colorDate: "Data",
+        colorCalendar: "Pola kalendarza",
+        colorDateDesc:
+          "Kolor tekstu kolumny Data",
+        colorCalendarDesc:
+          "Kolor tekstu kolumn Godzina, Miejsce i Opis - tylko dla wydarzeń z zewnętrznych kalendarzy",
+        fontDateDesc:
+          "Rozmiar czcionki kolumny Data (zobacz Kolumny wiersza w Układ -> Wyświetlanie)",
+        fontCalendarDesc:
+          "Rozmiar czcionki kolumn Godzina, Miejsce i Opis - tylko dla wydarzeń z zewnętrznych kalendarzy",
         cardTitleColorDesc: "Kolor tekstu dla własnego tytułu karty",
         colorNameDesc: "Kolor tekstu dla nazwy wydarzenia",
         colorLastName: "Nazwisko",
@@ -2491,6 +2546,7 @@
         holdAction: "Acción al mantener pulsado",
         holdActionDesc: "Qué ocurre al mantener pulsada una fila",
         cardLanguage: "Idioma",
+        missingLanguage: "¿Falta tu idioma?",
         dateFormat: "Formato de fecha",
         dateFormatDesc:
           "Cómo escribe la columna Fecha la fecha de un evento: cada opción se muestra como la fecha misma, así que ves directamente lo que eliges. Se aplica también al marcador {date} de una columna de texto libre y a «Mostrar fecha» de la línea de tiempo. La fecha completa tras pulsar la cuenta atrás siempre se mantiene escrita por extenso.",
@@ -2651,6 +2707,16 @@
         colorBadge: "Ocurrencia",
         colorWhen: "Cuenta atrás",
         colorText: "Texto personalizado",
+        colorDate: "Fecha",
+        colorCalendar: "Campos de calendario",
+        colorDateDesc:
+          "Color del texto de la columna Fecha",
+        colorCalendarDesc:
+          "Color del texto de las columnas Hora, Ubicación y Descripción: solo para eventos de calendarios externos",
+        fontDateDesc:
+          "Tamaño de fuente de la columna Fecha (ver Columnas de fila en Diseño -> Visualización)",
+        fontCalendarDesc:
+          "Tamaño de fuente de las columnas Hora, Ubicación y Descripción: solo para eventos de calendarios externos",
         cardTitleColorDesc: "Color del texto para el título propio de la tarjeta",
         colorNameDesc: "Color del texto para el nombre del evento",
         colorLastName: "Apellido",
@@ -2933,6 +2999,7 @@
         holdAction: "Azione alla pressione prolungata",
         holdActionDesc: "Cosa succede quando si tiene premuta una riga",
         cardLanguage: "Lingua",
+        missingLanguage: "Manca la tua lingua?",
         dateFormat: "Formato data",
         dateFormatDesc:
           "Come la colonna Data scrive la data di un evento: ogni opzione è mostrata come la data stessa, così vedi subito cosa stai scegliendo. Vale anche per il segnaposto {date} in una colonna di testo libero e per «Mostra data» della timeline. La data completa dietro un conto alla rovescia toccato resta sempre scritta per esteso.",
@@ -3094,6 +3161,16 @@
         colorBadge: "Occorrenza",
         colorWhen: "Conto alla rovescia",
         colorText: "Testo libero",
+        colorDate: "Data",
+        colorCalendar: "Campi del calendario",
+        colorDateDesc:
+          "Colore del testo della colonna Data",
+        colorCalendarDesc:
+          "Colore del testo delle colonne Ora, Luogo e Descrizione - solo per eventi da calendari esterni",
+        fontDateDesc:
+          "Dimensione del carattere della colonna Data (vedi Colonne della riga in Layout -> Visualizzazione)",
+        fontCalendarDesc:
+          "Dimensione del carattere delle colonne Ora, Luogo e Descrizione - solo per eventi da calendari esterni",
         cardTitleColorDesc: "Colore del testo per il titolo proprio della scheda",
         colorNameDesc: "Colore del testo per il nome dell'evento",
         colorLastName: "Cognome",
@@ -3376,6 +3453,7 @@
         holdAction: "Ação ao pressionar e segurar",
         holdActionDesc: "O que acontece ao pressionar e segurar uma linha",
         cardLanguage: "Idioma",
+        missingLanguage: "Falta o seu idioma?",
         dateFormat: "Formato de fecha",
         dateFormatDesc:
           "Cómo escribe la columna Fecha la fecha de un evento: cada opción se muestra como la fecha misma, así que ves directamente lo que eliges. Se aplica también al marcador {date} de una columna de texto libre y a «Mostrar fecha» de la línea de tiempo. La fecha completa tras pulsar la cuenta atrás siempre se mantiene escrita por extenso.",
@@ -3535,6 +3613,16 @@
         colorBadge: "Ocorrência",
         colorWhen: "Contagem regressiva",
         colorText: "Texto personalizado",
+        colorDate: "Data",
+        colorCalendar: "Campos de calendário",
+        colorDateDesc:
+          "Cor do texto da coluna Data",
+        colorCalendarDesc:
+          "Cor do texto das colunas Hora, Local e Descrição - apenas para eventos de calendários externos",
+        fontDateDesc:
+          "Tamanho da fonte da coluna Data (veja Colunas da linha em Layout -> Exibição)",
+        fontCalendarDesc:
+          "Tamanho da fonte das colunas Hora, Local e Descrição - apenas para eventos de calendários externos",
         cardTitleColorDesc: "Cor do texto para o título próprio do cartão",
         colorNameDesc: "Cor do texto para o nome do evento",
         colorLastName: "Sobrenome",
@@ -3822,6 +3910,7 @@
         holdAction: "Действие при удержании",
         holdActionDesc: "Что происходит при удержании строки нажатой",
         cardLanguage: "Язык",
+        missingLanguage: "Не хватает вашего языка?",
         dateFormat: "Формат даты",
         dateFormatDesc:
           "Как столбец «Дата» записывает дату события - каждый вариант показан самой датой, так что сразу видно, что выбираешь. Действует и на подстановку {date} в столбце произвольного текста, и на «Показывать дату» на шкале времени. Полная дата за нажатым обратным отсчётом всегда остаётся выписанной целиком.",
@@ -3982,6 +4071,16 @@
         colorBadge: "Номер события",
         colorWhen: "Обратный отсчёт",
         colorText: "Произвольный текст",
+        colorDate: "Дата",
+        colorCalendar: "Поля календаря",
+        colorDateDesc:
+          "Цвет текста столбца «Дата»",
+        colorCalendarDesc:
+          "Цвет текста столбцов «Время», «Место» и «Описание» - только для событий из внешних календарей",
+        fontDateDesc:
+          "Размер шрифта столбца «Дата» (см. «Столбцы строки» в разделе Макет -> Отображение)",
+        fontCalendarDesc:
+          "Размер шрифта столбцов «Время», «Место» и «Описание» - только для событий из внешних календарей",
         cardTitleColorDesc: "Цвет текста для собственного заголовка карточки",
         colorNameDesc: "Цвет текста для имени события",
         colorLastName: "Фамилия",
@@ -4268,6 +4367,7 @@
         holdAction: "Åtgärd vid tryck och håll",
         holdActionDesc: "Vad som händer när en rad trycks och hålls in",
         cardLanguage: "Språk",
+        missingLanguage: "Saknas ditt språk?",
         dateFormat: "Datumformat",
         dateFormatDesc:
           "Hur Datum-kolumnen skriver en händelses datum - varje alternativ visas som datumet självt, så du ser direkt vad du väljer. Gäller även platshållaren {date} i en fritextkolumn och tidslinjens ”Visa datum”. Det fullständiga datumet bakom en tryckt nedräkning skrivs alltid ut i sin helhet.",
@@ -4430,6 +4530,16 @@
         colorBadge: "Händelsenummer",
         colorWhen: "Nedräkning",
         colorText: "Egen text",
+        colorDate: "Datum",
+        colorCalendar: "Kalenderfält",
+        colorDateDesc:
+          "Textfärg för Datum-kolumnen",
+        colorCalendarDesc:
+          "Textfärg för kolumnerna Tid, Plats och Beskrivning - endast för händelser från externa kalendrar",
+        fontDateDesc:
+          "Teckenstorlek för Datum-kolumnen (se Radkolumner under Layout -> Visning)",
+        fontCalendarDesc:
+          "Teckenstorlek för kolumnerna Tid, Plats och Beskrivning - endast för händelser från externa kalendrar",
         colorNameDesc: "Textfärg för händelsens namn",
         colorLastName: "Efternamn",
         colorLastNameDesc: "Textfärg för händelsens efternamn",
@@ -4709,6 +4819,7 @@
         holdAction: "长按操作",
         holdActionDesc: "长按某行时执行的操作",
         cardLanguage: "语言",
+        missingLanguage: "缺少你的语言？",
         dateFormat: "日期格式",
         dateFormatDesc:
           "“日期”列如何书写事件的日期——每个选项都以日期本身呈现，因此你能直接看到自己选的是什么。同样适用于自定义文本列中的 {date} 占位符，以及时间轴的“显示日期”。点击倒计时后显示的完整日期始终保持完整写法。",
@@ -4869,6 +4980,16 @@
         colorBadge: "周年数",
         colorWhen: "倒计时",
         colorText: "自定义文本",
+        colorDate: "日期",
+        colorCalendar: "日历字段",
+        colorDateDesc:
+          "“日期”列的文本颜色",
+        colorCalendarDesc:
+          "“时间”“地点”“描述”列的文本颜色——仅适用于来自外部日历的事件",
+        fontDateDesc:
+          "“日期”列的字号（见“布局 -> 显示”下的“行列”）",
+        fontCalendarDesc:
+          "“时间”“地点”“描述”列的字号——仅适用于来自外部日历的事件",
         colorNameDesc: "事件名称的文本颜色",
         colorLastName: "姓氏",
         colorLastNameDesc: "事件姓氏的文本颜色",
@@ -5156,6 +5277,7 @@
         holdAction: "Akce při podržení",
         holdActionDesc: "Co se stane při podržení řádku",
         cardLanguage: "Jazyk",
+        missingLanguage: "Chybí váš jazyk?",
         dateFormat: "Formát data",
         dateFormatDesc:
           "Jak sloupec Datum zapisuje datum události - každá možnost je zobrazena jako samotné datum, takže hned vidíte, co vybíráte. Platí i pro zástupný text {date} ve sloupci s vlastním textem a pro „Zobrazit datum“ na časové ose. Úplné datum za klepnutým odpočtem zůstává vždy vypsané celé.",
@@ -5319,6 +5441,16 @@
         colorBadge: "Výročí",
         colorWhen: "Odpočet",
         colorText: "Vlastní text",
+        colorDate: "Datum",
+        colorCalendar: "Pole kalendáře",
+        colorDateDesc:
+          "Barva textu sloupce Datum",
+        colorCalendarDesc:
+          "Barva textu sloupců Čas, Místo a Popis - pouze pro události z externích kalendářů",
+        fontDateDesc:
+          "Velikost písma sloupce Datum (viz Sloupce řádku v Rozvržení -> Zobrazení)",
+        fontCalendarDesc:
+          "Velikost písma sloupců Čas, Místo a Popis - pouze pro události z externích kalendářů",
         colorNameDesc: "Barva textu pro jméno události",
         colorLastName: "Příjmení",
         colorLastNameDesc: "Barva textu pro příjmení události",
@@ -5603,6 +5735,7 @@
         holdAction: "Handling ved trykk og hold",
         holdActionDesc: "Hva som skjer når en rad trykkes og holdes inne",
         cardLanguage: "Språk",
+        missingLanguage: "Mangler språket ditt?",
         dateFormat: "Datumformat",
         dateFormatDesc:
           "Hur Datum-kolumnen skriver en händelses datum - varje alternativ visas som datumet självt, så du ser direkt vad du väljer. Gäller även platshållaren {date} i en fritextkolumn och tidslinjens ”Visa datum”. Det fullständiga datumet bakom en tryckt nedräkning skrivs alltid ut i sin helhet.",
@@ -5765,6 +5898,16 @@
         colorBadge: "Jubileum",
         colorWhen: "Nedtelling",
         colorText: "Egendefinert tekst",
+        colorDate: "Dato",
+        colorCalendar: "Kalenderfelt",
+        colorDateDesc:
+          "Tekstfarge for Dato-kolonnen",
+        colorCalendarDesc:
+          "Tekstfarge for kolonnene Tid, Sted og Beskrivelse - kun for hendelser fra eksterne kalendere",
+        fontDateDesc:
+          "Skriftstørrelse for Dato-kolonnen (se Radkolonner under Layout -> Visning)",
+        fontCalendarDesc:
+          "Skriftstørrelse for kolonnene Tid, Sted og Beskrivelse - kun for hendelser fra eksterne kalendere",
         colorNameDesc: "Tekstfarge for hendelsens navn",
         colorLastName: "Etternavn",
         colorLastNameDesc: "Tekstfarge for hendelsens etternavn",
@@ -6049,6 +6192,7 @@
         holdAction: "Handling ved tryk og hold",
         holdActionDesc: "Hvad der sker, når en række trykkes og holdes nede",
         cardLanguage: "Sprog",
+        missingLanguage: "Mangler dit sprog?",
         dateFormat: "Datoformat",
         dateFormatDesc:
           "Hvordan Dato-kolonnen skriver en begivenheds dato - hver mulighed vises som selve datoen, så du ser direkte, hvad du vælger. Gælder også pladsholderen {date} i en fritekstkolonne og tidslinjens «Vis dato». Den fuldstændige dato bag en trykket nedtælling står altid skrevet helt ud.",
@@ -6211,6 +6355,16 @@
         colorBadge: "Jubilæum",
         colorWhen: "Nedtælling",
         colorText: "Brugerdefineret tekst",
+        colorDate: "Dato",
+        colorCalendar: "Kalenderfelter",
+        colorDateDesc:
+          "Tekstfarve for Dato-kolonnen",
+        colorCalendarDesc:
+          "Tekstfarve for kolonnerne Tid, Sted og Beskrivelse - kun for begivenheder fra eksterne kalendere",
+        fontDateDesc:
+          "Skriftstørrelse for Dato-kolonnen (se Rækkekolonner under Layout -> Visning)",
+        fontCalendarDesc:
+          "Skriftstørrelse for kolonnerne Tid, Sted og Beskrivelse - kun for begivenheder fra eksterne kalendere",
         colorNameDesc: "Tekstfarve for begivenhedens navn",
         colorLastName: "Efternavn",
         colorLastNameDesc: "Tekstfarve for begivenhedens efternavn",
@@ -6501,6 +6655,7 @@
         holdAction: "Basılı tutma eylemi",
         holdActionDesc: "Bir satır basılı tutulduğunda ne olacağı",
         cardLanguage: "Dil",
+        missingLanguage: "Diliniz eksik mi?",
         dateFormat: "Tarih biçimi",
         dateFormatDesc:
           "Tarih sütununun bir etkinliğin tarihini nasıl yazacağı - her seçenek tarihin kendisi olarak gösterilir, böylece neyi seçtiğinizi doğrudan görürsünüz. Serbest metin sütunundaki {date} yer tutucusu ve zaman çizelgesinin «Tarihi göster» seçeneği için de geçerlidir. Dokunulan geri sayımın ardındaki tam tarih her zaman açık yazılmış kalır.",
@@ -6663,6 +6818,16 @@
         colorBadge: "Tekrar sayısı",
         colorWhen: "Geri sayım",
         colorText: "Özel metin",
+        colorDate: "Tarih",
+        colorCalendar: "Takvim alanları",
+        colorDateDesc:
+          "Tarih sütununun metin rengi",
+        colorCalendarDesc:
+          "Saat, Konum ve Açıklama sütunlarının metin rengi - yalnızca harici takvimlerden gelen etkinlikler için",
+        fontDateDesc:
+          "Tarih sütununun yazı tipi boyutu (Düzen -> Görünüm altındaki Satır sütunlarına bakın)",
+        fontCalendarDesc:
+          "Saat, Konum ve Açıklama sütunlarının yazı tipi boyutu - yalnızca harici takvimlerden gelen etkinlikler için",
         colorNameDesc: "Etkinlik adı için metin rengi",
         colorLastName: "Soyad",
         colorLastNameDesc: "Etkinliğin soyadı için metin rengi",
@@ -6824,6 +6989,40 @@
       return new Intl.DateTimeFormat(locale, DATE_FORMATS.short).format(date);
     }
     return new Intl.DateTimeFormat(locale, options).format(date);
+  }
+
+  // Opens a feature request for another card language, pre-titled so every
+  // one of them lands in the issue list under the same, searchable heading
+  // rather than 15 differently-worded variants of the same ask - with the
+  // requester's own profile language appended, since that's the one thing
+  // the request is useless without and the one thing the card already
+  // knows.
+  const NEW_LANGUAGE_ISSUE_TITLE = "[FR] - Additional language support";
+
+  // "Finnish (fi)" rather than a bare "fi": the tag alone is what the card
+  // needs, the name is what makes the issue list readable at a glance.
+  // Deliberately named in English, not in the requester's own language -
+  // this is a title someone else has to triage.
+  function languageDisplayName(tag) {
+    try {
+      const name = new Intl.DisplayNames(["en"], { type: "language" }).of(tag);
+      return name && name !== tag ? `${name} (${tag})` : tag;
+    } catch (err) {
+      // Intl.DisplayNames is missing, or the tag isn't well-formed - the raw
+      // tag still says everything the request actually needs.
+      return tag;
+    }
+  }
+
+  function newLanguageIssueUrl(hass) {
+    const tag = (hass && hass.language) || "";
+    const title = tag
+      ? `${NEW_LANGUAGE_ISSUE_TITLE}: ${languageDisplayName(tag)}`
+      : NEW_LANGUAGE_ISSUE_TITLE;
+    return (
+      "https://github.com/somansch/annuals/issues/new" +
+      `?labels=enhancement&title=${encodeURIComponent(title)}`
+    );
   }
 
   // The date the editor's Date format dropdown previews every option with.
@@ -7190,6 +7389,8 @@
         badge: "",
         when: "",
         text: "",
+        date: "",
+        calendar: "",
         match_accent: false,
         match_today: false,
         match_soon: false,
@@ -7241,6 +7442,8 @@
         badge: "",
         when: "",
         text: "",
+        date: "",
+        calendar: "",
         timeline_header: "",
         timeline_tooltip: "",
         timeline_list: "",
@@ -7311,6 +7514,22 @@
           underline: false,
           letter_spacing: "",
           ...((config.font_style || {}).text || {}),
+        },
+        date: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).date || {}),
+        },
+        calendar: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).calendar || {}),
         },
         timeline_header: {
           bold: false,
@@ -7691,8 +7910,142 @@
   // conditionals, consistent with this card's no-build-step, no-cleverness
   // approach elsewhere. Missing keys render as empty string rather than
   // leaving the literal "{foo}" in the output.
-  function renderTemplate(template, values) {
-    return template.replace(/\{(\w+)\}/g, (_, key) => (values[key] ?? ""));
+  // Which field's styling a {placeholder} inside a Custom text column adopts.
+  // "{name} turns {occurrence}" should read with the Name and Occurrence
+  // colors and fonts the Colors/Fonts tabs already offer - otherwise those
+  // settings simply have no effect on a card built out of custom text, which
+  // is exactly the sentence-style layout most likely to be using them.
+  // {country} has no field of its own (it's a suffix on other fields), so it
+  // takes the surrounding Custom text styling.
+  const PLACEHOLDER_CLASSES = {
+    name: "name",
+    last_name: "last-name",
+    full_name: "full-name",
+    type: "type",
+    occurrence: "badge",
+    when: "when",
+    date: "date-col",
+    time: "calendar-col",
+    location: "calendar-col",
+    description: "calendar-col",
+  };
+
+  // Deep value equality, enough for what a card config can hold: scalars,
+  // arrays and plain objects. Used to tell "the user set this" from "this is
+  // simply the default" - see pruneDefaults.
+  function sameConfigValue(a, b) {
+    if (a === b) return true;
+    if (Array.isArray(a) || Array.isArray(b)) {
+      if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) return false;
+      return a.every((item, i) => sameConfigValue(item, b[i]));
+    }
+    if (a && b && typeof a === "object" && typeof b === "object") {
+      const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+      return [...keys].every((key) => sameConfigValue(a[key], b[key]));
+    }
+    return false;
+  }
+
+  // Everything in `config` that differs from what defaultConfig() would have
+  // produced anyway.
+  //
+  // The card fills every option in via defaultConfig on the way in, so
+  // writing all of them back out would put ~90 lines of YAML behind a card
+  // nobody has customized - burying the two or three lines that actually say
+  // something. Only what was deliberately changed is emitted; the rest is
+  // filled back in on load exactly as before, so a pruned config renders
+  // identically to a complete one.
+  //
+  // The trade-off is deliberate: an option left at its default now follows
+  // that default if a later version changes it, instead of being pinned to
+  // today's value forever. That's how a dashboard card is normally expected
+  // to behave - and the alternative pins settings nobody ever chose.
+  function pruneDefaults(config) {
+    const defaults = defaultConfig({});
+    const prune = (value, fallback) => {
+      if (sameConfigValue(value, fallback)) return undefined;
+      // A nested group (colors, font_sizes, font_style, ...) keeps only its
+      // own changed entries, and disappears entirely once none are left.
+      if (
+        value &&
+        fallback &&
+        typeof value === "object" &&
+        typeof fallback === "object" &&
+        !Array.isArray(value) &&
+        !Array.isArray(fallback)
+      ) {
+        const kept = {};
+        for (const [key, inner] of Object.entries(value)) {
+          const prunedInner = prune(inner, fallback[key]);
+          if (prunedInner !== undefined) kept[key] = prunedInner;
+        }
+        return Object.keys(kept).length ? kept : undefined;
+      }
+      return value;
+    };
+
+    const result = {};
+    for (const [key, value] of Object.entries(config)) {
+      // "type" identifies the card to Home Assistant - never a default to
+      // drop, and not part of defaultConfig's own output.
+      if (key === "type") {
+        result[key] = value;
+        continue;
+      }
+      const pruned = prune(value, defaults[key]);
+      if (pruned !== undefined) result[key] = pruned;
+    }
+    return result;
+  }
+
+  // The Type cell's content (used by the standalone Type column and by both
+  // combined Name + Type columns), with everything an external calendar
+  // contributed wrapped in .calendar-col so the Calendar fields color and
+  // font reach it - the calendar's own name included, not just the
+  // time/location/description appended after it. The separators and the
+  // Annuals type text itself stay in the Type field's own styling.
+  function typeCellFragment(parts) {
+    const fragment = document.createDocumentFragment();
+    (parts || []).forEach((part, index) => {
+      if (index > 0) fragment.appendChild(document.createTextNode(" · "));
+      if (!part.calendar) {
+        fragment.appendChild(document.createTextNode(part.text));
+        return;
+      }
+      const span = document.createElement("span");
+      span.className = "calendar-col";
+      span.textContent = part.text;
+      fragment.appendChild(span);
+    });
+    return fragment;
+  }
+
+  // Substitutes {placeholder}s into a Custom text column's template, wrapping
+  // each replaced one in its field's class so the CSS above can style it.
+  // Literal text between placeholders stays plain text nodes.
+  function renderTemplateNodes(template, values) {
+    const fragment = document.createDocumentFragment();
+    let lastIndex = 0;
+    for (const match of template.matchAll(/\{(\w+)\}/g)) {
+      if (match.index > lastIndex) {
+        fragment.appendChild(document.createTextNode(template.slice(lastIndex, match.index)));
+      }
+      const value = values[match[1]] ?? "";
+      const className = PLACEHOLDER_CLASSES[match[1]];
+      if (value !== "" && className) {
+        const span = document.createElement("span");
+        span.className = className;
+        span.textContent = String(value);
+        fragment.appendChild(span);
+      } else if (value !== "") {
+        fragment.appendChild(document.createTextNode(String(value)));
+      }
+      lastIndex = match.index + match[0].length;
+    }
+    if (lastIndex < template.length) {
+      fragment.appendChild(document.createTextNode(template.slice(lastIndex)));
+    }
+    return fragment;
   }
 
   const CARD_STYLE = `
@@ -7902,7 +8255,9 @@
     .row.match-accent-text .type,
     .row.match-accent-text .badge,
     .row.match-accent-text .when,
-    .row.match-accent-text .text-col {
+    .row.match-accent-text .text-col,
+    .row.match-accent-text .date-col,
+    .row.match-accent-text .calendar-col {
       color: var(--annuals-accent-color, var(--primary-text-color));
     }
     .row.match-today-text .name,
@@ -7911,7 +8266,9 @@
     .row.match-today-text .type,
     .row.match-today-text .badge,
     .row.match-today-text .when,
-    .row.match-today-text .text-col {
+    .row.match-today-text .text-col,
+    .row.match-today-text .date-col,
+    .row.match-today-text .calendar-col {
       color: var(--annuals-today-color, var(--error-color));
     }
     .row.match-soon-text .name,
@@ -7920,7 +8277,9 @@
     .row.match-soon-text .type,
     .row.match-soon-text .badge,
     .row.match-soon-text .when,
-    .row.match-soon-text .text-col {
+    .row.match-soon-text .text-col,
+    .row.match-soon-text .date-col,
+    .row.match-soon-text .calendar-col {
       color: var(--annuals-soon-color, var(--warning-color));
     }
     .info { flex: 1; min-width: 0; }
@@ -8067,6 +8426,65 @@
       text-decoration: var(--annuals-row-text-decoration, none);
       letter-spacing: var(--annuals-row-text-spacing, normal);
     }
+    /* Date used to share .text-col with Custom text, which meant styling one
+       silently restyled the other - and left Date with no Colors/Fonts entry
+       of its own at all. Same shape, own variables. */
+    .date-col {
+      white-space: pre-wrap;
+      color: var(--annuals-date-color, inherit);
+      font-size: var(--annuals-row-date-size, inherit);
+      font-weight: var(--annuals-row-date-weight, normal);
+      font-style: var(--annuals-row-date-style, normal);
+      text-transform: var(--annuals-row-date-transform, none);
+      text-decoration: var(--annuals-row-date-decoration, none);
+      letter-spacing: var(--annuals-row-date-spacing, normal);
+    }
+    /* Time, Location and Description together - the three fields only an
+       embedded external calendar event ever fills in (see buildExternalEvent),
+       so they're configured as one group rather than three near-identical
+       rows in the Colors and Fonts tabs. */
+    .calendar-col {
+      white-space: pre-wrap;
+      color: var(--annuals-calendar-color, inherit);
+      font-size: var(--annuals-row-calendar-size, inherit);
+      font-weight: var(--annuals-row-calendar-weight, normal);
+      font-style: var(--annuals-row-calendar-style, normal);
+      text-transform: var(--annuals-row-calendar-transform, none);
+      text-decoration: var(--annuals-row-calendar-decoration, none);
+      letter-spacing: var(--annuals-row-calendar-spacing, normal);
+    }
+    /* A {placeholder} inside a Custom text column is wrapped in the class of
+       the field it stands for (see renderTemplateNodes), so "{name} turns
+       {occurrence}" picks up the Name and Occurrence colors and fonts rather
+       than rendering as one undifferentiated run of Custom text.
+       Only the typography carries over: the pill behind a real Occurrence
+       badge, and the ellipsis/flex sizing that lets a real Name column
+       truncate, belong to a column of its own - not to a word inside a
+       sentence. */
+    .text-col .name,
+    .text-col .last-name,
+    .text-col .full-name,
+    .text-col .type,
+    .text-col .when,
+    .text-col .badge,
+    .text-col .date-col,
+    .text-col .calendar-col,
+    /* Same treatment for the external-calendar parts inside a Type cell
+       (see typeCellFragment) - they're words in a run of text there, not a
+       column of their own. */
+    .type .calendar-col {
+      display: inline;
+      flex: none;
+      min-width: 0;
+      overflow: visible;
+      white-space: inherit;
+      text-overflow: clip;
+    }
+    .text-col .badge {
+      background: none;
+      padding: 0;
+      border-radius: 0;
+    }
     /* "Compact" mode (columns_compact) - for building one continuous
        sentence out of columns instead of a classic multi-field row: removes
        every field's built-in width/growth/alignment so nothing but the
@@ -8096,6 +8514,8 @@
     .list.columns-compact .icon-wrap { align-self: flex-end; margin-bottom: 6px; }
     .list.columns-compact .info,
     .list.columns-compact .text-col,
+    .list.columns-compact .date-col,
+    .list.columns-compact .calendar-col,
     .list.columns-compact .name,
     .list.columns-compact .last-name,
     .list.columns-compact .full-name,
@@ -8745,8 +9165,12 @@
       return document.createElement("annuals-card-editor");
     }
 
+    // What a freshly added card is seeded with. Deliberately bare: every
+    // option defaultConfig fills in on load would otherwise be written into
+    // the dashboard before the user has changed a single one of them (see
+    // pruneDefaults).
     static getStubConfig() {
-      return defaultConfig({});
+      return {};
     }
 
     // The open to-do items matched to one event, as far as the badge is
@@ -9995,19 +10419,27 @@
       // external calendar event, same as the values.time/location/
       // description fields above - a no-op for every Annuals event,
       // including a one-time event, which carries none of the three.
-      const typeExtras = [];
-      if (countrySuffix && config.show_type_country) typeExtras.push(countrySuffix);
-      if (config.show_type_time && timeText) typeExtras.push(timeText);
-      if (config.show_type_location && locationText) typeExtras.push(locationText);
-      if (config.show_type_description && descriptionText) typeExtras.push(descriptionText);
-      // typeLabel can be "" when show_type_calendar_name is off - in that
-      // case the extras stand on their own instead of leading with a
-      // dangling " · ".
-      const typeText = typeExtras.length
-        ? typeLabel
-          ? `${typeLabel} · ${typeExtras.join(" · ")}`
-          : typeExtras.join(" · ")
-        : typeLabel;
+      // Kept as parts rather than one joined string so each can be rendered
+      // in its own styling: everything an external calendar contributes -
+      // the calendar's own name filling the type slot, plus time/location/
+      // description - belongs to the Calendar fields group (.calendar-col),
+      // while an Annuals type label and a holiday's country suffix are the
+      // Type field's own text. See _typeCellFragment.
+      const typeParts = [];
+      if (typeLabel) typeParts.push({ text: typeLabel, calendar: !!e.isExternal });
+      if (countrySuffix && config.show_type_country)
+        typeParts.push({ text: countrySuffix, calendar: false });
+      if (config.show_type_time && timeText) typeParts.push({ text: timeText, calendar: true });
+      if (config.show_type_location && locationText)
+        typeParts.push({ text: locationText, calendar: true });
+      if (config.show_type_description && descriptionText)
+        typeParts.push({ text: descriptionText, calendar: true });
+      // The same thing as one plain string, for everything that needs the
+      // text rather than the markup (the {type} placeholder's neighbours,
+      // tooltips, the timeline). typeLabel can be "" when
+      // show_type_calendar_name is off - the extras then stand on their own
+      // instead of leading with a dangling " · ".
+      const typeText = typeParts.map((part) => part.text).join(" · ");
 
       // Shared value set for "text" column templates ({name}/{last_name}/
       // {full_name}/{type}/{occurrence}/{when}/{date}/{country}/{time}/
@@ -10044,6 +10476,7 @@
         iconVisible,
         nameText,
         typeText,
+        typeParts,
         lastNameText: e.lastName,
         fullNameText: fullNameSuffixedText,
         showBadge,
@@ -10298,7 +10731,7 @@
         iconAnimClass,
         iconVisible,
         nameText,
-        typeText,
+        typeParts,
         lastNameText,
         fullNameText,
         showBadge,
@@ -10337,7 +10770,7 @@
           name.textContent = nameText;
           const type = document.createElement("div");
           type.className = "type";
-          type.textContent = typeText;
+          type.appendChild(typeCellFragment(typeParts));
           info.append(name, type);
           return info;
         }
@@ -10349,7 +10782,7 @@
           fullName.textContent = fullNameText;
           const type = document.createElement("div");
           type.className = "type";
-          type.textContent = typeText;
+          type.appendChild(typeCellFragment(typeParts));
           info.append(fullName, type);
           return info;
         }
@@ -10362,7 +10795,7 @@
         case "type": {
           const type = document.createElement("div");
           type.className = "type";
-          type.textContent = typeText;
+          type.appendChild(typeCellFragment(typeParts));
           return type;
         }
         case "last_name": {
@@ -10427,20 +10860,17 @@
           // already reads - see _render().
           const textEl = document.createElement("div");
           textEl.className = "text-col";
-          textEl.textContent = renderTemplate(col.template || "", values);
+          textEl.appendChild(renderTemplateNodes(col.template || "", values));
           return textEl;
         }
         case "date": {
-          // Shares the Custom text column's styling (.text-col) rather than
-          // getting its own Colors/Fonts tab entry - it's the same kind of
-          // short, secondary text. On the day itself this reads "Today" -
-          // same word as the Countdown column's own today case - so it
-          // gets the same leading/trailing case treatment there. Any other
-          // day this is a real formatted date (e.g. "Aug 3" - the month
-          // name leads in several locales), which must always stay
-          // capitalized regardless of position in the row.
+          // On the day itself this reads "Today" - same word as the Countdown
+          // column's own today case - so it gets the same leading/trailing
+          // case treatment there. Any other day this is a real formatted date
+          // (e.g. "Aug 3" - the month name leads in several locales), which
+          // must always stay capitalized regardless of position in the row.
           const dateEl = document.createElement("div");
-          dateEl.className = "text-col";
+          dateEl.className = "date-col";
           const dateText = values.date || "";
           dateEl.textContent =
             ctx.dateIsToday && !whenLeading
@@ -10448,26 +10878,26 @@
               : dateText.charAt(0).toUpperCase() + dateText.slice(1);
           return dateEl;
         }
-        // Time/location/description share the Custom text column's styling
-        // (.text-col) same as Date above, and are simply empty for any
-        // non-external event (see _row's values.time/location/description) -
-        // rendering an empty div rather than hiding the column entirely,
+        // Time/location/description are the external-calendar fields and
+        // share one styling group (.calendar-col). They're simply empty for
+        // any non-external event (see _row's values.time/location/description)
+        // - rendering an empty div rather than hiding the column entirely,
         // consistent with every other column type here.
         case "time": {
           const timeEl = document.createElement("div");
-          timeEl.className = "text-col";
+          timeEl.className = "calendar-col";
           timeEl.textContent = values.time || "";
           return timeEl;
         }
         case "location": {
           const locationEl = document.createElement("div");
-          locationEl.className = "text-col";
+          locationEl.className = "calendar-col";
           locationEl.textContent = values.location || "";
           return locationEl;
         }
         case "description": {
           const descriptionEl = document.createElement("div");
-          descriptionEl.className = "text-col";
+          descriptionEl.className = "calendar-col";
           descriptionEl.textContent = values.description || "";
           return descriptionEl;
         }
@@ -10516,6 +10946,9 @@
         card.style.setProperty("--annuals-badge-bg-color", config.colors.badge_background_color);
       if (config.colors.when) card.style.setProperty("--annuals-when-color", config.colors.when);
       if (config.colors.text) card.style.setProperty("--annuals-text-color", config.colors.text);
+      if (config.colors.date) card.style.setProperty("--annuals-date-color", config.colors.date);
+      if (config.colors.calendar)
+        card.style.setProperty("--annuals-calendar-color", config.colors.calendar);
       if (config.colors.highlight_past)
         card.style.setProperty("--annuals-highlight-past-color", config.colors.highlight_past);
       if (config.colors.highlight_today)
@@ -10579,6 +11012,10 @@
         card.style.setProperty("--annuals-row-when-size", config.font_sizes.when);
       if (config.font_sizes.text)
         card.style.setProperty("--annuals-row-text-size", config.font_sizes.text);
+      if (config.font_sizes.date)
+        card.style.setProperty("--annuals-row-date-size", config.font_sizes.date);
+      if (config.font_sizes.calendar)
+        card.style.setProperty("--annuals-row-calendar-size", config.font_sizes.calendar);
 
       const setFontStyle = (cssKey, style) => {
         card.style.removeProperty(`--annuals-${cssKey}-weight`);
@@ -10601,6 +11038,8 @@
       setFontStyle("row-badge", config.font_style.badge);
       setFontStyle("row-when", config.font_style.when);
       setFontStyle("row-text", config.font_style.text);
+      setFontStyle("row-date", config.font_style.date);
+      setFontStyle("row-calendar", config.font_style.calendar);
       setFontStyle("timeline-header", config.font_style.timeline_header);
       setFontStyle("timeline-tooltip", config.font_style.timeline_tooltip);
       setFontStyle("timeline-list", config.font_style.timeline_list);
@@ -10911,6 +11350,28 @@
       margin-bottom: 16px;
     }
     .field-row-split .field-col { flex: 1; min-width: 0; }
+    /* Pushed to the bottom of its column so it sits on the same line as the
+       toggle opposite it, whose row is taller than a line of text. The
+       matching margin-bottom is what lines the two bottom edges up exactly:
+       the column's height includes the toggle row's own 16px. */
+    .field-row-split .field-col.align-bottom {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .editor-link {
+      display: block;
+      margin-bottom: 16px;
+      /* Same 0.9em as .field-label, which is what wraps the toggle label
+         opposite - matching that rule rather than picking a size that only
+         happens to look similar. */
+      font-size: 0.9em;
+      color: var(--primary-color, #03a9f4);
+      text-decoration: none;
+    }
+    .editor-link:hover {
+      text-decoration: underline;
+    }
     /* The right-hand column sits close to the dialog's right edge, so a
        tooltip opening the usual way (left-aligned, expanding rightward)
        overflows past it and gets clipped - open it right-aligned instead,
@@ -11331,8 +11792,15 @@
       this._render();
     }
 
+    // this._config stays complete for the editor's own use; only what leaves
+    // here is reduced to the options actually changed (see pruneDefaults).
+    // Home Assistant hands the pruned config straight back to setConfig,
+    // which runs it through defaultConfig again - so the editor keeps
+    // working off a full config either way.
     _emit() {
-      this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+      this.dispatchEvent(
+        new CustomEvent("config-changed", { detail: { config: pruneDefaults(this._config) } })
+      );
     }
 
     // Plain scalar text/number fields (title, count, days_ahead, ...) - same
@@ -11640,6 +12108,22 @@
         this._dateFormatOptions(),
         "short"
       );
+
+      // The column opposite the "Say Today" toggle would otherwise just be
+      // empty space under the Language dropdown - which is exactly where
+      // someone who just looked for their own language and didn't find it
+      // is looking.
+      const linkCol = body.querySelectorAll(".field-row-split")[2].children[1];
+      linkCol.classList.add("align-bottom");
+      const link = document.createElement("a");
+      link.className = "editor-link";
+      link.textContent = strings.editor.missingLanguage;
+      link.href = newLanguageIssueUrl(this._hass);
+      link.target = "_blank";
+      // Without this, the opened tab could reach back into this one via
+      // window.opener - the usual precaution for any target=_blank link.
+      link.rel = "noopener noreferrer";
+      linkCol.appendChild(link);
 
       const todayRow = body
         .querySelector('input[data-visibility="date_show_today"]')
@@ -12386,6 +12870,8 @@
         "badge_background_color",
         "when",
         "text",
+        "date",
+        "calendar",
         "timeline_header",
         "timeline_tooltip",
         "timeline_list",
@@ -12569,13 +13055,18 @@
         this._colorRowHtml("badge", strings.editor.colorPlaceholder, { bgToggle: true }) +
         this._colorRowHtml("badge_background_color", strings.editor.colorPlaceholder, { sub: true }) +
         this._colorRowHtml("when", strings.editor.colorPlaceholder) +
-        this._colorRowHtml("text", strings.editor.colorPlaceholder) +
+        this._colorRowHtml("date", strings.editor.colorPlaceholder) +
+        this._colorRowHtml("calendar", strings.editor.colorPlaceholder) +
         // Timeline layout only - see _applyLayoutStyleVisibility, which
         // hides these three whenever layout_style isn't "timeline".
         this._colorRowHtml("timeline_header", strings.editor.colorPlaceholder) +
         this._colorRowHtml("timeline_tooltip", strings.editor.colorPlaceholder) +
         this._colorRowHtml("timeline_list", strings.editor.colorPlaceholder) +
         this._colorRowHtml("timeline_button", strings.editor.colorPlaceholder) +
+        // Last: unlike every field above it, Custom text isn't one of the
+        // card's own fields but whatever a Custom text column was told to
+        // write - so it reads as the odd one out at the top of the list.
+        this._colorRowHtml("text", strings.editor.colorPlaceholder) +
         // Timeline layout only, same as the four rows above - one row per
         // event type (see EVENT_TYPE_KEYS/TIMELINE_TYPE_COLORS), each in the
         // exact same field-row style as Header/Tooltip/etc above so it reads
@@ -12599,6 +13090,8 @@
         ],
         when: [strings.editor.colorWhen, strings.editor.colorWhenDesc],
         text: [strings.editor.colorText, strings.editor.colorTextDesc],
+        date: [strings.editor.colorDate, strings.editor.colorDateDesc],
+        calendar: [strings.editor.colorCalendar, strings.editor.colorCalendarDesc],
         timeline_header: [strings.editor.timelineHeaderLabel, strings.editor.timelineHeaderColorDesc],
         timeline_tooltip: [strings.editor.timelineTooltipLabel, strings.editor.timelineTooltipColorDesc],
         timeline_list: [strings.editor.timelineListLabel, strings.editor.timelineListColorDesc],
@@ -12614,6 +13107,8 @@
         "badge_background_color",
         "when",
         "text",
+        "date",
+        "calendar",
         "timeline_header",
         "timeline_tooltip",
         "timeline_list",
@@ -13829,6 +14324,8 @@
         { key: "badge", value: config.font_sizes.badge, style: config.font_style.badge },
         { key: "when", value: config.font_sizes.when, style: config.font_style.when },
         { key: "text", value: config.font_sizes.text, style: config.font_style.text },
+        { key: "date", value: config.font_sizes.date, style: config.font_style.date },
+        { key: "calendar", value: config.font_sizes.calendar, style: config.font_style.calendar },
         { key: "timeline_header", value: config.font_sizes.timeline_header, style: config.font_style.timeline_header },
         { key: "timeline_tooltip", value: config.font_sizes.timeline_tooltip, style: config.font_style.timeline_tooltip },
         { key: "timeline_list", value: config.font_sizes.timeline_list, style: config.font_style.timeline_list },
@@ -13864,13 +14361,18 @@
         this._fontRowHtml("type", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
         this._fontRowHtml("badge", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
         this._fontRowHtml("when", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        this._fontRowHtml("text", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
+        this._fontRowHtml("date", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
+        this._fontRowHtml("calendar", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
         // Timeline layout only - see _applyLayoutStyleVisibility, which
         // hides these three whenever layout_style isn't "timeline".
         this._fontRowHtml("timeline_header", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
         this._fontRowHtml("timeline_tooltip", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
         this._fontRowHtml("timeline_list", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        this._fontRowHtml("timeline_button", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder);
+        this._fontRowHtml("timeline_button", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
+        // Last, same reasoning as in the Colors tab - Custom text isn't one
+        // of the card's own fields but whatever a Custom text column was
+        // told to write.
+        this._fontRowHtml("text", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder);
       body.appendChild(rows);
 
       const toggleLabels = [
@@ -13893,6 +14395,8 @@
         badge: [strings.editor.colorBadge, strings.editor.fontBadgeDesc],
         when: [strings.editor.colorWhen, strings.editor.fontWhenDesc],
         text: [strings.editor.colorText, strings.editor.fontTextDesc],
+        date: [strings.editor.colorDate, strings.editor.fontDateDesc],
+        calendar: [strings.editor.colorCalendar, strings.editor.fontCalendarDesc],
         timeline_header: [strings.editor.timelineHeaderLabel, strings.editor.timelineHeaderFontDesc],
         timeline_tooltip: [strings.editor.timelineTooltipLabel, strings.editor.timelineTooltipFontDesc],
         timeline_list: [strings.editor.timelineListLabel, strings.editor.timelineListFontDesc],
@@ -13907,6 +14411,8 @@
         "badge",
         "when",
         "text",
+        "date",
+        "calendar",
         "timeline_header",
         "timeline_tooltip",
         "timeline_list",
@@ -14251,10 +14757,21 @@
 
       // Fonts/Colors: everything but the card title (which both layouts
       // share) only applies to the list layout's own row fields.
-      for (const key of ["name", "last_name", "full_name", "type", "badge", "when", "text"]) {
+      for (const key of ["name", "last_name", "full_name", "type", "badge", "when", "date", "calendar", "text"]) {
         setFontRowHidden("fonts-body", key, isTimeline);
       }
-      for (const key of ["name", "last_name", "full_name", "type", "badge", "badge_background_color", "when", "text"]) {
+      for (const key of [
+        "name",
+        "last_name",
+        "full_name",
+        "type",
+        "badge",
+        "badge_background_color",
+        "when",
+        "date",
+        "calendar",
+        "text",
+      ]) {
         setRowHidden(this.shadowRoot.querySelector(`.colors-body input[data-color="${key}"]`), isTimeline);
       }
 

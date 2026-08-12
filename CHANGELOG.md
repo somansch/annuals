@@ -2,6 +2,19 @@
 
 All notable changes to this integration are documented here.
 
+## v2.8.2
+
+### Added
+- **Own Colors and Fonts entries for the Date column** - previously the Date column silently borrowed the Custom text styling, which meant it had no settings of its own and restyling custom text restyled dates too. It now has its own **Date** row in both tabs.
+- **Calendar fields as their own styling group** - **Time**, **Location**, **Description** and the source calendar's own name get one shared **Calendar fields** entry in Colors and Fonts. It applies wherever those fields end up, including inline on the **Type**, **Name + type** and **Full name + type** columns, so an embedded calendar event's own details can be told apart from the event's Annuals type text at a glance.
+- **"Missing your language?" link** (Settings → General, next to Language) - opens a pre-filled feature request for a language the card isn't translated into yet, titled with the requester's own profile language.
+
+### Fixed
+- **`{placeholder}`s in a Custom text column ignored their own field's styling** - `{name} turns {occurrence}` rendered as one undifferentiated run of Custom text, so the Name and Occurrence colors and fonts had no effect on it. Each substituted placeholder now carries its field's styling. Only the typography carries over: the pill behind a real Occurrence badge, and the truncation behavior of a real Name column, stay with those columns. Note that sizes given in `em` compound with the Custom text size (`px` doesn't).
+
+### Changed
+- **The card only stores what you actually changed** - a card left on its defaults is now three words of YAML (`type: custom:annuals-card`) instead of ~90 lines, and each setting you change adds exactly that one line. Nothing about how a card renders changes: every option is still filled in with the same default on load, so an existing full configuration and its reduced form are identical on screen. Existing cards are reduced the next time they're saved. One consequence worth knowing: an option left at its default now follows a later version's default rather than being pinned to today's value.
+
 ## v2.8.1
 
 ### Added
