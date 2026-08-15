@@ -1,6 +1,18 @@
 {
     "title": "Annuals",
     "selector": {
+        "holiday_span": {
+            "options": {
+                "start": "začátek",
+                "end": "konec",
+                "day": "den {day}"
+            }
+        },
+        "holiday_breaks": {
+            "options": {
+                "note": "Vícedenní prázdniny, jako jsou školní prázdniny, se opět skládají do celých prázdnin - níže lze vybrat, které jejich části importovat."
+            }
+        },
         "event_type": {
             "options": {
                 "birthday": "Narozeniny",
@@ -75,6 +87,7 @@
                     "day": "Den",
                     "month": "Měsíc",
                     "year": "Rok (ponechte prázdné, pokud není znám; u jednorázových událostí povinné)",
+                    "end_date": "Datum konce (jen jednorázové události, volitelné - udělá z ní vícedenní událost)",
                     "icon": "Vlastní ikona (volitelné)",
                     "vip": "VIP Annual"
                 }
@@ -89,6 +102,7 @@
                     "day": "Den",
                     "month": "Měsíc",
                     "year": "Rok (ponechte prázdné, pokud není znám; u jednorázových událostí povinné)",
+                    "end_date": "Datum konce (jen jednorázové události, volitelné - udělá z ní vícedenní událost)",
                     "icon": "Vlastní ikona (volitelné)",
                     "vip": "VIP Annual"
                 }
@@ -96,6 +110,8 @@
         },
         "error": {
             "name_required": "Zadejte jméno.",
+            "end_date_one_time_only": "Datum konce lze nastavit jen u jednorázové události.",
+            "end_date_before_start": "Datum konce musí být po datu začátku.",
             "invalid_date": "Tato kombinace den/měsíc/rok není platné datum.",
             "year_required": "Jednorázové události vyžadují rok."
         },
@@ -117,6 +133,7 @@
                     "day": "Den",
                     "month": "Měsíc",
                     "year": "Rok (ponechte prázdné, pokud není znám; u jednorázových událostí povinné)",
+                    "end_date": "Datum konce (jen jednorázové události, volitelné - udělá z ní vícedenní událost)",
                     "icon": "Vlastní ikona (volitelné)",
                     "vip": "VIP Annual"
                 }
@@ -181,12 +198,57 @@
                 "title": "Odstranit události importované z vCard",
                 "description": "{count} událost(í) bylo vytvořeno předchozím importem vCard. Kliknutím na OK odstraníte všechny – záznamy, které import vCard pouze aktualizoval (nikoli vytvořil), nejsou nikdy ovlivněny, stejně jako ručně přidané, CSV- nebo ICS-importované události."
             },
+            "holiday_menu": {
+                "title": "Svátek",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}",
+                "menu_options": {
+                    "holiday_settings": "⚙️ Nastavení",
+                    "holiday_names": "🌐 Název a překlady"
+                }
+            },
+            "holiday_settings": {
+                "title": "Nastavení svátku",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nDatum, typ a region pocházejí z databáze svátků a nelze je zde upravit.",
+                "data": {
+                    "icon": "Ikona"
+                }
+            },
+            "holiday_names": {
+                "title": "Název a překlady",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nVyberte jazyk, ve kterém chcete zadat název tohoto svátku.",
+                "data": {
+                    "language": "Jazyk"
+                }
+            },
+            "holiday_name_edit": {
+                "title": "Název svátku",
+                "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nPředvyplněno tím, co se zobrazuje dnes. Ponechte prázdné pro návrat k databázi svátků.",
+                "data": {
+                    "name": "Název"
+                }
+            },
+            "holiday_translations": {
+                "title": "🌐 Holiday translations",
+                "description": "Export and import the holiday names you wrote yourself.",
+                "menu_options": {
+                    "export_translations": "📤 Export translations",
+                    "import_translations": "📥 Import translations"
+                }
+            },
+            "import_translations": {
+                "title": "Import translations",
+                "description": "Upload a translations CSV. Columns: `country,subdivision,category,holiday_key,observed,language,name`. Rows are matched onto holidays by country, subdivision, category, holiday key and observed flag - not by entry id, so a file exported before re-importing a country still applies. Rows whose holiday isn't present are skipped and counted.",
+                "data": {
+                    "csv_file": "CSV"
+                }
+            },
             "hub_menu": {
                 "title": "Annuals Nastavení",
                 "menu_options": {
                     "annual_settings": "{icon_annual_settings} Annual Nastavení",
                     "import_events": "{icon_import_events} Import událostí",
                     "export_csv": "{icon_export_csv} Exportovat události do CSV",
+                    "holiday_translations": "{icon_holiday_translations} Holiday translations",
                     "remove_events": "{icon_remove_events} Odstranit události",
                     "delete_all": "{icon_delete_all} Smazat všechna data Annuals"
                 }
@@ -219,15 +281,21 @@
             },
             "import_holidays_options": {
                 "title": "Import svátků - {country}",
-                "description": "Ponechte oblast prázdnou pro pouze celostátní svátky - kraj/provincie přidá své vlastní regionální svátky. Kategorie a jazyk závisí na tom, co poskytují data o svátcích dané země. Vícedenní kategorie, jako jsou školní prázdniny, jsou reprezentovány jako jedna událost v jejich první den.",
+                "description": "Ponechte oblast prázdnou pro pouze celostátní svátky - kraj/provincie přidá své vlastní regionální svátky. Kategorie a jazyk závisí na tom, co poskytují data o svátcích dané země.{breaks}",
                 "data": {
                     "include_actual": "Importovat skutečné datum",
                     "include_observed": "Importovat náhradní (posunuté) datum",
+                    "break_start": "Importovat první den prázdnin",
+                    "break_end": "Importovat poslední den prázdnin",
+                    "break_days": "Importovat každý den prázdnin",
                     "subdivision": "Oblast (kraj/provincie, volitelné)",
                     "categories": "Kategorie",
                     "language": "Jazyk názvů svátků"
                 },
                 "data_description": {
+                    "break_start": "Školní prázdniny obsahují jen školní dny, takže začínají dříve - počítá se zpět přes víkend a sousední svátky až k prvnímu skutečně volnému dni.",
+                    "break_end": "Totéž opačně: poslední volný den, ne poslední uvedený.",
+                    "break_days": "Jedna událost na každý den prázdnin. Samotné letní prázdniny jich dají přes čtyřicet.",
                     "include_observed": "Svátky této země bývají někdy nahrazeny sousedním pracovním dnem, pokud připadnou na víkend (např. nahrazeno předchozím pátkem nebo následujícím pondělím) - importujte i toto náhradní datum jako samostatnou událost."
                 }
             },
@@ -272,6 +340,8 @@
         },
         "error": {
             "name_required": "Zadejte jméno.",
+            "end_date_one_time_only": "Datum konce lze nastavit jen u jednorázové události.",
+            "end_date_before_start": "Datum konce musí být po datu začátku.",
             "invalid_date": "Tato kombinace den/měsíc/rok není platné datum.",
             "year_required": "Jednorázové události vyžadují rok.",
             "invalid_csv": "Tento soubor se nepodařilo přečíst jako CSV. Zkontrolujte kódování a formát.",
@@ -284,13 +354,16 @@
             "no_batch_selected": "Zaškrtněte „Odstranit všechny importované svátky“, nebo vyberte dávku."
         },
         "abort": {
+            "translations_exported": "Exportováno {count} překladů. [Stáhnout annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+klik pro stažení - obyčejné kliknutí zde nefunguje)\n\nNebo zkopírujte níže uvedené CSV:\n\n```\n{csv}\n```",
+            "translations_imported": "{updated} holiday(s) updated, {skipped} row(s) skipped.",
+            "no_translations_to_export": "No holiday names have been written yet - there is nothing to export.",
             "hub_not_configurable": "Hub Annuals nemá vlastní nastavení – obsahuje pouze sdílené kalendáře.",
             "import_started": "Import zahájen: {created} událostí zařazeno do fronty, {skipped} řádků přeskočeno (podrobnosti v protokolu).",
             "ics_import_started": "Import zahájen: {created} událostí vytvořeno, {updated} aktualizováno, {skipped} záznamů přeskočeno nebo vyloučeno.",
             "csv_exported": "Exportováno {count} událostí. [Stáhnout annuals_export.csv]({url}) (Ctrl/Cmd+klik pro stažení - obyčejné kliknutí zde nefunguje)\n\nNebo zkopírujte níže uvedené CSV:\n\n```\n{csv}\n```",
             "no_events_to_export": "Zatím nejsou žádné události k exportu.",
             "deleted_all": "Všechny události, kalendáře a hub Annuals byly odstraněny.",
-            "holiday_import_started": "Import zahájen: {count} svátků zařazeno do fronty pro {country}.",
+            "holiday_import_started": "Import zahájen: {count} svátečních událostí ve frontě pro {country} ({new} nových, {updated} aktualizováno).",
             "no_holidays_imported": "Zatím nebyly importovány žádné svátky.",
             "holidays_removed": "Odstraněno {count} svátků.",
             "no_ics_imports": "Nebyly nalezeny žádné události vytvořené importem ICS.",

@@ -1,6 +1,18 @@
 {
     "title": "Annuals",
     "selector": {
+        "holiday_span": {
+            "options": {
+                "start": "start",
+                "end": "end",
+                "day": "day {day}"
+            }
+        },
+        "holiday_breaks": {
+            "options": {
+                "note": "Multi-day breaks such as school holidays are turned back into whole breaks - pick below which parts of them to import."
+            }
+        },
         "event_type": {
             "options": {
                 "birthday": "Birthday",
@@ -75,6 +87,7 @@
                     "day": "Day",
                     "month": "Month",
                     "year": "Year (leave empty if unknown; required for one-time events)",
+                    "end_date": "End date (one-time events only, optional - makes it a multi-day event)",
                     "icon": "Icon override (optional)",
                     "vip": "VIP annual"
                 }
@@ -89,6 +102,7 @@
                     "day": "Day",
                     "month": "Month",
                     "year": "Year (leave empty if unknown; required for one-time events)",
+                    "end_date": "End date (one-time events only, optional - makes it a multi-day event)",
                     "icon": "Icon override (optional)",
                     "vip": "VIP annual"
                 }
@@ -96,6 +110,8 @@
         },
         "error": {
             "name_required": "Please enter a name.",
+            "end_date_one_time_only": "An end date can only be set on a one-time event.",
+            "end_date_before_start": "The end date must be after the start date.",
             "invalid_date": "This day/month/year combination is not a valid date.",
             "year_required": "One-time events require a year."
         },
@@ -117,6 +133,7 @@
                     "day": "Day",
                     "month": "Month",
                     "year": "Year (leave empty if unknown; required for one-time events)",
+                    "end_date": "End date (one-time events only, optional - makes it a multi-day event)",
                     "icon": "Icon override (optional)",
                     "vip": "VIP annual"
                 }
@@ -181,12 +198,57 @@
                 "title": "Remove vCard-imported events",
                 "description": "{count} event(s) were created by a previous vCard import. Click OK to remove all of them - entries a vCard import only updated (rather than created) are never affected, nor are manually added, CSV-, or ICS-imported events."
             },
+            "holiday_menu": {
+                "title": "Holiday",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}",
+                "menu_options": {
+                    "holiday_settings": "⚙️ Settings",
+                    "holiday_names": "🌐 Name and translations"
+                }
+            },
+            "holiday_settings": {
+                "title": "Holiday settings",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nDate, type and region come from the holidays database and can't be edited here.",
+                "data": {
+                    "icon": "Icon"
+                }
+            },
+            "holiday_names": {
+                "title": "Name and translations",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nPick the language you want to write this holiday's name in.",
+                "data": {
+                    "language": "Language"
+                }
+            },
+            "holiday_name_edit": {
+                "title": "Holiday name",
+                "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nPre-filled with what is shown today. Leave empty to fall back to the holidays database.",
+                "data": {
+                    "name": "Name"
+                }
+            },
+            "holiday_translations": {
+                "title": "🌐 Holiday translations",
+                "description": "Export and import the holiday names you wrote yourself.",
+                "menu_options": {
+                    "export_translations": "📤 Export translations",
+                    "import_translations": "📥 Import translations"
+                }
+            },
+            "import_translations": {
+                "title": "Import translations",
+                "description": "Upload a translations CSV. Columns: `country,subdivision,category,holiday_key,observed,language,name`. Rows are matched onto holidays by country, subdivision, category, holiday key and observed flag - not by entry id, so a file exported before re-importing a country still applies. Rows whose holiday isn't present are skipped and counted.",
+                "data": {
+                    "csv_file": "CSV"
+                }
+            },
             "hub_menu": {
                 "title": "Annuals Settings",
                 "menu_options": {
                     "annual_settings": "{icon_annual_settings} Annual Settings",
                     "import_events": "{icon_import_events} Import events",
                     "export_csv": "{icon_export_csv} Export events to CSV",
+                    "holiday_translations": "{icon_holiday_translations} Holiday translations",
                     "remove_events": "{icon_remove_events} Remove events",
                     "delete_all": "{icon_delete_all} Delete all Annuals data"
                 }
@@ -219,15 +281,21 @@
             },
             "import_holidays_options": {
                 "title": "Import holidays - {country}",
-                "description": "Leave the subdivision empty for national holidays only - a state/province adds its own regional holidays on top. Categories and language depend on what this country's holiday data provides. Multi-day categories like school holidays are represented as one event on their first day.",
+                "description": "Leave the subdivision empty for national holidays only - a state/province adds its own regional holidays on top. Categories and language depend on what this country's holiday data provides.{breaks}",
                 "data": {
                     "include_actual": "Import the actual date",
                     "include_observed": "Import the observed (shifted) date",
+                    "break_start": "Import the first day of a break",
+                    "break_end": "Import the last day of a break",
+                    "break_days": "Import every day of a break",
                     "subdivision": "Subdivision (state/province, optional)",
                     "categories": "Categories",
                     "language": "Language for holiday names"
                 },
                 "data_description": {
+                    "break_start": "School holidays are listed as school days only, so a break really begins earlier - this counts back over the weekend and any public holidays to the first day school is actually out.",
+                    "break_end": "The same the other way round: the last day off, not the last one listed.",
+                    "break_days": "One event per day of the break. A six-week summer break alone becomes over forty events.",
                     "include_observed": "This country's holidays are sometimes shifted to a nearby weekday when they fall on a weekend (e.g. observed the Friday before or Monday after) - import that shifted date too, as a separate event."
                 }
             },
@@ -272,6 +340,8 @@
         },
         "error": {
             "name_required": "Please enter a name.",
+            "end_date_one_time_only": "An end date can only be set on a one-time event.",
+            "end_date_before_start": "The end date must be after the start date.",
             "invalid_date": "This day/month/year combination is not a valid date.",
             "year_required": "One-time events require a year.",
             "invalid_csv": "Could not read this file as CSV. Check the encoding and format.",
@@ -284,13 +354,16 @@
             "no_batch_selected": "Check \"Remove all imported holidays\", or pick a batch to remove."
         },
         "abort": {
+            "translations_exported": "{count} translation(s) exported. [Download annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+click to download - a plain click won't work here)\n\nOr copy the CSV below:\n\n```\n{csv}\n```",
+            "translations_imported": "{updated} holiday(s) updated, {skipped} row(s) skipped.",
+            "no_translations_to_export": "No holiday names have been written yet - there is nothing to export.",
             "hub_not_configurable": "The Annuals hub has no settings of its own - it just holds the shared calendars.",
             "import_started": "Import started: {created} event(s) queued, {skipped} row(s) skipped (see the log for details).",
             "ics_import_started": "Import started: {created} event(s) created, {updated} updated, {skipped} entry/entries skipped or excluded.",
             "csv_exported": "{count} event(s) exported. [Download annuals_export.csv]({url}) (Ctrl/Cmd+click to download - a plain click won't work here)\n\nOr copy the CSV below:\n\n```\n{csv}\n```",
             "no_events_to_export": "No events to export yet - add some first.",
             "deleted_all": "All Annuals events, calendars, and the hub have been removed.",
-            "holiday_import_started": "Import started: {count} holiday event(s) queued for {country}.",
+            "holiday_import_started": "Import started: {count} holiday event(s) queued for {country} ({new} new, {updated} updated).",
             "no_holidays_imported": "No holidays have been imported yet.",
             "holidays_removed": "{count} holiday event(s) removed.",
             "no_ics_imports": "No events created by an ICS import were found.",

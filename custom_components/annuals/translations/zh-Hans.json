@@ -1,6 +1,18 @@
 {
     "title": "Annuals",
     "selector": {
+        "holiday_span": {
+            "options": {
+                "start": "开始",
+                "end": "结束",
+                "day": "第{day}天"
+            }
+        },
+        "holiday_breaks": {
+            "options": {
+                "note": "像学校假期这样的多日假期会还原为完整假期——请在下方选择要导入其中的哪些部分。"
+            }
+        },
         "event_type": {
             "options": {
                 "birthday": "生日",
@@ -75,6 +87,7 @@
                     "day": "日",
                     "month": "月",
                     "year": "年份（未知可留空；单次事件必填）",
+                    "end_date": "结束日期（仅限一次性事件，可选——设置后即成为多日事件）",
                     "icon": "自定义图标（可选）",
                     "vip": "VIP Annual"
                 }
@@ -89,6 +102,7 @@
                     "day": "日",
                     "month": "月",
                     "year": "年份（未知可留空；单次事件必填）",
+                    "end_date": "结束日期（仅限一次性事件，可选——设置后即成为多日事件）",
                     "icon": "自定义图标（可选）",
                     "vip": "VIP Annual"
                 }
@@ -96,6 +110,8 @@
         },
         "error": {
             "name_required": "请输入姓名。",
+            "end_date_one_time_only": "只有一次性事件才能设置结束日期。",
+            "end_date_before_start": "结束日期必须晚于开始日期。",
             "invalid_date": "此日/月/年组合不是有效日期。",
             "year_required": "单次事件必须填写年份。"
         },
@@ -117,6 +133,7 @@
                     "day": "日",
                     "month": "月",
                     "year": "年份（未知可留空；单次事件必填）",
+                    "end_date": "结束日期（仅限一次性事件，可选——设置后即成为多日事件）",
                     "icon": "自定义图标（可选）",
                     "vip": "VIP Annual"
                 }
@@ -181,12 +198,57 @@
                 "title": "删除通过 vCard 导入的事件",
                 "description": "此前的 vCard 导入创建了 {count} 个事件。点击“确定”删除全部 —— vCard 导入仅更新（而非创建）的条目不受影响，手动添加、CSV 或 ICS 导入的事件也不受影响。"
             },
+            "holiday_menu": {
+                "title": "节日",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}",
+                "menu_options": {
+                    "holiday_settings": "⚙️ 设置",
+                    "holiday_names": "🌐 名称与翻译"
+                }
+            },
+            "holiday_settings": {
+                "title": "节日设置",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\n日期、类型和地区来自节日数据库，无法在此修改。",
+                "data": {
+                    "icon": "图标"
+                }
+            },
+            "holiday_names": {
+                "title": "名称与翻译",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\n选择你要为该节日填写名称的语言。",
+                "data": {
+                    "language": "语言"
+                }
+            },
+            "holiday_name_edit": {
+                "title": "节日名称",
+                "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\n已预填当前显示的名称。留空则恢复使用节日数据库。",
+                "data": {
+                    "name": "名称"
+                }
+            },
+            "holiday_translations": {
+                "title": "🌐 Holiday translations",
+                "description": "Export and import the holiday names you wrote yourself.",
+                "menu_options": {
+                    "export_translations": "📤 Export translations",
+                    "import_translations": "📥 Import translations"
+                }
+            },
+            "import_translations": {
+                "title": "Import translations",
+                "description": "Upload a translations CSV. Columns: `country,subdivision,category,holiday_key,observed,language,name`. Rows are matched onto holidays by country, subdivision, category, holiday key and observed flag - not by entry id, so a file exported before re-importing a country still applies. Rows whose holiday isn't present are skipped and counted.",
+                "data": {
+                    "csv_file": "CSV"
+                }
+            },
             "hub_menu": {
                 "title": "Annuals 设置",
                 "menu_options": {
                     "annual_settings": "{icon_annual_settings} Annual 设置",
                     "import_events": "{icon_import_events} 导入事件",
                     "export_csv": "{icon_export_csv} 将事件导出为 CSV",
+                    "holiday_translations": "{icon_holiday_translations} Holiday translations",
                     "remove_events": "{icon_remove_events} 删除事件",
                     "delete_all": "{icon_delete_all} 删除所有 Annuals 数据"
                 }
@@ -219,15 +281,21 @@
             },
             "import_holidays_options": {
                 "title": "导入节假日 - {country}",
-                "description": "细分地区留空则仅导入全国性节假日 —— 选择州/省会额外添加其地区性节假日。类别和语言取决于该国家/地区的节假日数据提供的内容。像学校假期这样的多日类别会在第一天表示为一个事件。",
+                "description": "细分地区留空则仅导入全国性节假日 —— 选择州/省会额外添加其地区性节假日。类别和语言取决于该国家/地区的节假日数据提供的内容。{breaks}",
                 "data": {
                     "include_actual": "导入实际日期",
                     "include_observed": "导入顺延（调休）日期",
+                    "break_start": "导入假期的第一天",
+                    "break_end": "导入假期的最后一天",
+                    "break_days": "导入假期的每一天",
                     "subdivision": "细分地区（州/省，可选）",
                     "categories": "类别",
                     "language": "节假日名称的语言"
                 },
                 "data_description": {
+                    "break_start": "学校假期只登记上学日，因此假期实际开始得更早——这里会向前推算周末和相邻的公共假日，直到真正放假的第一天。",
+                    "break_end": "反方向同理：最后一个休息日，而不是登记的最后一天。",
+                    "break_days": "假期的每一天各生成一个事件。仅暑假就会超过四十个。",
                     "include_observed": "该国家/地区的节假日在落在周末时有时会顺延到附近的工作日（例如提前到之前的周五或顺延到之后的周一）—— 也将该顺延日期作为独立事件导入。"
                 }
             },
@@ -272,6 +340,8 @@
         },
         "error": {
             "name_required": "请输入姓名。",
+            "end_date_one_time_only": "只有一次性事件才能设置结束日期。",
+            "end_date_before_start": "结束日期必须晚于开始日期。",
             "invalid_date": "此日/月/年组合不是有效日期。",
             "year_required": "单次事件必须填写年份。",
             "invalid_csv": "无法将此文件读取为 CSV。请检查编码和格式。",
@@ -284,13 +354,16 @@
             "no_batch_selected": "请勾选“删除所有已导入的节假日”，或选择一个批次。"
         },
         "abort": {
+            "translations_exported": "已导出 {count} 条翻译。[下载 annuals_holiday_translations.csv]({url})（按住 Ctrl/Cmd 点击以下载 - 普通点击在此处无效）\n\n或复制下方的 CSV：\n\n```\n{csv}\n```",
+            "translations_imported": "{updated} holiday(s) updated, {skipped} row(s) skipped.",
+            "no_translations_to_export": "No holiday names have been written yet - there is nothing to export.",
             "hub_not_configurable": "Annuals 中心没有自身设置 —— 它只保存共享日历。",
             "import_started": "导入已开始：{created} 个事件已加入队列，{skipped} 行被跳过（详情见日志）。",
             "ics_import_started": "导入已开始：已创建 {created} 个事件，更新 {updated} 个，跳过或排除 {skipped} 个条目。",
             "csv_exported": "已导出 {count} 个事件。[下载 annuals_export.csv]({url})（按住 Ctrl/Cmd 点击以下载 - 普通点击在此处无效）\n\n或复制下方的 CSV：\n\n```\n{csv}\n```",
             "no_events_to_export": "还没有可导出的事件。",
             "deleted_all": "所有 Annuals 事件、日历及中心均已删除。",
-            "holiday_import_started": "导入已开始：{country} 的 {count} 个节假日事件已加入队列。",
+            "holiday_import_started": "导入已开始：{count} 个节假日事件已加入 {country} 的队列（新增 {new} 个，更新 {updated} 个）。",
             "no_holidays_imported": "尚未导入任何节假日。",
             "holidays_removed": "已删除 {count} 个节假日事件。",
             "no_ics_imports": "未找到通过 ICS 导入创建的事件。",

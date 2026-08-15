@@ -1,6 +1,18 @@
 {
     "title": "Annuals",
     "selector": {
+        "holiday_span": {
+            "options": {
+                "start": "Beginn",
+                "end": "Ende",
+                "day": "Tag {day}"
+            }
+        },
+        "holiday_breaks": {
+            "options": {
+                "note": "Mehrtägige Ferien wie Schulferien werden wieder zu ganzen Ferien zusammengefasst - unten ist wählbar, welche Teile davon importiert werden."
+            }
+        },
         "event_type": {
             "options": {
                 "birthday": "Geburtstag",
@@ -75,6 +87,7 @@
                     "day": "Tag",
                     "month": "Monat",
                     "year": "Jahr (leer lassen, wenn unbekannt; bei einmaligen Ereignissen erforderlich)",
+                    "end_date": "Enddatum (nur einmalige Ereignisse, optional - macht daraus ein mehrtägiges Ereignis)",
                     "icon": "Icon überschreiben (optional)",
                     "vip": "VIP Annual"
                 }
@@ -89,6 +102,7 @@
                     "day": "Tag",
                     "month": "Monat",
                     "year": "Jahr (leer lassen, wenn unbekannt; bei einmaligen Ereignissen erforderlich)",
+                    "end_date": "Enddatum (nur einmalige Ereignisse, optional - macht daraus ein mehrtägiges Ereignis)",
                     "icon": "Icon überschreiben (optional)",
                     "vip": "VIP Annual"
                 }
@@ -96,6 +110,8 @@
         },
         "error": {
             "name_required": "Bitte einen Namen eingeben.",
+            "end_date_one_time_only": "Ein Enddatum kann nur bei einem einmaligen Ereignis gesetzt werden.",
+            "end_date_before_start": "Das Enddatum muss nach dem Startdatum liegen.",
             "invalid_date": "Diese Tag/Monat/Jahr-Kombination ist kein gültiges Datum.",
             "year_required": "Einmalige Ereignisse benötigen ein Jahr."
         },
@@ -117,6 +133,7 @@
                     "day": "Tag",
                     "month": "Monat",
                     "year": "Jahr (leer lassen, wenn unbekannt; bei einmaligen Ereignissen erforderlich)",
+                    "end_date": "Enddatum (nur einmalige Ereignisse, optional - macht daraus ein mehrtägiges Ereignis)",
                     "icon": "Icon überschreiben (optional)",
                     "vip": "VIP Annual"
                 }
@@ -181,12 +198,57 @@
                 "title": "vCard-importierte Ereignisse entfernen",
                 "description": "{count} Ereignis(se) wurden durch einen vorherigen vCard-Import angelegt. Klicke auf OK, um alle zu entfernen - Einträge, die ein vCard-Import nur aktualisiert (statt angelegt) hat, sind davon nie betroffen, ebenso wenig manuell angelegte, per CSV oder per ICS importierte Ereignisse."
             },
+            "holiday_menu": {
+                "title": "Feiertag",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}",
+                "menu_options": {
+                    "holiday_settings": "⚙️ Einstellungen",
+                    "holiday_names": "🌐 Name und Übersetzungen"
+                }
+            },
+            "holiday_settings": {
+                "title": "Feiertag-Einstellungen",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nDatum, Typ und Region stammen aus der Feiertagsdatenbank und sind hier nicht änderbar.",
+                "data": {
+                    "icon": "Icon"
+                }
+            },
+            "holiday_names": {
+                "title": "Name und Übersetzungen",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nWähle die Sprache, für die du den Namen dieses Feiertags eintragen willst.",
+                "data": {
+                    "language": "Sprache"
+                }
+            },
+            "holiday_name_edit": {
+                "title": "Name des Feiertags",
+                "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nVorbelegt mit dem, was heute angezeigt wird. Leer lassen, um wieder die Feiertagsdatenbank zu verwenden.",
+                "data": {
+                    "name": "Name"
+                }
+            },
+            "holiday_translations": {
+                "title": "🌐 Feiertags-Übersetzungen",
+                "description": "Selbst geschriebene Feiertagsnamen exportieren und importieren.",
+                "menu_options": {
+                    "export_translations": "📤 Übersetzungen exportieren",
+                    "import_translations": "📥 Übersetzungen importieren"
+                }
+            },
+            "import_translations": {
+                "title": "Übersetzungen importieren",
+                "description": "Lade eine Übersetzungs-CSV hoch. Spalten: `country,subdivision,category,holiday_key,observed,language,name`. Zeilen werden über Land, Region, Kategorie, Feiertagsschlüssel und Observed-Kennzeichen zugeordnet - nicht über die Eintrags-ID, eine vor einem Neuimport exportierte Datei passt also weiterhin. Zeilen ohne passenden Feiertag werden übersprungen und gezählt.",
+                "data": {
+                    "csv_file": "CSV"
+                }
+            },
             "hub_menu": {
                 "title": "Annuals Einstellungen",
                 "menu_options": {
                     "annual_settings": "{icon_annual_settings} Annual Einstellung",
                     "import_events": "{icon_import_events} Ereignisse importieren",
                     "export_csv": "{icon_export_csv} Ereignisse als CSV exportieren",
+                    "holiday_translations": "{icon_holiday_translations} Feiertags-Übersetzungen",
                     "remove_events": "{icon_remove_events} Ereignisse entfernen",
                     "delete_all": "{icon_delete_all} Alle Annuals-Daten löschen"
                 }
@@ -219,15 +281,21 @@
             },
             "import_holidays_options": {
                 "title": "Feiertage importieren - {country}",
-                "description": "Bundesland/Provinz leer lassen für nur landesweite Feiertage - eine Auswahl fügt eigene regionale Feiertage hinzu. Kategorien und Sprache hängen davon ab, was für dieses Land verfügbar ist. Mehrtägige Kategorien wie Schulferien werden als ein Ereignis am ersten Tag dargestellt.",
+                "description": "Bundesland/Provinz leer lassen für nur landesweite Feiertage - eine Auswahl fügt eigene regionale Feiertage hinzu. Kategorien und Sprache hängen davon ab, was für dieses Land verfügbar ist.{breaks}",
                 "data": {
                     "include_actual": "Tatsächliches Datum importieren",
                     "include_observed": "Nachgeholtes (verschobenes) Datum importieren",
+                    "break_start": "Ferienbeginn importieren",
+                    "break_end": "Ferienende importieren",
+                    "break_days": "Jeden Ferientag importieren",
                     "subdivision": "Bundesland/Provinz (optional)",
                     "categories": "Kategorien",
                     "language": "Sprache der Feiertagsnamen"
                 },
                 "data_description": {
+                    "break_start": "Schulferien sind nur mit Schultagen hinterlegt, die Ferien beginnen also früher - hier wird über das Wochenende und angrenzende Feiertage zurückgerechnet bis zum ersten wirklich freien Tag.",
+                    "break_end": "Dasselbe in die andere Richtung: der letzte freie Tag, nicht der letzte hinterlegte.",
+                    "break_days": "Ein Ereignis pro Ferientag. Allein die Sommerferien ergeben so über vierzig Ereignisse.",
                     "include_observed": "Feiertage dieses Landes werden manchmal auf einen nahegelegenen Wochentag verschoben, wenn sie auf ein Wochenende fallen (z. B. am Freitag davor oder Montag danach nachgeholt) - importiere dieses nachgeholte Datum zusätzlich als eigenes Ereignis."
                 }
             },
@@ -272,6 +340,8 @@
         },
         "error": {
             "name_required": "Bitte einen Namen eingeben.",
+            "end_date_one_time_only": "Ein Enddatum kann nur bei einem einmaligen Ereignis gesetzt werden.",
+            "end_date_before_start": "Das Enddatum muss nach dem Startdatum liegen.",
             "invalid_date": "Diese Tag/Monat/Jahr-Kombination ist kein gültiges Datum.",
             "year_required": "Einmalige Ereignisse benötigen ein Jahr.",
             "invalid_csv": "Diese Datei konnte nicht als CSV gelesen werden. Prüfe Kodierung und Format.",
@@ -284,13 +354,16 @@
             "no_batch_selected": "Aktiviere \"Alle importierten Feiertage entfernen\" oder wähle einen Import aus."
         },
         "abort": {
+            "translations_exported": "{count} Übersetzung(en) exportiert. [annuals_holiday_translations.csv herunterladen]({url}) (Strg/Cmd-Klick zum Herunterladen - ein einfacher Klick funktioniert hier nicht)\n\nOder kopiere die CSV unten:\n\n```\n{csv}\n```",
+            "translations_imported": "{updated} Feiertag(e) aktualisiert, {skipped} Zeile(n) übersprungen.",
+            "no_translations_to_export": "Es wurden noch keine Feiertagsnamen geschrieben - es gibt nichts zu exportieren.",
             "hub_not_configurable": "Der Annuals-Hub hat keine eigenen Einstellungen – er hält nur die gemeinsamen Kalender.",
             "import_started": "Import gestartet: {created} Ereignis(se) werden angelegt, {skipped} Zeile(n) übersprungen (Details im Log).",
             "ics_import_started": "Import gestartet: {created} Ereignis(se) angelegt, {updated} aktualisiert, {skipped} Eintrag/Einträge übersprungen oder ausgeschlossen.",
             "csv_exported": "{count} Ereignis(se) exportiert. [annuals_export.csv herunterladen]({url}) (Strg/Cmd-Klick zum Herunterladen - ein einfacher Klick funktioniert hier nicht)\n\nOder kopiere die CSV unten:\n\n```\n{csv}\n```",
             "no_events_to_export": "Es gibt noch keine Ereignisse zum Exportieren.",
             "deleted_all": "Alle Annuals-Ereignisse, Kalender und der Hub wurden entfernt.",
-            "holiday_import_started": "Import gestartet: {count} Feiertags-Ereignis(se) für {country} werden angelegt.",
+            "holiday_import_started": "Import gestartet: {count} Feiertags-Ereignis(se) für {country} werden angelegt ({new} neu, {updated} aktualisiert).",
             "no_holidays_imported": "Es wurden noch keine Feiertage importiert.",
             "holidays_removed": "{count} Feiertags-Ereignis(se) entfernt.",
             "no_ics_imports": "Es wurden keine durch einen ICS-Import angelegten Ereignisse gefunden.",

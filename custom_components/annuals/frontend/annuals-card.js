@@ -56,6 +56,9 @@
       inDays: (n) => `in ${n} days`,
       dayAgo: "Yesterday",
       daysAgo: (n) => `${n} days ago`,
+      multiDayStart: "start",
+      multiDayEnd: "end",
+      multiDayDay: "day {day}",
       noEvents: "No upcoming events",
       todoCompleteConfirm: 'Mark "{item}" as completed?',
       todoCompleteConfirmMultiple: "Mark all {count} to-do items for this event as completed?",
@@ -179,6 +182,16 @@
         holidayDateActual: "Actual",
         holidayDateObserved: "Observed",
         holidayMergeObserved: "Prefer observed date",
+        holidayMergeRegions: "Merge holidays shared by several countries",
+        holidayMergeRegionsDesc:
+          "One row per holiday instead of one per country, listing every region that celebrates it. Grouped by date and by the name the holiday actually reads under - so two different holidays on the same day stay apart, and countries whose wording differs only merge once you have given them the same name (see Name and translations on the holiday's own settings).",
+        regionFormat: "Region format",
+        regionFormatDesc: "How a holiday's country and region are written wherever they are shown.",
+        regionFormatShort: "US (CA)",
+        regionFormatLong: "US (California)",
+        holidayRegions: "Countries and regions",
+        holidayRegionsDesc:
+          "Which of the imported countries and regions the card shows. All of them selected means no filter, so a country imported later shows up on its own.",
         holidayMergeObservedDesc:
           "When a holiday has both an actual and an observed entity, show only the observed one (without the \"(observed)\" label) and hide the actual duplicate - handy for a clean list of the days actually off.",
         showAll: "Show All",
@@ -302,6 +315,16 @@
         suffixLabel: "Suffix",
         suffixGroupHolidayTitle: "Holidays only",
         suffixGroupExternalTitle: "External calendars only",
+        suffixShowHolidayType: "Type label",
+        suffixShowHolidayTypeDesc:
+          "Show a holiday's own type label, e.g. \u201cHoliday (Public)\u201d. Turn off to leave only the country/region suffix in this cell.",
+        multiDayDisplay: "Multi-day events",
+        multiDayDisplayDesc:
+          "How a one-time event that spans several days - a holiday trip, a conference - is listed. Only affects events that actually have an end date; everything else is one row either way.",
+        multiDayStartOnly: "Only the first day",
+        multiDayEndOnly: "Only the last day",
+        multiDayStartEnd: "First and last day",
+        multiDayEveryDay: "Every day",
         suffixShowCalendarName: "Calendar name",
         suffixShowCalendarNameDesc:
           "Show the external calendar's own name (e.g. \"Personal\") here. Turn off once Time/Location/Description below already say enough on their own.",
@@ -510,6 +533,9 @@
       inDays: (n) => `in ${n} Tagen`,
       dayAgo: "Gestern",
       daysAgo: (n) => `vor ${n} Tagen`,
+      multiDayStart: "Beginn",
+      multiDayEnd: "Ende",
+      multiDayDay: "Tag {day}",
       noEvents: "Keine anstehenden Ereignisse",
       todoCompleteConfirm: '„{item}“ als erledigt markieren?',
       todoCompleteConfirmMultiple: "Alle {count} To-do-Einträge dieses Ereignisses als erledigt markieren?",
@@ -644,6 +670,16 @@
         holidayDateActual: "Tatsächlich",
         holidayDateObserved: "Nachgeholt",
         holidayMergeObserved: "Nachgeholtes Datum bevorzugen",
+        holidayMergeRegions: "Länderübergreifend gleiche Feiertage zusammenfassen",
+        holidayMergeRegionsDesc:
+          "Eine Zeile pro Feiertag statt einer pro Land, mit allen Regionen, die ihn begehen. Gruppiert wird nach Datum und nach dem Namen, unter dem der Feiertag tatsächlich erscheint - zwei verschiedene Feiertage am selben Tag bleiben also getrennt, und Länder mit abweichender Schreibweise verschmelzen erst, wenn du ihnen denselben Namen gegeben hast (siehe „Name und Übersetzungen“ beim Feiertag selbst).",
+        regionFormat: "Regionsformat",
+        regionFormatDesc: "Wie Land und Region eines Feiertags geschrieben werden, überall wo sie erscheinen.",
+        regionFormatShort: "US (CA)",
+        regionFormatLong: "US (California)",
+        holidayRegions: "Länder und Regionen",
+        holidayRegionsDesc:
+          "Welche der importierten Länder und Regionen die Karte anzeigt. Alle ausgewählt bedeutet kein Filter, ein später importiertes Land erscheint also von selbst.",
         holidayMergeObservedDesc:
           "Wenn ein Feiertag sowohl eine tatsächliche als auch eine nachgeholte Entität hat, wird nur die nachgeholte angezeigt (ohne den Zusatz „(observed)“) und das tatsächliche Duplikat ausgeblendet - praktisch für eine saubere Liste der wirklich freien Tage.",
         showAll: "Alle anzeigen",
@@ -767,6 +803,16 @@
         suffixLabel: "Suffix",
         suffixGroupHolidayTitle: "Nur Feiertage",
         suffixGroupExternalTitle: "Nur externe Kalender",
+        suffixShowHolidayType: "Typ-Bezeichnung",
+        suffixShowHolidayTypeDesc:
+          "Die Typ-Bezeichnung eines Feiertags anzeigen, z. B. \u201eHoliday (Public)\u201c. Ausschalten, damit in dieser Zelle nur noch der Land-/Regions-Zusatz steht.",
+        multiDayDisplay: "Mehrtägige Ereignisse",
+        multiDayDisplayDesc:
+          "Wie ein einmaliges Ereignis über mehrere Tage - eine Urlaubsreise, eine Tagung - aufgeführt wird. Betrifft nur Ereignisse, die wirklich ein Enddatum haben; alles andere bleibt eine Zeile.",
+        multiDayStartOnly: "Nur der erste Tag",
+        multiDayEndOnly: "Nur der letzte Tag",
+        multiDayStartEnd: "Erster und letzter Tag",
+        multiDayEveryDay: "Jeder Tag",
         suffixShowCalendarName: "Kalendername",
         suffixShowCalendarNameDesc:
           "Zeigt hier den eigenen Namen des externen Kalenders an (z. B. „Privat“). Ausschalten, sobald Uhrzeit/Ort/Beschreibung unten für sich schon genug aussagen.",
@@ -976,6 +1022,9 @@
       inDays: (n) => `dans ${n} jours`,
       dayAgo: "Hier",
       daysAgo: (n) => `il y a ${n} jours`,
+      multiDayStart: "début",
+      multiDayEnd: "fin",
+      multiDayDay: "jour {day}",
       noEvents: "Aucun événement à venir",
       todoCompleteConfirm: 'Marquer « {item} » comme terminé ?',
       todoCompleteConfirmMultiple: "Marquer les {count} tâches de cet événement comme terminées ?",
@@ -1098,6 +1147,16 @@
         holidayDateActual: "Réelle",
         holidayDateObserved: "Observée",
         holidayMergeObserved: "Préférer la date observée",
+        holidayMergeRegions: "Fusionner les jours fériés communs à plusieurs pays",
+        holidayMergeRegionsDesc:
+          "Une ligne par jour férié au lieu d'une par pays, listant toutes les régions concernées. Le regroupement se fait par date et par le nom sous lequel le jour férié s'affiche réellement - deux jours fériés différents le même jour restent donc séparés, et des pays dont la formulation diffère ne fusionnent qu'une fois que vous leur avez donné le même nom (voir « Nom et traductions » sur le jour férié).",
+        regionFormat: "Format de région",
+        regionFormatDesc: "Comment le pays et la région d'un jour férié sont écrits, partout où ils apparaissent.",
+        regionFormatShort: "US (CA)",
+        regionFormatLong: "US (California)",
+        holidayRegions: "Pays et régions",
+        holidayRegionsDesc:
+          "Quels pays et régions importés la carte affiche. Tous sélectionnés signifie aucun filtre, un pays importé plus tard apparaît donc automatiquement.",
         holidayMergeObservedDesc:
           "Lorsqu'un jour férié a à la fois une entité réelle et une entité observée, seule l'observée est affichée (sans le libellé « (observed) ») et le doublon réel est masqué - pratique pour une liste propre des jours réellement chômés.",
         showAll: "Tout afficher",
@@ -1221,6 +1280,16 @@
         suffixLabel: "Suffixe",
         suffixGroupHolidayTitle: "Jours fériés uniquement",
         suffixGroupExternalTitle: "Calendriers externes uniquement",
+        suffixShowHolidayType: "Libellé du type",
+        suffixShowHolidayTypeDesc:
+          "Afficher le libellé de type d'un jour férié, par ex. \u00ab\u00a0Holiday (Public)\u00a0\u00bb. Désactiver pour ne laisser que le suffixe pays/région dans cette cellule.",
+        multiDayDisplay: "Événements sur plusieurs jours",
+        multiDayDisplayDesc:
+          "Comment un événement unique s'étendant sur plusieurs jours - un voyage, un congrès - est listé. N'affecte que les événements qui ont réellement une date de fin ; tout le reste reste une seule ligne.",
+        multiDayStartOnly: "Uniquement le premier jour",
+        multiDayEndOnly: "Uniquement le dernier jour",
+        multiDayStartEnd: "Premier et dernier jour",
+        multiDayEveryDay: "Chaque jour",
         suffixShowCalendarName: "Nom du calendrier",
         suffixShowCalendarNameDesc:
           "Affiche ici le propre nom du calendrier externe (par ex. « Personnel »). Désactivez une fois que Heure/Lieu/Description ci-dessous en disent déjà assez.",
@@ -1429,6 +1498,9 @@
       inDays: (n) => `over ${n} dagen`,
       dayAgo: "Gisteren",
       daysAgo: (n) => `${n} dagen geleden`,
+      multiDayStart: "begin",
+      multiDayEnd: "einde",
+      multiDayDay: "dag {day}",
       noEvents: "Geen aankomende evenementen",
       todoCompleteConfirm: '„{item}” als voltooid markeren?',
       todoCompleteConfirmMultiple: "Alle {count} taken van dit evenement als voltooid markeren?",
@@ -1551,6 +1623,16 @@
         holidayDateActual: "Werkelijk",
         holidayDateObserved: "Waargenomen",
         holidayMergeObserved: "Waargenomen datum voorkeur",
+        holidayMergeRegions: "Feestdagen samenvoegen die meerdere landen delen",
+        holidayMergeRegionsDesc:
+          "Eén rij per feestdag in plaats van één per land, met alle regio's die hem vieren. Gegroepeerd op datum én op de naam waaronder de feestdag daadwerkelijk wordt getoond - twee verschillende feestdagen op dezelfde dag blijven dus gescheiden, en landen met een afwijkende schrijfwijze voegen pas samen als je ze dezelfde naam hebt gegeven (zie \"Naam en vertalingen\" bij de feestdag zelf).",
+        regionFormat: "Regioweergave",
+        regionFormatDesc: "Hoe het land en de regio van een feestdag worden geschreven, overal waar ze verschijnen.",
+        regionFormatShort: "US (CA)",
+        regionFormatLong: "US (California)",
+        holidayRegions: "Landen en regio's",
+        holidayRegionsDesc:
+          "Welke van de geïmporteerde landen en regio's de kaart toont. Alles geselecteerd betekent geen filter, dus een later geïmporteerd land verschijnt vanzelf.",
         holidayMergeObservedDesc:
           "Als een feestdag zowel een werkelijke als een waargenomen entiteit heeft, wordt alleen de waargenomen getoond (zonder het label \"(observed)\") en het werkelijke duplicaat verborgen - handig voor een schone lijst van daadwerkelijk vrije dagen.",
         showAll: "Alles tonen",
@@ -1674,6 +1756,16 @@
         suffixLabel: "Suffix",
         suffixGroupHolidayTitle: "Alleen feestdagen",
         suffixGroupExternalTitle: "Alleen externe kalenders",
+        suffixShowHolidayType: "Type-aanduiding",
+        suffixShowHolidayTypeDesc:
+          "De type-aanduiding van een feestdag tonen, bijv. \u201cHoliday (Public)\u201d. Uitschakelen om alleen het land-/regiosuffix in deze cel te laten staan.",
+        multiDayDisplay: "Meerdaagse gebeurtenissen",
+        multiDayDisplayDesc:
+          "Hoe een eenmalige gebeurtenis van meerdere dagen - een vakantiereis, een congres - wordt weergegeven. Geldt alleen voor gebeurtenissen die echt een einddatum hebben; al het andere blijft één regel.",
+        multiDayStartOnly: "Alleen de eerste dag",
+        multiDayEndOnly: "Alleen de laatste dag",
+        multiDayStartEnd: "Eerste en laatste dag",
+        multiDayEveryDay: "Elke dag",
         suffixShowCalendarName: "Kalendernaam",
         suffixShowCalendarNameDesc:
           "Toont hier de eigen naam van de externe kalender (bijv. „Privé”). Zet dit uit zodra Tijd/Locatie/Beschrijving hieronder al genoeg zeggen.",
@@ -1882,6 +1974,9 @@
       inDays: (n) => `za ${n} dni`,
       dayAgo: "Wczoraj",
       daysAgo: (n) => `${n} dni temu`,
+      multiDayStart: "początek",
+      multiDayEnd: "koniec",
+      multiDayDay: "dzień {day}",
       noEvents: "Brak nadchodzących wydarzeń",
       todoCompleteConfirm: 'Oznaczyć „{item}” jako ukończone?',
       todoCompleteConfirmMultiple: "Oznaczyć wszystkie {count} zadania tego wydarzenia jako ukończone?",
@@ -2010,6 +2105,16 @@
         holidayDateActual: "Rzeczywista",
         holidayDateObserved: "Zastępcza",
         holidayMergeObserved: "Preferuj datę zastępczą",
+        holidayMergeRegions: "Scal święta wspólne dla wielu krajów",
+        holidayMergeRegionsDesc:
+          "Jeden wiersz na święto zamiast jednego na kraj, z wszystkimi obchodzącymi je regionami. Grupowanie następuje po dacie i po nazwie, pod którą święto faktycznie się wyświetla - dwa różne święta tego samego dnia pozostają więc osobno, a kraje o odmiennym zapisie scalają się dopiero wtedy, gdy nadasz im tę samą nazwę (zobacz „Nazwa i tłumaczenia” przy samym święcie).",
+        regionFormat: "Format regionu",
+        regionFormatDesc: "Jak zapisywane są kraj i region święta, wszędzie tam gdzie się pojawiają.",
+        regionFormatShort: "US (CA)",
+        regionFormatLong: "US (California)",
+        holidayRegions: "Kraje i regiony",
+        holidayRegionsDesc:
+          "Które z zaimportowanych krajów i regionów pokazuje karta. Wszystkie zaznaczone oznacza brak filtra, więc kraj zaimportowany później pojawi się sam.",
         holidayMergeObservedDesc:
           "Gdy święto ma zarówno rzeczywistą, jak i zastępczą jednostkę, pokazywana jest tylko zastępcza (bez etykiety „(observed)”), a rzeczywisty duplikat jest ukrywany - przydatne dla czystej listy faktycznie wolnych dni.",
         showAll: "Pokaż wszystko",
@@ -2133,6 +2238,16 @@
         suffixLabel: "Sufiks",
         suffixGroupHolidayTitle: "Tylko święta",
         suffixGroupExternalTitle: "Tylko kalendarze zewnętrzne",
+        suffixShowHolidayType: "Etykieta typu",
+        suffixShowHolidayTypeDesc:
+          "Pokaż etykietę typu święta, np. \u201eHoliday (Public)\u201d. Wyłącz, aby w tej komórce został tylko sufiks kraju/regionu.",
+        multiDayDisplay: "Wydarzenia wielodniowe",
+        multiDayDisplayDesc:
+          "Jak wyświetlane jest jednorazowe wydarzenie trwające kilka dni - wyjazd wakacyjny, konferencja. Dotyczy tylko wydarzeń, które faktycznie mają datę zakończenia; wszystko inne pozostaje jednym wierszem.",
+        multiDayStartOnly: "Tylko pierwszy dzień",
+        multiDayEndOnly: "Tylko ostatni dzień",
+        multiDayStartEnd: "Pierwszy i ostatni dzień",
+        multiDayEveryDay: "Każdy dzień",
         suffixShowCalendarName: "Nazwa kalendarza",
         suffixShowCalendarNameDesc:
           "Pokazuje tutaj własną nazwę kalendarza zewnętrznego (np. „Prywatny”). Wyłącz, gdy Godzina/Lokalizacja/Opis poniżej mówią już wystarczająco dużo.",
@@ -2340,6 +2455,9 @@
       inDays: (n) => `en ${n} días`,
       dayAgo: "Ayer",
       daysAgo: (n) => `hace ${n} días`,
+      multiDayStart: "inicio",
+      multiDayEnd: "fin",
+      multiDayDay: "día {day}",
       noEvents: "No hay próximos eventos",
       todoCompleteConfirm: '¿Marcar «{item}» como completada?',
       todoCompleteConfirmMultiple: "¿Marcar las {count} tareas de este evento como completadas?",
@@ -2462,6 +2580,16 @@
         holidayDateActual: "Real",
         holidayDateObserved: "Observada",
         holidayMergeObserved: "Preferir fecha observada",
+        holidayMergeRegions: "Combinar festivos compartidos por varios países",
+        holidayMergeRegionsDesc:
+          "Una fila por festivo en lugar de una por país, listando todas las regiones que lo celebran. Se agrupa por fecha y por el nombre con el que el festivo se muestra realmente: dos festivos distintos el mismo día siguen separados, y los países cuya redacción difiere solo se combinan cuando les has dado el mismo nombre (ver «Nombre y traducciones» en el propio festivo).",
+        regionFormat: "Formato de región",
+        regionFormatDesc: "Cómo se escriben el país y la región de un festivo, dondequiera que aparezcan.",
+        regionFormatShort: "US (CA)",
+        regionFormatLong: "US (California)",
+        holidayRegions: "Países y regiones",
+        holidayRegionsDesc:
+          "Qué países y regiones importados muestra la tarjeta. Todos seleccionados significa sin filtro, así que un país importado más tarde aparece por sí solo.",
         holidayMergeObservedDesc:
           "Cuando un festivo tiene tanto una entidad real como una observada, se muestra solo la observada (sin la etiqueta \"(observed)\") y se oculta el duplicado real - útil para una lista limpia de los días realmente libres.",
         showAll: "Mostrar todo",
@@ -2585,6 +2713,16 @@
         suffixLabel: "Sufijo",
         suffixGroupHolidayTitle: "Solo festivos",
         suffixGroupExternalTitle: "Solo calendarios externos",
+        suffixShowHolidayType: "Etiqueta de tipo",
+        suffixShowHolidayTypeDesc:
+          "Mostrar la etiqueta de tipo de un festivo, p. ej. \u201cHoliday (Public)\u201d. Desactívalo para dejar solo el sufijo de país/región en esta celda.",
+        multiDayDisplay: "Eventos de varios días",
+        multiDayDisplayDesc:
+          "Cómo se lista un evento único que dura varios días: un viaje, un congreso. Solo afecta a los eventos que realmente tienen fecha de fin; todo lo demás sigue siendo una sola fila.",
+        multiDayStartOnly: "Solo el primer día",
+        multiDayEndOnly: "Solo el último día",
+        multiDayStartEnd: "Primer y último día",
+        multiDayEveryDay: "Cada día",
         suffixShowCalendarName: "Nombre del calendario",
         suffixShowCalendarNameDesc:
           "Muestra aquí el propio nombre del calendario externo (p. ej. «Personal»). Desactívalo cuando Hora/Ubicación/Descripción de abajo ya digan suficiente por sí solos.",
@@ -2793,6 +2931,9 @@
       inDays: (n) => `tra ${n} giorni`,
       dayAgo: "Ieri",
       daysAgo: (n) => `${n} giorni fa`,
+      multiDayStart: "inizio",
+      multiDayEnd: "fine",
+      multiDayDay: "giorno {day}",
       noEvents: "Nessun evento in arrivo",
       todoCompleteConfirm: 'Contrassegnare «{item}» come completata?',
       todoCompleteConfirmMultiple: "Contrassegnare tutte le {count} attività di questo evento come completate?",
@@ -2915,6 +3056,16 @@
         holidayDateActual: "Effettiva",
         holidayDateObserved: "Osservata",
         holidayMergeObserved: "Preferisci data osservata",
+        holidayMergeRegions: "Unisci le festività comuni a più paesi",
+        holidayMergeRegionsDesc:
+          "Una riga per festività invece di una per paese, elencando tutte le regioni che la celebrano. Il raggruppamento avviene per data e per il nome con cui la festività appare davvero: due festività diverse nello stesso giorno restano separate, e i paesi con dicitura differente si uniscono solo dopo che hai dato loro lo stesso nome (vedi «Nome e traduzioni» sulla festività stessa).",
+        regionFormat: "Formato regione",
+        regionFormatDesc: "Come vengono scritti il paese e la regione di una festività, ovunque compaiano.",
+        regionFormatShort: "US (CA)",
+        regionFormatLong: "US (California)",
+        holidayRegions: "Paesi e regioni",
+        holidayRegionsDesc:
+          "Quali dei paesi e delle regioni importati mostra la scheda. Tutti selezionati significa nessun filtro, quindi un paese importato in seguito compare da solo.",
         holidayMergeObservedDesc:
           "Quando una festività ha sia un'entità effettiva che una osservata, viene mostrata solo quella osservata (senza l'etichetta \"(observed)\") e il duplicato effettivo viene nascosto - utile per un elenco pulito dei giorni effettivamente liberi.",
         showAll: "Mostra tutto",
@@ -3038,6 +3189,16 @@
         suffixLabel: "Suffisso",
         suffixGroupHolidayTitle: "Solo festività",
         suffixGroupExternalTitle: "Solo calendari esterni",
+        suffixShowHolidayType: "Etichetta del tipo",
+        suffixShowHolidayTypeDesc:
+          "Mostra l'etichetta di tipo di una festività, ad es. \u201cHoliday (Public)\u201d. Disattiva per lasciare in questa cella solo il suffisso paese/regione.",
+        multiDayDisplay: "Eventi di più giorni",
+        multiDayDisplayDesc:
+          "Come viene elencato un evento singolo che dura più giorni: un viaggio, un congresso. Riguarda solo gli eventi che hanno davvero una data di fine; tutto il resto resta una sola riga.",
+        multiDayStartOnly: "Solo il primo giorno",
+        multiDayEndOnly: "Solo l'ultimo giorno",
+        multiDayStartEnd: "Primo e ultimo giorno",
+        multiDayEveryDay: "Ogni giorno",
         suffixShowCalendarName: "Nome del calendario",
         suffixShowCalendarNameDesc:
           "Mostra qui il nome proprio del calendario esterno (ad es. «Personale»). Disattivalo quando Ora/Luogo/Descrizione qui sotto dicono già abbastanza da soli.",
@@ -3247,6 +3408,9 @@
       inDays: (n) => `em ${n} dias`,
       dayAgo: "Ontem",
       daysAgo: (n) => `${n} dias atrás`,
+      multiDayStart: "início",
+      multiDayEnd: "fim",
+      multiDayDay: "dia {day}",
       noEvents: "Nenhum evento próximo",
       todoCompleteConfirm: 'Marcar "{item}" como concluída?',
       todoCompleteConfirmMultiple: "Marcar todas as {count} tarefas deste evento como concluídas?",
@@ -3369,6 +3533,16 @@
         holidayDateActual: "Real",
         holidayDateObserved: "Observada",
         holidayMergeObserved: "Preferir data observada",
+        holidayMergeRegions: "Mesclar feriados compartilhados por vários países",
+        holidayMergeRegionsDesc:
+          "Uma linha por feriado em vez de uma por país, listando todas as regiões que o celebram. O agrupamento é por data e pelo nome com que o feriado realmente aparece: dois feriados diferentes no mesmo dia continuam separados, e países com redação distinta só se mesclam depois que você lhes deu o mesmo nome (veja \"Nome e traduções\" no próprio feriado).",
+        regionFormat: "Formato de região",
+        regionFormatDesc: "Como o país e a região de um feriado são escritos, onde quer que apareçam.",
+        regionFormatShort: "US (CA)",
+        regionFormatLong: "US (California)",
+        holidayRegions: "Países e regiões",
+        holidayRegionsDesc:
+          "Quais dos países e regiões importados o cartão mostra. Todos selecionados significa sem filtro, então um país importado depois aparece sozinho.",
         holidayMergeObservedDesc:
           "Quando um feriado tem tanto uma entidade real quanto uma observada, mostra apenas a observada (sem o rótulo \"(observed)\") e oculta o duplicado real - útil para uma lista limpa dos dias realmente de folga.",
         showAll: "Mostrar tudo",
@@ -3492,6 +3666,16 @@
         suffixLabel: "Sufixo",
         suffixGroupHolidayTitle: "Somente feriados",
         suffixGroupExternalTitle: "Somente calendários externos",
+        suffixShowHolidayType: "Rótulo do tipo",
+        suffixShowHolidayTypeDesc:
+          "Mostrar o rótulo de tipo de um feriado, por ex. \u201cHoliday (Public)\u201d. Desative para deixar apenas o sufixo de país/região nesta célula.",
+        multiDayDisplay: "Eventos de vários dias",
+        multiDayDisplayDesc:
+          "Como um evento único que dura vários dias - uma viagem, um congresso - é listado. Afeta apenas eventos que realmente têm data de término; todo o resto continua sendo uma linha.",
+        multiDayStartOnly: "Apenas o primeiro dia",
+        multiDayEndOnly: "Apenas o último dia",
+        multiDayStartEnd: "Primeiro e último dia",
+        multiDayEveryDay: "Todos os dias",
         suffixShowCalendarName: "Nome do calendário",
         suffixShowCalendarNameDesc:
           "Exibe aqui o próprio nome do calendário externo (por ex. \"Pessoal\"). Desative assim que Horário/Local/Descrição abaixo já disserem o suficiente por si só.",
@@ -3699,6 +3883,9 @@
       inDays: (n) => `через ${n} дн.`,
       dayAgo: "Вчера",
       daysAgo: (n) => `${n} дн. назад`,
+      multiDayStart: "начало",
+      multiDayEnd: "конец",
+      multiDayDay: "день {day}",
       noEvents: "Нет ближайших событий",
       todoCompleteConfirm: 'Отметить «{item}» как выполненное?',
       todoCompleteConfirmMultiple: "Отметить все задачи этого события ({count}) как выполненные?",
@@ -3826,6 +4013,16 @@
         holidayDateActual: "Фактическая",
         holidayDateObserved: "Перенесённая",
         holidayMergeObserved: "Предпочитать перенесённую дату",
+        holidayMergeRegions: "Объединять праздники, общие для нескольких стран",
+        holidayMergeRegionsDesc:
+          "Одна строка на праздник вместо одной на страну, со списком всех отмечающих его регионов. Группировка идёт по дате и по названию, под которым праздник действительно отображается: два разных праздника в один день остаются раздельно, а страны с различающейся формулировкой объединяются лишь после того, как вы дали им одно и то же название (см. «Название и переводы» у самого праздника).",
+        regionFormat: "Формат региона",
+        regionFormatDesc: "Как записываются страна и регион праздника везде, где они показываются.",
+        regionFormatShort: "US (CA)",
+        regionFormatLong: "US (California)",
+        holidayRegions: "Страны и регионы",
+        holidayRegionsDesc:
+          "Какие из импортированных стран и регионов показывает карточка. Выбраны все — фильтра нет, поэтому импортированная позже страна появится сама.",
         holidayMergeObservedDesc:
           "Если у праздника есть и фактическая, и перенесённая сущность, показывается только перенесённая (без метки «(observed)»), а фактический дубликат скрывается — удобно для чистого списка действительно выходных дней.",
         showAll: "Показать все",
@@ -3949,6 +4146,16 @@
         suffixLabel: "Суффикс",
         suffixGroupHolidayTitle: "Только праздники",
         suffixGroupExternalTitle: "Только внешние календари",
+        suffixShowHolidayType: "Метка типа",
+        suffixShowHolidayTypeDesc:
+          "Показывать метку типа праздника, например \u201cHoliday (Public)\u201d. Отключите, чтобы в этой ячейке остался только суффикс страны/региона.",
+        multiDayDisplay: "Многодневные события",
+        multiDayDisplayDesc:
+          "Как отображается разовое событие, длящееся несколько дней, — поездка, конференция. Затрагивает только события, у которых действительно есть дата окончания; всё остальное остаётся одной строкой.",
+        multiDayStartOnly: "Только первый день",
+        multiDayEndOnly: "Только последний день",
+        multiDayStartEnd: "Первый и последний день",
+        multiDayEveryDay: "Каждый день",
         suffixShowCalendarName: "Название календаря",
         suffixShowCalendarNameDesc:
           "Показывает здесь собственное название внешнего календаря (например, «Личный»). Отключите, когда время/место/описание ниже уже достаточно информативны.",
@@ -4157,6 +4364,9 @@
       inDays: (n) => `om ${n} dagar`,
       dayAgo: "Igår",
       daysAgo: (n) => `för ${n} dagar sedan`,
+      multiDayStart: "start",
+      multiDayEnd: "slut",
+      multiDayDay: "dag {day}",
       noEvents: "Inga kommande händelser",
       todoCompleteConfirm: 'Markera "{item}" som klar?',
       todoCompleteConfirmMultiple: "Markera alla {count} uppgifter för den här händelsen som klara?",
@@ -4283,6 +4493,16 @@
         holidayDateActual: "Faktiskt",
         holidayDateObserved: "Observerat",
         holidayMergeObserved: "Föredra observerat datum",
+        holidayMergeRegions: "Slå ihop helgdagar som flera länder delar",
+        holidayMergeRegionsDesc:
+          "En rad per helgdag i stället för en per land, med alla regioner som firar den. Grupperingen sker på datum och på det namn helgdagen faktiskt visas under - två olika helgdagar samma dag hålls alltså isär, och länder med avvikande formulering slås ihop först när du gett dem samma namn (se ”Namn och översättningar” på helgdagen själv).",
+        regionFormat: "Regionformat",
+        regionFormatDesc: "Hur en helgdags land och region skrivs, överallt där de visas.",
+        regionFormatShort: "US (CA)",
+        regionFormatLong: "US (California)",
+        holidayRegions: "Länder och regioner",
+        holidayRegionsDesc:
+          "Vilka av de importerade länderna och regionerna kortet visar. Alla valda betyder inget filter, så ett land som importeras senare dyker upp av sig självt.",
         holidayMergeObservedDesc:
           "När en helgdag har både en faktisk och en observerad entitet visas endast den observerade (utan etiketten \"(observed)\") och den faktiska dubbletten döljs - praktiskt för en ren lista över faktiskt lediga dagar.",
         showAll: "Visa alla",
@@ -4407,6 +4627,16 @@
         suffixLabel: "Suffix",
         suffixGroupHolidayTitle: "Endast helgdagar",
         suffixGroupExternalTitle: "Endast externa kalendrar",
+        suffixShowHolidayType: "Typetikett",
+        suffixShowHolidayTypeDesc:
+          "Visa en helgdags egen typetikett, t.ex. \u201dHoliday (Public)\u201d. Stäng av för att bara lämna land-/regionsuffixet i den här cellen.",
+        multiDayDisplay: "Flerdagshändelser",
+        multiDayDisplayDesc:
+          "Hur en engångshändelse som sträcker sig över flera dagar - en semesterresa, en konferens - listas. Påverkar bara händelser som faktiskt har ett slutdatum; allt annat är en rad ändå.",
+        multiDayStartOnly: "Bara första dagen",
+        multiDayEndOnly: "Bara sista dagen",
+        multiDayStartEnd: "Första och sista dagen",
+        multiDayEveryDay: "Varje dag",
         suffixShowCalendarName: "Kalendernamn",
         suffixShowCalendarNameDesc:
           "Visa den externa kalenderns eget namn här (t.ex. \"Privat\"). Stäng av när Tid/Plats/Beskrivning nedan redan säger tillräckligt på egen hand.",
@@ -4618,6 +4848,9 @@
       inDays: (n) => `${n} 天后`,
       dayAgo: "昨天",
       daysAgo: (n) => `${n} 天前`,
+      multiDayStart: "开始",
+      multiDayEnd: "结束",
+      multiDayDay: "第{day}天",
       noEvents: "没有即将到来的事件",
       todoCompleteConfirm: "将“{item}”标记为已完成？",
       todoCompleteConfirmMultiple: "将此事件的全部 {count} 项待办标记为已完成？",
@@ -4744,6 +4977,16 @@
         holidayDateActual: "实际日期",
         holidayDateObserved: "顺延日期",
         holidayMergeObserved: "优先显示顺延日期",
+        holidayMergeRegions: "合并多个国家共有的节日",
+        holidayMergeRegionsDesc:
+          "每个节日一行，而不是每个国家一行，并列出所有庆祝它的地区。按日期以及节日实际显示的名称分组——因此同一天的两个不同节日仍分开显示，而措辞不同的国家只有在你为它们设置了相同名称后才会合并（见节日自身的“名称与翻译”）。",
+        regionFormat: "地区格式",
+        regionFormatDesc: "节日的国家和地区在各处的书写方式。",
+        regionFormatShort: "US (CA)",
+        regionFormatLong: "US (California)",
+        holidayRegions: "国家和地区",
+        holidayRegionsDesc:
+          "卡片显示哪些已导入的国家和地区。全选表示不过滤，因此以后导入的国家会自动出现。",
         holidayMergeObservedDesc:
           "当某节假日同时存在实际和顺延两个实体时，只显示顺延的（不带“(observed)”标签），并隐藏实际的重复项——便于生成一份干净的实际休息日列表。",
         showAll: "全部显示",
@@ -4859,6 +5102,16 @@
         suffixLabel: "后缀",
         suffixGroupHolidayTitle: "仅限节假日",
         suffixGroupExternalTitle: "仅限外部日历",
+        suffixShowHolidayType: "类型标签",
+        suffixShowHolidayTypeDesc:
+          "显示节假日自身的类型标签，例如\u201cHoliday (Public)\u201d。关闭后此单元格中仅保留国家/地区后缀。",
+        multiDayDisplay: "多日事件",
+        multiDayDisplayDesc:
+          "跨越多天的一次性事件（如旅行、会议）如何显示。仅影响确实设置了结束日期的事件，其他事件始终只占一行。",
+        multiDayStartOnly: "仅第一天",
+        multiDayEndOnly: "仅最后一天",
+        multiDayStartEnd: "第一天和最后一天",
+        multiDayEveryDay: "每一天",
         suffixShowCalendarName: "日历名称",
         suffixShowCalendarNameDesc:
           "在此显示外部日历自身的名称（例如「个人」）。一旦下方的时间/地点/描述已经足够说明，可关闭此项。",
@@ -5066,6 +5319,9 @@
       inDays: (n) => `za ${n} dní`,
       dayAgo: "Včera",
       daysAgo: (n) => `před ${n} dny`,
+      multiDayStart: "začátek",
+      multiDayEnd: "konec",
+      multiDayDay: "den {day}",
       noEvents: "Žádné nadcházející události",
       todoCompleteConfirm: 'Označit „{item}“ jako dokončené?',
       todoCompleteConfirmMultiple: "Označit všechny úkoly této události ({count}) jako dokončené?",
@@ -5193,6 +5449,16 @@
         holidayDateActual: "Skutečné",
         holidayDateObserved: "Náhradní",
         holidayMergeObserved: "Upřednostnit náhradní datum",
+        holidayMergeRegions: "Sloučit svátky společné více zemím",
+        holidayMergeRegionsDesc:
+          "Jeden řádek na svátek místo jednoho na zemi, se všemi regiony, které jej slaví. Seskupuje se podle data a podle názvu, pod kterým se svátek skutečně zobrazuje - dva různé svátky ve stejný den tedy zůstanou oddělené a země s odlišným zněním se sloučí až poté, co jim dáte stejný název (viz „Název a překlady“ u samotného svátku).",
+        regionFormat: "Formát regionu",
+        regionFormatDesc: "Jak se zapisuje země a region svátku všude, kde se zobrazují.",
+        regionFormatShort: "US (CA)",
+        regionFormatLong: "US (California)",
+        holidayRegions: "Země a regiony",
+        holidayRegionsDesc:
+          "Které z importovaných zemí a regionů karta zobrazuje. Všechny vybrané znamená žádný filtr, takže později importovaná země se objeví sama.",
         holidayMergeObservedDesc:
           "Pokud má svátek jak skutečnou, tak náhradní entitu, zobrazí se pouze náhradní (bez označení „(observed)“) a skutečný duplikát se skryje - užitečné pro čistý seznam skutečně volných dnů.",
         showAll: "Zobrazit vše",
@@ -5317,6 +5583,16 @@
         suffixLabel: "Přípona",
         suffixGroupHolidayTitle: "Pouze svátky",
         suffixGroupExternalTitle: "Pouze externí kalendáře",
+        suffixShowHolidayType: "Označení typu",
+        suffixShowHolidayTypeDesc:
+          "Zobrazit vlastní označení typu svátku, např. \u201eHoliday (Public)\u201c. Vypněte, aby v této buňce zůstal jen přípona země/regionu.",
+        multiDayDisplay: "Vícedenní události",
+        multiDayDisplayDesc:
+          "Jak se zobrazuje jednorázová událost trvající několik dní - dovolená, konference. Týká se jen událostí, které skutečně mají datum konce; vše ostatní zůstává jedním řádkem.",
+        multiDayStartOnly: "Jen první den",
+        multiDayEndOnly: "Jen poslední den",
+        multiDayStartEnd: "První a poslední den",
+        multiDayEveryDay: "Každý den",
         suffixShowCalendarName: "Název kalendáře",
         suffixShowCalendarNameDesc:
           "Zobrazí zde vlastní název externího kalendáře (např. „Osobní“). Vypněte, jakmile níže uvedené Čas/Místo/Popis samy o sobě říkají dost.",
@@ -5529,6 +5805,9 @@
       inDays: (n) => `om ${n} dager`,
       dayAgo: "I går",
       daysAgo: (n) => `for ${n} dager siden`,
+      multiDayStart: "start",
+      multiDayEnd: "slutt",
+      multiDayDay: "dag {day}",
       noEvents: "Ingen kommende hendelser",
       todoCompleteConfirm: 'Merke «{item}» som fullført?',
       todoCompleteConfirmMultiple: "Merke alle {count} oppgavene for denne hendelsen som fullført?",
@@ -5651,6 +5930,16 @@
         holidayDateActual: "Faktisk",
         holidayDateObserved: "Observert",
         holidayMergeObserved: "Foretrekk observert dato",
+        holidayMergeRegions: "Slå sammen helligdager flere land deler",
+        holidayMergeRegionsDesc:
+          "Én rad per helligdag i stedet for én per land, med alle regionene som feirer den. Gruppert på dato og på navnet helligdagen faktisk vises under - to forskjellige helligdager samme dag holdes altså fra hverandre, og land med avvikende ordlyd slås først sammen når du har gitt dem samme navn (se «Navn og oversettelser» på helligdagen selv).",
+        regionFormat: "Regionformat",
+        regionFormatDesc: "Hvordan en helligdags land og region skrives, overalt der de vises.",
+        regionFormatShort: "US (CA)",
+        regionFormatLong: "US (California)",
+        holidayRegions: "Land og regioner",
+        holidayRegionsDesc:
+          "Hvilke av de importerte landene og regionene kortet viser. Alle valgt betyr ingen filtrering, så et land som importeres senere dukker opp av seg selv.",
         holidayMergeObservedDesc:
           "Når en helligdag har både en faktisk og en observert enhet, vises kun den observerte (uten etiketten \"(observed)\") og den faktiske duplikaten skjules - praktisk for en ren liste over faktiske fridager.",
         showAll: "Vis alle",
@@ -5775,6 +6064,16 @@
         suffixLabel: "Suffiks",
         suffixGroupHolidayTitle: "Kun helligdager",
         suffixGroupExternalTitle: "Kun eksterne kalendere",
+        suffixShowHolidayType: "Typebetegnelse",
+        suffixShowHolidayTypeDesc:
+          "Vis en helligdags egen typebetegnelse, f.eks. \u201cHoliday (Public)\u201d. Slå av for å bare la land-/regionssuffikset stå igjen i denne cellen.",
+        multiDayDisplay: "Flerdagshendelser",
+        multiDayDisplayDesc:
+          "Hvordan en engangshendelse som går over flere dager - en ferietur, en konferanse - vises. Gjelder bare hendelser som faktisk har en sluttdato; alt annet er én rad uansett.",
+        multiDayStartOnly: "Bare første dag",
+        multiDayEndOnly: "Bare siste dag",
+        multiDayStartEnd: "Første og siste dag",
+        multiDayEveryDay: "Hver dag",
         suffixShowCalendarName: "Kalendernavn",
         suffixShowCalendarNameDesc:
           "Vis den eksterne kalenderens eget navn her (f.eks. «Privat»). Slå av når Klokkeslett/Sted/Beskrivelse nedenfor allerede sier nok på egen hånd.",
@@ -5986,6 +6285,9 @@
       inDays: (n) => `om ${n} dage`,
       dayAgo: "I går",
       daysAgo: (n) => `for ${n} dage siden`,
+      multiDayStart: "start",
+      multiDayEnd: "slut",
+      multiDayDay: "dag {day}",
       noEvents: "Ingen kommende begivenheder",
       todoCompleteConfirm: 'Markér "{item}" som fuldført?',
       todoCompleteConfirmMultiple: "Markér alle {count} opgaver for denne begivenhed som fuldført?",
@@ -6108,6 +6410,16 @@
         holidayDateActual: "Faktisk",
         holidayDateObserved: "Erstattet",
         holidayMergeObserved: "Foretræk observeret dato",
+        holidayMergeRegions: "Slå helligdage sammen, som flere lande deler",
+        holidayMergeRegionsDesc:
+          "Én række per helligdag i stedet for én per land, med alle de regioner, der fejrer den. Grupperet på dato og på det navn, helligdagen faktisk vises under - to forskellige helligdage samme dag holdes altså adskilt, og lande med afvigende ordlyd slås først sammen, når du har givet dem samme navn (se «Navn og oversættelser» på helligdagen selv).",
+        regionFormat: "Regionformat",
+        regionFormatDesc: "Hvordan en helligdags land og region skrives, alle steder de vises.",
+        regionFormatShort: "US (CA)",
+        regionFormatLong: "US (California)",
+        holidayRegions: "Lande og regioner",
+        holidayRegionsDesc:
+          "Hvilke af de importerede lande og regioner kortet viser. Alle valgt betyder ingen filtrering, så et land der importeres senere dukker op af sig selv.",
         holidayMergeObservedDesc:
           "Når en helligdag har både en faktisk og en observeret enhed, vises kun den observerede (uden mærket \"(observed)\"), og det faktiske duplikat skjules - praktisk til en ren liste over faktiske fridage.",
         showAll: "Vis alle",
@@ -6232,6 +6544,16 @@
         suffixLabel: "Suffiks",
         suffixGroupHolidayTitle: "Kun helligdage",
         suffixGroupExternalTitle: "Kun eksterne kalendere",
+        suffixShowHolidayType: "Typebetegnelse",
+        suffixShowHolidayTypeDesc:
+          "Vis en helligdags egen typebetegnelse, f.eks. \u201cHoliday (Public)\u201d. Slå fra for kun at lade land-/regionssuffikset stå i denne celle.",
+        multiDayDisplay: "Flerdagsbegivenheder",
+        multiDayDisplayDesc:
+          "Hvordan en engangsbegivenhed over flere dage - en ferierejse, en konference - vises. Gælder kun begivenheder, der rent faktisk har en slutdato; alt andet er én række alligevel.",
+        multiDayStartOnly: "Kun den første dag",
+        multiDayEndOnly: "Kun den sidste dag",
+        multiDayStartEnd: "Første og sidste dag",
+        multiDayEveryDay: "Hver dag",
         suffixShowCalendarName: "Kalendernavn",
         suffixShowCalendarNameDesc:
           "Vis den eksterne kalenders eget navn her (f.eks. „Privat”). Slå fra, når Klokkeslæt/Sted/Beskrivelse nedenfor allerede siger nok i sig selv.",
@@ -6443,6 +6765,9 @@
       inDays: (n) => `${n} gün sonra`,
       dayAgo: "Dün",
       daysAgo: (n) => `${n} gün önce`,
+      multiDayStart: "başlangıç",
+      multiDayEnd: "bitiş",
+      multiDayDay: "{day}. gün",
       noEvents: "Yaklaşan etkinlik yok",
       todoCompleteConfirm: '"{item}" tamamlandı olarak işaretlensin mi?',
       todoCompleteConfirmMultiple: "Bu etkinliğin {count} yapılacak öğesinin tümü tamamlandı olarak işaretlensin mi?",
@@ -6571,6 +6896,16 @@
         holidayDateActual: "Gerçek",
         holidayDateObserved: "Kaydırılmış",
         holidayMergeObserved: "Gözlemlenen tarihi tercih et",
+        holidayMergeRegions: "Birden çok ülkenin paylaştığı tatilleri birleştir",
+        holidayMergeRegionsDesc:
+          "Ülke başına bir satır yerine tatil başına bir satır; onu kutlayan tüm bölgeler listelenir. Gruplama tarihe ve tatilin gerçekten göründüğü ada göre yapılır - aynı gündeki iki farklı tatil ayrı kalır, ifadesi farklı olan ülkeler ise ancak onlara aynı adı verdikten sonra birleşir (tatilin kendi «Ad ve çeviriler» bölümüne bakın).",
+        regionFormat: "Bölge biçimi",
+        regionFormatDesc: "Bir tatilin ülkesi ve bölgesi göründükleri her yerde nasıl yazılır.",
+        regionFormatShort: "US (CA)",
+        regionFormatLong: "US (California)",
+        holidayRegions: "Ülkeler ve bölgeler",
+        holidayRegionsDesc:
+          "İçe aktarılan ülke ve bölgelerden hangilerini kartın göstereceği. Tümü seçili olması filtre yok demektir, bu yüzden sonradan içe aktarılan bir ülke kendiliğinden görünür.",
         holidayMergeObservedDesc:
           "Bir tatilin hem gerçek hem de gözlemlenen bir varlığı olduğunda, yalnızca gözlemlenen gösterilir (\"(observed)\" etiketi olmadan) ve gerçek kopya gizlenir - gerçekten tatil olan günlerin temiz bir listesi için kullanışlıdır.",
         showAll: "Tümünü göster",
@@ -6695,6 +7030,16 @@
         suffixLabel: "Ek",
         suffixGroupHolidayTitle: "Yalnızca tatiller",
         suffixGroupExternalTitle: "Yalnızca harici takvimler",
+        suffixShowHolidayType: "Tür etiketi",
+        suffixShowHolidayTypeDesc:
+          "Bir tatilin kendi tür etiketini göster, ör. \u201cHoliday (Public)\u201d. Bu hücrede yalnızca ülke/bölge son ekinin kalması için kapatın.",
+        multiDayDisplay: "Çok günlü etkinlikler",
+        multiDayDisplayDesc:
+          "Birkaç gün süren tek seferlik bir etkinliğin - tatil yolculuğu, konferans - nasıl listeleneceği. Yalnızca gerçekten bitiş tarihi olan etkinlikleri etkiler; diğer her şey yine tek satırdır.",
+        multiDayStartOnly: "Yalnızca ilk gün",
+        multiDayEndOnly: "Yalnızca son gün",
+        multiDayStartEnd: "İlk ve son gün",
+        multiDayEveryDay: "Her gün",
         suffixShowCalendarName: "Takvim adı",
         suffixShowCalendarNameDesc:
           "Harici takvimin kendi adını burada gösterir (örn. \"Kişisel\"). Aşağıdaki Saat/Konum/Açıklama zaten yeterince açıklayıcı olduğunda kapatın.",
@@ -6924,6 +7269,21 @@
   // it to one of CARD_LANGUAGES for every viewer alike (see defaultConfig),
   // for a dashboard that should read the same no matter whose profile is
   // looking at it. Empty (the default) keeps the per-viewer behavior.
+  // The name a user typed in for `locale`, if any. Matched leniently on the
+  // primary subtag as well, so a viewer whose Home Assistant profile says
+  // "de-DE" still gets the name entered under "de" - the integration stores
+  // these under its own 15 language codes, the browser hands out whatever
+  // the profile happens to be set to.
+  function translatedName(translations, locale) {
+    if (!translations || !locale) return null;
+    if (translations[locale]) return translations[locale];
+    const base = String(locale).split("-")[0].toLowerCase();
+    for (const [key, value] of Object.entries(translations)) {
+      if (value && key.split("-")[0].toLowerCase() === base) return value;
+    }
+    return null;
+  }
+
   function cardLocale(hass, config) {
     const pinned = config && config.language;
     if (pinned && STRINGS[pinned]) return pinned;
@@ -7213,6 +7573,25 @@
       // two checkboxes above or seeing the suffix on the handful of years
       // a date actually shifts.
       holiday_merge_observed: false,
+      // Holidays several countries share fall into one row listing every
+      // region, instead of one near-identical row per country (see
+      // _filteredEvents). Off by default: it only helps once more than one
+      // country is imported, and merging is never what a single-country
+      // setup wants.
+      holiday_merge_regions: false,
+      // Which imported countries/regions to show ("US", "US-CA"); empty
+      // means every one, so importing another country later needs no edit
+      // here (same convention as `categories`).
+      holiday_regions: [],
+      // "short" = "US (CA)" as before, "long" = "US (California)".
+      region_format: "short",
+      // How a one-time event that spans several days - a holiday trip, see
+      // CONF_END_DATE in const.py - is turned into rows: just the day it
+      // starts (the default, and what a single-day event has always done),
+      // just the day it ends, both, or one row for every day of it. Only
+      // ever affects events that actually carry an end date; every other
+      // event is one row regardless.
+      multi_day_display: "start",
       show_past: true,
       show_today: true,
       show_soon: true,
@@ -7250,6 +7629,9 @@
       // Holidays only - appends the imported country (+ subdivision) to the
       // name/type text instead of the old hover-only tooltip.
       show_name_country: false,
+      // Holidays only - lets the type label ("Holiday (Public)") be dropped
+      // from the Type cell while its country/region suffix stays.
+      show_holiday_type: true,
       show_type_country: false,
       show_full_name_country: false,
       // List layout, Row columns -> Type field's "External calendars" group
@@ -7644,12 +8026,117 @@
         // across those - see config_flow._import_unique_id for the same
         // composite identity used on the backend).
         holidayKey: state.attributes.holiday_key,
+        // "California" for "CA" (see sensor.py) - undefined for a country-wide
+        // entry, and on an entry whose integration predates the attribute.
+        subdivisionName: state.attributes.subdivision_name || "",
+        // Holidays only - {language: name} the user typed in themselves (see
+        // CONF_NAME_TRANSLATIONS in const.py). Applied per render rather than
+        // here, since which one applies depends on the language this
+        // particular card is being read in (see _localizedEvent).
+        nameTranslations: state.attributes.name_translations || null,
         country: state.attributes.country,
         subdivision: state.attributes.subdivision,
+        // Only present on a one-time event spanning several days - a
+        // holiday trip, a conference (see CONF_END_DATE in const.py).
+        // undefined on every single-day event, which is what every check
+        // below uses to tell the two apart.
+        endDate: state.attributes.end_date,
+        daysUntilEnd: state.attributes.days_until_end,
+        durationDays: state.attributes.duration_days,
+        inProgress: state.attributes.in_progress === true,
       });
     }
     events.sort((a, b) => a.days - b.days || a.entityId.localeCompare(b.entityId));
     return events;
+  }
+
+  // Local calendar day as "YYYY-MM-DD" - the anchor every day count below
+  // is measured from. Built from the local date parts rather than
+  // toISOString(), which converts to UTC first and so reports yesterday for
+  // anyone east of Greenwich in the small hours.
+  function localIsoDay(when) {
+    const pad = (n) => String(n).padStart(2, "0");
+    return `${when.getFullYear()}-${pad(when.getMonth() + 1)}-${pad(when.getDate())}`;
+  }
+
+  // Whole days between two "YYYY-MM-DD" strings. Anchored at midday so a
+  // daylight-saving change inside the range - which shortens or lengthens
+  // one of its days by an hour - can't round the result to the wrong day.
+  function isoDayDiff(fromIso, toIso) {
+    return Math.round(
+      (Date.parse(`${toIso}T12:00:00`) - Date.parse(`${fromIso}T12:00:00`)) / 86400000
+    );
+  }
+
+  // Turn each one-time event that spans several days (see `endDate` in
+  // getEvents) into the rows this card is configured to show for it, and
+  // leave everything else exactly as it is.
+  //
+  // Days already past are dropped: on day five of a fortnight, days one to
+  // four are history and listing them would bury the rows that still say
+  // something. The start row is the deliberate exception - it is clamped to
+  // 0 while the event runs rather than going negative, matching what the
+  // sensor itself reports, so an ongoing holiday doesn't silently vanish
+  // from a card that only shows starts.
+  function expandMultiDay(events, mode, todayIso, strings) {
+    const out = [];
+    for (const e of events) {
+      if (!e.endDate || e.type !== "one_time" || !e.nextDate) {
+        out.push(e);
+        continue;
+      }
+      const startIso = e.nextDate;
+      // Always applied, even when only one part is listed: on a card of
+      // single-day events, a row that silently means "the day this one
+      // *begins*" is indistinguishable from every other row, and a holiday
+      // trip is exactly where that distinction matters.
+      const label = (text) => (text ? `${e.fullName} (${text})` : e.fullName);
+      const rows = [];
+      if (mode === "start" || mode === "start_end") {
+        rows.push({
+          ...e,
+          // The sensor's own count, not one recomputed here: it already
+          // counts down to the start and already holds at 0 while the
+          // event runs (see sensor.py), and two answers to the same
+          // question is one too many.
+          multiDayPart: "start",
+          fullName: label(strings.multiDayStart),
+        });
+      }
+      if (mode === "end" || mode === "start_end") {
+        rows.push({
+          ...e,
+          days: isoDayDiff(todayIso, e.endDate),
+          nextDate: e.endDate,
+          multiDayPart: "end",
+          fullName: label(strings.multiDayEnd),
+        });
+      }
+      if (mode === "days") {
+        const total = isoDayDiff(startIso, e.endDate);
+        for (let offset = 0; offset <= total; offset++) {
+          const days = isoDayDiff(todayIso, startIso) + offset;
+          if (days < 0) continue;
+          const dayIso = localIsoDay(new Date(Date.parse(`${startIso}T12:00:00`) + offset * 86400000));
+          rows.push({
+            ...e,
+            days,
+            nextDate: dayIso,
+            multiDayPart: "day",
+            multiDayIndex: offset + 1,
+            fullName: label(
+              (strings.multiDayDay || "day {day}").replace("{day}", String(offset + 1))
+            ),
+          });
+        }
+      }
+      // A configuration that produces nothing for this event at all (every
+      // day of it already past, with only per-day rows asked for) still
+      // leaves the event itself, rather than making it disappear from a card
+      // it is plainly still relevant to.
+      out.push(...(rows.length ? rows : [e]));
+    }
+    return out;
   }
 
   // Cheap fingerprint of just the entities getEvents() actually reads -
@@ -9203,7 +9690,9 @@
     _filteredEvents() {
       const config = this._config;
       const now = new Date();
-      const all = [...getEvents(this._hass), ...this._externalEvents];
+      const all = [...getEvents(this._hass), ...this._externalEvents].map((e) =>
+        this._localizedEvent(e)
+      );
       // Matched once per render rather than per row/dot, since the scoring
       // compares every item against every event (see matchTodoItems) and
       // the filter below plus both layouts all need the same result.
@@ -9212,7 +9701,17 @@
       // genuine tie, and hiding that event shouldn't quietly hand the item
       // to its runner-up.
       this._todoByEntity = matchTodoItems(all, this._todoItems);
-      let filtered = all.filter((e) => {
+      // After the to-do match, not before: an item belongs to the event, not
+      // to whichever of its days happens to be listed, and matching against
+      // fourteen copies of one holiday trip would only make the scoring
+      // fight itself.
+      const expanded = expandMultiDay(
+        all,
+        config.multi_day_display || "start",
+        localIsoDay(now),
+        t(this._hass, this._config)
+      );
+      let filtered = expanded.filter((e) => {
         // Checked ahead of the isExternal short-circuit below, and so the
         // one Annuals-side filter that does apply to an external calendar
         // event: it can't ever carry an open to-do (matchTodoItems needs a
@@ -9245,6 +9744,15 @@
           !config.categories.includes(e.category)
         )
           return false;
+        // Which countries/regions to show, in the same "empty means all,
+        // holidays only" shape. Matched against the bare country too, since
+        // a nationwide holiday carries no region of its own - so picking
+        // "US-CA" alone shows California's own holidays without the federal
+        // ones, and "US" adds those back.
+        if (e.type === "holiday" && config.holiday_regions && config.holiday_regions.length) {
+          const region = e.subdivision ? `${e.country}-${e.subdivision}` : e.country;
+          if (!config.holiday_regions.includes(region)) return false;
+        }
         // Same "doesn't apply outside holidays" shape as `categories` above -
         // e.observed is only ever set (true/false) on holiday-type events.
         // Skipped entirely in merge mode, which applies its own actual/
@@ -9294,6 +9802,45 @@
               ? { ...e, name: e.name.replace(/ \(observed\)$/, ""), fullName: e.fullName.replace(/ \(observed\)$/, "") }
               : e
           );
+      }
+      // Merge holidays that several countries celebrate on the same day into
+      // one row, listing all of their regions instead of repeating the same
+      // entry four times (see holiday_merge_regions in defaultConfig).
+      //
+      // Grouped by date *and* name, not by date alone: two genuinely
+      // different holidays can fall on the same day, and collapsing those
+      // would be wrong rather than tidy. The library has no cross-country
+      // identity to group by - it calls the same day "Assumption Day" in one
+      // country and "Assumption Of Mary Day" in the next - so the name a
+      // holiday actually renders under is the only honest signal. That also
+      // makes this the payoff for translating them (see
+      // CONF_NAME_TRANSLATIONS): once they read alike, they merge.
+      if (config.holiday_merge_regions) {
+        const groups = new Map();
+        const merged = [];
+        for (const event of filtered) {
+          if (event.type !== "holiday") {
+            merged.push(event);
+            continue;
+          }
+          const key = `${event.days}|${(event.name || "").toLowerCase()}`;
+          const existing = groups.get(key);
+          if (!existing) {
+            // The events themselves, not pre-rendered text: the list layout
+            // writes "US (CA)" and the timeline "US-CA", so each has to
+            // render the group in its own style. Only set once a group
+            // actually has a second member, so a holiday only one country
+            // celebrates renders exactly as it does with merging off.
+            const copy = { ...event, mergedFrom: [event] };
+            groups.set(key, copy);
+            merged.push(copy);
+            continue;
+          }
+          if (!existing.mergedFrom.some((other) => other.entityId === event.entityId)) {
+            existing.mergedFrom.push(event);
+          }
+        }
+        filtered = merged;
       }
       // "Only next event day" - once every other filter above has been
       // applied, keep only whichever events share the single soonest
@@ -9382,6 +9929,54 @@
     // unambiguously, whatever the columns are set to.
     _formatEventDate(date) {
       return formatEventDate(date, this._config.date_format, this._locale());
+    }
+
+    // A holiday rendered under the name its own translation gives it, if the
+    // user wrote one for the language this card reads in. Applied here, on
+    // the way into the render, rather than in getEvents: the same entity can
+    // be on two cards pinned to two different languages at once (see the
+    // Language option), so there is no single right name to bake in earlier.
+    // The country (+ subdivision) a holiday was imported for: "US (CA)" or,
+    // in long format, "US (California)".
+    //
+    // Only the subdivision is ever spelled out. Its long name comes from the
+    // holidays library, in that region's own language, which is how people
+    // write it. The country deliberately stays a code: the only source for a
+    // localized country name is the browser's own Intl.DisplayNames, and it
+    // silently falls back to English wherever a browser ships reduced ICU
+    // data - which would produce an English country name on a card read
+      // in any other language. A code
+    // that is the same everywhere beats a name that is right only sometimes.
+    _regionSuffix(e) {
+      if (e.type !== "holiday" || !e.country) return "";
+      // Merged with other countries' copies of the same holiday - list all of
+      // them rather than only the one this row happens to have come from.
+      if (e.mergedFrom && e.mergedFrom.length > 1) {
+        // Deduplicated: two merged sources can render the same label
+        // without being the same entry - the same nationwide holiday
+        // imported under two categories (e.g. US "Washington's Birthday"
+        // as both public and government) is one place, listed twice.
+        return [
+          ...new Set(
+            e.mergedFrom.map((other) => this._regionSuffix({ ...other, mergedFrom: null }))
+          ),
+        ].join(" · ");
+      }
+      const region = this._regionSubdivision(e);
+      return region ? `${e.country} (${region})` : e.country;
+    }
+
+    // The subdivision alone, as a code or spelled out - shared by the list
+    // layout's "US (California)" and the timeline's own "US-California".
+    _regionSubdivision(e) {
+      if (this._config.region_format === "long") return e.subdivisionName || e.subdivision;
+      return e.subdivision;
+    }
+
+    _localizedEvent(e) {
+      const translated = translatedName(e.nameTranslations, this._locale());
+      if (!translated) return e;
+      return { ...e, name: translated, fullName: translated };
     }
 
     // Short calendar date ("6 Aug") for config.timeline_show_date - same
@@ -9623,9 +10218,15 @@
       // list layout's own "US (UT)" country-suffix format (see _row()),
       // since this one's meant to read as a single parenthetical rather than
       // nested parens.
+      // A merged row stands for several countries at once (see
+      // holiday_merge_regions), so it lists every one of them - rendered in
+      // this layout's own hyphenated style rather than the list layout's
+      // parenthesised one, which would nest parens inside these.
+      const regionPart = (event) =>
+        `${event.country}${event.subdivision ? `-${this._regionSubdivision(event)}` : ""}`;
       const holidaySuffix =
         config.show_holiday_suffix && e.type === "holiday" && e.country
-          ? ` (${e.country}${e.subdivision ? `-${e.subdivision}` : ""})`
+          ? ` (${[...new Set((e.mergedFrom || [e]).map(regionPart))].join(" · ")})`
           : "";
       const baseName = config.timeline_show_full_name && e.fullName ? e.fullName : e.name;
       const displayName = `${baseName}${holidaySuffix}`;
@@ -10339,12 +10940,7 @@
       // (see the "Show country/subdivision" sub-options under Name/Type
       // in the editor) rather than always-on, since most setups only ever
       // import a single country and don't need it repeated on every row.
-      const countrySuffix =
-        e.type === "holiday" && e.country
-          ? e.subdivision
-            ? `${e.country} (${e.subdivision})`
-            : e.country
-          : "";
+      const countrySuffix = this._regionSuffix(e);
 
       let when;
       if (isRecent && e.daysSince > 0) {
@@ -10426,7 +11022,13 @@
       // while an Annuals type label and a holiday's country suffix are the
       // Type field's own text. See _typeCellFragment.
       const typeParts = [];
-      if (typeLabel) typeParts.push({ text: typeLabel, calendar: !!e.isExternal });
+      // "Type label" in the Holidays-only group: a holiday's own type text
+      // ("Holiday (Public)") can be dropped while everything else in the
+      // cell stays, for whom the category adds nothing next to the
+      // country/region suffix. Holidays only - every other event type keeps
+      // its label, which is often all that cell says.
+      const showTypeLabel = e.type !== "holiday" || config.show_holiday_type !== false;
+      if (typeLabel && showTypeLabel) typeParts.push({ text: typeLabel, calendar: !!e.isExternal });
       if (countrySuffix && config.show_type_country)
         typeParts.push({ text: countrySuffix, calendar: false });
       if (config.show_type_time && timeText) typeParts.push({ text: timeText, calendar: true });
@@ -11951,7 +12553,19 @@
     // Fills one of _actionSelectorSplitHtml's slots with a plain dropdown -
     // the same ha-selector component (and therefore the same look and width)
     // the action selectors below use, just a select instead of a ui_action.
-    _upgradeSelectField(body, key, label, desc, options, fallback) {
+    // Relabels the country/region filter in place. Its labels spell out the
+    // region according to the Region format setting, so they have to follow
+    // that dropdown without the section being rebuilt - which won't happen
+    // while the editor stays open.
+    _updateRegionFilterLabels() {
+      if (!this._holidayFilterRowEl) return;
+      this._holidayFilterRowEl.querySelectorAll("input[data-holidayregion]").forEach((input) => {
+        const label = input.closest(".type-toggle-row").querySelector(".type-toggle-label");
+        if (label) label.textContent = this._regionValueLabel(input.dataset.holidayregion);
+      });
+    }
+
+    _upgradeSelectField(body, key, label, desc, options, fallback, onChange) {
       const col = body.querySelector(`[data-action-slot="${key}"]`).closest(".field-col");
       col.querySelector(".label-text").textContent = label;
       col.querySelector(".tooltip-anchor").dataset.tooltip = desc;
@@ -11967,6 +12581,7 @@
         ev.stopPropagation();
         this._config = defaultConfig({ ...this._config, [key]: ev.detail.value || fallback });
         this._emit();
+        if (onChange) onChange();
       });
       slot.appendChild(selector);
       this._selectFields = this._selectFields || {};
@@ -12234,6 +12849,30 @@
         })
       );
 
+      // How a one-time event spanning several days is broken into rows.
+      // Sits with the other "which rows exist at all" settings rather than
+      // in Display, and outside the holiday block below since it has
+      // nothing to do with holidays. Always offered: unlike the holiday
+      // categories, there is a fixed set of choices whether or not such an
+      // event exists right now.
+      const multiDayWrapper = document.createElement("div");
+      multiDayWrapper.innerHTML = this._actionSelectorSplitHtml(["multi_day_display"]);
+      body.appendChild(multiDayWrapper);
+      this._multiDayRowEl = multiDayWrapper;
+      this._upgradeSelectField(
+        body,
+        "multi_day_display",
+        strings.editor.multiDayDisplay,
+        strings.editor.multiDayDisplayDesc,
+        [
+          { value: "start", label: strings.editor.multiDayStartOnly },
+          { value: "end", label: strings.editor.multiDayEndOnly },
+          { value: "start_end", label: strings.editor.multiDayStartEnd },
+          { value: "days", label: strings.editor.multiDayEveryDay },
+        ],
+        "start"
+      );
+
       // Only shown once at least one holiday event is actually present -
       // which categories exist depends entirely on what's been imported
       // (see config_flow.py's "Import public holidays" step), so there's no
@@ -12313,11 +12952,86 @@
           this._emit();
         });
         body.appendChild(mergeWrapper);
+
+        // The other two holiday-only display choices: collapse the same
+        // holiday shared by several countries into one row, and whether the
+        // country/region reads as codes or spelled out.
+        const regionsWrapper = document.createElement("div");
+        regionsWrapper.innerHTML = this._visibilityTwoColHtml(["holiday_merge_regions"], []);
+        const regionsRow = regionsWrapper
+          .querySelector('input[data-visibility="holiday_merge_regions"]')
+          .closest(".toggle-row");
+        regionsRow.querySelector(".label-text").textContent = strings.editor.holidayMergeRegions;
+        regionsRow.querySelector(".tooltip-anchor").dataset.tooltip =
+          strings.editor.holidayMergeRegionsDesc;
+        const regionsToggle = regionsRow.querySelector(
+          'input[data-visibility="holiday_merge_regions"]'
+        );
+        regionsToggle.addEventListener("change", () => {
+          this._config = defaultConfig({
+            ...this._config,
+            holiday_merge_regions: regionsToggle.checked,
+          });
+          this._emit();
+        });
+        body.appendChild(regionsWrapper);
+        this._holidayRegionsRowEl = regionsRow;
+
+        const formatWrapper = document.createElement("div");
+        formatWrapper.innerHTML = this._actionSelectorSplitHtml(["region_format"]);
+        body.appendChild(formatWrapper);
+        this._regionFormatRowEl = formatWrapper;
+
+        // Which of the imported countries/regions the card shows at all.
+        // Empty means "every one", exactly like `categories` above, so a
+        // later import of another country shows up without anyone having to
+        // revisit this row.
+        const regions = this._availableRegions();
+        if (regions.length > 1) {
+          this._holidayFilterRowEl = this._buildToggleGridRow({
+            labelText: strings.editor.holidayRegions,
+            tooltipText: strings.editor.holidayRegionsDesc,
+            values: regions,
+            dataAttr: "holidayregion",
+            valueLabel: (value) => this._regionValueLabel(value),
+            showAllText: strings.editor.showAll || "Show All",
+            hideAllText: strings.editor.hideAll || "Hide All",
+            onChange: (checked) => {
+              // All of them checked is the same statement as "no filter" -
+              // stored as [] so the config stays free of a list that has to
+              // be maintained by hand whenever a country is imported later.
+              const all = checked.length === regions.length;
+              this._config = defaultConfig({
+                ...this._config,
+                holiday_regions: all ? [] : checked,
+              });
+              this._emit();
+            },
+          });
+          body.appendChild(this._holidayFilterRowEl);
+        } else {
+          this._holidayFilterRowEl = null;
+        }
+        this._upgradeSelectField(
+          body,
+          "region_format",
+          strings.editor.regionFormat,
+          strings.editor.regionFormatDesc,
+          [
+            { value: "short", label: strings.editor.regionFormatShort },
+            { value: "long", label: strings.editor.regionFormatLong },
+          ],
+          "short",
+          () => this._updateRegionFilterLabels()
+        );
+
         this._updateCategoriesRowVisibility();
       } else {
         this._categoriesRowEl = null;
         this._holidayDateRowEl = null;
         this._holidayMergeRowEl = null;
+        this._holidayRegionsRowEl = null;
+        this._regionFormatRowEl = null;
       }
 
       // Same shape as External calendars below - another opt-in data source
@@ -12391,6 +13105,22 @@
       return types.length === 0 || types.includes("holiday");
     }
 
+    // Same reading as _holidayTypeEnabled above, for the one type the
+    // multi-day row describes - an end date only ever exists on a one-time
+    // event (see CONF_END_DATE in const.py), so with that type hidden the
+    // setting has nothing left to act on.
+    _oneTimeTypeEnabled() {
+      const types = this._config.types || [];
+      if (types.length === 1 && types[0] === NONE_SELECTED) return false;
+      return types.length === 0 || types.includes("one_time");
+    }
+
+    _updateMultiDayRowVisibility() {
+      if (this._multiDayRowEl) {
+        this._multiDayRowEl.hidden = !this._oneTimeTypeEnabled();
+      }
+    }
+
     // Mirror image of the types-onChange cascade above (types -> categories)
     // - unchecking every category folds back into unchecking "Holiday"
     // itself, since "no categories shown" and "no holidays shown" mean the
@@ -12426,6 +13156,12 @@
       }
       if (this._holidayMergeRowEl) {
         this._holidayMergeRowEl.hidden = observedHidden;
+      }
+      // Holiday-only, but not observed-only: these three describe how
+      // holidays are written and which ones are shown, so they follow the
+      // event type alone.
+      for (const row of [this._holidayRegionsRowEl, this._regionFormatRowEl, this._holidayFilterRowEl]) {
+        if (row) row.hidden = hidden;
       }
     }
 
@@ -12506,6 +13242,42 @@
     // holiday sensors - there's no fixed enum (see const.py's CATEGORY_ICONS
     // comment: countries define their own categories), so the checkbox list
     // above can only ever offer what's actually been imported.
+    // The distinct places holidays were imported for, as "US" or "US-CA".
+    // Same reasoning as _availableCategories below: what exists depends
+    // entirely on what was imported, so there's no fixed list to offer.
+    // Nationwide holidays carry no region at all (see _build_holiday_rows in
+    // config_flow.py), which is why the bare country is a value in its own
+    // right here rather than only ever a prefix.
+    _availableRegions() {
+      if (!this._hass) return [];
+      const found = new Set();
+      for (const entityId in this._hass.states) {
+        if (!entityId.startsWith("sensor.annuals_holiday_")) continue;
+        const attrs = this._hass.states[entityId].attributes;
+        if (!attrs.country) continue;
+        found.add(attrs.subdivision ? `${attrs.country}-${attrs.subdivision}` : attrs.country);
+      }
+      return Array.from(found).sort();
+    }
+
+    // "US-CA" -> "US (California)" or "US (CA)", following the card's own
+    // Region format setting so the filter reads the same as the rows it
+    // filters.
+    _regionValueLabel(value) {
+      const [country, subdivision] = value.split("-");
+      if (!subdivision) return country;
+      if (this._config && this._config.region_format === "long") {
+        for (const entityId in this._hass.states) {
+          if (!entityId.startsWith("sensor.annuals_holiday_")) continue;
+          const attrs = this._hass.states[entityId].attributes;
+          if (attrs.country === country && attrs.subdivision === subdivision && attrs.subdivision_name) {
+            return `${country} (${attrs.subdivision_name})`;
+          }
+        }
+      }
+      return `${country} (${subdivision})`;
+    }
+
     _availableCategories() {
       if (!this._hass) return [];
       const found = new Set();
@@ -12534,6 +13306,13 @@
       this.shadowRoot.querySelectorAll(".events-body input[data-category]").forEach((el) => {
         el.checked = allCategoriesChecked || categories.includes(el.dataset.category);
       });
+
+      // Same "empty means all" reading as categories above.
+      const holidayRegions = this._config.holiday_regions || [];
+      const allRegionsChecked = holidayRegions.length === 0;
+      this.shadowRoot.querySelectorAll(".events-body input[data-holidayregion]").forEach((el) => {
+        el.checked = allRegionsChecked || holidayRegions.includes(el.dataset.holidayregion);
+      });
       // Unlike categories/types above, an empty array here is never stored
       // as "all" - defaultConfig always fills in at least ["actual"] - so
       // this only ever reflects exactly what's checked, no "all means empty"
@@ -12546,7 +13325,16 @@
         '.events-body input[data-visibility="holiday_merge_observed"]'
       );
       if (mergeToggle) mergeToggle.checked = this._config.holiday_merge_observed === true;
+      const regionsToggle = this.shadowRoot.querySelector(
+        'input[data-visibility="holiday_merge_regions"]'
+      );
+      if (regionsToggle) regionsToggle.checked = this._config.holiday_merge_regions === true;
+      const regionFormat = (this._selectFields || {}).region_format;
+      if (regionFormat) regionFormat.value = this._config.region_format || "short";
+      const multiDay = (this._selectFields || {}).multi_day_display;
+      if (multiDay) multiDay.value = this._config.multi_day_display || "start";
       this._updateCategoriesRowVisibility();
+      this._updateMultiDayRowVisibility();
       this._syncActionSelector("external_calendars", this._config.external_calendars || []);
       const calendarSelector = this._actionSelectors && this._actionSelectors.external_calendars;
       if (calendarSelector) {
@@ -13699,6 +14487,16 @@
         // event, regardless of which field it's attached to.
         entries.push({ toggleKey: key, configKey, fieldKey: key, kind: "country", group: "holiday" });
         if (key === "type") {
+          // Also holidays-only, and also attached to the Type field: hides
+          // the type label itself rather than adding to it, so it sits with
+          // the suffix toggle above rather than in the external group.
+          entries.push({
+            toggleKey: "holiday_type",
+            configKey: "show_holiday_type",
+            fieldKey: key,
+            kind: "holiday_type",
+            group: "holiday",
+          });
           // "External calendars" - only ever has an effect on an embedded
           // external calendar's own event, never on any Annuals event.
           entries.push({
@@ -13738,6 +14536,7 @@
     // "type" field, so unlike the country-suffix toggle they never need a
     // "(Type)"-style disambiguation suffix on their label.
     _suffixToggleLabel(entry, multiField, strings) {
+      if (entry.kind === "holiday_type") return strings.editor.suffixShowHolidayType || "Type label";
       if (entry.kind === "calendar_name") return strings.editor.suffixShowCalendarName || "Calendar name";
       if (entry.kind === "time") return strings.editor.columnTypeTime || "Time";
       if (entry.kind === "location") return strings.editor.columnTypeLocation || "Location";
@@ -13764,6 +14563,12 @@
         return (
           strings.editor.visibilityCountrySuffixDesc ||
           "Append the country (and subdivision, if any) after the holiday's name/type, e.g. “Independence Day · US (UT)”"
+        );
+      }
+      if (entry.kind === "holiday_type") {
+        return (
+          strings.editor.suffixShowHolidayTypeDesc ||
+          "Show a holiday's own type label, e.g. “Holiday (Public)”. Turn off to leave only the country/region suffix in this cell."
         );
       }
       if (entry.kind === "calendar_name") {

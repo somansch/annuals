@@ -1,6 +1,18 @@
 {
     "title": "Annuals",
     "selector": {
+        "holiday_span": {
+            "options": {
+                "start": "début",
+                "end": "fin",
+                "day": "jour {day}"
+            }
+        },
+        "holiday_breaks": {
+            "options": {
+                "note": "Les périodes de plusieurs jours, comme les vacances scolaires, sont reconstituées en vacances entières - choisissez ci-dessous quelles parties importer."
+            }
+        },
         "event_type": {
             "options": {
                 "birthday": "Anniversaire",
@@ -75,6 +87,7 @@
                     "day": "Jour",
                     "month": "Mois",
                     "year": "Année (laisser vide si inconnue ; obligatoire pour les événements ponctuels)",
+                    "end_date": "Date de fin (événements uniques seulement, facultatif - en fait un événement sur plusieurs jours)",
                     "icon": "Icône personnalisée (optionnel)",
                     "vip": "VIP Annual"
                 }
@@ -89,6 +102,7 @@
                     "day": "Jour",
                     "month": "Mois",
                     "year": "Année (laisser vide si inconnue ; obligatoire pour les événements ponctuels)",
+                    "end_date": "Date de fin (événements uniques seulement, facultatif - en fait un événement sur plusieurs jours)",
                     "icon": "Icône personnalisée (optionnel)",
                     "vip": "VIP Annual"
                 }
@@ -96,6 +110,8 @@
         },
         "error": {
             "name_required": "Veuillez saisir un nom.",
+            "end_date_one_time_only": "Une date de fin ne peut être définie que sur un événement unique.",
+            "end_date_before_start": "La date de fin doit être postérieure à la date de début.",
             "invalid_date": "Cette combinaison jour/mois/année n'est pas une date valide.",
             "year_required": "Les événements ponctuels nécessitent une année."
         },
@@ -117,6 +133,7 @@
                     "day": "Jour",
                     "month": "Mois",
                     "year": "Année (laisser vide si inconnue ; obligatoire pour les événements ponctuels)",
+                    "end_date": "Date de fin (événements uniques seulement, facultatif - en fait un événement sur plusieurs jours)",
                     "icon": "Icône personnalisée (optionnel)",
                     "vip": "VIP Annual"
                 }
@@ -181,12 +198,57 @@
                 "title": "Supprimer les événements importés depuis vCard",
                 "description": "{count} événement(s) ont été créés par un précédent import vCard. Cliquez sur « OK » pour tous les supprimer - les entrées qu'un import vCard a seulement mises à jour (plutôt que créées) ne sont jamais concernées, pas plus que les événements ajoutés manuellement ou importés depuis un CSV ou un calendrier ICS."
             },
+            "holiday_menu": {
+                "title": "Jour férié",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}",
+                "menu_options": {
+                    "holiday_settings": "⚙️ Paramètres",
+                    "holiday_names": "🌐 Nom et traductions"
+                }
+            },
+            "holiday_settings": {
+                "title": "Paramètres du jour férié",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nLa date, le type et la région proviennent de la base des jours fériés et ne sont pas modifiables ici.",
+                "data": {
+                    "icon": "Icône"
+                }
+            },
+            "holiday_names": {
+                "title": "Nom et traductions",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nChoisissez la langue dans laquelle saisir le nom de ce jour férié.",
+                "data": {
+                    "language": "Langue"
+                }
+            },
+            "holiday_name_edit": {
+                "title": "Nom du jour férié",
+                "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nPré-rempli avec ce qui est affiché actuellement. Laissez vide pour revenir à la base des jours fériés.",
+                "data": {
+                    "name": "Nom"
+                }
+            },
+            "holiday_translations": {
+                "title": "🌐 Holiday translations",
+                "description": "Export and import the holiday names you wrote yourself.",
+                "menu_options": {
+                    "export_translations": "📤 Export translations",
+                    "import_translations": "📥 Import translations"
+                }
+            },
+            "import_translations": {
+                "title": "Import translations",
+                "description": "Upload a translations CSV. Columns: `country,subdivision,category,holiday_key,observed,language,name`. Rows are matched onto holidays by country, subdivision, category, holiday key and observed flag - not by entry id, so a file exported before re-importing a country still applies. Rows whose holiday isn't present are skipped and counted.",
+                "data": {
+                    "csv_file": "CSV"
+                }
+            },
             "hub_menu": {
                 "title": "Annuals Paramètres",
                 "menu_options": {
                     "annual_settings": "{icon_annual_settings} Annual Paramètres",
                     "import_events": "{icon_import_events} Importer des événements",
                     "export_csv": "{icon_export_csv} Exporter les événements en CSV",
+                    "holiday_translations": "{icon_holiday_translations} Holiday translations",
                     "remove_events": "{icon_remove_events} Supprimer des événements",
                     "delete_all": "{icon_delete_all} Supprimer toutes les données Annuals"
                 }
@@ -219,15 +281,21 @@
             },
             "import_holidays_options": {
                 "title": "Importer des jours fériés - {country}",
-                "description": "Laissez la subdivision vide pour les jours fériés nationaux uniquement - une région/province ajoute ses propres jours fériés régionaux. Les catégories et la langue dépendent de ce que fournissent les données de ce pays. Les catégories sur plusieurs jours, comme les vacances scolaires, sont représentées par un seul événement le premier jour.",
+                "description": "Laissez la subdivision vide pour les jours fériés nationaux uniquement - une région/province ajoute ses propres jours fériés régionaux. Les catégories et la langue dépendent de ce que fournissent les données de ce pays.{breaks}",
                 "data": {
                     "include_actual": "Importer la date réelle",
                     "include_observed": "Importer la date observée (décalée)",
+                    "break_start": "Importer le premier jour des vacances",
+                    "break_end": "Importer le dernier jour des vacances",
+                    "break_days": "Importer chaque jour des vacances",
                     "subdivision": "Subdivision (région/province, optionnel)",
                     "categories": "Catégories",
                     "language": "Langue des noms de jours fériés"
                 },
                 "data_description": {
+                    "break_start": "Les vacances scolaires ne recensent que les jours d'école, elles commencent donc plus tôt - le calcul remonte le week-end et les jours fériés voisins jusqu'au premier jour réellement libre.",
+                    "break_end": "La même chose dans l'autre sens : le dernier jour libre, et non le dernier jour recensé.",
+                    "break_days": "Un événement par jour de vacances. Les seules vacances d'été en produisent plus de quarante.",
                     "include_observed": "Les jours fériés de ce pays sont parfois décalés vers un jour ouvré proche lorsqu'ils tombent un week-end (ex. observé le vendredi précédent ou le lundi suivant) - importez aussi cette date décalée comme événement distinct."
                 }
             },
@@ -272,6 +340,8 @@
         },
         "error": {
             "name_required": "Veuillez saisir un nom.",
+            "end_date_one_time_only": "Une date de fin ne peut être définie que sur un événement unique.",
+            "end_date_before_start": "La date de fin doit être postérieure à la date de début.",
             "invalid_date": "Cette combinaison jour/mois/année n'est pas une date valide.",
             "year_required": "Les événements ponctuels nécessitent une année.",
             "invalid_csv": "Impossible de lire ce fichier en tant que CSV. Vérifiez l'encodage et le format.",
@@ -284,13 +354,16 @@
             "no_batch_selected": "Cochez « Supprimer tous les jours fériés importés », ou choisissez un lot."
         },
         "abort": {
+            "translations_exported": "{count} traduction(s) exporté(s). [Télécharger annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+clic pour télécharger - un simple clic ne fonctionne pas ici)\n\nOu copiez le CSV ci-dessous :\n\n```\n{csv}\n```",
+            "translations_imported": "{updated} holiday(s) updated, {skipped} row(s) skipped.",
+            "no_translations_to_export": "No holiday names have been written yet - there is nothing to export.",
             "hub_not_configurable": "Le hub Annuals n'a pas de paramètres propres - il contient uniquement les calendriers partagés.",
             "import_started": "Import démarré : {created} événement(s) en cours d'ajout, {skipped} ligne(s) ignorée(s) (voir le journal pour le détail).",
             "ics_import_started": "Import démarré : {created} événement(s) créé(s), {updated} mis à jour, {skipped} entrée(s) ignorée(s) ou exclue(s).",
             "csv_exported": "{count} événement(s) exporté(s). [Télécharger annuals_export.csv]({url}) (Ctrl/Cmd+clic pour télécharger - un simple clic ne fonctionne pas ici)\n\nOu copiez le CSV ci-dessous :\n\n```\n{csv}\n```",
             "no_events_to_export": "Aucun événement à exporter pour le moment.",
             "deleted_all": "Tous les événements, calendriers et le hub Annuals ont été supprimés.",
-            "holiday_import_started": "Import démarré : {count} jour(s) férié(s) en cours d'ajout pour {country}.",
+            "holiday_import_started": "Importation démarrée : {count} événement(s) de jour férié en file d'attente pour {country} ({new} nouveaux, {updated} mis à jour).",
             "no_holidays_imported": "Aucun jour férié n'a encore été importé.",
             "holidays_removed": "{count} jour(s) férié(s) supprimé(s).",
             "no_ics_imports": "Aucun événement importé depuis ICS n'a été trouvé.",

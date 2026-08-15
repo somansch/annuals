@@ -1,6 +1,18 @@
 {
     "title": "Annuals",
     "selector": {
+        "holiday_span": {
+            "options": {
+                "start": "początek",
+                "end": "koniec",
+                "day": "dzień {day}"
+            }
+        },
+        "holiday_breaks": {
+            "options": {
+                "note": "Wielodniowe ferie, takie jak ferie szkolne, są z powrotem łączone w całe ferie - poniżej można wybrać, które ich części zaimportować."
+            }
+        },
         "event_type": {
             "options": {
                 "birthday": "Urodziny",
@@ -75,6 +87,7 @@
                     "day": "Dzień",
                     "month": "Miesiąc",
                     "year": "Rok (pozostaw puste, jeśli nieznany; wymagany dla wydarzeń jednorazowych)",
+                    "end_date": "Data zakończenia (tylko wydarzenia jednorazowe, opcjonalnie - zmienia je w wydarzenie wielodniowe)",
                     "icon": "Zastąp ikonę (opcjonalnie)",
                     "vip": "VIP Annual"
                 }
@@ -89,6 +102,7 @@
                     "day": "Dzień",
                     "month": "Miesiąc",
                     "year": "Rok (pozostaw puste, jeśli nieznany; wymagany dla wydarzeń jednorazowych)",
+                    "end_date": "Data zakończenia (tylko wydarzenia jednorazowe, opcjonalnie - zmienia je w wydarzenie wielodniowe)",
                     "icon": "Zastąp ikonę (opcjonalnie)",
                     "vip": "VIP Annual"
                 }
@@ -96,6 +110,8 @@
         },
         "error": {
             "name_required": "Podaj nazwę.",
+            "end_date_one_time_only": "Datę zakończenia można ustawić tylko dla wydarzenia jednorazowego.",
+            "end_date_before_start": "Data zakończenia musi być późniejsza niż data rozpoczęcia.",
             "invalid_date": "Ta kombinacja dzień/miesiąc/rok nie jest prawidłową datą.",
             "year_required": "Wydarzenia jednorazowe wymagają podania roku."
         },
@@ -117,6 +133,7 @@
                     "day": "Dzień",
                     "month": "Miesiąc",
                     "year": "Rok (pozostaw puste, jeśli nieznany; wymagany dla wydarzeń jednorazowych)",
+                    "end_date": "Data zakończenia (tylko wydarzenia jednorazowe, opcjonalnie - zmienia je w wydarzenie wielodniowe)",
                     "icon": "Zastąp ikonę (opcjonalnie)",
                     "vip": "VIP Annual"
                 }
@@ -181,12 +198,57 @@
                 "title": "Usuń wydarzenia zaimportowane z vCard",
                 "description": "{count} wydarzenie(a) zostało utworzonych przez wcześniejszy import vCard. Kliknij OK, aby usunąć je wszystkie – wpisy, które import vCard tylko zaktualizował (a nie utworzył), nigdy nie są objęte, podobnie jak wydarzenia dodane ręcznie oraz zaimportowane z CSV lub ICS."
             },
+            "holiday_menu": {
+                "title": "Święto",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}",
+                "menu_options": {
+                    "holiday_settings": "⚙️ Ustawienia",
+                    "holiday_names": "🌐 Nazwa i tłumaczenia"
+                }
+            },
+            "holiday_settings": {
+                "title": "Ustawienia święta",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nData, typ i region pochodzą z bazy świąt i nie można ich tu zmienić.",
+                "data": {
+                    "icon": "Ikona"
+                }
+            },
+            "holiday_names": {
+                "title": "Nazwa i tłumaczenia",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nWybierz język, w którym chcesz wpisać nazwę tego święta.",
+                "data": {
+                    "language": "Język"
+                }
+            },
+            "holiday_name_edit": {
+                "title": "Nazwa święta",
+                "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nWstępnie wypełnione tym, co jest teraz wyświetlane. Pozostaw puste, aby wrócić do bazy świąt.",
+                "data": {
+                    "name": "Nazwa"
+                }
+            },
+            "holiday_translations": {
+                "title": "🌐 Holiday translations",
+                "description": "Export and import the holiday names you wrote yourself.",
+                "menu_options": {
+                    "export_translations": "📤 Export translations",
+                    "import_translations": "📥 Import translations"
+                }
+            },
+            "import_translations": {
+                "title": "Import translations",
+                "description": "Upload a translations CSV. Columns: `country,subdivision,category,holiday_key,observed,language,name`. Rows are matched onto holidays by country, subdivision, category, holiday key and observed flag - not by entry id, so a file exported before re-importing a country still applies. Rows whose holiday isn't present are skipped and counted.",
+                "data": {
+                    "csv_file": "CSV"
+                }
+            },
             "hub_menu": {
                 "title": "Annuals Ustawienia",
                 "menu_options": {
                     "annual_settings": "{icon_annual_settings} Annual Ustawienia",
                     "import_events": "{icon_import_events} Importuj wydarzenia",
                     "export_csv": "{icon_export_csv} Eksportuj wydarzenia do CSV",
+                    "holiday_translations": "{icon_holiday_translations} Holiday translations",
                     "remove_events": "{icon_remove_events} Usuń wydarzenia",
                     "delete_all": "{icon_delete_all} Usuń wszystkie dane Annuals"
                 }
@@ -219,15 +281,21 @@
             },
             "import_holidays_options": {
                 "title": "Importuj święta - {country}",
-                "description": "Pozostaw region pusty, aby uwzględnić tylko święta ogólnokrajowe - region dodaje własne święta regionalne. Kategorie i język zależą od tego, co udostępniają dane o świętach danego kraju. Kategorie wielodniowe, takie jak ferie szkolne, są reprezentowane jako jedno wydarzenie w pierwszym dniu.",
+                "description": "Pozostaw region pusty, aby uwzględnić tylko święta ogólnokrajowe - region dodaje własne święta regionalne. Kategorie i język zależą od tego, co udostępniają dane o świętach danego kraju.{breaks}",
                 "data": {
                     "include_actual": "Importuj rzeczywistą datę",
                     "include_observed": "Importuj przeniesioną (zastępczą) datę",
+                    "break_start": "Importuj pierwszy dzień ferii",
+                    "break_end": "Importuj ostatni dzień ferii",
+                    "break_days": "Importuj każdy dzień ferii",
                     "subdivision": "Region (województwo/prowincja, opcjonalnie)",
                     "categories": "Kategorie",
                     "language": "Język nazw świąt"
                 },
                 "data_description": {
+                    "break_start": "Ferie szkolne zawierają tylko dni nauki, więc zaczynają się wcześniej - liczenie cofa się przez weekend i sąsiednie święta do pierwszego naprawdę wolnego dnia.",
+                    "break_end": "To samo w drugą stronę: ostatni wolny dzień, a nie ostatni wymieniony.",
+                    "break_days": "Jedno wydarzenie na każdy dzień ferii. Same wakacje letnie dają ich ponad czterdzieści.",
                     "include_observed": "Święta tego kraju są czasem przenoszone na najbliższy dzień roboczy, gdy wypadają w weekend (np. na poprzedzający piątek lub następny poniedziałek) - zaimportuj też tę przeniesioną datę jako osobne wydarzenie."
                 }
             },
@@ -272,6 +340,8 @@
         },
         "error": {
             "name_required": "Podaj nazwę.",
+            "end_date_one_time_only": "Datę zakończenia można ustawić tylko dla wydarzenia jednorazowego.",
+            "end_date_before_start": "Data zakończenia musi być późniejsza niż data rozpoczęcia.",
             "invalid_date": "Ta kombinacja dzień/miesiąc/rok nie jest prawidłową datą.",
             "year_required": "Wydarzenia jednorazowe wymagają podania roku.",
             "invalid_csv": "Nie udało się odczytać tego pliku jako CSV. Sprawdź kodowanie i format.",
@@ -284,13 +354,16 @@
             "no_batch_selected": "Zaznacz „Usuń wszystkie zaimportowane święta” lub wybierz partię."
         },
         "abort": {
+            "translations_exported": "Wyeksportowano {count} tłumaczeń. [Pobierz annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+klik, aby pobrać - zwykłe kliknięcie tu nie zadziała)\n\nLub skopiuj poniższy CSV:\n\n```\n{csv}\n```",
+            "translations_imported": "{updated} holiday(s) updated, {skipped} row(s) skipped.",
+            "no_translations_to_export": "No holiday names have been written yet - there is nothing to export.",
             "hub_not_configurable": "Centrum Annuals nie ma własnych ustawień – zawiera tylko wspólne kalendarze.",
             "import_started": "Import rozpoczęty: {created} wydarzenie(a) w kolejce, {skipped} wiersz(y) pominięto (szczegóły w dzienniku).",
             "ics_import_started": "Import rozpoczęty: {created} wydarzenie(a) utworzono, {updated} zaktualizowano, {skipped} wpis(y) pominięto lub wykluczono.",
             "csv_exported": "Wyeksportowano {count} wydarzeń. [Pobierz annuals_export.csv]({url}) (Ctrl/Cmd+klik, aby pobrać - zwykłe kliknięcie tu nie zadziała)\n\nLub skopiuj poniższy CSV:\n\n```\n{csv}\n```",
             "no_events_to_export": "Nie ma jeszcze żadnych wydarzeń do wyeksportowania.",
             "deleted_all": "Wszystkie wydarzenia, kalendarze i centrum Annuals zostały usunięte.",
-            "holiday_import_started": "Import rozpoczęty: {count} święto(a) w kolejce dla {country}.",
+            "holiday_import_started": "Rozpoczęto import: {count} wydarzeń świątecznych w kolejce dla {country} ({new} nowych, {updated} zaktualizowanych).",
             "no_holidays_imported": "Nie zaimportowano jeszcze żadnych świąt.",
             "holidays_removed": "{count} święto(a) usunięto.",
             "no_ics_imports": "Nie znaleziono żadnych wydarzeń utworzonych przez import ICS.",

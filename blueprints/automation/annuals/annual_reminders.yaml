@@ -10,6 +10,9 @@ blueprint:
     **🎯 Target**
     - Pick specific events, or every event of one or more chosen types
     - Filter by VIP and/or Important, with AND / OR / "must NOT be" logic
+    - For multi-day one-time events (a holiday trip, a conference): remind before it starts, before it ends, or both
+    - For holidays: filter by category (Public, School, Bank, ...), and remind only when a school break starts rather than on every day of it
+
 
     **⏰ Schedule**
     - Remind at one or more "days before" thresholds in a single automation
@@ -142,6 +145,136 @@ blueprint:
                   value: and
                 - label: "OR - either one matches"
                   value: or
+    multi_day_events:
+      name: Multi-day events
+      icon: mdi:calendar-range
+      collapsed: true
+      input:
+        multi_day_end_label:
+          name: Wording for the end
+          description: >-
+            Appended to the notification title when a reminder is about the
+            day a multi-day event ends, so departure and return read
+            differently - and, with to-do tracking on, become two separate
+            items instead of one that either can tick off. Translate it into
+            your own language here; it is the one piece of this that isn't
+            already translated server-side.
+          default: end
+          selector:
+            text: {}
+        multi_day_parts:
+          name: Remind about
+          description: >-
+            A one-time event can span several days - a holiday trip, a
+            conference. Pick whether the reminder counts down to the day it
+            starts, to the day it ends, or both, each using its own "days
+            before" thresholds above. Single-day events and every other event
+            type are never affected by this; they only ever have a start.
+          default: [start]
+          selector:
+            select:
+              multiple: true
+              mode: dropdown
+              options:
+                - label: The day it starts
+                  value: start
+                - label: The day it ends
+                  value: end
+    holiday_filters:
+      name: Holiday filters
+      icon: mdi:flag-variant
+      collapsed: true
+      input:
+        holiday_categories:
+          name: Holiday categories
+          description: >-
+            Only remind about holidays from these categories. Leave empty for
+            no category filter. Events that aren't holidays are never affected
+            by this - and neither are categories a country doesn't provide,
+            since it simply has no events in them. Which categories exist at
+            all depends on the country: most only have Public, some add Bank
+            or School, and the religious and minority ones are rare
+            country-specific exceptions.
+          default: []
+          selector:
+            select:
+              multiple: true
+              mode: dropdown
+              options:
+                - label: Public
+                  value: public
+                - label: Bank
+                  value: bank
+                - label: Government
+                  value: government
+                - label: School
+                  value: school
+                - label: Optional
+                  value: optional
+                - label: Unofficial
+                  value: unofficial
+                - label: De facto
+                  value: de_facto
+                - label: Half day
+                  value: half_day
+                - label: Armed forces
+                  value: armed_forces
+                - label: Workday
+                  value: workday
+                - label: Catholic
+                  value: catholic
+                - label: Christian
+                  value: christian
+                - label: Protestant
+                  value: protestant
+                - label: Orthodox
+                  value: orthodox
+                - label: Hebrew
+                  value: hebrew
+                - label: Islamic
+                  value: islamic
+                - label: Hindu
+                  value: hindu
+                - label: Sabian
+                  value: sabian
+                - label: Yazidi
+                  value: yazidi
+                - label: Albanian
+                  value: albanian
+                - label: Armenian
+                  value: armenian
+                - label: Bosnian
+                  value: bosnian
+                - label: Roma
+                  value: roma
+                - label: Serbian
+                  value: serbian
+                - label: Turkish
+                  value: turkish
+                - label: Vlach
+                  value: vlach
+        break_parts:
+          name: Parts of multi-day breaks
+          description: >-
+            School holidays can be imported as several events - the day a
+            break starts, the day it ends, and one event per day in between.
+            Pick which of those may remind; leave empty for all of them.
+            Choosing only "Start of the break" is the usual setting: one
+            reminder when the holidays begin instead of one every single day.
+            Single-day holidays and all other event types are never affected
+            by this.
+          default: []
+          selector:
+            select:
+              multiple: true
+              mode: dropdown
+              options:
+                - label: Start of the break
+                  value: start
+                - label: End of the break
+                  value: end
+                - label: Individual days of the break
+                  value: day
     schedule:
       name: Reminder schedule
       icon: mdi:clock-outline
@@ -331,6 +464,10 @@ variables:
   target_type: !input target_type
   vip_filter: !input vip_filter
   important_filter: !input important_filter
+  holiday_categories: !input holiday_categories
+  break_parts: !input break_parts
+  multi_day_parts: !input multi_day_parts
+  ev_end_label: !input multi_day_end_label
   filter_logic: !input filter_logic
   reminder_days: !input reminder_days
   notify_time: !input notify_time
@@ -373,10 +510,31 @@ action:
                     is_important: "{{ state_attr(ent, 'important') | bool(false) }}"
                     vip_match: "{{ true if vip_filter == 'ignore' else (is_vip if vip_filter == 'yes' else not is_vip) }}"
                     important_match: "{{ true if important_filter == 'ignore' else (is_important if important_filter == 'yes' else not is_important) }}"
+                    # Both are plain narrowing filters and deliberately stay
+                    # out of the VIP/Important AND-OR logic below: they only
+                    # ever say which holidays are eligible at all, which is
+                    # not a thing that would sensibly be OR'd with "is a VIP".
+                    #
+                    # Anything the filter doesn't apply to passes it. A
+                    # birthday has no category and no break part; a
+                    # single-day holiday has a category but no break part.
+                    # That is what lets the two combine the obvious way -
+                    # categories "Public, School" with break part "Start"
+                    # reminds about every public holiday and about school
+                    # breaks only on the day they begin.
+                    category_match: >-
+                      {{ true if holiday_categories | length == 0
+                            or state_attr(ent, 'category') is none
+                         else state_attr(ent, 'category') in holiday_categories }}
+                    break_match: >-
+                      {{ true if break_parts | length == 0
+                            or state_attr(ent, 'break_part') is none
+                         else state_attr(ent, 'break_part') in break_parts }}
                     filter_match: >-
-                      {{ (vip_match or important_match)
+                      {{ category_match and break_match and (
+                         (vip_match or important_match)
                          if (vip_filter != 'ignore' and important_filter != 'ignore' and filter_logic == 'or')
-                         else (vip_match and important_match) }}
+                         else (vip_match and important_match)) }}
                     ev_name: "{{ state_attr(ent, 'full_name') or state_attr(ent, 'name') }}"
                     # Both already translated into Home Assistant's
                     # configured language server-side (see the "type_label"/
@@ -389,11 +547,32 @@ action:
                     # English text.
                     ev_type: "{{ state_attr(ent, 'type_label') }}"
                     occurrence: "{{ state_attr(ent, 'occurrence_number') }}"
+                    # Only a multi-day one-time event has this at all (see
+                    # CONF_END_DATE in const.py); it is none for everything
+                    # else, which is what keeps the whole block below a
+                    # no-op for every other event.
+                    end_days: "{{ state_attr(ent, 'days_until_end') }}"
+                    # Does the *end* fall on one of the thresholds today,
+                    # and was the end asked for? Kept apart from the start
+                    # check so that a threshold matching both (a two-day
+                    # event reminded at "1") still only notifies once.
+                    end_due: >-
+                      {{ end_days is not none and 'end' in multi_day_parts
+                         and end_days in reminder_days_list }}
+                    start_due: >-
+                      {{ days_until in reminder_days_list
+                         and (end_days is none or 'start' in multi_day_parts) }}
                 - condition: template
-                  value_template: "{{ days_until in reminder_days_list and filter_match }}"
+                  value_template: "{{ (start_due or end_due) and filter_match }}"
                 - variables:
+                    # The start always wins when both land on the same day,
+                    # so one event never sends two notifications at once.
+                    # The countdown phrase follows whichever it is - the
+                    # sensor renders both, translated (see sensor.py).
                     reminder_message: >-
-                      {{ state_attr(ent, 'reminder_message') }}{{ ' (#' ~ occurrence ~ ')' if occurrence else '' }}
+                      {{ (state_attr(ent, 'reminder_message') if start_due
+                          else state_attr(ent, 'reminder_message_end'))
+                      }}{{ ' (#' ~ occurrence ~ ')' if occurrence else '' }}
                 # notify_title/notify_message are user-configurable templates
                 # (blueprint inputs) - rendering them here, as a variables
                 # step, evaluates them in this iteration's context (ev_name,
@@ -407,7 +586,15 @@ action:
                     rendered_title: !input notify_title
                     rendered_message: !input notify_message
                 - variables:
-                    summary: "{{ rendered_title }}"
+                    # The end of a multi-day event gets its own summary, and
+                    # so its own to-do item: the summary is what the
+                    # already-completed check matches on, and departure and
+                    # return are two different things to tick off. Without
+                    # this they would share one item, and ticking off "pack
+                    # the bags" would silently swallow the reminder about
+                    # coming home. Single-day events append nothing and read
+                    # exactly as they did before.
+                    summary: "{{ rendered_title }}{{ ' - ' ~ ev_end_label if end_due and not start_due else '' }}"
                     # Only ever True when a to-do list is set below *and* an
                     # already-completed item matching this event's summary
                     # is found there - stays False (never blocks anything)

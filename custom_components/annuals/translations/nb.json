@@ -1,6 +1,18 @@
 {
     "title": "Annuals",
     "selector": {
+        "holiday_span": {
+            "options": {
+                "start": "start",
+                "end": "slutt",
+                "day": "dag {day}"
+            }
+        },
+        "holiday_breaks": {
+            "options": {
+                "note": "Flerdagersferier som skoleferier settes sammen igjen til hele ferier - velg nedenfor hvilke deler av dem som skal importeres."
+            }
+        },
         "event_type": {
             "options": {
                 "birthday": "Bursdag",
@@ -75,6 +87,7 @@
                     "day": "Dag",
                     "month": "Måned",
                     "year": "År (la stå tomt hvis ukjent; påkrevd for engangshendelser)",
+                    "end_date": "Sluttdato (kun engangshendelser, valgfritt - gjør den til en flerdagershendelse)",
                     "icon": "Overstyr ikon (valgfritt)",
                     "vip": "VIP Annual"
                 }
@@ -89,6 +102,7 @@
                     "day": "Dag",
                     "month": "Måned",
                     "year": "År (la stå tomt hvis ukjent; påkrevd for engangshendelser)",
+                    "end_date": "Sluttdato (kun engangshendelser, valgfritt - gjør den til en flerdagershendelse)",
                     "icon": "Overstyr ikon (valgfritt)",
                     "vip": "VIP Annual"
                 }
@@ -96,6 +110,8 @@
         },
         "error": {
             "name_required": "Skriv inn et navn.",
+            "end_date_one_time_only": "En sluttdato kan bare settes på en engangshendelse.",
+            "end_date_before_start": "Sluttdatoen må være etter startdatoen.",
             "invalid_date": "Denne kombinasjonen av dag/måned/år er ikke en gyldig dato.",
             "year_required": "Engangshendelser krever et år."
         },
@@ -117,6 +133,7 @@
                     "day": "Dag",
                     "month": "Måned",
                     "year": "År (la stå tomt hvis ukjent; påkrevd for engangshendelser)",
+                    "end_date": "Sluttdato (kun engangshendelser, valgfritt - gjør den til en flerdagershendelse)",
                     "icon": "Overstyr ikon (valgfritt)",
                     "vip": "VIP Annual"
                 }
@@ -181,12 +198,57 @@
                 "title": "Fjern vCard-importerte hendelser",
                 "description": "{count} hendelse(r) ble opprettet av en tidligere vCard-import. Klikk OK for å fjerne alle - oppføringer som en vCard-import bare har oppdatert (i stedet for å opprette), påvirkes aldri, og heller ikke manuelt lagt til, CSV- eller ICS-importerte hendelser."
             },
+            "holiday_menu": {
+                "title": "Helligdag",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}",
+                "menu_options": {
+                    "holiday_settings": "⚙️ Innstillinger",
+                    "holiday_names": "🌐 Navn og oversettelser"
+                }
+            },
+            "holiday_settings": {
+                "title": "Innstillinger for helligdagen",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nDato, type og region kommer fra helligdagsdatabasen og kan ikke endres her.",
+                "data": {
+                    "icon": "Ikon"
+                }
+            },
+            "holiday_names": {
+                "title": "Navn og oversettelser",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nVelg språket du vil skrive navnet på denne helligdagen på.",
+                "data": {
+                    "language": "Språk"
+                }
+            },
+            "holiday_name_edit": {
+                "title": "Navn på helligdagen",
+                "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nForhåndsutfylt med det som vises i dag. La stå tomt for å gå tilbake til helligdagsdatabasen.",
+                "data": {
+                    "name": "Navn"
+                }
+            },
+            "holiday_translations": {
+                "title": "🌐 Holiday translations",
+                "description": "Export and import the holiday names you wrote yourself.",
+                "menu_options": {
+                    "export_translations": "📤 Export translations",
+                    "import_translations": "📥 Import translations"
+                }
+            },
+            "import_translations": {
+                "title": "Import translations",
+                "description": "Upload a translations CSV. Columns: `country,subdivision,category,holiday_key,observed,language,name`. Rows are matched onto holidays by country, subdivision, category, holiday key and observed flag - not by entry id, so a file exported before re-importing a country still applies. Rows whose holiday isn't present are skipped and counted.",
+                "data": {
+                    "csv_file": "CSV"
+                }
+            },
             "hub_menu": {
                 "title": "Annuals Innstillinger",
                 "menu_options": {
                     "annual_settings": "{icon_annual_settings} Annual Innstillinger",
                     "import_events": "{icon_import_events} Importer hendelser",
                     "export_csv": "{icon_export_csv} Eksporter hendelser til CSV",
+                    "holiday_translations": "{icon_holiday_translations} Holiday translations",
                     "remove_events": "{icon_remove_events} Fjern hendelser",
                     "delete_all": "{icon_delete_all} Slett all Annuals-data"
                 }
@@ -219,15 +281,21 @@
             },
             "import_holidays_options": {
                 "title": "Importer helligdager - {country}",
-                "description": "La delregionen stå tom for kun nasjonale helligdager - et fylke/provins legger til sine egne regionale helligdager. Kategorier og språk avhenger av hva dette landets helligdagsdata gir. Flerdagerskategorier som skolefri representeres som én hendelse på den første dagen.",
+                "description": "La delregionen stå tom for kun nasjonale helligdager - et fylke/provins legger til sine egne regionale helligdager. Kategorier og språk avhenger av hva dette landets helligdagsdata gir.{breaks}",
                 "data": {
                     "include_actual": "Importer den faktiske datoen",
                     "include_observed": "Importer den observerte (flyttede) datoen",
+                    "break_start": "Importer feriens første dag",
+                    "break_end": "Importer feriens siste dag",
+                    "break_days": "Importer hver feriedag",
                     "subdivision": "Delregion (fylke/provins, valgfritt)",
                     "categories": "Kategorier",
                     "language": "Språk for helligdagsnavn"
                 },
                 "data_description": {
+                    "break_start": "Skoleferier er bare oppført med skoledager, så ferien begynner tidligere - her regnes det tilbake over helgen og tilstøtende helligdager til den første virkelig frie dagen.",
+                    "break_end": "Det samme motsatt vei: den siste frie dagen, ikke den sist oppførte.",
+                    "break_days": "Én hendelse per feriedag. Sommerferien alene gir over førti.",
                     "include_observed": "Helligdager i dette landet blir noen ganger flyttet til en nærliggende ukedag når de faller i helgen (f.eks. observert fredagen før eller mandagen etter) - importer også denne flyttede datoen som en egen hendelse."
                 }
             },
@@ -272,6 +340,8 @@
         },
         "error": {
             "name_required": "Skriv inn et navn.",
+            "end_date_one_time_only": "En sluttdato kan bare settes på en engangshendelse.",
+            "end_date_before_start": "Sluttdatoen må være etter startdatoen.",
             "invalid_date": "Denne kombinasjonen av dag/måned/år er ikke en gyldig dato.",
             "year_required": "Engangshendelser krever et år.",
             "invalid_csv": "Kunne ikke lese denne filen som CSV. Sjekk koding og format.",
@@ -284,13 +354,16 @@
             "no_batch_selected": "Kryss av for «Fjern alle importerte helligdager», eller velg en gruppe."
         },
         "abort": {
+            "translations_exported": "{count} oversettelse(r) eksportert. [Last ned annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+klikk for å laste ned - et vanlig klikk fungerer ikke her)\n\nEller kopier CSV-en under:\n\n```\n{csv}\n```",
+            "translations_imported": "{updated} holiday(s) updated, {skipped} row(s) skipped.",
+            "no_translations_to_export": "No holiday names have been written yet - there is nothing to export.",
             "hub_not_configurable": "Annuals-huben har ingen egne innstillinger - den inneholder bare de delte kalendrene.",
             "import_started": "Import startet: {created} hendelse(r) i kø, {skipped} rad(er) hoppet over (se loggen for detaljer).",
             "ics_import_started": "Import startet: {created} hendelse(r) opprettet, {updated} oppdatert, {skipped} oppføring(er) hoppet over eller ekskludert.",
             "csv_exported": "{count} hendelse(r) eksportert. [Last ned annuals_export.csv]({url}) (Ctrl/Cmd+klikk for å laste ned - et vanlig klikk fungerer ikke her)\n\nEller kopier CSV-en under:\n\n```\n{csv}\n```",
             "no_events_to_export": "Det finnes ingen hendelser å eksportere ennå.",
             "deleted_all": "Alle Annuals-hendelser, kalendere og huben er fjernet.",
-            "holiday_import_started": "Import startet: {count} helligdag(er) i kø for {country}.",
+            "holiday_import_started": "Import startet: {count} helligdagshendelse(r) i kø for {country} ({new} nye, {updated} oppdatert).",
             "no_holidays_imported": "Ingen helligdager er importert ennå.",
             "holidays_removed": "{count} helligdag(er) fjernet.",
             "no_ics_imports": "Fant ingen hendelser opprettet av en ICS-import.",

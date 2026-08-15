@@ -43,23 +43,43 @@ That's the whole setup - everything below covers the individual features and opt
 
 ## Quick links
 
+**Setting up and adding events**
+
 - [First-time setup](#first-time-setup)
 - [Adding an event](#adding-an-event)
 - [Annuals Settings](#annuals-settings) (milestones, to-do lists, import, export, remove, delete all)
-  - [Importing events from a CSV file](#importing-events-from-a-csv-file)
-  - [Importing events from an ICS calendar](#importing-events-from-an-ics-calendar)
-  - [Importing events from a vCard (.vcf) file](#importing-events-from-a-vcard-vcf-file)
-  - [Importing public holidays](#importing-public-holidays)
-  - [Exporting events to CSV](#exporting-events-to-csv)
+
+**Getting events in and out**
+
+- [Importing events from a CSV file](#importing-events-from-a-csv-file)
+- [Importing events from an ICS calendar](#importing-events-from-an-ics-calendar)
+- [Importing events from a vCard (.vcf) file](#importing-events-from-a-vcard-vcf-file)
+- [Importing public holidays](#importing-public-holidays)
+  - [School holidays and other multi-day breaks](#school-holidays-and-other-multi-day-breaks)
+  - [Holiday names in your language](#holiday-names-in-your-language)
+- [Exporting events to CSV](#exporting-events-to-csv)
+
+**How events behave**
+
 - [Leap years](#leap-years)
-- [Created entities](#created-entities)
+- [Created entities](#created-entities) - every sensor attribute, for your own templates
+
+**Automations**
+
 - [Automation examples](#automation-examples)
-- [Countdown for one-time events](#countdown-for-one-time-events)
+  - [Blueprint: Upcoming Event Reminders](#blueprint-upcoming-event-reminders)
+  - [Use in your own automations](#use-in-your-own-automations)
+
+**Showing events on a dashboard**
+
+- [Countdown for one-time events](#countdown-for-one-time-events) - with Home Assistant's own badges and cards
+  - [Events that span several days](#events-that-span-several-days)
 - [Native Calendar card](#native-calendar-card)
 - [Custom dashboard card](#custom-dashboard-card)
   - [Date format](#date-format)
   - [The visual editor](#the-visual-editor)
   - [Row columns](#row-columns)
+  - [Holidays from several places](#holidays-from-several-places)
   - [To-dos](#to-dos)
   - [External calendars](#external-calendars)
   - [Timeline layout](#timeline-layout)
@@ -67,6 +87,9 @@ That's the whole setup - everything below covers the individual features and opt
   - [Row click/tap behavior](#row-clicktap-behavior)
   - [Example configurations](#example-configurations)
   - [Theming with CSS variables](#theming-with-css-variables)
+
+**Installing**
+
 - [Installation](#installation)
 - [Help and Contribution](#help-and-contribution)
 
@@ -143,7 +166,7 @@ Generates a CSV of every manually-added/CSV-imported event, ready to re-import u
 
 ### Remove events
 
-Removes only the events a particular source actually created - **ICS-imported**, **vCard-imported**, or **Holidays** - without touching manually added events, CSV-imported events, or events from any other source. Each import section below explains its own removal option in context.
+Removes only the events a particular source actually created - **ICS-imported**, **vCard-imported**, or **Holidays** - without touching manually added events, CSV-imported events, or events from any other source. Each import section below explains its own removal option in context. Holidays can be removed by country/region in batches, several at once, or all of them at one go.
 
 ### Delete all Annuals data
 
@@ -232,14 +255,16 @@ Find the **"Annuals Settings" hub entry** under **Settings → Devices & Service
 The wizard is two steps:
 
 1. **Country** - pick from the full list the `holidays` library supports.
-2. For that country: whether to import each holiday's **actual date**, its practically-**observed date** (many countries shift a holiday that falls on a weekend to a nearby weekday - e.g. a Saturday US federal holiday is observed the preceding Friday), or both as separate events (actual only, by default) - an optional **state/province** (leave empty for national holidays only; picking one adds that region's own holidays on top), **categories** (which ones are offered depends entirely on what that country's holiday data provides - e.g. `public`, `bank`, `school`, `catholic` - see the table below), and **language** for the holiday names (also country-dependent).
+2. For that country: whether to import each holiday's **actual date**, its practically-**observed date** (many countries shift a holiday that falls on a weekend to a nearby weekday - e.g. a Saturday US federal holiday is observed the preceding Friday), or both as separate events (actual only, by default) - which parts of a **multi-day break** to import, for countries that have them (see [School holidays](#school-holidays-and-other-multi-day-breaks) below) - one or more optional **states/provinces** (leave empty for national holidays only; picking some adds those regions' own holidays on top), **categories** (which ones are offered depends entirely on what that country's holiday data provides - e.g. `public`, `bank`, `school`, `catholic` - see the table below), and **language** for the holiday names (also country-dependent).
+
+A holiday the whole country observes is stored **once**, without a region, no matter how many of that country's regions you import; only holidays a region has to itself are kept per region. So importing California and Utah gives you one Thanksgiving, plus Cesar Chavez Day for California and Pioneer Day for Utah.
 
 | Category | Meaning |
 |---|---|
 | Public | Statutory/legal national holidays |
 | Bank | Bank holidays specifically |
 | Government | Government/administrative offices closed |
-| School | School holidays/breaks (often multi-day, e.g. summer break) |
+| School | School holidays/breaks (multi-day, e.g. summer break - see [School holidays](#school-holidays-and-other-multi-day-breaks)) |
 | Optional | Optional/discretionary holidays |
 | Unofficial | Observed but not legally mandated |
 | De facto | Practically observed nationwide, without formal legal status (e.g. Switzerland, Sweden) |
@@ -251,9 +276,45 @@ The wizard is two steps:
 
 Which categories are offered for a given country depends entirely on what that country's `holidays` library data provides - most only ever expose Public (and maybe Bank/School); the ethnic and minority-specific ones above are rare, country-specific exceptions.
 
-A multi-day category like school holidays (e.g. a 6-week summer break) is imported as a single event on its first day, not one event per day.
+Re-running the wizard later for the same country (and subdivision) updates the existing imported events instead of creating duplicates - safe to repeat if a country adds or removes a holiday. The result says which is which, e.g. `16 holiday event(s) queued for US (7 new, 9 updated)`.
 
-Re-running the wizard later for the same country (and subdivision) updates the existing imported events instead of creating duplicates - safe to repeat if a country adds or removes a holiday
+### School holidays and other multi-day breaks
+
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-holiday-school-and-vacation.png" alt="A card listing the start and end of two German states' school holidays, plus the start and end of a multi-day holiday trip" width="55%">
+
+Most holidays are a single day. School holidays are not, and the import treats them as the breaks they are. Three checkboxes decide what you get, in any combination:
+
+| Option | Creates | Default |
+|---|---|---|
+| **Import the first day of a break** | `Summer Break (start)` | On |
+| **Import the last day of a break** | `Summer Break (end)` | Off |
+| **Import every day of a break** | `Summer Break (day 1)` … `(day 45)`, one event each | Off |
+
+Those suffixes are translated into Home Assistant's own language - a German server writes `(Beginn)`, `(Ende)`, `(Tag 3)`. The wording is fixed when the entry is created, so switching the server language later doesn't rename events you already have.
+
+The options only appear for countries whose holiday data actually contains such breaks - in practice the handful with a **School** category. Everything else imports exactly as before.
+
+**The first and last day are computed, not taken from the data.** A school calendar lists school days only: Bavaria's 2026 autumn break is listed as Mon Nov 2 to Fri Nov 6. But school breaks up on the Friday before and resumes on the Monday after, so the break really runs Sat Oct 31 to Sun Nov 8 - and that is what gets imported. The first day is found by counting backwards over the weekend and any adjacent public holidays, the last day by counting forwards the same way. The weekend comes from the country itself rather than being assumed to be Saturday and Sunday, so Israel's Friday/Saturday weekend produces the right dates too. A public holiday next to a break is pulled in as well: a Berlin break listed as the single Friday after Ascension Day is imported as Thu to Sun, because the Thursday is Ascension Day.
+
+**One name can cover several breaks.** Bavaria files both its February break and its Easter break as `Oster-/Frühjahrsferien`; every German state files the end of one Christmas break and the start of the next as `Weihnachtsferien`. Breaks are therefore found as runs of consecutive days rather than by name, and a break running across New Year stays a single break rather than being split at January 1st. A public holiday *inside* a break doesn't split it either, even though it isn't a school day and so isn't listed - Baden-Württemberg's Easter break has Good Friday, a weekend and Easter Monday in the middle of it. Only an ordinary working day in between makes it two breaks.
+
+**Joined names are taken apart.** Where two breaks share one composite name, each break gets its own: `Oster-/Frühjahrsferien` becomes `Osterferien` and `Frühjahrsferien`, and in English `Easter/Spring Break` becomes `Easter Break` and `Spring Break`. Which half goes with which break is decided by the public holidays the break actually contains, never by the order the halves are written in - Bavaria writes Easter first, but its *later* break is the Easter one and its February break is the spring one. A break containing no public holiday at all gets the half that has no holiday anchoring it anywhere; that is how Bavaria's February break and Hamburg's March break both come out as `Frühjahrsferien`. Where a language builds the composite the other way round - Ukrainian and Thai put the shared word first and slash the tail - the name is left whole rather than split wrongly. Breaks that can't be told apart this way keep the joined name, numbered `(2)`, `(3)`.
+
+The screenshot above is one card showing all of this at once - Bavaria's and Baden-Württemberg's school holidays imported with **first day** and **last day** ticked, plus a multi-day holiday trip ([Events that span several days](#events-that-span-several-days)) and, at *Vacation*, an ordinary single-day one-time event that carries no suffix because there is nothing to distinguish. Two details are worth pointing out:
+
+- **The two states differ where they actually differ.** Their autumn breaks start a week apart (Oct 24 vs Oct 31) and their Christmas breaks start a day apart (Dec 23 vs Dec 24), so those stay separate rows. But both Christmas breaks *end* on the same Sunday, and with *Merge holidays shared by several countries* on, that one row lists both places: `DE (Baden-Württemberg) · DE (Bayern)`. Merging happens per part of a break, not per break.
+- **Every date is computed, none of it is listed.** Sat Oct 24, Sat Oct 31, Sun Nov 1, Sun Nov 8 - all weekend days, none of them a school day, none of them in the holiday database. They're the days school actually breaks up and resumes.
+
+> [!NOTE]
+> If you imported school holidays with an earlier version, re-import the same country and region: those entries are updated in place and move from the first listed school day to the day school actually breaks up. Nothing is duplicated, and nothing needs removing first.
+
+### Holiday names in your language
+
+Each imported holiday keeps the name it was imported under. Where the `holidays` library has no translation for your language - or where you simply want different wording - **Configure** that holiday and pick **Holiday names**: choose a language, type the name, done. The imported name is editable too, so `Assumption Day` can become `Assumption of Mary`.
+
+These names round-trip through their own CSV, separate from the event export: **Configure → Holiday translations**. Only holidays you actually gave a name to appear in it.
+
+Giving several countries' versions of one holiday the same name also lets the card collapse them into a single row - see [Holidays from several places](#holidays-from-several-places).
 
 ## Exporting events to CSV
 
@@ -326,6 +387,8 @@ Attributes on each event's sensor:
 | `important` | `true` if the upcoming occurrence number matches one of that type's milestones in [Annual Settings](#annual-settings-automatic-milestones), `false` otherwise (always `false` when no year was entered, since there's no occurrence number to check - always `false` for `one_time` events for the same reason). |
 | `category`, `country`, `subdivision`, `holiday_key` | `holiday` events only - the imported holiday's category (see [Importing public holidays](#importing-public-holidays)), country code, subdivision code (empty if none was chosen), and its stable identity key (e.g. "New Year's Day") used to match its actual/observed counterpart. `null`/absent on every other type. |
 | `observed` | `holiday` events only - `true` if this entity tracks the holiday's practically-observed (weekend-shifted) date rather than its literal one, see [Importing public holidays](#importing-public-holidays). `false`/absent on every other type. |
+| `end_date`, `days_until_end`, `duration_days`, `in_progress`, `reminder_message_end` | Multi-day one-time events only (see [Events that span several days](#events-that-span-several-days)) - the last day as an ISO date, the countdown to it, how many days the event covers, whether it's running right now, and the translated countdown phrase for the end. All absent on single-day events and on every other type. |
+| `break_part` | `holiday` events only - which part of a multi-day break this entity is: `start`, `end`, or `day` (see [School holidays](#school-holidays-and-other-multi-day-breaks)). `null` on single-day holidays and on every other type, which is what lets a filter for it leave them alone. |
 
 Attributes on each per-type calendar (standard Home Assistant calendar entity attributes, reflecting whichever event is current or comes up next for that type):
 
@@ -347,6 +410,8 @@ A ready-to-use automation [blueprint](blueprints/automation/annuals/annual_remin
 
 - **Target** either a hand-picked list of events, or every event of one or more chosen types (e.g. all birthdays and wedding anniversaries) - no need to list entities one by one or update the automation when you add a new event.
 - **Filter** by VIP and/or Important, each independently set to "must be" or "must NOT be" - and when both are active, choose whether they need to match together (AND) or either is enough (OR).
+- **Multi-day events**: for a one-time event with an end date (a holiday trip, a conference), count down to the day it starts, the day it ends, or both - each using the same "days before" thresholds. The end reminder gets its own to-do item, so ticking off "pack the bags" doesn't swallow the reminder about coming home.
+- **Filter holidays** by **category** (Public, School, Bank, …) and by which **part of a multi-day break** may remind - start, end, or the individual days. Anything the filter doesn't apply to passes it, so *Public + School* with *Start of the break* reminds about every public holiday, and about school holidays only on the day they begin rather than on all forty-five of them. Both are plain narrowing filters and stay out of the VIP/Important AND-OR logic.
 - **Multiple lead times** in one go, e.g. `7,1,0` for a week before, the day before, and the day itself - each is a one-time ping, not a repeating nag.
 - **Notify anywhere**, each its own collapsible section - mix and match freely:
   - **Mobile App Notify**: push to one or more devices via the Companion App, each with a tappable "Done" button.
@@ -358,9 +423,9 @@ A ready-to-use automation [blueprint](blueprints/automation/annuals/annual_remin
 
 See the blueprint's own field descriptions (visible when creating an automation from it) for the full details on each option.
 
-### Roll your own
+### Use in your own automations
 
-Since `vip` and `important` are plain sensor attributes, they're just as usable in your own automations as on the dashboard card. Both examples below use a daily **time trigger** plus a `repeat: for_each` action, rather than a `state` trigger on one specific entity - that way they keep working as-is no matter how many events you add or remove later, without listing every `sensor.annuals_*` entity by hand. Replace `notify.notify` with your own notify target (e.g. `notify.mobile_app_your_phone`).
+Every event is a plain sensor with plain attributes - `vip`, `important`, `category`, `in_progress` and the rest (see [Created entities](#created-entities)) - so anything the card or the blueprint can do, your own automations can do too. The examples below never name a single event entity: they select over `sensor.annuals_*` by attribute, so they keep working as-is no matter how many events you add or remove later. Replace `notify.notify` with your own notify target (e.g. `notify.mobile_app_your_phone`).
 
 **Notify me when a VIP has their day today:**
 
@@ -422,11 +487,117 @@ automation:
 
 Adjust the `"7"` in the second example to match however far ahead you want the reminder, and add a second `repeat` block (or duplicate the automation) if you want more than one lead time.
 
+**Open the shutters later on a day off** - weekend, public holiday, or school holidays:
+
+> [!IMPORTANT]
+> This one needs the school holidays imported with **every day** ticked (see [School holidays](#school-holidays-and-other-multi-day-breaks)). A break imported only as its first and last day is two events on two days, which can tell you a break *begins* today but not that you are in the middle of one. With every day imported, "is today a holiday" is simply "is any holiday event due today".
+
+<details>
+<summary>YAML</summary>
+
+```yaml
+automation:
+  - alias: "Annuals - shutters up later on days off"
+    triggers:
+      - trigger: time
+        at: "07:00:00"
+        id: early
+      - trigger: time
+        at: "09:00:00"
+        id: late
+    variables:
+      # Saturday/Sunday, or any public or school holiday falling today.
+      day_off: >
+        {{ now().weekday() >= 5
+           or states.sensor
+              | selectattr('entity_id', 'match', '^sensor\.annuals_')
+              | selectattr('attributes.category', 'defined')
+              | selectattr('attributes.category', 'in', ['public', 'school'])
+              | selectattr('state', 'equalto', '0')
+              | list | count > 0 }}
+    conditions:
+      # Exactly one of the two triggers survives this: the late one on a day
+      # off, the early one otherwise.
+      - condition: template
+        value_template: "{{ (trigger.id == 'late') == (day_off | bool) }}"
+    actions:
+      - action: cover.open_cover
+        target:
+          entity_id: cover.bedroom
+```
+
+</details>
+
+**Switch lights on and off at random while you're away** - for the whole length of a multi-day event, without touching the automation when the dates change:
+
+<details>
+<summary>YAML</summary>
+
+```yaml
+automation:
+  - alias: "Annuals - presence simulation while away"
+    # Runs at most one lamp cycle at a time; a trigger landing mid-cycle is
+    # dropped rather than queued.
+    mode: single
+    max_exceeded: silent
+    triggers:
+      - trigger: time_pattern
+        minutes: "/20"
+    conditions:
+      - condition: sun
+        after: sunset
+        after_offset: "-00:30:00"
+      - condition: time
+        before: "23:30:00"
+      # True while any multi-day one-time event is running - "in_progress"
+      # only exists on those, so nothing else can match (see Events that
+      # span several days).
+      - condition: template
+        value_template: >
+          {{ states.sensor
+             | selectattr('entity_id', 'match', '^sensor\.annuals_')
+             | selectattr('attributes.in_progress', 'defined')
+             | selectattr('attributes.in_progress', 'equalto', true)
+             | list | count > 0 }}
+    variables:
+      lamp: "{{ ['light.living_room', 'light.kitchen', 'light.bedroom'] | random }}"
+    actions:
+      - delay:
+          minutes: "{{ range(0, 15) | random }}"
+      - action: light.turn_on
+        target:
+          entity_id: "{{ lamp }}"
+      - delay:
+          minutes: "{{ range(10, 40) | random }}"
+      - action: light.turn_off
+        target:
+          entity_id: "{{ lamp }}"
+```
+
+</details>
+
+The second one fires for *any* multi-day event that's currently running, which is usually what you want - a conference away from home simulates presence just as well as a holiday. To tie it to one specific trip instead, replace the template condition with `{{ is_state_attr('sensor.annuals_one_time_vacation', 'in_progress', true) }}`.
+
 ## Countdown for one-time events
 
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/one-time-examples.png" alt="A badge, a Tile card, and a Markdown card all showing the same one-time event countdown" width="45%">
 
 A one-time event's sensor (`state` = days left, plus `full_name` and `next_date` attributes) works with Home Assistant's own built-in cards - no custom card needed. Three ways to show it, from smallest to most flexible:
+
+### Events that span several days
+
+A one-time event can have an **End date** - that's what turns a single date into a holiday trip, a conference or a hospital stay. Leave it empty and nothing changes; fill it in and the event runs from its start date to that day inclusive. The [screenshot further up](#school-holidays-and-other-multi-day-breaks) shows one: *Urlaub auf Mallorca* listed as its start and its end, next to a plain single-day one-time event that keeps no suffix at all.
+
+What changes once it has one:
+
+- The countdown still counts down to the **start**, and then **stays at 0** for the whole time the event runs rather than going negative. `in_progress` tells the two apart.
+- Extra attributes come along: `end_date`, `days_until_end`, `duration_days`, `in_progress` and `reminder_message_end` (the translated countdown phrase for the *end*, e.g. "in 3 days"). They're absent on single-day events, so anything reading them can use their presence as "this one spans several days".
+- The event is **removed after its last day**, not after its first - a two-week holiday stays on the dashboard for the whole two weeks.
+- On the **calendar entity** it's one all-day event covering the whole range, instead of a single day at the start.
+- The **[dashboard card](#custom-dashboard-card)** can list it as its first day, its last day, both, or one row per day - Events → *Multi-day events*, shown only while **One-time event** is among the types the card displays. Each row says which part it is - `Vacation (start)`, `(end)`, `(day 3)`, in the language the card is read in - so it can't be mistaken for an ordinary single-day row. Days already past are dropped, so on day five of a fortnight the list starts at day five.
+- The **[reminder blueprint](#blueprint-upcoming-event-reminders)** can count down to the start, to the end, or both, each using the same "days before" thresholds - Multi-day events → *Remind about*. With to-do tracking on, departure and return become two separate items rather than one that either can tick off.
+
+The **end_date** column also rides along in the [event CSV](#exporting-events-to-csv), as an ISO `YYYY-MM-DD` date in the last column. A CSV written before this existed imports unchanged.
 
 - **Badge/chip** (top of a view or a Heading card) - **Settings** (pencil icon) → **Add badge** → pick the event's sensor. Shows its icon, name, and "X days" as a small pill.
 - **Tile card** - add a card, pick the sensor; the suggested Tile card shows the same thing as a small stand-alone card.
@@ -512,7 +683,7 @@ Each row's layout is fully configurable from Layout → Display → **Row column
 **Name flexibility for non-holiday events:** set a Last name on an event (Adding an event, above) to get first/last name apart - e.g. a **Name** column showing just "Anna" for a compact card, and a separate **Full name** column ("Anna Miller") elsewhere. Both Colors and Fonts have dedicated rows for Last name and Full name, right next to Name.
 
 Any column that includes a Type field - the standalone **Type** column, or the combined **Name + Type**/**Full name + Type** - shows its extra options grouped under two headings:
-- **Holidays only**: a **Suffix** toggle per name field (Name/Full name/Type on the combined columns, just Type on the standalone one) that appends the imported country (+ subdivision) for holiday rows, e.g. "· US (UT)".
+- **Holidays only**: a **Suffix** toggle per name field (Name/Full name/Type on the combined columns, just Type on the standalone one) that appends the imported country (+ subdivision) for holiday rows, e.g. "· US (UT)". Plus a **Type label** toggle (on by default) that drops the type text itself for holidays - "Holiday (Public) · US (Hawaii)" becomes "US (Hawaii)" - for whom the category adds nothing next to the place. Holidays only: every other event type keeps its label, which is often all that cell says.
 - **External calendars only**: **Calendar name** (on by default - the source calendar's own name filling the Type cell), **Time**, **Location**, and **Description** - each only ever has an effect on an [embedded external calendar event](#external-calendars); every Annuals event, including a one-time event, ignores them. Turn **Calendar name** off once Time/Location/Description already say enough on their own, e.g. "10:00 AM–10:45 AM · YMCA Pool · Level 2" instead of "Personal · 10:00 AM–10:45 AM · YMCA Pool · Level 2". Joined the same " · " way as everything else on this card.
 
 Every toggle in both groups has its own "i" tooltip explaining exactly what it does.
@@ -520,6 +691,30 @@ Every toggle in both groups has its own "i" tooltip explaining exactly what it d
 Turning on **Compact** mode removes the spacing between columns, centers the row, and equalizes the weight/opacity of every field - meant for exactly that sentence-style layout. Switching it on immediately swaps the columns to **Icon, Full name, Occurrence, Type, Countdown, Date**, with a plain space column automatically inserted before each of the last five so nothing runs together with no gap - a starting point you're still free to add, remove, or reorder from there. Switching Compact back off resets the columns to the standard (non-compact) default above. This is also how to build a small "today only" card: duplicate the card, turn on the **Today only** filter (Settings), reduce the columns to a single custom-text one, and enable Compact:
 
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/birthday_small_animated.gif" alt="Compact today-only birthday card" width="40%">
+
+### Holidays from several places
+
+Once a card carries holidays from more than one country or region, three settings under Settings → Events → Holidays decide how that reads.
+
+**Merge holidays shared by several countries** collapses one holiday observed in several places into a single row, listing the places after the name. **Region format** writes a region as `US (California)` rather than `US (CA)`; the country stays a code either way.
+
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-holiday-joined-2.png" alt="Holidays from five US states in one card, with shared holidays merged into a single row" width="60%">
+
+Nationwide holidays show the bare country (`US`), because that is where they apply; a merged row lists each place it came from (`US (Hawaii) · US (Illinois)`).
+
+**Countries and regions** limits the card to some of what you imported. All of them selected means no filter, so a country imported later shows up without revisiting the setting. Note that nationwide holidays carry no region, so selecting only `US (California)` shows California's own holidays without the federal ones - add `US` to bring those back.
+
+#### When merging doesn't happen
+
+Merging matches on the **name**, so two places that call the same day different things stay separate - `Day After Thanksgiving` and `Friday After Thanksgiving` in the screenshot above are the same Friday. That is what [Holiday names](#holiday-names-in-your-language) is for: rename one to match the other and the next render merges them.
+
+Across countries this is the normal case rather than the exception, because the `holidays` library carries each country's names in that country's own languages - and there is no reason for a Spanish or French calendar to also be translated into German. Import August 15 from Bavaria, Saarland, Spain, France and Italy and you get `Mariä Himmelfahrt`, `Asunción de la Virgen`, `Assomption` and `Ferragosto`: one holiday, five entries, no two names alike, so nothing merges.
+
+Give the four non-German ones the German name once, and the whole set collapses into one row:
+
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-holiday-joined.png" alt="One holiday observed in five places across four countries, merged into a single row" width="60%">
+
+The same trick handles a country whose language the library doesn't cover at all: whatever it imported under, you can give it a name in each of the 15 languages and the card will use the one matching its own Language setting.
 
 ### To-dos
 

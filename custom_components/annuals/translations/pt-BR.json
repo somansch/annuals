@@ -1,6 +1,18 @@
 {
     "title": "Annuals",
     "selector": {
+        "holiday_span": {
+            "options": {
+                "start": "início",
+                "end": "fim",
+                "day": "dia {day}"
+            }
+        },
+        "holiday_breaks": {
+            "options": {
+                "note": "Períodos de vários dias, como as férias escolares, são recompostos em férias inteiras - escolha abaixo quais partes importar."
+            }
+        },
         "event_type": {
             "options": {
                 "birthday": "Aniversário",
@@ -75,6 +87,7 @@
                     "day": "Dia",
                     "month": "Mês",
                     "year": "Ano (deixe vazio se desconhecido; obrigatório para eventos únicos)",
+                    "end_date": "Data de término (apenas eventos únicos, opcional - transforma em evento de vários dias)",
                     "icon": "Substituir ícone (opcional)",
                     "vip": "VIP Annual"
                 }
@@ -89,6 +102,7 @@
                     "day": "Dia",
                     "month": "Mês",
                     "year": "Ano (deixe vazio se desconhecido; obrigatório para eventos únicos)",
+                    "end_date": "Data de término (apenas eventos únicos, opcional - transforma em evento de vários dias)",
                     "icon": "Substituir ícone (opcional)",
                     "vip": "VIP Annual"
                 }
@@ -96,6 +110,8 @@
         },
         "error": {
             "name_required": "Informe um nome.",
+            "end_date_one_time_only": "Uma data de término só pode ser definida em um evento único.",
+            "end_date_before_start": "A data de término deve ser posterior à data de início.",
             "invalid_date": "Essa combinação de dia/mês/ano não é uma data válida.",
             "year_required": "Eventos únicos exigem um ano."
         },
@@ -117,6 +133,7 @@
                     "day": "Dia",
                     "month": "Mês",
                     "year": "Ano (deixe vazio se desconhecido; obrigatório para eventos únicos)",
+                    "end_date": "Data de término (apenas eventos únicos, opcional - transforma em evento de vários dias)",
                     "icon": "Substituir ícone (opcional)",
                     "vip": "VIP Annual"
                 }
@@ -181,12 +198,57 @@
                 "title": "Remover eventos importados de vCard",
                 "description": "{count} evento(s) foram criados por uma importação vCard anterior. Clique em OK para remover todos eles - entradas que uma importação vCard apenas atualizou (em vez de criar) nunca são afetadas, nem eventos adicionados manualmente, importados de CSV ou de ICS."
             },
+            "holiday_menu": {
+                "title": "Feriado",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}",
+                "menu_options": {
+                    "holiday_settings": "⚙️ Configurações",
+                    "holiday_names": "🌐 Nome e traduções"
+                }
+            },
+            "holiday_settings": {
+                "title": "Configurações do feriado",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nData, tipo e região vêm do banco de feriados e não podem ser editados aqui.",
+                "data": {
+                    "icon": "Ícone"
+                }
+            },
+            "holiday_names": {
+                "title": "Nome e traduções",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nEscolha o idioma em que deseja escrever o nome deste feriado.",
+                "data": {
+                    "language": "Idioma"
+                }
+            },
+            "holiday_name_edit": {
+                "title": "Nome do feriado",
+                "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nPreenchido com o que é exibido atualmente. Deixe vazio para voltar ao banco de feriados.",
+                "data": {
+                    "name": "Nome"
+                }
+            },
+            "holiday_translations": {
+                "title": "🌐 Holiday translations",
+                "description": "Export and import the holiday names you wrote yourself.",
+                "menu_options": {
+                    "export_translations": "📤 Export translations",
+                    "import_translations": "📥 Import translations"
+                }
+            },
+            "import_translations": {
+                "title": "Import translations",
+                "description": "Upload a translations CSV. Columns: `country,subdivision,category,holiday_key,observed,language,name`. Rows are matched onto holidays by country, subdivision, category, holiday key and observed flag - not by entry id, so a file exported before re-importing a country still applies. Rows whose holiday isn't present are skipped and counted.",
+                "data": {
+                    "csv_file": "CSV"
+                }
+            },
             "hub_menu": {
                 "title": "Annuals Configurações",
                 "menu_options": {
                     "annual_settings": "{icon_annual_settings} Annual Configurações",
                     "import_events": "{icon_import_events} Importar eventos",
                     "export_csv": "{icon_export_csv} Exportar eventos para CSV",
+                    "holiday_translations": "{icon_holiday_translations} Holiday translations",
                     "remove_events": "{icon_remove_events} Remover eventos",
                     "delete_all": "{icon_delete_all} Excluir todos os dados do Annuals"
                 }
@@ -219,15 +281,21 @@
             },
             "import_holidays_options": {
                 "title": "Importar feriados - {country}",
-                "description": "Deixe a subdivisão vazia para apenas feriados nacionais - um estado/província adiciona seus próprios feriados regionais. Categorias e idioma dependem do que os dados de feriados desse país fornecem. Categorias de vários dias, como férias escolares, são representadas como um evento no primeiro dia.",
+                "description": "Deixe a subdivisão vazia para apenas feriados nacionais - um estado/província adiciona seus próprios feriados regionais. Categorias e idioma dependem do que os dados de feriados desse país fornecem.{breaks}",
                 "data": {
                     "include_actual": "Importar a data real",
                     "include_observed": "Importar a data observada (deslocada)",
+                    "break_start": "Importar o primeiro dia das férias",
+                    "break_end": "Importar o último dia das férias",
+                    "break_days": "Importar cada dia das férias",
                     "subdivision": "Subdivisão (estado/província, opcional)",
                     "categories": "Categorias",
                     "language": "Idioma dos nomes dos feriados"
                 },
                 "data_description": {
+                    "break_start": "As férias escolares listam apenas dias letivos, então começam antes: conta-se de volta pelo fim de semana e pelos feriados adjacentes até o primeiro dia realmente livre.",
+                    "break_end": "O mesmo ao contrário: o último dia livre, não o último listado.",
+                    "break_days": "Um evento por dia de férias. Só as férias de verão já geram mais de quarenta.",
                     "include_observed": "Os feriados desse país às vezes são deslocados para um dia útil próximo quando caem em um fim de semana (ex.: observado na sexta-feira anterior ou na segunda-feira seguinte) - importe também essa data deslocada como um evento separado."
                 }
             },
@@ -272,6 +340,8 @@
         },
         "error": {
             "name_required": "Informe um nome.",
+            "end_date_one_time_only": "Uma data de término só pode ser definida em um evento único.",
+            "end_date_before_start": "A data de término deve ser posterior à data de início.",
             "invalid_date": "Essa combinação de dia/mês/ano não é uma data válida.",
             "year_required": "Eventos únicos exigem um ano.",
             "invalid_csv": "Não foi possível ler este arquivo como CSV. Verifique a codificação e o formato.",
@@ -284,13 +354,16 @@
             "no_batch_selected": "Marque \"Remover todos os feriados importados\" ou escolha um lote."
         },
         "abort": {
+            "translations_exported": "{count} tradução(ões) exportado(s). [Baixar annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+clique para baixar - um clique simples não funciona aqui)\n\nOu copie o CSV abaixo:\n\n```\n{csv}\n```",
+            "translations_imported": "{updated} holiday(s) updated, {skipped} row(s) skipped.",
+            "no_translations_to_export": "No holiday names have been written yet - there is nothing to export.",
             "hub_not_configurable": "O hub do Annuals não tem configurações próprias - ele apenas mantém os calendários compartilhados.",
             "import_started": "Importação iniciada: {created} evento(s) na fila, {skipped} linha(s) ignorada(s) (veja o log para detalhes).",
             "ics_import_started": "Importação iniciada: {created} evento(s) criado(s), {updated} atualizado(s), {skipped} entrada(s) ignorada(s) ou excluída(s).",
             "csv_exported": "{count} evento(s) exportado(s). [Baixar annuals_export.csv]({url}) (Ctrl/Cmd+clique para baixar - um clique simples não funciona aqui)\n\nOu copie o CSV abaixo:\n\n```\n{csv}\n```",
             "no_events_to_export": "Ainda não há eventos para exportar.",
             "deleted_all": "Todos os eventos, calendários e o hub do Annuals foram removidos.",
-            "holiday_import_started": "Importação iniciada: {count} feriado(s) na fila para {country}.",
+            "holiday_import_started": "Importação iniciada: {count} evento(s) de feriado na fila para {country} ({new} novos, {updated} atualizados).",
             "no_holidays_imported": "Nenhum feriado foi importado ainda.",
             "holidays_removed": "{count} feriado(s) removido(s).",
             "no_ics_imports": "Nenhum evento criado por uma importação ICS foi encontrado.",

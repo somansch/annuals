@@ -18,8 +18,14 @@ from homeassistant.helpers.typing import ConfigType
 from .const import (
     CONF_DAY,
     CONF_EVENT_NAME,
+    CONF_END_DATE,
     CONF_EVENT_TYPE,
+    CONF_CATEGORY,
+    CONF_COUNTRY,
+    CONF_HOLIDAY_KEY,
     CONF_HOLIDAY_OBSERVED,
+    CONF_HOLIDAY_SPAN,
+    CONF_SUBDIVISION,
     CONF_HUB,
     CONF_MONTH,
     CONF_YEAR,
@@ -31,9 +37,9 @@ from .const import (
     TYPE_HOLIDAY,
     TYPE_ONE_TIME,
 )
-from .dates import holiday_key_from_name
+from .dates import _holiday_calendar, holiday_key_from_name, one_time_span
 from .helpers import async_event_type_labels, async_reminder_strings, full_name, hub_title
-from .http import AnnualsExportCsvView
+from .http import AnnualsExportCsvView, AnnualsExportTranslationsView
 from .services import async_register_services
 from .todo_match import (
     async_refresh_todo_matches,
@@ -84,7 +90,12 @@ async def _async_purge_expired_one_time_events(hass: HomeAssistant) -> None:
         data = entry.data
         if data.get(CONF_EVENT_TYPE) != TYPE_ONE_TIME:
             continue
-        occurrence = date(data[CONF_YEAR], data[CONF_MONTH], data[CONF_DAY])
+        # The *last* day, which for a multi-day event (a holiday trip, see
+        # CONF_END_DATE) is not the day it started on - removing it the
+        # morning after departure is exactly what this must not do.
+        _, occurrence = one_time_span(
+            data[CONF_YEAR], data[CONF_MONTH], data[CONF_DAY], data.get(CONF_END_DATE)
+        )
         if occurrence < today:
             _LOGGER.info(
                 "Annuals: removing expired one-time event '%s' (%s)", entry.title, occurrence
@@ -176,6 +187,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
     async_register_services(hass)
     hass.http.register_view(AnnualsExportCsvView())
+    hass.http.register_view(AnnualsExportTranslationsView())
     return True
 
 
@@ -208,6 +220,9 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
 
     if config_entry.data.get(CONF_HUB):
         async_setup_todo_tracking(hass)
+        # Deferred rather than awaited here: it removes other config entries,
+        # which must not happen while this one is still setting up.
+        hass.async_create_task(_async_migrate_holiday_regions(hass))
     else:
         _async_ensure_hub(hass)
         # A newly set-up event may already have an open to-do waiting for it
@@ -233,6 +248,11 @@ async def _async_migrate_holiday_name(hass: HomeAssistant, config_entry: ConfigE
     rather than on every read.
     """
     data = config_entry.data
+    # Break entries are left alone: their name carries a translated
+    # "(Beginn)"/"(Tag 3)" suffix fixed when they were imported (see
+    # CONF_HOLIDAY_SUFFIX), which this has no business rewording.
+    if data.get(CONF_HOLIDAY_SPAN):
+        return
     base_name = holiday_key_from_name(data[CONF_EVENT_NAME])
     correct_name = f"{base_name} (observed)" if data.get(CONF_HOLIDAY_OBSERVED, False) else base_name
     if correct_name == data[CONF_EVENT_NAME]:
@@ -241,6 +261,99 @@ async def _async_migrate_holiday_name(hass: HomeAssistant, config_entry: ConfigE
     labels = await async_event_type_labels(hass)
     new_title = f"{labels[TYPE_HOLIDAY]}: {full_name(new_data)}"
     hass.config_entries.async_update_entry(config_entry, data=new_data, title=new_title)
+
+
+def _nationwide_holiday_keys(country: str, category: str) -> set[str]:
+    """Which of a country's holidays every region observes - the country-level
+    calendar with no subdivision. Blocking (the holidays library reads its
+    own data files), so only ever called from an executor.
+    """
+    calendar = _holiday_calendar(country, None, category, date.today().year, None)
+    return {holiday_key_from_name(name) for name in calendar.values()}
+
+
+async def _async_migrate_holiday_regions(hass: HomeAssistant) -> None:
+    """Collapse per-region copies of a nationwide holiday into one entry.
+
+    Holidays used to be stored under the region they were imported from, so
+    importing two regions of one country produced two "Christmas Day"
+    entries - one per region - for a holiday the whole country observes.
+    Imports now store those without a region at all (see
+    _build_holiday_rows); this brings entries created before that in line.
+
+    The first copy of each is kept and stripped of its region, the rest are
+    removed. Idempotent by construction: once the survivor has no region,
+    nothing here matches it again.
+    """
+    # Imported here rather than at module level purely to keep __init__ free
+    # of a config_flow import; the identity has to be built by that exact
+    # function, since a hand-rolled copy drifting from it would leave
+    # entries that no later import can match.
+    from .config_flow import _import_unique_id
+
+    holidays_entries = [
+        entry
+        for entry in hass.config_entries.async_entries(DOMAIN)
+        if not entry.data.get(CONF_HUB) and entry.data.get(CONF_EVENT_TYPE) == TYPE_HOLIDAY
+    ]
+    if not holidays_entries:
+        return
+
+    # One lookup per country/category rather than per entry - a country's
+    # import creates dozens of entries that all ask the same question.
+    nationwide: dict[tuple[str, str], set[str]] = {}
+
+    async def _target_subdivision(data: dict) -> str | None:
+        subdivision = data.get(CONF_SUBDIVISION)
+        if not subdivision:
+            return None
+        cache_key = (data.get(CONF_COUNTRY), data.get(CONF_CATEGORY))
+        if cache_key not in nationwide:
+            nationwide[cache_key] = await hass.async_add_executor_job(
+                _nationwide_holiday_keys, *cache_key
+            )
+        return None if data.get(CONF_HOLIDAY_KEY) in nationwide[cache_key] else subdivision
+
+    # Grouped by where each entry *belongs*, not where it currently sits, so
+    # one pass catches both jobs at once: several regions' copies of one
+    # nationwide holiday collapse together, and entries that already share an
+    # identity (including ones an earlier, incomplete run of this migration
+    # left behind) collapse too.
+    by_identity: dict[str, list[ConfigEntry]] = {}
+    targets: dict[str, str | None] = {}
+    for entry in holidays_entries:
+        target = await _target_subdivision(entry.data)
+        identity = _import_unique_id({**entry.data, CONF_SUBDIVISION: target})
+        by_identity.setdefault(identity, []).append(entry)
+        targets[identity] = target
+
+    removed = 0
+    rekeyed = 0
+    for identity, entries in by_identity.items():
+        survivor, *duplicates = entries
+        # Duplicates go first: the survivor's new unique_id would otherwise
+        # collide with a copy that still holds it.
+        for duplicate in duplicates:
+            await hass.config_entries.async_remove(duplicate.entry_id)
+            removed += 1
+        if survivor.unique_id == identity and survivor.data.get(CONF_SUBDIVISION) == targets[identity]:
+            continue
+        hass.config_entries.async_update_entry(
+            survivor,
+            data={**survivor.data, CONF_SUBDIVISION: targets[identity]},
+            unique_id=identity,
+        )
+        # Changing entry data doesn't restart the entry by itself, so without
+        # this the sensor keeps publishing the region it was set up with.
+        await hass.config_entries.async_reload(survivor.entry_id)
+        rekeyed += 1
+
+    if removed or rekeyed:
+        _LOGGER.info(
+            "Annuals: re-keyed %d nationwide holiday entries and removed %d duplicate(s)",
+            rekeyed,
+            removed,
+        )
 
 
 def _async_ensure_hub(hass: HomeAssistant) -> None:

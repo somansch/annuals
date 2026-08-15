@@ -14,6 +14,7 @@ from .const import (
     CONF_CATEGORY,
     CONF_COUNTRY,
     CONF_DAY,
+    CONF_END_DATE,
     CONF_EVENT_TYPE,
     CONF_HOLIDAY_KEY,
     CONF_HOLIDAY_OBSERVED,
@@ -28,11 +29,13 @@ from .const import (
 )
 from .dates import (
     holiday_occurrence_in_year,
+    holiday_span_kwargs,
     next_holiday_occurrence,
     next_occurrence,
     occurrence_in_year,
     occurrence_number,
     one_time_date,
+    one_time_span,
 )
 from .helpers import async_event_type_labels, full_name
 
@@ -102,9 +105,21 @@ class AnnualsTypeCalendar(CalendarEntity):
         return f"{name} - {self._type_label}{suffix}"
 
     def _calendar_event(self, entry: ConfigEntry, occurrence: date) -> CalendarEvent:
+        # A multi-day one-time event (a holiday trip, see CONF_END_DATE)
+        # becomes one all-day event spanning the whole range, which is what
+        # a calendar is for - not a single day at its start. `end` is
+        # exclusive in an all-day event, hence the extra day either way.
+        last_day = occurrence
+        if entry.data[CONF_EVENT_TYPE] == TYPE_ONE_TIME:
+            _, last_day = one_time_span(
+                entry.data[CONF_YEAR],
+                entry.data[CONF_MONTH],
+                entry.data[CONF_DAY],
+                entry.data.get(CONF_END_DATE),
+            )
         return CalendarEvent(
             start=occurrence,
-            end=occurrence + timedelta(days=1),
+            end=last_day + timedelta(days=1),
             summary=self._summary(entry, occurrence),
             uid=f"{DOMAIN}-{entry.entry_id}-{occurrence.isoformat()}",
         )
@@ -120,6 +135,7 @@ class AnnualsTypeCalendar(CalendarEntity):
                 data[CONF_HOLIDAY_KEY],
                 today,
                 data.get(CONF_HOLIDAY_OBSERVED, False),
+                **holiday_span_kwargs(data),
             )
         if data[CONF_EVENT_TYPE] == TYPE_ONE_TIME:
             # Never wraps to "next year" like next_occurrence() does below -
@@ -127,8 +143,14 @@ class AnnualsTypeCalendar(CalendarEntity):
             # the past, same as a holiday with no more occurrences; in
             # practice this entry is removed entirely by the midnight purge
             # (see __init__.py) before that ever shows up here.
-            occurrence = one_time_date(data[CONF_YEAR], data[CONF_MONTH], data[CONF_DAY])
-            return occurrence if occurrence >= today else None
+            # Judged on the last day, not the first: an event that is
+            # currently running (see CONF_END_DATE) has not passed, and must
+            # keep showing on the calendar for the rest of its span rather
+            # than vanishing the morning after it began.
+            occurrence, last_day = one_time_span(
+                data[CONF_YEAR], data[CONF_MONTH], data[CONF_DAY], data.get(CONF_END_DATE)
+            )
+            return occurrence if last_day >= today else None
         return next_occurrence(data[CONF_MONTH], data[CONF_DAY], today)
 
     @staticmethod
@@ -142,6 +164,7 @@ class AnnualsTypeCalendar(CalendarEntity):
                 data[CONF_HOLIDAY_KEY],
                 year,
                 data.get(CONF_HOLIDAY_OBSERVED, False),
+                **holiday_span_kwargs(data),
             )
         if data[CONF_EVENT_TYPE] == TYPE_ONE_TIME:
             # Only ever occurs in its own stored year, unlike every other

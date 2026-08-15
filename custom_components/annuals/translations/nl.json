@@ -1,6 +1,18 @@
 {
     "title": "Annuals",
     "selector": {
+        "holiday_span": {
+            "options": {
+                "start": "begin",
+                "end": "einde",
+                "day": "dag {day}"
+            }
+        },
+        "holiday_breaks": {
+            "options": {
+                "note": "Meerdaagse vakanties zoals schoolvakanties worden weer als hele vakantie behandeld - kies hieronder welke delen ervan worden geïmporteerd."
+            }
+        },
         "event_type": {
             "options": {
                 "birthday": "Verjaardag",
@@ -75,6 +87,7 @@
                     "day": "Dag",
                     "month": "Maand",
                     "year": "Jaar (leeg laten indien onbekend; verplicht voor eenmalige evenementen)",
+                    "end_date": "Einddatum (alleen eenmalige gebeurtenissen, optioneel - maakt er een meerdaagse gebeurtenis van)",
                     "icon": "Icoon overschrijven (optioneel)",
                     "vip": "VIP Annual"
                 }
@@ -89,6 +102,7 @@
                     "day": "Dag",
                     "month": "Maand",
                     "year": "Jaar (leeg laten indien onbekend; verplicht voor eenmalige evenementen)",
+                    "end_date": "Einddatum (alleen eenmalige gebeurtenissen, optioneel - maakt er een meerdaagse gebeurtenis van)",
                     "icon": "Icoon overschrijven (optioneel)",
                     "vip": "VIP Annual"
                 }
@@ -96,6 +110,8 @@
         },
         "error": {
             "name_required": "Voer een naam in.",
+            "end_date_one_time_only": "Een einddatum kan alleen bij een eenmalige gebeurtenis worden ingesteld.",
+            "end_date_before_start": "De einddatum moet na de startdatum liggen.",
             "invalid_date": "Deze combinatie van dag/maand/jaar is geen geldige datum.",
             "year_required": "Eenmalige evenementen vereisen een jaar."
         },
@@ -117,6 +133,7 @@
                     "day": "Dag",
                     "month": "Maand",
                     "year": "Jaar (leeg laten indien onbekend; verplicht voor eenmalige evenementen)",
+                    "end_date": "Einddatum (alleen eenmalige gebeurtenissen, optioneel - maakt er een meerdaagse gebeurtenis van)",
                     "icon": "Icoon overschrijven (optioneel)",
                     "vip": "VIP Annual"
                 }
@@ -181,12 +198,57 @@
                 "title": "Uit vCard geïmporteerde evenementen verwijderen",
                 "description": "{count} evenement(en) zijn aangemaakt door een eerdere vCard-import. Klik op „OK” om ze allemaal te verwijderen - items die een vCard-import alleen heeft bijgewerkt (in plaats van aangemaakt) worden nooit beïnvloed, evenmin als handmatig toegevoegde, CSV- of ICS-geïmporteerde evenementen."
             },
+            "holiday_menu": {
+                "title": "Feestdag",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}",
+                "menu_options": {
+                    "holiday_settings": "⚙️ Instellingen",
+                    "holiday_names": "🌐 Naam en vertalingen"
+                }
+            },
+            "holiday_settings": {
+                "title": "Feestdag-instellingen",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nDatum, type en regio komen uit de feestdagendatabase en zijn hier niet te wijzigen.",
+                "data": {
+                    "icon": "Icoon"
+                }
+            },
+            "holiday_names": {
+                "title": "Naam en vertalingen",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nKies de taal waarin je de naam van deze feestdag wilt invoeren.",
+                "data": {
+                    "language": "Taal"
+                }
+            },
+            "holiday_name_edit": {
+                "title": "Naam van de feestdag",
+                "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nVooringevuld met wat nu wordt getoond. Laat leeg om terug te vallen op de feestdagendatabase.",
+                "data": {
+                    "name": "Naam"
+                }
+            },
+            "holiday_translations": {
+                "title": "🌐 Holiday translations",
+                "description": "Export and import the holiday names you wrote yourself.",
+                "menu_options": {
+                    "export_translations": "📤 Export translations",
+                    "import_translations": "📥 Import translations"
+                }
+            },
+            "import_translations": {
+                "title": "Import translations",
+                "description": "Upload a translations CSV. Columns: `country,subdivision,category,holiday_key,observed,language,name`. Rows are matched onto holidays by country, subdivision, category, holiday key and observed flag - not by entry id, so a file exported before re-importing a country still applies. Rows whose holiday isn't present are skipped and counted.",
+                "data": {
+                    "csv_file": "CSV"
+                }
+            },
             "hub_menu": {
                 "title": "Annuals Instellingen",
                 "menu_options": {
                     "annual_settings": "{icon_annual_settings} Annual Instellingen",
                     "import_events": "{icon_import_events} Evenementen importeren",
                     "export_csv": "{icon_export_csv} Evenementen exporteren naar CSV",
+                    "holiday_translations": "{icon_holiday_translations} Holiday translations",
                     "remove_events": "{icon_remove_events} Evenementen verwijderen",
                     "delete_all": "{icon_delete_all} Alle Annuals-gegevens verwijderen"
                 }
@@ -219,15 +281,21 @@
             },
             "import_holidays_options": {
                 "title": "Feestdagen importeren - {country}",
-                "description": "Laat de subdivisie leeg voor alleen landelijke feestdagen - een provincie voegt eigen regionale feestdagen toe. Categorieën en taal hangen af van wat de feestdaggegevens van dit land bieden. Meerdaagse categorieën zoals schoolvakanties worden weergegeven als één evenement op de eerste dag.",
+                "description": "Laat de subdivisie leeg voor alleen landelijke feestdagen - een provincie voegt eigen regionale feestdagen toe. Categorieën en taal hangen af van wat de feestdaggegevens van dit land bieden.{breaks}",
                 "data": {
                     "include_actual": "Werkelijke datum importeren",
                     "include_observed": "Waargenomen (verschoven) datum importeren",
+                    "break_start": "Eerste vakantiedag importeren",
+                    "break_end": "Laatste vakantiedag importeren",
+                    "break_days": "Elke vakantiedag importeren",
                     "subdivision": "Subdivisie (provincie, optioneel)",
                     "categories": "Categorieën",
                     "language": "Taal voor feestdagnamen"
                 },
                 "data_description": {
+                    "break_start": "Schoolvakanties bevatten alleen schooldagen, dus de vakantie begint eerder - er wordt teruggerekend over het weekend en aangrenzende feestdagen tot de eerste echt vrije dag.",
+                    "break_end": "Hetzelfde andersom: de laatste vrije dag, niet de laatst vermelde.",
+                    "break_days": "Eén evenement per vakantiedag. Alleen de zomervakantie levert er al meer dan veertig op.",
                     "include_observed": "Feestdagen van dit land worden soms verschoven naar een nabije werkdag als ze in het weekend vallen (bijv. waargenomen op de vrijdag ervoor of de maandag erna) - importeer deze verschoven datum ook als apart evenement."
                 }
             },
@@ -272,6 +340,8 @@
         },
         "error": {
             "name_required": "Voer een naam in.",
+            "end_date_one_time_only": "Een einddatum kan alleen bij een eenmalige gebeurtenis worden ingesteld.",
+            "end_date_before_start": "De einddatum moet na de startdatum liggen.",
             "invalid_date": "Deze combinatie van dag/maand/jaar is geen geldige datum.",
             "year_required": "Eenmalige evenementen vereisen een jaar.",
             "invalid_csv": "Dit bestand kon niet als CSV worden gelezen. Controleer de codering en indeling.",
@@ -284,13 +354,16 @@
             "no_batch_selected": "Vink „Alle geïmporteerde feestdagen verwijderen” aan, of kies een batch."
         },
         "abort": {
+            "translations_exported": "{count} vertaling(en) geëxporteerd. [annuals_holiday_translations.csv downloaden]({url}) (Ctrl/Cmd+klik om te downloaden - een gewone klik werkt hier niet)\n\nOf kopieer de CSV hieronder:\n\n```\n{csv}\n```",
+            "translations_imported": "{updated} holiday(s) updated, {skipped} row(s) skipped.",
+            "no_translations_to_export": "No holiday names have been written yet - there is nothing to export.",
             "hub_not_configurable": "De Annuals-hub heeft geen eigen instellingen - hij bevat alleen de gedeelde kalenders.",
             "import_started": "Import gestart: {created} evenement(en) in de wachtrij, {skipped} rij(en) overgeslagen (zie het logboek voor details).",
             "ics_import_started": "Import gestart: {created} evenement(en) aangemaakt, {updated} bijgewerkt, {skipped} item(s) overgeslagen of uitgesloten.",
             "csv_exported": "{count} evenement(en) geëxporteerd. [annuals_export.csv downloaden]({url}) (Ctrl/Cmd+klik om te downloaden - een gewone klik werkt hier niet)\n\nOf kopieer de CSV hieronder:\n\n```\n{csv}\n```",
             "no_events_to_export": "Er zijn nog geen evenementen om te exporteren.",
             "deleted_all": "Alle Annuals-evenementen, kalenders en de hub zijn verwijderd.",
-            "holiday_import_started": "Import gestart: {count} feestdag(en) in de wachtrij voor {country}.",
+            "holiday_import_started": "Import gestart: {count} feestdag-gebeurtenis(sen) in de wachtrij voor {country} ({new} nieuw, {updated} bijgewerkt).",
             "no_holidays_imported": "Er zijn nog geen feestdagen geïmporteerd.",
             "holidays_removed": "{count} feestdag(en) verwijderd.",
             "no_ics_imports": "Er zijn geen door een ICS-import aangemaakte evenementen gevonden.",

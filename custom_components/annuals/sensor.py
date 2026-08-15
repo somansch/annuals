@@ -16,15 +16,19 @@ from .const import (
     CONF_COUNTRY,
     CONF_DAY,
     CONF_EVENT_NAME,
+    CONF_END_DATE,
     CONF_EVENT_TYPE,
     CONF_HOLIDAY_KEY,
     CONF_HOLIDAY_OBSERVED,
+    CONF_HOLIDAY_SPAN,
+    CONF_HOLIDAY_SUFFIX,
     CONF_HUB,
     CONF_ICON,
     CONF_IMPORTANT_THRESHOLDS,
     CONF_LANGUAGE,
     CONF_LAST_NAME,
     CONF_MONTH,
+    CONF_NAME_TRANSLATIONS,
     CONF_SUBDIVISION,
     CONF_VIP,
     CONF_YEAR,
@@ -41,15 +45,20 @@ from .const import (
 )
 from .dates import (
     days_until,
+    holiday_break_display_name,
     holiday_display_name,
     holiday_key_from_name,
+    holiday_label,
+    holiday_span_kwargs,
     is_important,
     next_holiday_occurrence,
     next_occurrence,
     occurrence_number,
-    one_time_date,
+    one_time_span,
     parse_thresholds,
+    subdivision_name,
 )
+from .helpers import holiday_span_suffix, ui_language
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -86,8 +95,19 @@ class AnnualEventSensor(SensorEntity):
             # suffix happened to be present in the import year, which would
             # drift year to year for a plain-date entry and stay permanently
             # wrong either way once frozen into config_entry.data.
-            base_name = holiday_key_from_name(name)
-            name = f"{base_name} (observed)" if data.get(CONF_HOLIDAY_OBSERVED, False) else base_name
+            #
+            # A break entry's stored name is used exactly as it is: its
+            # "(Beginn)"/"(Tag 3)" suffix was rendered in the server's
+            # language when it was imported (see CONF_HOLIDAY_SUFFIX), and
+            # taking it apart and back together here would only risk
+            # doubling it or silently rewording it later.
+            if not data.get(CONF_HOLIDAY_SPAN):
+                base_name = holiday_key_from_name(name)
+                name = (
+                    f"{base_name} (observed)"
+                    if data.get(CONF_HOLIDAY_OBSERVED, False)
+                    else base_name
+                )
         self._name = name
         # Empty for TYPE_HOLIDAY (never offered on that form) and for any
         # event added before this field existed - never touches
@@ -140,8 +160,14 @@ class AnnualEventSensor(SensorEntity):
         # "important" (which both describe *which* repeat this is) simply
         # don't apply. year is always set for this type (enforced in
         # config_flow._validate_and_normalise), so the plain int() is safe.
+        end_day: date | None = None
+        in_progress = False
         if event_type == TYPE_ONE_TIME:
-            occurrence = one_time_date(int(year), month, day)
+            occurrence, last_day = one_time_span(int(year), month, day, data.get(CONF_END_DATE))
+            # Only reported for events that actually span several days, so a
+            # plain one-time event's attributes stay exactly as they were.
+            end_day = last_day if last_day != occurrence else None
+            in_progress = occurrence <= today <= last_day
             occurrence_num = None
             important = False
         else:
@@ -149,7 +175,13 @@ class AnnualEventSensor(SensorEntity):
             occurrence_num = occurrence_number(year, occurrence)
             important = is_important(occurrence_num, self._important_thresholds(event_type))
 
-        days = days_until(occurrence, today)
+        # Never negative: a multi-day event that has already begun still has
+        # days to run, and "-3 days until" would be read as an error by
+        # everything downstream (the card's countdown, the blueprint's
+        # "remind at 7, 1, 0"). It counts down to the start, hits 0 on the
+        # first day, and stays there until the event is over - which the
+        # "in_progress" attribute below is what distinguishes.
+        days = max(days_until(occurrence, today), 0) if in_progress else days_until(occurrence, today)
         self._attr_native_value = days
         self._attr_extra_state_attributes: dict[str, Any] = {
             "type": event_type,
@@ -167,6 +199,27 @@ class AnnualEventSensor(SensorEntity):
             "reminder_message": self._reminder_message(days),
             "todo": self._has_open_todo(),
         }
+        if end_day is not None:
+            # Only present on a one-time event that spans several days (see
+            # CONF_END_DATE) - absent everywhere else, so anything reading
+            # these can use their mere presence as "this is a multi-day
+            # event" without a second check.
+            self._attr_extra_state_attributes.update(
+                {
+                    "end_date": end_day.isoformat(),
+                    "days_until_end": days_until(end_day, today),
+                    "duration_days": (end_day - occurrence).days + 1,
+                    "in_progress": in_progress,
+                    # The same translated countdown phrase as
+                    # "reminder_message", but for the day the event ends -
+                    # so an automation reminding before the return flight
+                    # can say "in 3 days" about the return flight rather
+                    # than about a departure that already happened.
+                    "reminder_message_end": self._reminder_message(
+                        days_until(end_day, today)
+                    ),
+                }
+            )
 
     def _update_holiday_state(self, data: dict, today: date) -> None:
         """Holiday events have no stored day/month/year (see dates.py) - the
@@ -181,15 +234,59 @@ class AnnualEventSensor(SensorEntity):
         language: str | None = data.get(CONF_LANGUAGE)
         observed: bool = data.get(CONF_HOLIDAY_OBSERVED, False)
 
+        spans = holiday_span_kwargs(data)
+
         occurrence = next_holiday_occurrence(
-            country, subdivision, category, holiday_key, today, observed
+            country, subdivision, category, holiday_key, today, observed, **spans
         )
         name = self._name
         if occurrence is not None:
-            name = (
-                holiday_display_name(country, subdivision, category, language, occurrence.year, occurrence)
-                or self._name
-            )
+            resolved = None
+            if spans["span"]:
+                # A composite name split back into one name per break, where
+                # that's possible (see dates.holiday_break_names) - resolved
+                # against the year the block belongs to, which for a break
+                # running across New Year is not the year its end falls in.
+                for block_year in (occurrence.year, occurrence.year - 1):
+                    resolved = holiday_break_display_name(
+                        country, subdivision, category, holiday_key, block_year,
+                        language, spans["block"],
+                    )
+                    if resolved is not None:
+                        break
+            if resolved is None:
+                resolved = holiday_display_name(
+                    country, subdivision, category, language, occurrence.year, occurrence, holiday_key
+                )
+            if resolved is not None:
+                # Re-suffixed for breaks only, with the wording stored when
+                # the entry was created: every part of one break shares the
+                # library's single name, so without this the start, the end
+                # and each individual day would all render identically.
+                # `observed` is deliberately left off - that variant has
+                # always displayed under the plain name and changing it here
+                # would rename existing entities.
+                suffix = data.get(CONF_HOLIDAY_SUFFIX) or ""
+                if not suffix and spans["span"]:
+                    # Imported before the suffix was stored: fall back to the
+                    # untranslated wording rather than dropping it, which
+                    # would make a break's start, end and days indistinguishable
+                    # until it's imported again.
+                    suffix = holiday_span_suffix({}, spans["span"], 0, spans["day"])
+                name = holiday_label(resolved, suffix=suffix)
+        # The user's own wording wins over the library's for the language this
+        # entry was imported in (see CONF_NAME_TRANSLATIONS). Every other
+        # language they filled in rides along as an attribute instead: the
+        # dashboard card renders in the *viewer's* language, which needn't be
+        # the one this entity's own name is resolved in, so it has to be able
+        # to pick for itself.
+        # Keyed by this integration's own language codes, not the library's -
+        # the entry's stored language is something like "en_US" (see
+        # helpers.ui_language for why the two differ).
+        translations: dict[str, str] = data.get(CONF_NAME_TRANSLATIONS) or {}
+        own_language = ui_language(language)
+        if own_language and translations.get(own_language):
+            name = translations[own_language]
 
         days = days_until(occurrence, today) if occurrence is not None else None
         self._attr_native_value = days
@@ -201,11 +298,23 @@ class AnnualEventSensor(SensorEntity):
             "occurrence_number": None,
             "country": country,
             "subdivision": subdivision,
+            # "California" for "CA" - the dashboard card's Region format option
+            # renders one or the other (see subdivision_name). None for a
+            # country-wide entry, and for a country whose subdivisions the
+            # library has no long names for.
+            "subdivision_name": subdivision_name(country, subdivision),
             "category": category,
+            # Which part of a multi-day break this entry is - "start", "end"
+            # or "day" (see CONF_HOLIDAY_SPAN), None for every single-day
+            # holiday. Exposed so automations and the card can tell them
+            # apart, e.g. to remind only when a school break begins rather
+            # than on all forty-five of its days.
+            "break_part": spans["span"],
             "holiday_key": holiday_key,
             "vip": bool(data.get(CONF_VIP, False)),
             "important": False,
             "observed": observed,
+            "name_translations": translations,
             "reminder_message": self._reminder_message(days),
             "todo": self._has_open_todo(),
         }

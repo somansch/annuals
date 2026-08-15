@@ -17,6 +17,20 @@ CONF_YEAR = "year"
 CONF_ICON = "icon"
 CONF_VIP = "vip"
 
+# One-time events only (TYPE_ONE_TIME): the last day of an event that spans
+# several days - a holiday trip, a conference, a hospital stay. An ISO
+# "YYYY-MM-DD" string rather than the day/month/year triple every other date
+# here uses, because a one-time event's end is always a fully known, nearby
+# date that a native date picker handles well; the split fields exist for
+# reaching a birth year in 1970 without clicking back through the picker
+# month by month, which simply doesn't apply.
+#
+# Absent on every single-day event and on everything created before this
+# existed, which is the same thing: the event is its start date and nothing
+# more. Never set on a recurring type - those repeat every year, so an end
+# date in one specific year would be meaningless.
+CONF_END_DATE = "end_date"
+
 # Marks an entry as created by a specific bulk-import mechanism, distinct from
 # CONF_EVENT_TYPE (which holidays already overload for the same "find just
 # these later" purpose - see async_step_remove_holidays). Only ever set to
@@ -94,11 +108,81 @@ CONF_SUBDIVISION = "subdivision"
 CONF_CATEGORY = "category"
 CONF_LANGUAGE = "language"
 CONF_HOLIDAY_KEY = "holiday_key"
+# Holidays only - {language code: name} the user typed in themselves, taking
+# precedence over whatever the `holidays` library resolves for that language.
+# Two things it's there for: a language the library has no names in at all
+# (importing French holidays onto a German dashboard is the usual case), and
+# wording the library is simply inconsistent about ("Assumption Day" in one
+# country, "Assumption Of Mary Day" in the next). Only ever holds languages
+# actually filled in - anything absent falls back to the library, so an entry
+# nobody has touched carries nothing.
+CONF_NAME_TRANSLATIONS = "name_translations"
+
+# The languages a holiday name can be translated into - the same 15 this
+# integration and its dashboard card are themselves translated into (one
+# file each in translations/), so a name can always be provided for whatever
+# language a viewer is actually reading the card in.
+NAME_TRANSLATION_LANGUAGES = [
+    "en",
+    "de",
+    "fr",
+    "nl",
+    "pl",
+    "es",
+    "it",
+    "pt-BR",
+    "ru",
+    "sv",
+    "zh-Hans",
+    "cs",
+    "nb",
+    "da",
+    "tr",
+]
 # Whether this entry tracks a holiday's practically-observed (weekend-shifted)
 # date rather than its literal one - see dates.holiday_occurrence_in_year.
 # Absent (.get(..., False)) on every entry imported before this field
 # existed, which is exactly the "literal date" behaviour they already had.
 CONF_HOLIDAY_OBSERVED = "holiday_observed"
+
+# --- Multi-day breaks (school holidays) -----------------------------------
+#
+# Most holidays are a single day, and the fields above describe them fully.
+# Some categories - "school" above all - instead list every calendar day of a
+# multi-week break under one name, e.g. "Sommerferien" on 45 consecutive
+# dates. Those three fields pin an entry to one specific piece of such a
+# break; see dates.holiday_break_blocks for how the pieces are worked out.
+#
+# CONF_HOLIDAY_SPAN says *which* piece: the break's first day (SPAN_START),
+# its last day (SPAN_END), or one individual day of it (SPAN_DAY, together
+# with CONF_HOLIDAY_DAY below). Absent on every single-day holiday and on
+# everything imported before this existed - which resolves exactly as it
+# always did, to the first listed day.
+CONF_HOLIDAY_SPAN = "holiday_span"
+SPAN_START = "start"
+SPAN_END = "end"
+SPAN_DAY = "day"
+
+# Which block of the break, when one name covers several separate blocks in
+# the same year - Bavaria files both its February and its Easter break under
+# "Oster-/Frühjahrsferien", and they are genuinely two different holidays.
+# 0-based, chronological, counting only blocks that *start* in the entry's
+# year (so a break running across New Year belongs to the year it starts in
+# and stays one block rather than being torn in two).
+CONF_HOLIDAY_BLOCK = "holiday_block"
+
+# For SPAN_DAY only: 0-based offset from the block's first day. Stored as an
+# offset rather than a date because a holiday entry never stores dates (see
+# dates.py) - the break moves every year, and so does each day inside it.
+CONF_HOLIDAY_DAY = "holiday_day"
+
+# The rendered, already-translated decoration that marks which part of a break
+# this entry is: "(Beginn)", "(2) (Ende)", "(Tag 3)". Stored rather than
+# rebuilt on every read, for two reasons: dates.py has no access to Home
+# Assistant's translations, and an entry must not rename itself later because
+# the server language changed. Fixed in the language the import ran in - see
+# helpers.async_span_labels.
+CONF_HOLIDAY_SUFFIX = "holiday_suffix"
 
 # Icon per `holidays` library category - every category value the library
 # defines across its entire country set, confirmed exhaustively (not
