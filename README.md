@@ -6,7 +6,7 @@
 
 **Available languages:** English, Deutsch, Français, Nederlands, Polski, Español, Italiano, Português (Brasil), Русский, Svenska, 简体中文, Čeština, Norsk bokmål, Dansk, Türkçe
 
-<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-summary.png" alt="List, Timeline, and Compact layouts side by side" width="45%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-summary.png" alt="List view, Timeline, Compact, to-dos and an Agenda-style list, side by side" width="45%">
 
 ## Overview
 
@@ -659,9 +659,9 @@ To override that per card, set **Language** (Settings → General) to one of tho
 
 **No events text** (Settings → General) is what the card writes in place of the list when it has nothing to show. Left empty it stays the built-in phrase, translated into whichever language the card is read in - the same way an empty **Card title** keeps the default one. Its own appearance sits in Layout → **Design**, in a block directly under Card title: a color, a size and the four style toggles, like every other element. Both layouts fall back to the same line, so the block is always listed rather than following the row columns.
 
-A List card, a Timeline card, and a Compact one-line card, side by side - all the same integration, three different layouts:
+One integration, five ways to read the same events - the List view, the Timeline, a Compact one-line card, the to-dos it tracks, and an Agenda-style list:
 
-<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-summary.png" alt="List, Timeline, and Compact layouts side by side" width="90%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-summary.png" alt="List view, Timeline, Compact, to-dos and an Agenda-style list, side by side" width="90%">
 
 ### The visual editor
 
