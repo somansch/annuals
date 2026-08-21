@@ -151,13 +151,24 @@ def _holiday_calendar(
     """One year's holidays for a single category, cached - constructing this
     isn't free, and every holiday sensor sharing a country/subdivision/
     category/year would otherwise rebuild an identical calendar on every poll.
+
+    Returned as a plain dict rather than the library's own object, because
+    that object populates itself lazily: looking up a date outside the years
+    it was built for silently loads that year into it too. Cached and shared
+    as these are, one such lookup anywhere would leave every later reader
+    holding more years than it asked for - and the readers below take the
+    earliest match, so they would answer with the wrong year's date. A
+    snapshot cannot grow, which ends the whole question rather than asking
+    each reader to defend itself.
     """
-    return holidays_lib.country_holidays(
-        country,
-        subdiv=subdivision or None,
-        years=year,
-        categories=(category,),
-        language=language,
+    return dict(
+        holidays_lib.country_holidays(
+            country,
+            subdiv=subdivision or None,
+            years=year,
+            categories=(category,),
+            language=language,
+        )
     )
 
 
@@ -572,6 +583,11 @@ def holiday_occurrence_in_year(
 
     plain: date | None = None
     for occurrence, name in _holiday_calendar(country, subdivision, category, year, None).items():
+        # Only this year: a cached calendar can hold more years than it was
+        # built for (see the estimated-only branch below for why), and the
+        # earliest match would otherwise be taken from one of them.
+        if occurrence.year != year:
+            continue
         if holiday_key_from_name(name) == holiday_key and name == holiday_key_from_name(name):
             if plain is None or occurrence < plain:
                 plain = occurrence
@@ -612,7 +628,18 @@ def holiday_occurrence_in_year(
         # Estimated-only holiday (lunar/Hijri) - the name is always
         # suffixed, so there's no unsuffixed "plain" entry to anchor a
         # proximity search on; just use whatever's in this year's dict.
+        #
+        # The year check is not redundant. A `holidays` calendar populates
+        # itself lazily: looking a date up that lies outside the years it
+        # was built for silently loads that year into it as well - and these
+        # objects are cached and shared (see _holiday_calendar), so one such
+        # lookup anywhere leaves every later reader looking at more years
+        # than it asked for. Taking the earliest match without checking then
+        # answers with the *previous* year's occurrence, which for a lunar
+        # holiday is a fortnight-sized error rather than a rounding one.
         for occurrence, name in _holiday_calendar(country, subdivision, category, year, None).items():
+            if occurrence.year != year:
+                continue
             if holiday_key_from_name(name) == holiday_key:
                 if shifted is None or occurrence < shifted:
                     shifted = occurrence

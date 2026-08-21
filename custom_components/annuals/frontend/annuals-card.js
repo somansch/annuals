@@ -60,6 +60,10 @@
       multiDayEnd: "end",
       multiDayDay: "day {day}",
       noEvents: "No upcoming events",
+      // The Week separator's own label (see separatorLabelText) - the word
+      // this language actually uses for a calendar week, which no Intl format
+      // supplies. {week} is the number.
+      separatorWeekLabel: "Week {week}",
       todoCompleteConfirm: 'Mark "{item}" as completed?',
       todoCompleteConfirmMultiple: "Mark all {count} to-do items for this event as completed?",
       todoCompleteFailed: "Could not complete this to-do item.",
@@ -183,8 +187,7 @@
         holidayDateObserved: "Observed",
         holidayMergeObserved: "Prefer observed date",
         holidayMergeRegions: "Merge holidays shared by several countries",
-        holidayMergeRegionsDesc:
-          "One row per holiday instead of one per country, listing every region that celebrates it. Grouped by date and by the name the holiday actually reads under - so two different holidays on the same day stay apart, and countries whose wording differs only merge once you have given them the same name (see Name and translations on the holiday's own settings).",
+        holidayMergeRegionsDesc: "One entry per holiday instead of one per country, listing every region that celebrates it. Grouped by date and by the name the holiday actually reads under - so two different holidays on the same day stay apart, and countries whose wording differs only merge once you have given them the same name (see Name and translations on the holiday's own settings).",
         regionFormat: "Region format",
         regionFormatDesc: "How a holiday's country and region are written wherever they are shown.",
         regionFormatShort: "US (CA)",
@@ -245,7 +248,7 @@
         moreActionDesc:
           "What the timeline's bottom-right \"More\" button does. Typically a Navigate action pointing at a dashboard that shows the same events in the full List layout. Leave it on \"Nothing\" to hide the button.",
         groupTimeline: "Timeline",
-        groupTimelineDesc: "Only used when Layout style (under Display) is set to Timeline.",
+        groupTimelineDesc: "Only used when Layout style is set to Timeline.",
         timelineHeaderLabel: "Header",
         timelineHeaderFontDesc:
           "Font for the description line above the axis, e.g. \"Kevin's 27th birthday is today\".",
@@ -262,15 +265,14 @@
         eventTypesHeading: "Event types",
         eventTypeColorDesc: "Color used for this event type's icon and dot on the timeline.",
         visibilityHeading: "Show / Hide",
-        visibilityPast: "Past events",
-        visibilityPastDesc: "Show events whose anniversary already passed within the configured past window",
-        visibilityToday: "Today's events",
-        visibilityTodayDesc: "Show events happening today",
-        visibilitySoon: "Upcoming soon",
-        visibilitySoonDesc: "Show events within the “soon” threshold",
-        visibilityCardTitleDesc: "Show the card's own title",
         hideCardTitle: "Hide",
         hideCardTitleDesc: "Hide the card's own title, even when set above",
+        noEventsText: "No events text",
+        noEventsTextDesc:
+          "What the card says when it has nothing to list (leave empty for the default).",
+        noEventsLabel: "No events",
+        noEventsColorDesc: "Text color for the line the card shows when it has nothing to list.",
+        noEventsFontDesc: "Font for the line the card shows when it has nothing to list.",
         tapAction: "Tap action",
         tapActionDesc: "What happens when a row is tapped or clicked",
         holdAction: "Hold action",
@@ -286,14 +288,13 @@
         cardLanguageDesc:
           "Pins this card to one language for everyone who sees it, instead of following each viewer's own profile language. Affects the card's own text and its date formatting alike - not the event names themselves, which come from the integration. This editor keeps following your own language either way.",
         cardLanguageAuto: "Automatic",
-        visibilityIcon: "Icon",
-        visibilityIconDesc: "Show the type icon in front of each row",
-        visibilityNameDesc: "Show the event name",
-        visibilityTypeDesc: "Show the event type",
-        visibilityCountrySuffix: "Holiday suffix",
         visibilityCountrySuffixDesc: "Append the country (and subdivision, if any) after the holiday's name/type, e.g. “Independence Day · US (UT)”",
         columnsHeading: "Row columns",
-        columnsDesc: "Add, remove, and reorder what each row shows. Custom text columns can mix free text with placeholders: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
+        columnsDesc:
+          "Add, remove, and reorder what each row shows, or start from one of these.",
+        columnsPresetDefault: "Default",
+        columnsPresetAgenda: "Agenda",
+        columnsPresetMinimal: "Minimal",
         columnTypeIcon: "Icon",
         columnTypeInfo: "Name + type",
         columnTypeName: "Name",
@@ -303,6 +304,8 @@
         columnTypeType: "Type",
         columnTypeText: "Custom text",
         columnTypeDate: "Date",
+        columnTypeDateBlock: "Date block",
+        columnTypeAccentBar: "Accent bar",
         columnTypeTime: "Time",
         columnTypeLocation: "Location",
         columnTypeDescription: "Description",
@@ -319,8 +322,7 @@
         suffixShowHolidayTypeDesc:
           "Show a holiday's own type label, e.g. \u201cHoliday (Public)\u201d. Turn off to leave only the country/region suffix in this cell.",
         multiDayDisplay: "Multi-day events",
-        multiDayDisplayDesc:
-          "How a one-time event that spans several days - a holiday trip, a conference - is listed. Only affects events that actually have an end date; everything else is one row either way.",
+        multiDayDisplayDesc: "How a one-time event that spans several days - a holiday trip, a conference - is listed. Only affects events that actually have an end date; everything else is a single entry either way.",
         multiDayStartOnly: "Only the first day",
         multiDayEndOnly: "Only the last day",
         multiDayStartEnd: "First and last day",
@@ -346,11 +348,31 @@
         columnMoveDown: "Move down",
         columnRemove: "Remove",
         columnTemplatePlaceholder: "e.g. {name} turns {occurrence} today",
-        columnColor: "Color",
         columnsCompact: "Compact (no gaps, centered)",
         columnsCompactDesc: "Remove the spacing between columns, center the row, and make every field match in weight and opacity - useful when the columns form one continuous sentence.",
-        visibilityBadgeDesc: "Show the occurrence number badge",
-        visibilityWhenDesc: "Show the countdown (e.g. “in 3 days”)",
+        monthSeparators: "Month separators",
+        monthSeparatorsDesc: "Draw a line wherever consecutive rows fall in different months, splitting a long list into month blocks. The order of the rows themselves is unchanged.",
+        weekSeparators: "Week separators",
+        weekSeparatorsDesc: "The same one step finer: a line wherever consecutive rows fall in different weeks, using your Home Assistant first-day-of-week setting. With Month separators also on, a row that starts both gets one line.",
+        daySeparators: "Day separators",
+        daySeparatorsDesc: "A line wherever consecutive rows fall on different days, breaking the list into one block per day. The finest of the three - with Week or Month separators also on, a row that begins two of them gets only the coarser line.",
+        separatorWidth: "Width",
+        separatorWidthDesc: "Thickness of the line, e.g. \"1px\". Left empty it is 1px.",
+        separatorColor: "Color",
+        separatorColorDesc: "Color of the line. Left empty it follows the theme's own text color, the same one the card title uses.",
+        separatorShowDayLabel: "Show weekday",
+        separatorShowDayLabelDesc: "Write the weekday on the line itself, centered on an elliptical plate in the card's background color, so the rule breaks around the text instead of running through it.",
+        separatorShowWeekLabel: "Show calendar week",
+        separatorShowWeekLabelDesc: "Write the calendar week on the line itself, centered on an elliptical plate in the card's background color. The number follows your Home Assistant first-day-of-week setting, the same one that decides where the lines fall.",
+        separatorShowMonthLabel: "Show month",
+        separatorShowMonthLabelDesc: "Write the month on the line itself, centered on an elliptical plate in the card's background color, so the rule breaks around the text instead of running through it.",
+        separatorLabelColor: "Label color",
+        separatorLabelColorDesc: "Color of the label's text. Left empty it follows the theme's own text color, the same one the card title uses.",
+        separatorLabelBackground: "Label background",
+        separatorLabelBackgroundDesc: "Color of the plate behind the label - this is what hides the line under it. Left empty it is the card's own background color, so the label reads as a gap in the rule.",
+        separatorLabelFontDesc: "Size of the label's text, e.g. \"0.8em\" or \"11px\". Left empty it is 0.75em, relative to the card's own font size, plus the four style toggles and the letter spacing below.",
+        accentBarWidthDesc: "Thickness of the bar, e.g. \"3px\". Left empty it is 3px. Add the Accent bar column above to show it at all.",
+        accentBarColorDesc: "Default color for the bar. The event type and the row's status can each override it.",
         whenClickShowsDate: "Tap countdown for date",
         whenClickShowsDateDesc:
           "Tapping a row's countdown swaps it for the event's actual date (e.g. \"Mon, 3 Aug 2026\"), tapping again swaps back - the row's own tap/hold action still works everywhere else in the row.",
@@ -364,41 +386,35 @@
         visibilityTodoOnly: "Open to-dos only",
         visibilityTodoOnlyDesc:
           "Only show events that still have an open to-do item (see To-dos under Settings → Events). Narrows the two filters above rather than joining them: with VIP only also on, this shows the VIP events that still have something to do.",
-        vipBadgeIcon: "VIP badge icon",
-        vipBadgeIconDesc: "MDI icon shown as a small badge on the icon of VIP-flagged events",
+        badgesHeading: "Badges",
+        badgeTargetIcon: "Event icon",
+        badgeTargetIconDesc: "Draw this badge in the corner of the row's event icon.",
+        badgeTargetAccentBar: "Accent bar",
+        badgeTargetAccentBarDesc: "Draw this badge in the stack left of the Accent bar, centered against the row. Needs the Accent bar column.",
+        badgeColor: "Badge color",
+        badgeColorDesc: "Color of the symbol inside the badge.",
+        badgeBgColor: "Badge background color",
+        badgeBgColorDesc: "Color of the disc behind the symbol.",
+        vipBadgeIcon: "Badge icon",
+        vipBadgeIconDesc: "MDI icon used as the badge on VIP-flagged events.",
         vipBadgeIconPlaceholder: "mdi:star",
-        importantBadgeIcon: "Important badge icon",
-        importantBadgeIconDesc: "MDI icon shown as a small badge on the icon of events automatically flagged as important",
+        importantBadgeIcon: "Badge icon",
+        importantBadgeIconDesc: "MDI icon used as the badge on events automatically flagged as important.",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
-        todoBadgeIcon: "To-do badge icon",
-        todoBadgeIconDesc:
-          "MDI icon shown as a small badge on the icon of events with a still-open to-do item (see To-dos under Events)",
-        todoBadgeColorList: "Badge color (List)",
-        todoBadgeColorListDesc: "Color of that badge in the List layout - defaults to the theme's red",
-        todoBadgeColorTimeline: "Badge color (Timeline)",
+        todoBadgeIcon: "Badge icon",
+        todoBadgeIconDesc: "MDI icon used as the badge on events with a still-open to-do item (see To-dos under Events).",
         todoBadgeColorTimelineDesc: "Color of that badge in the Timeline layout - defaults to the theme's red",
         highlightHeading: "Highlight",
         highlightPast: "Past events",
-        highlightPastDesc: "Tint the row background for events that already happened",
-        highlightToday: "Today's events",
-        highlightTodayDesc: "Tint the row background for events happening today",
-        highlightSoon: "Upcoming soon",
-        highlightSoonDesc: "Tint the row background for events within the “soon” threshold",
         highlightBgColor: "Background color",
         highlightBgColorDesc: "Background tint color for this highlight",
         highlightVip: "VIP events",
-        highlightVipDesc: "Show a badge on the icon of VIP-flagged events",
+        highlightVipDesc: "Show a badge on VIP-flagged events.",
         highlightImportant: "Important events",
-        highlightImportantDesc: "Show a badge on the icon of events automatically flagged as important",
+        highlightImportantDesc: "Show a badge on events automatically flagged as important.",
         highlightTodo: "To-do tasks",
-        highlightTodoDesc: "Show a badge on the icon of events with a still-open to-do item",
-        vipBadgeColorList: "Badge color (List)",
-        vipBadgeColorListDesc: "Color of that badge in the List layout - defaults to the theme's red",
-        vipBadgeColorTimeline: "Badge color (Timeline)",
-        vipBadgeColorTimelineDesc: "Color of that badge in the Timeline layout - defaults to white",
-        importantBadgeColorList: "Badge color (List)",
-        importantBadgeColorListDesc: "Color of that badge in the List layout - defaults to the theme's amber",
-        importantBadgeColorTimeline: "Badge color (Timeline)",
+        highlightTodoDesc: "Show a badge on events with a still-open to-do item.",
+        vipBadgeColorTimelineDesc: "Color of that badge in the Timeline layout - defaults to the theme's red",
         importantBadgeColorTimelineDesc:
           "Color of that badge in the Timeline layout - defaults to the theme's amber",
         colors: "Colors",
@@ -422,16 +438,43 @@
         cardBackgroundSizeRepeat: "Repeat (tile)",
         cardBackgroundOpacity: "Opacity",
         cardBackgroundOpacityDesc: "Opacity of the background color/image, in percent",
-        colorsIconsHeading: "Icons",
-        colorsLabelsHeading: "Labels",
+        statusHeading: "Event status",
+        statusTimelineIconColorDesc: "This status' dot and glyphs on the timeline.",
+        statusEntryTextColor: "Entry text color",
+        statusEntryTextColorDesc: "This status' text on the timeline. Empty takes this status' own color.",
+        typeRowColor: "Whole row color",
+        typeRowColorDesc: "Color for the row's text when Whole row is on. Empty takes this type's own color.",
+        typeEntryColor: "Entry text color",
+        typeEntryColorDesc: "Color for the event's text in the timeline when Entry text is on. Empty takes this type's own color.",
+        typeBarColor: "Accent bar color",
+        typeBarColorDesc: "Color for the accent bar when Accent bar is on. Empty takes this type's own color.",
+        typeIconColor: "Icon color",
+        typeIconColorDesc: "Color for the icon - the row's in the list, the dot on the timeline. Empty takes this type's own color.",
+        typeAnimationDesc: "Animation for this event type's icons, overriding the Icon block's own in Design. Left at None it follows that default. A status can override it again.",
+        rowTargetTimeline: "Entry text",
+        rowTargetTimelineDesc: "Give the event's text in the list under the axis this color too, not just its dot.",
+        fontLetterSpacingDesc: "Space between the letters, e.g. 0.05em or 1px. Empty leaves the font's own spacing.",
+        lineStyleDesc: "Whether the line is drawn solid, dashed or dotted.",
+        designLineBlockDesc: "The line's width, stroke style and color.",
+        statusOverrideHint: "Off, the event type's color or the Design default applies.",
+        designIconBlockDesc: "The default color and animation for the card's icons. Every event type and every status falls back to these unless it overrides them.",
+        designBarBlockDesc: "The bar's default color and its width.",
+        designElementDesc: "Everything that styles this part of the card: its color, its font and the switches below.",
+        designGroupDesc: "The lines this column is made of. Each one is styled on its own below.",
+        statusTextColor: "Whole text color",
+        statusTextColorDesc: "The row's text, apart from its icon and accent bar. Empty takes this status' own color.",
+        statusIconAnimation: "Icon animation",
+        statusIconAnimationDesc: "The icon's animation. Off, the Design default applies.",
+        designIconColorDesc: "Default color for the row's icon. Every status falls back to it unless it overrides it.",
+        statusPastDesc: "Events that have already been and gone.",
+        statusIconColor: "Icon color",
+        statusIconColorDesc: "The row's icon.",
+        statusBarColor: "Accent bar color",
+        statusBarColorDesc: "The row's accent bar. Empty follows the icon color.",
         colorToday: "Today",
         colorSoon: "Soon",
-        colorAccent: "Default",
-        colorTodayDesc: "Icon color for today's events",
-        colorSoonDesc: "Icon color for events within the “soon” threshold",
-        iconVisibleLabel: "Show icon",
-        iconVisibleDesc: "Show or hide the icon for this category",
-        colorAccentDesc: "Icon color for events with no special status",
+        colorTodayDesc: "Events happening today.",
+        colorSoonDesc: "Events within the \"soon\" threshold.",
         animationLabel: "Animation",
         animationDesc: "Add a looping animation to this icon",
         animationNone: "None",
@@ -440,23 +483,39 @@
         animationShake: "Shake",
         animationSpin: "Spin",
         animationFlash: "Flash",
-        matchTextLabel: "Also color the text",
-        matchTextDesc: "Also color the whole row's text with this icon color",
+        rowColorsLabel: "Design rows by event type",
+        rowColorsDesc: "Let each event type carry its own design - its color, and which parts of a row or timeline entry it paints - instead of the Design defaults. A row's status can still override it.",
+        calendarColorsHeading: "Embedded calendars",
+        calendarColorDesc: "Color for this calendar - its rows in the list, its dot on the timeline. Left empty, the color Home Assistant itself stores for the calendar is used.",
+        eventTypeRowColorDesc: "Color for this event type - its rows in the list, its dot on the timeline. In the list, the switches beside it choose which parts of a row it paints.",
+        rowTargetIcon: "Icon",
+        rowTargetIconDesc: "Color this type's icon.",
+        rowTargetAccentBar: "Accent bar",
+        rowTargetAccentBarDesc: "Color this type's accent bar.",
+        rowTargetRow: "Whole row",
+        rowTargetRowDesc: "Color the whole row, its text included - and with it the icon and the accent bar, whatever their own switches say.",
         colorName: "Name",
         colorType: "Type",
+        combinedFontDesc: "Size and style for this line of the combined column.",
+        combinedColorDesc: "Color for this line of the combined column.",
         colorBadge: "Occurrence",
         colorWhen: "Countdown",
         colorText: "Custom text",
         colorDate: "Date",
-        colorCalendar: "Calendar fields",
+        dateBlockWeekday: "Weekday",
+        dateBlockDay: "Day",
+        dateBlockMonth: "Month",
+        dateBlockFontDesc: "Only affects the Date block column. Sizes are relative to the card's own font size - 0.75 / 1.5 / 0.75 when left empty.",
+        dateBlockColorDesc: "Only affects the Date block column. Left empty, the weekday and month take the theme's secondary text color and the day its primary one.",
+        colorCalendar: "External calendar fields",
         colorDateDesc:
           "Text color for the Date column",
         colorCalendarDesc:
-          "Text color for the Time, Location and Description columns - external calendar events only",
+          "Only affects events from external calendars. Left empty, each line takes the theme's secondary text color.",
         fontDateDesc:
           "Font size for the Date column (see Row columns in Layout -> Display)",
         fontCalendarDesc:
-          "Font size for the Time, Location and Description columns - external calendar events only",
+          "Only affects events from external calendars. Sizes are relative to the card's own font size.",
         cardTitleColorDesc: "Text color for the card's own title",
         colorNameDesc: "Text color for the event name",
         colorLastName: "Last name",
@@ -515,14 +574,20 @@
         panelSettings: "Settings",
         panelSettingsDesc: "General, events, and time period",
         panelLayout: "Layout",
-        panelLayoutDesc: "Display, fonts, colors, icons, card background and timeline",
+        panelLayoutDesc: "General, list and timeline view, design, highlight and card background",
         groupGeneral: "General",
         groupGeneralDesc: "",
         groupEvents: "Events",
         groupEventsDesc: "",
         groupPeriod: "Time period",
         groupPeriodDesc: "",
-        groupDisplay: "Display",
+        groupDisplay: "General",
+        groupListView: "List view",
+        groupListViewDesc:
+          "Only used when Layout style is set to List.",
+        groupDesign: "Design",
+        designColor: "Color",
+        designFont: "Font",
         groupDisplayDesc: "",
       },
     },
@@ -537,6 +602,10 @@
       multiDayEnd: "Ende",
       multiDayDay: "Tag {day}",
       noEvents: "Keine anstehenden Ereignisse",
+      // The Week separator's own label (see separatorLabelText) - the word
+      // this language actually uses for a calendar week, which no Intl format
+      // supplies. {week} is the number.
+      separatorWeekLabel: "KW {week}",
       todoCompleteConfirm: '„{item}“ als erledigt markieren?',
       todoCompleteConfirmMultiple: "Alle {count} To-do-Einträge dieses Ereignisses als erledigt markieren?",
       todoCompleteFailed: "Dieser To-do-Eintrag konnte nicht abgehakt werden.",
@@ -671,8 +740,7 @@
         holidayDateObserved: "Nachgeholt",
         holidayMergeObserved: "Nachgeholtes Datum bevorzugen",
         holidayMergeRegions: "Länderübergreifend gleiche Feiertage zusammenfassen",
-        holidayMergeRegionsDesc:
-          "Eine Zeile pro Feiertag statt einer pro Land, mit allen Regionen, die ihn begehen. Gruppiert wird nach Datum und nach dem Namen, unter dem der Feiertag tatsächlich erscheint - zwei verschiedene Feiertage am selben Tag bleiben also getrennt, und Länder mit abweichender Schreibweise verschmelzen erst, wenn du ihnen denselben Namen gegeben hast (siehe „Name und Übersetzungen“ beim Feiertag selbst).",
+        holidayMergeRegionsDesc: "Ein Eintrag pro Feiertag statt einer pro Land, mit allen Regionen, die ihn begehen. Gruppiert nach Datum und nach dem Namen, unter dem der Feiertag tatsächlich erscheint - so bleiben zwei verschiedene Feiertage am selben Tag getrennt, und Länder mit abweichender Schreibweise werden erst zusammengefasst, wenn du ihnen denselben Namen gegeben hast (siehe Name und Übersetzungen in den Einstellungen des Feiertags).",
         regionFormat: "Regionsformat",
         regionFormatDesc: "Wie Land und Region eines Feiertags geschrieben werden, überall wo sie erscheinen.",
         regionFormatShort: "US (CA)",
@@ -733,7 +801,7 @@
         moreActionDesc:
           "Was die Schaltfläche „Mehr“ unten rechts in der Timeline auslöst. Üblicherweise eine Navigations-Aktion zu einem Dashboard, das dieselben Ereignisse im vollständigen Listen-Layout zeigt. Bei „Nichts“ wird die Schaltfläche ausgeblendet.",
         groupTimeline: "Timeline",
-        groupTimelineDesc: "Wird nur verwendet, wenn unter Anzeige als Kartenlayout „Timeline“ ausgewählt ist.",
+        groupTimelineDesc: "Wird nur verwendet, wenn als Kartenlayout „Timeline“ ausgewählt ist.",
         timelineHeaderLabel: "Kopfzeile",
         timelineHeaderFontDesc:
           "Schrift für die Beschreibungszeile über der Achse, z. B. „Kevins 27. Geburtstag ist heute“.",
@@ -750,15 +818,14 @@
         eventTypesHeading: "Ereignistypen",
         eventTypeColorDesc: "Farbe für Icon und Punkt dieses Ereignistyps auf der Timeline.",
         visibilityHeading: "Ein- und ausblenden",
-        visibilityPast: "Vergangene Ereignisse",
-        visibilityPastDesc: "Vergangene Ereignisse innerhalb des eingestellten Zeitraums in der Liste anzeigen",
-        visibilityToday: "Heutige Ereignisse",
-        visibilityTodayDesc: "Heutige Ereignisse in der Liste anzeigen",
-        visibilitySoon: "Baldige Ereignisse",
-        visibilitySoonDesc: "Ereignisse innerhalb der „Bald“-Schwelle in der Liste anzeigen",
-        visibilityCardTitleDesc: "Kartentitel in der Karte anzeigen",
         hideCardTitle: "Ausblenden",
         hideCardTitleDesc: "Eigenen Kartentitel ausblenden, auch wenn oben einer gesetzt ist",
+        noEventsText: "Text ohne Ereignisse",
+        noEventsTextDesc:
+          "Was die Karte anzeigt, wenn nichts aufzulisten ist (leer lassen für den Standardtext).",
+        noEventsLabel: "Keine Ereignisse",
+        noEventsColorDesc: "Textfarbe der Zeile, die die Karte anzeigt, wenn nichts aufzulisten ist.",
+        noEventsFontDesc: "Schrift der Zeile, die die Karte anzeigt, wenn nichts aufzulisten ist.",
         tapAction: "Aktion beim Antippen",
         tapActionDesc: "Was passiert, wenn eine Zeile angetippt oder angeklickt wird",
         holdAction: "Aktion beim Gedrückthalten",
@@ -774,14 +841,13 @@
         cardLanguageDesc:
           "Legt diese Karte für alle Betrachter auf eine Sprache fest, statt der jeweiligen Profilsprache zu folgen. Betrifft die Texte der Karte und die Datumsformatierung gleichermaßen - nicht die Ereignisnamen selbst, die aus der Integration kommen. Dieser Editor folgt in jedem Fall weiterhin deiner eigenen Sprache.",
         cardLanguageAuto: "Automatisch",
-        visibilityIcon: "Icon",
-        visibilityIconDesc: "Symbol vor jeder Zeile anzeigen",
-        visibilityNameDesc: "Namen des Ereignisses anzeigen",
-        visibilityTypeDesc: "Ereignistyp anzeigen",
-        visibilityCountrySuffix: "Feiertagssuffix",
         visibilityCountrySuffixDesc: "Land (und ggf. Bundesland/Provinz) hinter dem Namen/Typ des Feiertags anhängen, z. B. „Tag der Deutschen Einheit · DE (BY)“",
         columnsHeading: "Zeilenspalten",
-        columnsDesc: "Lege fest, was jede Zeile anzeigt, und in welcher Reihenfolge. Eigene Textspalten können freien Text mit Platzhaltern kombinieren: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
+        columnsDesc:
+          "Lege fest, was jede Zeile anzeigt, und in welcher Reihenfolge - oder beginne mit einer dieser Vorlagen.",
+        columnsPresetDefault: "Standard",
+        columnsPresetAgenda: "Agenda",
+        columnsPresetMinimal: "Minimal",
         columnTypeIcon: "Icon",
         columnTypeInfo: "Name + Typ",
         columnTypeName: "Name",
@@ -791,6 +857,8 @@
         columnTypeType: "Typ",
         columnTypeText: "Freier Text",
         columnTypeDate: "Datum",
+        columnTypeDateBlock: "Datumsblock",
+        columnTypeAccentBar: "Akzentbalken",
         columnTypeTime: "Uhrzeit",
         columnTypeLocation: "Ort",
         columnTypeDescription: "Beschreibung",
@@ -807,8 +875,7 @@
         suffixShowHolidayTypeDesc:
           "Die Typ-Bezeichnung eines Feiertags anzeigen, z. B. \u201eHoliday (Public)\u201c. Ausschalten, damit in dieser Zelle nur noch der Land-/Regions-Zusatz steht.",
         multiDayDisplay: "Mehrtägige Ereignisse",
-        multiDayDisplayDesc:
-          "Wie ein einmaliges Ereignis über mehrere Tage - eine Urlaubsreise, eine Tagung - aufgeführt wird. Betrifft nur Ereignisse, die wirklich ein Enddatum haben; alles andere bleibt eine Zeile.",
+        multiDayDisplayDesc: "Wie ein einmaliges Ereignis über mehrere Tage - eine Urlaubsreise, eine Konferenz - dargestellt wird. Betrifft nur Ereignisse, die tatsächlich ein Enddatum haben; alles andere ist ohnehin ein einzelner Eintrag.",
         multiDayStartOnly: "Nur der erste Tag",
         multiDayEndOnly: "Nur der letzte Tag",
         multiDayStartEnd: "Erster und letzter Tag",
@@ -834,11 +901,31 @@
         columnMoveDown: "Nach unten",
         columnRemove: "Entfernen",
         columnTemplatePlaceholder: "z. B. {name} wird heute {occurrence}",
-        columnColor: "Farbe",
         columnsCompact: "Kompakt (kein Abstand, zentriert)",
         columnsCompactDesc: "Entfernt den Abstand zwischen den Spalten, zentriert die Zeile und gleicht Schriftstärke und Deckkraft aller Felder an - nützlich, wenn die Spalten einen zusammenhängenden Satz ergeben.",
-        visibilityBadgeDesc: "Jubiläums-Badge anzeigen",
-        visibilityWhenDesc: "Zeitangabe (Countdown) anzeigen",
+        monthSeparators: "Monatstrenner",
+        monthSeparatorsDesc: "Zeichnet überall dort eine Linie, wo aufeinanderfolgende Zeilen in verschiedene Monate fallen, und teilt eine lange Liste so in Monatsblöcke. An der Reihenfolge der Zeilen selbst ändert sich nichts.",
+        weekSeparators: "Wochentrenner",
+        weekSeparatorsDesc: "Dasselbe eine Stufe feiner: eine Linie überall dort, wo aufeinanderfolgende Zeilen in verschiedene Wochen fallen, nach der Einstellung „Erster Wochentag“ in Home Assistant. Sind auch die Monatstrenner an, bekommt eine Zeile, die beides beginnt, nur eine Linie.",
+        daySeparators: "Tagestrenner",
+        daySeparatorsDesc: "Eine Linie überall dort, wo aufeinanderfolgende Zeilen auf verschiedene Tage fallen, und teilt die Liste so in einen Block je Tag. Die feinste der drei Stufen - sind auch Wochen- oder Monatstrenner an, bekommt eine Zeile, die zwei davon beginnt, nur die gröbere Linie.",
+        separatorWidth: "Breite",
+        separatorWidthDesc: "Dicke der Linie, z. B. „1px“. Leer gelassen sind es 1px.",
+        separatorColor: "Farbe",
+        separatorColorDesc: "Farbe der Linie. Leer gelassen folgt sie der Textfarbe des Themes, derselben wie beim Kartentitel.",
+        separatorShowDayLabel: "Wochentag anzeigen",
+        separatorShowDayLabelDesc: "Schreibt den Wochentag mittig auf die Linie selbst, auf eine elliptische Fläche in der Hintergrundfarbe der Karte, sodass die Linie um den Text herum unterbrochen wird statt hindurchzulaufen.",
+        separatorShowWeekLabel: "Kalenderwoche anzeigen",
+        separatorShowWeekLabelDesc: "Schreibt die Kalenderwoche mittig auf die Linie selbst, auf eine elliptische Fläche in der Hintergrundfarbe der Karte. Die Nummer folgt der Einstellung „Erster Wochentag“ in Home Assistant, derselben, die auch bestimmt, wo die Linien liegen.",
+        separatorShowMonthLabel: "Monat anzeigen",
+        separatorShowMonthLabelDesc: "Schreibt den Monat mittig auf die Linie selbst, auf eine elliptische Fläche in der Hintergrundfarbe der Karte, sodass die Linie um den Text herum unterbrochen wird statt hindurchzulaufen.",
+        separatorLabelColor: "Textfarbe",
+        separatorLabelColorDesc: "Farbe der Beschriftung. Leer gelassen folgt sie der Textfarbe des Themes, derselben wie beim Kartentitel.",
+        separatorLabelBackground: "Hintergrundfarbe",
+        separatorLabelBackgroundDesc: "Farbe der Fläche hinter der Beschriftung – sie ist es, die die Linie darunter verdeckt. Leer gelassen ist es die Hintergrundfarbe der Karte, sodass die Beschriftung wie eine Lücke in der Linie wirkt.",
+        separatorLabelFontDesc: "Größe der Beschriftung, z. B. „0.8em“ oder „11px“. Leer gelassen sind es 0.75em, bezogen auf die Schriftgröße der Karte – dazu die vier Stilschalter und die Laufweite darunter.",
+        accentBarWidthDesc: "Dicke des Balkens, z. B. „3px“. Leer gelassen sind es 3px. Damit er überhaupt erscheint, füge oben die Spalte Akzentbalken hinzu.",
+        accentBarColorDesc: "Standardfarbe des Balkens. Ereignistyp und Zeilenstatus können sie jeweils überschreiben.",
         whenClickShowsDate: "Datum per Klick auf Countdown",
         whenClickShowsDateDesc:
           "Ein Klick auf den Countdown einer Zeile zeigt stattdessen das tatsächliche Datum (z. B. „Mo., 3. Aug. 2026“), ein erneuter Klick schaltet zurück - die Tipp-/Halte-Aktion der Zeile funktioniert im Rest der Zeile weiterhin.",
@@ -852,42 +939,35 @@
         visibilityTodoOnly: "Nur offene To-dos",
         visibilityTodoOnlyDesc:
           "Nur Ereignisse anzeigen, die noch ein offenes To-do haben (siehe To-dos unter Einstellungen → Ereignisse). Schränkt die beiden Filter darüber weiter ein, statt sich mit ihnen zu vereinen: zusammen mit „Nur VIP“ werden die VIP-Ereignisse gezeigt, bei denen noch etwas zu tun ist.",
-        vipBadgeIcon: "VIP-Badge-Icon",
-        vipBadgeIconDesc: "MDI-Icon, das als kleines Badge auf dem Icon von VIP-Ereignissen angezeigt wird",
+        badgesHeading: "Badges",
+        badgeTargetIcon: "Ereignis-Icon",
+        badgeTargetIconDesc: "Zeichnet dieses Badge in die Ecke des Zeilen-Icons.",
+        badgeTargetAccentBar: "Akzentbalken",
+        badgeTargetAccentBarDesc: "Zeichnet dieses Badge in die Spalte links vom Akzentbalken, mittig zur Zeile. Erfordert die Spalte Akzentbalken.",
+        badgeColor: "Badge-Farbe",
+        badgeColorDesc: "Farbe des Symbols im Badge.",
+        badgeBgColor: "Badge-Hintergrundfarbe",
+        badgeBgColorDesc: "Farbe der Fläche hinter dem Symbol.",
+        vipBadgeIcon: "Badge-Icon",
+        vipBadgeIconDesc: "MDI-Icon, das als Badge bei VIP-Ereignissen verwendet wird.",
         vipBadgeIconPlaceholder: "mdi:star",
-        importantBadgeIcon: "Important-Badge-Icon",
-        importantBadgeIconDesc:
-          "MDI-Icon, das als kleines Badge auf dem Icon von automatisch als wichtig markierten Ereignissen angezeigt wird",
+        importantBadgeIcon: "Badge-Icon",
+        importantBadgeIconDesc: "MDI-Icon, das als Badge bei automatisch als wichtig gekennzeichneten Ereignissen verwendet wird.",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
-        todoBadgeIcon: "To-do-Badge-Icon",
-        todoBadgeIconDesc:
-          "MDI-Icon, das als kleines Badge auf dem Icon von Ereignissen mit einem noch offenen To-do angezeigt wird (siehe To-dos unter Ereignisse)",
-        todoBadgeColorList: "Badge-Farbe (Liste)",
-        todoBadgeColorListDesc: "Farbe dieses Badges im Listen-Layout - standardmäßig das Rot des Themes",
-        todoBadgeColorTimeline: "Badge-Farbe (Timeline)",
+        todoBadgeIcon: "Badge-Icon",
+        todoBadgeIconDesc: "MDI-Icon, das als Badge bei Ereignissen mit noch offener Aufgabe verwendet wird (siehe To-dos unter Ereignisse).",
         todoBadgeColorTimelineDesc: "Farbe dieses Badges im Timeline-Layout - standardmäßig das Rot des Themes",
         highlightHeading: "Hervorheben",
         highlightPast: "Vergangene Ereignisse",
-        highlightPastDesc: "Zeilenhintergrund für bereits vergangene Ereignisse einfärben",
-        highlightToday: "Heutige Ereignisse",
-        highlightTodayDesc: "Zeilenhintergrund für heutige Ereignisse einfärben",
-        highlightSoon: "Baldige Ereignisse",
-        highlightSoonDesc: "Zeilenhintergrund für Ereignisse innerhalb der „Bald“-Schwelle einfärben",
         highlightBgColor: "Hintergrundfarbe",
         highlightBgColorDesc: "Hintergrund-Einfärbung für dieses Highlight",
         highlightVip: "VIP Events",
-        highlightVipDesc: "Badge auf dem Icon von VIP-Ereignissen anzeigen",
+        highlightVipDesc: "Zeigt ein Badge bei Ereignissen mit VIP-Kennzeichnung.",
         highlightImportant: "Important Events",
-        highlightImportantDesc: "Badge auf dem Icon von automatisch als wichtig markierten Ereignissen anzeigen",
+        highlightImportantDesc: "Zeigt ein Badge bei Ereignissen, die automatisch als wichtig gekennzeichnet sind.",
         highlightTodo: "To-do Tasks",
-        highlightTodoDesc: "Badge auf dem Icon von Ereignissen mit einem noch offenen To-do anzeigen",
-        vipBadgeColorList: "Badge-Farbe (Liste)",
-        vipBadgeColorListDesc: "Farbe dieses Badges im Listen-Layout - standardmäßig das Rot des Themes",
-        vipBadgeColorTimeline: "Badge-Farbe (Timeline)",
-        vipBadgeColorTimelineDesc: "Farbe dieses Badges im Timeline-Layout - standardmäßig Weiß",
-        importantBadgeColorList: "Badge-Farbe (Liste)",
-        importantBadgeColorListDesc: "Farbe dieses Badges im Listen-Layout - standardmäßig das Bernstein des Themes",
-        importantBadgeColorTimeline: "Badge-Farbe (Timeline)",
+        highlightTodoDesc: "Zeigt ein Badge bei Ereignissen mit einer noch offenen Aufgabe.",
+        vipBadgeColorTimelineDesc: "Farbe dieses Badges im Timeline-Layout - standardmäßig das Rot des Themes",
         importantBadgeColorTimelineDesc:
           "Farbe dieses Badges im Timeline-Layout - standardmäßig das Bernstein des Themes",
         colors: "Farben",
@@ -911,16 +991,43 @@
         cardBackgroundSizeRepeat: "Kacheln",
         cardBackgroundOpacity: "Deckkraft",
         cardBackgroundOpacityDesc: "Deckkraft von Farbe/Bild im Hintergrund, in Prozent",
-        colorsIconsHeading: "Icons",
-        colorsLabelsHeading: "Beschriftung",
+        statusHeading: "Ereignis-Status",
+        statusTimelineIconColorDesc: "Punkt und Glyphen dieses Status in der Timeline.",
+        statusEntryTextColor: "Farbe des Eintragstexts",
+        statusEntryTextColorDesc: "Der Text dieses Status in der Timeline. Leer nimmt die Farbe dieses Status.",
+        typeRowColor: "Farbe der ganzen Zeile",
+        typeRowColorDesc: "Farbe des Zeilentexts, wenn Ganze Zeile an ist. Leer nimmt die Farbe dieses Typs.",
+        typeEntryColor: "Farbe des Eintragstexts",
+        typeEntryColorDesc: "Farbe des Ereignistexts in der Timeline, wenn Eintragstext an ist. Leer nimmt die Farbe dieses Typs.",
+        typeBarColor: "Farbe des Akzentbalkens",
+        typeBarColorDesc: "Farbe des Akzentbalkens, wenn Akzentbalken an ist. Leer nimmt die Farbe dieses Typs.",
+        typeIconColor: "Farbe des Icons",
+        typeIconColorDesc: "Farbe des Icons - in der Liste das Zeilen-Icon, in der Timeline der Punkt. Leer nimmt die Farbe dieses Typs.",
+        typeAnimationDesc: "Animation für die Icons dieses Ereignistyps; überschreibt die des Icon-Blocks in Design. Auf Keine folgt sie diesem Standard. Ein Status kann sie erneut überschreiben.",
+        rowTargetTimeline: "Eintragstext",
+        rowTargetTimelineDesc: "Färbt auch den Text des Ereignisses in der Liste unter der Achse in dieser Farbe, nicht nur seinen Punkt.",
+        fontLetterSpacingDesc: "Abstand zwischen den Buchstaben, z. B. 0.05em oder 1px. Leer lässt den Abstand der Schrift.",
+        lineStyleDesc: "Ob die Linie durchgezogen, gestrichelt oder gepunktet gezeichnet wird.",
+        designLineBlockDesc: "Breite, Strichart und Farbe der Linie.",
+        statusOverrideHint: "Aus gilt die Farbe des Ereignistyps oder der Standard aus Design.",
+        designIconBlockDesc: "Standardfarbe und -animation für die Icons der Karte. Jeder Ereignistyp und jeder Status greift darauf zurück, solange er sie nicht überschreibt.",
+        designBarBlockDesc: "Standardfarbe des Balkens und seine Breite.",
+        designElementDesc: "Alles, was diesen Teil der Karte gestaltet: Farbe, Schrift und die Schalter darunter.",
+        designGroupDesc: "Die Zeilen, aus denen diese Spalte besteht. Jede wird darunter einzeln gestaltet.",
+        statusTextColor: "Farbe des gesamten Texts",
+        statusTextColorDesc: "Der Zeilentext, ohne Icon und Akzentbalken. Leer nimmt die Farbe dieses Status.",
+        statusIconAnimation: "Icon-Animation",
+        statusIconAnimationDesc: "Die Animation des Icons. Aus gilt der Standard aus Design.",
+        designIconColorDesc: "Standardfarbe des Zeilen-Icons. Jeder Status greift darauf zurück, solange er sie nicht überschreibt.",
+        statusPastDesc: "Ereignisse, die bereits vorbei sind.",
+        statusIconColor: "Icon-Farbe",
+        statusIconColorDesc: "Das Icon der Zeile.",
+        statusBarColor: "Akzentbalken-Farbe",
+        statusBarColorDesc: "Der Akzentbalken der Zeile. Leer folgt der Icon-Farbe.",
         colorToday: "Heute",
         colorSoon: "Demnächst",
-        colorAccent: "Standard",
-        colorTodayDesc: "Icon-Farbe für heutige Ereignisse",
-        colorSoonDesc: "Icon-Farbe für Ereignisse innerhalb der „Bald“-Schwelle",
-        iconVisibleLabel: "Icon anzeigen",
-        iconVisibleDesc: "Icon für diese Kategorie ein- oder ausblenden",
-        colorAccentDesc: "Icon-Farbe für Ereignisse ohne besonderen Status",
+        colorTodayDesc: "Ereignisse, die heute stattfinden.",
+        colorSoonDesc: "Ereignisse innerhalb der Schwelle „Demnächst“.",
         animationLabel: "Animation",
         animationNone: "Keine",
         animationPulse: "Pulsieren",
@@ -929,23 +1036,39 @@
         animationSpin: "Drehen",
         animationFlash: "Blinken",
         animationDesc: "Dem Icon eine wiederkehrende Animation hinzufügen",
-        matchTextLabel: "Auch den Text einfärben",
-        matchTextDesc: "Auch den gesamten Zeilentext in dieser Icon-Farbe einfärben",
+        rowColorsLabel: "Zeilen nach Ereignistyp gestalten",
+        rowColorsDesc: "Gibt jedem Ereignistyp seine eigene Gestaltung - Farbe und welche Teile einer Zeile oder eines Timeline-Eintrags sie färbt - statt der Standards aus Design. Der Status einer Zeile kann sie weiterhin überschreiben.",
+        calendarColorsHeading: "Eingebundene Kalender",
+        calendarColorDesc: "Farbe für diesen Kalender - seine Zeilen in der Liste, seinen Punkt in der Timeline. Leer gelassen wird die Farbe verwendet, die Home Assistant selbst für den Kalender speichert.",
+        eventTypeRowColorDesc: "Farbe für diesen Ereignistyp - seine Zeilen in der Liste, seinen Punkt in der Timeline. In der Liste bestimmen die Schalter daneben, welche Teile einer Zeile sie färbt.",
+        rowTargetIcon: "Icon",
+        rowTargetIconDesc: "Färbt das Icon dieses Typs.",
+        rowTargetAccentBar: "Akzentbalken",
+        rowTargetAccentBarDesc: "Färbt den Akzentbalken dieses Typs.",
+        rowTargetRow: "Ganze Zeile",
+        rowTargetRowDesc: "Färbt die ganze Zeile samt Text - und damit auch Icon und Akzentbalken, unabhängig von deren eigenen Schaltern.",
         colorName: "Name",
         colorType: "Typ",
+        combinedFontDesc: "Größe und Stil für diese Zeile der kombinierten Spalte.",
+        combinedColorDesc: "Farbe für diese Zeile der kombinierten Spalte.",
         colorBadge: "Jubiläum",
         colorWhen: "Countdown",
         colorText: "Freier Text",
         colorDate: "Datum",
-        colorCalendar: "Kalenderfelder",
+        dateBlockWeekday: "Wochentag",
+        dateBlockDay: "Tag",
+        dateBlockMonth: "Monat",
+        dateBlockFontDesc: "Betrifft nur die Spalte Datumsblock. Die Größen sind relativ zur Schriftgröße der Karte - 0,75 / 1,5 / 0,75, wenn leer.",
+        dateBlockColorDesc: "Betrifft nur die Spalte Datumsblock. Leer gelassen nehmen Wochentag und Monat die sekundäre Textfarbe des Themes, der Tag die primäre.",
+        colorCalendar: "Externe Kalenderfelder",
         colorDateDesc:
           "Textfarbe für die Datums-Spalte",
         colorCalendarDesc:
-          "Textfarbe für die Spalten Zeit, Ort und Beschreibung - nur für Ereignisse aus externen Kalendern",
+          "Betrifft nur Ereignisse aus externen Kalendern. Leer gelassen, nimmt jede Zeile die sekundäre Textfarbe des Themes.",
         fontDateDesc:
           "Schriftgröße für die Datums-Spalte (siehe Zeilenspalten unter Layout -> Anzeige)",
         fontCalendarDesc:
-          "Schriftgröße für die Spalten Zeit, Ort und Beschreibung - nur für Ereignisse aus externen Kalendern",
+          "Betrifft nur Ereignisse aus externen Kalendern. Größen sind relativ zur Schriftgröße der Karte.",
         cardTitleColorDesc: "Textfarbe für den Kartentitel",
         colorNameDesc: "Textfarbe für den Namen des Ereignisses",
         colorLastName: "Nachname",
@@ -1004,14 +1127,20 @@
         panelSettings: "Einstellungen",
         panelSettingsDesc: "Allgemein, Ereignisse und Zeitraum",
         panelLayout: "Layout",
-        panelLayoutDesc: "Anzeige, Schriften, Farben, Icons, Kartenhintergrund und Timeline",
+        panelLayoutDesc: "Allgemein, Listen- und Timeline-Ansicht, Design, Hervorheben und Kartenhintergrund",
         groupGeneral: "Allgemein",
         groupGeneralDesc: "",
         groupEvents: "Ereignisse",
         groupEventsDesc: "",
         groupPeriod: "Zeitraum",
         groupPeriodDesc: "",
-        groupDisplay: "Anzeige",
+        groupDisplay: "Allgemein",
+        groupListView: "Listenansicht",
+        groupListViewDesc:
+          "Wird nur verwendet, wenn als Kartenlayout „Liste“ ausgewählt ist.",
+        groupDesign: "Design",
+        designColor: "Farbe",
+        designFont: "Schrift",
         groupDisplayDesc: "",
       },
     },
@@ -1026,6 +1155,10 @@
       multiDayEnd: "fin",
       multiDayDay: "jour {day}",
       noEvents: "Aucun événement à venir",
+      // The Week separator's own label (see separatorLabelText) - the word
+      // this language actually uses for a calendar week, which no Intl format
+      // supplies. {week} is the number.
+      separatorWeekLabel: "Sem. {week}",
       todoCompleteConfirm: 'Marquer « {item} » comme terminé ?',
       todoCompleteConfirmMultiple: "Marquer les {count} tâches de cet événement comme terminées ?",
       todoCompleteFailed: "Impossible de terminer cette tâche.",
@@ -1148,8 +1281,7 @@
         holidayDateObserved: "Observée",
         holidayMergeObserved: "Préférer la date observée",
         holidayMergeRegions: "Fusionner les jours fériés communs à plusieurs pays",
-        holidayMergeRegionsDesc:
-          "Une ligne par jour férié au lieu d'une par pays, listant toutes les régions concernées. Le regroupement se fait par date et par le nom sous lequel le jour férié s'affiche réellement - deux jours fériés différents le même jour restent donc séparés, et des pays dont la formulation diffère ne fusionnent qu'une fois que vous leur avez donné le même nom (voir « Nom et traductions » sur le jour férié).",
+        holidayMergeRegionsDesc: "Une entrée par jour férié au lieu d'une par pays, listant toutes les régions qui le célèbrent. Regroupé par date et par le nom sous lequel le jour férié apparaît réellement - ainsi deux jours fériés différents le même jour restent séparés, et les pays dont la formulation diffère ne fusionnent qu'une fois que vous leur avez donné le même nom (voir Nom et traductions dans les réglages du jour férié).",
         regionFormat: "Format de région",
         regionFormatDesc: "Comment le pays et la région d'un jour férié sont écrits, partout où ils apparaissent.",
         regionFormatShort: "US (CA)",
@@ -1210,7 +1342,7 @@
         moreActionDesc:
           "Ce que fait le bouton « Plus » en bas à droite de la timeline. Généralement une action de navigation vers un tableau de bord affichant les mêmes événements dans le layout Liste complet. Laissez sur « Rien » pour masquer le bouton.",
         groupTimeline: "Timeline",
-        groupTimelineDesc: "Utilisé uniquement lorsque le style de mise en page (sous Affichage) est réglé sur Timeline.",
+        groupTimelineDesc: "Utilisé uniquement lorsque le style de mise en page est réglé sur Timeline.",
         timelineHeaderLabel: "En-tête",
         timelineHeaderFontDesc:
           "Police pour la ligne de description au-dessus de l'axe, par ex. « L'anniversaire de Kevin est aujourd'hui ».",
@@ -1227,15 +1359,14 @@
         eventTypesHeading: "Types d'événements",
         eventTypeColorDesc: "Couleur utilisée pour l'icône et le point de ce type d'événement sur la chronologie.",
         visibilityHeading: "Afficher / Masquer",
-        visibilityPast: "Événements passés",
-        visibilityPastDesc: "Afficher les événements dont l'anniversaire est déjà passé dans la période configurée",
-        visibilityToday: "Événements du jour",
-        visibilityTodayDesc: "Afficher les événements du jour",
-        visibilitySoon: "Bientôt",
-        visibilitySoonDesc: "Afficher les événements dans le seuil « bientôt »",
-        visibilityCardTitleDesc: "Afficher le titre propre de la carte",
         hideCardTitle: "Masquer",
         hideCardTitleDesc: "Masquer le titre propre de la carte, même s'il est défini ci-dessus",
+        noEventsText: "Texte sans événement",
+        noEventsTextDesc:
+          "Ce que la carte affiche lorsqu'elle n'a rien à lister (laisser vide pour le texte par défaut).",
+        noEventsLabel: "Aucun événement",
+        noEventsColorDesc: "Couleur du texte affiché lorsque la carte n'a rien à lister.",
+        noEventsFontDesc: "Police du texte affiché lorsque la carte n'a rien à lister.",
         tapAction: "Action au toucher",
         tapActionDesc: "Ce qui se passe lorsqu'une ligne est touchée ou cliquée",
         holdAction: "Action à l'appui long",
@@ -1251,14 +1382,13 @@
         cardLanguageDesc:
           "Fixe cette carte à une seule langue pour tous ceux qui la voient, au lieu de suivre la langue du profil de chacun. Affecte aussi bien le texte de la carte que le format des dates - pas les noms des événements eux-mêmes, qui viennent de l'intégration. Cet éditeur continue de suivre votre propre langue dans tous les cas.",
         cardLanguageAuto: "Automatique",
-        visibilityIcon: "Icône",
-        visibilityIconDesc: "Afficher l'icône du type devant chaque ligne",
-        visibilityNameDesc: "Afficher le nom de l'événement",
-        visibilityTypeDesc: "Afficher le type d'événement",
-        visibilityCountrySuffix: "Suffixe du jour férié",
         visibilityCountrySuffixDesc: "Ajouter le pays (et la subdivision, le cas échéant) après le nom/type du jour férié, par ex. « Fête nationale · FR (75) »",
         columnsHeading: "Colonnes de ligne",
-        columnsDesc: "Ajoutez, supprimez et réorganisez ce que chaque ligne affiche. Les colonnes de texte libre peuvent combiner du texte libre avec des espaces réservés : {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
+        columnsDesc:
+          "Ajoutez, supprimez et réorganisez ce que chaque ligne affiche, ou partez de l'un de ces modèles.",
+        columnsPresetDefault: "Par défaut",
+        columnsPresetAgenda: "Agenda",
+        columnsPresetMinimal: "Minimal",
         columnTypeIcon: "Icône",
         columnTypeInfo: "Nom + type",
         columnTypeName: "Nom",
@@ -1268,6 +1398,8 @@
         columnTypeType: "Type",
         columnTypeText: "Texte libre",
         columnTypeDate: "Date",
+        columnTypeDateBlock: "Bloc de date",
+        columnTypeAccentBar: "Barre d'accentuation",
         columnTypeTime: "Heure",
         columnTypeLocation: "Lieu",
         columnTypeDescription: "Description",
@@ -1284,8 +1416,7 @@
         suffixShowHolidayTypeDesc:
           "Afficher le libellé de type d'un jour férié, par ex. \u00ab\u00a0Holiday (Public)\u00a0\u00bb. Désactiver pour ne laisser que le suffixe pays/région dans cette cellule.",
         multiDayDisplay: "Événements sur plusieurs jours",
-        multiDayDisplayDesc:
-          "Comment un événement unique s'étendant sur plusieurs jours - un voyage, un congrès - est listé. N'affecte que les événements qui ont réellement une date de fin ; tout le reste reste une seule ligne.",
+        multiDayDisplayDesc: "Comment un événement ponctuel s'étalant sur plusieurs jours - un voyage, une conférence - est affiché. N'affecte que les événements qui ont réellement une date de fin ; tout le reste est une seule entrée de toute façon.",
         multiDayStartOnly: "Uniquement le premier jour",
         multiDayEndOnly: "Uniquement le dernier jour",
         multiDayStartEnd: "Premier et dernier jour",
@@ -1311,11 +1442,31 @@
         columnMoveDown: "Descendre",
         columnRemove: "Supprimer",
         columnTemplatePlaceholder: "par ex. {name} a {occurrence} ans aujourd'hui",
-        columnColor: "Couleur",
         columnsCompact: "Compact (sans espace, centré)",
         columnsCompactDesc: "Supprime l'espace entre les colonnes, centre la ligne, et harmonise la graisse et l'opacité de tous les champs - utile lorsque les colonnes forment une seule phrase continue.",
-        visibilityBadgeDesc: "Afficher le badge du numéro d'occurrence",
-        visibilityWhenDesc: "Afficher le compte à rebours (par ex. « dans 3 jours »)",
+        monthSeparators: "Séparateurs de mois",
+        monthSeparatorsDesc: "Trace une ligne partout où des lignes consécutives tombent dans des mois différents, découpant une longue liste en blocs mensuels. L'ordre des lignes lui-même reste inchangé.",
+        weekSeparators: "Séparateurs de semaine",
+        weekSeparatorsDesc: "La même chose en plus fin : une ligne partout où des lignes consécutives tombent dans des semaines différentes, selon votre réglage « Premier jour de la semaine » dans Home Assistant. Si les séparateurs de mois sont également actifs, une ligne qui commence les deux n'obtient qu'un seul trait.",
+        daySeparators: "Séparateurs de jour",
+        daySeparatorsDesc: "Une ligne partout où des lignes consécutives tombent des jours différents, découpant la liste en un bloc par jour. Le plus fin des trois : si les séparateurs de semaine ou de mois sont aussi actifs, une ligne qui en commence deux ne reçoit que le trait le plus grossier.",
+        separatorWidth: "Épaisseur",
+        separatorWidthDesc: "Épaisseur du trait, par ex. « 1px ». Laissé vide, il fait 1px.",
+        separatorColor: "Couleur",
+        separatorColorDesc: "Couleur du trait. Laissée vide, elle suit la couleur de texte du thème, la même que le titre de la carte.",
+        separatorShowDayLabel: "Afficher le jour",
+        separatorShowDayLabelDesc: "Écrit le jour de la semaine sur le trait lui-même, centré sur une pastille elliptique de la couleur de fond de la carte, si bien que le trait s'interrompt autour du texte au lieu de le traverser.",
+        separatorShowWeekLabel: "Afficher la semaine",
+        separatorShowWeekLabelDesc: "Écrit le numéro de semaine sur le trait lui-même, centré sur une pastille elliptique de la couleur de fond de la carte. Le numéro suit le réglage « Premier jour de la semaine » de Home Assistant, celui-là même qui décide où tombent les traits.",
+        separatorShowMonthLabel: "Afficher le mois",
+        separatorShowMonthLabelDesc: "Écrit le mois sur le trait lui-même, centré sur une pastille elliptique de la couleur de fond de la carte, si bien que le trait s'interrompt autour du texte au lieu de le traverser.",
+        separatorLabelColor: "Couleur du texte",
+        separatorLabelColorDesc: "Couleur de l'étiquette. Laissée vide, elle suit la couleur de texte du thème, la même que le titre de la carte.",
+        separatorLabelBackground: "Couleur de fond",
+        separatorLabelBackgroundDesc: "Couleur de la pastille derrière l'étiquette – c'est elle qui masque le trait en dessous. Laissée vide, c'est la couleur de fond de la carte, si bien que l'étiquette se lit comme une coupure dans le trait.",
+        separatorLabelFontDesc: "Taille du texte de l'étiquette, par ex. « 0.8em » ou « 11px ». Laissée vide, elle vaut 0.75em, relative à la taille de police de la carte, plus les quatre bascules de style et l'interlettrage ci-dessous.",
+        accentBarWidthDesc: "Épaisseur de la barre, par ex. « 3px ». Laissée vide, elle fait 3px. Ajoutez la colonne Barre d'accentuation ci-dessus pour qu'elle apparaisse.",
+        accentBarColorDesc: "Couleur par défaut de la barre. Le type d'événement et le statut de la ligne peuvent chacun la remplacer.",
         whenClickShowsDate: "Date au clic sur le compte à rebours",
         whenClickShowsDateDesc:
           "Cliquer sur le compte à rebours d'une ligne affiche à la place la date réelle (par ex. « lun. 3 août 2026 »), un nouveau clic revient en arrière - l'action tap/appui long de la ligne continue de fonctionner ailleurs dans la ligne.",
@@ -1329,41 +1480,35 @@
         visibilityTodoOnly: "Tâches ouvertes uniquement",
         visibilityTodoOnlyDesc:
           "N'afficher que les événements ayant encore une tâche ouverte (voir Tâches sous Paramètres → Événements). Restreint les deux filtres ci-dessus au lieu de s'y ajouter : avec « VIP uniquement » également actif, cela montre les événements VIP pour lesquels il reste quelque chose à faire.",
-        vipBadgeIcon: "Icône du badge VIP",
-        vipBadgeIconDesc: "Icône MDI affichée en petit badge sur l'icône des événements marqués VIP",
+        badgesHeading: "Badges",
+        badgeTargetIcon: "Icône de l'événement",
+        badgeTargetIconDesc: "Dessine ce badge dans le coin de l'icône de la ligne.",
+        badgeTargetAccentBar: "Barre d'accentuation",
+        badgeTargetAccentBarDesc: "Dessine ce badge dans la colonne à gauche de la barre d'accentuation, centrée sur la ligne. Nécessite la colonne Barre d'accentuation.",
+        badgeColor: "Couleur du badge",
+        badgeColorDesc: "Couleur du symbole à l'intérieur du badge.",
+        badgeBgColor: "Couleur de fond du badge",
+        badgeBgColorDesc: "Couleur du disque derrière le symbole.",
+        vipBadgeIcon: "Icône du badge",
+        vipBadgeIconDesc: "Icône MDI utilisée comme badge sur les événements marqués VIP.",
         vipBadgeIconPlaceholder: "mdi:star",
-        importantBadgeIcon: "Icône du badge Important",
-        importantBadgeIconDesc: "Icône MDI affichée en petit badge sur l'icône des événements automatiquement marqués comme importants",
+        importantBadgeIcon: "Icône du badge",
+        importantBadgeIconDesc: "Icône MDI utilisée comme badge sur les événements marqués automatiquement comme importants.",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
-        todoBadgeIcon: "Icône du badge de tâche",
-        todoBadgeIconDesc:
-          "Icône MDI affichée comme petit badge sur l'icône des événements ayant encore une tâche ouverte (voir Tâches sous Événements)",
-        todoBadgeColorList: "Couleur du badge (Liste)",
-        todoBadgeColorListDesc: "Couleur de ce badge dans la disposition Liste - par défaut le rouge du thème",
-        todoBadgeColorTimeline: "Couleur du badge (Timeline)",
+        todoBadgeIcon: "Icône du badge",
+        todoBadgeIconDesc: "Icône MDI utilisée comme badge sur les événements ayant une tâche encore ouverte (voir Tâches sous Événements).",
         todoBadgeColorTimelineDesc: "Couleur de ce badge dans la disposition Chronologie - par défaut le rouge du thème",
         highlightHeading: "Mise en évidence",
         highlightPast: "Événements passés",
-        highlightPastDesc: "Teinter le fond de la ligne pour les événements déjà passés",
-        highlightToday: "Événements du jour",
-        highlightTodayDesc: "Teinter le fond de la ligne pour les événements du jour",
-        highlightSoon: "Bientôt",
-        highlightSoonDesc: "Teinter le fond de la ligne pour les événements dans le seuil « bientôt »",
         highlightBgColor: "Couleur de fond",
         highlightBgColorDesc: "Couleur de fond pour cette mise en évidence",
         highlightVip: "Événements VIP",
-        highlightVipDesc: "Afficher un badge sur l'icône des événements marqués VIP",
+        highlightVipDesc: "Affiche un badge sur les événements marqués VIP.",
         highlightImportant: "Événements importants",
-        highlightImportantDesc: "Afficher un badge sur l'icône des événements automatiquement marqués comme importants",
+        highlightImportantDesc: "Affiche un badge sur les événements marqués automatiquement comme importants.",
         highlightTodo: "Tâches à faire",
-        highlightTodoDesc: "Afficher un badge sur l'icône des événements ayant encore une tâche ouverte",
-        vipBadgeColorList: "Couleur du badge (Liste)",
-        vipBadgeColorListDesc: "Couleur de ce badge dans la disposition Liste - par défaut le rouge du thème",
-        vipBadgeColorTimeline: "Couleur du badge (Timeline)",
-        vipBadgeColorTimelineDesc: "Couleur de ce badge dans la disposition Chronologie - par défaut le blanc",
-        importantBadgeColorList: "Couleur du badge (Liste)",
-        importantBadgeColorListDesc: "Couleur de ce badge dans la disposition Liste - par défaut l'ambre du thème",
-        importantBadgeColorTimeline: "Couleur du badge (Timeline)",
+        highlightTodoDesc: "Affiche un badge sur les événements ayant une tâche encore ouverte.",
+        vipBadgeColorTimelineDesc: "Couleur de ce badge dans la disposition Chronologie - par défaut le rouge du thème",
         importantBadgeColorTimelineDesc:
           "Couleur de ce badge dans la disposition Chronologie - par défaut l'ambre du thème",
         colors: "Couleurs",
@@ -1387,16 +1532,43 @@
         cardBackgroundSizeRepeat: "Mosaïque",
         cardBackgroundOpacity: "Opacité",
         cardBackgroundOpacityDesc: "Opacité de la couleur/image de fond, en pourcentage",
-        colorsIconsHeading: "Icônes",
-        colorsLabelsHeading: "Libellés",
+        statusHeading: "Statut de l'événement",
+        statusTimelineIconColorDesc: "Le point et les glyphes de ce statut sur la timeline.",
+        statusEntryTextColor: "Couleur du texte de l'entrée",
+        statusEntryTextColorDesc: "Le texte de ce statut sur la timeline. Vide prend la couleur de ce statut.",
+        typeRowColor: "Couleur de toute la ligne",
+        typeRowColorDesc: "Couleur du texte de la ligne quand Ligne entière est activé. Vide prend la couleur de ce type.",
+        typeEntryColor: "Couleur du texte de l'entrée",
+        typeEntryColorDesc: "Couleur du texte de l'événement dans la timeline quand Texte de l'entrée est activé. Vide prend la couleur de ce type.",
+        typeBarColor: "Couleur de la barre d'accentuation",
+        typeBarColorDesc: "Couleur de la barre d'accentuation quand Barre d'accentuation est activé. Vide prend la couleur de ce type.",
+        typeIconColor: "Couleur de l'icône",
+        typeIconColorDesc: "Couleur de l'icône - celle de la ligne dans la liste, le point sur la timeline. Vide prend la couleur de ce type.",
+        typeAnimationDesc: "Animation des icônes de ce type d'événement, remplaçant celle du bloc Icône dans Design. Sur Aucune, elle suit ce réglage par défaut. Un statut peut la remplacer à nouveau.",
+        rowTargetTimeline: "Texte de l'entrée",
+        rowTargetTimelineDesc: "Colore aussi le texte de l'événement dans la liste sous l'axe, pas seulement son point.",
+        fontLetterSpacingDesc: "Espacement entre les lettres, par ex. 0.05em ou 1px. Vide conserve l'espacement de la police.",
+        lineStyleDesc: "Si la ligne est tracée pleine, tiretée ou pointillée.",
+        designLineBlockDesc: "L'épaisseur, le style de trait et la couleur de la ligne.",
+        statusOverrideHint: "Désactivé, la couleur du type d'événement ou la valeur par défaut de Design s'applique.",
+        designIconBlockDesc: "La couleur et l'animation par défaut des icônes de la carte. Chaque type d'événement et chaque statut s'y rabat tant qu'il ne les remplace pas.",
+        designBarBlockDesc: "Couleur par défaut de la barre et sa largeur.",
+        designElementDesc: "Tout ce qui met en forme cette partie de la carte : sa couleur, sa police et les interrupteurs ci-dessous.",
+        designGroupDesc: "Les lignes qui composent cette colonne. Chacune se met en forme séparément ci-dessous.",
+        statusTextColor: "Couleur de tout le texte",
+        statusTextColorDesc: "Le texte de la ligne, hors icône et barre d'accentuation. Vide prend la couleur de ce statut.",
+        statusIconAnimation: "Animation de l'icône",
+        statusIconAnimationDesc: "L'animation de l'icône. Désactivé, la valeur par défaut de Design s'applique.",
+        designIconColorDesc: "Couleur par défaut de l'icône de la ligne. Chaque statut s'y rabat tant qu'il ne la remplace pas.",
+        statusPastDesc: "Événements déjà passés.",
+        statusIconColor: "Couleur de l'icône",
+        statusIconColorDesc: "L'icône de la ligne.",
+        statusBarColor: "Couleur de la barre d'accentuation",
+        statusBarColorDesc: "La barre d'accentuation de la ligne. Vide suit la couleur de l'icône.",
         colorToday: "Aujourd'hui",
         colorSoon: "Bientôt",
-        colorAccent: "Par défaut",
-        colorTodayDesc: "Couleur de l'icône pour les événements du jour",
-        colorSoonDesc: "Couleur de l'icône pour les événements dans le seuil « bientôt »",
-        iconVisibleLabel: "Afficher l'icône",
-        iconVisibleDesc: "Afficher ou masquer l'icône pour cette catégorie",
-        colorAccentDesc: "Couleur de l'icône pour les événements sans statut particulier",
+        colorTodayDesc: "Événements qui ont lieu aujourd'hui.",
+        colorSoonDesc: "Événements dans le seuil « bientôt ».",
         animationLabel: "Animation",
         animationDesc: "Ajouter une animation en boucle à cette icône",
         animationNone: "Aucune",
@@ -1405,23 +1577,39 @@
         animationShake: "Secousse",
         animationSpin: "Rotation",
         animationFlash: "Clignotement",
-        matchTextLabel: "Colorer aussi le texte",
-        matchTextDesc: "Colorer aussi tout le texte de la ligne avec cette couleur d'icône",
+        rowColorsLabel: "Mettre en forme les lignes par type d'événement",
+        rowColorsDesc: "Donne à chaque type d'événement sa propre mise en forme - sa couleur et les parties d'une ligne ou d'une entrée de timeline qu'elle colore - au lieu des valeurs par défaut de Design. Le statut d'une ligne peut encore la remplacer.",
+        calendarColorsHeading: "Calendriers intégrés",
+        calendarColorDesc: "Couleur pour ce calendrier - ses lignes dans la liste, son point sur la timeline. Laissée vide, la couleur que Home Assistant enregistre lui-même pour le calendrier est utilisée.",
+        eventTypeRowColorDesc: "Couleur pour ce type d'événement - ses lignes dans la liste, son point sur la timeline. Dans la liste, les interrupteurs à côté choisissent les parties d'une ligne qu'elle colore.",
+        rowTargetIcon: "Icône",
+        rowTargetIconDesc: "Colore l'icône de ce type.",
+        rowTargetAccentBar: "Barre d'accentuation",
+        rowTargetAccentBarDesc: "Colore la barre d'accentuation de ce type.",
+        rowTargetRow: "Ligne entière",
+        rowTargetRowDesc: "Colore toute la ligne, texte compris - et avec elle l'icône et la barre d'accentuation, quels que soient leurs propres interrupteurs.",
         colorName: "Nom",
         colorType: "Type",
+        combinedFontDesc: "Taille et style de cette ligne de la colonne combinée.",
+        combinedColorDesc: "Couleur de cette ligne de la colonne combinée.",
         colorBadge: "Occurrence",
         colorWhen: "Compte à rebours",
         colorText: "Texte libre",
         colorDate: "Date",
-        colorCalendar: "Champs de calendrier",
+        dateBlockWeekday: "Jour de la semaine",
+        dateBlockDay: "Jour",
+        dateBlockMonth: "Mois",
+        dateBlockFontDesc: "N'affecte que la colonne Bloc de date. Les tailles sont relatives à la taille de police de la carte : 0,75 / 1,5 / 0,75 si vide.",
+        dateBlockColorDesc: "N'affecte que la colonne Bloc de date. Laissée vide, le jour de la semaine et le mois prennent la couleur de texte secondaire du thème, et le jour la principale.",
+        colorCalendar: "Champs de calendrier externe",
         colorDateDesc:
           "Couleur du texte de la colonne Date",
         colorCalendarDesc:
-          "Couleur du texte des colonnes Heure, Lieu et Description - uniquement pour les événements de calendriers externes",
+          "N'affecte que les événements de calendriers externes. Laissée vide, chaque ligne prend la couleur de texte secondaire du thème.",
         fontDateDesc:
           "Taille de police de la colonne Date (voir Colonnes de ligne sous Disposition -> Affichage)",
         fontCalendarDesc:
-          "Taille de police des colonnes Heure, Lieu et Description - uniquement pour les événements de calendriers externes",
+          "N'affecte que les événements de calendriers externes. Les tailles sont relatives à la taille de police de la carte.",
         cardTitleColorDesc: "Couleur du texte pour le titre propre de la carte",
         colorNameDesc: "Couleur du texte pour le nom de l'événement",
         colorLastName: "Nom de famille",
@@ -1480,14 +1668,20 @@
         panelSettings: "Paramètres",
         panelSettingsDesc: "Général, événements et période",
         panelLayout: "Mise en page",
-        panelLayoutDesc: "Affichage, polices, couleurs, icônes, fond de carte et timeline",
+        panelLayoutDesc: "Général, vue liste et timeline, design, mise en évidence et fond de carte",
         groupGeneral: "Général",
         groupGeneralDesc: "",
         groupEvents: "Événements",
         groupEventsDesc: "",
         groupPeriod: "Période",
         groupPeriodDesc: "",
-        groupDisplay: "Affichage",
+        groupDisplay: "Général",
+        groupListView: "Vue liste",
+        groupListViewDesc:
+          "Utilisé uniquement lorsque le style de mise en page est réglé sur Liste.",
+        groupDesign: "Design",
+        designColor: "Couleur",
+        designFont: "Police",
         groupDisplayDesc: "",
       },
     },
@@ -1502,6 +1696,10 @@
       multiDayEnd: "einde",
       multiDayDay: "dag {day}",
       noEvents: "Geen aankomende evenementen",
+      // The Week separator's own label (see separatorLabelText) - the word
+      // this language actually uses for a calendar week, which no Intl format
+      // supplies. {week} is the number.
+      separatorWeekLabel: "Week {week}",
       todoCompleteConfirm: '„{item}” als voltooid markeren?',
       todoCompleteConfirmMultiple: "Alle {count} taken van dit evenement als voltooid markeren?",
       todoCompleteFailed: "Kon dit taakitem niet voltooien.",
@@ -1624,8 +1822,7 @@
         holidayDateObserved: "Waargenomen",
         holidayMergeObserved: "Waargenomen datum voorkeur",
         holidayMergeRegions: "Feestdagen samenvoegen die meerdere landen delen",
-        holidayMergeRegionsDesc:
-          "Eén rij per feestdag in plaats van één per land, met alle regio's die hem vieren. Gegroepeerd op datum én op de naam waaronder de feestdag daadwerkelijk wordt getoond - twee verschillende feestdagen op dezelfde dag blijven dus gescheiden, en landen met een afwijkende schrijfwijze voegen pas samen als je ze dezelfde naam hebt gegeven (zie \"Naam en vertalingen\" bij de feestdag zelf).",
+        holidayMergeRegionsDesc: "Eén item per feestdag in plaats van één per land, met alle regio's die hem vieren. Gegroepeerd op datum en op de naam waaronder de feestdag daadwerkelijk verschijnt - zo blijven twee verschillende feestdagen op dezelfde dag apart, en landen met afwijkende bewoording worden pas samengevoegd zodra je ze dezelfde naam hebt gegeven (zie Naam en vertalingen bij de instellingen van de feestdag).",
         regionFormat: "Regioweergave",
         regionFormatDesc: "Hoe het land en de regio van een feestdag worden geschreven, overal waar ze verschijnen.",
         regionFormatShort: "US (CA)",
@@ -1686,7 +1883,7 @@
         moreActionDesc:
           "Wat de „Meer”-knop rechtsonder in de timeline doet. Meestal een navigatie-actie naar een dashboard dat dezelfde evenementen in het volledige Lijst-layout toont. Laat op „Niets” staan om de knop te verbergen.",
         groupTimeline: "Timeline",
-        groupTimelineDesc: "Wordt alleen gebruikt wanneer Kaartlayout (onder Weergave) is ingesteld op Timeline.",
+        groupTimelineDesc: "Wordt alleen gebruikt wanneer Kaartlayout is ingesteld op Timeline.",
         timelineHeaderLabel: "Kop",
         timelineHeaderFontDesc:
           "Lettertype voor de beschrijvingsregel boven de as, bijv. „Kevins verjaardag is vandaag”.",
@@ -1703,15 +1900,14 @@
         eventTypesHeading: "Gebeurtenistypen",
         eventTypeColorDesc: "Kleur voor het icoon en de stip van dit gebeurtenistype op de tijdlijn.",
         visibilityHeading: "Tonen / Verbergen",
-        visibilityPast: "Vergane evenementen",
-        visibilityPastDesc: "Toon evenementen waarvan de jaardag al is geweest binnen het ingestelde verleden-venster",
-        visibilityToday: "Evenementen van vandaag",
-        visibilityTodayDesc: "Toon evenementen die vandaag plaatsvinden",
-        visibilitySoon: "Binnenkort",
-        visibilitySoonDesc: "Toon evenementen binnen de „binnenkort”-drempel",
-        visibilityCardTitleDesc: "Toon de eigen titel van de kaart",
         hideCardTitle: "Verbergen",
         hideCardTitleDesc: "Verberg de eigen titel van de kaart, ook als deze hierboven is ingesteld",
+        noEventsText: "Tekst zonder gebeurtenissen",
+        noEventsTextDesc:
+          "Wat de kaart toont wanneer er niets te tonen is (leeg laten voor de standaardtekst).",
+        noEventsLabel: "Geen gebeurtenissen",
+        noEventsColorDesc: "Tekstkleur van de regel die de kaart toont wanneer er niets te tonen is.",
+        noEventsFontDesc: "Lettertype van de regel die de kaart toont wanneer er niets te tonen is.",
         tapAction: "Actie bij tikken",
         tapActionDesc: "Wat er gebeurt als op een rij wordt getikt of geklikt",
         holdAction: "Actie bij ingedrukt houden",
@@ -1727,14 +1923,13 @@
         cardLanguageDesc:
           "Zet deze kaart voor iedereen die hem ziet vast op één taal, in plaats van de profieltaal van elke kijker te volgen. Geldt zowel voor de tekst van de kaart als voor de datumopmaak - niet voor de namen van de evenementen zelf, die uit de integratie komen. Deze editor blijft hoe dan ook je eigen taal volgen.",
         cardLanguageAuto: "Automatisch",
-        visibilityIcon: "Icoon",
-        visibilityIconDesc: "Toon het type-icoon vóór elke rij",
-        visibilityNameDesc: "Toon de naam van het evenement",
-        visibilityTypeDesc: "Toon het evenementtype",
-        visibilityCountrySuffix: "Feestdagsuffix",
         visibilityCountrySuffixDesc: "Voeg het land (en eventueel de deelstaat/provincie) toe na de naam/type van de feestdag, bijv. „Bevrijdingsdag · NL (NH)”",
         columnsHeading: "Rijkolommen",
-        columnsDesc: "Voeg toe, verwijder en herschik wat elke rij toont. Eigen tekstkolommen kunnen vrije tekst combineren met plaatshouders: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
+        columnsDesc:
+          "Voeg toe, verwijder en herschik wat elke rij toont, of begin met een van deze opzetjes.",
+        columnsPresetDefault: "Standaard",
+        columnsPresetAgenda: "Agenda",
+        columnsPresetMinimal: "Minimaal",
         columnTypeIcon: "Icoon",
         columnTypeInfo: "Naam + type",
         columnTypeName: "Naam",
@@ -1744,6 +1939,8 @@
         columnTypeType: "Type",
         columnTypeText: "Eigen tekst",
         columnTypeDate: "Datum",
+        columnTypeDateBlock: "Datumblok",
+        columnTypeAccentBar: "Accentbalk",
         columnTypeTime: "Tijd",
         columnTypeLocation: "Locatie",
         columnTypeDescription: "Beschrijving",
@@ -1760,8 +1957,7 @@
         suffixShowHolidayTypeDesc:
           "De type-aanduiding van een feestdag tonen, bijv. \u201cHoliday (Public)\u201d. Uitschakelen om alleen het land-/regiosuffix in deze cel te laten staan.",
         multiDayDisplay: "Meerdaagse gebeurtenissen",
-        multiDayDisplayDesc:
-          "Hoe een eenmalige gebeurtenis van meerdere dagen - een vakantiereis, een congres - wordt weergegeven. Geldt alleen voor gebeurtenissen die echt een einddatum hebben; al het andere blijft één regel.",
+        multiDayDisplayDesc: "Hoe een eenmalige gebeurtenis over meerdere dagen - een vakantiereis, een conferentie - wordt weergegeven. Betreft alleen gebeurtenissen die daadwerkelijk een einddatum hebben; al het andere is sowieso één item.",
         multiDayStartOnly: "Alleen de eerste dag",
         multiDayEndOnly: "Alleen de laatste dag",
         multiDayStartEnd: "Eerste en laatste dag",
@@ -1787,11 +1983,31 @@
         columnMoveDown: "Omlaag",
         columnRemove: "Verwijderen",
         columnTemplatePlaceholder: "bijv. {name} wordt vandaag {occurrence}",
-        columnColor: "Kleur",
         columnsCompact: "Compact (geen ruimte, gecentreerd)",
         columnsCompactDesc: "Verwijdert de ruimte tussen de kolommen, centreert de rij, en laat alle velden overeenkomen in dikte en dekking - handig wanneer de kolommen één doorlopende zin vormen.",
-        visibilityBadgeDesc: "Toon het badge met het jubileumnummer",
-        visibilityWhenDesc: "Toon het aftellen (bijv. „over 3 dagen”)",
+        monthSeparators: "Maandscheidingen",
+        monthSeparatorsDesc: "Tekent een lijn overal waar opeenvolgende rijen in verschillende maanden vallen, waardoor een lange lijst in maandblokken uiteenvalt. De volgorde van de rijen zelf verandert niet.",
+        weekSeparators: "Weekscheidingen",
+        weekSeparatorsDesc: "Hetzelfde, maar fijner: een lijn overal waar opeenvolgende rijen in verschillende weken vallen, volgens je instelling \"Eerste dag van de week\" in Home Assistant. Staan de maandscheidingen ook aan, dan krijgt een rij die beide begint maar één lijn.",
+        daySeparators: "Dagscheidingen",
+        daySeparatorsDesc: "Een lijn overal waar opeenvolgende rijen op verschillende dagen vallen, waardoor de lijst in één blok per dag uiteenvalt. De fijnste van de drie - staan week- of maandscheidingen ook aan, dan krijgt een rij die er twee begint alleen de grovere lijn.",
+        separatorWidth: "Breedte",
+        separatorWidthDesc: "Dikte van de lijn, bijv. \"1px\". Leeg gelaten is het 1px.",
+        separatorColor: "Kleur",
+        separatorColorDesc: "Kleur van de lijn. Leeg gelaten volgt hij de tekstkleur van het thema, dezelfde als de kaarttitel.",
+        separatorShowDayLabel: "Weekdag tonen",
+        separatorShowDayLabelDesc: "Zet de weekdag op de lijn zelf, gecentreerd op een ellipsvormig vlak in de achtergrondkleur van de kaart, zodat de lijn om de tekst heen onderbroken wordt in plaats van erdoorheen te lopen.",
+        separatorShowWeekLabel: "Weeknummer tonen",
+        separatorShowWeekLabelDesc: "Zet het weeknummer op de lijn zelf, gecentreerd op een ellipsvormig vlak in de achtergrondkleur van de kaart. Het nummer volgt je Home Assistant-instelling voor de eerste dag van de week, dezelfde die bepaalt waar de lijnen vallen.",
+        separatorShowMonthLabel: "Maand tonen",
+        separatorShowMonthLabelDesc: "Zet de maand op de lijn zelf, gecentreerd op een ellipsvormig vlak in de achtergrondkleur van de kaart, zodat de lijn om de tekst heen onderbroken wordt in plaats van erdoorheen te lopen.",
+        separatorLabelColor: "Tekstkleur",
+        separatorLabelColorDesc: "Kleur van het bijschrift. Leeg gelaten volgt het de tekstkleur van het thema, dezelfde als de kaarttitel.",
+        separatorLabelBackground: "Achtergrondkleur",
+        separatorLabelBackgroundDesc: "Kleur van het vlak achter het bijschrift – dat is wat de lijn eronder afdekt. Leeg gelaten is het de achtergrondkleur van de kaart, zodat het bijschrift leest als een onderbreking in de lijn.",
+        separatorLabelFontDesc: "Grootte van het bijschrift, bijv. \"0.8em\" of \"11px\". Leeg gelaten is het 0.75em, relatief aan de lettergrootte van de kaart, plus de vier stijlschakelaars en de letterafstand hieronder.",
+        accentBarWidthDesc: "Dikte van de balk, bijv. \"3px\". Leeg gelaten is het 3px. Voeg hierboven de kolom Accentbalk toe om hem überhaupt te tonen.",
+        accentBarColorDesc: "Standaardkleur van de balk. Het gebeurtenistype en de status van de rij kunnen hem elk overschrijven.",
         whenClickShowsDate: "Datum bij klik op aftelling",
         whenClickShowsDateDesc:
           "Klikken op het aftellen van een rij toont in plaats daarvan de werkelijke datum (bijv. „ma 3 aug 2026”), nogmaals klikken schakelt terug - de tik-/houdactie van de rij werkt elders in de rij gewoon door.",
@@ -1805,41 +2021,35 @@
         visibilityTodoOnly: "Alleen open taken",
         visibilityTodoOnlyDesc:
           "Toon alleen evenementen met een nog openstaande taak (zie Taken onder Instellingen → Evenementen). Beperkt de twee filters hierboven in plaats van zich ermee te verenigen: met ook „Alleen VIP“ aan worden de VIP-evenementen getoond waarvoor nog iets te doen is.",
-        vipBadgeIcon: "VIP-badge-icoon",
-        vipBadgeIconDesc: "MDI-icoon dat als klein badge op het icoon van VIP-evenementen wordt getoond",
+        badgesHeading: "Badges",
+        badgeTargetIcon: "Gebeurtenisicoon",
+        badgeTargetIconDesc: "Tekent dit badge in de hoek van het rij-icoon.",
+        badgeTargetAccentBar: "Accentbalk",
+        badgeTargetAccentBarDesc: "Tekent dit badge in de kolom links van de accentbalk, gecentreerd op de rij. Vereist de kolom Accentbalk.",
+        badgeColor: "Badgekleur",
+        badgeColorDesc: "Kleur van het symbool in het badge.",
+        badgeBgColor: "Achtergrondkleur van het badge",
+        badgeBgColorDesc: "Kleur van de schijf achter het symbool.",
+        vipBadgeIcon: "Badge-icoon",
+        vipBadgeIconDesc: "MDI-icoon dat als badge wordt gebruikt bij VIP-gebeurtenissen.",
         vipBadgeIconPlaceholder: "mdi:star",
-        importantBadgeIcon: "Important-badge-icoon",
-        importantBadgeIconDesc: "MDI-icoon dat als klein badge op het icoon van automatisch als belangrijk gemarkeerde evenementen wordt getoond",
+        importantBadgeIcon: "Badge-icoon",
+        importantBadgeIconDesc: "MDI-icoon dat als badge wordt gebruikt bij gebeurtenissen die automatisch als belangrijk zijn gemarkeerd.",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
-        todoBadgeIcon: "Taakbadge-pictogram",
-        todoBadgeIconDesc:
-          "MDI-pictogram dat als kleine badge op het pictogram van evenementen met een nog openstaande taak wordt getoond (zie Taken onder Evenementen)",
-        todoBadgeColorList: "Badgekleur (Lijst)",
-        todoBadgeColorListDesc: "Kleur van die badge in de Lijst-indeling - standaard het rood van het thema",
-        todoBadgeColorTimeline: "Badgekleur (Timeline)",
+        todoBadgeIcon: "Badge-icoon",
+        todoBadgeIconDesc: "MDI-icoon dat als badge wordt gebruikt bij gebeurtenissen met een nog openstaande taak (zie Taken onder Gebeurtenissen).",
         todoBadgeColorTimelineDesc: "Kleur van die badge in de Tijdlijn-indeling - standaard het rood van het thema",
         highlightHeading: "Markeren",
         highlightPast: "Vergane evenementen",
-        highlightPastDesc: "Rijachtergrond inkleuren voor evenementen die al zijn geweest",
-        highlightToday: "Evenementen van vandaag",
-        highlightTodayDesc: "Rijachtergrond inkleuren voor evenementen van vandaag",
-        highlightSoon: "Binnenkort",
-        highlightSoonDesc: "Rijachtergrond inkleuren voor evenementen binnen de „binnenkort”-drempel",
         highlightBgColor: "Achtergrondkleur",
         highlightBgColorDesc: "Achtergrondkleur voor deze markering",
         highlightVip: "VIP-evenementen",
-        highlightVipDesc: "Toon een badge op het icoon van VIP-evenementen",
+        highlightVipDesc: "Toont een badge bij gebeurtenissen met VIP-markering.",
         highlightImportant: "Belangrijke evenementen",
-        highlightImportantDesc: "Toon een badge op het icoon van automatisch als belangrijk gemarkeerde evenementen",
+        highlightImportantDesc: "Toont een badge bij gebeurtenissen die automatisch als belangrijk zijn gemarkeerd.",
         highlightTodo: "Taken",
-        highlightTodoDesc: "Toon een badge op het icoon van evenementen met een nog openstaande taak",
-        vipBadgeColorList: "Badgekleur (Lijst)",
-        vipBadgeColorListDesc: "Kleur van die badge in de Lijst-indeling - standaard het rood van het thema",
-        vipBadgeColorTimeline: "Badgekleur (Timeline)",
-        vipBadgeColorTimelineDesc: "Kleur van die badge in de Tijdlijn-indeling - standaard wit",
-        importantBadgeColorList: "Badgekleur (Lijst)",
-        importantBadgeColorListDesc: "Kleur van die badge in de Lijst-indeling - standaard het amber van het thema",
-        importantBadgeColorTimeline: "Badgekleur (Timeline)",
+        highlightTodoDesc: "Toont een badge bij gebeurtenissen met een nog openstaande taak.",
+        vipBadgeColorTimelineDesc: "Kleur van die badge in de Tijdlijn-indeling - standaard het rood van het thema",
         importantBadgeColorTimelineDesc:
           "Kleur van die badge in de Tijdlijn-indeling - standaard het amber van het thema",
         colors: "Kleuren",
@@ -1863,16 +2073,43 @@
         cardBackgroundSizeRepeat: "Tegels",
         cardBackgroundOpacity: "Dekking",
         cardBackgroundOpacityDesc: "Dekking van de achtergrondkleur/-afbeelding, in procenten",
-        colorsIconsHeading: "Iconen",
-        colorsLabelsHeading: "Labels",
+        statusHeading: "Gebeurtenisstatus",
+        statusTimelineIconColorDesc: "De punt en glyphs van deze status op de tijdlijn.",
+        statusEntryTextColor: "Kleur van de itemtekst",
+        statusEntryTextColorDesc: "De tekst van deze status op de tijdlijn. Leeg neemt de kleur van deze status.",
+        typeRowColor: "Kleur van de hele rij",
+        typeRowColorDesc: "Kleur van de rijtekst als Hele rij aan staat. Leeg neemt de kleur van dit type.",
+        typeEntryColor: "Kleur van de itemtekst",
+        typeEntryColorDesc: "Kleur van de tekst van de gebeurtenis in de tijdlijn als Tekst van het item aan staat. Leeg neemt de kleur van dit type.",
+        typeBarColor: "Kleur van de accentbalk",
+        typeBarColorDesc: "Kleur van de accentbalk als Accentbalk aan staat. Leeg neemt de kleur van dit type.",
+        typeIconColor: "Kleur van het icoon",
+        typeIconColorDesc: "Kleur van het icoon - in de lijst dat van de rij, op de tijdlijn de punt. Leeg neemt de kleur van dit type.",
+        typeAnimationDesc: "Animatie voor de iconen van dit gebeurtenistype; overschrijft die van het Icoon-blok in Design. Op Geen volgt ze die standaard. Een status kan haar opnieuw overschrijven.",
+        rowTargetTimeline: "Tekst van het item",
+        rowTargetTimelineDesc: "Kleurt ook de tekst van de gebeurtenis in de lijst onder de as, niet alleen haar punt.",
+        fontLetterSpacingDesc: "Ruimte tussen de letters, bijv. 0.05em of 1px. Leeg laat de spatiëring van het lettertype.",
+        lineStyleDesc: "Of de lijn doorgetrokken, gestreept of gestippeld wordt getekend.",
+        designLineBlockDesc: "De breedte, lijnstijl en kleur van de lijn.",
+        statusOverrideHint: "Uit geldt de kleur van het gebeurtenistype of de standaard uit Design.",
+        designIconBlockDesc: "De standaardkleur en -animatie voor de iconen van de kaart. Elk gebeurtenistype en elke status valt hierop terug zolang het ze niet overschrijft.",
+        designBarBlockDesc: "Standaardkleur van de balk en zijn breedte.",
+        designElementDesc: "Alles wat dit deel van de kaart vormgeeft: de kleur, het lettertype en de schakelaars hieronder.",
+        designGroupDesc: "De regels waaruit deze kolom bestaat. Elke regel wordt hieronder apart vormgegeven.",
+        statusTextColor: "Kleur van de hele tekst",
+        statusTextColorDesc: "De rijtekst, zonder icoon en accentbalk. Leeg neemt de kleur van deze status.",
+        statusIconAnimation: "Icoonanimatie",
+        statusIconAnimationDesc: "De animatie van het icoon. Uit geldt de standaard uit Design.",
+        designIconColorDesc: "Standaardkleur van het rij-icoon. Elke status valt erop terug zolang hij hem niet overschrijft.",
+        statusPastDesc: "Gebeurtenissen die al voorbij zijn.",
+        statusIconColor: "Icoonkleur",
+        statusIconColorDesc: "Het icoon van de rij.",
+        statusBarColor: "Accentbalkkleur",
+        statusBarColorDesc: "De accentbalk van de rij. Leeg volgt de icoonkleur.",
         colorToday: "Vandaag",
         colorSoon: "Binnenkort",
-        colorAccent: "Standaard",
-        colorTodayDesc: "Icoonkleur voor evenementen van vandaag",
-        colorSoonDesc: "Icoonkleur voor evenementen binnen de „binnenkort”-drempel",
-        iconVisibleLabel: "Icoon weergeven",
-        iconVisibleDesc: "Icoon voor deze categorie tonen of verbergen",
-        colorAccentDesc: "Icoonkleur voor evenementen zonder speciale status",
+        colorTodayDesc: "Gebeurtenissen die vandaag plaatsvinden.",
+        colorSoonDesc: "Gebeurtenissen binnen de drempel \"binnenkort\".",
         animationLabel: "Animatie",
         animationDesc: "Voeg een herhalende animatie toe aan dit icoon",
         animationNone: "Geen",
@@ -1881,23 +2118,39 @@
         animationShake: "Schudden",
         animationSpin: "Draaien",
         animationFlash: "Knipperen",
-        matchTextLabel: "Ook de tekst inkleuren",
-        matchTextDesc: "Ook alle tekst van de rij inkleuren met deze icoonkleur",
+        rowColorsLabel: "Rijen vormgeven per gebeurtenistype",
+        rowColorsDesc: "Geeft elk gebeurtenistype zijn eigen vormgeving - de kleur en welke delen van een rij of tijdlijnitem ze kleurt - in plaats van de standaarden uit Design. De status van een rij kan haar nog steeds overschrijven.",
+        calendarColorsHeading: "Ingesloten agenda's",
+        calendarColorDesc: "Kleur voor deze agenda - haar rijen in de lijst, haar punt op de tijdlijn. Leeg gelaten wordt de kleur gebruikt die Home Assistant zelf voor de agenda bewaart.",
+        eventTypeRowColorDesc: "Kleur voor dit gebeurtenistype - zijn rijen in de lijst, zijn punt op de tijdlijn. In de lijst bepalen de schakelaars ernaast welke delen van een rij ze kleurt.",
+        rowTargetIcon: "Icoon",
+        rowTargetIconDesc: "Kleurt het icoon van dit type.",
+        rowTargetAccentBar: "Accentbalk",
+        rowTargetAccentBarDesc: "Kleurt de accentbalk van dit type.",
+        rowTargetRow: "Hele rij",
+        rowTargetRowDesc: "Kleurt de hele rij inclusief tekst - en daarmee ook het icoon en de accentbalk, wat hun eigen schakelaars ook zeggen.",
         colorName: "Naam",
         colorType: "Type",
+        combinedFontDesc: "Grootte en stijl voor deze regel van de gecombineerde kolom.",
+        combinedColorDesc: "Kleur voor deze regel van de gecombineerde kolom.",
         colorBadge: "Jubileum",
         colorWhen: "Aftellen",
         colorText: "Eigen tekst",
         colorDate: "Datum",
-        colorCalendar: "Agendavelden",
+        dateBlockWeekday: "Weekdag",
+        dateBlockDay: "Dag",
+        dateBlockMonth: "Maand",
+        dateBlockFontDesc: "Geldt alleen voor de kolom Datumblok. De groottes zijn relatief aan de lettergrootte van de kaart: 0,75 / 1,5 / 0,75 als leeg.",
+        dateBlockColorDesc: "Geldt alleen voor de kolom Datumblok. Leeg gelaten nemen weekdag en maand de secundaire tekstkleur van het thema en de dag de primaire.",
+        colorCalendar: "Externe agendavelden",
         colorDateDesc:
           "Tekstkleur voor de Datum-kolom",
         colorCalendarDesc:
-          "Tekstkleur voor de kolommen Tijd, Locatie en Beschrijving - alleen voor evenementen uit externe agenda's",
+          "Heeft alleen invloed op evenementen uit externe agenda's. Leeg gelaten neemt elke regel de secundaire tekstkleur van het thema.",
         fontDateDesc:
           "Lettergrootte voor de Datum-kolom (zie Rijkolommen onder Layout -> Weergave)",
         fontCalendarDesc:
-          "Lettergrootte voor de kolommen Tijd, Locatie en Beschrijving - alleen voor evenementen uit externe agenda's",
+          "Heeft alleen invloed op evenementen uit externe agenda's. Groottes zijn relatief aan de lettergrootte van de kaart.",
         cardTitleColorDesc: "Tekstkleur voor de eigen titel van de kaart",
         colorNameDesc: "Tekstkleur voor de naam van het evenement",
         colorLastName: "Achternaam",
@@ -1956,14 +2209,20 @@
         panelSettings: "Instellingen",
         panelSettingsDesc: "Algemeen, evenementen en periode",
         panelLayout: "Lay-out",
-        panelLayoutDesc: "Weergave, lettertypen, kleuren, iconen, kaartachtergrond en timeline",
+        panelLayoutDesc: "Algemeen, lijst- en timelineweergave, ontwerp, markeren en kaartachtergrond",
         groupGeneral: "Algemeen",
         groupGeneralDesc: "",
         groupEvents: "Evenementen",
         groupEventsDesc: "",
         groupPeriod: "Periode",
         groupPeriodDesc: "",
-        groupDisplay: "Weergave",
+        groupDisplay: "Algemeen",
+        groupListView: "Lijstweergave",
+        groupListViewDesc:
+          "Wordt alleen gebruikt wanneer Kaartlayout is ingesteld op Lijst.",
+        groupDesign: "Ontwerp",
+        designColor: "Kleur",
+        designFont: "Lettertype",
         groupDisplayDesc: "",
       },
     },
@@ -1978,6 +2237,10 @@
       multiDayEnd: "koniec",
       multiDayDay: "dzień {day}",
       noEvents: "Brak nadchodzących wydarzeń",
+      // The Week separator's own label (see separatorLabelText) - the word
+      // this language actually uses for a calendar week, which no Intl format
+      // supplies. {week} is the number.
+      separatorWeekLabel: "Tydz. {week}",
       todoCompleteConfirm: 'Oznaczyć „{item}” jako ukończone?',
       todoCompleteConfirmMultiple: "Oznaczyć wszystkie {count} zadania tego wydarzenia jako ukończone?",
       todoCompleteFailed: "Nie udało się ukończyć tego zadania.",
@@ -2106,8 +2369,7 @@
         holidayDateObserved: "Zastępcza",
         holidayMergeObserved: "Preferuj datę zastępczą",
         holidayMergeRegions: "Scal święta wspólne dla wielu krajów",
-        holidayMergeRegionsDesc:
-          "Jeden wiersz na święto zamiast jednego na kraj, z wszystkimi obchodzącymi je regionami. Grupowanie następuje po dacie i po nazwie, pod którą święto faktycznie się wyświetla - dwa różne święta tego samego dnia pozostają więc osobno, a kraje o odmiennym zapisie scalają się dopiero wtedy, gdy nadasz im tę samą nazwę (zobacz „Nazwa i tłumaczenia” przy samym święcie).",
+        holidayMergeRegionsDesc: "Jeden wpis na święto zamiast jednego na kraj, z wszystkimi regionami, które je obchodzą. Grupowane według daty i nazwy, pod jaką święto faktycznie występuje - dzięki temu dwa różne święta tego samego dnia pozostają osobno, a kraje o odmiennym brzmieniu łączą się dopiero, gdy nadasz im tę samą nazwę (zobacz Nazwa i tłumaczenia w ustawieniach święta).",
         regionFormat: "Format regionu",
         regionFormatDesc: "Jak zapisywane są kraj i region święta, wszędzie tam gdzie się pojawiają.",
         regionFormatShort: "US (CA)",
@@ -2168,7 +2430,7 @@
         moreActionDesc:
           "Co robi przycisk „Więcej” w prawym dolnym rogu osi czasu. Zwykle akcja nawigacji do pulpitu pokazującego te same wydarzenia w pełnym układzie Lista. Pozostaw „Nic”, aby ukryć przycisk.",
         groupTimeline: "Timeline",
-        groupTimelineDesc: "Używane tylko wtedy, gdy Układ karty (w sekcji Wyświetlanie) jest ustawiony na Timeline.",
+        groupTimelineDesc: "Używane tylko wtedy, gdy Układ karty jest ustawiony na Timeline.",
         timelineHeaderLabel: "Nagłówek",
         timelineHeaderFontDesc:
           "Czcionka dla linii opisu nad osią, np. „Kevin: 27. urodziny — dzisiaj”.",
@@ -2185,15 +2447,14 @@
         eventTypesHeading: "Typy wydarzeń",
         eventTypeColorDesc: "Kolor ikony i kropki tego typu wydarzenia na osi czasu.",
         visibilityHeading: "Pokaż / Ukryj",
-        visibilityPast: "Minione wydarzenia",
-        visibilityPastDesc: "Pokaż wydarzenia, których rocznica już minęła w skonfigurowanym oknie przeszłości",
-        visibilityToday: "Dzisiejsze wydarzenia",
-        visibilityTodayDesc: "Pokaż wydarzenia mające miejsce dzisiaj",
-        visibilitySoon: "Wkrótce",
-        visibilitySoonDesc: "Pokaż wydarzenia w progu „wkrótce”",
-        visibilityCardTitleDesc: "Pokaż własny tytuł karty",
         hideCardTitle: "Ukryj",
         hideCardTitleDesc: "Ukryj własny tytuł karty, nawet jeśli ustawiono go powyżej",
+        noEventsText: "Tekst przy braku wydarzeń",
+        noEventsTextDesc:
+          "Co karta pokazuje, gdy nie ma nic do wyświetlenia (pozostaw puste, aby użyć tekstu domyślnego).",
+        noEventsLabel: "Brak wydarzeń",
+        noEventsColorDesc: "Kolor tekstu wiersza pokazywanego, gdy karta nie ma nic do wyświetlenia.",
+        noEventsFontDesc: "Czcionka wiersza pokazywanego, gdy karta nie ma nic do wyświetlenia.",
         tapAction: "Akcja dotknięcia",
         tapActionDesc: "Co się dzieje po dotknięciu lub kliknięciu wiersza",
         holdAction: "Akcja przytrzymania",
@@ -2209,14 +2470,13 @@
         cardLanguageDesc:
           "Ustawia tę kartę na jeden język dla wszystkich, którzy ją widzą, zamiast podążać za językiem profilu każdego z nich. Dotyczy zarówno tekstów karty, jak i formatu dat - nie dotyczy samych nazw wydarzeń, które pochodzą z integracji. Ten edytor i tak nadal używa Twojego własnego języka.",
         cardLanguageAuto: "Automatycznie",
-        visibilityIcon: "Ikona",
-        visibilityIconDesc: "Pokaż ikonę typu przed każdym wierszem",
-        visibilityNameDesc: "Pokaż nazwę wydarzenia",
-        visibilityTypeDesc: "Pokaż typ wydarzenia",
-        visibilityCountrySuffix: "Sufiks święta",
         visibilityCountrySuffixDesc: "Dodaj kraj (i ewentualnie region) po nazwie/typie święta, np. „Święto Niepodległości · PL (MAZ)”",
         columnsHeading: "Kolumny wiersza",
-        columnsDesc: "Dodawaj, usuwaj i zmieniaj kolejność tego, co pokazuje każdy wiersz. Kolumny własnego tekstu mogą łączyć dowolny tekst z symbolami zastępczymi: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
+        columnsDesc:
+          "Dodawaj, usuwaj i zmieniaj kolejność tego, co pokazuje każdy wiersz, albo zacznij od jednego z tych układów.",
+        columnsPresetDefault: "Domyślny",
+        columnsPresetAgenda: "Terminarz",
+        columnsPresetMinimal: "Minimalny",
         columnTypeIcon: "Ikona",
         columnTypeInfo: "Nazwa + typ",
         columnTypeName: "Nazwa",
@@ -2226,6 +2486,8 @@
         columnTypeType: "Typ",
         columnTypeText: "Własny tekst",
         columnTypeDate: "Data",
+        columnTypeDateBlock: "Blok daty",
+        columnTypeAccentBar: "Pasek akcentu",
         columnTypeTime: "Godzina",
         columnTypeLocation: "Lokalizacja",
         columnTypeDescription: "Opis",
@@ -2242,8 +2504,7 @@
         suffixShowHolidayTypeDesc:
           "Pokaż etykietę typu święta, np. \u201eHoliday (Public)\u201d. Wyłącz, aby w tej komórce został tylko sufiks kraju/regionu.",
         multiDayDisplay: "Wydarzenia wielodniowe",
-        multiDayDisplayDesc:
-          "Jak wyświetlane jest jednorazowe wydarzenie trwające kilka dni - wyjazd wakacyjny, konferencja. Dotyczy tylko wydarzeń, które faktycznie mają datę zakończenia; wszystko inne pozostaje jednym wierszem.",
+        multiDayDisplayDesc: "Jak przedstawiane jest jednorazowe wydarzenie trwające kilka dni - wyjazd, konferencja. Dotyczy tylko wydarzeń, które faktycznie mają datę końcową; wszystko inne i tak jest pojedynczym wpisem.",
         multiDayStartOnly: "Tylko pierwszy dzień",
         multiDayEndOnly: "Tylko ostatni dzień",
         multiDayStartEnd: "Pierwszy i ostatni dzień",
@@ -2269,11 +2530,31 @@
         columnMoveDown: "Przenieś w dół",
         columnRemove: "Usuń",
         columnTemplatePlaceholder: "np. {name} kończy dziś {occurrence} lat",
-        columnColor: "Kolor",
         columnsCompact: "Kompaktowy (bez odstępów, wyśrodkowany)",
         columnsCompactDesc: "Usuwa odstępy między kolumnami, wyśrodkowuje wiersz i ujednolica grubość oraz krycie wszystkich pól - przydatne, gdy kolumny tworzą jedno spójne zdanie.",
-        visibilityBadgeDesc: "Pokaż odznakę numeru wystąpienia",
-        visibilityWhenDesc: "Pokaż odliczanie (np. „za 3 dni”)",
+        monthSeparators: "Separatory miesięcy",
+        monthSeparatorsDesc: "Rysuje linię wszędzie tam, gdzie kolejne wiersze przypadają na różne miesiące, dzieląc długą listę na bloki miesięczne. Kolejność samych wierszy pozostaje bez zmian.",
+        weekSeparators: "Separatory tygodni",
+        weekSeparatorsDesc: "To samo, tylko dokładniej: linia wszędzie tam, gdzie kolejne wiersze przypadają na różne tygodnie, zgodnie z ustawieniem „Pierwszy dzień tygodnia” w Home Assistant. Jeśli separatory miesięcy też są włączone, wiersz rozpoczynający jedno i drugie dostaje tylko jedną linię.",
+        daySeparators: "Separatory dni",
+        daySeparatorsDesc: "Linia wszędzie tam, gdzie kolejne wiersze przypadają na różne dni, dzieląc listę na blok dla każdego dnia. Najdrobniejszy z trzech - jeśli włączone są też separatory tygodni lub miesięcy, wiersz rozpoczynający dwa z nich dostaje tylko grubszą linię.",
+        separatorWidth: "Grubość",
+        separatorWidthDesc: "Grubość linii, np. „1px”. Pozostawione puste daje 1px.",
+        separatorColor: "Kolor",
+        separatorColorDesc: "Kolor linii. Pozostawiony pusty przejmuje kolor tekstu motywu, ten sam co tytuł karty.",
+        separatorShowDayLabel: "Pokaż dzień tygodnia",
+        separatorShowDayLabelDesc: "Zapisuje dzień tygodnia na samej linii, wyśrodkowany na eliptycznym tle w kolorze tła karty, dzięki czemu linia jest przerwana wokół tekstu zamiast przez niego przebiegać.",
+        separatorShowWeekLabel: "Pokaż numer tygodnia",
+        separatorShowWeekLabelDesc: "Zapisuje numer tygodnia na samej linii, wyśrodkowany na eliptycznym tle w kolorze tła karty. Numer wynika z ustawienia „Pierwszy dzień tygodnia” w Home Assistant – tego samego, które decyduje, gdzie padają linie.",
+        separatorShowMonthLabel: "Pokaż miesiąc",
+        separatorShowMonthLabelDesc: "Zapisuje miesiąc na samej linii, wyśrodkowany na eliptycznym tle w kolorze tła karty, dzięki czemu linia jest przerwana wokół tekstu zamiast przez niego przebiegać.",
+        separatorLabelColor: "Kolor tekstu",
+        separatorLabelColorDesc: "Kolor etykiety. Pozostawiony pusty podąża za kolorem tekstu motywu, tym samym co tytuł karty.",
+        separatorLabelBackground: "Kolor tła",
+        separatorLabelBackgroundDesc: "Kolor tła pod etykietą – to ono zasłania linię pod spodem. Pozostawiony pusty przyjmuje kolor tła karty, dzięki czemu etykieta czyta się jak przerwa w linii.",
+        separatorLabelFontDesc: "Rozmiar tekstu etykiety, np. „0.8em” lub „11px”. Pozostawiony pusty wynosi 0.75em względem rozmiaru czcionki karty, plus cztery przełączniki stylu i odstęp między literami poniżej.",
+        accentBarWidthDesc: "Grubość paska, np. „3px”. Pozostawione puste daje 3px. Aby pasek się w ogóle pojawił, dodaj powyżej kolumnę Pasek akcentu.",
+        accentBarColorDesc: "Domyślny kolor paska. Typ wydarzenia i status wiersza mogą go nadpisać.",
         whenClickShowsDate: "Data po kliknięciu odliczania",
         whenClickShowsDateDesc:
           "Kliknięcie odliczania w wierszu pokazuje zamiast niego rzeczywistą datę (np. „pon, 3 sie 2026”), ponowne kliknięcie przywraca odliczanie - akcja dotknięcia/przytrzymania wiersza nadal działa w pozostałej części wiersza.",
@@ -2287,41 +2568,35 @@
         visibilityTodoOnly: "Tylko otwarte zadania",
         visibilityTodoOnlyDesc:
           "Pokaż tylko wydarzenia z wciąż otwartym zadaniem (zobacz Zadania w Ustawienia → Wydarzenia). Zawęża oba filtry powyżej, zamiast się z nimi łączyć: przy włączonym również „Tylko VIP“ pokazuje wydarzenia VIP, przy których zostało jeszcze coś do zrobienia.",
-        vipBadgeIcon: "Ikona odznaki VIP",
-        vipBadgeIconDesc: "Ikona MDI pokazywana jako mała odznaka na ikonie wydarzeń oznaczonych VIP",
+        badgesHeading: "Odznaki",
+        badgeTargetIcon: "Ikona wydarzenia",
+        badgeTargetIconDesc: "Rysuje tę odznakę w rogu ikony wiersza.",
+        badgeTargetAccentBar: "Pasek akcentu",
+        badgeTargetAccentBarDesc: "Rysuje tę odznakę w kolumnie po lewej stronie paska akcentu, wyśrodkowanej względem wiersza. Wymaga kolumny Pasek akcentu.",
+        badgeColor: "Kolor odznaki",
+        badgeColorDesc: "Kolor symbolu wewnątrz odznaki.",
+        badgeBgColor: "Kolor tła odznaki",
+        badgeBgColorDesc: "Kolor tarczy za symbolem.",
+        vipBadgeIcon: "Ikona odznaki",
+        vipBadgeIconDesc: "Ikona MDI używana jako odznaka przy wydarzeniach oznaczonych jako VIP.",
         vipBadgeIconPlaceholder: "mdi:star",
-        importantBadgeIcon: "Ikona odznaki Important",
-        importantBadgeIconDesc: "Ikona MDI pokazywana jako mała odznaka na ikonie wydarzeń automatycznie oznaczonych jako ważne",
+        importantBadgeIcon: "Ikona odznaki",
+        importantBadgeIconDesc: "Ikona MDI używana jako odznaka przy wydarzeniach automatycznie oznaczonych jako ważne.",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
-        todoBadgeIcon: "Ikona plakietki zadania",
-        todoBadgeIconDesc:
-          "Ikona MDI pokazywana jako mała plakietka przy ikonie wydarzeń z wciąż otwartym zadaniem (zobacz Zadania w sekcji Wydarzenia)",
-        todoBadgeColorList: "Kolor odznaki (Lista)",
-        todoBadgeColorListDesc: "Kolor tej plakietki w układzie Lista - domyślnie czerwień motywu",
-        todoBadgeColorTimeline: "Kolor odznaki (Timeline)",
+        todoBadgeIcon: "Ikona odznaki",
+        todoBadgeIconDesc: "Ikona MDI używana jako odznaka przy wydarzeniach z wciąż otwartym zadaniem (zobacz Zadania w Wydarzeniach).",
         todoBadgeColorTimelineDesc: "Kolor tej plakietki w układzie Oś czasu - domyślnie czerwień motywu",
         highlightHeading: "Wyróżnienie",
         highlightPast: "Minione wydarzenia",
-        highlightPastDesc: "Zabarw tło wiersza dla wydarzeń, które już się odbyły",
-        highlightToday: "Dzisiejsze wydarzenia",
-        highlightTodayDesc: "Zabarw tło wiersza dla dzisiejszych wydarzeń",
-        highlightSoon: "Wkrótce",
-        highlightSoonDesc: "Zabarw tło wiersza dla wydarzeń w progu „wkrótce”",
         highlightBgColor: "Kolor tła",
         highlightBgColorDesc: "Kolor zabarwienia tła dla tego wyróżnienia",
         highlightVip: "Wydarzenia VIP",
-        highlightVipDesc: "Pokaż odznakę na ikonie wydarzeń oznaczonych VIP",
+        highlightVipDesc: "Pokazuje odznakę przy wydarzeniach oznaczonych jako VIP.",
         highlightImportant: "Wydarzenia ważne",
-        highlightImportantDesc: "Pokaż odznakę na ikonie wydarzeń automatycznie oznaczonych jako ważne",
+        highlightImportantDesc: "Pokazuje odznakę przy wydarzeniach automatycznie oznaczonych jako ważne.",
         highlightTodo: "Zadania do zrobienia",
-        highlightTodoDesc: "Pokaż odznakę na ikonie wydarzeń z wciąż otwartym zadaniem",
-        vipBadgeColorList: "Kolor odznaki (Lista)",
-        vipBadgeColorListDesc: "Kolor tej plakietki w układzie Lista - domyślnie czerwień motywu",
-        vipBadgeColorTimeline: "Kolor odznaki (Timeline)",
-        vipBadgeColorTimelineDesc: "Kolor tej plakietki w układzie Oś czasu - domyślnie biel",
-        importantBadgeColorList: "Kolor odznaki (Lista)",
-        importantBadgeColorListDesc: "Kolor tej plakietki w układzie Lista - domyślnie bursztyn motywu",
-        importantBadgeColorTimeline: "Kolor odznaki (Timeline)",
+        highlightTodoDesc: "Pokazuje odznakę przy wydarzeniach z wciąż otwartym zadaniem.",
+        vipBadgeColorTimelineDesc: "Kolor tej plakietki w układzie Oś czasu - domyślnie czerwień motywu",
         importantBadgeColorTimelineDesc: "Kolor tej plakietki w układzie Oś czasu - domyślnie bursztyn motywu",
         colors: "Kolory",
         cardBackgroundTabTitle: "Tło karty",
@@ -2344,16 +2619,43 @@
         cardBackgroundSizeRepeat: "Kafelki",
         cardBackgroundOpacity: "Nieprzezroczystość",
         cardBackgroundOpacityDesc: "Nieprzezroczystość koloru/obrazu tła, w procentach",
-        colorsIconsHeading: "Ikony",
-        colorsLabelsHeading: "Etykiety",
+        statusHeading: "Status wydarzenia",
+        statusTimelineIconColorDesc: "Punkt i symbole tego statusu na osi czasu.",
+        statusEntryTextColor: "Kolor tekstu wpisu",
+        statusEntryTextColorDesc: "Tekst tego statusu na osi czasu. Puste przyjmuje kolor tego statusu.",
+        typeRowColor: "Kolor całego wiersza",
+        typeRowColorDesc: "Kolor tekstu wiersza, gdy Cały wiersz jest włączony. Puste przyjmuje kolor tego typu.",
+        typeEntryColor: "Kolor tekstu wpisu",
+        typeEntryColorDesc: "Kolor tekstu wydarzenia na osi czasu, gdy Tekst wpisu jest włączony. Puste przyjmuje kolor tego typu.",
+        typeBarColor: "Kolor paska akcentu",
+        typeBarColorDesc: "Kolor paska akcentu, gdy Pasek akcentu jest włączony. Puste przyjmuje kolor tego typu.",
+        typeIconColor: "Kolor ikony",
+        typeIconColorDesc: "Kolor ikony - na liście ikony wiersza, na osi czasu punktu. Puste przyjmuje kolor tego typu.",
+        typeAnimationDesc: "Animacja ikon tego typu wydarzenia, nadpisująca tę z bloku Ikona w Design. Przy Brak podąża za tym domyślnym ustawieniem. Status może ją nadpisać ponownie.",
+        rowTargetTimeline: "Tekst wpisu",
+        rowTargetTimelineDesc: "Koloruje tym kolorem także tekst wydarzenia na liście pod osią, nie tylko jego punkt.",
+        fontLetterSpacingDesc: "Odstęp między literami, np. 0.05em lub 1px. Puste pozostawia odstęp czcionki.",
+        lineStyleDesc: "Czy linia jest rysowana ciągła, kreskowana czy kropkowana.",
+        designLineBlockDesc: "Grubość, styl kreski i kolor linii.",
+        statusOverrideHint: "Wyłączone - obowiązuje kolor typu wydarzenia lub domyślny z Design.",
+        designIconBlockDesc: "Domyślny kolor i animacja ikon karty. Każdy typ wydarzenia i każdy status wraca do nich, dopóki ich nie nadpisze.",
+        designBarBlockDesc: "Domyślny kolor paska i jego szerokość.",
+        designElementDesc: "Wszystko, co formatuje tę część karty: kolor, czcionkę i przełączniki poniżej.",
+        designGroupDesc: "Wiersze, z których składa się ta kolumna. Każdy jest formatowany osobno poniżej.",
+        statusTextColor: "Kolor całego tekstu",
+        statusTextColorDesc: "Tekst wiersza, bez ikony i paska akcentu. Puste przyjmuje kolor tego statusu.",
+        statusIconAnimation: "Animacja ikony",
+        statusIconAnimationDesc: "Animacja ikony. Wyłączone - obowiązuje domyślne ustawienie z Design.",
+        designIconColorDesc: "Domyślny kolor ikony wiersza. Każdy status wraca do niego, dopóki go nie nadpisze.",
+        statusPastDesc: "Wydarzenia, które już minęły.",
+        statusIconColor: "Kolor ikony",
+        statusIconColorDesc: "Ikona wiersza.",
+        statusBarColor: "Kolor paska akcentu",
+        statusBarColorDesc: "Pasek akcentu wiersza. Puste podąża za kolorem ikony.",
         colorToday: "Dzisiaj",
         colorSoon: "Wkrótce",
-        colorAccent: "Domyślny",
-        colorTodayDesc: "Kolor ikony dla dzisiejszych wydarzeń",
-        colorSoonDesc: "Kolor ikony dla wydarzeń w progu „wkrótce”",
-        iconVisibleLabel: "Pokaż ikonę",
-        iconVisibleDesc: "Pokaż lub ukryj ikonę dla tej kategorii",
-        colorAccentDesc: "Kolor ikony dla wydarzeń bez specjalnego statusu",
+        colorTodayDesc: "Wydarzenia odbywające się dzisiaj.",
+        colorSoonDesc: "Wydarzenia w progu „wkrótce”.",
         animationLabel: "Animacja",
         animationDesc: "Dodaj zapętloną animację do tej ikony",
         animationNone: "Brak",
@@ -2362,23 +2664,39 @@
         animationShake: "Trzęsienie",
         animationSpin: "Obracanie",
         animationFlash: "Miganie",
-        matchTextLabel: "Zabarw też tekst",
-        matchTextDesc: "Zabarw też cały tekst wiersza tym kolorem ikony",
+        rowColorsLabel: "Formatuj wiersze według typu wydarzenia",
+        rowColorsDesc: "Nadaje każdemu typowi wydarzenia własne formatowanie - kolor oraz to, które części wiersza lub wpisu osi czasu koloruje - zamiast domyślnych ustawień z Design. Status wiersza nadal może je nadpisać.",
+        calendarColorsHeading: "Osadzone kalendarze",
+        calendarColorDesc: "Kolor dla tego kalendarza - jego wiersze na liście, jego punkt na osi czasu. Pozostawiony pusty, używany jest kolor, który Home Assistant sam przechowuje dla kalendarza.",
+        eventTypeRowColorDesc: "Kolor dla tego typu wydarzenia - jego wiersze na liście, jego punkt na osi czasu. Na liście przełączniki obok decydują, które części wiersza koloruje.",
+        rowTargetIcon: "Ikona",
+        rowTargetIconDesc: "Koloruje ikonę tego typu.",
+        rowTargetAccentBar: "Pasek akcentu",
+        rowTargetAccentBarDesc: "Koloruje pasek akcentu tego typu.",
+        rowTargetRow: "Cały wiersz",
+        rowTargetRowDesc: "Koloruje cały wiersz wraz z tekstem - a wraz z nim ikonę i pasek akcentu, niezależnie od ich własnych przełączników.",
         colorName: "Nazwa",
         colorType: "Typ",
+        combinedFontDesc: "Rozmiar i styl dla tego wiersza połączonej kolumny.",
+        combinedColorDesc: "Kolor tego wiersza połączonej kolumny.",
         colorBadge: "Wystąpienie",
         colorWhen: "Odliczanie",
         colorText: "Własny tekst",
         colorDate: "Data",
-        colorCalendar: "Pola kalendarza",
+        dateBlockWeekday: "Dzień tygodnia",
+        dateBlockDay: "Dzień",
+        dateBlockMonth: "Miesiąc",
+        dateBlockFontDesc: "Dotyczy tylko kolumny Blok daty. Rozmiary są względne wobec rozmiaru czcionki karty: 0,75 / 1,5 / 0,75, gdy puste.",
+        dateBlockColorDesc: "Dotyczy tylko kolumny Blok daty. Pozostawione puste sprawia, że dzień tygodnia i miesiąc przyjmują drugorzędny kolor tekstu motywu, a dzień - podstawowy.",
+        colorCalendar: "Pola kalendarza zewnętrznego",
         colorDateDesc:
           "Kolor tekstu kolumny Data",
         colorCalendarDesc:
-          "Kolor tekstu kolumn Godzina, Miejsce i Opis - tylko dla wydarzeń z zewnętrznych kalendarzy",
+          "Dotyczy tylko wydarzeń z zewnętrznych kalendarzy. Pozostawiony pusty, każdy wiersz przyjmuje drugorzędny kolor tekstu motywu.",
         fontDateDesc:
           "Rozmiar czcionki kolumny Data (zobacz Kolumny wiersza w Układ -> Wyświetlanie)",
         fontCalendarDesc:
-          "Rozmiar czcionki kolumn Godzina, Miejsce i Opis - tylko dla wydarzeń z zewnętrznych kalendarzy",
+          "Dotyczy tylko wydarzeń z zewnętrznych kalendarzy. Rozmiary są względne wobec rozmiaru czcionki karty.",
         cardTitleColorDesc: "Kolor tekstu dla własnego tytułu karty",
         colorNameDesc: "Kolor tekstu dla nazwy wydarzenia",
         colorLastName: "Nazwisko",
@@ -2437,14 +2755,20 @@
         panelSettings: "Ustawienia",
         panelSettingsDesc: "Ogólne, wydarzenia i okres",
         panelLayout: "Układ",
-        panelLayoutDesc: "Wyświetlanie, czcionki, kolory, ikony, tło karty i timeline",
+        panelLayoutDesc: "Ogólne, widok listy i timeline, wygląd, wyróżnienie i tło karty",
         groupGeneral: "Ogólne",
         groupGeneralDesc: "",
         groupEvents: "Wydarzenia",
         groupEventsDesc: "",
         groupPeriod: "Okres",
         groupPeriodDesc: "",
-        groupDisplay: "Wyświetlanie",
+        groupDisplay: "Ogólne",
+        groupListView: "Widok listy",
+        groupListViewDesc:
+          "Używane tylko wtedy, gdy Układ karty jest ustawiony na Listę.",
+        groupDesign: "Wygląd",
+        designColor: "Kolor",
+        designFont: "Czcionka",
         groupDisplayDesc: "",
       },
     },
@@ -2459,6 +2783,10 @@
       multiDayEnd: "fin",
       multiDayDay: "día {day}",
       noEvents: "No hay próximos eventos",
+      // The Week separator's own label (see separatorLabelText) - the word
+      // this language actually uses for a calendar week, which no Intl format
+      // supplies. {week} is the number.
+      separatorWeekLabel: "Semana {week}",
       todoCompleteConfirm: '¿Marcar «{item}» como completada?',
       todoCompleteConfirmMultiple: "¿Marcar las {count} tareas de este evento como completadas?",
       todoCompleteFailed: "No se pudo completar esta tarea.",
@@ -2581,8 +2909,7 @@
         holidayDateObserved: "Observada",
         holidayMergeObserved: "Preferir fecha observada",
         holidayMergeRegions: "Combinar festivos compartidos por varios países",
-        holidayMergeRegionsDesc:
-          "Una fila por festivo en lugar de una por país, listando todas las regiones que lo celebran. Se agrupa por fecha y por el nombre con el que el festivo se muestra realmente: dos festivos distintos el mismo día siguen separados, y los países cuya redacción difiere solo se combinan cuando les has dado el mismo nombre (ver «Nombre y traducciones» en el propio festivo).",
+        holidayMergeRegionsDesc: "Una entrada por festivo en lugar de una por país, con todas las regiones que lo celebran. Agrupado por fecha y por el nombre con el que el festivo aparece realmente - así dos festivos distintos el mismo día siguen separados, y los países cuya redacción difiere solo se fusionan cuando les has dado el mismo nombre (ver Nombre y traducciones en los ajustes del festivo).",
         regionFormat: "Formato de región",
         regionFormatDesc: "Cómo se escriben el país y la región de un festivo, dondequiera que aparezcan.",
         regionFormatShort: "US (CA)",
@@ -2643,7 +2970,7 @@
         moreActionDesc:
           "Qué hace el botón «Más» de la esquina inferior derecha de la timeline. Normalmente una acción de navegación hacia un panel que muestra los mismos eventos en el diseño Lista completo. Déjalo en «Nada» para ocultar el botón.",
         groupTimeline: "Timeline",
-        groupTimelineDesc: "Solo se usa cuando el Estilo de diseño (en Visualización) está configurado como Timeline.",
+        groupTimelineDesc: "Solo se usa cuando el Estilo de diseño está configurado como Timeline.",
         timelineHeaderLabel: "Encabezado",
         timelineHeaderFontDesc:
           "Fuente para la línea de descripción sobre el eje, p. ej. «El cumpleaños número 27 de Kevin es hoy».",
@@ -2660,15 +2987,14 @@
         eventTypesHeading: "Tipos de evento",
         eventTypeColorDesc: "Color del icono y del punto de este tipo de evento en la línea de tiempo.",
         visibilityHeading: "Mostrar / Ocultar",
-        visibilityPast: "Eventos pasados",
-        visibilityPastDesc: "Mostrar eventos cuyo aniversario ya pasó dentro de la ventana pasada configurada",
-        visibilityToday: "Eventos de hoy",
-        visibilityTodayDesc: "Mostrar eventos que ocurren hoy",
-        visibilitySoon: "Próximamente",
-        visibilitySoonDesc: "Mostrar eventos dentro del umbral «pronto»",
-        visibilityCardTitleDesc: "Mostrar el título propio de la tarjeta",
         hideCardTitle: "Ocultar",
         hideCardTitleDesc: "Ocultar el título propio de la tarjeta, aunque esté configurado arriba",
+        noEventsText: "Texto sin eventos",
+        noEventsTextDesc:
+          "Lo que muestra la tarjeta cuando no hay nada que listar (déjalo vacío para el texto predeterminado).",
+        noEventsLabel: "Sin eventos",
+        noEventsColorDesc: "Color del texto que muestra la tarjeta cuando no hay nada que listar.",
+        noEventsFontDesc: "Fuente del texto que muestra la tarjeta cuando no hay nada que listar.",
         tapAction: "Acción al tocar",
         tapActionDesc: "Qué ocurre al tocar o hacer clic en una fila",
         holdAction: "Acción al mantener pulsado",
@@ -2684,14 +3010,13 @@
         cardLanguageDesc:
           "Fija esta tarjeta en un solo idioma para todos los que la vean, en lugar de seguir el idioma del perfil de cada uno. Afecta tanto al texto de la tarjeta como al formato de las fechas, no a los nombres de los eventos, que vienen de la integración. Este editor sigue usando tu propio idioma en cualquier caso.",
         cardLanguageAuto: "Automático",
-        visibilityIcon: "Icono",
-        visibilityIconDesc: "Mostrar el icono de tipo delante de cada fila",
-        visibilityNameDesc: "Mostrar el nombre del evento",
-        visibilityTypeDesc: "Mostrar el tipo de evento",
-        visibilityCountrySuffix: "Sufijo del festivo",
         visibilityCountrySuffixDesc: "Añadir el país (y la subdivisión, si la hay) tras el nombre/tipo del festivo, p. ej. «Día de la Hispanidad · ES (MD)»",
         columnsHeading: "Columnas de fila",
-        columnsDesc: "Añade, elimina y reordena lo que muestra cada fila. Las columnas de texto personalizado pueden combinar texto libre con marcadores de posición: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
+        columnsDesc:
+          "Añade, elimina y reordena lo que muestra cada fila, o empieza por una de estas plantillas.",
+        columnsPresetDefault: "Predeterminado",
+        columnsPresetAgenda: "Agenda",
+        columnsPresetMinimal: "Mínimo",
         columnTypeIcon: "Icono",
         columnTypeInfo: "Nombre + tipo",
         columnTypeName: "Nombre",
@@ -2701,6 +3026,8 @@
         columnTypeType: "Tipo",
         columnTypeText: "Texto personalizado",
         columnTypeDate: "Fecha",
+        columnTypeDateBlock: "Bloque de fecha",
+        columnTypeAccentBar: "Barra de acento",
         columnTypeTime: "Hora",
         columnTypeLocation: "Ubicación",
         columnTypeDescription: "Descripción",
@@ -2717,8 +3044,7 @@
         suffixShowHolidayTypeDesc:
           "Mostrar la etiqueta de tipo de un festivo, p. ej. \u201cHoliday (Public)\u201d. Desactívalo para dejar solo el sufijo de país/región en esta celda.",
         multiDayDisplay: "Eventos de varios días",
-        multiDayDisplayDesc:
-          "Cómo se lista un evento único que dura varios días: un viaje, un congreso. Solo afecta a los eventos que realmente tienen fecha de fin; todo lo demás sigue siendo una sola fila.",
+        multiDayDisplayDesc: "Cómo se muestra un evento único que abarca varios días - un viaje, un congreso. Solo afecta a los eventos que realmente tienen fecha de fin; todo lo demás es una sola entrada de todos modos.",
         multiDayStartOnly: "Solo el primer día",
         multiDayEndOnly: "Solo el último día",
         multiDayStartEnd: "Primer y último día",
@@ -2744,11 +3070,31 @@
         columnMoveDown: "Bajar",
         columnRemove: "Eliminar",
         columnTemplatePlaceholder: "p. ej. {name} cumple {occurrence} hoy",
-        columnColor: "Color",
         columnsCompact: "Compacto (sin espacios, centrado)",
         columnsCompactDesc: "Elimina el espacio entre columnas, centra la fila y iguala el grosor y la opacidad de todos los campos - útil cuando las columnas forman una sola frase continua.",
-        visibilityBadgeDesc: "Mostrar la insignia del número de ocurrencia",
-        visibilityWhenDesc: "Mostrar la cuenta atrás (p. ej. «en 3 días»)",
+        monthSeparators: "Separadores de mes",
+        monthSeparatorsDesc: "Dibuja una línea allí donde filas consecutivas caen en meses distintos, dividiendo una lista larga en bloques mensuales. El orden de las filas en sí no cambia.",
+        weekSeparators: "Separadores de semana",
+        weekSeparatorsDesc: "Lo mismo un paso más fino: una línea allí donde filas consecutivas caen en semanas distintas, según tu ajuste « Primer día de la semana » de Home Assistant. Si los separadores de mes también están activos, una fila que empieza ambos recibe una sola línea.",
+        daySeparators: "Separadores de día",
+        daySeparatorsDesc: "Una línea allí donde filas consecutivas caen en días distintos, dividiendo la lista en un bloque por día. El más fino de los tres: si también están activos los separadores de semana o de mes, una fila que empieza dos de ellos recibe solo la línea más gruesa.",
+        separatorWidth: "Grosor",
+        separatorWidthDesc: "Grosor de la línea, p. ej. « 1px ». En blanco es 1px.",
+        separatorColor: "Color",
+        separatorColorDesc: "Color de la línea. En blanco sigue el color de texto del tema, el mismo del título de la tarjeta.",
+        separatorShowDayLabel: "Mostrar día de la semana",
+        separatorShowDayLabelDesc: "Escribe el día de la semana sobre la propia línea, centrado en una placa elíptica del color de fondo de la tarjeta, de modo que la línea se interrumpe alrededor del texto en lugar de atravesarlo.",
+        separatorShowWeekLabel: "Mostrar semana",
+        separatorShowWeekLabelDesc: "Escribe el número de semana sobre la propia línea, centrado en una placa elíptica del color de fondo de la tarjeta. El número sigue el ajuste «Primer día de la semana» de Home Assistant, el mismo que decide dónde caen las líneas.",
+        separatorShowMonthLabel: "Mostrar mes",
+        separatorShowMonthLabelDesc: "Escribe el mes sobre la propia línea, centrado en una placa elíptica del color de fondo de la tarjeta, de modo que la línea se interrumpe alrededor del texto en lugar de atravesarlo.",
+        separatorLabelColor: "Color del texto",
+        separatorLabelColorDesc: "Color de la etiqueta. Vacío sigue el color de texto del tema, el mismo que usa el título de la tarjeta.",
+        separatorLabelBackground: "Color de fondo",
+        separatorLabelBackgroundDesc: "Color de la placa detrás de la etiqueta: es lo que oculta la línea por debajo. Vacío es el color de fondo de la propia tarjeta, de modo que la etiqueta se lee como un hueco en la línea.",
+        separatorLabelFontDesc: "Tamaño del texto de la etiqueta, p. ej. «0.8em» o «11px». Vacío es 0.75em, relativo al tamaño de fuente de la tarjeta, más los cuatro interruptores de estilo y el espaciado entre letras de abajo.",
+        accentBarWidthDesc: "Grosor de la barra, p. ej. « 3px ». En blanco es 3px. Añade arriba la columna Barra de acento para que aparezca.",
+        accentBarColorDesc: "Color predeterminado de la barra. El tipo de evento y el estado de la fila pueden sustituirlo.",
         whenClickShowsDate: "Fecha al pulsar la cuenta atrás",
         whenClickShowsDateDesc:
           "Pulsar la cuenta atrás de una fila muestra en su lugar la fecha real (p. ej. «lun, 3 ago 2026»), pulsar de nuevo la restaura - la acción de pulsación/mantener de la fila sigue funcionando en el resto de la fila.",
@@ -2762,41 +3108,35 @@
         visibilityTodoOnly: "Solo tareas pendientes",
         visibilityTodoOnlyDesc:
           "Mostrar solo los eventos que aún tienen una tarea pendiente (ver Tareas en Ajustes → Eventos). Restringe los dos filtros de arriba en lugar de sumarse a ellos: con «Solo VIP» también activo, muestra los eventos VIP en los que aún queda algo por hacer.",
-        vipBadgeIcon: "Icono de la insignia VIP",
-        vipBadgeIconDesc: "Icono MDI mostrado como pequeña insignia en el icono de los eventos marcados como VIP",
+        badgesHeading: "Insignias",
+        badgeTargetIcon: "Icono del evento",
+        badgeTargetIconDesc: "Dibuja esta insignia en la esquina del icono de la fila.",
+        badgeTargetAccentBar: "Barra de acento",
+        badgeTargetAccentBarDesc: "Dibuja esta insignia en la columna a la izquierda de la barra de acento, centrada en la fila. Requiere la columna Barra de acento.",
+        badgeColor: "Color de la insignia",
+        badgeColorDesc: "Color del símbolo dentro de la insignia.",
+        badgeBgColor: "Color de fondo de la insignia",
+        badgeBgColorDesc: "Color del disco detrás del símbolo.",
+        vipBadgeIcon: "Icono de la insignia",
+        vipBadgeIconDesc: "Icono MDI usado como insignia en los eventos marcados como VIP.",
         vipBadgeIconPlaceholder: "mdi:star",
-        importantBadgeIcon: "Icono de la insignia Important",
-        importantBadgeIconDesc: "Icono MDI mostrado como pequeña insignia en el icono de los eventos marcados automáticamente como importantes",
+        importantBadgeIcon: "Icono de la insignia",
+        importantBadgeIconDesc: "Icono MDI usado como insignia en los eventos marcados automáticamente como importantes.",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
-        todoBadgeIcon: "Icono de la insignia de tarea",
-        todoBadgeIconDesc:
-          "Icono MDI mostrado como pequeña insignia sobre el icono de los eventos con una tarea aún pendiente (ver Tareas en Eventos)",
-        todoBadgeColorList: "Color de la insignia (Lista)",
-        todoBadgeColorListDesc: "Color de esa insignia en el diseño Lista; por defecto el rojo del tema",
-        todoBadgeColorTimeline: "Color de la insignia (Timeline)",
+        todoBadgeIcon: "Icono de la insignia",
+        todoBadgeIconDesc: "Icono MDI usado como insignia en los eventos con una tarea aún abierta (ver Tareas en Eventos).",
         todoBadgeColorTimelineDesc: "Color de esa insignia en el diseño Línea de tiempo; por defecto el rojo del tema",
         highlightHeading: "Resaltado",
         highlightPast: "Eventos pasados",
-        highlightPastDesc: "Teñir el fondo de la fila para eventos que ya han ocurrido",
-        highlightToday: "Eventos de hoy",
-        highlightTodayDesc: "Teñir el fondo de la fila para eventos de hoy",
-        highlightSoon: "Próximamente",
-        highlightSoonDesc: "Teñir el fondo de la fila para eventos dentro del umbral «pronto»",
         highlightBgColor: "Color de fondo",
         highlightBgColorDesc: "Color de tinte de fondo para este resaltado",
         highlightVip: "Eventos VIP",
-        highlightVipDesc: "Mostrar una insignia en el icono de los eventos marcados como VIP",
+        highlightVipDesc: "Muestra una insignia en los eventos marcados como VIP.",
         highlightImportant: "Eventos importantes",
-        highlightImportantDesc: "Mostrar una insignia en el icono de los eventos marcados automáticamente como importantes",
+        highlightImportantDesc: "Muestra una insignia en los eventos marcados automáticamente como importantes.",
         highlightTodo: "Tareas pendientes",
-        highlightTodoDesc: "Mostrar una insignia en el icono de los eventos con una tarea aún pendiente",
-        vipBadgeColorList: "Color de la insignia (Lista)",
-        vipBadgeColorListDesc: "Color de esa insignia en el diseño Lista; por defecto el rojo del tema",
-        vipBadgeColorTimeline: "Color de la insignia (Timeline)",
-        vipBadgeColorTimelineDesc: "Color de esa insignia en el diseño Línea de tiempo; por defecto el blanco",
-        importantBadgeColorList: "Color de la insignia (Lista)",
-        importantBadgeColorListDesc: "Color de esa insignia en el diseño Lista; por defecto el ámbar del tema",
-        importantBadgeColorTimeline: "Color de la insignia (Timeline)",
+        highlightTodoDesc: "Muestra una insignia en los eventos con una tarea aún abierta.",
+        vipBadgeColorTimelineDesc: "Color de esa insignia en el diseño Línea de tiempo; por defecto el rojo del tema",
         importantBadgeColorTimelineDesc:
           "Color de esa insignia en el diseño Línea de tiempo; por defecto el ámbar del tema",
         colors: "Colores",
@@ -2820,16 +3160,43 @@
         cardBackgroundSizeRepeat: "Mosaico",
         cardBackgroundOpacity: "Opacidad",
         cardBackgroundOpacityDesc: "Opacidad del color/imagen de fondo, en porcentaje",
-        colorsIconsHeading: "Iconos",
-        colorsLabelsHeading: "Etiquetas",
+        statusHeading: "Estado del evento",
+        statusTimelineIconColorDesc: "El punto y los glifos de este estado en la línea de tiempo.",
+        statusEntryTextColor: "Color del texto de la entrada",
+        statusEntryTextColorDesc: "El texto de este estado en la línea de tiempo. En blanco toma el color de este estado.",
+        typeRowColor: "Color de toda la fila",
+        typeRowColorDesc: "Color del texto de la fila cuando Fila completa está activado. En blanco toma el color de este tipo.",
+        typeEntryColor: "Color del texto de la entrada",
+        typeEntryColorDesc: "Color del texto del evento en la línea de tiempo cuando Texto de la entrada está activado. En blanco toma el color de este tipo.",
+        typeBarColor: "Color de la barra de acento",
+        typeBarColorDesc: "Color de la barra de acento cuando Barra de acento está activado. En blanco toma el color de este tipo.",
+        typeIconColor: "Color del icono",
+        typeIconColorDesc: "Color del icono: el de la fila en la lista, el punto en la línea de tiempo. En blanco toma el color de este tipo.",
+        typeAnimationDesc: "Animación de los iconos de este tipo de evento; sustituye la del bloque Icono en Diseño. En Ninguna sigue ese valor predeterminado. Un estado puede sustituirla de nuevo.",
+        rowTargetTimeline: "Texto de la entrada",
+        rowTargetTimelineDesc: "Colorea también el texto del evento en la lista bajo el eje, no solo su punto.",
+        fontLetterSpacingDesc: "Espacio entre las letras, p. ej. 0.05em o 1px. En blanco mantiene el espaciado de la fuente.",
+        lineStyleDesc: "Si la línea se dibuja continua, discontinua o punteada.",
+        designLineBlockDesc: "El grosor, el estilo de trazo y el color de la línea.",
+        statusOverrideHint: "Desactivado se aplica el color del tipo de evento o el predeterminado de Diseño.",
+        designIconBlockDesc: "El color y la animación predeterminados de los iconos de la tarjeta. Cada tipo de evento y cada estado recurre a ellos mientras no los sustituya.",
+        designBarBlockDesc: "Color predeterminado de la barra y su grosor.",
+        designElementDesc: "Todo lo que da estilo a esta parte de la tarjeta: su color, su fuente y los interruptores de abajo.",
+        designGroupDesc: "Las líneas que componen esta columna. Cada una se ajusta por separado más abajo.",
+        statusTextColor: "Color de todo el texto",
+        statusTextColorDesc: "El texto de la fila, sin el icono ni la barra de acento. En blanco toma el color de este estado.",
+        statusIconAnimation: "Animación del icono",
+        statusIconAnimationDesc: "La animación del icono. Desactivado se aplica el predeterminado de Diseño.",
+        designIconColorDesc: "Color predeterminado del icono de la fila. Cada estado recurre a él mientras no lo sustituya.",
+        statusPastDesc: "Eventos que ya han pasado.",
+        statusIconColor: "Color del icono",
+        statusIconColorDesc: "El icono de la fila.",
+        statusBarColor: "Color de la barra de acento",
+        statusBarColorDesc: "La barra de acento de la fila. En blanco sigue el color del icono.",
         colorToday: "Hoy",
         colorSoon: "Pronto",
-        colorAccent: "Predeterminado",
-        colorTodayDesc: "Color del icono para los eventos de hoy",
-        colorSoonDesc: "Color del icono para eventos dentro del umbral «pronto»",
-        iconVisibleLabel: "Mostrar icono",
-        iconVisibleDesc: "Mostrar u ocultar el icono para esta categoría",
-        colorAccentDesc: "Color del icono para eventos sin estado especial",
+        colorTodayDesc: "Eventos que ocurren hoy.",
+        colorSoonDesc: "Eventos dentro del umbral « pronto ».",
         animationLabel: "Animación",
         animationDesc: "Añadir una animación en bucle a este icono",
         animationNone: "Ninguna",
@@ -2838,23 +3205,39 @@
         animationShake: "Vibración",
         animationSpin: "Giro",
         animationFlash: "Parpadeo",
-        matchTextLabel: "Colorear también el texto",
-        matchTextDesc: "Colorear también todo el texto de la fila con este color de icono",
+        rowColorsLabel: "Diseñar las filas por tipo de evento",
+        rowColorsDesc: "Da a cada tipo de evento su propio diseño - su color y qué partes de una fila o entrada de la línea de tiempo colorea - en lugar de los valores predeterminados de Diseño. El estado de una fila aún puede sustituirlo.",
+        calendarColorsHeading: "Calendarios integrados",
+        calendarColorDesc: "Color para este calendario: sus filas en la lista, su punto en la línea de tiempo. En blanco se usa el color que Home Assistant guarda para el calendario.",
+        eventTypeRowColorDesc: "Color para este tipo de evento: sus filas en la lista, su punto en la línea de tiempo. En la lista, los interruptores contiguos eligen qué partes de una fila colorea.",
+        rowTargetIcon: "Icono",
+        rowTargetIconDesc: "Colorea el icono de este tipo.",
+        rowTargetAccentBar: "Barra de acento",
+        rowTargetAccentBarDesc: "Colorea la barra de acento de este tipo.",
+        rowTargetRow: "Fila completa",
+        rowTargetRowDesc: "Colorea toda la fila, incluido su texto - y con ella el icono y la barra de acento, digan lo que digan sus propios interruptores.",
         colorName: "Nombre",
         colorType: "Tipo",
+        combinedFontDesc: "Tamaño y estilo de esta línea de la columna combinada.",
+        combinedColorDesc: "Color de esta línea de la columna combinada.",
         colorBadge: "Ocurrencia",
         colorWhen: "Cuenta atrás",
         colorText: "Texto personalizado",
         colorDate: "Fecha",
-        colorCalendar: "Campos de calendario",
+        dateBlockWeekday: "Día de la semana",
+        dateBlockDay: "Día",
+        dateBlockMonth: "Mes",
+        dateBlockFontDesc: "Solo afecta a la columna Bloque de fecha. Los tamaños son relativos al tamaño de fuente de la tarjeta: 0,75 / 1,5 / 0,75 si se deja vacío.",
+        dateBlockColorDesc: "Solo afecta a la columna Bloque de fecha. En blanco, el día de la semana y el mes toman el color de texto secundario del tema y el día el principal.",
+        colorCalendar: "Campos de calendario externo",
         colorDateDesc:
           "Color del texto de la columna Fecha",
         colorCalendarDesc:
-          "Color del texto de las columnas Hora, Ubicación y Descripción: solo para eventos de calendarios externos",
+          "Solo afecta a los eventos de calendarios externos. Si se deja vacío, cada línea toma el color de texto secundario del tema.",
         fontDateDesc:
           "Tamaño de fuente de la columna Fecha (ver Columnas de fila en Diseño -> Visualización)",
         fontCalendarDesc:
-          "Tamaño de fuente de las columnas Hora, Ubicación y Descripción: solo para eventos de calendarios externos",
+          "Solo afecta a los eventos de calendarios externos. Los tamaños son relativos al tamaño de fuente de la tarjeta.",
         cardTitleColorDesc: "Color del texto para el título propio de la tarjeta",
         colorNameDesc: "Color del texto para el nombre del evento",
         colorLastName: "Apellido",
@@ -2913,14 +3296,20 @@
         panelSettings: "Ajustes",
         panelSettingsDesc: "General, eventos y período",
         panelLayout: "Diseño",
-        panelLayoutDesc: "Visualización, fuentes, colores, iconos, fondo de tarjeta y timeline",
+        panelLayoutDesc: "General, vista de lista y timeline, diseño, resaltado y fondo de tarjeta",
         groupGeneral: "General",
         groupGeneralDesc: "",
         groupEvents: "Eventos",
         groupEventsDesc: "",
         groupPeriod: "Período",
         groupPeriodDesc: "",
-        groupDisplay: "Visualización",
+        groupDisplay: "General",
+        groupListView: "Vista de lista",
+        groupListViewDesc:
+          "Solo se usa cuando el Estilo de diseño está configurado como Lista.",
+        groupDesign: "Diseño",
+        designColor: "Color",
+        designFont: "Fuente",
         groupDisplayDesc: "",
       },
     },
@@ -2935,6 +3324,10 @@
       multiDayEnd: "fine",
       multiDayDay: "giorno {day}",
       noEvents: "Nessun evento in arrivo",
+      // The Week separator's own label (see separatorLabelText) - the word
+      // this language actually uses for a calendar week, which no Intl format
+      // supplies. {week} is the number.
+      separatorWeekLabel: "Settimana {week}",
       todoCompleteConfirm: 'Contrassegnare «{item}» come completata?',
       todoCompleteConfirmMultiple: "Contrassegnare tutte le {count} attività di questo evento come completate?",
       todoCompleteFailed: "Impossibile completare questa attività.",
@@ -3057,8 +3450,7 @@
         holidayDateObserved: "Osservata",
         holidayMergeObserved: "Preferisci data osservata",
         holidayMergeRegions: "Unisci le festività comuni a più paesi",
-        holidayMergeRegionsDesc:
-          "Una riga per festività invece di una per paese, elencando tutte le regioni che la celebrano. Il raggruppamento avviene per data e per il nome con cui la festività appare davvero: due festività diverse nello stesso giorno restano separate, e i paesi con dicitura differente si uniscono solo dopo che hai dato loro lo stesso nome (vedi «Nome e traduzioni» sulla festività stessa).",
+        holidayMergeRegionsDesc: "Una voce per festività invece di una per paese, con tutte le regioni che la celebrano. Raggruppato per data e per il nome con cui la festività compare davvero - così due festività diverse nello stesso giorno restano separate, e i paesi con dicitura diversa si uniscono solo dopo che hai dato loro lo stesso nome (vedi Nome e traduzioni nelle impostazioni della festività).",
         regionFormat: "Formato regione",
         regionFormatDesc: "Come vengono scritti il paese e la regione di una festività, ovunque compaiano.",
         regionFormatShort: "US (CA)",
@@ -3119,7 +3511,7 @@
         moreActionDesc:
           "Cosa fa il pulsante «Altro» in basso a destra nella timeline. Tipicamente un'azione di navigazione verso una dashboard che mostra gli stessi eventi nel layout Lista completo. Lascialo su «Nulla» per nascondere il pulsante.",
         groupTimeline: "Timeline",
-        groupTimelineDesc: "Usato solo quando lo Stile del layout (in Visualizzazione) è impostato su Timeline.",
+        groupTimelineDesc: "Usato solo quando lo Stile del layout è impostato su Timeline.",
         timelineHeaderLabel: "Intestazione",
         timelineHeaderFontDesc:
           "Font per la riga di descrizione sopra l'asse, ad es. «Il 27° compleanno di Kevin è oggi».",
@@ -3136,15 +3528,14 @@
         eventTypesHeading: "Tipi di evento",
         eventTypeColorDesc: "Colore dell'icona e del punto di questo tipo di evento sulla timeline.",
         visibilityHeading: "Mostra / Nascondi",
-        visibilityPast: "Eventi passati",
-        visibilityPastDesc: "Mostra eventi il cui anniversario è già trascorso entro la finestra passata configurata",
-        visibilityToday: "Eventi di oggi",
-        visibilityTodayDesc: "Mostra gli eventi di oggi",
-        visibilitySoon: "A breve",
-        visibilitySoonDesc: "Mostra eventi entro la soglia «a breve»",
-        visibilityCardTitleDesc: "Mostra il titolo proprio della scheda",
         hideCardTitle: "Nascondi",
         hideCardTitleDesc: "Nascondi il titolo proprio della scheda, anche se impostato sopra",
+        noEventsText: "Testo senza eventi",
+        noEventsTextDesc:
+          "Cosa mostra la scheda quando non c'è nulla da elencare (lascia vuoto per il testo predefinito).",
+        noEventsLabel: "Nessun evento",
+        noEventsColorDesc: "Colore del testo mostrato quando la scheda non ha nulla da elencare.",
+        noEventsFontDesc: "Carattere del testo mostrato quando la scheda non ha nulla da elencare.",
         tapAction: "Azione al tocco",
         tapActionDesc: "Cosa succede quando si tocca o si fa clic su una riga",
         holdAction: "Azione alla pressione prolungata",
@@ -3160,14 +3551,13 @@
         cardLanguageDesc:
           "Fissa questa scheda su una sola lingua per chiunque la veda, invece di seguire la lingua del profilo di ciascuno. Riguarda sia i testi della scheda sia il formato delle date - non i nomi degli eventi, che arrivano dall'integrazione. Questo editor continua comunque a seguire la tua lingua.",
         cardLanguageAuto: "Automatico",
-        visibilityIcon: "Icona",
-        visibilityIconDesc: "Mostra l'icona del tipo davanti a ogni riga",
-        visibilityNameDesc: "Mostra il nome dell'evento",
-        visibilityTypeDesc: "Mostra il tipo di evento",
-        visibilityCountrySuffix: "Suffisso festività",
         visibilityCountrySuffixDesc: "Aggiunge il paese (ed eventualmente la suddivisione) dopo il nome/tipo della festività, ad es. «Festa della Repubblica · IT (RM)»",
         columnsHeading: "Colonne di riga",
-        columnsDesc: "Aggiungi, rimuovi e riordina ciò che ogni riga mostra. Le colonne di testo libero possono combinare testo libero con segnaposto: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
+        columnsDesc:
+          "Aggiungi, rimuovi e riordina ciò che ogni riga mostra, oppure parti da uno di questi schemi.",
+        columnsPresetDefault: "Predefinito",
+        columnsPresetAgenda: "Agenda",
+        columnsPresetMinimal: "Minimo",
         columnTypeIcon: "Icona",
         columnTypeInfo: "Nome + tipo",
         columnTypeName: "Nome",
@@ -3177,6 +3567,8 @@
         columnTypeType: "Tipo",
         columnTypeText: "Testo libero",
         columnTypeDate: "Data",
+        columnTypeDateBlock: "Blocco data",
+        columnTypeAccentBar: "Barra di accento",
         columnTypeTime: "Ora",
         columnTypeLocation: "Luogo",
         columnTypeDescription: "Descrizione",
@@ -3193,8 +3585,7 @@
         suffixShowHolidayTypeDesc:
           "Mostra l'etichetta di tipo di una festività, ad es. \u201cHoliday (Public)\u201d. Disattiva per lasciare in questa cella solo il suffisso paese/regione.",
         multiDayDisplay: "Eventi di più giorni",
-        multiDayDisplayDesc:
-          "Come viene elencato un evento singolo che dura più giorni: un viaggio, un congresso. Riguarda solo gli eventi che hanno davvero una data di fine; tutto il resto resta una sola riga.",
+        multiDayDisplayDesc: "Come viene mostrato un evento singolo che dura più giorni - un viaggio, una conferenza. Riguarda solo gli eventi che hanno davvero una data di fine; tutto il resto è comunque una voce sola.",
         multiDayStartOnly: "Solo il primo giorno",
         multiDayEndOnly: "Solo l'ultimo giorno",
         multiDayStartEnd: "Primo e ultimo giorno",
@@ -3220,11 +3611,31 @@
         columnMoveDown: "Sposta giù",
         columnRemove: "Rimuovi",
         columnTemplatePlaceholder: "ad es. {name} compie {occurrence} anni oggi",
-        columnColor: "Colore",
         columnsCompact: "Compatto (senza spazi, centrato)",
         columnsCompactDesc: "Rimuove lo spazio tra le colonne, centra la riga e uniforma spessore e opacità di tutti i campi - utile quando le colonne formano un'unica frase continua.",
-        visibilityBadgeDesc: "Mostra il badge del numero di occorrenza",
-        visibilityWhenDesc: "Mostra il conto alla rovescia (ad es. «tra 3 giorni»)",
+        monthSeparators: "Separatori dei mesi",
+        monthSeparatorsDesc: "Disegna una linea ovunque righe consecutive cadano in mesi diversi, dividendo un elenco lungo in blocchi mensili. L'ordine delle righe stesse resta invariato.",
+        weekSeparators: "Separatori delle settimane",
+        weekSeparatorsDesc: "La stessa cosa un livello più fine: una linea ovunque righe consecutive cadano in settimane diverse, secondo l'impostazione « Primo giorno della settimana » di Home Assistant. Se sono attivi anche i separatori dei mesi, una riga che inizia entrambi riceve una sola linea.",
+        daySeparators: "Separatori dei giorni",
+        daySeparatorsDesc: "Una linea ovunque righe consecutive cadano in giorni diversi, dividendo l'elenco in un blocco per giorno. Il più fine dei tre: se sono attivi anche i separatori delle settimane o dei mesi, una riga che ne inizia due riceve solo la linea più grossa.",
+        separatorWidth: "Spessore",
+        separatorWidthDesc: "Spessore della linea, ad es. « 1px ». Lasciato vuoto è 1px.",
+        separatorColor: "Colore",
+        separatorColorDesc: "Colore della linea. Lasciato vuoto segue il colore del testo del tema, lo stesso del titolo della scheda.",
+        separatorShowDayLabel: "Mostra giorno della settimana",
+        separatorShowDayLabelDesc: "Scrive il giorno della settimana sulla linea stessa, centrato su una placca ellittica del colore di sfondo della scheda, così che la linea si interrompa attorno al testo invece di attraversarlo.",
+        separatorShowWeekLabel: "Mostra settimana",
+        separatorShowWeekLabelDesc: "Scrive il numero della settimana sulla linea stessa, centrato su una placca ellittica del colore di sfondo della scheda. Il numero segue l'impostazione « Primo giorno della settimana » di Home Assistant, la stessa che decide dove cadono le linee.",
+        separatorShowMonthLabel: "Mostra mese",
+        separatorShowMonthLabelDesc: "Scrive il mese sulla linea stessa, centrato su una placca ellittica del colore di sfondo della scheda, così che la linea si interrompa attorno al testo invece di attraversarlo.",
+        separatorLabelColor: "Colore del testo",
+        separatorLabelColorDesc: "Colore dell'etichetta. Lasciato vuoto segue il colore del testo del tema, lo stesso del titolo della scheda.",
+        separatorLabelBackground: "Colore di sfondo",
+        separatorLabelBackgroundDesc: "Colore della placca dietro l'etichetta: è ciò che nasconde la linea sottostante. Lasciato vuoto è il colore di sfondo della scheda, così l'etichetta si legge come un'interruzione della linea.",
+        separatorLabelFontDesc: "Dimensione del testo dell'etichetta, es. « 0.8em » o « 11px ». Lasciata vuota è 0.75em, relativa alla dimensione del carattere della scheda, più i quattro interruttori di stile e la spaziatura sotto.",
+        accentBarWidthDesc: "Spessore della barra, ad es. « 3px ». Lasciato vuoto è 3px. Aggiungi sopra la colonna Barra di accento perché compaia.",
+        accentBarColorDesc: "Colore predefinito della barra. Il tipo di evento e lo stato della riga possono sostituirlo.",
         whenClickShowsDate: "Data al clic sul conto alla rovescia",
         whenClickShowsDateDesc:
           "Fare clic sul conto alla rovescia di una riga mostra invece la data effettiva (ad es. «lun 3 ago 2026»), un altro clic ripristina - l'azione tocco/pressione della riga continua a funzionare nel resto della riga.",
@@ -3238,42 +3649,35 @@
         visibilityTodoOnly: "Solo attività aperte",
         visibilityTodoOnlyDesc:
           "Mostra solo gli eventi che hanno ancora un'attività aperta (vedi Attività in Impostazioni → Eventi). Restringe i due filtri sopra invece di unirsi a loro: con anche «Solo VIP» attivo, mostra gli eventi VIP per cui resta qualcosa da fare.",
-        vipBadgeIcon: "Icona badge VIP",
-        vipBadgeIconDesc: "Icona MDI mostrata come piccolo badge sull'icona degli eventi contrassegnati come VIP",
+        badgesHeading: "Badge",
+        badgeTargetIcon: "Icona dell'evento",
+        badgeTargetIconDesc: "Disegna questo badge nell'angolo dell'icona della riga.",
+        badgeTargetAccentBar: "Barra di accento",
+        badgeTargetAccentBarDesc: "Disegna questo badge nella colonna a sinistra della barra di accento, centrata sulla riga. Richiede la colonna Barra di accento.",
+        badgeColor: "Colore del badge",
+        badgeColorDesc: "Colore del simbolo all'interno del badge.",
+        badgeBgColor: "Colore di sfondo del badge",
+        badgeBgColorDesc: "Colore del disco dietro il simbolo.",
+        vipBadgeIcon: "Icona del badge",
+        vipBadgeIconDesc: "Icona MDI usata come badge sugli eventi contrassegnati come VIP.",
         vipBadgeIconPlaceholder: "mdi:star",
-        importantBadgeIcon: "Icona badge Important",
-        importantBadgeIconDesc: "Icona MDI mostrata come piccolo badge sull'icona degli eventi contrassegnati automaticamente come importanti",
+        importantBadgeIcon: "Icona del badge",
+        importantBadgeIconDesc: "Icona MDI usata come badge sugli eventi contrassegnati automaticamente come importanti.",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
-        todoBadgeIcon: "Icona del badge attività",
-        todoBadgeIconDesc:
-          "Icona MDI mostrata come piccolo badge sull'icona degli eventi con un'attività ancora aperta (vedi Attività in Eventi)",
-        todoBadgeColorList: "Colore del badge (Lista)",
-        todoBadgeColorListDesc: "Colore di quel badge nel layout Elenco - per impostazione predefinita il rosso del tema",
-        todoBadgeColorTimeline: "Colore del badge (Timeline)",
+        todoBadgeIcon: "Icona del badge",
+        todoBadgeIconDesc: "Icona MDI usata come badge sugli eventi con un'attività ancora aperta (vedi Attività in Eventi).",
         todoBadgeColorTimelineDesc: "Colore di quel badge nel layout Timeline - per impostazione predefinita il rosso del tema",
         highlightHeading: "Evidenziazione",
         highlightPast: "Eventi passati",
-        highlightPastDesc: "Colora lo sfondo della riga per gli eventi già trascorsi",
-        highlightToday: "Eventi di oggi",
-        highlightTodayDesc: "Colora lo sfondo della riga per gli eventi di oggi",
-        highlightSoon: "A breve",
-        highlightSoonDesc: "Colora lo sfondo della riga per gli eventi entro la soglia «a breve»",
         highlightBgColor: "Colore di sfondo",
         highlightBgColorDesc: "Colore di sfondo per questa evidenziazione",
         highlightVip: "Eventi VIP",
-        highlightVipDesc: "Mostra un badge sull'icona degli eventi contrassegnati come VIP",
+        highlightVipDesc: "Mostra un badge sugli eventi contrassegnati come VIP.",
         highlightImportant: "Eventi importanti",
-        highlightImportantDesc: "Mostra un badge sull'icona degli eventi contrassegnati automaticamente come importanti",
+        highlightImportantDesc: "Mostra un badge sugli eventi contrassegnati automaticamente come importanti.",
         highlightTodo: "Attività da fare",
-        highlightTodoDesc: "Mostra un badge sull'icona degli eventi con un'attività ancora aperta",
-        vipBadgeColorList: "Colore del badge (Lista)",
-        vipBadgeColorListDesc: "Colore di quel badge nel layout Elenco - per impostazione predefinita il rosso del tema",
-        vipBadgeColorTimeline: "Colore del badge (Timeline)",
-        vipBadgeColorTimelineDesc: "Colore di quel badge nel layout Timeline - per impostazione predefinita il bianco",
-        importantBadgeColorList: "Colore del badge (Lista)",
-        importantBadgeColorListDesc:
-          "Colore di quel badge nel layout Elenco - per impostazione predefinita l'ambra del tema",
-        importantBadgeColorTimeline: "Colore del badge (Timeline)",
+        highlightTodoDesc: "Mostra un badge sugli eventi con un'attività ancora aperta.",
+        vipBadgeColorTimelineDesc: "Colore di quel badge nel layout Timeline - per impostazione predefinita il rosso del tema",
         importantBadgeColorTimelineDesc:
           "Colore di quel badge nel layout Timeline - per impostazione predefinita l'ambra del tema",
         colors: "Colori",
@@ -3297,16 +3701,43 @@
         cardBackgroundSizeRepeat: "Piastrelle",
         cardBackgroundOpacity: "Opacità",
         cardBackgroundOpacityDesc: "Opacità del colore/immagine di sfondo, in percentuale",
-        colorsIconsHeading: "Icone",
-        colorsLabelsHeading: "Etichette",
+        statusHeading: "Stato dell'evento",
+        statusTimelineIconColorDesc: "Il punto e i glifi di questo stato sulla timeline.",
+        statusEntryTextColor: "Colore del testo della voce",
+        statusEntryTextColorDesc: "Il testo di questo stato sulla timeline. Vuoto prende il colore di questo stato.",
+        typeRowColor: "Colore dell'intera riga",
+        typeRowColorDesc: "Colore del testo della riga quando Riga intera è attivo. Vuoto prende il colore di questo tipo.",
+        typeEntryColor: "Colore del testo della voce",
+        typeEntryColorDesc: "Colore del testo dell'evento nella timeline quando Testo della voce è attivo. Vuoto prende il colore di questo tipo.",
+        typeBarColor: "Colore della barra di accento",
+        typeBarColorDesc: "Colore della barra di accento quando Barra di accento è attivo. Vuoto prende il colore di questo tipo.",
+        typeIconColor: "Colore dell'icona",
+        typeIconColorDesc: "Colore dell'icona: quella della riga nell'elenco, il punto sulla timeline. Vuoto prende il colore di questo tipo.",
+        typeAnimationDesc: "Animazione delle icone di questo tipo di evento; sostituisce quella del blocco Icona in Design. Su Nessuna segue quel predefinito. Uno stato può sostituirla di nuovo.",
+        rowTargetTimeline: "Testo della voce",
+        rowTargetTimelineDesc: "Colora anche il testo dell'evento nell'elenco sotto l'asse, non solo il suo punto.",
+        fontLetterSpacingDesc: "Spaziatura tra le lettere, ad es. 0.05em o 1px. Vuoto mantiene la spaziatura del carattere.",
+        lineStyleDesc: "Se la linea è disegnata continua, tratteggiata o punteggiata.",
+        designLineBlockDesc: "Lo spessore, lo stile del tratto e il colore della linea.",
+        statusOverrideHint: "Disattivato vale il colore del tipo di evento o il predefinito di Design.",
+        designIconBlockDesc: "Il colore e l'animazione predefiniti delle icone della scheda. Ogni tipo di evento e ogni stato vi ricade finché non li sostituisce.",
+        designBarBlockDesc: "Colore predefinito della barra e il suo spessore.",
+        designElementDesc: "Tutto ciò che dà stile a questa parte della scheda: il colore, il carattere e gli interruttori sotto.",
+        designGroupDesc: "Le righe di cui è composta questa colonna. Ognuna si imposta separatamente qui sotto.",
+        statusTextColor: "Colore di tutto il testo",
+        statusTextColorDesc: "Il testo della riga, senza icona e barra di accento. Vuoto prende il colore di questo stato.",
+        statusIconAnimation: "Animazione dell'icona",
+        statusIconAnimationDesc: "L'animazione dell'icona. Disattivato vale il predefinito di Design.",
+        designIconColorDesc: "Colore predefinito dell'icona della riga. Ogni stato vi ricade finché non lo sostituisce.",
+        statusPastDesc: "Eventi già passati.",
+        statusIconColor: "Colore dell'icona",
+        statusIconColorDesc: "L'icona della riga.",
+        statusBarColor: "Colore della barra di accento",
+        statusBarColorDesc: "La barra di accento della riga. Vuoto segue il colore dell'icona.",
         colorToday: "Oggi",
         colorSoon: "A breve",
-        colorAccent: "Predefinito",
-        colorTodayDesc: "Colore dell'icona per gli eventi di oggi",
-        colorSoonDesc: "Colore dell'icona per gli eventi entro la soglia «a breve»",
-        iconVisibleLabel: "Mostra icona",
-        iconVisibleDesc: "Mostra o nascondi l'icona per questa categoria",
-        colorAccentDesc: "Colore dell'icona per gli eventi senza stato particolare",
+        colorTodayDesc: "Eventi che si svolgono oggi.",
+        colorSoonDesc: "Eventi entro la soglia « a breve ».",
         animationLabel: "Animazione",
         animationDesc: "Aggiungi un'animazione in loop a questa icona",
         animationNone: "Nessuna",
@@ -3315,23 +3746,39 @@
         animationShake: "Scuotimento",
         animationSpin: "Rotazione",
         animationFlash: "Lampeggio",
-        matchTextLabel: "Colora anche il testo",
-        matchTextDesc: "Colora anche tutto il testo della riga con questo colore dell'icona",
+        rowColorsLabel: "Progettare le righe per tipo di evento",
+        rowColorsDesc: "Dà a ogni tipo di evento il suo aspetto - il colore e quali parti di una riga o di una voce della timeline colora - invece dei valori predefiniti di Design. Lo stato di una riga può ancora sostituirlo.",
+        calendarColorsHeading: "Calendari integrati",
+        calendarColorDesc: "Colore per questo calendario: le sue righe nell'elenco, il suo punto sulla timeline. Lasciato vuoto, si usa il colore che Home Assistant conserva per il calendario.",
+        eventTypeRowColorDesc: "Colore per questo tipo di evento: le sue righe nell'elenco, il suo punto sulla timeline. Nell'elenco, gli interruttori accanto scelgono quali parti di una riga colora.",
+        rowTargetIcon: "Icona",
+        rowTargetIconDesc: "Colora l'icona di questo tipo.",
+        rowTargetAccentBar: "Barra di accento",
+        rowTargetAccentBarDesc: "Colora la barra di accento di questo tipo.",
+        rowTargetRow: "Riga intera",
+        rowTargetRowDesc: "Colora l'intera riga, testo compreso - e con essa l'icona e la barra di accento, qualunque cosa dicano i loro interruttori.",
         colorName: "Nome",
         colorType: "Tipo",
+        combinedFontDesc: "Dimensione e stile di questa riga della colonna combinata.",
+        combinedColorDesc: "Colore di questa riga della colonna combinata.",
         colorBadge: "Occorrenza",
         colorWhen: "Conto alla rovescia",
         colorText: "Testo libero",
         colorDate: "Data",
-        colorCalendar: "Campi del calendario",
+        dateBlockWeekday: "Giorno della settimana",
+        dateBlockDay: "Giorno",
+        dateBlockMonth: "Mese",
+        dateBlockFontDesc: "Riguarda solo la colonna Blocco data. Le dimensioni sono relative alla dimensione del carattere della scheda: 0,75 / 1,5 / 0,75 se vuoto.",
+        dateBlockColorDesc: "Riguarda solo la colonna Blocco data. Lasciato vuoto, giorno della settimana e mese prendono il colore di testo secondario del tema e il giorno quello primario.",
+        colorCalendar: "Campi del calendario esterno",
         colorDateDesc:
           "Colore del testo della colonna Data",
         colorCalendarDesc:
-          "Colore del testo delle colonne Ora, Luogo e Descrizione - solo per eventi da calendari esterni",
+          "Riguarda solo gli eventi da calendari esterni. Se lasciato vuoto, ogni riga assume il colore del testo secondario del tema.",
         fontDateDesc:
           "Dimensione del carattere della colonna Data (vedi Colonne della riga in Layout -> Visualizzazione)",
         fontCalendarDesc:
-          "Dimensione del carattere delle colonne Ora, Luogo e Descrizione - solo per eventi da calendari esterni",
+          "Riguarda solo gli eventi da calendari esterni. Le dimensioni sono relative alla dimensione del carattere della scheda.",
         cardTitleColorDesc: "Colore del testo per il titolo proprio della scheda",
         colorNameDesc: "Colore del testo per il nome dell'evento",
         colorLastName: "Cognome",
@@ -3390,14 +3837,20 @@
         panelSettings: "Impostazioni",
         panelSettingsDesc: "Generale, eventi e periodo",
         panelLayout: "Layout",
-        panelLayoutDesc: "Visualizzazione, font, colori, icone, sfondo scheda e timeline",
+        panelLayoutDesc: "Generale, vista elenco e timeline, aspetto, evidenziazione e sfondo scheda",
         groupGeneral: "Generale",
         groupGeneralDesc: "",
         groupEvents: "Eventi",
         groupEventsDesc: "",
         groupPeriod: "Periodo",
         groupPeriodDesc: "",
-        groupDisplay: "Visualizzazione",
+        groupDisplay: "Generale",
+        groupListView: "Vista elenco",
+        groupListViewDesc:
+          "Usato solo quando lo Stile del layout è impostato su Elenco.",
+        groupDesign: "Aspetto",
+        designColor: "Colore",
+        designFont: "Carattere",
         groupDisplayDesc: "",
       },
     },
@@ -3412,6 +3865,10 @@
       multiDayEnd: "fim",
       multiDayDay: "dia {day}",
       noEvents: "Nenhum evento próximo",
+      // The Week separator's own label (see separatorLabelText) - the word
+      // this language actually uses for a calendar week, which no Intl format
+      // supplies. {week} is the number.
+      separatorWeekLabel: "Semana {week}",
       todoCompleteConfirm: 'Marcar "{item}" como concluída?',
       todoCompleteConfirmMultiple: "Marcar todas as {count} tarefas deste evento como concluídas?",
       todoCompleteFailed: "Não foi possível concluir esta tarefa.",
@@ -3534,8 +3991,7 @@
         holidayDateObserved: "Observada",
         holidayMergeObserved: "Preferir data observada",
         holidayMergeRegions: "Mesclar feriados compartilhados por vários países",
-        holidayMergeRegionsDesc:
-          "Uma linha por feriado em vez de uma por país, listando todas as regiões que o celebram. O agrupamento é por data e pelo nome com que o feriado realmente aparece: dois feriados diferentes no mesmo dia continuam separados, e países com redação distinta só se mesclam depois que você lhes deu o mesmo nome (veja \"Nome e traduções\" no próprio feriado).",
+        holidayMergeRegionsDesc: "Uma entrada por feriado em vez de uma por país, com todas as regiões que o celebram. Agrupado por data e pelo nome com que o feriado realmente aparece - assim dois feriados diferentes no mesmo dia permanecem separados, e países cuja redação difere só se fundem depois de lhes dar o mesmo nome (ver Nome e traduções nas definições do feriado).",
         regionFormat: "Formato de região",
         regionFormatDesc: "Como o país e a região de um feriado são escritos, onde quer que apareçam.",
         regionFormatShort: "US (CA)",
@@ -3596,7 +4052,7 @@
         moreActionDesc:
           "O que o botão \"Mais\" no canto inferior direito da timeline faz. Normalmente uma ação de navegação para um painel que mostra os mesmos eventos no layout Lista completo. Deixe em \"Nada\" para ocultar o botão.",
         groupTimeline: "Timeline",
-        groupTimelineDesc: "Usado apenas quando o Estilo de layout (em Exibição) está definido como Timeline.",
+        groupTimelineDesc: "Usado apenas quando o Estilo de layout está definido como Timeline.",
         timelineHeaderLabel: "Cabeçalho",
         timelineHeaderFontDesc:
           "Fonte para a linha de descrição acima do eixo, ex.: \"O 27º aniversário de Kevin é hoje\".",
@@ -3613,15 +4069,14 @@
         eventTypesHeading: "Tipos de evento",
         eventTypeColorDesc: "Cor do ícone e do ponto deste tipo de evento na linha do tempo.",
         visibilityHeading: "Mostrar / Ocultar",
-        visibilityPast: "Eventos passados",
-        visibilityPastDesc: "Mostrar eventos cujo aniversário já passou dentro da janela passada configurada",
-        visibilityToday: "Eventos de hoje",
-        visibilityTodayDesc: "Mostrar eventos que ocorrem hoje",
-        visibilitySoon: "Em breve",
-        visibilitySoonDesc: "Mostrar eventos dentro do limite \"em breve\"",
-        visibilityCardTitleDesc: "Mostrar o título próprio do cartão",
         hideCardTitle: "Ocultar",
         hideCardTitleDesc: "Ocultar o título próprio do cartão, mesmo se definido acima",
+        noEventsText: "Texto sem eventos",
+        noEventsTextDesc:
+          "O que o cartão mostra quando não há nada a listar (deixe vazio para o texto padrão).",
+        noEventsLabel: "Sem eventos",
+        noEventsColorDesc: "Cor do texto que o cartão mostra quando não há nada a listar.",
+        noEventsFontDesc: "Fonte do texto que o cartão mostra quando não há nada a listar.",
         tapAction: "Ação ao tocar",
         tapActionDesc: "O que acontece ao tocar ou clicar em uma linha",
         holdAction: "Ação ao pressionar e segurar",
@@ -3637,14 +4092,13 @@
         cardLanguageDesc:
           "Fixa este cartão em um único idioma para todos que o virem, em vez de seguir o idioma de perfil de cada um. Afeta tanto o texto do cartão quanto a formatação das datas - não os nomes dos eventos, que vêm da integração. Este editor continua seguindo o seu próprio idioma de qualquer forma.",
         cardLanguageAuto: "Automático",
-        visibilityIcon: "Ícone",
-        visibilityIconDesc: "Mostrar o ícone do tipo antes de cada linha",
-        visibilityNameDesc: "Mostrar o nome do evento",
-        visibilityTypeDesc: "Mostrar o tipo de evento",
-        visibilityCountrySuffix: "Sufixo do feriado",
         visibilityCountrySuffixDesc: "Acrescenta o país (e a subdivisão, se houver) após o nome/tipo do feriado, por ex. \"Independência do Brasil · BR (SP)\"",
         columnsHeading: "Colunas da linha",
-        columnsDesc: "Adicione, remova e reorganize o que cada linha mostra. Colunas de texto personalizado podem combinar texto livre com espaços reservados: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
+        columnsDesc:
+          "Adicione, remova e reorganize o que cada linha mostra, ou comece por um destes modelos.",
+        columnsPresetDefault: "Padrão",
+        columnsPresetAgenda: "Agenda",
+        columnsPresetMinimal: "Mínimo",
         columnTypeIcon: "Ícone",
         columnTypeInfo: "Nome + tipo",
         columnTypeName: "Nome",
@@ -3654,6 +4108,8 @@
         columnTypeType: "Tipo",
         columnTypeText: "Texto personalizado",
         columnTypeDate: "Data",
+        columnTypeDateBlock: "Bloco de data",
+        columnTypeAccentBar: "Barra de destaque",
         columnTypeTime: "Horário",
         columnTypeLocation: "Local",
         columnTypeDescription: "Descrição",
@@ -3670,8 +4126,7 @@
         suffixShowHolidayTypeDesc:
           "Mostrar o rótulo de tipo de um feriado, por ex. \u201cHoliday (Public)\u201d. Desative para deixar apenas o sufixo de país/região nesta célula.",
         multiDayDisplay: "Eventos de vários dias",
-        multiDayDisplayDesc:
-          "Como um evento único que dura vários dias - uma viagem, um congresso - é listado. Afeta apenas eventos que realmente têm data de término; todo o resto continua sendo uma linha.",
+        multiDayDisplayDesc: "Como é apresentado um evento único que se estende por vários dias - uma viagem, uma conferência. Afeta apenas eventos que têm realmente data de fim; todo o resto é uma única entrada de qualquer forma.",
         multiDayStartOnly: "Apenas o primeiro dia",
         multiDayEndOnly: "Apenas o último dia",
         multiDayStartEnd: "Primeiro e último dia",
@@ -3697,11 +4152,31 @@
         columnMoveDown: "Mover para baixo",
         columnRemove: "Remover",
         columnTemplatePlaceholder: "por ex. {name} completa {occurrence} anos hoje",
-        columnColor: "Cor",
         columnsCompact: "Compacto (sem espaços, centralizado)",
         columnsCompactDesc: "Remove o espaçamento entre as colunas, centraliza a linha e uniformiza a espessura e a opacidade de todos os campos - útil quando as colunas formam uma única frase contínua.",
-        visibilityBadgeDesc: "Mostrar o selo do número de ocorrência",
-        visibilityWhenDesc: "Mostrar a contagem regressiva (por ex. \"em 3 dias\")",
+        monthSeparators: "Separadores de mês",
+        monthSeparatorsDesc: "Desenha uma linha onde linhas consecutivas caem em meses diferentes, dividindo uma lista longa em blocos mensais. A ordem das linhas em si não muda.",
+        weekSeparators: "Separadores de semana",
+        weekSeparatorsDesc: "O mesmo, um nível mais fino: uma linha onde linhas consecutivas caem em semanas diferentes, conforme sua configuração « Primeiro dia da semana » no Home Assistant. Se os separadores de mês também estiverem ligados, uma linha que inicia ambos recebe apenas um traço.",
+        daySeparators: "Separadores de dia",
+        daySeparatorsDesc: "Uma linha onde linhas consecutivas caem em dias diferentes, dividindo a lista em um bloco por dia. O mais fino dos três: se os separadores de semana ou de mês também estiverem ligados, uma linha que inicia dois deles recebe apenas o traço mais grosso.",
+        separatorWidth: "Espessura",
+        separatorWidthDesc: "Espessura do traço, por ex. « 1px ». Deixado vazio, fica 1px.",
+        separatorColor: "Cor",
+        separatorColorDesc: "Cor do traço. Deixada vazia, segue a cor de texto do tema, a mesma do título do cartão.",
+        separatorShowDayLabel: "Mostrar dia da semana",
+        separatorShowDayLabelDesc: "Escreve o dia da semana sobre a própria linha, centrado numa placa elíptica na cor de fundo do cartão, de modo que a linha se interrompe à volta do texto em vez de o atravessar.",
+        separatorShowWeekLabel: "Mostrar semana",
+        separatorShowWeekLabelDesc: "Escreve o número da semana sobre a própria linha, centrado numa placa elíptica na cor de fundo do cartão. O número segue a definição «Primeiro dia da semana» do Home Assistant, a mesma que decide onde caem as linhas.",
+        separatorShowMonthLabel: "Mostrar mês",
+        separatorShowMonthLabelDesc: "Escreve o mês sobre a própria linha, centrado numa placa elíptica na cor de fundo do cartão, de modo que a linha se interrompe à volta do texto em vez de o atravessar.",
+        separatorLabelColor: "Cor do texto",
+        separatorLabelColorDesc: "Cor da etiqueta. Deixada vazia segue a cor de texto do tema, a mesma do título do cartão.",
+        separatorLabelBackground: "Cor de fundo",
+        separatorLabelBackgroundDesc: "Cor da placa por trás da etiqueta – é ela que esconde a linha por baixo. Deixada vazia é a cor de fundo do próprio cartão, de modo que a etiqueta se lê como uma falha na linha.",
+        separatorLabelFontDesc: "Tamanho do texto da etiqueta, p. ex. «0.8em» ou «11px». Deixado vazio é 0.75em, relativo ao tamanho de letra do cartão, mais os quatro interruptores de estilo e o espaçamento abaixo.",
+        accentBarWidthDesc: "Espessura da barra, por ex. « 3px ». Deixada vazia, fica 3px. Adicione acima a coluna Barra de destaque para que ela apareça.",
+        accentBarColorDesc: "Cor padrão da barra. O tipo de evento e o estado da linha podem substituí-la.",
         whenClickShowsDate: "Data ao clicar na contagem regressiva",
         whenClickShowsDateDesc:
           "Clicar na contagem regressiva de uma linha mostra a data real (por ex. \"seg, 3 de ago de 2026\"), clicar novamente volta atrás - a ação de toque/pressionar da linha continua funcionando no resto da linha.",
@@ -3715,41 +4190,35 @@
         visibilityTodoOnly: "Apenas tarefas em aberto",
         visibilityTodoOnlyDesc:
           "Mostrar apenas os eventos que ainda têm uma tarefa em aberto (veja Tarefas em Configurações → Eventos). Restringe os dois filtros acima em vez de se juntar a eles: com «Apenas VIP» também ativo, mostra os eventos VIP em que ainda há algo a fazer.",
-        vipBadgeIcon: "Ícone do selo VIP",
-        vipBadgeIconDesc: "Ícone MDI mostrado como um pequeno selo no ícone de eventos marcados como VIP",
+        badgesHeading: "Emblemas",
+        badgeTargetIcon: "Ícone do evento",
+        badgeTargetIconDesc: "Desenha este emblema no canto do ícone da linha.",
+        badgeTargetAccentBar: "Barra de destaque",
+        badgeTargetAccentBarDesc: "Desenha este emblema na coluna à esquerda da barra de destaque, centralizada na linha. Requer a coluna Barra de destaque.",
+        badgeColor: "Cor do emblema",
+        badgeColorDesc: "Cor do símbolo dentro do emblema.",
+        badgeBgColor: "Cor de fundo do emblema",
+        badgeBgColorDesc: "Cor do disco atrás do símbolo.",
+        vipBadgeIcon: "Ícone do emblema",
+        vipBadgeIconDesc: "Ícone MDI usado como emblema nos eventos marcados como VIP.",
         vipBadgeIconPlaceholder: "mdi:star",
-        importantBadgeIcon: "Ícone do selo Important",
-        importantBadgeIconDesc: "Ícone MDI mostrado como um pequeno selo no ícone de eventos marcados automaticamente como importantes",
+        importantBadgeIcon: "Ícone do emblema",
+        importantBadgeIconDesc: "Ícone MDI usado como emblema nos eventos marcados automaticamente como importantes.",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
-        todoBadgeIcon: "Ícone do selo de tarefa",
-        todoBadgeIconDesc:
-          "Ícone MDI mostrado como pequeno selo sobre o ícone dos eventos com uma tarefa ainda em aberto (veja Tarefas em Eventos)",
-        todoBadgeColorList: "Cor do selo (Lista)",
-        todoBadgeColorListDesc: "Cor desse selo no layout Lista - por padrão o vermelho do tema",
-        todoBadgeColorTimeline: "Cor do selo (Timeline)",
+        todoBadgeIcon: "Ícone do emblema",
+        todoBadgeIconDesc: "Ícone MDI usado como emblema nos eventos com uma tarefa ainda aberta (ver Tarefas em Eventos).",
         todoBadgeColorTimelineDesc: "Cor desse selo no layout Linha do tempo - por padrão o vermelho do tema",
         highlightHeading: "Destaque",
         highlightPast: "Eventos passados",
-        highlightPastDesc: "Colorir o fundo da linha para eventos que já aconteceram",
-        highlightToday: "Eventos de hoje",
-        highlightTodayDesc: "Colorir o fundo da linha para eventos de hoje",
-        highlightSoon: "Em breve",
-        highlightSoonDesc: "Colorir o fundo da linha para eventos dentro do limite \"em breve\"",
         highlightBgColor: "Cor de fundo",
         highlightBgColorDesc: "Cor de fundo para este destaque",
         highlightVip: "Eventos VIP",
-        highlightVipDesc: "Mostrar um selo no ícone de eventos marcados como VIP",
+        highlightVipDesc: "Mostra um emblema nos eventos marcados como VIP.",
         highlightImportant: "Eventos importantes",
-        highlightImportantDesc: "Mostrar um selo no ícone de eventos marcados automaticamente como importantes",
+        highlightImportantDesc: "Mostra um emblema nos eventos marcados automaticamente como importantes.",
         highlightTodo: "Tarefas em aberto",
-        highlightTodoDesc: "Mostrar um selo no ícone de eventos com uma tarefa ainda em aberto",
-        vipBadgeColorList: "Cor do selo (Lista)",
-        vipBadgeColorListDesc: "Cor desse selo no layout Lista - por padrão o vermelho do tema",
-        vipBadgeColorTimeline: "Cor do selo (Timeline)",
-        vipBadgeColorTimelineDesc: "Cor desse selo no layout Linha do tempo - por padrão o branco",
-        importantBadgeColorList: "Cor do selo (Lista)",
-        importantBadgeColorListDesc: "Cor desse selo no layout Lista - por padrão o âmbar do tema",
-        importantBadgeColorTimeline: "Cor do selo (Timeline)",
+        highlightTodoDesc: "Mostra um emblema nos eventos com uma tarefa ainda aberta.",
+        vipBadgeColorTimelineDesc: "Cor desse selo no layout Linha do tempo - por padrão o vermelho do tema",
         importantBadgeColorTimelineDesc: "Cor desse selo no layout Linha do tempo - por padrão o âmbar do tema",
         colors: "Cores",
         cardBackgroundTabTitle: "Fundo do cartão",
@@ -3772,16 +4241,43 @@
         cardBackgroundSizeRepeat: "Mosaico",
         cardBackgroundOpacity: "Opacidade",
         cardBackgroundOpacityDesc: "Opacidade da cor/imagem de fundo, em porcentagem",
-        colorsIconsHeading: "Ícones",
-        colorsLabelsHeading: "Rótulos",
+        statusHeading: "Estado do evento",
+        statusTimelineIconColorDesc: "O ponto e os glifos deste estado na linha do tempo.",
+        statusEntryTextColor: "Cor do texto da entrada",
+        statusEntryTextColorDesc: "O texto deste estado na linha do tempo. Vazio assume a cor deste estado.",
+        typeRowColor: "Cor da linha inteira",
+        typeRowColorDesc: "Cor do texto da linha quando Linha inteira está ligado. Vazio assume a cor deste tipo.",
+        typeEntryColor: "Cor do texto da entrada",
+        typeEntryColorDesc: "Cor do texto do evento na linha do tempo quando Texto da entrada está ligado. Vazio assume a cor deste tipo.",
+        typeBarColor: "Cor da barra de destaque",
+        typeBarColorDesc: "Cor da barra de destaque quando Barra de destaque está ligado. Vazio assume a cor deste tipo.",
+        typeIconColor: "Cor do ícone",
+        typeIconColorDesc: "Cor do ícone: o da linha na lista, o ponto na linha do tempo. Vazio assume a cor deste tipo.",
+        typeAnimationDesc: "Animação dos ícones deste tipo de evento; substitui a do bloco Ícone em Design. Em Nenhuma segue esse padrão. Um estado pode substituí-la de novo.",
+        rowTargetTimeline: "Texto da entrada",
+        rowTargetTimelineDesc: "Colore também o texto do evento na lista sob o eixo, não apenas o seu ponto.",
+        fontLetterSpacingDesc: "Espaçamento entre as letras, por ex. 0.05em ou 1px. Vazio mantém o espaçamento da fonte.",
+        lineStyleDesc: "Se a linha é desenhada contínua, tracejada ou pontilhada.",
+        designLineBlockDesc: "A espessura, o estilo de traço e a cor da linha.",
+        statusOverrideHint: "Desativado aplica-se a cor do tipo de evento ou o padrão de Design.",
+        designIconBlockDesc: "A cor e a animação padrão dos ícones do cartão. Cada tipo de evento e cada estado recorre a elas enquanto não as substituir.",
+        designBarBlockDesc: "Cor padrão da barra e a sua espessura.",
+        designElementDesc: "Tudo o que dá estilo a esta parte do cartão: a cor, a fonte e os interruptores abaixo.",
+        designGroupDesc: "As linhas que compõem esta coluna. Cada uma é ajustada separadamente abaixo.",
+        statusTextColor: "Cor de todo o texto",
+        statusTextColorDesc: "O texto da linha, sem o ícone e a barra de destaque. Vazio assume a cor deste estado.",
+        statusIconAnimation: "Animação do ícone",
+        statusIconAnimationDesc: "A animação do ícone. Desativado aplica-se o padrão de Design.",
+        designIconColorDesc: "Cor padrão do ícone da linha. Cada estado recorre a ela enquanto não a substituir.",
+        statusPastDesc: "Eventos que já passaram.",
+        statusIconColor: "Cor do ícone",
+        statusIconColorDesc: "O ícone da linha.",
+        statusBarColor: "Cor da barra de destaque",
+        statusBarColorDesc: "A barra de destaque da linha. Vazio segue a cor do ícone.",
         colorToday: "Hoje",
         colorSoon: "Em breve",
-        colorAccent: "Padrão",
-        colorTodayDesc: "Cor do ícone para eventos de hoje",
-        colorSoonDesc: "Cor do ícone para eventos dentro do limite \"em breve\"",
-        iconVisibleLabel: "Mostrar ícone",
-        iconVisibleDesc: "Mostrar ou ocultar o ícone para esta categoria",
-        colorAccentDesc: "Cor do ícone para eventos sem status especial",
+        colorTodayDesc: "Eventos que acontecem hoje.",
+        colorSoonDesc: "Eventos dentro do limite « em breve ».",
         animationLabel: "Animação",
         animationDesc: "Adicionar uma animação em loop a este ícone",
         animationNone: "Nenhuma",
@@ -3790,23 +4286,39 @@
         animationShake: "Tremer",
         animationSpin: "Girar",
         animationFlash: "Piscar",
-        matchTextLabel: "Colorir também o texto",
-        matchTextDesc: "Colorir também todo o texto da linha com esta cor de ícone",
+        rowColorsLabel: "Formatar as linhas por tipo de evento",
+        rowColorsDesc: "Dá a cada tipo de evento o seu próprio aspeto - a cor e que partes de uma linha ou entrada da linha do tempo ela colore - em vez dos padrões de Design. O estado de uma linha ainda pode substituí-lo.",
+        calendarColorsHeading: "Calendários incorporados",
+        calendarColorDesc: "Cor para este calendário: as suas linhas na lista, o seu ponto na linha do tempo. Deixada vazia, usa-se a cor que o Home Assistant guarda para o calendário.",
+        eventTypeRowColorDesc: "Cor para este tipo de evento: as suas linhas na lista, o seu ponto na linha do tempo. Na lista, os interruptores ao lado escolhem que partes de uma linha ela colore.",
+        rowTargetIcon: "Ícone",
+        rowTargetIconDesc: "Colore o ícone deste tipo.",
+        rowTargetAccentBar: "Barra de destaque",
+        rowTargetAccentBarDesc: "Colore a barra de destaque deste tipo.",
+        rowTargetRow: "Linha inteira",
+        rowTargetRowDesc: "Colore a linha inteira, incluindo o texto - e com ela o ícone e a barra de destaque, independentemente dos seus próprios interruptores.",
         colorName: "Nome",
         colorType: "Tipo",
+        combinedFontDesc: "Tamanho e estilo desta linha da coluna combinada.",
+        combinedColorDesc: "Cor desta linha da coluna combinada.",
         colorBadge: "Ocorrência",
         colorWhen: "Contagem regressiva",
         colorText: "Texto personalizado",
         colorDate: "Data",
-        colorCalendar: "Campos de calendário",
+        dateBlockWeekday: "Dia da semana",
+        dateBlockDay: "Dia",
+        dateBlockMonth: "Mês",
+        dateBlockFontDesc: "Afeta apenas a coluna Bloco de data. Os tamanhos são relativos ao tamanho da fonte do cartão: 0,75 / 1,5 / 0,75 se vazio.",
+        dateBlockColorDesc: "Afeta apenas a coluna Bloco de data. Deixado vazio, o dia da semana e o mês assumem a cor de texto secundária do tema e o dia a primária.",
+        colorCalendar: "Campos de calendário externo",
         colorDateDesc:
           "Cor do texto da coluna Data",
         colorCalendarDesc:
-          "Cor do texto das colunas Hora, Local e Descrição - apenas para eventos de calendários externos",
+          "Afeta apenas eventos de calendários externos. Se deixado vazio, cada linha assume a cor de texto secundária do tema.",
         fontDateDesc:
           "Tamanho da fonte da coluna Data (veja Colunas da linha em Layout -> Exibição)",
         fontCalendarDesc:
-          "Tamanho da fonte das colunas Hora, Local e Descrição - apenas para eventos de calendários externos",
+          "Afeta apenas eventos de calendários externos. Os tamanhos são relativos ao tamanho da fonte do cartão.",
         cardTitleColorDesc: "Cor do texto para o título próprio do cartão",
         colorNameDesc: "Cor do texto para o nome do evento",
         colorLastName: "Sobrenome",
@@ -3865,14 +4377,20 @@
         panelSettings: "Configurações",
         panelSettingsDesc: "Geral, eventos e período",
         panelLayout: "Layout",
-        panelLayoutDesc: "Exibição, fontes, cores, ícones, fundo do cartão e timeline",
+        panelLayoutDesc: "Geral, vista de lista e timeline, design, destaque e fundo do cartão",
         groupGeneral: "Geral",
         groupGeneralDesc: "",
         groupEvents: "Eventos",
         groupEventsDesc: "",
         groupPeriod: "Período",
         groupPeriodDesc: "",
-        groupDisplay: "Exibição",
+        groupDisplay: "Geral",
+        groupListView: "Vista de lista",
+        groupListViewDesc:
+          "Usado apenas quando o Estilo de layout está definido como Lista.",
+        groupDesign: "Design",
+        designColor: "Cor",
+        designFont: "Fonte",
         groupDisplayDesc: "",
       },
     },
@@ -3887,6 +4405,10 @@
       multiDayEnd: "конец",
       multiDayDay: "день {day}",
       noEvents: "Нет ближайших событий",
+      // The Week separator's own label (see separatorLabelText) - the word
+      // this language actually uses for a calendar week, which no Intl format
+      // supplies. {week} is the number.
+      separatorWeekLabel: "Неделя {week}",
       todoCompleteConfirm: 'Отметить «{item}» как выполненное?',
       todoCompleteConfirmMultiple: "Отметить все задачи этого события ({count}) как выполненные?",
       todoCompleteFailed: "Не удалось выполнить эту задачу.",
@@ -4014,8 +4536,7 @@
         holidayDateObserved: "Перенесённая",
         holidayMergeObserved: "Предпочитать перенесённую дату",
         holidayMergeRegions: "Объединять праздники, общие для нескольких стран",
-        holidayMergeRegionsDesc:
-          "Одна строка на праздник вместо одной на страну, со списком всех отмечающих его регионов. Группировка идёт по дате и по названию, под которым праздник действительно отображается: два разных праздника в один день остаются раздельно, а страны с различающейся формулировкой объединяются лишь после того, как вы дали им одно и то же название (см. «Название и переводы» у самого праздника).",
+        holidayMergeRegionsDesc: "Одна запись на праздник вместо одной на страну, со всеми регионами, которые его отмечают. Группируется по дате и по имени, под которым праздник действительно отображается - так два разных праздника в один день остаются раздельными, а страны с различающимися формулировками объединяются лишь после того, как вы дали им одно имя (см. «Имя и переводы» в настройках праздника).",
         regionFormat: "Формат региона",
         regionFormatDesc: "Как записываются страна и регион праздника везде, где они показываются.",
         regionFormatShort: "US (CA)",
@@ -4076,7 +4597,7 @@
         moreActionDesc:
           "Что делает кнопка «Ещё» в правом нижнем углу таймлайна. Обычно действие перехода на дашборд, показывающий те же события в полном макете Список. Оставьте «Ничего», чтобы скрыть кнопку.",
         groupTimeline: "Timeline",
-        groupTimelineDesc: "Используется только когда Стиль макета (в разделе Отображение) установлен на Timeline.",
+        groupTimelineDesc: "Используется только когда Стиль макета установлен на Timeline.",
         timelineHeaderLabel: "Заголовок",
         timelineHeaderFontDesc:
           "Шрифт для строки описания над осью, напр. «Kevin: 27-й день рождения — сегодня».",
@@ -4093,15 +4614,14 @@
         eventTypesHeading: "Типы событий",
         eventTypeColorDesc: "Цвет значка и точки этого типа события на шкале времени.",
         visibilityHeading: "Показать / Скрыть",
-        visibilityPast: "Прошедшие события",
-        visibilityPastDesc: "Показывать события, годовщина которых уже прошла в настроенном окне прошлого",
-        visibilityToday: "Сегодняшние события",
-        visibilityTodayDesc: "Показывать события, происходящие сегодня",
-        visibilitySoon: "Скоро",
-        visibilitySoonDesc: "Показывать события в пределах порога «скоро»",
-        visibilityCardTitleDesc: "Показывать собственный заголовок карточки",
         hideCardTitle: "Скрыть",
         hideCardTitleDesc: "Скрыть собственный заголовок карточки, даже если он задан выше",
+        noEventsText: "Текст без событий",
+        noEventsTextDesc:
+          "Что показывает карточка, когда список пуст (оставьте пустым для текста по умолчанию).",
+        noEventsLabel: "Нет событий",
+        noEventsColorDesc: "Цвет текста строки, которую карточка показывает при пустом списке.",
+        noEventsFontDesc: "Шрифт строки, которую карточка показывает при пустом списке.",
         tapAction: "Действие при нажатии",
         tapActionDesc: "Что происходит при нажатии или клике на строку",
         holdAction: "Действие при удержании",
@@ -4117,14 +4637,13 @@
         cardLanguageDesc:
           "Закрепляет за этой карточкой один язык для всех, кто её видит, вместо того чтобы следовать языку профиля каждого. Касается и текстов карточки, и формата дат - но не самих названий событий, которые приходят из интеграции. Этот редактор в любом случае остаётся на вашем языке.",
         cardLanguageAuto: "Автоматически",
-        visibilityIcon: "Значок",
-        visibilityIconDesc: "Показывать значок типа перед каждой строкой",
-        visibilityNameDesc: "Показывать имя события",
-        visibilityTypeDesc: "Показывать тип события",
-        visibilityCountrySuffix: "Суффикс праздника",
         visibilityCountrySuffixDesc: "Добавлять страну (и регион, если есть) после названия/типа праздника, напр. «День России · RU (MOW)»",
         columnsHeading: "Столбцы строки",
-        columnsDesc: "Добавляйте, удаляйте и меняйте порядок того, что показывает каждая строка. Столбцы произвольного текста могут сочетать свободный текст с плейсхолдерами: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
+        columnsDesc:
+          "Добавляйте, удаляйте и меняйте порядок того, что показывает каждая строка, или начните с одной из этих заготовок.",
+        columnsPresetDefault: "По умолчанию",
+        columnsPresetAgenda: "Ежедневник",
+        columnsPresetMinimal: "Минимум",
         columnTypeIcon: "Значок",
         columnTypeInfo: "Имя + тип",
         columnTypeName: "Имя",
@@ -4134,6 +4653,8 @@
         columnTypeType: "Тип",
         columnTypeText: "Произвольный текст",
         columnTypeDate: "Дата",
+        columnTypeDateBlock: "Блок даты",
+        columnTypeAccentBar: "Акцентная полоса",
         columnTypeTime: "Время",
         columnTypeLocation: "Место",
         columnTypeDescription: "Описание",
@@ -4150,8 +4671,7 @@
         suffixShowHolidayTypeDesc:
           "Показывать метку типа праздника, например \u201cHoliday (Public)\u201d. Отключите, чтобы в этой ячейке остался только суффикс страны/региона.",
         multiDayDisplay: "Многодневные события",
-        multiDayDisplayDesc:
-          "Как отображается разовое событие, длящееся несколько дней, — поездка, конференция. Затрагивает только события, у которых действительно есть дата окончания; всё остальное остаётся одной строкой.",
+        multiDayDisplayDesc: "Как отображается разовое событие длиной в несколько дней - поездка, конференция. Касается только событий, у которых действительно есть дата окончания; всё остальное и так одна запись.",
         multiDayStartOnly: "Только первый день",
         multiDayEndOnly: "Только последний день",
         multiDayStartEnd: "Первый и последний день",
@@ -4177,11 +4697,31 @@
         columnMoveDown: "Переместить вниз",
         columnRemove: "Удалить",
         columnTemplatePlaceholder: "напр. {name} исполняется {occurrence} сегодня",
-        columnColor: "Цвет",
         columnsCompact: "Компактно (без промежутков, по центру)",
         columnsCompactDesc: "Убирает промежутки между столбцами, центрирует строку и выравнивает толщину и прозрачность всех полей - полезно, когда столбцы образуют одно связное предложение.",
-        visibilityBadgeDesc: "Показывать значок номера события",
-        visibilityWhenDesc: "Показывать обратный отсчёт (напр. «через 3 дня»)",
+        monthSeparators: "Разделители месяцев",
+        monthSeparatorsDesc: "Рисует линию везде, где соседние строки попадают в разные месяцы, разбивая длинный список на блоки по месяцам. Сам порядок строк не меняется.",
+        weekSeparators: "Разделители недель",
+        weekSeparatorsDesc: "То же самое, но мельче: линия везде, где соседние строки попадают в разные недели, по настройке «Первый день недели» в Home Assistant. Если включены и разделители месяцев, строка, начинающая и то и другое, получит одну линию.",
+        daySeparators: "Разделители дней",
+        daySeparatorsDesc: "Линия везде, где соседние строки попадают на разные дни, разбивая список на блок для каждого дня. Самый мелкий из трёх: если включены и разделители недель или месяцев, строка, начинающая два из них, получит только более крупную линию.",
+        separatorWidth: "Толщина",
+        separatorWidthDesc: "Толщина линии, например «1px». Если оставить пустым - 1px.",
+        separatorColor: "Цвет",
+        separatorColorDesc: "Цвет линии. Если оставить пустым, берётся цвет текста темы - тот же, что у заголовка карточки.",
+        separatorShowDayLabel: "Показывать день недели",
+        separatorShowDayLabelDesc: "Пишет день недели на самой линии, по центру, на эллиптической плашке цвета фона карточки, так что линия прерывается вокруг текста, а не проходит сквозь него.",
+        separatorShowWeekLabel: "Показывать номер недели",
+        separatorShowWeekLabelDesc: "Пишет номер недели на самой линии, на эллиптической плашке цвета фона карточки. Номер следует настройке «Первый день недели» в Home Assistant – той же, что решает, где проходят линии.",
+        separatorShowMonthLabel: "Показывать месяц",
+        separatorShowMonthLabelDesc: "Пишет месяц на самой линии, по центру, на эллиптической плашке цвета фона карточки, так что линия прерывается вокруг текста.",
+        separatorLabelColor: "Цвет текста",
+        separatorLabelColorDesc: "Цвет подписи. Пустое поле следует цвету текста темы, тому же, что у заголовка карточки.",
+        separatorLabelBackground: "Цвет фона",
+        separatorLabelBackgroundDesc: "Цвет плашки за подписью – именно она скрывает линию под ней. Пустое поле – цвет фона самой карточки.",
+        separatorLabelFontDesc: "Размер текста подписи, напр. «0.8em» или «11px». Пустое поле – это 0.75em относительно размера шрифта карточки, плюс четыре переключателя стиля и межбуквенный интервал ниже.",
+        accentBarWidthDesc: "Толщина полосы, например «3px». Если оставить пустым - 3px. Чтобы полоса вообще появилась, добавьте выше столбец «Акцентная полоса».",
+        accentBarColorDesc: "Цвет полосы по умолчанию. Тип события и статус строки могут его переопределить.",
         whenClickShowsDate: "Дата по клику на отсчёт",
         whenClickShowsDateDesc:
           "Клик по обратному отсчёту в строке показывает вместо него фактическую дату (напр. «пн, 3 авг. 2026 г.»), повторный клик возвращает отсчёт - действие нажатия/удержания строки по-прежнему работает в остальной части строки.",
@@ -4195,41 +4735,35 @@
         visibilityTodoOnly: "Только с открытыми задачами",
         visibilityTodoOnlyDesc:
           "Показывать только события, у которых осталась невыполненная задача (см. «Задачи» в разделе Настройки → События). Сужает два фильтра выше, а не объединяется с ними: вместе с «Только VIP» показывает VIP-события, по которым ещё есть что сделать.",
-        vipBadgeIcon: "Значок VIP-бейджа",
-        vipBadgeIconDesc: "Значок MDI, показываемый как небольшой бейдж на значке событий, отмеченных как VIP",
+        badgesHeading: "Значки",
+        badgeTargetIcon: "Значок события",
+        badgeTargetIconDesc: "Рисует этот бейдж в углу значка строки.",
+        badgeTargetAccentBar: "Акцентная полоса",
+        badgeTargetAccentBarDesc: "Рисует этот бейдж в столбце слева от акцентной полосы, по центру строки. Требуется столбец «Акцентная полоса».",
+        badgeColor: "Цвет бейджа",
+        badgeColorDesc: "Цвет символа внутри бейджа.",
+        badgeBgColor: "Цвет фона бейджа",
+        badgeBgColorDesc: "Цвет круга за символом.",
+        vipBadgeIcon: "Значок бейджа",
+        vipBadgeIconDesc: "Значок MDI, используемый как бейдж у событий с пометкой VIP.",
         vipBadgeIconPlaceholder: "mdi:star",
-        importantBadgeIcon: "Значок бейджа Important",
-        importantBadgeIconDesc: "Значок MDI, показываемый как небольшой бейдж на значке событий, автоматически отмеченных как важные",
+        importantBadgeIcon: "Значок бейджа",
+        importantBadgeIconDesc: "Значок MDI, используемый как бейдж у событий, автоматически помеченных как важные.",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
-        todoBadgeIcon: "Значок задачи",
-        todoBadgeIconDesc:
-          "Иконка MDI, показываемая небольшим значком поверх иконки событий с невыполненной задачей (см. «Задачи» в разделе «События»)",
-        todoBadgeColorList: "Цвет бейджа (Список)",
-        todoBadgeColorListDesc: "Цвет этого значка в макете «Список» - по умолчанию красный цвет темы",
-        todoBadgeColorTimeline: "Цвет бейджа (Timeline)",
+        todoBadgeIcon: "Значок бейджа",
+        todoBadgeIconDesc: "Значок MDI, используемый как бейдж у событий с ещё незакрытой задачей (см. «Задачи» в разделе «События»).",
         todoBadgeColorTimelineDesc: "Цвет этого значка в макете «Шкала времени» - по умолчанию красный цвет темы",
         highlightHeading: "Выделение",
         highlightPast: "Прошедшие события",
-        highlightPastDesc: "Окрашивать фон строки для уже прошедших событий",
-        highlightToday: "Сегодняшние события",
-        highlightTodayDesc: "Окрашивать фон строки для сегодняшних событий",
-        highlightSoon: "Скоро",
-        highlightSoonDesc: "Окрашивать фон строки для событий в пределах порога «скоро»",
         highlightBgColor: "Цвет фона",
         highlightBgColorDesc: "Цвет фона для этого выделения",
         highlightVip: "VIP-события",
-        highlightVipDesc: "Показывать бейдж на значке событий, отмеченных как VIP",
+        highlightVipDesc: "Показывает значок у событий с пометкой VIP.",
         highlightImportant: "Важные события",
-        highlightImportantDesc: "Показывать бейдж на значке событий, автоматически отмеченных как важные",
+        highlightImportantDesc: "Показывает значок у событий, автоматически помеченных как важные.",
         highlightTodo: "Задачи",
-        highlightTodoDesc: "Показывать бейдж на значке событий с невыполненной задачей",
-        vipBadgeColorList: "Цвет бейджа (Список)",
-        vipBadgeColorListDesc: "Цвет этого значка в макете «Список» - по умолчанию красный цвет темы",
-        vipBadgeColorTimeline: "Цвет бейджа (Timeline)",
-        vipBadgeColorTimelineDesc: "Цвет этого значка в макете «Шкала времени» - по умолчанию белый",
-        importantBadgeColorList: "Цвет бейджа (Список)",
-        importantBadgeColorListDesc: "Цвет этого значка в макете «Список» - по умолчанию янтарный цвет темы",
-        importantBadgeColorTimeline: "Цвет бейджа (Timeline)",
+        highlightTodoDesc: "Показывает значок у событий с ещё незакрытой задачей.",
+        vipBadgeColorTimelineDesc: "Цвет этого значка в макете «Шкала времени» - по умолчанию красный цвет темы",
         importantBadgeColorTimelineDesc:
           "Цвет этого значка в макете «Шкала времени» - по умолчанию янтарный цвет темы",
         colors: "Цвета",
@@ -4253,16 +4787,43 @@
         cardBackgroundSizeRepeat: "Плитка",
         cardBackgroundOpacity: "Непрозрачность",
         cardBackgroundOpacityDesc: "Непрозрачность цвета/изображения фона, в процентах",
-        colorsIconsHeading: "Значки",
-        colorsLabelsHeading: "Подписи",
+        statusHeading: "Статус события",
+        statusTimelineIconColorDesc: "Точка и значки этого статуса на шкале времени.",
+        statusEntryTextColor: "Цвет текста записи",
+        statusEntryTextColorDesc: "Текст этого статуса на шкале времени. Пусто - берётся цвет этого статуса.",
+        typeRowColor: "Цвет всей строки",
+        typeRowColorDesc: "Цвет текста строки, когда включена «Вся строка». Пусто - берётся цвет этого типа.",
+        typeEntryColor: "Цвет текста записи",
+        typeEntryColorDesc: "Цвет текста события на шкале времени, когда включён «Текст записи». Пусто - берётся цвет этого типа.",
+        typeBarColor: "Цвет акцентной полосы",
+        typeBarColorDesc: "Цвет акцентной полосы, когда включена «Акцентная полоса». Пусто - берётся цвет этого типа.",
+        typeIconColor: "Цвет значка",
+        typeIconColorDesc: "Цвет значка: в списке значка строки, на шкале времени точки. Пусто - берётся цвет этого типа.",
+        typeAnimationDesc: "Анимация значков этого типа события; переопределяет анимацию блока «Значок» в Design. При «Нет» следует этому значению по умолчанию. Статус может переопределить её снова.",
+        rowTargetTimeline: "Текст записи",
+        rowTargetTimelineDesc: "Окрашивает в этот цвет и текст события в списке под осью, а не только его точку.",
+        fontLetterSpacingDesc: "Расстояние между буквами, например 0.05em или 1px. Пусто - остаётся межбуквенный интервал шрифта.",
+        lineStyleDesc: "Как рисуется линия: сплошной, штриховой или пунктирной.",
+        designLineBlockDesc: "Толщина, тип штриха и цвет линии.",
+        statusOverrideHint: "Выключено - действует цвет типа события или значение по умолчанию из Design.",
+        designIconBlockDesc: "Цвет и анимация значков карточки по умолчанию. Каждый тип события и каждый статус опирается на них, пока не переопределит.",
+        designBarBlockDesc: "Цвет полосы по умолчанию и её толщина.",
+        designElementDesc: "Всё, что оформляет эту часть карточки: цвет, шрифт и переключатели ниже.",
+        designGroupDesc: "Строки, из которых состоит этот столбец. Каждая настраивается отдельно ниже.",
+        statusTextColor: "Цвет всего текста",
+        statusTextColorDesc: "Текст строки, кроме значка и акцентной полосы. Пусто - берётся цвет этого статуса.",
+        statusIconAnimation: "Анимация значка",
+        statusIconAnimationDesc: "Анимация значка. Выключено - действует значение по умолчанию из Design.",
+        designIconColorDesc: "Цвет значка строки по умолчанию. Каждый статус опирается на него, пока не переопределит.",
+        statusPastDesc: "События, которые уже прошли.",
+        statusIconColor: "Цвет значка",
+        statusIconColorDesc: "Значок строки.",
+        statusBarColor: "Цвет акцентной полосы",
+        statusBarColorDesc: "Акцентная полоса строки. Пусто - следует цвету значка.",
         colorToday: "Сегодня",
         colorSoon: "Скоро",
-        colorAccent: "По умолчанию",
-        colorTodayDesc: "Цвет значка для сегодняшних событий",
-        colorSoonDesc: "Цвет значка для событий в пределах порога «скоро»",
-        iconVisibleLabel: "Показывать значок",
-        iconVisibleDesc: "Показать или скрыть значок для этой категории",
-        colorAccentDesc: "Цвет значка для событий без особого статуса",
+        colorTodayDesc: "События, происходящие сегодня.",
+        colorSoonDesc: "События в пределах порога «скоро».",
         animationLabel: "Анимация",
         animationDesc: "Добавить зацикленную анимацию к этому значку",
         animationNone: "Нет",
@@ -4271,23 +4832,39 @@
         animationShake: "Встряхивание",
         animationSpin: "Вращение",
         animationFlash: "Мигание",
-        matchTextLabel: "Также окрашивать текст",
-        matchTextDesc: "Также окрашивать весь текст строки в этот цвет значка",
+        rowColorsLabel: "Оформлять строки по типу события",
+        rowColorsDesc: "Даёт каждому типу события собственное оформление - цвет и то, какие части строки или записи шкалы времени он окрашивает - вместо значений по умолчанию из Design. Статус строки по-прежнему может его переопределить.",
+        calendarColorsHeading: "Встроенные календари",
+        calendarColorDesc: "Цвет для этого календаря - его строки в списке, его точка на шкале времени. Если оставить пустым, используется цвет, который Home Assistant сам хранит для календаря.",
+        eventTypeRowColorDesc: "Цвет для этого типа события - его строки в списке, его точка на шкале времени. В списке переключатели рядом определяют, какие части строки он окрашивает.",
+        rowTargetIcon: "Значок",
+        rowTargetIconDesc: "Окрашивает значок этого типа.",
+        rowTargetAccentBar: "Акцентная полоса",
+        rowTargetAccentBarDesc: "Окрашивает акцентную полосу этого типа.",
+        rowTargetRow: "Вся строка",
+        rowTargetRowDesc: "Окрашивает всю строку вместе с текстом - а с ней значок и акцентную полосу, независимо от их собственных переключателей.",
         colorName: "Имя",
         colorType: "Тип",
+        combinedFontDesc: "Размер и начертание для этой строки объединённого столбца.",
+        combinedColorDesc: "Цвет этой строки объединённого столбца.",
         colorBadge: "Номер события",
         colorWhen: "Обратный отсчёт",
         colorText: "Произвольный текст",
         colorDate: "Дата",
-        colorCalendar: "Поля календаря",
+        dateBlockWeekday: "День недели",
+        dateBlockDay: "Число",
+        dateBlockMonth: "Месяц",
+        dateBlockFontDesc: "Касается только столбца «Блок даты». Размеры заданы относительно размера шрифта карточки: 0,75 / 1,5 / 0,75, если пусто.",
+        dateBlockColorDesc: "Касается только столбца «Блок даты». Если оставить пустым, день недели и месяц берут вторичный цвет текста темы, а число - основной.",
+        colorCalendar: "Поля внешнего календаря",
         colorDateDesc:
           "Цвет текста столбца «Дата»",
         colorCalendarDesc:
-          "Цвет текста столбцов «Время», «Место» и «Описание» - только для событий из внешних календарей",
+          "Влияет только на события из внешних календарей. Если оставить пустым, каждая строка берёт вторичный цвет текста темы.",
         fontDateDesc:
           "Размер шрифта столбца «Дата» (см. «Столбцы строки» в разделе Макет -> Отображение)",
         fontCalendarDesc:
-          "Размер шрифта столбцов «Время», «Место» и «Описание» - только для событий из внешних календарей",
+          "Влияет только на события из внешних календарей. Размеры указываются относительно размера шрифта карточки.",
         cardTitleColorDesc: "Цвет текста для собственного заголовка карточки",
         colorNameDesc: "Цвет текста для имени события",
         colorLastName: "Фамилия",
@@ -4346,14 +4923,20 @@
         panelSettings: "Настройки",
         panelSettingsDesc: "Общее, события и период",
         panelLayout: "Оформление",
-        panelLayoutDesc: "Отображение, шрифты, цвета, значки, фон карточки и timeline",
+        panelLayoutDesc: "Общее, список и timeline, оформление, выделение и фон карточки",
         groupGeneral: "Общее",
         groupGeneralDesc: "",
         groupEvents: "События",
         groupEventsDesc: "",
         groupPeriod: "Период",
         groupPeriodDesc: "",
-        groupDisplay: "Отображение",
+        groupDisplay: "Общее",
+        groupListView: "Список",
+        groupListViewDesc:
+          "Используется, только если для стиля макета выбран список.",
+        groupDesign: "Оформление",
+        designColor: "Цвет",
+        designFont: "Шрифт",
         groupDisplayDesc: "",
       },
     },
@@ -4368,6 +4951,10 @@
       multiDayEnd: "slut",
       multiDayDay: "dag {day}",
       noEvents: "Inga kommande händelser",
+      // The Week separator's own label (see separatorLabelText) - the word
+      // this language actually uses for a calendar week, which no Intl format
+      // supplies. {week} is the number.
+      separatorWeekLabel: "V. {week}",
       todoCompleteConfirm: 'Markera "{item}" som klar?',
       todoCompleteConfirmMultiple: "Markera alla {count} uppgifter för den här händelsen som klara?",
       todoCompleteFailed: "Kunde inte slutföra den här uppgiften.",
@@ -4494,8 +5081,7 @@
         holidayDateObserved: "Observerat",
         holidayMergeObserved: "Föredra observerat datum",
         holidayMergeRegions: "Slå ihop helgdagar som flera länder delar",
-        holidayMergeRegionsDesc:
-          "En rad per helgdag i stället för en per land, med alla regioner som firar den. Grupperingen sker på datum och på det namn helgdagen faktiskt visas under - två olika helgdagar samma dag hålls alltså isär, och länder med avvikande formulering slås ihop först när du gett dem samma namn (se ”Namn och översättningar” på helgdagen själv).",
+        holidayMergeRegionsDesc: "En post per helgdag i stället för en per land, med alla regioner som firar den. Grupperat efter datum och efter det namn helgdagen faktiskt visas under - så två olika helgdagar samma dag hålls isär, och länder vars formulering skiljer sig slås ihop först när du har gett dem samma namn (se Namn och översättningar i helgdagens egna inställningar).",
         regionFormat: "Regionformat",
         regionFormatDesc: "Hur en helgdags land och region skrivs, överallt där de visas.",
         regionFormatShort: "US (CA)",
@@ -4556,7 +5142,7 @@
         moreActionDesc:
           "Vad knappen \"Mer\" längst ned till höger i tidslinjen gör. Vanligtvis en navigeringsåtgärd till en instrumentpanel som visar samma händelser i det fullständiga Lista-layouten. Lämna på \"Inget\" för att dölja knappen.",
         groupTimeline: "Timeline",
-        groupTimelineDesc: "Används endast när Kortlayout (under Visning) är inställd på Timeline.",
+        groupTimelineDesc: "Används endast när Kortlayout är inställd på Timeline.",
         timelineHeaderLabel: "Rubrik",
         timelineHeaderFontDesc:
           "Teckensnitt för beskrivningsraden ovanför axeln, t.ex. \"Kevins 27:e födelsedag är idag\".",
@@ -4573,15 +5159,14 @@
         eventTypesHeading: "Händelsetyper",
         eventTypeColorDesc: "Färg för ikonen och punkten för denna händelsetyp på tidslinjen.",
         visibilityHeading: "Visa / Dölj",
-        visibilityPast: "Tidigare händelser",
-        visibilityPastDesc: "Visa händelser vars årsdag redan passerat inom det inställda tidigare-fönstret",
-        visibilityToday: "Dagens händelser",
-        visibilityTodayDesc: "Visa händelser som inträffar idag",
-        visibilitySoon: "Snart",
-        visibilitySoonDesc: "Visa händelser inom \"snart\"-tröskeln",
-        visibilityCardTitleDesc: "Visa kortets egen titel",
         hideCardTitle: "Dölj",
         hideCardTitleDesc: "Dölj kortets egen titel, även om den är inställd ovan",
+        noEventsText: "Text utan händelser",
+        noEventsTextDesc:
+          "Vad kortet visar när det inte finns något att lista (lämna tomt för standardtexten).",
+        noEventsLabel: "Inga händelser",
+        noEventsColorDesc: "Textfärg för raden kortet visar när det inte finns något att lista.",
+        noEventsFontDesc: "Typsnitt för raden kortet visar när det inte finns något att lista.",
         tapAction: "Åtgärd vid tryck",
         tapActionDesc: "Vad som händer när en rad trycks eller klickas",
         holdAction: "Åtgärd vid tryck och håll",
@@ -4597,15 +5182,13 @@
         cardLanguageDesc:
           "Låser det här kortet till ett språk för alla som ser det, i stället för att följa varje betraktares egen profilspråk. Gäller både kortets text och dess datumformat - inte händelsernas namn, som kommer från integrationen. Den här redigeraren följer ditt eget språk oavsett.",
         cardLanguageAuto: "Automatiskt",
-        visibilityIcon: "Ikon",
-        visibilityIconDesc: "Visa typikonen framför varje rad",
-        visibilityNameDesc: "Visa händelsens namn",
-        visibilityTypeDesc: "Visa händelsetypen",
-        visibilityCountrySuffix: "Helgdagssuffix",
         visibilityCountrySuffixDesc: "Lägg till landet (och ev. delstat/region) efter helgdagens namn/typ, t.ex. \"Nationaldagen · SE (AB)\"",
         columnsHeading: "Radkolumner",
         columnsDesc:
-          "Lägg till, ta bort och ändra ordning på vad varje rad visar. Egna textkolumner kan blanda fri text med platshållare: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
+          "Lägg till, ta bort och ändra ordning på vad varje rad visar, eller börja med en av dessa.",
+        columnsPresetDefault: "Standard",
+        columnsPresetAgenda: "Agenda",
+        columnsPresetMinimal: "Minimal",
         columnTypeIcon: "Ikon",
         columnTypeInfo: "Namn + typ",
         columnTypeName: "Namn",
@@ -4615,6 +5198,8 @@
         columnTypeType: "Typ",
         columnTypeText: "Egen text",
         columnTypeDate: "Datum",
+        columnTypeDateBlock: "Datumblock",
+        columnTypeAccentBar: "Accentstapel",
         columnTypeTime: "Tid",
         columnTypeLocation: "Plats",
         columnTypeDescription: "Beskrivning",
@@ -4631,8 +5216,7 @@
         suffixShowHolidayTypeDesc:
           "Visa en helgdags egen typetikett, t.ex. \u201dHoliday (Public)\u201d. Stäng av för att bara lämna land-/regionsuffixet i den här cellen.",
         multiDayDisplay: "Flerdagshändelser",
-        multiDayDisplayDesc:
-          "Hur en engångshändelse som sträcker sig över flera dagar - en semesterresa, en konferens - listas. Påverkar bara händelser som faktiskt har ett slutdatum; allt annat är en rad ändå.",
+        multiDayDisplayDesc: "Hur en engångshändelse som sträcker sig över flera dagar - en semesterresa, en konferens - visas. Påverkar bara händelser som faktiskt har ett slutdatum; allt annat är ändå en enda post.",
         multiDayStartOnly: "Bara första dagen",
         multiDayEndOnly: "Bara sista dagen",
         multiDayStartEnd: "Första och sista dagen",
@@ -4658,12 +5242,32 @@
         columnMoveDown: "Flytta ner",
         columnRemove: "Ta bort",
         columnTemplatePlaceholder: "t.ex. {name} fyller {occurrence} idag",
-        columnColor: "Färg",
         columnsCompact: "Kompakt (inga mellanrum, centrerad)",
         columnsCompactDesc:
           "Tar bort mellanrummet mellan kolumnerna, centrerar raden och gör vikt och opacitet lika för alla fält - användbart när kolumnerna bildar en sammanhängande mening.",
-        visibilityBadgeDesc: "Visa märket för händelsenumret",
-        visibilityWhenDesc: "Visa nedräkningen (t.ex. \"om 3 dagar\")",
+        monthSeparators: "Månadsavdelare",
+        monthSeparatorsDesc: "Ritar en linje överallt där två rader efter varandra hamnar i olika månader, och delar en lång lista i månadsblock. Ordningen på raderna själva ändras inte.",
+        weekSeparators: "Veckoavdelare",
+        weekSeparatorsDesc: "Samma sak ett steg finare: en linje överallt där två rader efter varandra hamnar i olika veckor, enligt din inställning \"Veckans första dag\" i Home Assistant. Är månadsavdelarna också på får en rad som börjar båda bara en linje.",
+        daySeparators: "Dagavdelare",
+        daySeparatorsDesc: "En linje överallt där två rader efter varandra hamnar på olika dagar, och delar listan i ett block per dag. Den finaste av de tre - är vecko- eller månadsavdelarna också på får en rad som börjar två av dem bara den grövre linjen.",
+        separatorWidth: "Tjocklek",
+        separatorWidthDesc: "Linjens tjocklek, t.ex. \"1px\". Lämnas den tom blir det 1px.",
+        separatorColor: "Färg",
+        separatorColorDesc: "Linjens färg. Lämnas den tom följer den temats egen textfärg, samma som kortets rubrik.",
+        separatorShowDayLabel: "Visa veckodag",
+        separatorShowDayLabelDesc: "Skriver veckodagen på själva linjen, centrerad på en elliptisk platta i kortets bakgrundsfärg, så att linjen bryts runt texten i stället för att gå igenom den.",
+        separatorShowWeekLabel: "Visa veckonummer",
+        separatorShowWeekLabelDesc: "Skriver veckonumret på själva linjen, centrerat på en elliptisk platta i kortets bakgrundsfärg. Numret följer din Home Assistant-inställning för veckans första dag, samma som avgör var linjerna hamnar.",
+        separatorShowMonthLabel: "Visa månad",
+        separatorShowMonthLabelDesc: "Skriver månaden på själva linjen, centrerad på en elliptisk platta i kortets bakgrundsfärg, så att linjen bryts runt texten i stället för att gå igenom den.",
+        separatorLabelColor: "Textfärg",
+        separatorLabelColorDesc: "Etikettens färg. Lämnad tom följer den temats egen textfärg, samma som kortrubriken.",
+        separatorLabelBackground: "Bakgrundsfärg",
+        separatorLabelBackgroundDesc: "Färgen på plattan bakom etiketten – det är den som döljer linjen under. Lämnad tom blir det kortets egen bakgrundsfärg, så att etiketten läses som en lucka i linjen.",
+        separatorLabelFontDesc: "Storlek på etikettens text, t.ex. \"0.8em\" eller \"11px\". Lämnad tom är den 0.75em, relativt kortets egen teckenstorlek, plus de fyra stilreglagen och teckenavståndet nedan.",
+        accentBarWidthDesc: "Stapelns tjocklek, t.ex. \"3px\". Lämnas den tom blir den 3px. Lägg till kolumnen Accentstapel ovan för att visa den alls.",
+        accentBarColorDesc: "Standardfärg för stapeln. Händelsetypen och radens status kan var för sig ersätta den.",
         whenClickShowsDate: "Datum vid klick på nedräkning",
         whenClickShowsDateDesc:
           "Att klicka på en rads nedräkning visar i stället det faktiska datumet (t.ex. \"mån 3 aug. 2026\"), ett nytt klick växlar tillbaka - radens tryck-/hållåtgärd fungerar fortfarande i resten av raden.",
@@ -4677,41 +5281,35 @@
         visibilityTodoOnly: "Endast öppna uppgifter",
         visibilityTodoOnlyDesc:
           "Visa endast händelser som fortfarande har en öppen uppgift (se Uppgifter under Inställningar → Händelser). Smalnar av de två filtren ovan i stället för att slås ihop med dem: med även ”Endast VIP” på visas de VIP-händelser som fortfarande har något kvar att göra.",
-        vipBadgeIcon: "VIP-märkesikon",
-        vipBadgeIconDesc: "MDI-ikon som visas som ett litet märke på ikonen för VIP-markerade händelser",
+        badgesHeading: "Märken",
+        badgeTargetIcon: "Händelseikon",
+        badgeTargetIconDesc: "Ritar det här märket i hörnet av radens ikon.",
+        badgeTargetAccentBar: "Accentstapel",
+        badgeTargetAccentBarDesc: "Ritar det här märket i kolumnen till vänster om accentstapeln, centrerad mot raden. Kräver kolumnen Accentstapel.",
+        badgeColor: "Märkesfärg",
+        badgeColorDesc: "Färg på symbolen inuti märket.",
+        badgeBgColor: "Märkets bakgrundsfärg",
+        badgeBgColorDesc: "Färg på skivan bakom symbolen.",
+        vipBadgeIcon: "Märkesikon",
+        vipBadgeIconDesc: "MDI-ikon som används som märke på händelser markerade som VIP.",
         vipBadgeIconPlaceholder: "mdi:star",
-        importantBadgeIcon: "Important-märkesikon",
-        importantBadgeIconDesc: "MDI-ikon som visas som ett litet märke på ikonen för händelser som automatiskt markerats som viktiga",
+        importantBadgeIcon: "Märkesikon",
+        importantBadgeIconDesc: "MDI-ikon som används som märke på händelser som automatiskt markerats som viktiga.",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
-        todoBadgeIcon: "Ikon för uppgiftsbricka",
-        todoBadgeIconDesc:
-          "MDI-ikon som visas som en liten bricka på ikonen för händelser med en ännu öppen uppgift (se Uppgifter under Händelser)",
-        todoBadgeColorList: "Märkesfärg (Lista)",
-        todoBadgeColorListDesc: "Färgen på den brickan i Lista-layouten - som standard temats röda färg",
-        todoBadgeColorTimeline: "Märkesfärg (Timeline)",
+        todoBadgeIcon: "Märkesikon",
+        todoBadgeIconDesc: "MDI-ikon som används som märke på händelser med en ännu öppen uppgift (se Uppgifter under Händelser).",
         todoBadgeColorTimelineDesc: "Färgen på den brickan i Tidslinje-layouten - som standard temats röda färg",
         highlightHeading: "Markering",
         highlightPast: "Tidigare händelser",
-        highlightPastDesc: "Färga radens bakgrund för händelser som redan inträffat",
-        highlightToday: "Dagens händelser",
-        highlightTodayDesc: "Färga radens bakgrund för dagens händelser",
-        highlightSoon: "Snart",
-        highlightSoonDesc: "Färga radens bakgrund för händelser inom \"snart\"-tröskeln",
         highlightBgColor: "Bakgrundsfärg",
         highlightBgColorDesc: "Bakgrundsfärg för denna markering",
         highlightVip: "VIP-händelser",
-        highlightVipDesc: "Visa ett märke på ikonen för VIP-markerade händelser",
+        highlightVipDesc: "Visar ett märke på händelser markerade som VIP.",
         highlightImportant: "Viktiga händelser",
-        highlightImportantDesc: "Visa ett märke på ikonen för händelser som automatiskt markerats som viktiga",
+        highlightImportantDesc: "Visar ett märke på händelser som automatiskt markerats som viktiga.",
         highlightTodo: "Öppna uppgifter",
-        highlightTodoDesc: "Visa ett märke på ikonen för händelser med en ännu öppen uppgift",
-        vipBadgeColorList: "Märkesfärg (Lista)",
-        vipBadgeColorListDesc: "Färgen på den brickan i Lista-layouten - som standard temats röda färg",
-        vipBadgeColorTimeline: "Märkesfärg (Timeline)",
-        vipBadgeColorTimelineDesc: "Färgen på den brickan i Tidslinje-layouten - som standard vitt",
-        importantBadgeColorList: "Märkesfärg (Lista)",
-        importantBadgeColorListDesc: "Färgen på den brickan i Lista-layouten - som standard temats bärnstensfärg",
-        importantBadgeColorTimeline: "Märkesfärg (Timeline)",
+        highlightTodoDesc: "Visar ett märke på händelser med en ännu öppen uppgift.",
+        vipBadgeColorTimelineDesc: "Färgen på den brickan i Tidslinje-layouten - som standard temats röda färg",
         importantBadgeColorTimelineDesc:
           "Färgen på den brickan i Tidslinje-layouten - som standard temats bärnstensfärg",
         colors: "Färger",
@@ -4735,16 +5333,43 @@
         cardBackgroundSizeRepeat: "Kakel",
         cardBackgroundOpacity: "Opacitet",
         cardBackgroundOpacityDesc: "Opacitet för bakgrundsfärg/-bild, i procent",
-        colorsIconsHeading: "Ikoner",
-        colorsLabelsHeading: "Etiketter",
+        statusHeading: "Händelsestatus",
+        statusTimelineIconColorDesc: "Den här statusens punkt och tecken i tidslinjen.",
+        statusEntryTextColor: "Färg på postens text",
+        statusEntryTextColorDesc: "Den här statusens text i tidslinjen. Tom tar den här statusens färg.",
+        typeRowColor: "Färg på hela raden",
+        typeRowColorDesc: "Färg på radens text när Hela raden är på. Tom tar den här typens färg.",
+        typeEntryColor: "Färg på postens text",
+        typeEntryColorDesc: "Färg på händelsens text i tidslinjen när Postens text är på. Tom tar den här typens färg.",
+        typeBarColor: "Accentstapelns färg",
+        typeBarColorDesc: "Färg på accentstapeln när Accentstapel är på. Tom tar den här typens färg.",
+        typeIconColor: "Ikonens färg",
+        typeIconColorDesc: "Färg på ikonen - radens i listan, punkten på tidslinjen. Tom tar den här typens färg.",
+        typeAnimationDesc: "Animering för den här händelsetypens ikoner; ersätter Ikon-blockets egen i Design. På Ingen följer den det standardvärdet. En status kan ersätta den igen.",
+        rowTargetTimeline: "Postens text",
+        rowTargetTimelineDesc: "Färgar även händelsens text i listan under axeln, inte bara dess punkt.",
+        fontLetterSpacingDesc: "Avstånd mellan bokstäverna, t.ex. 0.05em eller 1px. Tom behåller typsnittets eget avstånd.",
+        lineStyleDesc: "Om linjen ritas heldragen, streckad eller prickad.",
+        designLineBlockDesc: "Linjens tjocklek, streckstil och färg.",
+        statusOverrideHint: "Av gäller händelsetypens färg eller standardvärdet från Design.",
+        designIconBlockDesc: "Standardfärgen och -animeringen för kortets ikoner. Varje händelsetyp och varje status faller tillbaka på dem så länge den inte ersätter dem.",
+        designBarBlockDesc: "Stapelns standardfärg och dess tjocklek.",
+        designElementDesc: "Allt som formger den här delen av kortet: färgen, typsnittet och reglagen nedan.",
+        designGroupDesc: "Raderna som den här kolumnen består av. Var och en formges för sig nedan.",
+        statusTextColor: "Färg på hela texten",
+        statusTextColorDesc: "Radens text, utom ikonen och accentstapeln. Tom tar den här statusens färg.",
+        statusIconAnimation: "Ikonanimering",
+        statusIconAnimationDesc: "Ikonens animering. Av gäller standardvärdet från Design.",
+        designIconColorDesc: "Standardfärg för radens ikon. Varje status faller tillbaka på den så länge den inte ersätter den.",
+        statusPastDesc: "Händelser som redan har varit.",
+        statusIconColor: "Ikonfärg",
+        statusIconColorDesc: "Radens ikon.",
+        statusBarColor: "Accentstapelns färg",
+        statusBarColorDesc: "Radens accentstapel. Tom följer ikonfärgen.",
         colorToday: "Idag",
         colorSoon: "Snart",
-        colorAccent: "Standard",
-        colorTodayDesc: "Ikonfärg för dagens händelser",
-        colorSoonDesc: "Ikonfärg för händelser inom \"snart\"-tröskeln",
-        iconVisibleLabel: "Visa ikon",
-        iconVisibleDesc: "Visa eller dölj ikonen för denna kategori",
-        colorAccentDesc: "Ikonfärg för händelser utan särskild status",
+        colorTodayDesc: "Händelser som sker idag.",
+        colorSoonDesc: "Händelser inom tröskeln \"snart\".",
         animationLabel: "Animation",
         animationDesc: "Lägg till en repeterande animation för denna ikon",
         animationNone: "Ingen",
@@ -4753,23 +5378,39 @@
         animationShake: "Skaka",
         animationSpin: "Snurra",
         animationFlash: "Blinka",
-        matchTextLabel: "Färga även texten",
-        matchTextDesc: "Färga även hela radens text med denna ikonfärg",
+        rowColorsLabel: "Formge rader efter händelsetyp",
+        rowColorsDesc: "Ger varje händelsetyp sin egen formgivning - färgen och vilka delar av en rad eller en tidslinjepost den färgar - i stället för standardvärdena från Design. En rads status kan fortfarande ersätta den.",
+        calendarColorsHeading: "Inbäddade kalendrar",
+        calendarColorDesc: "Färg för den här kalendern - dess rader i listan, dess punkt på tidslinjen. Lämnas den tom används den färg Home Assistant själv sparar för kalendern.",
+        eventTypeRowColorDesc: "Färg för den här händelsetypen - dess rader i listan, dess punkt på tidslinjen. I listan väljer reglagen bredvid vilka delar av en rad den färgar.",
+        rowTargetIcon: "Ikon",
+        rowTargetIconDesc: "Färgar den här typens ikon.",
+        rowTargetAccentBar: "Accentstapel",
+        rowTargetAccentBarDesc: "Färgar den här typens accentstapel.",
+        rowTargetRow: "Hela raden",
+        rowTargetRowDesc: "Färgar hela raden inklusive texten - och med den ikonen och accentstapeln, vad deras egna reglage än säger.",
         colorName: "Namn",
         colorType: "Typ",
+        combinedFontDesc: "Storlek och stil för den här raden i den kombinerade kolumnen.",
+        combinedColorDesc: "Färg för den här raden i den kombinerade kolumnen.",
         colorBadge: "Händelsenummer",
         colorWhen: "Nedräkning",
         colorText: "Egen text",
         colorDate: "Datum",
-        colorCalendar: "Kalenderfält",
+        dateBlockWeekday: "Veckodag",
+        dateBlockDay: "Dag",
+        dateBlockMonth: "Månad",
+        dateBlockFontDesc: "Gäller bara kolumnen Datumblock. Storlekarna är relativa till kortets egen teckenstorlek: 0,75 / 1,5 / 0,75 om tomt.",
+        dateBlockColorDesc: "Gäller bara kolumnen Datumblock. Lämnas den tom tar veckodag och månad temats sekundära textfärg och dagen den primära.",
+        colorCalendar: "Externa kalenderfält",
         colorDateDesc:
           "Textfärg för Datum-kolumnen",
         colorCalendarDesc:
-          "Textfärg för kolumnerna Tid, Plats och Beskrivning - endast för händelser från externa kalendrar",
+          "Påverkar endast händelser från externa kalendrar. Lämnas det tomt tar varje rad temats sekundära textfärg.",
         fontDateDesc:
           "Teckenstorlek för Datum-kolumnen (se Radkolumner under Layout -> Visning)",
         fontCalendarDesc:
-          "Teckenstorlek för kolumnerna Tid, Plats och Beskrivning - endast för händelser från externa kalendrar",
+          "Påverkar endast händelser från externa kalendrar. Storlekarna är relativa till kortets egen teckenstorlek.",
         colorNameDesc: "Textfärg för händelsens namn",
         colorLastName: "Efternamn",
         colorLastNameDesc: "Textfärg för händelsens efternamn",
@@ -4830,14 +5471,20 @@
         panelSettings: "Inställningar",
         panelSettingsDesc: "Allmänt, händelser och period",
         panelLayout: "Layout",
-        panelLayoutDesc: "Visning, typsnitt, färger, ikoner, kortbakgrund och timeline",
+        panelLayoutDesc: "Allmänt, list- och timelinevy, design, markering och kortbakgrund",
         groupGeneral: "Allmänt",
         groupGeneralDesc: "",
         groupEvents: "Händelser",
         groupEventsDesc: "",
         groupPeriod: "Period",
         groupPeriodDesc: "",
-        groupDisplay: "Visning",
+        groupDisplay: "Allmänt",
+        groupListView: "Listvy",
+        groupListViewDesc:
+          "Används endast när Layoutstil är inställd på Lista.",
+        groupDesign: "Design",
+        designColor: "Färg",
+        designFont: "Typsnitt",
         groupDisplayDesc: "",
       },
     },
@@ -4852,6 +5499,10 @@
       multiDayEnd: "结束",
       multiDayDay: "第{day}天",
       noEvents: "没有即将到来的事件",
+      // The Week separator's own label (see separatorLabelText) - the word
+      // this language actually uses for a calendar week, which no Intl format
+      // supplies. {week} is the number.
+      separatorWeekLabel: "第{week}周",
       todoCompleteConfirm: "将“{item}”标记为已完成？",
       todoCompleteConfirmMultiple: "将此事件的全部 {count} 项待办标记为已完成？",
       todoCompleteFailed: "无法完成此待办事项。",
@@ -4978,8 +5629,7 @@
         holidayDateObserved: "顺延日期",
         holidayMergeObserved: "优先显示顺延日期",
         holidayMergeRegions: "合并多个国家共有的节日",
-        holidayMergeRegionsDesc:
-          "每个节日一行，而不是每个国家一行，并列出所有庆祝它的地区。按日期以及节日实际显示的名称分组——因此同一天的两个不同节日仍分开显示，而措辞不同的国家只有在你为它们设置了相同名称后才会合并（见节日自身的“名称与翻译”）。",
+        holidayMergeRegionsDesc: "每个节日一条记录，而不是每个国家一条，并列出庆祝该节日的所有地区。按日期以及节日实际显示的名称分组——因此同一天的两个不同节日仍会分开，而措辞不同的国家只有在你为它们设置了相同名称后才会合并（参见节日设置中的名称与翻译）。",
         regionFormat: "地区格式",
         regionFormatDesc: "节日的国家和地区在各处的书写方式。",
         regionFormatShort: "US (CA)",
@@ -5032,7 +5682,7 @@
         moreActionDesc:
           "时间轴右下角「更多」按钮的作用。通常是跳转到以完整列表布局显示相同事件的仪表盘的导航操作。留空为「无」可隐藏该按钮。",
         groupTimeline: "时间轴",
-        groupTimelineDesc: "仅当「显示」下的布局样式设置为「时间轴」时使用。",
+        groupTimelineDesc: "仅当布局样式设置为「时间轴」时使用。",
         timelineHeaderLabel: "标题行",
         timelineHeaderFontDesc: "轴上方描述行的字体，例如「Kevin 的第 27 个生日是今天」。",
         timelineHeaderColorDesc: "轴上方描述行的文字颜色。",
@@ -5048,15 +5698,14 @@
         eventTypesHeading: "事件类型",
         eventTypeColorDesc: "此事件类型在时间轴上的图标和圆点颜色。",
         visibilityHeading: "显示 / 隐藏",
-        visibilityPast: "过去的事件",
-        visibilityPastDesc: "显示在设定的过去时间范围内已经过去的周年纪念事件",
-        visibilityToday: "今天的事件",
-        visibilityTodayDesc: "显示今天发生的事件",
-        visibilitySoon: "即将到来",
-        visibilitySoonDesc: "显示在“即将到来”阈值内的事件",
-        visibilityCardTitleDesc: "显示卡片自身的标题",
         hideCardTitle: "隐藏",
         hideCardTitleDesc: "隐藏卡片自身的标题，即使上方已设置",
+        noEventsText: "无事件时的文字",
+        noEventsTextDesc:
+          "卡片没有内容可显示时的文字（留空则使用默认文字）。",
+        noEventsLabel: "无事件",
+        noEventsColorDesc: "卡片没有内容可显示时那行文字的颜色。",
+        noEventsFontDesc: "卡片没有内容可显示时那行文字的字体。",
         tapAction: "点击操作",
         tapActionDesc: "点击或单击某行时执行的操作",
         holdAction: "长按操作",
@@ -5072,15 +5721,13 @@
         cardLanguageDesc:
           "将此卡片固定为一种语言，对所有查看者都一样，而不再跟随各自的个人资料语言。同时影响卡片文本和日期格式——不影响事件名称本身，那来自集成。无论如何，此编辑器仍跟随你自己的语言。",
         cardLanguageAuto: "自动",
-        visibilityIcon: "图标",
-        visibilityIconDesc: "在每行前显示类型图标",
-        visibilityNameDesc: "显示事件名称",
-        visibilityTypeDesc: "显示事件类型",
-        visibilityCountrySuffix: "节假日后缀",
         visibilityCountrySuffixDesc: "在节假日名称/类型后附加国家（及地区，如有），例如“国庆节 · CN (BJ)”",
         columnsHeading: "行列",
         columnsDesc:
-          "添加、删除并重新排列每行显示的内容。自定义文本列可以混合自由文本与占位符：{name}、{last_name}、{full_name}、{type}、{occurrence}、{when}、{date}、{country}、{time}、{location}、{description}。",
+          "添加、删除和重新排序每行显示的内容，或从以下预设之一开始。",
+        columnsPresetDefault: "默认",
+        columnsPresetAgenda: "日程",
+        columnsPresetMinimal: "极简",
         columnTypeIcon: "图标",
         columnTypeInfo: "名称 + 类型",
         columnTypeName: "名称",
@@ -5090,6 +5737,8 @@
         columnTypeType: "类型",
         columnTypeText: "自定义文本",
         columnTypeDate: "日期",
+        columnTypeDateBlock: "日期块",
+        columnTypeAccentBar: "强调色条",
         columnTypeTime: "时间",
         columnTypeLocation: "地点",
         columnTypeDescription: "描述",
@@ -5106,8 +5755,7 @@
         suffixShowHolidayTypeDesc:
           "显示节假日自身的类型标签，例如\u201cHoliday (Public)\u201d。关闭后此单元格中仅保留国家/地区后缀。",
         multiDayDisplay: "多日事件",
-        multiDayDisplayDesc:
-          "跨越多天的一次性事件（如旅行、会议）如何显示。仅影响确实设置了结束日期的事件，其他事件始终只占一行。",
+        multiDayDisplayDesc: "跨越多天的一次性事件（如假期旅行、会议）如何显示。仅影响确实有结束日期的事件；其余无论如何都是单条记录。",
         multiDayStartOnly: "仅第一天",
         multiDayEndOnly: "仅最后一天",
         multiDayStartEnd: "第一天和最后一天",
@@ -5133,12 +5781,32 @@
         columnMoveDown: "下移",
         columnRemove: "移除",
         columnTemplatePlaceholder: "例如：{name} 今天满 {occurrence} 岁",
-        columnColor: "颜色",
         columnsCompact: "紧凑（无间距，居中）",
         columnsCompactDesc:
           "移除各列之间的间距，使该行居中，并让所有字段的粗细和不透明度保持一致——适用于各列组成一个连贯句子的情况。",
-        visibilityBadgeDesc: "显示周年数徽章",
-        visibilityWhenDesc: "显示倒计时（例如“3 天后”）",
+        monthSeparators: "月份分隔线",
+        monthSeparatorsDesc: "在相邻两行落入不同月份的位置绘制一条线，把长列表分成按月的区块。行本身的顺序不变。",
+        weekSeparators: "周分隔线",
+        weekSeparatorsDesc: "同样的功能，但更细一层：在相邻两行落入不同周的位置绘制一条线，依据你在 Home Assistant 中的“一周的第一天”设置。若同时开启月份分隔线，同时开始两者的行只画一条线。",
+        daySeparators: "日期分隔线",
+        daySeparatorsDesc: "在相邻两行落入不同日期的位置绘制一条线，把列表按天分成区块。三者中最细的一级——若同时开启周或月分隔线，同时开始两者的行只画较粗的那条。",
+        separatorWidth: "粗细",
+        separatorWidthDesc: "线条粗细，例如“1px”。留空即为 1px。",
+        separatorColor: "颜色",
+        separatorColorDesc: "线条颜色。留空则跟随主题自身的文字颜色，与卡片标题相同。",
+        separatorShowDayLabel: "显示星期",
+        separatorShowDayLabelDesc: "将星期写在分隔线上，居中放在一个与卡片背景同色的椭圆底块上，这样线条会在文字处断开，而不是从文字中间穿过。",
+        separatorShowWeekLabel: "显示周数",
+        separatorShowWeekLabelDesc: "将周数写在分隔线上，居中放在与卡片背景同色的椭圆底块上。周数遵循 Home Assistant 的“每周首日”设置，与决定分隔线位置的是同一项设置。",
+        separatorShowMonthLabel: "显示月份",
+        separatorShowMonthLabelDesc: "将月份写在分隔线上，居中放在与卡片背景同色的椭圆底块上，这样线条会在文字处断开。",
+        separatorLabelColor: "文字颜色",
+        separatorLabelColorDesc: "标签文字的颜色。留空则跟随主题自身的文字颜色，与卡片标题相同。",
+        separatorLabelBackground: "背景颜色",
+        separatorLabelBackgroundDesc: "标签后面底块的颜色——正是它遮住了下面的线条。留空则为卡片自身的背景色。",
+        separatorLabelFontDesc: "标签文字的大小，例如“0.8em”或“11px”。留空则为 0.75em，相对于卡片自身的字号；下方还有四个样式开关和字间距。",
+        accentBarWidthDesc: "色条粗细，例如“3px”。留空即为 3px。需先在上方添加“强调色条”列才会显示。",
+        accentBarColorDesc: "色条的默认颜色。事件类型和行状态都可以覆盖它。",
         whenClickShowsDate: "点击倒计时显示日期",
         whenClickShowsDateDesc:
           "点击某行的倒计时会改为显示实际日期（例如“2026年8月3日 周一”），再次点击可切换回来 - 该行的点按/长按操作在行内其他位置仍然有效。",
@@ -5152,40 +5820,35 @@
         visibilityTodoOnly: "仅未完成待办",
         visibilityTodoOnlyDesc:
           "仅显示仍有未完成待办的事件（见“设置 → 事件”下的“待办事项”）。它是在上面两个筛选之上进一步收窄，而不是与它们取并集：同时开启“仅 VIP”时，显示的是仍有待办的 VIP 事件。",
-        vipBadgeIcon: "VIP 徽章图标",
-        vipBadgeIconDesc: "在被标记为 VIP 的事件图标上显示的小徽章 MDI 图标",
+        badgesHeading: "徽章",
+        badgeTargetIcon: "事件图标",
+        badgeTargetIconDesc: "在行图标的角上绘制此徽章。",
+        badgeTargetAccentBar: "强调色条",
+        badgeTargetAccentBarDesc: "在强调色条左侧的一列中绘制此徽章，相对于该行垂直居中。需要强调色条列。",
+        badgeColor: "徽章颜色",
+        badgeColorDesc: "徽章内符号的颜色。",
+        badgeBgColor: "徽章背景色",
+        badgeBgColorDesc: "符号后面圆形底的颜色。",
+        vipBadgeIcon: "徽章图标",
+        vipBadgeIconDesc: "用作 VIP 标记事件徽章的 MDI 图标。",
         vipBadgeIconPlaceholder: "mdi:star",
-        importantBadgeIcon: "Important 徽章图标",
-        importantBadgeIconDesc: "在自动标记为重要的事件图标上显示的小徽章 MDI 图标",
+        importantBadgeIcon: "徽章图标",
+        importantBadgeIconDesc: "用作自动标记为重要的事件徽章的 MDI 图标。",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
-        todoBadgeIcon: "待办徽标图标",
-        todoBadgeIconDesc: "在仍有未完成待办的事件图标上显示为小徽标的 MDI 图标（见“事件”下的“待办事项”）",
-        todoBadgeColorList: "徽章颜色（列表）",
-        todoBadgeColorListDesc: "该徽标在列表布局中的颜色——默认使用主题的红色",
-        todoBadgeColorTimeline: "徽章颜色（时间轴）",
+        todoBadgeIcon: "徽章图标",
+        todoBadgeIconDesc: "用作仍有未完成待办事项的事件徽章的 MDI 图标（参见“事件”下的待办事项）。",
         todoBadgeColorTimelineDesc: "该徽标在时间轴布局中的颜色——默认使用主题的红色",
         highlightHeading: "高亮",
         highlightPast: "过去的事件",
-        highlightPastDesc: "为已发生的事件的行背景着色",
-        highlightToday: "今天的事件",
-        highlightTodayDesc: "为今天发生的事件的行背景着色",
-        highlightSoon: "即将到来",
-        highlightSoonDesc: "为“即将到来”阈值内的事件的行背景着色",
         highlightBgColor: "背景颜色",
         highlightBgColorDesc: "此高亮的背景着色颜色",
         highlightVip: "VIP 事件",
-        highlightVipDesc: "在标记为 VIP 的事件图标上显示徽章",
+        highlightVipDesc: "在标记为 VIP 的事件上显示徽章。",
         highlightImportant: "重要事件",
-        highlightImportantDesc: "在自动标记为重要的事件图标上显示徽章",
+        highlightImportantDesc: "在自动标记为重要的事件上显示徽章。",
         highlightTodo: "待办任务",
-        highlightTodoDesc: "在仍有未完成待办的事件图标上显示徽章",
-        vipBadgeColorList: "徽章颜色（列表）",
-        vipBadgeColorListDesc: "该徽章在列表布局中的颜色——默认使用主题的红色",
-        vipBadgeColorTimeline: "徽章颜色（时间轴）",
-        vipBadgeColorTimelineDesc: "该徽章在时间轴布局中的颜色——默认使用白色",
-        importantBadgeColorList: "徽章颜色（列表）",
-        importantBadgeColorListDesc: "该徽章在列表布局中的颜色——默认使用主题的琥珀色",
-        importantBadgeColorTimeline: "徽章颜色（时间轴）",
+        highlightTodoDesc: "在仍有未完成待办事项的事件上显示徽章。",
+        vipBadgeColorTimelineDesc: "该徽标在时间轴布局中的颜色——默认使用主题的红色",
         importantBadgeColorTimelineDesc: "该徽章在时间轴布局中的颜色——默认使用主题的琥珀色",
         colors: "颜色",
         cardBackgroundTabTitle: "卡片背景",
@@ -5208,16 +5871,43 @@
         cardBackgroundSizeRepeat: "平铺",
         cardBackgroundOpacity: "不透明度",
         cardBackgroundOpacityDesc: "背景颜色/图片的不透明度（百分比）",
-        colorsIconsHeading: "图标",
-        colorsLabelsHeading: "标签",
+        statusHeading: "事件状态",
+        statusTimelineIconColorDesc: "该状态在时间轴上的圆点和图形。",
+        statusEntryTextColor: "条目文本颜色",
+        statusEntryTextColorDesc: "该状态在时间轴上的文本。留空时采用该状态的颜色。",
+        typeRowColor: "整行颜色",
+        typeRowColorDesc: "开启“整行”时行文本的颜色。留空时采用该类型的颜色。",
+        typeEntryColor: "条目文本颜色",
+        typeEntryColorDesc: "开启“条目文本”时时间轴中事件文本的颜色。留空时采用该类型的颜色。",
+        typeBarColor: "强调色条颜色",
+        typeBarColorDesc: "开启“强调色条”时色条的颜色。留空时采用该类型的颜色。",
+        typeIconColor: "图标颜色",
+        typeIconColorDesc: "图标的颜色——在列表中是行图标，在时间轴上是圆点。留空时采用该类型的颜色。",
+        typeAnimationDesc: "此事件类型图标的动画，覆盖 Design 中图标块自身的动画。设为“无”时沿用该默认值。状态可以再次覆盖它。",
+        rowTargetTimeline: "条目文本",
+        rowTargetTimelineDesc: "让轴下方列表中该事件的文本也使用此颜色，而不仅是它的圆点。",
+        fontLetterSpacingDesc: "字母之间的间距，例如 0.05em 或 1px。留空则保留字体自身的间距。",
+        lineStyleDesc: "线条是实线、虚线还是点线。",
+        designLineBlockDesc: "线条的宽度、线型和颜色。",
+        statusOverrideHint: "关闭时采用事件类型的颜色或 Design 中的默认值。",
+        designIconBlockDesc: "卡片图标的默认颜色和动画。除非某个事件类型或状态覆盖它们，否则都会回退到这里。",
+        designBarBlockDesc: "色条的默认颜色及其宽度。",
+        designElementDesc: "设置卡片中这一部分外观的全部内容：颜色、字体以及下方的开关。",
+        designGroupDesc: "该列所包含的各行。每一行都在下方单独设置。",
+        statusTextColor: "整段文本颜色",
+        statusTextColorDesc: "行的文本，不含图标和强调色条。留空时采用该状态的颜色。",
+        statusIconAnimation: "图标动画",
+        statusIconAnimationDesc: "图标的动画。关闭时采用 Design 中的默认值。",
+        designIconColorDesc: "行图标的默认颜色。除非某个状态覆盖它，否则都会回退到这里。",
+        statusPastDesc: "已经过去的事件。",
+        statusIconColor: "图标颜色",
+        statusIconColorDesc: "行的图标。",
+        statusBarColor: "强调色条颜色",
+        statusBarColorDesc: "行的强调色条。留空时沿用图标颜色。",
         colorToday: "今天",
         colorSoon: "即将到来",
-        colorAccent: "默认",
-        colorTodayDesc: "今天事件的图标颜色",
-        colorSoonDesc: "“即将到来”阈值内事件的图标颜色",
-        iconVisibleLabel: "显示图标",
-        iconVisibleDesc: "显示或隐藏此类别的图标",
-        colorAccentDesc: "无特殊状态事件的图标颜色",
+        colorTodayDesc: "今天发生的事件。",
+        colorSoonDesc: "处于“即将到来”阈值内的事件。",
         animationLabel: "动画",
         animationDesc: "为此图标添加循环动画",
         animationNone: "无",
@@ -5226,23 +5916,39 @@
         animationShake: "摇晃",
         animationSpin: "旋转",
         animationFlash: "闪烁",
-        matchTextLabel: "同时为文本着色",
-        matchTextDesc: "同时用此图标颜色为整行文本着色",
+        rowColorsLabel: "按事件类型设计行",
+        rowColorsDesc: "让每个事件类型拥有自己的样式——颜色，以及它为行或时间轴条目中的哪些部分着色——而不是使用 Design 中的默认值。行的状态仍可覆盖它。",
+        calendarColorsHeading: "嵌入的日历",
+        calendarColorDesc: "此日历的颜色——在列表中是其行，在时间轴上是其圆点。留空时使用 Home Assistant 自身为该日历保存的颜色。",
+        eventTypeRowColorDesc: "此事件类型的颜色——在列表中是其行，在时间轴上是其圆点。在列表中，旁边的开关决定它为行中的哪些部分着色。",
+        rowTargetIcon: "图标",
+        rowTargetIconDesc: "为此类型的图标着色。",
+        rowTargetAccentBar: "强调色条",
+        rowTargetAccentBarDesc: "为此类型的强调色条着色。",
+        rowTargetRow: "整行",
+        rowTargetRowDesc: "为整行（包括文本）着色，图标和强调色条也随之着色，无论它们自己的开关如何设置。",
         colorName: "名称",
         colorType: "类型",
+        combinedFontDesc: "组合列中该行的字号与样式。",
+        combinedColorDesc: "组合列中该行的颜色。",
         colorBadge: "周年数",
         colorWhen: "倒计时",
         colorText: "自定义文本",
         colorDate: "日期",
-        colorCalendar: "日历字段",
+        dateBlockWeekday: "星期",
+        dateBlockDay: "日",
+        dateBlockMonth: "月份",
+        dateBlockFontDesc: "仅影响“日期块”列。字号相对于卡片自身的字号：留空时为 0.75 / 1.5 / 0.75。",
+        dateBlockColorDesc: "仅影响“日期块”列。留空时星期和月份采用主题的次要文字颜色，日采用主要文字颜色。",
+        colorCalendar: "外部日历字段",
         colorDateDesc:
           "“日期”列的文本颜色",
         colorCalendarDesc:
-          "“时间”“地点”“描述”列的文本颜色——仅适用于来自外部日历的事件",
+          "仅影响来自外部日历的事件。留空时，每行使用主题的次要文本颜色。",
         fontDateDesc:
           "“日期”列的字号（见“布局 -> 显示”下的“行列”）",
         fontCalendarDesc:
-          "“时间”“地点”“描述”列的字号——仅适用于来自外部日历的事件",
+          "仅影响来自外部日历的事件。字号相对于卡片自身的字号。",
         colorNameDesc: "事件名称的文本颜色",
         colorLastName: "姓氏",
         colorLastNameDesc: "事件姓氏的文本颜色",
@@ -5301,14 +6007,20 @@
         panelSettings: "设置",
         panelSettingsDesc: "常规、事件和时间段",
         panelLayout: "布局",
-        panelLayoutDesc: "显示、字体、颜色、图标、卡片背景和时间轴",
+        panelLayoutDesc: "常规、列表视图和时间轴视图、外观、高亮和卡片背景",
         groupGeneral: "常规",
         groupGeneralDesc: "",
         groupEvents: "事件",
         groupEventsDesc: "",
         groupPeriod: "时间段",
         groupPeriodDesc: "",
-        groupDisplay: "显示",
+        groupDisplay: "常规",
+        groupListView: "列表视图",
+        groupListViewDesc:
+          "仅在布局样式设置为列表时使用。",
+        groupDesign: "外观",
+        designColor: "颜色",
+        designFont: "字体",
         groupDisplayDesc: "",
       },
     },
@@ -5323,6 +6035,10 @@
       multiDayEnd: "konec",
       multiDayDay: "den {day}",
       noEvents: "Žádné nadcházející události",
+      // The Week separator's own label (see separatorLabelText) - the word
+      // this language actually uses for a calendar week, which no Intl format
+      // supplies. {week} is the number.
+      separatorWeekLabel: "Týden {week}",
       todoCompleteConfirm: 'Označit „{item}“ jako dokončené?',
       todoCompleteConfirmMultiple: "Označit všechny úkoly této události ({count}) jako dokončené?",
       todoCompleteFailed: "Tento úkol se nepodařilo dokončit.",
@@ -5450,8 +6166,7 @@
         holidayDateObserved: "Náhradní",
         holidayMergeObserved: "Upřednostnit náhradní datum",
         holidayMergeRegions: "Sloučit svátky společné více zemím",
-        holidayMergeRegionsDesc:
-          "Jeden řádek na svátek místo jednoho na zemi, se všemi regiony, které jej slaví. Seskupuje se podle data a podle názvu, pod kterým se svátek skutečně zobrazuje - dva různé svátky ve stejný den tedy zůstanou oddělené a země s odlišným zněním se sloučí až poté, co jim dáte stejný název (viz „Název a překlady“ u samotného svátku).",
+        holidayMergeRegionsDesc: "Jedna položka na svátek místo jedné na zemi, se všemi regiony, které jej slaví. Seskupeno podle data a podle názvu, pod kterým se svátek skutečně zobrazuje - takže dva různé svátky ve stejný den zůstanou oddělené a země s odlišným zněním se sloučí až poté, co jim dáte stejný název (viz Název a překlady v nastavení svátku).",
         regionFormat: "Formát regionu",
         regionFormatDesc: "Jak se zapisuje země a region svátku všude, kde se zobrazují.",
         regionFormatShort: "US (CA)",
@@ -5512,7 +6227,7 @@
         moreActionDesc:
           "Co dělá tlačítko „Více“ vpravo dole na časové ose. Obvykle akce navigace na řídicí panel zobrazující stejné události v plném rozvržení Seznam. Ponechte na „Nic“, chcete-li tlačítko skrýt.",
         groupTimeline: "Timeline",
-        groupTimelineDesc: "Používá se pouze tehdy, když je Styl rozvržení (v sekci Zobrazení) nastaven na Timeline.",
+        groupTimelineDesc: "Používá se pouze tehdy, když je Styl rozvržení nastaven na Timeline.",
         timelineHeaderLabel: "Záhlaví",
         timelineHeaderFontDesc:
           "Písmo pro popisný řádek nad osou, např. „Kevin: 27. narozeniny — dnes“.",
@@ -5529,15 +6244,14 @@
         eventTypesHeading: "Typy událostí",
         eventTypeColorDesc: "Barva ikony a tečky tohoto typu události na časové ose.",
         visibilityHeading: "Zobrazit / Skrýt",
-        visibilityPast: "Minulé události",
-        visibilityPastDesc: "Zobrazit události, jejichž výročí již proběhlo v nastaveném minulém okně",
-        visibilityToday: "Dnešní události",
-        visibilityTodayDesc: "Zobrazit události, které se konají dnes",
-        visibilitySoon: "Brzy",
-        visibilitySoonDesc: "Zobrazit události v prahu „brzy“",
-        visibilityCardTitleDesc: "Zobrazit vlastní název karty",
         hideCardTitle: "Skrýt",
         hideCardTitleDesc: "Skrýt vlastní název karty, i když je nastaven výše",
+        noEventsText: "Text bez událostí",
+        noEventsTextDesc:
+          "Co karta zobrazí, když není co vypsat (ponechte prázdné pro výchozí text).",
+        noEventsLabel: "Žádné události",
+        noEventsColorDesc: "Barva textu řádku, který karta zobrazí, když není co vypsat.",
+        noEventsFontDesc: "Písmo řádku, který karta zobrazí, když není co vypsat.",
         tapAction: "Akce při klepnutí",
         tapActionDesc: "Co se stane při klepnutí nebo kliknutí na řádek",
         holdAction: "Akce při podržení",
@@ -5553,15 +6267,13 @@
         cardLanguageDesc:
           "Zafixuje tuto kartu na jeden jazyk pro všechny, kdo ji vidí, místo aby sledovala jazyk profilu každého z nich. Týká se textů karty i formátu dat - nikoli názvů samotných událostí, které pocházejí z integrace. Tento editor se v každém případě dál řídí vaším vlastním jazykem.",
         cardLanguageAuto: "Automaticky",
-        visibilityIcon: "Ikona",
-        visibilityIconDesc: "Zobrazit ikonu typu před každým řádkem",
-        visibilityNameDesc: "Zobrazit jméno události",
-        visibilityTypeDesc: "Zobrazit typ události",
-        visibilityCountrySuffix: "Přípona svátku",
         visibilityCountrySuffixDesc: "Připojit zemi (a případně kraj) za název/typ svátku, např. „Den české státnosti · CZ (PR)“",
         columnsHeading: "Sloupce řádku",
         columnsDesc:
-          "Přidávejte, odebírejte a měňte pořadí toho, co každý řádek zobrazuje. Vlastní textové sloupce mohou kombinovat volný text se zástupnými symboly: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
+          "Přidávejte, odebírejte a měňte pořadí toho, co každý řádek ukazuje, nebo začněte jednou z těchto předloh.",
+        columnsPresetDefault: "Výchozí",
+        columnsPresetAgenda: "Diář",
+        columnsPresetMinimal: "Minimální",
         columnTypeIcon: "Ikona",
         columnTypeInfo: "Jméno + typ",
         columnTypeName: "Jméno",
@@ -5571,6 +6283,8 @@
         columnTypeType: "Typ",
         columnTypeText: "Vlastní text",
         columnTypeDate: "Datum",
+        columnTypeDateBlock: "Blok data",
+        columnTypeAccentBar: "Barevný proužek",
         columnTypeTime: "Čas",
         columnTypeLocation: "Místo",
         columnTypeDescription: "Popis",
@@ -5587,8 +6301,7 @@
         suffixShowHolidayTypeDesc:
           "Zobrazit vlastní označení typu svátku, např. \u201eHoliday (Public)\u201c. Vypněte, aby v této buňce zůstal jen přípona země/regionu.",
         multiDayDisplay: "Vícedenní události",
-        multiDayDisplayDesc:
-          "Jak se zobrazuje jednorázová událost trvající několik dní - dovolená, konference. Týká se jen událostí, které skutečně mají datum konce; vše ostatní zůstává jedním řádkem.",
+        multiDayDisplayDesc: "Jak se zobrazuje jednorázová událost trvající několik dní - dovolená, konference. Týká se jen událostí, které skutečně mají datum konce; vše ostatní je stejně jedna položka.",
         multiDayStartOnly: "Jen první den",
         multiDayEndOnly: "Jen poslední den",
         multiDayStartEnd: "První a poslední den",
@@ -5614,12 +6327,32 @@
         columnMoveDown: "Posunout dolů",
         columnRemove: "Odebrat",
         columnTemplatePlaceholder: "např. {name} má dnes {occurrence}. narozeniny",
-        columnColor: "Barva",
         columnsCompact: "Kompaktní (bez mezer, na střed)",
         columnsCompactDesc:
           "Odstraní mezery mezi sloupci, vystředí řádek a sjednotí váhu a krytí všech polí - užitečné, když sloupce tvoří jednu souvislou větu.",
-        visibilityBadgeDesc: "Zobrazit odznak čísla výročí",
-        visibilityWhenDesc: "Zobrazit odpočet (např. „za 3 dny“)",
+        monthSeparators: "Oddělovače měsíců",
+        monthSeparatorsDesc: "Nakreslí čáru všude tam, kde po sobě jdoucí řádky spadají do různých měsíců, a rozdělí tak dlouhý seznam na měsíční bloky. Pořadí samotných řádků se nemění.",
+        weekSeparators: "Oddělovače týdnů",
+        weekSeparatorsDesc: "Totéž o stupeň jemněji: čára všude tam, kde po sobě jdoucí řádky spadají do různých týdnů, podle nastavení „První den v týdnu“ v Home Assistantu. Jsou-li zapnuté i oddělovače měsíců, řádek začínající obojí dostane jen jednu čáru.",
+        daySeparators: "Oddělovače dnů",
+        daySeparatorsDesc: "Čára všude tam, kde po sobě jdoucí řádky spadají do různých dnů, a rozdělí seznam na blok pro každý den. Nejjemnější ze tří - jsou-li zapnuté i oddělovače týdnů nebo měsíců, řádek začínající dva z nich dostane jen tu hrubší čáru.",
+        separatorWidth: "Tloušťka",
+        separatorWidthDesc: "Tloušťka čáry, např. „1px“. Ponecháno prázdné znamená 1px.",
+        separatorColor: "Barva",
+        separatorColorDesc: "Barva čáry. Ponecháno prázdné se řídí barvou textu motivu, stejnou jako u názvu karty.",
+        separatorShowDayLabel: "Zobrazit den v týdnu",
+        separatorShowDayLabelDesc: "Napíše den v týdnu přímo na čáru, na střed, na eliptickou plochu v barvě pozadí karty, takže se čára kolem textu přeruší, místo aby jím procházela.",
+        separatorShowWeekLabel: "Zobrazit číslo týdne",
+        separatorShowWeekLabelDesc: "Napíše číslo týdne přímo na čáru, na eliptickou plochu v barvě pozadí karty. Číslo se řídí nastavením „První den týdne“ v Home Assistantu – tým samým, které určuje, kde čáry leží.",
+        separatorShowMonthLabel: "Zobrazit měsíc",
+        separatorShowMonthLabelDesc: "Napíše měsíc přímo na čáru, na střed, na eliptickou plochu v barvě pozadí karty, takže se čára kolem textu přeruší.",
+        separatorLabelColor: "Barva textu",
+        separatorLabelColorDesc: "Barva popisku. Ponechána prázdná se řídí barvou textu motivu, stejnou jako název karty.",
+        separatorLabelBackground: "Barva pozadí",
+        separatorLabelBackgroundDesc: "Barva plochy za popiskem – právě ta zakrývá čáru pod ním. Ponechána prázdná je to barva pozadí samotné karty.",
+        separatorLabelFontDesc: "Velikost textu popisku, např. „0.8em“ nebo „11px“. Ponechána prázdná je 0.75em vzhledem k velikosti písma karty, plus čtyři přepínače stylu a proklad písmen níže.",
+        accentBarWidthDesc: "Tloušťka proužku, např. „3px“. Ponecháno prázdné znamená 3px. Aby se vůbec zobrazil, přidejte výše sloupec Barevný proužek.",
+        accentBarColorDesc: "Výchozí barva proužku. Typ události i stav řádku ji mohou přepsat.",
         whenClickShowsDate: "Datum po kliknutí na odpočet",
         whenClickShowsDateDesc:
           "Kliknutí na odpočet v řádku zobrazí místo něj skutečné datum (např. „po 3. 8. 2026“), dalším kliknutím se přepne zpět - akce klepnutí/podržení řádku ve zbytku řádku funguje dál.",
@@ -5633,42 +6366,35 @@
         visibilityTodoOnly: "Pouze otevřené úkoly",
         visibilityTodoOnlyDesc:
           "Zobrazit pouze události, které mají dosud otevřený úkol (viz Úkoly v Nastavení → Události). Zužuje oba filtry výše, místo aby se s nimi spojoval: se zapnutým „Pouze VIP“ ukáže VIP události, u kterých ještě něco zbývá udělat.",
-        vipBadgeIcon: "Ikona VIP odznaku",
-        vipBadgeIconDesc: "Ikona MDI zobrazená jako malý odznak na ikoně událostí označených jako VIP",
+        badgesHeading: "Odznaky",
+        badgeTargetIcon: "Ikona události",
+        badgeTargetIconDesc: "Vykreslí tento odznak v rohu ikony řádku.",
+        badgeTargetAccentBar: "Barevný proužek",
+        badgeTargetAccentBarDesc: "Vykreslí tento odznak ve sloupci vlevo od barevného proužku, svisle na střed řádku. Vyžaduje sloupec Barevný proužek.",
+        badgeColor: "Barva odznaku",
+        badgeColorDesc: "Barva symbolu uvnitř odznaku.",
+        badgeBgColor: "Barva pozadí odznaku",
+        badgeBgColorDesc: "Barva kolečka za symbolem.",
+        vipBadgeIcon: "Ikona odznaku",
+        vipBadgeIconDesc: "Ikona MDI použitá jako odznak u událostí označených jako VIP.",
         vipBadgeIconPlaceholder: "mdi:star",
-        importantBadgeIcon: "Ikona odznaku Important",
-        importantBadgeIconDesc: "Ikona MDI zobrazená jako malý odznak na ikoně událostí automaticky označených jako důležité",
+        importantBadgeIcon: "Ikona odznaku",
+        importantBadgeIconDesc: "Ikona MDI použitá jako odznak u událostí automaticky označených jako důležité.",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
-        todoBadgeIcon: "Ikona odznaku úkolu",
-        todoBadgeIconDesc:
-          "Ikona MDI zobrazená jako malý odznak na ikoně událostí s dosud otevřeným úkolem (viz Úkoly v části Události)",
-        todoBadgeColorList: "Barva odznaku (Seznam)",
-        todoBadgeColorListDesc: "Barva tohoto odznaku v rozvržení Seznam - ve výchozím stavu červená z motivu",
-        todoBadgeColorTimeline: "Barva odznaku (Timeline)",
+        todoBadgeIcon: "Ikona odznaku",
+        todoBadgeIconDesc: "Ikona MDI použitá jako odznak u událostí s dosud otevřeným úkolem (viz Úkoly v sekci Události).",
         todoBadgeColorTimelineDesc: "Barva tohoto odznaku v rozvržení Časová osa - ve výchozím stavu červená z motivu",
         highlightHeading: "Zvýraznění",
         highlightPast: "Minulé události",
-        highlightPastDesc: "Obarvit pozadí řádku pro události, které již proběhly",
-        highlightToday: "Dnešní události",
-        highlightTodayDesc: "Obarvit pozadí řádku pro dnešní události",
-        highlightSoon: "Brzy",
-        highlightSoonDesc: "Obarvit pozadí řádku pro události v prahu „brzy“",
         highlightBgColor: "Barva pozadí",
         highlightBgColorDesc: "Barva pozadí pro toto zvýraznění",
         highlightVip: "VIP události",
-        highlightVipDesc: "Zobrazit odznak na ikoně událostí označených jako VIP",
+        highlightVipDesc: "Zobrazí odznak u událostí označených jako VIP.",
         highlightImportant: "Důležité události",
-        highlightImportantDesc: "Zobrazit odznak na ikoně událostí automaticky označených jako důležité",
+        highlightImportantDesc: "Zobrazí odznak u událostí automaticky označených jako důležité.",
         highlightTodo: "Otevřené úkoly",
-        highlightTodoDesc: "Zobrazit odznak na ikoně událostí s dosud otevřeným úkolem",
-        vipBadgeColorList: "Barva odznaku (Seznam)",
-        vipBadgeColorListDesc: "Barva tohoto odznaku v rozvržení Seznam - ve výchozím stavu červená z motivu",
-        vipBadgeColorTimeline: "Barva odznaku (Timeline)",
-        vipBadgeColorTimelineDesc: "Barva tohoto odznaku v rozvržení Časová osa - ve výchozím stavu bílá",
-        importantBadgeColorList: "Barva odznaku (Seznam)",
-        importantBadgeColorListDesc:
-          "Barva tohoto odznaku v rozvržení Seznam - ve výchozím stavu jantarová z motivu",
-        importantBadgeColorTimeline: "Barva odznaku (Timeline)",
+        highlightTodoDesc: "Zobrazí odznak u událostí s dosud otevřeným úkolem.",
+        vipBadgeColorTimelineDesc: "Barva tohoto odznaku v rozvržení Časová osa - ve výchozím stavu červená z motivu",
         importantBadgeColorTimelineDesc:
           "Barva tohoto odznaku v rozvržení Časová osa - ve výchozím stavu jantarová z motivu",
         colors: "Barvy",
@@ -5692,16 +6418,43 @@
         cardBackgroundSizeRepeat: "Dlaždice",
         cardBackgroundOpacity: "Krytí",
         cardBackgroundOpacityDesc: "Krytí barvy/obrázku pozadí, v procentech",
-        colorsIconsHeading: "Ikony",
-        colorsLabelsHeading: "Popisky",
+        statusHeading: "Stav události",
+        statusTimelineIconColorDesc: "Bod a symboly tohoto stavu na časové ose.",
+        statusEntryTextColor: "Barva textu položky",
+        statusEntryTextColorDesc: "Text tohoto stavu na časové ose. Prázdné převezme barvu tohoto stavu.",
+        typeRowColor: "Barva celého řádku",
+        typeRowColorDesc: "Barva textu řádku, když je zapnuto Celý řádek. Prázdné převezme barvu tohoto typu.",
+        typeEntryColor: "Barva textu položky",
+        typeEntryColorDesc: "Barva textu události na časové ose, když je zapnuto Text položky. Prázdné převezme barvu tohoto typu.",
+        typeBarColor: "Barva barevného proužku",
+        typeBarColorDesc: "Barva barevného proužku, když je zapnut Barevný proužek. Prázdné převezme barvu tohoto typu.",
+        typeIconColor: "Barva ikony",
+        typeIconColorDesc: "Barva ikony - v seznamu ikony řádku, na časové ose bodu. Prázdné převezme barvu tohoto typu.",
+        typeAnimationDesc: "Animace ikon tohoto typu události; přepisuje animaci bloku Ikona v Design. Při Žádná se řídí tímto výchozím nastavením. Stav ji může přepsat znovu.",
+        rowTargetTimeline: "Text položky",
+        rowTargetTimelineDesc: "Obarví touto barvou i text události v seznamu pod osou, nejen její bod.",
+        fontLetterSpacingDesc: "Mezera mezi písmeny, např. 0.05em nebo 1px. Prázdné ponechá rozestup písma.",
+        lineStyleDesc: "Zda je čára vykreslena plnou, čárkovanou nebo tečkovanou.",
+        designLineBlockDesc: "Šířka, styl čáry a barva linky.",
+        statusOverrideHint: "Vypnuto platí barva typu události nebo výchozí hodnota z Design.",
+        designIconBlockDesc: "Výchozí barva a animace ikon karty. Každý typ události i každý stav se k nim vrací, dokud je nepřepíše.",
+        designBarBlockDesc: "Výchozí barva proužku a jeho šířka.",
+        designElementDesc: "Vše, co utváří tuto část karty: barvu, písmo a přepínače níže.",
+        designGroupDesc: "Řádky, ze kterých se tento sloupec skládá. Každý se nastavuje níže zvlášť.",
+        statusTextColor: "Barva celého textu",
+        statusTextColorDesc: "Text řádku, kromě ikony a barevného proužku. Prázdné převezme barvu tohoto stavu.",
+        statusIconAnimation: "Animace ikony",
+        statusIconAnimationDesc: "Animace ikony. Vypnuto platí výchozí hodnota z Design.",
+        designIconColorDesc: "Výchozí barva ikony řádku. Každý stav se k ní vrací, dokud ji nepřepíše.",
+        statusPastDesc: "Události, které již proběhly.",
+        statusIconColor: "Barva ikony",
+        statusIconColorDesc: "Ikona řádku.",
+        statusBarColor: "Barva barevného proužku",
+        statusBarColorDesc: "Barevný proužek řádku. Prázdné se řídí barvou ikony.",
         colorToday: "Dnes",
         colorSoon: "Brzy",
-        colorAccent: "Výchozí",
-        colorTodayDesc: "Barva ikony pro dnešní události",
-        colorSoonDesc: "Barva ikony pro události v prahu „brzy“",
-        iconVisibleLabel: "Zobrazit ikonu",
-        iconVisibleDesc: "Zobrazit nebo skrýt ikonu pro tuto kategorii",
-        colorAccentDesc: "Barva ikony pro události bez zvláštního stavu",
+        colorTodayDesc: "Události, které se konají dnes.",
+        colorSoonDesc: "Události v rámci prahu „brzy“.",
         animationLabel: "Animace",
         animationDesc: "Přidat této ikoně smyčkovou animaci",
         animationNone: "Žádná",
@@ -5710,23 +6463,39 @@
         animationShake: "Třesení",
         animationSpin: "Otáčení",
         animationFlash: "Blikání",
-        matchTextLabel: "Obarvit i text",
-        matchTextDesc: "Obarvit touto barvou ikony i celý text řádku",
+        rowColorsLabel: "Formátovat řádky podle typu události",
+        rowColorsDesc: "Dá každému typu události vlastní vzhled - barvu a to, které části řádku nebo položky časové osy obarvuje - místo výchozích hodnot z Design. Stav řádku ji stále může přepsat.",
+        calendarColorsHeading: "Vložené kalendáře",
+        calendarColorDesc: "Barva pro tento kalendář - jeho řádky v seznamu, jeho bod na časové ose. Ponecháno prázdné se použije barva, kterou pro kalendář ukládá sám Home Assistant.",
+        eventTypeRowColorDesc: "Barva pro tento typ události - jeho řádky v seznamu, jeho bod na časové ose. V seznamu přepínače vedle určují, které části řádku obarvuje.",
+        rowTargetIcon: "Ikona",
+        rowTargetIconDesc: "Obarví ikonu tohoto typu.",
+        rowTargetAccentBar: "Barevný proužek",
+        rowTargetAccentBarDesc: "Obarví barevný proužek tohoto typu.",
+        rowTargetRow: "Celý řádek",
+        rowTargetRowDesc: "Obarví celý řádek včetně textu - a s ním ikonu i barevný proužek, ať jejich vlastní přepínače říkají cokoli.",
         colorName: "Jméno",
         colorType: "Typ",
+        combinedFontDesc: "Velikost a styl pro tento řádek kombinovaného sloupce.",
+        combinedColorDesc: "Barva tohoto řádku kombinovaného sloupce.",
         colorBadge: "Výročí",
         colorWhen: "Odpočet",
         colorText: "Vlastní text",
         colorDate: "Datum",
-        colorCalendar: "Pole kalendáře",
+        dateBlockWeekday: "Den v týdnu",
+        dateBlockDay: "Den",
+        dateBlockMonth: "Měsíc",
+        dateBlockFontDesc: "Týká se jen sloupce Blok data. Velikosti jsou relativní k velikosti písma karty: 0,75 / 1,5 / 0,75, pokud prázdné.",
+        dateBlockColorDesc: "Týká se jen sloupce Blok data. Ponecháno prázdné převezmou den v týdnu a měsíc sekundární barvu textu motivu a den primární.",
+        colorCalendar: "Pole externího kalendáře",
         colorDateDesc:
           "Barva textu sloupce Datum",
         colorCalendarDesc:
-          "Barva textu sloupců Čas, Místo a Popis - pouze pro události z externích kalendářů",
+          "Týká se pouze událostí z externích kalendářů. Ponecháno prázdné, každý řádek převezme sekundární barvu textu motivu.",
         fontDateDesc:
           "Velikost písma sloupce Datum (viz Sloupce řádku v Rozvržení -> Zobrazení)",
         fontCalendarDesc:
-          "Velikost písma sloupců Čas, Místo a Popis - pouze pro události z externích kalendářů",
+          "Týká se pouze událostí z externích kalendářů. Velikosti jsou relativní k velikosti písma karty.",
         colorNameDesc: "Barva textu pro jméno události",
         colorLastName: "Příjmení",
         colorLastNameDesc: "Barva textu pro příjmení události",
@@ -5787,14 +6556,20 @@
         panelSettings: "Nastavení",
         panelSettingsDesc: "Obecné, události a období",
         panelLayout: "Rozvržení",
-        panelLayoutDesc: "Zobrazení, písma, barvy, ikony, pozadí karty a timeline",
+        panelLayoutDesc: "Obecné, zobrazení seznamu a timeline, vzhled, zvýraznění a pozadí karty",
         groupGeneral: "Obecné",
         groupGeneralDesc: "",
         groupEvents: "Události",
         groupEventsDesc: "",
         groupPeriod: "Období",
         groupPeriodDesc: "",
-        groupDisplay: "Zobrazení",
+        groupDisplay: "Obecné",
+        groupListView: "Zobrazení seznamu",
+        groupListViewDesc:
+          "Použije se pouze tehdy, když je Rozvržení karty nastaveno na Seznam.",
+        groupDesign: "Vzhled",
+        designColor: "Barva",
+        designFont: "Písmo",
         groupDisplayDesc: "",
       },
     },
@@ -5809,6 +6584,10 @@
       multiDayEnd: "slutt",
       multiDayDay: "dag {day}",
       noEvents: "Ingen kommende hendelser",
+      // The Week separator's own label (see separatorLabelText) - the word
+      // this language actually uses for a calendar week, which no Intl format
+      // supplies. {week} is the number.
+      separatorWeekLabel: "Uke {week}",
       todoCompleteConfirm: 'Merke «{item}» som fullført?',
       todoCompleteConfirmMultiple: "Merke alle {count} oppgavene for denne hendelsen som fullført?",
       todoCompleteFailed: "Kunne ikke fullføre denne oppgaven.",
@@ -5931,8 +6710,7 @@
         holidayDateObserved: "Observert",
         holidayMergeObserved: "Foretrekk observert dato",
         holidayMergeRegions: "Slå sammen helligdager flere land deler",
-        holidayMergeRegionsDesc:
-          "Én rad per helligdag i stedet for én per land, med alle regionene som feirer den. Gruppert på dato og på navnet helligdagen faktisk vises under - to forskjellige helligdager samme dag holdes altså fra hverandre, og land med avvikende ordlyd slås først sammen når du har gitt dem samme navn (se «Navn og oversettelser» på helligdagen selv).",
+        holidayMergeRegionsDesc: "Én oppføring per helligdag i stedet for én per land, med alle regionene som feirer den. Gruppert etter dato og etter navnet helligdagen faktisk vises under - slik holdes to ulike helligdager samme dag fra hverandre, og land med avvikende ordlyd slås først sammen når du har gitt dem samme navn (se Navn og oversettelser i helligdagens egne innstillinger).",
         regionFormat: "Regionformat",
         regionFormatDesc: "Hvordan en helligdags land og region skrives, overalt der de vises.",
         regionFormatShort: "US (CA)",
@@ -5993,7 +6771,7 @@
         moreActionDesc:
           "Hva «Mer»-knappen nederst til høyre i tidslinjen gjør. Vanligvis en navigasjonshandling til et dashbord som viser de samme hendelsene i det fulle Liste-layoutet. La stå på «Ingenting» for å skjule knappen.",
         groupTimeline: "Timeline",
-        groupTimelineDesc: "Brukes kun når Kortlayout (under Visning) er satt til Timeline.",
+        groupTimelineDesc: "Brukes kun når Kortlayout er satt til Timeline.",
         timelineHeaderLabel: "Overskrift",
         timelineHeaderFontDesc:
           "Skrift for beskrivelseslinjen over aksen, f.eks. «Kevins 27. bursdag er i dag».",
@@ -6010,15 +6788,14 @@
         eventTypesHeading: "Hendelsestyper",
         eventTypeColorDesc: "Farge for ikonet og punktet til denne hendelsestypen på tidslinjen.",
         visibilityHeading: "Vis / Skjul",
-        visibilityPast: "Tidligere hendelser",
-        visibilityPastDesc: "Vis hendelser hvis jubileum allerede har passert innenfor det konfigurerte tidligere-vinduet",
-        visibilityToday: "Dagens hendelser",
-        visibilityTodayDesc: "Vis hendelser som skjer i dag",
-        visibilitySoon: "Snart",
-        visibilitySoonDesc: "Vis hendelser innenfor «snart»-terskelen",
-        visibilityCardTitleDesc: "Vis kortets egen tittel",
         hideCardTitle: "Skjul",
         hideCardTitleDesc: "Skjul kortets egen tittel, selv om den er angitt ovenfor",
+        noEventsText: "Tekst uten hendelser",
+        noEventsTextDesc:
+          "Hva kortet viser når det ikke er noe å liste opp (la stå tomt for standardteksten).",
+        noEventsLabel: "Ingen hendelser",
+        noEventsColorDesc: "Tekstfarge for linjen kortet viser når det ikke er noe å liste opp.",
+        noEventsFontDesc: "Skrift for linjen kortet viser når det ikke er noe å liste opp.",
         tapAction: "Handling ved trykk",
         tapActionDesc: "Hva som skjer når en rad trykkes eller klikkes",
         holdAction: "Handling ved trykk og hold",
@@ -6034,15 +6811,13 @@
         cardLanguageDesc:
           "Låser dette kortet til ett språk for alle som ser det, i stedet for å følge hver enkelt seers profilspråk. Gjelder både kortets tekst og datoformatet - ikke navnene på hendelsene selv, som kommer fra integrasjonen. Denne redigereren følger uansett ditt eget språk.",
         cardLanguageAuto: "Automatisk",
-        visibilityIcon: "Ikon",
-        visibilityIconDesc: "Vis typeikonet foran hver rad",
-        visibilityNameDesc: "Vis hendelsens navn",
-        visibilityTypeDesc: "Vis hendelsestypen",
-        visibilityCountrySuffix: "Helligdagssuffiks",
         visibilityCountrySuffixDesc: "Legg til landet (og eventuelt fylket) etter helligdagens navn/type, f.eks. «Grunnlovsdagen · NO (OSL)»",
         columnsHeading: "Radkolonner",
         columnsDesc:
-          "Legg til, fjern og endre rekkefølgen på det hver rad viser. Egendefinerte tekstkolonner kan blande fri tekst med plassholdere: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
+          "Legg til, fjern og endre rekkefølgen på det hver rad viser, eller start med en av disse.",
+        columnsPresetDefault: "Standard",
+        columnsPresetAgenda: "Agenda",
+        columnsPresetMinimal: "Minimal",
         columnTypeIcon: "Ikon",
         columnTypeInfo: "Navn + type",
         columnTypeName: "Navn",
@@ -6052,6 +6827,8 @@
         columnTypeType: "Type",
         columnTypeText: "Egendefinert tekst",
         columnTypeDate: "Dato",
+        columnTypeDateBlock: "Datoblokk",
+        columnTypeAccentBar: "Aksentstripe",
         columnTypeTime: "Klokkeslett",
         columnTypeLocation: "Sted",
         columnTypeDescription: "Beskrivelse",
@@ -6068,8 +6845,7 @@
         suffixShowHolidayTypeDesc:
           "Vis en helligdags egen typebetegnelse, f.eks. \u201cHoliday (Public)\u201d. Slå av for å bare la land-/regionssuffikset stå igjen i denne cellen.",
         multiDayDisplay: "Flerdagshendelser",
-        multiDayDisplayDesc:
-          "Hvordan en engangshendelse som går over flere dager - en ferietur, en konferanse - vises. Gjelder bare hendelser som faktisk har en sluttdato; alt annet er én rad uansett.",
+        multiDayDisplayDesc: "Hvordan en engangshendelse som strekker seg over flere dager - en ferietur, en konferanse - vises. Gjelder bare hendelser som faktisk har en sluttdato; alt annet er uansett én oppføring.",
         multiDayStartOnly: "Bare første dag",
         multiDayEndOnly: "Bare siste dag",
         multiDayStartEnd: "Første og siste dag",
@@ -6095,12 +6871,32 @@
         columnMoveDown: "Flytt ned",
         columnRemove: "Fjern",
         columnTemplatePlaceholder: "f.eks. {name} fyller {occurrence} i dag",
-        columnColor: "Farge",
         columnsCompact: "Kompakt (ingen mellomrom, sentrert)",
         columnsCompactDesc:
           "Fjerner mellomrommet mellom kolonnene, sentrerer raden og gjør vekt og opasitet lik for alle felt - nyttig når kolonnene danner én sammenhengende setning.",
-        visibilityBadgeDesc: "Vis merket for jubileumsnummeret",
-        visibilityWhenDesc: "Vis nedtellingen (f.eks. «om 3 dager»)",
+        monthSeparators: "Månedsskiller",
+        monthSeparatorsDesc: "Tegner en linje overalt der påfølgende rader faller i ulike måneder, og deler en lang liste i månedsblokker. Rekkefølgen på radene selv endres ikke.",
+        weekSeparators: "Ukeskiller",
+        weekSeparatorsDesc: "Det samme ett hakk finere: en linje overalt der påfølgende rader faller i ulike uker, etter innstillingen \"Første ukedag\" i Home Assistant. Er månedsskillerne også på, får en rad som starter begge bare én linje.",
+        daySeparators: "Dagskiller",
+        daySeparatorsDesc: "En linje overalt der påfølgende rader faller på ulike dager, og deler listen i én blokk per dag. Den fineste av de tre - er uke- eller månedsskillerne også på, får en rad som starter to av dem bare den grovere linjen.",
+        separatorWidth: "Tykkelse",
+        separatorWidthDesc: "Linjens tykkelse, f.eks. \"1px\". Står den tom blir den 1px.",
+        separatorColor: "Farge",
+        separatorColorDesc: "Linjens farge. Står den tom følger den temaets egen tekstfarge, den samme som korttittelen.",
+        separatorShowDayLabel: "Vis ukedag",
+        separatorShowDayLabelDesc: "Skriver ukedagen på selve linjen, midtstilt på en elliptisk plate i kortets bakgrunnsfarge, slik at linjen brytes rundt teksten i stedet for å gå gjennom den.",
+        separatorShowWeekLabel: "Vis ukenummer",
+        separatorShowWeekLabelDesc: "Skriver ukenummeret på selve linjen, midtstilt på en elliptisk plate i kortets bakgrunnsfarge. Nummeret følger Home Assistant-innstillingen for ukens første dag, den samme som avgjør hvor linjene faller.",
+        separatorShowMonthLabel: "Vis måned",
+        separatorShowMonthLabelDesc: "Skriver måneden på selve linjen, midtstilt på en elliptisk plate i kortets bakgrunnsfarge, slik at linjen brytes rundt teksten.",
+        separatorLabelColor: "Tekstfarge",
+        separatorLabelColorDesc: "Fargen på etiketten. Latt stå tom følger den temaets egen tekstfarge, den samme som korttittelen.",
+        separatorLabelBackground: "Bakgrunnsfarge",
+        separatorLabelBackgroundDesc: "Fargen på platen bak etiketten – det er den som skjuler linjen under. Latt stå tom blir det kortets egen bakgrunnsfarge.",
+        separatorLabelFontDesc: "Størrelsen på etikettens tekst, f.eks. \"0.8em\" eller \"11px\". Latt stå tom er den 0.75em, relativt kortets egen skriftstørrelse, pluss de fire stilbryterne og tegnavstanden under.",
+        accentBarWidthDesc: "Stripens tykkelse, f.eks. \"3px\". Står den tom blir den 3px. Legg til kolonnen Aksentstripe over for at den skal vises i det hele tatt.",
+        accentBarColorDesc: "Standardfarge for stripen. Hendelsestypen og radens status kan hver overstyre den.",
         whenClickShowsDate: "Dato ved klikk på nedtelling",
         whenClickShowsDateDesc:
           "Klikk på en rads nedtelling viser i stedet den faktiske datoen (f.eks. «man. 3. aug. 2026»), et nytt klikk bytter tilbake - radens trykk-/holdehandling virker fortsatt ellers i raden.",
@@ -6114,41 +6910,35 @@
         visibilityTodoOnly: "Bare åpne oppgaver",
         visibilityTodoOnlyDesc:
           "Vis bare hendelser som fortsatt har en åpen oppgave (se Oppgaver under Innstillinger → Hendelser). Snevrer inn de to filtrene over i stedet for å slås sammen med dem: med «Bare VIP» også på vises de VIP-hendelsene som fortsatt har noe å gjøre.",
-        vipBadgeIcon: "VIP-merkeikon",
-        vipBadgeIconDesc: "MDI-ikon vist som et lite merke på ikonet til VIP-merkede hendelser",
+        badgesHeading: "Merker",
+        badgeTargetIcon: "Hendelsesikon",
+        badgeTargetIconDesc: "Tegner dette merket i hjørnet av radens ikon.",
+        badgeTargetAccentBar: "Aksentstripe",
+        badgeTargetAccentBarDesc: "Tegner dette merket i kolonnen til venstre for aksentstripen, sentrert mot raden. Krever kolonnen Aksentstripe.",
+        badgeColor: "Merkefarge",
+        badgeColorDesc: "Farge på symbolet inne i merket.",
+        badgeBgColor: "Merkets bakgrunnsfarge",
+        badgeBgColorDesc: "Farge på skiven bak symbolet.",
+        vipBadgeIcon: "Merkeikon",
+        vipBadgeIconDesc: "MDI-ikon som brukes som merke på hendelser merket som VIP.",
         vipBadgeIconPlaceholder: "mdi:star",
-        importantBadgeIcon: "Important-merkeikon",
-        importantBadgeIconDesc: "MDI-ikon vist som et lite merke på ikonet til hendelser som automatisk er merket som viktige",
+        importantBadgeIcon: "Merkeikon",
+        importantBadgeIconDesc: "MDI-ikon som brukes som merke på hendelser som automatisk er merket som viktige.",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
-        todoBadgeIcon: "Ikon for oppgavemerke",
-        todoBadgeIconDesc:
-          "MDI-ikon som vises som et lite merke på ikonet til hendelser med en ennå åpen oppgave (se Oppgaver under Hendelser)",
-        todoBadgeColorList: "Merkefarge (Liste)",
-        todoBadgeColorListDesc: "Fargen på dette merket i Liste-oppsettet - som standard temaets røde farge",
-        todoBadgeColorTimeline: "Merkefarge (Timeline)",
+        todoBadgeIcon: "Merkeikon",
+        todoBadgeIconDesc: "MDI-ikon som brukes som merke på hendelser med et fortsatt åpent gjøremål (se Gjøremål under Hendelser).",
         todoBadgeColorTimelineDesc: "Fargen på dette merket i Tidslinje-oppsettet - som standard temaets røde farge",
         highlightHeading: "Fremheving",
         highlightPast: "Tidligere hendelser",
-        highlightPastDesc: "Fargelegg radbakgrunnen for hendelser som allerede har skjedd",
-        highlightToday: "Dagens hendelser",
-        highlightTodayDesc: "Fargelegg radbakgrunnen for dagens hendelser",
-        highlightSoon: "Snart",
-        highlightSoonDesc: "Fargelegg radbakgrunnen for hendelser innenfor «snart»-terskelen",
         highlightBgColor: "Bakgrunnsfarge",
         highlightBgColorDesc: "Bakgrunnsfarge for denne fremhevingen",
         highlightVip: "VIP-hendelser",
-        highlightVipDesc: "Vis et merke på ikonet til VIP-merkede hendelser",
+        highlightVipDesc: "Viser et merke på hendelser merket som VIP.",
         highlightImportant: "Viktige hendelser",
-        highlightImportantDesc: "Vis et merke på ikonet til hendelser som automatisk er merket som viktige",
+        highlightImportantDesc: "Viser et merke på hendelser som automatisk er merket som viktige.",
         highlightTodo: "Åpne oppgaver",
-        highlightTodoDesc: "Vis et merke på ikonet til hendelser med en ennå åpen oppgave",
-        vipBadgeColorList: "Merkefarge (Liste)",
-        vipBadgeColorListDesc: "Fargen på dette merket i Liste-oppsettet - som standard temaets røde farge",
-        vipBadgeColorTimeline: "Merkefarge (Timeline)",
-        vipBadgeColorTimelineDesc: "Fargen på dette merket i Tidslinje-oppsettet - som standard hvitt",
-        importantBadgeColorList: "Merkefarge (Liste)",
-        importantBadgeColorListDesc: "Fargen på dette merket i Liste-oppsettet - som standard temaets ravfarge",
-        importantBadgeColorTimeline: "Merkefarge (Timeline)",
+        highlightTodoDesc: "Viser et merke på hendelser med et fortsatt åpent gjøremål.",
+        vipBadgeColorTimelineDesc: "Fargen på dette merket i Tidslinje-oppsettet - som standard temaets røde farge",
         importantBadgeColorTimelineDesc:
           "Fargen på dette merket i Tidslinje-oppsettet - som standard temaets ravfarge",
         colors: "Farger",
@@ -6172,16 +6962,43 @@
         cardBackgroundSizeRepeat: "Flislegg",
         cardBackgroundOpacity: "Ugjennomsiktighet",
         cardBackgroundOpacityDesc: "Ugjennomsiktighet for bakgrunnsfarge/-bilde, i prosent",
-        colorsIconsHeading: "Ikoner",
-        colorsLabelsHeading: "Etiketter",
+        statusHeading: "Hendelsesstatus",
+        statusTimelineIconColorDesc: "Denne statusens punkt og tegn i tidslinjen.",
+        statusEntryTextColor: "Farge på oppføringens tekst",
+        statusEntryTextColorDesc: "Denne statusens tekst i tidslinjen. Tom tar denne statusens farge.",
+        typeRowColor: "Farge på hele raden",
+        typeRowColorDesc: "Farge på radens tekst når Hele raden er på. Tom tar denne typens farge.",
+        typeEntryColor: "Farge på oppføringens tekst",
+        typeEntryColorDesc: "Farge på hendelsens tekst i tidslinjen når Oppføringens tekst er på. Tom tar denne typens farge.",
+        typeBarColor: "Aksentstripens farge",
+        typeBarColorDesc: "Farge på aksentstripen når Aksentstripe er på. Tom tar denne typens farge.",
+        typeIconColor: "Ikonets farge",
+        typeIconColorDesc: "Farge på ikonet - radens i listen, punktet på tidslinjen. Tom tar denne typens farge.",
+        typeAnimationDesc: "Animasjon for ikonene til denne hendelsestypen; overstyrer Ikon-blokkens egen i Design. På Ingen følger den den standarden. En status kan overstyre den igjen.",
+        rowTargetTimeline: "Oppføringens tekst",
+        rowTargetTimelineDesc: "Farger også hendelsens tekst i listen under aksen, ikke bare punktet dens.",
+        fontLetterSpacingDesc: "Avstand mellom bokstavene, f.eks. 0.05em eller 1px. Tom beholder skriftens eget avstand.",
+        lineStyleDesc: "Om linjen tegnes heltrukket, stiplet eller prikket.",
+        designLineBlockDesc: "Linjens tykkelse, strekstil og farge.",
+        statusOverrideHint: "Av gjelder hendelsestypens farge eller standardverdien fra Design.",
+        designIconBlockDesc: "Standardfargen og -animasjonen for kortets ikoner. Hver hendelsestype og hver status faller tilbake på dem så lenge den ikke overstyrer dem.",
+        designBarBlockDesc: "Stripens standardfarge og bredden dens.",
+        designElementDesc: "Alt som utformer denne delen av kortet: fargen, skrifttypen og bryterne nedenfor.",
+        designGroupDesc: "Linjene denne kolonnen består av. Hver av dem utformes for seg nedenfor.",
+        statusTextColor: "Farge på hele teksten",
+        statusTextColorDesc: "Radens tekst, uten ikonet og aksentstripen. Tom tar denne statusens farge.",
+        statusIconAnimation: "Ikonanimasjon",
+        statusIconAnimationDesc: "Ikonets animasjon. Av gjelder standardverdien fra Design.",
+        designIconColorDesc: "Standardfarge for radens ikon. Hver status faller tilbake på den så lenge den ikke overstyrer den.",
+        statusPastDesc: "Hendelser som allerede har vært.",
+        statusIconColor: "Ikonfarge",
+        statusIconColorDesc: "Radens ikon.",
+        statusBarColor: "Aksentstripens farge",
+        statusBarColorDesc: "Radens aksentstripe. Tom følger ikonfargen.",
         colorToday: "I dag",
         colorSoon: "Snart",
-        colorAccent: "Standard",
-        colorTodayDesc: "Ikonfarge for dagens hendelser",
-        colorSoonDesc: "Ikonfarge for hendelser innenfor «snart»-terskelen",
-        iconVisibleLabel: "Vis ikon",
-        iconVisibleDesc: "Vis eller skjul ikonet for denne kategorien",
-        colorAccentDesc: "Ikonfarge for hendelser uten spesiell status",
+        colorTodayDesc: "Hendelser som skjer i dag.",
+        colorSoonDesc: "Hendelser innenfor terskelen \"snart\".",
         animationLabel: "Animasjon",
         animationDesc: "Legg til en løkkeanimasjon for dette ikonet",
         animationNone: "Ingen",
@@ -6190,23 +7007,39 @@
         animationShake: "Rist",
         animationSpin: "Snurr",
         animationFlash: "Blink",
-        matchTextLabel: "Fargelegg også teksten",
-        matchTextDesc: "Fargelegg også all tekst i raden med denne ikonfargen",
+        rowColorsLabel: "Utform rader etter hendelsestype",
+        rowColorsDesc: "Gir hver hendelsestype sin egen utforming - fargen og hvilke deler av en rad eller en tidslinjeoppføring den farger - i stedet for standardverdiene fra Design. Radens status kan fortsatt overstyre den.",
+        calendarColorsHeading: "Innebygde kalendere",
+        calendarColorDesc: "Farge for denne kalenderen - radene dens i listen, punktet dens på tidslinjen. Står den tom, brukes fargen Home Assistant selv lagrer for kalenderen.",
+        eventTypeRowColorDesc: "Farge for denne hendelsestypen - radene dens i listen, punktet dens på tidslinjen. I listen velger bryterne ved siden av hvilke deler av en rad den farger.",
+        rowTargetIcon: "Ikon",
+        rowTargetIconDesc: "Farger ikonet til denne typen.",
+        rowTargetAccentBar: "Aksentstripe",
+        rowTargetAccentBarDesc: "Farger aksentstripen til denne typen.",
+        rowTargetRow: "Hele raden",
+        rowTargetRowDesc: "Farger hele raden inkludert teksten - og med den ikonet og aksentstripen, uansett hva deres egne brytere sier.",
         colorName: "Navn",
         colorType: "Type",
+        combinedFontDesc: "Størrelse og stil for denne linjen i den kombinerte kolonnen.",
+        combinedColorDesc: "Farge for denne linjen i den kombinerte kolonnen.",
         colorBadge: "Jubileum",
         colorWhen: "Nedtelling",
         colorText: "Egendefinert tekst",
         colorDate: "Dato",
-        colorCalendar: "Kalenderfelt",
+        dateBlockWeekday: "Ukedag",
+        dateBlockDay: "Dag",
+        dateBlockMonth: "Måned",
+        dateBlockFontDesc: "Gjelder bare kolonnen Datoblokk. Størrelsene er relative til kortets egen skriftstørrelse: 0,75 / 1,5 / 0,75 når tomt.",
+        dateBlockColorDesc: "Gjelder bare kolonnen Datoblokk. Står den tom tar ukedag og måned temaets sekundære tekstfarge og dagen den primære.",
+        colorCalendar: "Eksterne kalenderfelt",
         colorDateDesc:
           "Tekstfarge for Dato-kolonnen",
         colorCalendarDesc:
-          "Tekstfarge for kolonnene Tid, Sted og Beskrivelse - kun for hendelser fra eksterne kalendere",
+          "Påvirker bare hendelser fra eksterne kalendere. Hvis feltet står tomt, tar hver linje temaets sekundære tekstfarge.",
         fontDateDesc:
           "Skriftstørrelse for Dato-kolonnen (se Radkolonner under Layout -> Visning)",
         fontCalendarDesc:
-          "Skriftstørrelse for kolonnene Tid, Sted og Beskrivelse - kun for hendelser fra eksterne kalendere",
+          "Påvirker bare hendelser fra eksterne kalendere. Størrelsene er relative til kortets egen skriftstørrelse.",
         colorNameDesc: "Tekstfarge for hendelsens navn",
         colorLastName: "Etternavn",
         colorLastNameDesc: "Tekstfarge for hendelsens etternavn",
@@ -6267,14 +7100,20 @@
         panelSettings: "Innstillinger",
         panelSettingsDesc: "Generelt, hendelser og periode",
         panelLayout: "Layout",
-        panelLayoutDesc: "Visning, skrifter, farger, ikoner, kortbakgrunn og timeline",
+        panelLayoutDesc: "Generelt, liste- og timelinevisning, design, fremheving og kortbakgrunn",
         groupGeneral: "Generelt",
         groupGeneralDesc: "",
         groupEvents: "Hendelser",
         groupEventsDesc: "",
         groupPeriod: "Periode",
         groupPeriodDesc: "",
-        groupDisplay: "Visning",
+        groupDisplay: "Generelt",
+        groupListView: "Listevisning",
+        groupListViewDesc:
+          "Brukes bare når Kortoppsett er satt til Liste.",
+        groupDesign: "Design",
+        designColor: "Farge",
+        designFont: "Skrift",
         groupDisplayDesc: "",
       },
     },
@@ -6289,6 +7128,10 @@
       multiDayEnd: "slut",
       multiDayDay: "dag {day}",
       noEvents: "Ingen kommende begivenheder",
+      // The Week separator's own label (see separatorLabelText) - the word
+      // this language actually uses for a calendar week, which no Intl format
+      // supplies. {week} is the number.
+      separatorWeekLabel: "Uge {week}",
       todoCompleteConfirm: 'Markér "{item}" som fuldført?',
       todoCompleteConfirmMultiple: "Markér alle {count} opgaver for denne begivenhed som fuldført?",
       todoCompleteFailed: "Denne opgave kunne ikke fuldføres.",
@@ -6411,8 +7254,7 @@
         holidayDateObserved: "Erstattet",
         holidayMergeObserved: "Foretræk observeret dato",
         holidayMergeRegions: "Slå helligdage sammen, som flere lande deler",
-        holidayMergeRegionsDesc:
-          "Én række per helligdag i stedet for én per land, med alle de regioner, der fejrer den. Grupperet på dato og på det navn, helligdagen faktisk vises under - to forskellige helligdage samme dag holdes altså adskilt, og lande med afvigende ordlyd slås først sammen, når du har givet dem samme navn (se «Navn og oversættelser» på helligdagen selv).",
+        holidayMergeRegionsDesc: "Én post pr. helligdag i stedet for én pr. land, med alle de regioner, der fejrer den. Grupperet efter dato og efter det navn, helligdagen faktisk vises under - så to forskellige helligdage samme dag holdes adskilt, og lande med afvigende ordlyd slås først sammen, når du har givet dem samme navn (se Navn og oversættelser i helligdagens egne indstillinger).",
         regionFormat: "Regionformat",
         regionFormatDesc: "Hvordan en helligdags land og region skrives, alle steder de vises.",
         regionFormatShort: "US (CA)",
@@ -6473,7 +7315,7 @@
         moreActionDesc:
           "Hvad „Mere”-knappen nederst til højre i tidslinjen gør. Typisk en navigationshandling til et dashboard, der viser de samme begivenheder i det fulde Liste-layout. Lad den stå på „Intet” for at skjule knappen.",
         groupTimeline: "Timeline",
-        groupTimelineDesc: "Bruges kun når Kortlayout (under Visning) er sat til Timeline.",
+        groupTimelineDesc: "Bruges kun når Kortlayout er sat til Timeline.",
         timelineHeaderLabel: "Overskrift",
         timelineHeaderFontDesc:
           "Skrifttype til beskrivelseslinjen over aksen, f.eks. „Kevins 27. fødselsdag er i dag”.",
@@ -6490,15 +7332,14 @@
         eventTypesHeading: "Begivenhedstyper",
         eventTypeColorDesc: "Farve til ikonet og prikken for denne begivenhedstype på tidslinjen.",
         visibilityHeading: "Vis / Skjul",
-        visibilityPast: "Tidligere begivenheder",
-        visibilityPastDesc: "Vis begivenheder, hvis mærkedag allerede er passeret inden for det konfigurerede tidligere-vindue",
-        visibilityToday: "Dagens begivenheder",
-        visibilityTodayDesc: "Vis begivenheder, der finder sted i dag",
-        visibilitySoon: "Snart",
-        visibilitySoonDesc: "Vis begivenheder inden for \"snart\"-tærsklen",
-        visibilityCardTitleDesc: "Vis kortets egen titel",
         hideCardTitle: "Skjul",
         hideCardTitleDesc: "Skjul kortets egen titel, selv når den er angivet ovenfor",
+        noEventsText: "Tekst uden begivenheder",
+        noEventsTextDesc:
+          "Hvad kortet viser, når der ikke er noget at vise (lad stå tomt for standardteksten).",
+        noEventsLabel: "Ingen begivenheder",
+        noEventsColorDesc: "Tekstfarve for linjen, kortet viser, når der ikke er noget at vise.",
+        noEventsFontDesc: "Skrifttype for linjen, kortet viser, når der ikke er noget at vise.",
         tapAction: "Handling ved tryk",
         tapActionDesc: "Hvad der sker, når en række trykkes eller klikkes",
         holdAction: "Handling ved tryk og hold",
@@ -6514,15 +7355,13 @@
         cardLanguageDesc:
           "Låser dette kort til ét sprog for alle, der ser det, i stedet for at følge den enkelte seers profilsprog. Gælder både kortets tekst og datoformatet - ikke selve begivenhedernes navne, som kommer fra integrationen. Denne editor følger under alle omstændigheder dit eget sprog.",
         cardLanguageAuto: "Automatisk",
-        visibilityIcon: "Ikon",
-        visibilityIconDesc: "Vis typeikonet foran hver række",
-        visibilityNameDesc: "Vis begivenhedens navn",
-        visibilityTypeDesc: "Vis begivenhedstypen",
-        visibilityCountrySuffix: "Helligdagssuffiks",
         visibilityCountrySuffixDesc: "Tilføj landet (og evt. regionen) efter helligdagens navn/type, f.eks. \"Grundlovsdag · DK (84)\"",
         columnsHeading: "Rækkekolonner",
         columnsDesc:
-          "Tilføj, fjern og omorganiser hvad hver række viser. Brugerdefinerede tekstkolonner kan blande fri tekst med pladsholdere: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
+          "Tilføj, fjern og omarrangér hvad hver række viser, eller start med en af disse.",
+        columnsPresetDefault: "Standard",
+        columnsPresetAgenda: "Agenda",
+        columnsPresetMinimal: "Minimal",
         columnTypeIcon: "Ikon",
         columnTypeInfo: "Navn + type",
         columnTypeName: "Navn",
@@ -6532,6 +7371,8 @@
         columnTypeType: "Type",
         columnTypeText: "Brugerdefineret tekst",
         columnTypeDate: "Dato",
+        columnTypeDateBlock: "Datoblok",
+        columnTypeAccentBar: "Accentbjælke",
         columnTypeTime: "Klokkeslæt",
         columnTypeLocation: "Sted",
         columnTypeDescription: "Beskrivelse",
@@ -6548,8 +7389,7 @@
         suffixShowHolidayTypeDesc:
           "Vis en helligdags egen typebetegnelse, f.eks. \u201cHoliday (Public)\u201d. Slå fra for kun at lade land-/regionssuffikset stå i denne celle.",
         multiDayDisplay: "Flerdagsbegivenheder",
-        multiDayDisplayDesc:
-          "Hvordan en engangsbegivenhed over flere dage - en ferierejse, en konference - vises. Gælder kun begivenheder, der rent faktisk har en slutdato; alt andet er én række alligevel.",
+        multiDayDisplayDesc: "Hvordan en engangsbegivenhed, der strækker sig over flere dage - en ferierejse, en konference - vises. Vedrører kun begivenheder, der faktisk har en slutdato; alt andet er alligevel én post.",
         multiDayStartOnly: "Kun den første dag",
         multiDayEndOnly: "Kun den sidste dag",
         multiDayStartEnd: "Første og sidste dag",
@@ -6575,12 +7415,32 @@
         columnMoveDown: "Flyt ned",
         columnRemove: "Fjern",
         columnTemplatePlaceholder: "f.eks. {name} fylder {occurrence} i dag",
-        columnColor: "Farve",
         columnsCompact: "Kompakt (ingen mellemrum, centreret)",
         columnsCompactDesc:
           "Fjerner mellemrummet mellem kolonnerne, centrerer rækken og gør vægt og opacitet ens for alle felter - nyttigt når kolonnerne danner én sammenhængende sætning.",
-        visibilityBadgeDesc: "Vis mærket for jubilæumsnummeret",
-        visibilityWhenDesc: "Vis nedtællingen (f.eks. \"om 3 dage\")",
+        monthSeparators: "Månedsskillelinjer",
+        monthSeparatorsDesc: "Tegner en linje alle steder, hvor rækker efter hinanden falder i forskellige måneder, og deler dermed en lang liste op i månedsblokke. Rækkefølgen af selve rækkerne ændres ikke.",
+        weekSeparators: "Ugeskillelinjer",
+        weekSeparatorsDesc: "Det samme et niveau finere: en linje alle steder, hvor rækker efter hinanden falder i forskellige uger, efter din indstilling \"Ugens første dag\" i Home Assistant. Er månedsskillelinjerne også slået til, får en række, der starter begge dele, kun én linje.",
+        daySeparators: "Dagskillelinjer",
+        daySeparatorsDesc: "En linje alle steder, hvor rækker efter hinanden falder på forskellige dage, og deler listen op i én blok pr. dag. Den fineste af de tre - er uge- eller månedsskillelinjerne også slået til, får en række, der starter to af dem, kun den grovere linje.",
+        separatorWidth: "Tykkelse",
+        separatorWidthDesc: "Linjens tykkelse, f.eks. \"1px\". Efterlades den tom, bliver den 1px.",
+        separatorColor: "Farve",
+        separatorColorDesc: "Linjens farve. Efterlades den tom, følger den temaets egen tekstfarve, den samme som kortets titel.",
+        separatorShowDayLabel: "Vis ugedag",
+        separatorShowDayLabelDesc: "Skriver ugedagen på selve linjen, centreret på en elliptisk plade i kortets baggrundsfarve, så linjen brydes omkring teksten i stedet for at løbe igennem den.",
+        separatorShowWeekLabel: "Vis ugenummer",
+        separatorShowWeekLabelDesc: "Skriver ugenummeret på selve linjen, centreret på en elliptisk plade i kortets baggrundsfarve. Nummeret følger din Home Assistant-indstilling for ugens første dag, den samme som afgør, hvor linjerne falder.",
+        separatorShowMonthLabel: "Vis måned",
+        separatorShowMonthLabelDesc: "Skriver måneden på selve linjen, centreret på en elliptisk plade i kortets baggrundsfarve, så linjen brydes omkring teksten.",
+        separatorLabelColor: "Tekstfarve",
+        separatorLabelColorDesc: "Etikettens farve. Efterladt tom følger den temaets egen tekstfarve, den samme som korttitlen.",
+        separatorLabelBackground: "Baggrundsfarve",
+        separatorLabelBackgroundDesc: "Farven på pladen bag etiketten – det er den, der skjuler linjen nedenunder. Efterladt tom bliver det kortets egen baggrundsfarve.",
+        separatorLabelFontDesc: "Størrelsen på etikettens tekst, f.eks. \"0.8em\" eller \"11px\". Efterladt tom er den 0.75em, relativt kortets egen skriftstørrelse, plus de fire stilkontakter og bogstavafstanden nedenfor.",
+        accentBarWidthDesc: "Bjælkens tykkelse, f.eks. \"3px\". Efterlades den tom, bliver den 3px. Tilføj kolonnen Accentbjælke ovenfor, for at den overhovedet vises.",
+        accentBarColorDesc: "Standardfarve for bjælken. Begivenhedstypen og rækkens status kan hver især tilsidesætte den.",
         whenClickShowsDate: "Dato ved klik på nedtælling",
         whenClickShowsDateDesc:
           "Klik på en rækkes nedtælling viser i stedet den faktiske dato (f.eks. \"man. 3. aug. 2026\"), et nyt klik skifter tilbage - rækkens tryk-/holdhandling virker stadig i resten af rækken.",
@@ -6594,41 +7454,35 @@
         visibilityTodoOnly: "Kun åbne opgaver",
         visibilityTodoOnlyDesc:
           "Vis kun begivenheder, der stadig har en åben opgave (se Opgaver under Indstillinger → Begivenheder). Indsnævrer de to filtre ovenfor i stedet for at blive slået sammen med dem: med «Kun VIP» også slået til vises de VIP-begivenheder, hvor der stadig er noget at gøre.",
-        vipBadgeIcon: "VIP-mærkeikon",
-        vipBadgeIconDesc: "MDI-ikon vist som et lille mærke på ikonet for VIP-markerede begivenheder",
+        badgesHeading: "Badges",
+        badgeTargetIcon: "Begivenhedsikon",
+        badgeTargetIconDesc: "Tegner dette badge i hjørnet af rækkens ikon.",
+        badgeTargetAccentBar: "Accentbjælke",
+        badgeTargetAccentBarDesc: "Tegner dette badge i kolonnen til venstre for accentbjælken, centreret i forhold til rækken. Kræver kolonnen Accentbjælke.",
+        badgeColor: "Badgefarve",
+        badgeColorDesc: "Farve på symbolet inde i badget.",
+        badgeBgColor: "Badgets baggrundsfarve",
+        badgeBgColorDesc: "Farve på skiven bag symbolet.",
+        vipBadgeIcon: "Badge-ikon",
+        vipBadgeIconDesc: "MDI-ikon, der bruges som badge på begivenheder markeret som VIP.",
         vipBadgeIconPlaceholder: "mdi:star",
-        importantBadgeIcon: "Important-mærkeikon",
-        importantBadgeIconDesc: "MDI-ikon vist som et lille mærke på ikonet for begivenheder, der automatisk er markeret som vigtige",
+        importantBadgeIcon: "Badge-ikon",
+        importantBadgeIconDesc: "MDI-ikon, der bruges som badge på begivenheder, der automatisk er markeret som vigtige.",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
-        todoBadgeIcon: "Ikon for opgavemærke",
-        todoBadgeIconDesc:
-          "MDI-ikon, der vises som et lille mærke på ikonet for begivenheder med en stadig åben opgave (se Opgaver under Begivenheder)",
-        todoBadgeColorList: "Mærkefarve (Liste)",
-        todoBadgeColorListDesc: "Farven på det mærke i Liste-layoutet - som standard temaets røde farve",
-        todoBadgeColorTimeline: "Mærkefarve (Timeline)",
+        todoBadgeIcon: "Badge-ikon",
+        todoBadgeIconDesc: "MDI-ikon, der bruges som badge på begivenheder med en stadig åben opgave (se Opgaver under Begivenheder).",
         todoBadgeColorTimelineDesc: "Farven på det mærke i Tidslinje-layoutet - som standard temaets røde farve",
         highlightHeading: "Fremhævning",
         highlightPast: "Tidligere begivenheder",
-        highlightPastDesc: "Farvelæg rækkebaggrunden for begivenheder, der allerede er sket",
-        highlightToday: "Dagens begivenheder",
-        highlightTodayDesc: "Farvelæg rækkebaggrunden for dagens begivenheder",
-        highlightSoon: "Snart",
-        highlightSoonDesc: "Farvelæg rækkebaggrunden for begivenheder inden for \"snart\"-tærsklen",
         highlightBgColor: "Baggrundsfarve",
         highlightBgColorDesc: "Baggrundsfarve for denne fremhævning",
         highlightVip: "VIP-begivenheder",
-        highlightVipDesc: "Vis et mærke på ikonet for VIP-markerede begivenheder",
+        highlightVipDesc: "Viser et badge på begivenheder markeret som VIP.",
         highlightImportant: "Vigtige begivenheder",
-        highlightImportantDesc: "Vis et mærke på ikonet for begivenheder, der automatisk er markeret som vigtige",
+        highlightImportantDesc: "Viser et badge på begivenheder, der automatisk er markeret som vigtige.",
         highlightTodo: "Åbne opgaver",
-        highlightTodoDesc: "Vis et mærke på ikonet for begivenheder med en stadig åben opgave",
-        vipBadgeColorList: "Mærkefarve (Liste)",
-        vipBadgeColorListDesc: "Farven på det mærke i Liste-layoutet - som standard temaets røde farve",
-        vipBadgeColorTimeline: "Mærkefarve (Timeline)",
-        vipBadgeColorTimelineDesc: "Farven på det mærke i Tidslinje-layoutet - som standard hvid",
-        importantBadgeColorList: "Mærkefarve (Liste)",
-        importantBadgeColorListDesc: "Farven på det mærke i Liste-layoutet - som standard temaets ravfarve",
-        importantBadgeColorTimeline: "Mærkefarve (Timeline)",
+        highlightTodoDesc: "Viser et badge på begivenheder med en stadig åben opgave.",
+        vipBadgeColorTimelineDesc: "Farven på det mærke i Tidslinje-layoutet - som standard temaets røde farve",
         importantBadgeColorTimelineDesc:
           "Farven på det mærke i Tidslinje-layoutet - som standard temaets ravfarve",
         colors: "Farver",
@@ -6652,16 +7506,43 @@
         cardBackgroundSizeRepeat: "Fliser",
         cardBackgroundOpacity: "Uigennemsigtighed",
         cardBackgroundOpacityDesc: "Uigennemsigtighed for baggrundsfarve/-billede, i procent",
-        colorsIconsHeading: "Ikoner",
-        colorsLabelsHeading: "Etiketter",
+        statusHeading: "Begivenhedsstatus",
+        statusTimelineIconColorDesc: "Denne status' punkt og tegn i tidslinjen.",
+        statusEntryTextColor: "Farve på postens tekst",
+        statusEntryTextColorDesc: "Denne status' tekst i tidslinjen. Tom tager denne status' farve.",
+        typeRowColor: "Farve på hele rækken",
+        typeRowColorDesc: "Farve på rækkens tekst, når Hele rækken er slået til. Tom tager denne types farve.",
+        typeEntryColor: "Farve på postens tekst",
+        typeEntryColorDesc: "Farve på begivenhedens tekst i tidslinjen, når Postens tekst er slået til. Tom tager denne types farve.",
+        typeBarColor: "Accentbjælkens farve",
+        typeBarColorDesc: "Farve på accentbjælken, når Accentbjælke er slået til. Tom tager denne types farve.",
+        typeIconColor: "Ikonets farve",
+        typeIconColorDesc: "Farve på ikonet - rækkens i listen, punktet på tidslinjen. Tom tager denne types farve.",
+        typeAnimationDesc: "Animation for denne begivenhedstypes ikoner; tilsidesætter Ikon-blokkens egen i Design. På Ingen følger den den standard. En status kan tilsidesætte den igen.",
+        rowTargetTimeline: "Postens tekst",
+        rowTargetTimelineDesc: "Farvelægger også begivenhedens tekst i listen under aksen, ikke kun dens punkt.",
+        fontLetterSpacingDesc: "Afstand mellem bogstaverne, f.eks. 0.05em eller 1px. Tom beholder skrifttypens eget afstand.",
+        lineStyleDesc: "Om linjen tegnes ubrudt, stiplet eller prikket.",
+        designLineBlockDesc: "Linjens tykkelse, stregstil og farve.",
+        statusOverrideHint: "Fra gælder begivenhedstypens farve eller standardværdien fra Design.",
+        designIconBlockDesc: "Standardfarven og -animationen for kortets ikoner. Hver begivenhedstype og hver status falder tilbage på dem, så længe den ikke tilsidesætter dem.",
+        designBarBlockDesc: "Bjælkens standardfarve og dens tykkelse.",
+        designElementDesc: "Alt, der giver denne del af kortet udseende: farven, skrifttypen og kontakterne nedenfor.",
+        designGroupDesc: "De linjer, denne kolonne består af. Hver enkelt sættes op for sig nedenfor.",
+        statusTextColor: "Farve på hele teksten",
+        statusTextColorDesc: "Rækkens tekst, uden ikonet og accentbjælken. Tom tager denne status' farve.",
+        statusIconAnimation: "Ikonanimation",
+        statusIconAnimationDesc: "Ikonets animation. Fra gælder standardværdien fra Design.",
+        designIconColorDesc: "Standardfarve for rækkens ikon. Hver status falder tilbage på den, så længe den ikke tilsidesætter den.",
+        statusPastDesc: "Begivenheder, der allerede har været.",
+        statusIconColor: "Ikonfarve",
+        statusIconColorDesc: "Rækkens ikon.",
+        statusBarColor: "Accentbjælkens farve",
+        statusBarColorDesc: "Rækkens accentbjælke. Tom følger ikonfarven.",
         colorToday: "I dag",
         colorSoon: "Snart",
-        colorAccent: "Standard",
-        colorTodayDesc: "Ikonfarve for dagens begivenheder",
-        colorSoonDesc: "Ikonfarve for begivenheder inden for \"snart\"-tærsklen",
-        iconVisibleLabel: "Vis ikon",
-        iconVisibleDesc: "Vis eller skjul ikonet for denne kategori",
-        colorAccentDesc: "Ikonfarve for begivenheder uden særlig status",
+        colorTodayDesc: "Begivenheder, der finder sted i dag.",
+        colorSoonDesc: "Begivenheder inden for tærsklen \"snart\".",
         animationLabel: "Animation",
         animationDesc: "Tilføj en løkkeanimation til dette ikon",
         animationNone: "Ingen",
@@ -6670,23 +7551,39 @@
         animationShake: "Ryst",
         animationSpin: "Spin",
         animationFlash: "Blink",
-        matchTextLabel: "Farvelæg også teksten",
-        matchTextDesc: "Farvelæg også hele rækkens tekst med denne ikonfarve",
+        rowColorsLabel: "Udform rækker efter begivenhedstype",
+        rowColorsDesc: "Giver hver begivenhedstype sit eget udseende - farven og hvilke dele af en række eller en tidslinjepost den farvelægger - i stedet for standardværdierne fra Design. Rækkens status kan stadig tilsidesætte den.",
+        calendarColorsHeading: "Indlejrede kalendere",
+        calendarColorDesc: "Farve for denne kalender - dens rækker i listen, dens punkt på tidslinjen. Står den tom, bruges den farve, Home Assistant selv gemmer for kalenderen.",
+        eventTypeRowColorDesc: "Farve for denne begivenhedstype - dens rækker i listen, dens punkt på tidslinjen. I listen vælger kontakterne ved siden af, hvilke dele af en række den farvelægger.",
+        rowTargetIcon: "Ikon",
+        rowTargetIconDesc: "Farvelægger denne types ikon.",
+        rowTargetAccentBar: "Accentbjælke",
+        rowTargetAccentBarDesc: "Farvelægger denne types accentbjælke.",
+        rowTargetRow: "Hele rækken",
+        rowTargetRowDesc: "Farvelægger hele rækken inklusive teksten - og dermed også ikonet og accentbjælken, uanset hvad deres egne kontakter siger.",
         colorName: "Navn",
         colorType: "Type",
+        combinedFontDesc: "Størrelse og stil for denne linje i den kombinerede kolonne.",
+        combinedColorDesc: "Farve for denne linje i den kombinerede kolonne.",
         colorBadge: "Jubilæum",
         colorWhen: "Nedtælling",
         colorText: "Brugerdefineret tekst",
         colorDate: "Dato",
-        colorCalendar: "Kalenderfelter",
+        dateBlockWeekday: "Ugedag",
+        dateBlockDay: "Dag",
+        dateBlockMonth: "Måned",
+        dateBlockFontDesc: "Gælder kun kolonnen Datoblok. Størrelserne er relative til kortets egen skriftstørrelse: 0,75 / 1,5 / 0,75 når tom.",
+        dateBlockColorDesc: "Gælder kun kolonnen Datoblok. Efterlades den tom, tager ugedag og måned temaets sekundære tekstfarve og dagen den primære.",
+        colorCalendar: "Eksterne kalenderfelter",
         colorDateDesc:
           "Tekstfarve for Dato-kolonnen",
         colorCalendarDesc:
-          "Tekstfarve for kolonnerne Tid, Sted og Beskrivelse - kun for begivenheder fra eksterne kalendere",
+          "Påvirker kun begivenheder fra eksterne kalendere. Hvis feltet står tomt, tager hver linje temaets sekundære tekstfarve.",
         fontDateDesc:
           "Skriftstørrelse for Dato-kolonnen (se Rækkekolonner under Layout -> Visning)",
         fontCalendarDesc:
-          "Skriftstørrelse for kolonnerne Tid, Sted og Beskrivelse - kun for begivenheder fra eksterne kalendere",
+          "Påvirker kun begivenheder fra eksterne kalendere. Størrelserne er relative til kortets egen skriftstørrelse.",
         colorNameDesc: "Tekstfarve for begivenhedens navn",
         colorLastName: "Efternavn",
         colorLastNameDesc: "Tekstfarve for begivenhedens efternavn",
@@ -6747,14 +7644,20 @@
         panelSettings: "Indstillinger",
         panelSettingsDesc: "Generelt, begivenheder og periode",
         panelLayout: "Layout",
-        panelLayoutDesc: "Visning, skrifttyper, farver, ikoner, kortbaggrund og timeline",
+        panelLayoutDesc: "Generelt, liste- og timelinevisning, design, fremhævning og kortbaggrund",
         groupGeneral: "Generelt",
         groupGeneralDesc: "",
         groupEvents: "Begivenheder",
         groupEventsDesc: "",
         groupPeriod: "Periode",
         groupPeriodDesc: "",
-        groupDisplay: "Visning",
+        groupDisplay: "Generelt",
+        groupListView: "Listevisning",
+        groupListViewDesc:
+          "Bruges kun, når Kortlayout er indstillet til Liste.",
+        groupDesign: "Design",
+        designColor: "Farve",
+        designFont: "Skrifttype",
         groupDisplayDesc: "",
       },
     },
@@ -6769,6 +7672,10 @@
       multiDayEnd: "bitiş",
       multiDayDay: "{day}. gün",
       noEvents: "Yaklaşan etkinlik yok",
+      // The Week separator's own label (see separatorLabelText) - the word
+      // this language actually uses for a calendar week, which no Intl format
+      // supplies. {week} is the number.
+      separatorWeekLabel: "{week}. hafta",
       todoCompleteConfirm: '"{item}" tamamlandı olarak işaretlensin mi?',
       todoCompleteConfirmMultiple: "Bu etkinliğin {count} yapılacak öğesinin tümü tamamlandı olarak işaretlensin mi?",
       todoCompleteFailed: "Bu yapılacak öğesi tamamlanamadı.",
@@ -6897,8 +7804,7 @@
         holidayDateObserved: "Kaydırılmış",
         holidayMergeObserved: "Gözlemlenen tarihi tercih et",
         holidayMergeRegions: "Birden çok ülkenin paylaştığı tatilleri birleştir",
-        holidayMergeRegionsDesc:
-          "Ülke başına bir satır yerine tatil başına bir satır; onu kutlayan tüm bölgeler listelenir. Gruplama tarihe ve tatilin gerçekten göründüğü ada göre yapılır - aynı gündeki iki farklı tatil ayrı kalır, ifadesi farklı olan ülkeler ise ancak onlara aynı adı verdikten sonra birleşir (tatilin kendi «Ad ve çeviriler» bölümüne bakın).",
+        holidayMergeRegionsDesc: "Her ülke için bir tane yerine her tatil için tek bir kayıt, onu kutlayan tüm bölgeleri listeler. Tarihe ve tatilin gerçekten göründüğü ada göre gruplanır - böylece aynı gündeki iki farklı tatil ayrı kalır ve ifadesi farklı olan ülkeler ancak onlara aynı adı verdiğinizde birleşir (tatilin kendi ayarlarındaki Ad ve çeviriler'e bakın).",
         regionFormat: "Bölge biçimi",
         regionFormatDesc: "Bir tatilin ülkesi ve bölgesi göründükleri her yerde nasıl yazılır.",
         regionFormatShort: "US (CA)",
@@ -6959,7 +7865,7 @@
         moreActionDesc:
           "Zaman çizelgesinin sağ alt köşesindeki \"Daha fazla\" düğmesinin ne yaptığı. Genellikle aynı etkinlikleri tam Liste düzeninde gösteren bir panoya yönlendiren bir gezinme eylemi. Düğmeyi gizlemek için \"Hiçbiri\" olarak bırakın.",
         groupTimeline: "Timeline",
-        groupTimelineDesc: "Yalnızca Düzen stili (Görünüm altında) Timeline olarak ayarlandığında kullanılır.",
+        groupTimelineDesc: "Yalnızca Düzen stili Timeline olarak ayarlandığında kullanılır.",
         timelineHeaderLabel: "Başlık",
         timelineHeaderFontDesc:
           "Eksenin üzerindeki açıklama satırının yazı tipi, örn. \"Kevin: 27. doğum günü — bugün\".",
@@ -6976,15 +7882,14 @@
         eventTypesHeading: "Etkinlik türleri",
         eventTypeColorDesc: "Bu etkinlik türünün zaman çizelgesindeki simge ve nokta rengi.",
         visibilityHeading: "Göster / Gizle",
-        visibilityPast: "Geçmiş etkinlikler",
-        visibilityPastDesc: "Yıl dönümü, ayarlanan geçmiş penceresi içinde zaten geçmiş olan etkinlikleri göster",
-        visibilityToday: "Bugünkü etkinlikler",
-        visibilityTodayDesc: "Bugün gerçekleşen etkinlikleri göster",
-        visibilitySoon: "Yakında",
-        visibilitySoonDesc: "\"Yakında\" eşiği içindeki etkinlikleri göster",
-        visibilityCardTitleDesc: "Kartın kendi başlığını göster",
         hideCardTitle: "Gizle",
         hideCardTitleDesc: "Yukarıda ayarlanmış olsa bile kartın kendi başlığını gizle",
+        noEventsText: "Etkinlik yokken gösterilecek metin",
+        noEventsTextDesc:
+          "Kartın listeleyecek bir şeyi olmadığında gösterdiği metin (varsayılan metin için boş bırakın).",
+        noEventsLabel: "Etkinlik yok",
+        noEventsColorDesc: "Kartın listeleyecek bir şeyi olmadığında gösterdiği satırın metin rengi.",
+        noEventsFontDesc: "Kartın listeleyecek bir şeyi olmadığında gösterdiği satırın yazı tipi.",
         tapAction: "Dokunma eylemi",
         tapActionDesc: "Bir satıra dokunulduğunda veya tıklandığında ne olacağı",
         holdAction: "Basılı tutma eylemi",
@@ -7000,15 +7905,13 @@
         cardLanguageDesc:
           "Bu kartı, her izleyicinin kendi profil dilini takip etmek yerine, onu görecek herkes için tek bir dile sabitler. Hem kartın metnini hem de tarih biçimini etkiler - etkinliklerin adlarını değil, onlar entegrasyondan gelir. Bu düzenleyici her hâlükârda kendi dilinizi izlemeye devam eder.",
         cardLanguageAuto: "Otomatik",
-        visibilityIcon: "Simge",
-        visibilityIconDesc: "Her satırın önünde tür simgesini göster",
-        visibilityNameDesc: "Etkinlik adını göster",
-        visibilityTypeDesc: "Etkinlik türünü göster",
-        visibilityCountrySuffix: "Tatil eki",
         visibilityCountrySuffixDesc: "Tatilin adının/türünün ardına ülkeyi (ve varsa bölgeyi) ekler, örn. \"Cumhuriyet Bayramı · TR (34)\"",
         columnsHeading: "Satır sütunları",
         columnsDesc:
-          "Her satırın gösterdiği içeriği ekleyin, kaldırın ve yeniden sıralayın. Özel metin sütunları serbest metni yer tutucularla karıştırabilir: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.",
+          "Her satırın neyi göstereceğini ekleyin, kaldırın ve sıralayın ya da şu hazır düzenlerden biriyle başlayın.",
+        columnsPresetDefault: "Varsayılan",
+        columnsPresetAgenda: "Ajanda",
+        columnsPresetMinimal: "Sade",
         columnTypeIcon: "Simge",
         columnTypeInfo: "Ad + tür",
         columnTypeName: "Ad",
@@ -7018,6 +7921,8 @@
         columnTypeType: "Tür",
         columnTypeText: "Özel metin",
         columnTypeDate: "Tarih",
+        columnTypeDateBlock: "Tarih bloğu",
+        columnTypeAccentBar: "Vurgu çubuğu",
         columnTypeTime: "Saat",
         columnTypeLocation: "Konum",
         columnTypeDescription: "Açıklama",
@@ -7034,8 +7939,7 @@
         suffixShowHolidayTypeDesc:
           "Bir tatilin kendi tür etiketini göster, ör. \u201cHoliday (Public)\u201d. Bu hücrede yalnızca ülke/bölge son ekinin kalması için kapatın.",
         multiDayDisplay: "Çok günlü etkinlikler",
-        multiDayDisplayDesc:
-          "Birkaç gün süren tek seferlik bir etkinliğin - tatil yolculuğu, konferans - nasıl listeleneceği. Yalnızca gerçekten bitiş tarihi olan etkinlikleri etkiler; diğer her şey yine tek satırdır.",
+        multiDayDisplayDesc: "Birden çok güne yayılan tek seferlik bir etkinliğin - tatil gezisi, konferans - nasıl gösterileceği. Yalnızca gerçekten bitiş tarihi olan etkinlikleri etkiler; diğer her şey zaten tek bir kayıttır.",
         multiDayStartOnly: "Yalnızca ilk gün",
         multiDayEndOnly: "Yalnızca son gün",
         multiDayStartEnd: "İlk ve son gün",
@@ -7061,12 +7965,32 @@
         columnMoveDown: "Aşağı taşı",
         columnRemove: "Kaldır",
         columnTemplatePlaceholder: "örn. {name} bugün {occurrence} yaşına giriyor",
-        columnColor: "Renk",
         columnsCompact: "Kompakt (boşluksuz, ortalanmış)",
         columnsCompactDesc:
           "Sütunlar arasındaki boşluğu kaldırır, satırı ortalar ve tüm alanların kalınlık ve saydamlığını eşitler - sütunların tek bir cümle oluşturduğu durumlarda kullanışlıdır.",
-        visibilityBadgeDesc: "Tekrar numarası rozetini göster",
-        visibilityWhenDesc: "Geri sayımı göster (örn. \"3 gün sonra\")",
+        monthSeparators: "Ay ayırıcıları",
+        monthSeparatorsDesc: "Ardışık satırların farklı aylara düştüğü her yere bir çizgi çizerek uzun bir listeyi aylık bloklara böler. Satırların kendi sırası değişmez.",
+        weekSeparators: "Hafta ayırıcıları",
+        weekSeparatorsDesc: "Aynısının bir kademe incesi: ardışık satırların farklı haftalara düştüğü her yere bir çizgi, Home Assistant'taki \"Haftanın ilk günü\" ayarınıza göre. Ay ayırıcıları da açıksa, ikisini birden başlatan satır tek çizgi alır.",
+        daySeparators: "Gün ayırıcıları",
+        daySeparatorsDesc: "Ardışık satırların farklı günlere düştüğü her yere bir çizgi çizerek listeyi güne bir blok olacak şekilde böler. Üçünün en incesi - hafta veya ay ayırıcıları da açıksa, ikisini birden başlatan satır yalnızca daha kalın çizgiyi alır.",
+        separatorWidth: "Kalınlık",
+        separatorWidthDesc: "Çizginin kalınlığı, örn. \"1px\". Boş bırakılırsa 1px olur.",
+        separatorColor: "Renk",
+        separatorColorDesc: "Çizginin rengi. Boş bırakılırsa temanın kendi metin rengini, kart başlığıyla aynı rengi izler.",
+        separatorShowDayLabel: "Haftanın gününü göster",
+        separatorShowDayLabelDesc: "Haftanın gününü çizginin üzerine, ortalanmış biçimde, kartın arka plan rengindeki eliptik bir zeminin üstüne yazar; böylece çizgi metnin içinden geçmek yerine çevresinde kesilir.",
+        separatorShowWeekLabel: "Hafta numarasını göster",
+        separatorShowWeekLabelDesc: "Hafta numarasını çizginin üzerine, kartın arka plan rengindeki eliptik bir zeminin üstüne yazar. Numara, Home Assistant'taki “Haftanın ilk günü” ayarını – çizgilerin nereye düştüğünü de belirleyen aynı ayarı – izler.",
+        separatorShowMonthLabel: "Ayı göster",
+        separatorShowMonthLabelDesc: "Ayı çizginin üzerine, ortalanmış biçimde, kartın arka plan rengindeki eliptik bir zeminin üstüne yazar; böylece çizgi metnin çevresinde kesilir.",
+        separatorLabelColor: "Metin rengi",
+        separatorLabelColorDesc: "Etiketin rengi. Boş bırakılırsa temanın kendi metin rengini izler, kart başlığıyla aynısını.",
+        separatorLabelBackground: "Arka plan rengi",
+        separatorLabelBackgroundDesc: "Etiketin arkasındaki zeminin rengi – alttaki çizgiyi gizleyen şey odur. Boş bırakılırsa kartın kendi arka plan rengi olur.",
+        separatorLabelFontDesc: "Etiket metninin boyutu, örn. “0.8em” veya “11px”. Boş bırakılırsa kartın kendi yazı boyutuna göre 0.75em olur; ayrıca aşağıdaki dört biçim anahtarı ve harf aralığı.",
+        accentBarWidthDesc: "Çubuğun kalınlığı, örn. \"3px\". Boş bırakılırsa 3px olur. Görünmesi için yukarıdan Vurgu çubuğu sütununu ekleyin.",
+        accentBarColorDesc: "Çubuğun varsayılan rengi. Etkinlik türü ve satırın durumu bunu geçersiz kılabilir.",
         whenClickShowsDate: "Geri sayıma tıklayınca tarih",
         whenClickShowsDateDesc:
           "Bir satırın geri sayımına tıklamak onun yerine gerçek tarihi gösterir (örn. \"3 Ağu 2026 Pzt\"), tekrar tıklamak geri döndürür - satırın kendi dokunma/basılı tutma eylemi satırın geri kalanında çalışmaya devam eder.",
@@ -7080,41 +8004,35 @@
         visibilityTodoOnly: "Yalnızca açık görevler",
         visibilityTodoOnlyDesc:
           "Yalnızca hâlâ açık bir yapılacak öğesi olan etkinlikleri göster (Ayarlar → Etkinlikler altındaki Yapılacaklar'a bakın). Yukarıdaki iki filtreyle birleşmek yerine onları daraltır: «Yalnızca VIP» de açıkken, hâlâ yapılacak bir şeyi olan VIP etkinlikleri gösterir.",
-        vipBadgeIcon: "VIP rozet simgesi",
-        vipBadgeIconDesc: "VIP olarak işaretlenmiş etkinliklerin simgesinde küçük bir rozet olarak gösterilen MDI simgesi",
+        badgesHeading: "Rozetler",
+        badgeTargetIcon: "Etkinlik simgesi",
+        badgeTargetIconDesc: "Bu rozeti satır simgesinin köşesine çizer.",
+        badgeTargetAccentBar: "Vurgu çubuğu",
+        badgeTargetAccentBarDesc: "Bu rozeti vurgu çubuğunun solundaki sütuna, satıra göre ortalanmış olarak çizer. Vurgu çubuğu sütununu gerektirir.",
+        badgeColor: "Rozet rengi",
+        badgeColorDesc: "Rozetin içindeki simgenin rengi.",
+        badgeBgColor: "Rozet arka plan rengi",
+        badgeBgColorDesc: "Simgenin arkasındaki dairenin rengi.",
+        vipBadgeIcon: "Rozet simgesi",
+        vipBadgeIconDesc: "VIP olarak işaretlenen etkinliklerde rozet olarak kullanılan MDI simgesi.",
         vipBadgeIconPlaceholder: "mdi:star",
-        importantBadgeIcon: "Important rozet simgesi",
-        importantBadgeIconDesc: "Otomatik olarak önemli işaretlenmiş etkinliklerin simgesinde küçük bir rozet olarak gösterilen MDI simgesi",
+        importantBadgeIcon: "Rozet simgesi",
+        importantBadgeIconDesc: "Otomatik olarak önemli işaretlenen etkinliklerde rozet olarak kullanılan MDI simgesi.",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
-        todoBadgeIcon: "Yapılacak rozeti simgesi",
-        todoBadgeIconDesc:
-          "Hâlâ açık bir yapılacak öğesi olan etkinliklerin simgesinde küçük bir rozet olarak gösterilen MDI simgesi (Etkinlikler altındaki Yapılacaklar'a bakın)",
-        todoBadgeColorList: "Rozet rengi (Liste)",
-        todoBadgeColorListDesc: "Bu rozetin Liste düzenindeki rengi - varsayılan olarak temanın kırmızısı",
-        todoBadgeColorTimeline: "Rozet rengi (Timeline)",
+        todoBadgeIcon: "Rozet simgesi",
+        todoBadgeIconDesc: "Hâlâ açık bir görevi olan etkinliklerde rozet olarak kullanılan MDI simgesi (Etkinlikler altındaki Görevler'e bakın).",
         todoBadgeColorTimelineDesc: "Bu rozetin Zaman çizelgesi düzenindeki rengi - varsayılan olarak temanın kırmızısı",
         highlightHeading: "Vurgulama",
         highlightPast: "Geçmiş etkinlikler",
-        highlightPastDesc: "Zaten gerçekleşmiş etkinlikler için satır arka planını renklendir",
-        highlightToday: "Bugünkü etkinlikler",
-        highlightTodayDesc: "Bugünkü etkinlikler için satır arka planını renklendir",
-        highlightSoon: "Yakında",
-        highlightSoonDesc: "\"Yakında\" eşiği içindeki etkinlikler için satır arka planını renklendir",
         highlightBgColor: "Arka plan rengi",
         highlightBgColorDesc: "Bu vurgulama için arka plan rengi",
         highlightVip: "VIP etkinlikler",
-        highlightVipDesc: "VIP olarak işaretlenmiş etkinliklerin simgesinde bir rozet göster",
+        highlightVipDesc: "VIP olarak işaretlenen etkinliklerde bir rozet gösterir.",
         highlightImportant: "Önemli etkinlikler",
-        highlightImportantDesc: "Otomatik olarak önemli işaretlenmiş etkinliklerin simgesinde bir rozet göster",
+        highlightImportantDesc: "Otomatik olarak önemli işaretlenen etkinliklerde bir rozet gösterir.",
         highlightTodo: "Açık görevler",
-        highlightTodoDesc: "Hâlâ açık bir yapılacak öğesi olan etkinliklerin simgesinde bir rozet göster",
-        vipBadgeColorList: "Rozet rengi (Liste)",
-        vipBadgeColorListDesc: "Bu rozetin Liste düzenindeki rengi - varsayılan olarak temanın kırmızısı",
-        vipBadgeColorTimeline: "Rozet rengi (Timeline)",
-        vipBadgeColorTimelineDesc: "Bu rozetin Zaman çizelgesi düzenindeki rengi - varsayılan olarak beyaz",
-        importantBadgeColorList: "Rozet rengi (Liste)",
-        importantBadgeColorListDesc: "Bu rozetin Liste düzenindeki rengi - varsayılan olarak temanın kehribar rengi",
-        importantBadgeColorTimeline: "Rozet rengi (Timeline)",
+        highlightTodoDesc: "Hâlâ açık bir görevi olan etkinliklerde bir rozet gösterir.",
+        vipBadgeColorTimelineDesc: "Bu rozetin Zaman çizelgesi düzenindeki rengi - varsayılan olarak temanın kırmızısı",
         importantBadgeColorTimelineDesc:
           "Bu rozetin Zaman çizelgesi düzenindeki rengi - varsayılan olarak temanın kehribar rengi",
         colors: "Renkler",
@@ -7138,16 +8056,43 @@
         cardBackgroundSizeRepeat: "Döşeme",
         cardBackgroundOpacity: "Opaklık",
         cardBackgroundOpacityDesc: "Arka plan rengi/görselinin opaklığı, yüzde olarak",
-        colorsIconsHeading: "Simgeler",
-        colorsLabelsHeading: "Etiketler",
+        statusHeading: "Etkinlik durumu",
+        statusTimelineIconColorDesc: "Bu durumun zaman çizelgesindeki noktası ve simgeleri.",
+        statusEntryTextColor: "Girdi metni rengi",
+        statusEntryTextColorDesc: "Bu durumun zaman çizelgesindeki metni. Boş bırakılırsa bu durumun rengi alınır.",
+        typeRowColor: "Tüm satır rengi",
+        typeRowColorDesc: "Tüm satır açıkken satır metninin rengi. Boş bırakılırsa bu türün rengi alınır.",
+        typeEntryColor: "Girdi metni rengi",
+        typeEntryColorDesc: "Girdi metni açıkken zaman çizelgesindeki etkinlik metninin rengi. Boş bırakılırsa bu türün rengi alınır.",
+        typeBarColor: "Vurgu çubuğu rengi",
+        typeBarColorDesc: "Vurgu çubuğu açıkken çubuğun rengi. Boş bırakılırsa bu türün rengi alınır.",
+        typeIconColor: "Simge rengi",
+        typeIconColorDesc: "Simgenin rengi - listede satır simgesi, zaman çizelgesinde nokta. Boş bırakılırsa bu türün rengi alınır.",
+        typeAnimationDesc: "Bu etkinlik türünün simgeleri için animasyon; Design'daki Simge bloğunun kendi animasyonunu geçersiz kılar. Yok seçildiğinde bu varsayılanı izler. Bir durum onu yeniden geçersiz kılabilir.",
+        rowTargetTimeline: "Girdi metni",
+        rowTargetTimelineDesc: "Eksenin altındaki listede etkinliğin metnini de bu renkle boyar, yalnızca noktasını değil.",
+        fontLetterSpacingDesc: "Harfler arasındaki boşluk, örn. 0.05em veya 1px. Boş bırakılırsa yazı tipinin kendi boşluğu kalır.",
+        lineStyleDesc: "Çizginin düz, kesik veya noktalı çizilip çizilmeyeceği.",
+        designLineBlockDesc: "Çizginin kalınlığı, çizgi stili ve rengi.",
+        statusOverrideHint: "Kapalıyken etkinlik türünün rengi ya da Design'daki varsayılan geçerlidir.",
+        designIconBlockDesc: "Kartın simgeleri için varsayılan renk ve animasyon. Her etkinlik türü ve her durum, onları geçersiz kılmadığı sürece bunlara geri döner.",
+        designBarBlockDesc: "Çubuğun varsayılan rengi ve kalınlığı.",
+        designElementDesc: "Kartın bu bölümünü biçimlendiren her şey: rengi, yazı tipi ve aşağıdaki anahtarlar.",
+        designGroupDesc: "Bu sütunun oluştuğu satırlar. Her biri aşağıda ayrı ayrı biçimlendirilir.",
+        statusTextColor: "Tüm metin rengi",
+        statusTextColorDesc: "Satırın metni, simge ve vurgu çubuğu hariç. Boş bırakılırsa bu durumun rengi alınır.",
+        statusIconAnimation: "Simge animasyonu",
+        statusIconAnimationDesc: "Simgenin animasyonu. Kapalıyken Design'daki varsayılan geçerlidir.",
+        designIconColorDesc: "Satır simgesinin varsayılan rengi. Her durum, onu geçersiz kılmadığı sürece buna geri döner.",
+        statusPastDesc: "Çoktan geçmiş etkinlikler.",
+        statusIconColor: "Simge rengi",
+        statusIconColorDesc: "Satırın simgesi.",
+        statusBarColor: "Vurgu çubuğu rengi",
+        statusBarColorDesc: "Satırın vurgu çubuğu. Boş bırakılırsa simge rengini izler.",
         colorToday: "Bugün",
         colorSoon: "Yakında",
-        colorAccent: "Varsayılan",
-        colorTodayDesc: "Bugünkü etkinlikler için simge rengi",
-        colorSoonDesc: "\"Yakında\" eşiği içindeki etkinlikler için simge rengi",
-        iconVisibleLabel: "Simgeyi göster",
-        iconVisibleDesc: "Bu kategori için simgeyi göster veya gizle",
-        colorAccentDesc: "Özel durumu olmayan etkinlikler için simge rengi",
+        colorTodayDesc: "Bugün gerçekleşen etkinlikler.",
+        colorSoonDesc: "\"Yakında\" eşiği içindeki etkinlikler.",
         animationLabel: "Animasyon",
         animationDesc: "Bu simgeye döngüsel bir animasyon ekle",
         animationNone: "Yok",
@@ -7156,23 +8101,39 @@
         animationShake: "Sallanma",
         animationSpin: "Dönme",
         animationFlash: "Yanıp sönme",
-        matchTextLabel: "Metni de renklendir",
-        matchTextDesc: "Satırın tüm metnini de bu simge rengiyle renklendir",
+        rowColorsLabel: "Satırları etkinlik türüne göre tasarla",
+        rowColorsDesc: "Her etkinlik türüne kendi tasarımını verir - rengi ve satırın ya da zaman çizelgesi girdisinin hangi bölümlerini renklendirdiği - Design'daki varsayılanlar yerine. Satırın durumu bunu yine de geçersiz kılabilir.",
+        calendarColorsHeading: "Gömülü takvimler",
+        calendarColorDesc: "Bu takvimin rengi - listede satırları, zaman çizelgesinde noktası. Boş bırakılırsa Home Assistant'ın takvim için kendi sakladığı renk kullanılır.",
+        eventTypeRowColorDesc: "Bu etkinlik türünün rengi - listede satırları, zaman çizelgesinde noktası. Listede, yanındaki anahtarlar satırın hangi bölümlerini renklendireceğini seçer.",
+        rowTargetIcon: "Simge",
+        rowTargetIconDesc: "Bu türün simgesini renklendirir.",
+        rowTargetAccentBar: "Vurgu çubuğu",
+        rowTargetAccentBarDesc: "Bu türün vurgu çubuğunu renklendirir.",
+        rowTargetRow: "Tüm satır",
+        rowTargetRowDesc: "Metni dahil tüm satırı renklendirir - ve onunla birlikte simgeyi ve vurgu çubuğunu, kendi anahtarları ne derse desin.",
         colorName: "Ad",
         colorType: "Tür",
+        combinedFontDesc: "Birleşik sütunun bu satırı için boyut ve stil.",
+        combinedColorDesc: "Birleşik sütunun bu satırının rengi.",
         colorBadge: "Tekrar sayısı",
         colorWhen: "Geri sayım",
         colorText: "Özel metin",
         colorDate: "Tarih",
-        colorCalendar: "Takvim alanları",
+        dateBlockWeekday: "Haftanın günü",
+        dateBlockDay: "Gün",
+        dateBlockMonth: "Ay",
+        dateBlockFontDesc: "Yalnızca Tarih bloğu sütununu etkiler. Boyutlar kartın kendi yazı tipi boyutuna görecelidir: boş bırakılırsa 0,75 / 1,5 / 0,75.",
+        dateBlockColorDesc: "Yalnızca Tarih bloğu sütununu etkiler. Boş bırakılırsa haftanın günü ve ay temanın ikincil metin rengini, gün ise birincil rengini alır.",
+        colorCalendar: "Harici takvim alanları",
         colorDateDesc:
           "Tarih sütununun metin rengi",
         colorCalendarDesc:
-          "Saat, Konum ve Açıklama sütunlarının metin rengi - yalnızca harici takvimlerden gelen etkinlikler için",
+          "Yalnızca harici takvimlerden gelen etkinlikleri etkiler. Boş bırakılırsa her satır temanın ikincil metin rengini alır.",
         fontDateDesc:
           "Tarih sütununun yazı tipi boyutu (Düzen -> Görünüm altındaki Satır sütunlarına bakın)",
         fontCalendarDesc:
-          "Saat, Konum ve Açıklama sütunlarının yazı tipi boyutu - yalnızca harici takvimlerden gelen etkinlikler için",
+          "Yalnızca harici takvimlerden gelen etkinlikleri etkiler. Boyutlar kartın kendi yazı tipi boyutuna görelidir.",
         colorNameDesc: "Etkinlik adı için metin rengi",
         colorLastName: "Soyad",
         colorLastNameDesc: "Etkinliğin soyadı için metin rengi",
@@ -7233,14 +8194,20 @@
         panelSettings: "Ayarlar",
         panelSettingsDesc: "Genel, etkinlikler ve dönem",
         panelLayout: "Düzen",
-        panelLayoutDesc: "Görünüm, yazı tipleri, renkler, simgeler, kart arka planı ve zaman çizelgesi",
+        panelLayoutDesc: "Genel, liste ve zaman çizelgesi görünümü, tasarım, vurgulama ve kart arka planı",
         groupGeneral: "Genel",
         groupGeneralDesc: "",
         groupEvents: "Etkinlikler",
         groupEventsDesc: "",
         groupPeriod: "Dönem",
         groupPeriodDesc: "",
-        groupDisplay: "Görünüm",
+        groupDisplay: "Genel",
+        groupListView: "Liste görünümü",
+        groupListViewDesc:
+          "Yalnızca Düzen stili Liste olarak ayarlandığında kullanılır.",
+        groupDesign: "Tasarım",
+        designColor: "Renk",
+        designFont: "Yazı tipi",
         groupDisplayDesc: "",
       },
     },
@@ -7311,6 +8278,43 @@
     { id: "when", type: "when" },
   ];
 
+  // Reads like a paper agenda instead of a table: the date leads as three
+  // stacked lines, a colored edge beside it, then who it is. No countdown -
+  // the date block already answers "when", spelled out rather than counted.
+  const AGENDA_DEFAULT_COLUMNS = [
+    { id: "date_block", type: "date_block" },
+    { id: "accent_bar", type: "accent_bar" },
+    { id: "full_name_type", type: "full_name_type" },
+    { id: "badge", type: "badge" },
+    { id: "icon", type: "icon" },
+  ];
+
+  // The short row: a first name, the occurrence number and how soon. No
+  // icon, no last name, no type - for a card that is one column wide, or
+  // sits next to something else that already carries the detail.
+  const MINIMAL_DEFAULT_COLUMNS = [
+    { id: "name", type: "name" },
+    { id: "badge", type: "badge" },
+    { id: "when", type: "when" },
+  ];
+
+  // The one-click starting points offered above the columns list. They only
+  // ever write `columns`: Compact is a switch of its own below, and a
+  // preset rendered compactly is a combination worth keeping rather than
+  // something to silently undo.
+  const COLUMN_PRESETS = [
+    { key: "default", labelKey: "columnsPresetDefault", columns: DEFAULT_COLUMNS },
+    // The week rule comes with this one, and it says which week it is: a
+    // paper agenda breaks by week and names the week it is breaking into.
+    {
+      key: "agenda",
+      labelKey: "columnsPresetAgenda",
+      columns: AGENDA_DEFAULT_COLUMNS,
+      config: { week_separators: true, week_separator_label: true },
+    },
+    { key: "minimal", labelKey: "columnsPresetMinimal", columns: MINIMAL_DEFAULT_COLUMNS },
+  ];
+
   // Every way the Date column (and the Timeline's "Show date", and the
   // {date} placeholder) can render an event's own date. Deliberately
   // Intl.DateTimeFormat option sets rather than format strings: the order of
@@ -7349,6 +8353,112 @@
       return new Intl.DateTimeFormat(locale, DATE_FORMATS.short).format(date);
     }
     return new Intl.DateTimeFormat(locale, options).format(date);
+  }
+
+  // The three stacked lines of the agenda-style Date column (weekday /
+  // day number / month) - see the "date_block" column type in
+  // _buildColumnCell.
+  //
+  // Three separate Intl calls rather than formatToParts of one pattern:
+  // which of the three a locale's own date pattern contains, and in which
+  // order, varies by locale, while the block's layout is fixed at
+  // weekday-over-number-over-month by definition. Asking for each part on
+  // its own is the only way to get all three, correctly localized, without
+  // depending on any one locale's pattern.
+  //
+  // Nothing here upper-cases the month: several locales spell month
+  // abbreviations with a trailing dot or a non-Latin script where an
+  // upper-case form is either wrong or simply doesn't exist. The all-caps
+  // look is text-transform in CARD_STYLE instead, which the browser applies
+  // per locale rules and which leaves the actual text intact.
+  function formatDateBlock(date, locale) {
+    return {
+      weekday: new Intl.DateTimeFormat(locale, { weekday: "short" }).format(date),
+      day: new Intl.DateTimeFormat(locale, { day: "numeric" }).format(date),
+      month: new Intl.DateTimeFormat(locale, { month: "short" }).format(date),
+    };
+  }
+
+  const WEEKDAY_INDEX = {
+    monday: 0,
+    tuesday: 1,
+    wednesday: 2,
+    thursday: 3,
+    friday: 4,
+    saturday: 5,
+    sunday: 6,
+  };
+
+  // Which day starts the week, as an index with 0 = Monday - for the Week
+  // separators option, whose lines have to fall where the viewer's own
+  // calendar breaks or they read as arbitrary.
+  //
+  // Home Assistant's own "First day of the week" wins - hass.locale
+  // .first_weekday, the per-user setting on the profile page next to Language
+  // and Time format, since that is the one someone who cares has already
+  // found. Its default is "language", meaning "whatever the locale says", which Intl
+  // answers via weekInfo (firstDay is 1..7 with 7 = Sunday). Monday if
+  // neither is available - weekInfo is still missing in some browsers, and
+  // it's the majority answer worldwide.
+  function weekStartIndex(hassLocale, locale) {
+    const configured = hassLocale && hassLocale.first_weekday;
+    if (configured && Object.prototype.hasOwnProperty.call(WEEKDAY_INDEX, configured)) {
+      return WEEKDAY_INDEX[configured];
+    }
+    try {
+      const parsed = new Intl.Locale(locale);
+      const info = typeof parsed.getWeekInfo === "function" ? parsed.getWeekInfo() : parsed.weekInfo;
+      if (info && info.firstDay) return (info.firstDay - 1) % 7;
+    } catch (err) {
+      // Unparseable locale tag, or no weekInfo support - fall through.
+    }
+    return 0;
+  }
+
+  // The day that begins this date's week, as a key two dates in the same
+  // week share and no two dates in different weeks do.
+  // The day that starts the week `date` falls in, at local midnight - shared
+  // by the week separator's own grouping key and by the week number its
+  // label can show, so the two can never disagree about where a week begins.
+  function weekStartDate(date, startIndex) {
+    const dayIndex = (date.getDay() + 6) % 7;
+    const start = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    start.setDate(start.getDate() - ((dayIndex - startIndex + 7) % 7));
+    return start;
+  }
+
+  function weekStartKey(date, startIndex) {
+    const start = weekStartDate(date, startIndex);
+    return `${start.getFullYear()}-${start.getMonth()}-${start.getDate()}`;
+  }
+
+  // ISO-8601's rule, generalized to whatever day the week starts on here: a
+  // week belongs to the year holding its middle day, and week 1 is the one
+  // containing 4 January. With a Monday start that is exactly ISO week
+  // numbering, which is what "calendar week" means to anyone who asks for
+  // it; with another start day it is the same rule shifted rather than a
+  // second, differently-behaved definition. Both dates are local midnight,
+  // so the division is whole weeks even across a DST change.
+  function weekOfYear(date, startIndex) {
+    const start = weekStartDate(date, startIndex);
+    const middle = new Date(start.getFullYear(), start.getMonth(), start.getDate() + 3);
+    const firstStart = weekStartDate(new Date(middle.getFullYear(), 0, 4), startIndex);
+    return Math.round((start - firstStart) / 604800000) + 1;
+  }
+
+  // What a separator line says when its scale's label is switched on: the
+  // boundary's own name, in the card's own language. The weekday and the
+  // month come from Intl; the calendar week needs a word Intl has no format
+  // for, so it comes from the language table (see separatorWeekLabel).
+  function separatorLabelText(scale, date, strings, locale, weekStart) {
+    const fmt = (options) => new Intl.DateTimeFormat(locale, options).format(date);
+    if (scale === "week") {
+      return (strings.separatorWeekLabel || "Week {week}").replace(
+        "{week}",
+        String(weekOfYear(date, weekStart))
+      );
+    }
+    return scale === "month" ? fmt({ month: "long" }) : fmt({ weekday: "long" });
   }
 
   // Opens a feature request for another card language, pre-titled so every
@@ -7409,6 +8519,88 @@
     "full_name_type",
   ]);
 
+  // Which Colors/Fonts entries a given row column actually drives - the map
+  // behind "only show what this card is using" (see _fieldsInUse). A column
+  // type missing here simply contributes no field of its own (icon and
+  // accent_bar are styled from the Icons tab and their own block).
+  const COLUMN_FIELD_KEYS = {
+    name: ["name"],
+    last_name: ["last_name"],
+    full_name: ["full_name"],
+    type: ["type"],
+    info: ["info_name", "info_type"],
+    full_name_type: ["full_name_type_name", "full_name_type_type"],
+    badge: ["badge", "badge_background_color"],
+    when: ["when"],
+    date: ["date"],
+    date_block: ["date_block_weekday", "date_block_day", "date_block_month"],
+    time: ["calendar_time"],
+    location: ["calendar_location"],
+    description: ["calendar_description"],
+    text: ["text"],
+  };
+
+  // Which Design block a row column configures, so the Design tab can list
+  // its blocks in the order the row actually renders them (see
+  // _orderDesignElements). "group:" names one of the four grouped blocks.
+  // Icon is absent on purpose: its color lives under Highlight, with the
+  // categories that decide it.
+  const COLUMN_DESIGN_BLOCKS = {
+    name: ["name"],
+    last_name: ["last_name"],
+    full_name: ["full_name"],
+    type: ["type"],
+    info: ["group:info"],
+    full_name_type: ["group:full_name_type"],
+    badge: ["badge"],
+    when: ["when"],
+    date: ["date"],
+    date_block: ["group:date_block"],
+    icon: ["icon"],
+    accent_bar: ["accent_bar"],
+    time: ["group:calendar"],
+    location: ["group:calendar"],
+    description: ["group:calendar"],
+    text: ["text"],
+  };
+
+  // A {placeholder} inside a Custom text column renders in its own field's
+  // color and font (see PLACEHOLDER_CLASSES), so writing one keeps that
+  // field's entries relevant even without a column of that type.
+  // The two switch groups under a row column, with the value each switch
+  // carries when nothing has been set. A group describes a source rather
+  // than a setting - "Holidays only" does nothing without holidays among
+  // the selected types, "External calendars only" nothing without an
+  // embedded calendar - so both are hidden until that source exists. The
+  // defaults are what tells an untouched group from a configured one.
+  const SUFFIX_GROUP_DEFAULTS = {
+    holiday: {
+      show_name_country: false,
+      show_full_name_country: false,
+      show_type_country: false,
+      show_holiday_type: true,
+    },
+    external: {
+      show_type_calendar_name: true,
+      show_type_time: false,
+      show_type_location: false,
+      show_type_description: false,
+    },
+  };
+
+  const PLACEHOLDER_FIELD_KEYS = {
+    name: "name",
+    last_name: "last_name",
+    full_name: "full_name",
+    type: "type",
+    occurrence: "badge",
+    when: "when",
+    date: "date",
+    time: "calendar_time",
+    location: "calendar_location",
+    description: "calendar_description",
+  };
+
   // One grid track per configured column, shared by every row (see
   // .list.is-columns in CARD_STYLE).
   //
@@ -7421,6 +8613,23 @@
   // Reported as "column alignment broke when language changed" (issue #4),
   // because switching to a language with longer words is exactly what turns
   // a coincidental match into a visible mismatch.
+  // Anything interpolated into a quoted attribute of a template string.
+  //
+  // An icon name is not guaranteed to be a bare "mdi:something": it comes
+  // from a config field, from the icon column of an imported CSV, or from
+  // another integration's entity attribute. A value carrying a double quote
+  // closes the attribute and everything after it is parsed as markup - an
+  // <img onerror> inserted that way does run. Escaping at the point of
+  // interpolation keeps the surrounding template strings readable, which
+  // building each element by hand would not.
+  function attrText(value) {
+    return String(value === null || value === undefined ? "" : value)
+      .replace(/&/g, "&amp;")
+      .replace(/"/g, "&quot;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
   function rowColumnTemplate(config) {
     const columns = Array.isArray(config.columns) ? config.columns : DEFAULT_COLUMNS;
     return columns
@@ -7431,13 +8640,19 @@
 
   // Applied the moment "Compact (no gaps, centered)" is switched on (see the
   // compactToggle handler in _buildColumnsSection) - Icon, Full name,
-  // Occurrence, Type, Countdown, Date, each of the latter five preceded by
-  // its own space-only text column. Compact mode zeroes the flex gap
-  // between columns (see .list.columns-compact .row in CARD_STYLE) so two
-  // fields would otherwise run together with no separator at all; a real
-  // space character between them reads correctly on its own and, unlike a
-  // CSS gap, stays put if the user later mixes in their own custom text
-  // columns around this starting arrangement.
+  // Occurrence, Countdown, each of the latter three preceded by its own
+  // space-only text column. Compact mode zeroes the flex gap between columns
+  // (see .list.columns-compact .row in CARD_STYLE) so two fields would
+  // otherwise run together with no separator at all; a real space character
+  // between them reads correctly on its own and, unlike a CSS gap, stays put
+  // if the user later mixes in their own custom text columns around this
+  // starting arrangement.
+  //
+  // No Type and no Date: the row's icon already says which kind of event it
+  // is, and the countdown already says when - "Birthday" next to a cake and
+  // "Mar 3" next to "in 5 days" were the two that made a one-sentence row
+  // read as a list of fields again. Both are still one click away in the
+  // columns list, and the absolute date via "Tap countdown for date".
   const COMPACT_DEFAULT_COLUMNS = [
     { id: "icon", type: "icon" },
     { id: "space-1", type: "text", template: " " },
@@ -7445,11 +8660,7 @@
     { id: "space-2", type: "text", template: " " },
     { id: "badge", type: "badge" },
     { id: "space-3", type: "text", template: " " },
-    { id: "type", type: "type" },
-    { id: "space-4", type: "text", template: " " },
     { id: "when", type: "when" },
-    { id: "space-5", type: "text", template: " " },
-    { id: "date", type: "date" },
   ];
 
   // Rewrites a handful of legacy config keys from before "title"/"subtitle"
@@ -7462,6 +8673,15 @@
   // no separate "save" migration step needed.
   function migrateLegacyKeys(config) {
     const c = { ...config };
+    // The three "show past/today/soon" switches are gone. Past events were
+    // the only one with anything behind it, and it said exactly what a zero
+    // past window says - so a card that had it off keeps its list by getting
+    // that window instead. The other two are dropped: hiding today's events,
+    // or precisely the next few days, had no arrangement they were good for.
+    if (c.show_past === false) c.days_past = 0;
+    delete c.show_past;
+    delete c.show_today;
+    delete c.show_soon;
     const moveKey = (obj, oldKey, newKey) => {
       if (obj && obj[oldKey] !== undefined) {
         if (obj[newKey] === undefined) obj[newKey] = obj[oldKey];
@@ -7485,6 +8705,80 @@
     }
     moveKey(c, "show_subtitle", "show_type");
     moveKey(c, "show_subtitle_country", "show_type_country");
+    // "Also color the text" used to be one switch per icon category, back
+    // when the text could only follow an icon's color. It now follows the
+    // row's resolved color (see rowColor), which is one value per row, so
+    // the three collapse into one. Any of the three having been on means
+    // the user wanted colored text, so that is what carries over - the one
+    // reading that cannot silently take a setting away. Old YAML keeps
+    // working forever; the new key is only written on the next save.
+    if (c.colors && c.colors.match_row_text === undefined) {
+      const legacy = ["match_accent", "match_today", "match_soon"];
+      if (legacy.some((key) => c.colors[key] !== undefined)) {
+        c.colors = { ...c.colors, match_row_text: legacy.some((key) => c.colors[key] === true) };
+        for (const key of legacy) delete c.colors[key];
+      }
+    }
+    // ...and that one switch has since become three per event type (see
+    // row_color_targets), so a type can color the icon, the accent bar and
+    // the row's text independently of the others. Having had it on means
+    // every type colored its text, which is the "row" target - set on all
+    // of them, again so the reading never takes a setting away.
+    if (c.colors && c.colors.match_row_text !== undefined) {
+      if (c.colors.match_row_text === true) {
+        const targets = { ...(c.row_color_targets || {}) };
+        // Embedded calendars carry their own entry (see rowColors), so they
+        // need the same carry-over - otherwise a card that colored every
+        // row's text would quietly stop doing it for its calendar rows.
+        const keys = EVENT_TYPE_KEYS.concat(
+          (Array.isArray(c.external_calendars) ? c.external_calendars : []).map(
+            (id) => CALENDAR_COLOR_PREFIX + id
+          )
+        );
+        for (const key of keys) targets[key] = { ...(targets[key] || {}), row: true };
+        c.row_color_targets = targets;
+      }
+      c.colors = { ...c.colors };
+      delete c.colors.match_row_text;
+    }
+    // badges_on_bar was one switch for all three badges; they each carry
+    // their own placement now. On meant "on the bar, not on the icon".
+    if (c.badges_on_bar !== undefined) {
+      if (c.badges_on_bar === true) {
+        const targets = { ...(c.badge_targets || {}) };
+        for (const badge of BADGE_KEYS) {
+          targets[badge] = { icon: false, accent_bar: true, ...(targets[badge] || {}) };
+        }
+        c.badge_targets = targets;
+      }
+      delete c.badges_on_bar;
+    }
+    // "Fixed icon color for all icons" is gone; the Icon column's own Color
+    // in Design is the default every status falls back to. A card that had
+    // the fixed color set keeps it as that default - the closest carry-over,
+    // and the only one that does not silently drop a colour.
+    if (c.colors && c.colors.icon) {
+      if (!c.colors.accent) c.colors = { ...c.colors, accent: c.colors.icon };
+      else c.colors = { ...c.colors };
+      delete c.colors.icon;
+    }
+    // Today and Soon used to apply their own animation unconditionally; the
+    // switch that now governs it starts off, so a card that had actually
+    // chosen one gets it switched on rather than falling back to Default's.
+    for (const status of ["today", "soon"]) {
+      const anim = (c.icon_animation || {})[status];
+      if (!anim || anim === "none") continue;
+      const all = { ...(c.row_color_override || {}) };
+      const own = all[status];
+      // Already decided for this status - either by the user switching
+      // something, or by an earlier pass through here. Reading it again
+      // would undo a switch the moment it is turned off.
+      if (own && typeof own === "object") continue;
+      all[status] = own === true || own === false
+        ? { row: false, icon: own, accent_bar: own, animation: true }
+        : { animation: true };
+      c.row_color_override = all;
+    }
     if (Array.isArray(c.columns)) {
       c.columns = c.columns.map((col) => (col.type === "subtitle" ? { ...col, type: "type" } : col));
     }
@@ -7496,6 +8790,11 @@
     return {
       title: "",
       show_title: true,
+      // What the card says when nothing is left to list. Empty means
+      // the built-in translated phrase, the same way `title` empty means
+      // the built-in one - so a card that never touches this keeps
+      // following the language it is read in.
+      no_events_text: "",
       // One of DATE_FORMATS, driving the Date column, the {date} placeholder
       // and the Timeline's "Show date" together. "short" is what every card
       // saved before this option existed already rendered.
@@ -7505,6 +8804,51 @@
       // word is more useful than the date for the one row it applies to -
       // but a card meant to read as a date table can turn it off.
       date_show_today: true,
+      // A separator line wherever consecutive rows fall in different
+      // months, breaking a long list into month blocks. Nothing is
+      // re-sorted or grouped - the list order is unchanged, this only draws
+      // the boundaries that order already has. A property of the list as a
+      // whole rather than of any one column, which is why it's a switch
+      // under the columns list instead of a column type like the stacked
+      // Date block and the Accent bar are.
+      // Styling for the Accent bar column (see the "accent_bar" case in
+      // _buildColumnCell). No on/off key: the bar exists exactly when its
+      // column is in `columns`, and a second switch here would only be a way
+      // for the two to disagree. Empty width means the 3px baked into the
+      // CSS; empty color means each bar keeps its own row's icon color.
+      accent_bar_width: "",
+      // Three separator scales, each with its own switch and its own line
+      // styling. A line is drawn wherever consecutive rows fall in different
+      // months, weeks or days, breaking a long list into blocks; nothing is
+      // re-sorted or grouped, they only mark the boundaries the list order
+      // already has. Which day starts a week follows Home Assistant's own
+      // "First day of week" setting, so the lines break where the viewer's
+      // calendar breaks (see weekStartKey).
+      //
+      // All three are off by default and fully independent, but a row that
+      // begins two of them at once only gets the coarser one's line - two
+      // rules on one boundary would read as heavier than the boundary below
+      // it, which is backwards. Their default styles differ for the same
+      // reason: solid months, dashed weeks, dotted days, so a list with more
+      // than one on still reads as a hierarchy.
+      month_separators: false,
+      month_separator_width: "",
+      month_separator_style: "solid",
+      week_separators: false,
+      week_separator_width: "",
+      week_separator_style: "dashed",
+      day_separators: false,
+      day_separator_width: "",
+      day_separator_style: "dotted",
+      // Each scale's line can name the boundary it marks - the weekday, the
+      // calendar week, the month - written on the rule itself rather than
+      // beside it. Off everywhere, so an existing card's separators are
+      // unchanged. What it says is the boundary's own name in the card's
+      // language (see separatorLabelText); how it looks is the label's own
+      // color, background and font block.
+      month_separator_label: false,
+      week_separator_label: false,
+      day_separator_label: false,
       // One of CARD_LANGUAGES, pinning every string and date on this card to
       // that language for every viewer alike. LANGUAGE_AUTO (the default) -
       // like the "" every dashboard saved before this existed has - keeps
@@ -7592,9 +8936,6 @@
       // ever affects events that actually carry an end date; every other
       // event is one row regardless.
       multi_day_display: "start",
-      show_past: true,
-      show_today: true,
-      show_soon: true,
       highlight_past: true,
       highlight_today: true,
       highlight_soon: false,
@@ -7621,6 +8962,14 @@
       show_important_badge: true,
       show_todo_badge: true,
       vip_badge_icon: "mdi:star",
+      // Where each badge is drawn, one entry per badge: { icon, accent_bar }.
+      // Icon alone to start with - the corners of the row's icon are where
+      // these have always been. Accent bar puts it in a stack immediately
+      // left of that column, centered against the row and ordered VIP,
+      // Important, to-do from the top; both together draw it twice, which
+      // is a legitimate thing to want on a wide card. Only the badges the
+      // user actually changed are stored (see badgeTargets).
+      badge_targets: { ...(config.badge_targets || {}) },
       important_badge_icon: "mdi:exclamation-thick",
       // Marks an event that still has an open to-do item (see
       // matchTodoItems) - configurable in the same Highlight section, and
@@ -7744,6 +9093,9 @@
       // row's icon in" lookup (colorCategory in _row()) drives both.
       icon_animation: {
         accent: "none",
+        // No entry for past: unset means it follows Default (see
+        // statusValue), which is what past rows did before they had a
+        // status of their own.
         today: "none",
         soon: "none",
         ...(config.icon_animation || {}),
@@ -7759,23 +9111,117 @@
         soon: true,
         ...(config.icon_visibility || {}),
       },
+      // Off: a list row is colored by its status alone (Default/Today/Soon),
+      // which is what every card saved before this option renders as. On:
+      // each row resolves its own color from its event type, or from the
+      // calendar it came from, with the two status colors still able to
+      // override that (see row_color_override). Kept off by default because
+      // the per-type colors already have values of their own - switching
+      // this on for everyone would have recolored every existing card.
+      // Reads its own value rather than being written as a plain default:
+      // this sits after the `...config` spread above (where the nested
+      // objects around it have to be, to merge instead of replace), and a
+      // bare `false` here would overwrite whatever the card was configured
+      // with.
+      row_colors: config.row_colors === true,
+      // Which statuses still win over an event type's own color while
+      // row_colors is on. Today and Soon on to start with, so switching
+      // row_colors on does not silently stop today's events from being red;
+      // switch one off to let the type color through on those rows too.
+      // Default starts off, because it is the bottom of the chain: with it
+      // on, every ordinary row is back on one flat color and the per-type
+      // feature has nothing left to show. It is a switch all the same, so a
+      // card can pin its ordinary rows while still coloring the rest.
+      row_color_override: { ...(config.row_color_override || {}) },
+      // Which parts of a list row an event type's color paints, one entry
+      // per type: { icon, accent_bar, row }. Only the types the user
+      // actually changed are stored - rowColorTargets fills the rest in
+      // with icon and accent bar on and row off, which is exactly what the
+      // single "Also color the text" switch these replaced rendered as
+      // while it was off, so no existing card changes appearance.
+      row_color_targets: { ...(config.row_color_targets || {}) },
+      // One animation per event type (and per embedded calendar, keyed the
+      // same way its color is), overriding the Icon block's own animation
+      // in Design. Empty or missing means that default - the same chain the
+      // colors follow, with a status' own animation above both.
+      type_animation: { ...(config.type_animation || {}) },
       colors: {
         today: "",
         soon: "",
         accent: "",
+        // Past rows' own icon color. Empty means they keep taking the
+        // Default one, which is what they did before Past was a status.
+        past: "",
+        // One accent bar color per status, each empty by default so the bar
+        // keeps following that status' icon color (see statusBarColor).
+        accent_bar_accent: "",
+        accent_bar_past: "",
+        accent_bar_today: "",
+        accent_bar_soon: "",
+        // The row's text for a status - everything in the row except the
+        // icon and the accent bar, which have colors of their own. Empty
+        // means that status' own color, so the field only has to be filled
+        // in when the text should differ from the icon.
+        row_text_past: "",
+        row_text_today: "",
+        row_text_soon: "",
+        // The same for the timeline, where a status paints the event's own
+        // text rather than a row's. Shares the status' "whole text" switch;
+        // only one of the two is ever on screen (see the layout gating).
+        entry_text_past: "",
+        entry_text_today: "",
+        entry_text_soon: "",
+        // A status' colour for the timeline's dot and glyphs. Separate from
+        // its list icon colour above because the two start differently: the
+        // list has always tinted Today and Soon, the timeline never has.
+        timeline_icon_past: "",
+        timeline_icon_today: "",
+        timeline_icon_soon: "",
         card_title: "",
+        no_events: "",
         name: "",
         last_name: "",
         full_name: "",
         type: "",
+        info_name: "",
+        info_type: "",
+        full_name_type_name: "",
+        full_name_type_type: "",
         badge: "",
         when: "",
         text: "",
         date: "",
+        // The Date block column's three lines. Empty means each inherits the
+        // Date color above, so colouring Date still colours the whole block.
+        date_block_weekday: "",
+        date_block_day: "",
+        date_block_month: "",
         calendar: "",
-        match_accent: false,
-        match_today: false,
-        match_soon: false,
+        // The three external-calendar lines, each colored on its own (see
+        // typeCellFragment). Empty means the theme's secondary text color,
+        // unless a legacy `calendar` color is set - that one still wins, so
+        // configs written before the split keep rendering as they did.
+        calendar_time: "",
+        calendar_location: "",
+        calendar_description: "",
+        // The glyph inside the VIP/Important badge and the disc behind the
+        // to-do one - the counterparts of vip_badge/important_badge (which
+        // are the discs) and todo_badge (which is that badge's glyph), so
+        // each badge has both halves configurable.
+        vip_badge_fg: "",
+        important_badge_fg: "",
+        todo_badge_bg: "",
+        // Pins the icon to one fixed color, ignoring whatever the row
+        // resolved to - the counterpart of accent_bar below, so a card can
+        // have colored bars with monochrome icons or the other way round.
+        icon: "",
+        // One color per embedded calendar lives here too, under
+        // `calendar_color_<entity id>` (see CALENDAR_COLOR_PREFIX) - a flat
+        // key per calendar rather than a nested map, so the ordinary color
+        // row wiring reaches it like any other field. Unset means the color
+        // Home Assistant itself stores for that calendar entity (fetched by
+        // _fetchCalendarColors), which is why two embedded calendars are
+        // already told apart before anything is configured here.
         badge_background: true,
         badge_background_color: "",
         highlight_past: "",
@@ -7797,6 +9243,26 @@
         // that clashes with a custom theme.
         todo_badge: "",
         todo_badge_timeline: "",
+        // One per separator scale (see month_separators above). Empty means
+        // the theme's own --primary-text-color, the same variable the card
+        // title and the Name field default to.
+        month_separator: "",
+        week_separator: "",
+        day_separator: "",
+        // A separator label's own two colors: the text, and the plate behind
+        // it that hides the line. Empty means the theme's text color and the
+        // card's own background, which is what makes the plate invisible as
+        // a shape and visible only as a gap in the rule.
+        month_separator_label: "",
+        month_separator_label_background: "",
+        week_separator_label: "",
+        week_separator_label_background: "",
+        day_separator_label: "",
+        day_separator_label_background: "",
+        // One fixed color for every Accent bar. Empty - the default - lets
+        // each bar keep its own row's icon color instead, which is the whole
+        // point of the column.
+        accent_bar: "",
         // Timeline layout only (see Layout -> Timeline in the editor and
         // _buildTimeline) - the header sentence above the axis, each dot's
         // click tooltip, and the expandable chronological list, styled
@@ -7817,19 +9283,42 @@
         ...(config.colors || {}),
       },
       font_sizes: {
+        no_events: "",
         name: "",
         last_name: "",
         full_name: "",
         type: "",
+        info_name: "",
+        info_type: "",
+        full_name_type_name: "",
+        full_name_type_type: "",
         badge: "",
         when: "",
         text: "",
         date: "",
+        // The Date block column's three lines. Empty means each keeps its
+        // share of the block - 0.75em / 1.5em / 0.75em, relative to the Date
+        // field's own size, so setting Date still scales the whole block and
+        // these only change the balance inside it (see .date-block-* above).
+        date_block_weekday: "",
+        date_block_day: "",
+        date_block_month: "",
         calendar: "",
+        // Same split as in colors above - empty falls back to the legacy
+        // `calendar` size first, then to the surrounding row's own size.
+        calendar_time: "",
+        calendar_location: "",
+        calendar_description: "",
         timeline_header: "",
         timeline_tooltip: "",
         timeline_list: "",
         timeline_button: "",
+        // A separator label's own size. Empty is 0.75em, relative to the
+        // card's own font size, which is what keeps the label smaller than
+        // the rows it divides without being pinned to a pixel value.
+        day_separator_label: "",
+        week_separator_label: "",
+        month_separator_label: "",
         ...(config.font_sizes || {}),
       },
       font_style: {
@@ -7840,6 +9329,14 @@
           underline: false,
           letter_spacing: "",
           ...((config.font_style || {}).font_size_title || {}),
+        },
+        no_events: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).no_events || {}),
         },
         name: {
           bold: false,
@@ -7873,6 +9370,38 @@
           letter_spacing: "",
           ...((config.font_style || {}).type || {}),
         },
+        info_name: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).info_name || {}),
+        },
+        info_type: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).info_type || {}),
+        },
+        full_name_type_name: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).full_name_type_name || {}),
+        },
+        full_name_type_type: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).full_name_type_type || {}),
+        },
         badge: {
           bold: false,
           italic: false,
@@ -7905,6 +9434,57 @@
           letter_spacing: "",
           ...((config.font_style || {}).date || {}),
         },
+        day_separator_label: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).day_separator_label || {}),
+        },
+        week_separator_label: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).week_separator_label || {}),
+        },
+        month_separator_label: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).month_separator_label || {}),
+        },
+        date_block_weekday: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).date_block_weekday || {}),
+        },
+        date_block_day: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).date_block_day || {}),
+        },
+        date_block_month: {
+          bold: false,
+          italic: false,
+          // The block's small-caps month is this toggle, defaulted on rather
+          // than hardcoded in CSS so it can actually be switched off - see
+          // the .date-block-month rule.
+          uppercase: true,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).date_block_month || {}),
+        },
         calendar: {
           bold: false,
           italic: false,
@@ -7912,6 +9492,30 @@
           underline: false,
           letter_spacing: "",
           ...((config.font_style || {}).calendar || {}),
+        },
+        calendar_time: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).calendar_time || {}),
+        },
+        calendar_location: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).calendar_location || {}),
+        },
+        calendar_description: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).calendar_description || {}),
         },
         timeline_header: {
           bold: false,
@@ -8074,10 +9678,15 @@
   //
   // Days already past are dropped: on day five of a fortnight, days one to
   // four are history and listing them would bury the rows that still say
-  // something. The start row is the deliberate exception - it is clamped to
-  // 0 while the event runs rather than going negative, matching what the
-  // sensor itself reports, so an ongoing holiday doesn't silently vanish
-  // from a card that only shows starts.
+  // something. The start row follows the same rule and counts back once its
+  // day has gone by, so the card's own past-events settings can reach it.
+  // It used to be clamped to 0 for as long as the event ran - matching what
+  // the sensor reports, which holds at 0 so automations never see a
+  // negative countdown - but that made every day of a trip look like its
+  // first, and left a row in a card configured to show no past events at
+  // all. On a card that lists only first days, an ongoing trip therefore
+  // disappears once it has begun; "First and last day" keeps it through its
+  // end row, and "Every day" through the day it is on.
   function expandMultiDay(events, mode, todayIso, strings) {
     const out = [];
     for (const e of events) {
@@ -8095,10 +9704,12 @@
       if (mode === "start" || mode === "start_end") {
         rows.push({
           ...e,
-          // The sensor's own count, not one recomputed here: it already
-          // counts down to the start and already holds at 0 while the
-          // event runs (see sensor.py), and two answers to the same
-          // question is one too many.
+          // Measured against the start date rather than taken from the
+          // sensor: the sensor's own count holds at 0 while the event runs
+          // (see sensor.py), which is right for an automation counting down
+          // to a departure and wrong for a row that has to say which day it
+          // is about.
+          days: isoDayDiff(todayIso, startIso),
           multiDayPart: "start",
           fullName: label(strings.multiDayStart),
         });
@@ -8412,9 +10023,9 @@
     occurrence: "badge",
     when: "when",
     date: "date-col",
-    time: "calendar-col",
-    location: "calendar-col",
-    description: "calendar-col",
+    time: "calendar-col calendar-line-time",
+    location: "calendar-col calendar-line-location",
+    description: "calendar-col calendar-line-description",
   };
 
   // Deep value equality, enough for what a card config can hold: scalars,
@@ -8491,19 +10102,52 @@
   // font reach it - the calendar's own name included, not just the
   // time/location/description appended after it. The separators and the
   // Annuals type text itself stay in the Type field's own styling.
+  //
+  // Everything an external calendar contributes gets a line of its own -
+  // the calendar's name, then the time, location and description, in the
+  // order their toggles are listed in the editor. Run together on one " · "
+  // line (which is how this used to render) they read as an unbroken string
+  // the moment more than one of them is switched on, and a description is
+  // long enough to swallow the two short fields before it. Time, location
+  // and description also lead with an icon, so which is which is legible
+  // without reading them.
+  //
+  // The Annuals type label and a holiday's country suffix keep the old
+  // single " · " line: they're two short words that belong together, and
+  // that's every non-calendar row on the card.
   function typeCellFragment(parts) {
     const fragment = document.createDocumentFragment();
-    (parts || []).forEach((part, index) => {
-      if (index > 0) fragment.appendChild(document.createTextNode(" · "));
+    const plain = [];
+    const flushPlain = () => {
+      if (!plain.length) return;
+      fragment.appendChild(document.createTextNode(plain.join(" · ")));
+      plain.length = 0;
+    };
+    (parts || []).forEach((part) => {
       if (!part.calendar) {
-        fragment.appendChild(document.createTextNode(part.text));
+        plain.push(part.text);
         return;
       }
-      const span = document.createElement("span");
-      span.className = "calendar-col";
-      span.textContent = part.text;
-      fragment.appendChild(span);
+      flushPlain();
+      const line = document.createElement("div");
+      // The field class is what lets Time, Location and Description be sized
+      // and colored apart from each other in the External calendar fields
+      // group; the calendar's own name line has no field and keeps the
+      // shared .calendar-col styling alone.
+      line.className =
+        "calendar-col calendar-line" + (part.field ? ` calendar-line-${part.field}` : "");
+      if (part.icon) {
+        const icon = document.createElement("ha-icon");
+        icon.setAttribute("icon", part.icon);
+        icon.className = "calendar-line-icon";
+        line.appendChild(icon);
+      }
+      const text = document.createElement("span");
+      text.textContent = part.text;
+      line.appendChild(text);
+      fragment.appendChild(line);
     });
+    flushPlain();
     return fragment;
   }
 
@@ -8544,24 +10188,24 @@
       content: "";
       position: absolute;
       inset: 0;
-      background-color: var(--annuals-bg-color, transparent);
-      background-image: var(--annuals-bg-image, none);
-      background-size: var(--annuals-bg-size, cover);
-      background-repeat: var(--annuals-bg-repeat, no-repeat);
+      background-color: var(--annuals-card-background-color, transparent);
+      background-image: var(--annuals-card-background-image, none);
+      background-size: var(--annuals-card-background-size, cover);
+      background-repeat: var(--annuals-card-background-repeat, no-repeat);
       background-position: center;
-      opacity: var(--annuals-bg-opacity, 1);
+      opacity: var(--annuals-card-background-opacity, 1);
       z-index: 0;
       pointer-events: none;
     }
     .title {
       position: relative;
       z-index: 1;
-      font-size: var(--annuals-title-size, 1.2em);
-      font-weight: var(--annuals-title-weight, 500);
-      font-style: var(--annuals-title-style, normal);
-      text-transform: var(--annuals-title-transform, none);
-      text-decoration: var(--annuals-title-decoration, none);
-      letter-spacing: var(--annuals-title-spacing, normal);
+      font-size: var(--annuals-card-title-size, 1.2em);
+      font-weight: var(--annuals-card-title-weight, 500);
+      font-style: var(--annuals-card-title-style, normal);
+      text-transform: var(--annuals-card-title-transform, none);
+      text-decoration: var(--annuals-card-title-decoration, none);
+      letter-spacing: var(--annuals-card-title-spacing, normal);
       color: var(--annuals-card-title-color, inherit);
       margin-bottom: 12px;
     }
@@ -8592,8 +10236,22 @@
     @supports (grid-template-columns: subgrid) {
       .list.is-columns {
         display: grid;
-        grid-template-columns: var(--annuals-row-template);
+        grid-template-columns: var(--annuals-row-grid-template);
         column-gap: 12px;
+      }
+      /* The occurrence badge's slot and the countdown carry a fixed width and
+         a minimum width below. Those belong to the flex fallback, where every
+         row sizes itself and a common width is the only thing keeping the
+         columns on one x. A shared grid track already does that across every
+         row, so carrying them here only reserved space nothing used - about
+         20px beside the badge, up to 12px beside the countdown - which the
+         growing name column had to give up, wrapping names that would
+         otherwise have fit on one line. */
+      .list.is-columns .badge-slot {
+        width: auto;
+      }
+      .list.is-columns .when {
+        min-width: 0;
       }
       .list.is-columns > .row {
         display: grid;
@@ -8609,8 +10267,13 @@
        otherwise stays at the icon column's much narrower 4px, so the first
        field starts almost flush against the left edge - lopsided next to
        the same 12px the last field keeps from the right edge. Matching it
-       here restores that symmetry. */
-    .row.icon-hidden {
+       here restores that symmetry.
+       Only while no category shows an icon at all, though: the padding is
+       part of where a row's first field starts, so giving it to one
+       category's rows and not another's is the same misalignment the
+       .icon-wrap.is-hidden rules above exist to prevent. */
+    .list.icons-off .row.icon-hidden,
+    .list.columns-compact .row.icon-hidden {
       padding-left: 12px;
     }
     .row.has-action {
@@ -8622,28 +10285,49 @@
     .row.highlight-today {
       background: color-mix(
         in srgb,
-        var(--annuals-highlight-today-color, var(--annuals-today-color, var(--error-color))) 18%,
+        var(--annuals-row-highlight-today-color, var(--annuals-status-today-color, var(--error-color))) 18%,
         transparent
       );
     }
     .row.highlight-soon {
       background: color-mix(
         in srgb,
-        var(--annuals-highlight-soon-color, var(--annuals-soon-color, var(--warning-color))) 18%,
+        var(--annuals-row-highlight-soon-color, var(--annuals-status-soon-color, var(--warning-color))) 18%,
         transparent
       );
     }
     .row.highlight-past {
       background: color-mix(
         in srgb,
-        var(--annuals-highlight-past-color, var(--secondary-text-color, #888)) 15%,
+        var(--annuals-row-highlight-past-color, var(--secondary-text-color, #888)) 15%,
         transparent
       );
     }
     .icon-wrap { position: relative; flex-shrink: 0; display: flex; }
-    .icon { flex-shrink: 0; color: var(--annuals-accent-color, var(--primary-text-color)); }
-    .icon.today { color: var(--annuals-today-color, var(--error-color)); }
-    .icon.soon { color: var(--annuals-soon-color, var(--warning-color)); }
+    /* A row whose category has "Show icon" switched off. Hidden rather than
+       removed: the cell has to stay in the grid, or every field behind it
+       moves one column to the left while the rows of the other categories
+       keep theirs - and the icon column has to keep its width, or those
+       rows no longer line up with these. */
+    .icon-wrap.is-hidden { visibility: hidden; }
+    /* The two cases where the space really should be reclaimed. With no
+       category showing an icon there is no column left to line up with, and
+       Compact is a running sentence rather than a table, so every row there
+       closes up on its own anyway. */
+    .list.icons-off .icon-wrap.is-hidden,
+    .list.columns-compact .icon-wrap.is-hidden {
+      display: none;
+    }
+    /* --annuals-row-resolved-icon-color is set per row in _row() and already carries
+       the status color when row colors are off, so this one chain covers
+       both modes and the old .icon.today/.icon.soon overrides are gone with
+       it. --annuals-row-icon-color is the "one fixed color for every icon"
+       setting, which pins the icon and ignores whatever the row resolved
+       to. */
+    .icon {
+      flex-shrink: 0;
+      color: var(--annuals-row-icon-color, var(--annuals-row-resolved-icon-color, var(--primary-text-color)));
+    }
     /* Optional per-category (Default/Today/Soon) icon animation - see the
        Layout -> Icons editor tab. Applied via an anim-* class computed from
        config.icon_animation, directly on the icon in _row() (list layout),
@@ -8688,19 +10372,25 @@
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-      color: #fff;
+      /* The glyph. White unless the Badge color field says otherwise - the
+         disc behind it is the separate Badge background color, which is the
+         key these two have always carried. */
+      color: var(--annuals-row-vip-badge-color, #fff);
       box-shadow: 0 0 0 2px var(--ha-card-background, var(--card-background-color, #fff));
+    }
+    .important-badge {
+      color: var(--annuals-row-important-badge-color, #fff);
     }
     .vip-badge {
       right: -6px;
-      background: var(--annuals-vip-badge-color, var(--error-color));
+      background: var(--annuals-row-vip-badge-background-color, var(--error-color));
     }
     .important-badge {
       left: -6px;
       /* Same default as the "Upcoming soon" row highlight color, so an
          unconfigured Important badge and an unconfigured "soon" tint match
          out of the box. */
-      background: var(--annuals-important-badge-color, var(--annuals-soon-color, var(--warning-color)));
+      background: var(--annuals-row-important-badge-background-color, var(--annuals-status-soon-color, var(--warning-color)));
     }
     /* Third corner badge on the row icon, for an event with a still-open
        to-do item. Sits bottom-right, the one corner the VIP (top-right) and
@@ -8723,8 +10413,8 @@
          than sitting on a colored disc - a pin reads as a pin only when its
          own shape is visible. The disc behind it is just the card's own
          background, so it stays legible on top of the event icon. */
-      color: var(--annuals-todo-badge-color, var(--error-color));
-      background: var(--ha-card-background, var(--card-background-color, #fff));
+      color: var(--annuals-row-todo-badge-color, var(--error-color));
+      background: var(--annuals-row-todo-badge-background-color, var(--ha-card-background, var(--card-background-color, #fff)));
     }
     /* Only when completing from the card is enabled - the badged icon is a
        plain marker otherwise and must not look interactive. */
@@ -8736,38 +10426,25 @@
        overriding the individually configured name/type/badge/when
        colors for just that row. Higher specificity (.row.match-* .name vs
        plain .name) wins regardless of stylesheet order. */
-    .row.match-accent-text .name,
-    .row.match-accent-text .last-name,
-    .row.match-accent-text .full-name,
-    .row.match-accent-text .type,
-    .row.match-accent-text .badge,
-    .row.match-accent-text .when,
-    .row.match-accent-text .text-col,
-    .row.match-accent-text .date-col,
-    .row.match-accent-text .calendar-col {
-      color: var(--annuals-accent-color, var(--primary-text-color));
+    .row.match-row-text .name,
+    .row.match-row-text .last-name,
+    .row.match-row-text .full-name,
+    .row.match-row-text .type,
+    .row.match-row-text .badge,
+    .row.match-row-text .when,
+    .row.match-row-text .text-col,
+    .row.match-row-text .date-col,
+    .row.match-row-text .calendar-col {
+      color: var(--annuals-row-resolved-text-color, var(--primary-text-color));
     }
-    .row.match-today-text .name,
-    .row.match-today-text .last-name,
-    .row.match-today-text .full-name,
-    .row.match-today-text .type,
-    .row.match-today-text .badge,
-    .row.match-today-text .when,
-    .row.match-today-text .text-col,
-    .row.match-today-text .date-col,
-    .row.match-today-text .calendar-col {
-      color: var(--annuals-today-color, var(--error-color));
-    }
-    .row.match-soon-text .name,
-    .row.match-soon-text .last-name,
-    .row.match-soon-text .full-name,
-    .row.match-soon-text .type,
-    .row.match-soon-text .badge,
-    .row.match-soon-text .when,
-    .row.match-soon-text .text-col,
-    .row.match-soon-text .date-col,
-    .row.match-soon-text .calendar-col {
-      color: var(--annuals-soon-color, var(--warning-color));
+    /* "Match the row's text to its icon color" reaches the Date block too.
+       The three lines set their own color, so a plain "color" on .date-col
+       above no longer cascades into them - these hand it down through the
+       two variables their defaults read instead, which leaves a color the
+       user set on a line still winning over the match. */
+    .row.match-row-text .date-block {
+      --annuals-row-date-block-muted-color: var(--annuals-row-resolved-text-color, var(--primary-text-color));
+      --annuals-row-date-block-strong-color: var(--annuals-row-resolved-text-color, var(--primary-text-color));
     }
     .info { flex: 1; min-width: 0; }
     /* Standalone identity columns (as opposed to the combined .info wrapper)
@@ -8794,10 +10471,14 @@
       text-transform: var(--annuals-row-name-transform, none);
       text-decoration: var(--annuals-row-name-decoration, none);
       letter-spacing: var(--annuals-row-name-spacing, normal);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      color: var(--annuals-name-color, inherit);
+      /* Wraps rather than truncating: a name cut off at "Pediatric De..."
+         is the one thing on the row nobody can guess back. overflow-wrap
+         also breaks inside a word when a single word is wider than the
+         column, so the content is always fully readable however narrow the
+         card gets. */
+      white-space: normal;
+      overflow-wrap: anywhere;
+      color: var(--annuals-row-name-color, inherit);
       font-size: var(--annuals-row-name-size, inherit);
     }
     .type {
@@ -8807,13 +10488,16 @@
       text-transform: var(--annuals-row-type-transform, none);
       text-decoration: var(--annuals-row-type-decoration, none);
       letter-spacing: var(--annuals-row-type-spacing, normal);
-      opacity: 0.6;
-      color: var(--annuals-type-color, inherit);
+      /* No muting of any kind here - not opacity, not a dimmed default. The
+         Type field takes the theme's own text color at full strength, so a
+         color set for it renders exactly as picked and matches its swatch. */
+      color: var(--annuals-row-type-color, inherit);
     }
+    /* Same as .name above - the whole name stays readable instead of being
+       cut off with an ellipsis. */
     .last-name, .full-name {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      white-space: normal;
+      overflow-wrap: anywhere;
     }
     .last-name {
       font-weight: var(--annuals-row-last-name-weight, 500);
@@ -8821,7 +10505,7 @@
       text-transform: var(--annuals-row-last-name-transform, none);
       text-decoration: var(--annuals-row-last-name-decoration, none);
       letter-spacing: var(--annuals-row-last-name-spacing, normal);
-      color: var(--annuals-last-name-color, inherit);
+      color: var(--annuals-row-last-name-color, inherit);
       font-size: var(--annuals-row-last-name-size, inherit);
     }
     .full-name {
@@ -8830,8 +10514,54 @@
       text-transform: var(--annuals-row-full-name-transform, none);
       text-decoration: var(--annuals-row-full-name-decoration, none);
       letter-spacing: var(--annuals-row-full-name-spacing, normal);
-      color: var(--annuals-full-name-color, inherit);
+      color: var(--annuals-row-full-name-color, inherit);
       font-size: var(--annuals-row-full-name-size, inherit);
+    }
+    /* The two lines of each combined column get their own Fonts/Colors
+       entries. Written after the .name/.full-name/.type rules above and at
+       the same specificity, so these win on the combined columns while the
+       standalone ones keep driving the standalone columns. Their defaults
+       repeat what those rules give (500 weight on a name, 0.85em on a type),
+       so an untouched card renders exactly as before. */
+    .info-name {
+      font-weight: var(--annuals-row-info-name-weight, 500);
+      font-style: var(--annuals-row-info-name-style, normal);
+      text-transform: var(--annuals-row-info-name-transform, none);
+      text-decoration: var(--annuals-row-info-name-decoration, none);
+      letter-spacing: var(--annuals-row-info-name-spacing, normal);
+      color: var(--annuals-row-info-name-color, inherit);
+      font-size: var(--annuals-row-info-name-size, inherit);
+    }
+    /* The type line of a combined column defaults to the theme's secondary
+       text color - it is the subordinate second line there, where the
+       standalone Type column is a field in its own right and keeps the
+       primary color. A theme color used as-is, not a dimmed one. */
+    .info-type {
+      color: var(--annuals-row-info-type-color, var(--secondary-text-color, #9b9b9b));
+      font-size: var(--annuals-row-info-type-size, 0.85em);
+      font-weight: var(--annuals-row-info-type-weight, normal);
+      font-style: var(--annuals-row-info-type-style, normal);
+      text-transform: var(--annuals-row-info-type-transform, none);
+      text-decoration: var(--annuals-row-info-type-decoration, none);
+      letter-spacing: var(--annuals-row-info-type-spacing, normal);
+    }
+    .fnt-name {
+      font-weight: var(--annuals-row-full-name-type-name-weight, 500);
+      font-style: var(--annuals-row-full-name-type-name-style, normal);
+      text-transform: var(--annuals-row-full-name-type-name-transform, none);
+      text-decoration: var(--annuals-row-full-name-type-name-decoration, none);
+      letter-spacing: var(--annuals-row-full-name-type-name-spacing, normal);
+      color: var(--annuals-row-full-name-type-name-color, inherit);
+      font-size: var(--annuals-row-full-name-type-name-size, inherit);
+    }
+    .fnt-type {
+      font-size: var(--annuals-row-full-name-type-type-size, 0.85em);
+      font-weight: var(--annuals-row-full-name-type-type-weight, normal);
+      font-style: var(--annuals-row-full-name-type-type-style, normal);
+      text-transform: var(--annuals-row-full-name-type-type-transform, none);
+      text-decoration: var(--annuals-row-full-name-type-type-decoration, none);
+      letter-spacing: var(--annuals-row-full-name-type-type-spacing, normal);
+      color: var(--annuals-row-full-name-type-type-color, var(--secondary-text-color, #9b9b9b));
     }
     .badge-slot {
       flex-shrink: 0;
@@ -8842,7 +10572,7 @@
     .badge {
       display: inline-block;
       flex-shrink: 0;
-      background: var(--annuals-badge-bg-color, rgba(128, 128, 128, 0.25));
+      background: var(--annuals-row-badge-background-color, rgba(128, 128, 128, 0.25));
       border-radius: 12px;
       padding: 2px 10px;
       font-size: var(--annuals-row-badge-size, 1.05em);
@@ -8851,7 +10581,7 @@
       text-transform: var(--annuals-row-badge-transform, none);
       text-decoration: var(--annuals-row-badge-decoration, none);
       letter-spacing: var(--annuals-row-badge-spacing, normal);
-      color: var(--annuals-badge-color, inherit);
+      color: var(--annuals-row-badge-color, inherit);
       white-space: nowrap;
     }
     .badge.no-background {
@@ -8862,9 +10592,8 @@
       flex-shrink: 0;
       min-width: 80px;
       text-align: right;
-      opacity: 0.8;
       white-space: nowrap;
-      color: var(--annuals-when-color, inherit);
+      color: var(--annuals-row-when-color, inherit);
       font-size: var(--annuals-row-when-size, inherit);
       font-weight: var(--annuals-row-when-weight, normal);
       font-style: var(--annuals-row-when-style, normal);
@@ -8905,20 +10634,20 @@
        of inline text. */
     .text-col {
       white-space: pre-wrap;
-      color: var(--annuals-text-color, inherit);
-      font-size: var(--annuals-row-text-size, inherit);
-      font-weight: var(--annuals-row-text-weight, normal);
-      font-style: var(--annuals-row-text-style, normal);
-      text-transform: var(--annuals-row-text-transform, none);
-      text-decoration: var(--annuals-row-text-decoration, none);
-      letter-spacing: var(--annuals-row-text-spacing, normal);
+      color: var(--annuals-row-custom-text-color, inherit);
+      font-size: var(--annuals-row-custom-text-size, inherit);
+      font-weight: var(--annuals-row-custom-text-weight, normal);
+      font-style: var(--annuals-row-custom-text-style, normal);
+      text-transform: var(--annuals-row-custom-text-transform, none);
+      text-decoration: var(--annuals-row-custom-text-decoration, none);
+      letter-spacing: var(--annuals-row-custom-text-spacing, normal);
     }
     /* Date used to share .text-col with Custom text, which meant styling one
        silently restyled the other - and left Date with no Colors/Fonts entry
        of its own at all. Same shape, own variables. */
     .date-col {
       white-space: pre-wrap;
-      color: var(--annuals-date-color, inherit);
+      color: var(--annuals-row-date-color, inherit);
       font-size: var(--annuals-row-date-size, inherit);
       font-weight: var(--annuals-row-date-weight, normal);
       font-style: var(--annuals-row-date-style, normal);
@@ -8926,19 +10655,330 @@
       text-decoration: var(--annuals-row-date-decoration, none);
       letter-spacing: var(--annuals-row-date-spacing, normal);
     }
-    /* Time, Location and Description together - the three fields only an
-       embedded external calendar event ever fills in (see buildExternalEvent),
-       so they're configured as one group rather than three near-identical
-       rows in the Colors and Fonts tabs. */
+    /* One external-calendar field per line, each led by its own icon (see
+       typeCellFragment). The icon follows the surrounding text's size and
+       color, so the Calendar fields entries in Fonts and Colors keep
+       driving the whole line. */
+    .calendar-line {
+      display: flex;
+      /* flex-start, not center: a location or description long enough to
+         wrap would otherwise pull its icon down to the middle of the
+         paragraph, where it no longer reads as a label for it. */
+      align-items: flex-start;
+      gap: 4px;
+    }
+    /* Box one line tall with a glyph centered in it, so the icon lines up
+       with the first line of text whether or not the rest wraps. */
+    .calendar-line-icon {
+      --mdc-icon-size: 1em;
+      width: 1em;
+      height: 1.35em;
+      flex-shrink: 0;
+    }
+    /* Stacked date block (the "Date block" column): weekday over a large day
+       number over the month, the shape a calendar agenda uses for its dates.
+       Everything here is relative to the Date field's own font size, so the
+       Fonts tab still scales the whole block as one. */
+    .date-col.date-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.1;
+      /* Keeps single- and double-digit day numbers - and therefore every
+         row's remaining columns - at the same x. */
+      min-width: 2.6em;
+    }
+    /* The block is its own field, not a variant of the Date column, so it
+       starts from the card's own font size rather than the Date column's -
+       the three lines below are then sized against that. Without this reset
+       every one of them would silently scale with the Date entry, and the
+       Fonts tab would have two rows that both change the same thing. */
+    .date-col.date-block {
+      font-size: 1em;
+    }
+    /* Each line takes its own Fonts/Colors entry, falling back to what makes
+       the block a block: two small muted lines around a large number.
+       Muted via secondary-text-color rather than opacity - opacity would
+       also wash out a color the user picks here, which is not what "make
+       this line red" should do. Both are theme variables, so the default
+       follows whatever theme is active. */
+    .date-block-weekday {
+      font-size: var(--annuals-row-date-block-weekday-size, 0.75em);
+      color: var(--annuals-row-date-block-weekday-color, var(--annuals-row-date-block-muted-color, var(--secondary-text-color, #9b9b9b)));
+      font-weight: var(--annuals-row-date-block-weekday-weight, normal);
+      font-style: var(--annuals-row-date-block-weekday-style, normal);
+      text-transform: var(--annuals-row-date-block-weekday-transform, none);
+      text-decoration: var(--annuals-row-date-block-weekday-decoration, none);
+      letter-spacing: var(--annuals-row-date-block-weekday-spacing, normal);
+    }
+    .date-block-day {
+      font-size: var(--annuals-row-date-block-day-size, 1.5em);
+      color: var(--annuals-row-date-block-day-color, var(--annuals-row-date-block-strong-color, var(--primary-text-color, #e1e1e1)));
+      font-weight: var(--annuals-row-date-block-day-weight, 500);
+      font-style: var(--annuals-row-date-block-day-style, normal);
+      text-transform: var(--annuals-row-date-block-day-transform, none);
+      text-decoration: var(--annuals-row-date-block-day-decoration, none);
+      letter-spacing: var(--annuals-row-date-block-day-spacing, normal);
+    }
+    /* The month's all-caps look is the Uppercase toggle in Fonts, defaulted
+       on in defaultConfig rather than hardcoded here - baked into this rule
+       it would be a default nobody could switch off, since setFontStyle only
+       ever writes the variable for a toggle that is on. Doing it with
+       text-transform at all (rather than upper-casing in formatDateBlock)
+       keeps the browser applying each locale's own casing rules and leaves
+       the underlying text intact - see the note there. */
+    .date-block-month {
+      font-size: var(--annuals-row-date-block-month-size, 0.75em);
+      color: var(--annuals-row-date-block-month-color, var(--annuals-row-date-block-muted-color, var(--secondary-text-color, #9b9b9b)));
+      font-weight: var(--annuals-row-date-block-month-weight, normal);
+      font-style: var(--annuals-row-date-block-month-style, normal);
+      text-transform: var(--annuals-row-date-block-month-transform, none);
+      text-decoration: var(--annuals-row-date-block-month-decoration, none);
+      letter-spacing: var(--annuals-row-date-block-month-spacing, normal);
+    }
+    /* Accent bar column - one grid track wide, stretched to whatever height
+       the tallest cell in the row gives it. Colors are the same three
+       variables the icon reads, so the Colors tab drives both. */
+    /* Holds the badge stack and the bar side by side (see badges_on_bar), so
+       the pair occupies the single Accent bar column. Stretches to the row's
+       height the way the bare bar does, and the stack centers itself in
+       that height. */
+    .accent-bar-wrap {
+      display: flex;
+      align-items: center;
+      align-self: stretch;
+      gap: 5px;
+    }
+    /* Fixed width, badge-sized, whether it holds three badges or none: the
+       bar sits to its right, so a stack that collapsed on a row without
+       flags would put that row's bar 14px left of every other row's. The
+       rows are what has to line up, not the badges. */
+    .badge-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      flex: 0 0 14px;
+      width: 14px;
+    }
+    /* The same three badges the icon carries in its corners, so they keep
+       their colors and sizes - only the absolute positioning and the ring
+       that separated them from the icon behind them have no place here. */
+    .badge-stack .vip-badge,
+    .badge-stack .important-badge,
+    .badge-stack .todo-badge {
+      position: static;
+      top: auto;
+      right: auto;
+      bottom: auto;
+      left: auto;
+      box-shadow: none;
+    }
+    .accent-bar {
+      width: var(--annuals-row-accent-bar-width, 3px);
+      align-self: stretch;
+      /* A grid item that stretches still collapses to nothing when the row
+         happens to be shorter than this - a bar of zero height would just
+         look like a rendering bug. */
+      min-height: 1.5em;
+      /* Half the width, so the ends stay rounded at any thickness instead of
+         turning into a lozenge on a wide bar. */
+      border-radius: calc(var(--annuals-row-accent-bar-width, 3px) / 2);
+      /* One resolved value per row, handed down by _row (see rowColors):
+         the Accent bar's own Design color at the bottom, then the event
+         type, then the row's status. */
+      background: var(--annuals-row-resolved-bar-color, var(--primary-text-color));
+    }
+    /* Month and week boundaries (Month separators / Week separators) - a rule
+       running the full width of the list, centered in the space between the
+       two rows it divides.
+
+       Deliberately not a border-top on the row: a border traces the row's own
+       box, which is rounded at 8px, so its ends curved away and stopped short
+       instead of running straight across - and it sits flush against the row
+       below rather than between the two. This pseudo-element is positioned
+       against the row's padding box, which spans the row's full width, and
+       offset by exactly half the space above it.
+
+       Width, style and color all come from per-scale variables the editor
+       writes (see _render), each falling back to this scale's own default -
+       and the color, when left unset, to --primary-text-color, the same
+       theme variable the card title and the Name field default to, so an
+       unconfigured rule belongs to the card's own text. */
+    .row.month-start,
+    .row.week-start,
+    .row.day-start {
+      position: relative;
+    }
+    .row.month-start::before,
+    .row.week-start::before,
+    .row.day-start::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      /* The row still owns its whole area for tap/hold - the rule is
+         decoration lying across it, not a target. */
+      pointer-events: none;
+    }
+    /* Each offset is half of the list's own 4px gap plus the margin added
+       here, which is what puts the rule midway between the two rows. The
+       coarser the boundary, the more room around it. */
+    .row.month-start {
+      margin-top: 12px;
+    }
+    .row.month-start::before {
+      top: -8px;
+      border-top: var(--annuals-row-month-separator-width, 1px) var(--annuals-row-month-separator-style, solid)
+        var(--annuals-row-month-separator-color, var(--primary-text-color, #e1e1e1));
+    }
+    .row.week-start {
+      margin-top: 8px;
+    }
+    .row.week-start::before {
+      top: -6px;
+      border-top: var(--annuals-row-week-separator-width, 1px) var(--annuals-row-week-separator-style, dashed)
+        var(--annuals-row-week-separator-color, var(--primary-text-color, #e1e1e1));
+    }
+    .row.day-start {
+      margin-top: 6px;
+    }
+    .row.day-start::before {
+      top: -5px;
+      border-top: var(--annuals-row-day-separator-width, 1px) var(--annuals-row-day-separator-style, dotted)
+        var(--annuals-row-day-separator-color, var(--primary-text-color, #e1e1e1));
+    }
+    /* The boundary's own name, written on the rule rather than beside it: a
+       plate in the card's background color sits on the line and hides the
+       stretch behind the text, so the rule reads as broken by the label
+       instead of struck through it. A rectangle with strongly rounded
+       corners rather than an ellipse - an ellipse pinches in at the top and
+       bottom of its ends, which crops the first and last letter of a long
+       label; a rounded rectangle keeps its full height right up to the
+       corner radius. The box follows the text's own width, so "Monday" and
+       "9" each leave exactly the gap they need.
+
+       Matched on the attribute, not on the scale class alone: a row that
+       begins a boundary whose label is switched off carries no attribute and
+       so gets no plate, rather than an empty blob floating on the line.
+       Painted after ::before by document order, which is what puts it over
+       the rule. */
+    .row.month-start[data-sep-label]::after,
+    .row.week-start[data-sep-label]::after,
+    .row.day-start[data-sep-label]::after {
+      content: attr(data-sep-label);
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 0.3em 0.75em;
+      border-radius: 0.6em;
+      white-space: nowrap;
+      /* Same reasoning as the rule above - decoration lying across the row,
+         never a tap target of its own. */
+      pointer-events: none;
+      line-height: 1.25;
+    }
+    /* Each label sits on its own scale's line, so it takes that line's own
+       top offset, and carries its own color, plate and font block. Color
+       falls back to the theme's text color and the plate to the card's own
+       background, which is what makes the plate read as a gap rather than as
+       a shape; the size to 0.75em, relative to the card's own font size, so
+       the label stays smaller than the rows it divides. */
+    .row.month-start[data-sep-label]::after {
+      top: -8px;
+      color: var(--annuals-row-month-separator-label-color, var(--primary-text-color, #e1e1e1));
+      background: var(--annuals-row-month-separator-label-background-color, var(--ha-card-background, var(--card-background-color, #1c1c1c)));
+      font-size: var(--annuals-row-month-separator-label-size, 0.75em);
+      font-weight: var(--annuals-row-month-separator-label-weight, normal);
+      font-style: var(--annuals-row-month-separator-label-style, normal);
+      text-transform: var(--annuals-row-month-separator-label-transform, none);
+      text-decoration: var(--annuals-row-month-separator-label-decoration, none);
+      letter-spacing: var(--annuals-row-month-separator-label-spacing, normal);
+    }
+    .row.week-start[data-sep-label]::after {
+      top: -6px;
+      color: var(--annuals-row-week-separator-label-color, var(--primary-text-color, #e1e1e1));
+      background: var(--annuals-row-week-separator-label-background-color, var(--ha-card-background, var(--card-background-color, #1c1c1c)));
+      font-size: var(--annuals-row-week-separator-label-size, 0.75em);
+      font-weight: var(--annuals-row-week-separator-label-weight, normal);
+      font-style: var(--annuals-row-week-separator-label-style, normal);
+      text-transform: var(--annuals-row-week-separator-label-transform, none);
+      text-decoration: var(--annuals-row-week-separator-label-decoration, none);
+      letter-spacing: var(--annuals-row-week-separator-label-spacing, normal);
+    }
+    .row.day-start[data-sep-label]::after {
+      top: -5px;
+      color: var(--annuals-row-day-separator-label-color, var(--primary-text-color, #e1e1e1));
+      background: var(--annuals-row-day-separator-label-background-color, var(--ha-card-background, var(--card-background-color, #1c1c1c)));
+      font-size: var(--annuals-row-day-separator-label-size, 0.75em);
+      font-weight: var(--annuals-row-day-separator-label-weight, normal);
+      font-style: var(--annuals-row-day-separator-label-style, normal);
+      text-transform: var(--annuals-row-day-separator-label-transform, none);
+      text-decoration: var(--annuals-row-day-separator-label-decoration, none);
+      letter-spacing: var(--annuals-row-day-separator-label-spacing, normal);
+    }
+    /* Everything an embedded external calendar event contributes (see
+       buildExternalEvent): the calendar's own name, plus the Time, Location
+       and Description lines. This rule is the shared base - the three named
+       fields each override it below, from their own entry in the External
+       calendar fields group. */
     .calendar-col {
       white-space: pre-wrap;
-      color: var(--annuals-calendar-color, inherit);
+      color: var(--annuals-row-calendar-color, inherit);
       font-size: var(--annuals-row-calendar-size, inherit);
-      font-weight: var(--annuals-row-calendar-weight, normal);
-      font-style: var(--annuals-row-calendar-style, normal);
-      text-transform: var(--annuals-row-calendar-transform, none);
-      text-decoration: var(--annuals-row-calendar-decoration, none);
-      letter-spacing: var(--annuals-row-calendar-spacing, normal);
+      /* inherit, not normal/none: these lines sit inside the Type cell for an
+         external calendar event, so a hardcoded default here silently won
+         over whatever Type was set to - Bold, Italic and Uppercase on Type
+         did nothing for such a row, while size, letter spacing and underline
+         appeared to work (the first two inherit, and an ancestor's underline
+         cannot be switched off by a descendant at all). Inheriting means the
+         Calendar fields entry still overrides Type whenever it is actually
+         set, and stays out of the way when it isn't. */
+      font-weight: var(--annuals-row-calendar-weight, inherit);
+      font-style: var(--annuals-row-calendar-style, inherit);
+      text-transform: var(--annuals-row-calendar-transform, inherit);
+      text-decoration: var(--annuals-row-calendar-decoration, inherit);
+      letter-spacing: var(--annuals-row-calendar-spacing, inherit);
+    }
+    /* Time, Location and Description, each configured on its own in the
+       External calendar fields group. Every property falls back through the
+       shared .calendar-col variable above before reaching its default, so a
+       config written when these three shared one entry still renders exactly
+       as it did - that older entry simply became the group's fallback.
+       Color defaults to the theme's secondary text color (these lines are
+       details next to the event's own name), the rest to inherit for the
+       reason spelled out on .calendar-col. Listed after .calendar-col and at
+       the same specificity, so the field's own value wins by cascade order. */
+    .calendar-line-time {
+      color: var(--annuals-row-calendar-time-color,
+        var(--annuals-row-calendar-color, var(--secondary-text-color, #9b9b9b)));
+      font-size: var(--annuals-row-calendar-time-size, var(--annuals-row-calendar-size, inherit));
+      font-weight: var(--annuals-row-calendar-time-weight, var(--annuals-row-calendar-weight, inherit));
+      font-style: var(--annuals-row-calendar-time-style, var(--annuals-row-calendar-style, inherit));
+      text-transform: var(--annuals-row-calendar-time-transform, var(--annuals-row-calendar-transform, inherit));
+      text-decoration: var(--annuals-row-calendar-time-decoration, var(--annuals-row-calendar-decoration, inherit));
+      letter-spacing: var(--annuals-row-calendar-time-spacing, var(--annuals-row-calendar-spacing, inherit));
+    }
+    .calendar-line-location {
+      color: var(--annuals-row-calendar-location-color,
+        var(--annuals-row-calendar-color, var(--secondary-text-color, #9b9b9b)));
+      font-size: var(--annuals-row-calendar-location-size, var(--annuals-row-calendar-size, inherit));
+      font-weight: var(--annuals-row-calendar-location-weight, var(--annuals-row-calendar-weight, inherit));
+      font-style: var(--annuals-row-calendar-location-style, var(--annuals-row-calendar-style, inherit));
+      text-transform: var(--annuals-row-calendar-location-transform, var(--annuals-row-calendar-transform, inherit));
+      text-decoration: var(--annuals-row-calendar-location-decoration, var(--annuals-row-calendar-decoration, inherit));
+      letter-spacing: var(--annuals-row-calendar-location-spacing, var(--annuals-row-calendar-spacing, inherit));
+    }
+    .calendar-line-description {
+      color: var(--annuals-row-calendar-description-color,
+        var(--annuals-row-calendar-color, var(--secondary-text-color, #9b9b9b)));
+      font-size: var(--annuals-row-calendar-description-size, var(--annuals-row-calendar-size, inherit));
+      font-weight: var(--annuals-row-calendar-description-weight, var(--annuals-row-calendar-weight, inherit));
+      font-style: var(--annuals-row-calendar-description-style, var(--annuals-row-calendar-style, inherit));
+      text-transform: var(--annuals-row-calendar-description-transform, var(--annuals-row-calendar-transform, inherit));
+      text-decoration: var(--annuals-row-calendar-description-decoration, var(--annuals-row-calendar-decoration, inherit));
+      letter-spacing: var(--annuals-row-calendar-description-spacing, var(--annuals-row-calendar-spacing, inherit));
     }
     /* A {placeholder} inside a Custom text column is wrapped in the class of
        the field it stands for (see renderTemplateNodes), so "{name} turns
@@ -8958,8 +10998,10 @@
     .text-col .calendar-col,
     /* Same treatment for the external-calendar parts inside a Type cell
        (see typeCellFragment) - they're words in a run of text there, not a
-       column of their own. */
-    .type .calendar-col {
+       column of their own. Excludes .calendar-line, which is the one place
+       such a part *is* its own line and needs its own display; without the
+       :not() this rule wins on specificity and flattens it back inline. */
+    .type .calendar-col:not(.calendar-line) {
       display: inline;
       flex: none;
       min-width: 0;
@@ -9008,7 +11050,6 @@
     .list.columns-compact .full-name,
     .list.columns-compact .type {
       flex: none;
-      opacity: 1;
     }
     .list.columns-compact .name { font-weight: var(--annuals-row-name-weight, normal); }
     .list.columns-compact .last-name { font-weight: var(--annuals-row-last-name-weight, normal); }
@@ -9016,12 +11057,22 @@
     .list.columns-compact .type {
       font-size: var(--annuals-row-type-size, 1em);
     }
-    .list.columns-compact .when {
-      opacity: 1;
-    }
     .list.columns-compact .badge-slot { width: auto; flex: none; justify-content: center; }
     .list.columns-compact .when { min-width: 0; text-align: center; flex: none; }
-    .empty { opacity: 0.6; text-align: center; padding: 12px; }
+    /* The "no events" placeholder - the theme own secondary text color,
+       not the primary one dimmed, so nothing on this card uses opacity to
+       fake a lighter color. */
+    .empty {
+      color: var(--annuals-card-no-events-color, var(--secondary-text-color, #9b9b9b));
+      font-size: var(--annuals-card-no-events-size, inherit);
+      font-weight: var(--annuals-card-no-events-weight, inherit);
+      font-style: var(--annuals-card-no-events-style, inherit);
+      text-transform: var(--annuals-card-no-events-transform, inherit);
+      text-decoration: var(--annuals-card-no-events-decoration, inherit);
+      letter-spacing: var(--annuals-card-no-events-spacing, inherit);
+      text-align: center;
+      padding: 12px;
+    }
     /* Compact horizontal-axis layout (layout_style: "timeline") - see
        _buildTimeline. Deliberately its own small block of styles instead of
        reusing .row/.icon-wrap/etc., since it's a completely different visual
@@ -9091,7 +11142,7 @@
     .timeline-header-badge-todo {
       bottom: -4px;
       right: -4px;
-      color: var(--annuals-todo-badge-timeline-color, var(--error-color));
+      color: var(--annuals-timeline-todo-badge-color, var(--error-color));
     }
     .timeline-header .sentence {
       font-size: var(--annuals-timeline-header-size, 13px);
@@ -9147,7 +11198,7 @@
       height: 0;
       border-top-width: var(--annuals-timeline-line-width, 4px);
       border-top-style: var(--annuals-timeline-line-style, solid);
-      border-top-color: var(--annuals-timeline-line-color, var(--divider-color, rgba(128, 128, 128, 0.4)));
+      border-top-color: var(--annuals-timeline-line-color, var(--secondary-text-color, #9b9b9b));
     }
     /* Marks the past/future boundary - only present once at least one
        recent-past event is on the axis (see _buildTimeline). Left is set
@@ -9161,7 +11212,7 @@
       width: 0;
       border-left-width: var(--annuals-timeline-divider-width, 1px);
       border-left-style: var(--annuals-timeline-divider-style, solid);
-      border-left-color: var(--annuals-timeline-divider-color, var(--divider-color, rgba(128, 128, 128, 0.4)));
+      border-left-color: var(--annuals-timeline-divider-color, var(--secondary-text-color, #9b9b9b));
     }
     /* Each event is a small group (the circle plus, for Important events, an
        adjacent glyph to its left, and for events with an open to-do, a pin
@@ -9235,7 +11286,7 @@
        color has a per-badge fallback resolved in JS) - this one's fallback
        is a plain theme color the cascade can express on its own. */
     .timeline-dot-todo ha-icon {
-      color: var(--annuals-todo-badge-timeline-color, var(--error-color));
+      color: var(--annuals-timeline-todo-badge-color, var(--error-color));
     }
     .timeline-tip {
       /* left/top/width are set inline per-tooltip (see _buildTimeline), so
@@ -9371,7 +11422,7 @@
     .timeline-list-badge-todo {
       bottom: -4px;
       right: -4px;
-      color: var(--annuals-todo-badge-timeline-color, var(--error-color));
+      color: var(--annuals-timeline-todo-badge-color, var(--error-color));
     }
   `;
 
@@ -9404,6 +11455,14 @@
   // (Event types filter grid, this new Colors -> EVENT TYPES section) -
   // shared so both stay in sync with TIMELINE_TYPE_COLORS above.
   const EVENT_TYPE_KEYS = Object.keys(TIMELINE_TYPE_COLORS);
+  // ...minus "calendar", for the editor's EVENT TYPES section. An external
+  // event belongs to the calendar it came from, and that calendar has a row
+  // of its own under Embedded calendars with the same color field and the
+  // same three switches - one blanket "calendar" entry above them would only
+  // be a second place to set the same thing, in both layouts. The key itself
+  // stays: rows still fall back to TIMELINE_TYPE_COLORS.calendar, and a
+  // `type_calendar` written by an older version is still honored.
+  const EVENT_TYPE_COLOR_KEYS = EVENT_TYPE_KEYS.filter((key) => key !== "calendar");
   // colorName is only ever passed for an external calendar event (type
   // "calendar") - an explicit per-type Colors override still wins if the
   // user set one, but otherwise each embedded calendar uses its own
@@ -9416,13 +11475,256 @@
   // entries above already use, confirmed live (--calendar-color-pink is NOT
   // a real theme variable and silently fell through to the fallback;
   // --pink-color is).
-  function timelineDotColor(config, type, colorName) {
-    const configured = config && config.colors && config.colors[`type_${type}`];
+  function timelineDotColor(config, type, colorName, entityId) {
+    const colors = (config && config.colors) || {};
+    // The calendar's own row under Embedded calendars, which is the only
+    // place a calendar's color is set now that the event types list has no
+    // shared "calendar" entry - so it has to reach the dots too, or the
+    // section would sit in the Timeline layout doing nothing.
+    if (entityId && colors[CALENDAR_COLOR_PREFIX + entityId]) {
+      return colors[CALENDAR_COLOR_PREFIX + entityId];
+    }
+    // Still above colorName, where it has always been: a `type_calendar`
+    // written before that entry was retired keeps painting exactly the dots
+    // it painted then.
+    const configured = colors[`type_${type}`];
     if (configured) return configured;
     if (type === "calendar" && colorName) {
       return `var(--${colorName}-color, ${TIMELINE_TYPE_COLORS.calendar})`;
     }
     return TIMELINE_TYPE_COLORS[type] || TIMELINE_TYPE_COLORS.custom;
+  }
+  // What each icon color category resolves to when nothing more specific
+  // applies - the same chains the .icon/.accent-bar rules used to carry
+  // themselves, moved here so one row can be handed one finished value.
+  // colors["calendar_color_calendar.kids"] - one flat key per embedded
+  // calendar, so a per-calendar color is an ordinary color field rather than
+  // a nested structure needing wiring of its own.
+  const CALENDAR_COLOR_PREFIX = "calendar_color_";
+  const STATUS_ROW_COLORS = {
+    accent: "var(--annuals-status-accent-color, var(--primary-text-color))",
+    // Past rows used to be Default rows as far as color went, and still are
+    // until this one is set: the chain ends on the Default color, so an
+    // unset Past leaves every card exactly where it was.
+    past: "var(--annuals-status-past-color, var(--annuals-status-accent-color, var(--primary-text-color)))",
+    today: "var(--annuals-status-today-color, var(--error-color))",
+    soon: "var(--annuals-status-soon-color, var(--warning-color))",
+  };
+  // The four row statuses, in the order the editor lists them.
+  const STATUS_KEYS = ["past", "today", "soon"];
+  // Per-status accent bar color. Empty means the bar keeps the status' own
+  // icon color, which is the only thing it could ever be before this - so
+  // an unset entry changes nothing.
+  // Which of a status' settings take over from the row's default (the Icon
+  // column's Design block, or the event type's own color while row colors
+  // are on). Past starts off across the board, because past rows used to be
+  // Default rows in every respect; Today and Soon start on, which is what
+  // made them stand out before this was a switch at all.
+  const STATUS_OVERRIDE_TARGETS = ["row", "timeline_row", "icon", "timeline_icon", "accent_bar", "animation"];
+  const STATUS_OVERRIDE_NONE = {
+    row: false,
+    timeline_row: false,
+    icon: false,
+    timeline_icon: false,
+    accent_bar: false,
+    animation: false,
+  };
+  const STATUS_OVERRIDE_DEFAULTS = {
+    // "accent" is a row with no status at all - it never overrides.
+    accent: STATUS_OVERRIDE_NONE,
+    past: { row: false, timeline_row: false, icon: false, timeline_icon: false, accent_bar: false, animation: false },
+    today: { row: false, timeline_row: false, icon: true, timeline_icon: false, accent_bar: true, animation: false },
+    soon: { row: false, timeline_row: false, icon: true, timeline_icon: false, accent_bar: true, animation: false },
+  };
+  function statusOverride(config, category) {
+    const base = STATUS_OVERRIDE_DEFAULTS[category] || STATUS_OVERRIDE_NONE;
+    const own = ((config && config.row_color_override) || {})[category];
+    // Older configs stored one boolean for the whole status.
+    if (own === true || own === false) {
+      return { row: false, timeline_row: false, icon: own, timeline_icon: false, accent_bar: own, animation: own };
+    }
+    return { ...base, ...(own || {}) };
+  }
+  // The animation an event's icon runs, resolved down the same chain its
+  // color follows: the Icon block's default in Design, then the event type's
+  // own, then the row's status where that status overrides it. A status
+  // that overrides wins outright, "none" included - switching an animation
+  // off for Today is a choice, not an absence.
+  function timelineStatusCategory(e, config) {
+    const soonDays = (config && config.soon_days) || 0;
+    if (!e) return "accent";
+    if (e.daysSince !== undefined && e.daysSince > 0) return "past";
+    if (e.days === 0) return "today";
+    return e.days > 0 && e.days <= soonDays ? "soon" : "accent";
+  }
+  // A timeline glyph's colour: the row status wins where it overrides the
+  // icon, exactly as it does in the list; otherwise the event type's own.
+  function timelineIconColor(config, e, calendarColors) {
+    const category = timelineStatusCategory(e, config);
+    if (statusOverride(config, category).timeline_icon) {
+      const colors = (config && config.colors) || {};
+      return (
+        colors[`timeline_icon_${category}`] || STATUS_ROW_COLORS[category] || STATUS_ROW_COLORS.accent
+      );
+    }
+    return timelineDotColor(config, e.type, calendarColors?.[e.calendarEntityId], e.calendarEntityId);
+  }
+  // The colour a status paints an event's timeline text in.
+  function timelineStatusTextColor(config, e) {
+    const category = timelineStatusCategory(e, config);
+    if (!statusOverride(config, category).timeline_row) return "";
+    const colors = (config && config.colors) || {};
+    return colors[`entry_text_${category}`] || STATUS_ROW_COLORS[category] || STATUS_ROW_COLORS.accent;
+  }
+  function resolveIconAnimation(config, e, category) {
+    const anims = (config && config.icon_animation) || {};
+    if (statusOverride(config, category).animation) {
+      return statusValue(anims, category, "accent");
+    }
+    const typeKey =
+      e && e.isExternal && e.calendarEntityId ? CALENDAR_COLOR_PREFIX + e.calendarEntityId : e && e.type;
+    const perType = typeKey ? ((config && config.type_animation) || {})[typeKey] : "";
+    if (perType) return perType;
+    return anims.accent;
+  }
+  // A type's color for one particular target. The key is the type's own
+  // color key plus a suffix (type_birthday_row, calendar_color_x_bar, ...);
+  // empty falls back to the type's base color.
+  function typeTargetColor(config, typeKey, suffix, base) {
+    const colors = (config && config.colors) || {};
+    return (typeKey && colors[`${typeKey}_${suffix}`]) || base;
+  }
+  // The config key a type's colors live under - "type_birthday" for an
+  // event type, the calendar's own key for an embedded calendar.
+  function typeColorKey(e) {
+    if (!e) return "";
+    return e.isExternal && e.calendarEntityId ? CALENDAR_COLOR_PREFIX + e.calendarEntityId : `type_${e.type}`;
+  }
+  function statusBarColor(config, category) {
+    const key = `accent_bar_${category}`;
+    return (config && config.colors && config.colors[key]) || "";
+  }
+  // Past falls back to Default for everything it does not set of its own,
+  // which is what "empty = follows Default" means in the editor.
+  function statusValue(map, category, fallbackKey) {
+    const own = map && map[category];
+    if (own !== undefined && own !== "" && own !== null) return own;
+    return map && fallbackKey ? map[fallbackKey] : undefined;
+  }
+  // What an event type's own color paints in a list row (see
+  // row_color_targets). A type with no entry - the normal case, since only
+  // the ones the user changed are stored - colors the icon and the accent
+  // bar, which is where the color reached before these switches existed.
+  // "row" is the full version: the row's text as well, and with it the icon
+  // and the bar whatever their own switches say, because coloring a row's
+  // text while leaving its icon behind would only look like a mistake.
+  // Where a badge is drawn (see badge_targets). Same shape as the row-color
+  // targets above and the same reason for the defaults: a badge with no
+  // entry sits on the row's icon, which is where every card that predates
+  // this option has it.
+  const BADGE_TARGET_DEFAULTS = { icon: true, accent_bar: false };
+  const BADGE_TARGET_KEYS = Object.keys(BADGE_TARGET_DEFAULTS);
+  const BADGE_KEYS = ["vip", "important", "todo"];
+  // Each badge's own on/off switch, so the placement switches and it can
+  // keep each other in step (see _wireBadgeTargets).
+  const BADGE_SWITCH_KEYS = {
+    vip: "show_vip_badge",
+    important: "show_important_badge",
+    todo: "show_todo_badge",
+  };
+  function hasColumnType(config, type) {
+    const columns = config && config.columns;
+    return Array.isArray(columns) && columns.some((col) => col && col.type === type);
+  }
+  function badgeTargets(config, badge) {
+    const targets = {
+      ...BADGE_TARGET_DEFAULTS,
+      ...(((config && config.badge_targets) || {})[badge] || {}),
+    };
+    const onIcon = hasColumnType(config, "icon");
+    const onBar = hasColumnType(config, "accent_bar");
+    // Neither column: nothing to draw a badge on, and no stored target can
+    // change that - left as configured so it comes back untouched when a
+    // column returns.
+    if (!onIcon && !onBar) return targets;
+    // One column: it takes the badge whatever the stored target says, so
+    // removing the other one never makes a badge disappear.
+    if (!onBar) return { ...targets, icon: true, accent_bar: false };
+    if (!onIcon) return { ...targets, icon: false, accent_bar: true };
+    return targets;
+  }
+  const ROW_COLOR_TARGET_DEFAULTS = { icon: true, accent_bar: true, row: false, timeline_text: false };
+  const ROW_COLOR_TARGET_KEYS = Object.keys(ROW_COLOR_TARGET_DEFAULTS);
+  function rowColorTargets(config, type) {
+    return {
+      ...ROW_COLOR_TARGET_DEFAULTS,
+      ...(((config && config.row_color_targets) || {})[type] || {}),
+    };
+  }
+  // The three colors a list row renders in - its icon, its accent bar and
+  // its text - resolved together because they share one chain and differ
+  // only in where that chain is allowed to end. An empty `text` means the
+  // row's text is not colored at all and keeps the theme's own.
+  //
+  // With row_colors off all three are the row's status color, which is
+  // exactly how the card behaved before per-type colors existed - the whole
+  // feature is behind that switch because the per-type table already has
+  // values, so honoring it unconditionally would have recolored every card
+  // that ever saved one.
+  //
+  // Note this is deliberately *not* the timeline's timelineDotColor above:
+  // the two share config.colors.type_*, so a color set for one shows up in
+  // the other, but the timeline has no status categories to override with,
+  // no accent bar to feed and no row text to follow along.
+  function rowColors(config, e, colorCategory, calendarColors) {
+    const statusColor = STATUS_ROW_COLORS[colorCategory] || STATUS_ROW_COLORS.accent;
+    // The bar may be pinned to its own color for this status; unset, it is
+    // the status color the icon uses.
+    const barColor = statusBarColor(config, colorCategory) || statusColor;
+    // What the row falls back to where this status does not take over: the
+    // Icon column's Design color, and the Accent bar's own Design color.
+    const baseIcon = STATUS_ROW_COLORS.accent;
+    const baseBar = (config.colors && config.colors.accent_bar) || baseIcon;
+    const override = statusOverride(config, colorCategory);
+    const iconWins = override.icon ? statusColor : null;
+    const barWins = override.accent_bar ? barColor : null;
+    // The text is its own setting now: it no longer drags the icon and the
+    // bar along, because each of those has a color of its own to obey.
+    const textWins = override.row
+      ? (config.colors && config.colors[`row_text_${colorCategory}`]) || statusColor
+      : null;
+    if (config.row_colors !== true) {
+      return { icon: iconWins || baseIcon, bar: barWins || baseBar, text: textWins || "" };
+    }
+    let typeColor = "";
+    if (e.isExternal && e.calendarEntityId) {
+      typeColor = config.colors[CALENDAR_COLOR_PREFIX + e.calendarEntityId] || "";
+      // Home Assistant's own per-calendar color, so two embedded calendars
+      // are already told apart before anything is configured here.
+      if (!typeColor) {
+        const own = calendarColors && calendarColors[e.calendarEntityId];
+        if (own) typeColor = `var(--${own}-color, ${TIMELINE_TYPE_COLORS.calendar})`;
+      }
+    }
+    if (!typeColor) {
+      typeColor = config.colors[`type_${e.type}`] || TIMELINE_TYPE_COLORS[e.type] || statusColor;
+    }
+    // An external event's switches live on its own calendar's row (see
+    // EVENT_TYPE_COLOR_KEYS), so it looks them up under that calendar's key
+    // rather than under the shared "calendar" type.
+    const targets = rowColorTargets(
+      config,
+      e.isExternal && e.calendarEntityId ? CALENDAR_COLOR_PREFIX + e.calendarEntityId : e.type
+    );
+    const key = typeColorKey(e);
+    const typeIcon = typeTargetColor(config, key, "icon", typeColor);
+    const typeBar = typeTargetColor(config, key, "bar", typeColor);
+    const typeRow = typeTargetColor(config, key, "row", typeColor);
+    return {
+      icon: iconWins || (targets.icon ? typeIcon : targets.row ? typeRow : baseIcon),
+      bar: barWins || (targets.accent_bar ? typeBar : targets.row ? typeRow : baseBar),
+      text: textWins || (!iconWins && targets.row ? typeRow : ""),
+    };
   }
   // Width of the ring drawn around each dot (see .timeline-dot's box-shadow).
   // Kept here because _buildTimeline needs it in JS too, to sit the Important
@@ -9681,8 +11983,12 @@
       // An external event's own `days` (see buildExternalEvent) is already
       // its real, one-off offset from today - unlike an Annuals event's,
       // there's no yearly-recurring month/day to re-derive a "days ago"
-      // figure from, so a negative e.days *is* that figure already.
-      if (e.isExternal) return e.days < 0 && e.days >= -pastWindow;
+      // figure from, so a negative e.days *is* that figure already. The same
+      // goes for a multi-day event's own rows (see expandMultiDay): each
+      // carries the offset of the day it is about, where e.month/e.day are
+      // the trip's start for all of them alike - which had the end row of a
+      // running trip counting back from the departure it is five days after.
+      if (e.isExternal || e.multiDayPart) return e.days < 0 && e.days >= -pastWindow;
       const since = daysSincePrevOccurrence(e.month, e.day, now);
       return since > 0 && since <= pastWindow;
     }
@@ -9712,27 +12018,26 @@
         t(this._hass, this._config)
       );
       let filtered = expanded.filter((e) => {
-        // Checked ahead of the isExternal short-circuit below, and so the
-        // one Annuals-side filter that does apply to an external calendar
-        // event: it can't ever carry an open to-do (matchTodoItems needs a
-        // next_date, which only an Annuals sensor has), so "only events
-        // with something left to do" has to drop it rather than wave it
-        // through. Narrows whatever the VIP/Important pair further down
-        // leaves, rather than joining their OR - "VIP only" plus this one
-        // means the VIP events that still have something to do, not
-        // everything that is either.
-        if (config.show_todo_only) {
-          const todos = this._todoByEntity.get(e.entityId);
-          if (!todos || !todos.length) return false;
-        }
         // `types`/`categories`/VIP/Important all describe Annuals-specific
         // concepts (event type, holiday category, the manual VIP flag and
         // computed Important milestone) that simply don't exist for an
         // external calendar's own events - only the day-window filters
         // below (today_only, and days_ahead/soon_days further down) apply
         // to both alike, same as defaultConfig's external_calendars comment
-        // notes.
+        // notes. "Open to-dos only" is one of them: an external event can
+        // never carry a to-do the card can see (matchTodoItems needs a
+        // next_date, which only an Annuals sensor has), so applying it
+        // there would empty the calendar out rather than filter it - the
+        // same reason VIP only and Important only leave it alone.
         if (e.isExternal) return !config.today_only || e.days === 0;
+        // Narrows whatever the VIP/Important pair further down leaves,
+        // rather than joining their OR - "VIP only" plus this one means the
+        // VIP events that still have something to do, not everything that
+        // is either.
+        if (config.show_todo_only) {
+          const todos = this._todoByEntity.get(e.entityId);
+          if (!todos || !todos.length) return false;
+        }
         if (config.types && config.types.length && !config.types.includes(e.type)) return false;
         // Only holiday-type events carry a category at all (see getEvents) -
         // this never filters anything else out, same as `types` being
@@ -9846,36 +12151,40 @@
       // applied, keep only whichever events share the single soonest
       // `days` value (today if any event falls today, otherwise the
       // nearest upcoming day - possibly more than one event on that day).
+      // The next day, not merely the smallest number: a row already behind
+      // us - a multi-day trip's start once it has begun, an external event
+      // inside the past window - would otherwise win the minimum, take the
+      // whole card with it, and then be dropped again by the past-event
+      // settings, leaving nothing on screen at all. Falls back to the
+      // soonest day there is when every remaining event is in the past, so
+      // such a card shows that day rather than emptying itself.
       if (config.next_event_day_only && filtered.length) {
-        const minDays = Math.min(...filtered.map((e) => e.days));
+        const upcoming = filtered.map((e) => e.days).filter((days) => days >= 0);
+        const minDays = Math.min(...(upcoming.length ? upcoming : filtered.map((e) => e.days)));
         filtered = filtered.filter((e) => e.days === minDays);
       }
-      // defaultConfig() always fills this in - no "|| 7" fallback here, since
-      // that would treat a deliberate 0 (soon-highlighting disabled) as
-      // unset and silently re-enable a 7-day "soon" window.
-      const soonDays = config.soon_days;
-      const showPast = config.show_past !== false;
-      const showToday = config.show_today !== false;
-      const showSoon = config.show_soon !== false;
       const hero = filtered
         .filter((e) => this._isRecent(e, now))
         .map((e) => ({
           ...e,
-          // Same isExternal branch as _isRecent above - an external event's
-          // own e.days is already signed, so "how many days ago" is simply
-          // its negation instead of daysSincePrevOccurrence's yearly-
-          // recurrence math.
-          daysSince: e.days === 0 ? 0 : e.isExternal ? -e.days : daysSincePrevOccurrence(e.month, e.day, now),
+          // Same branch as _isRecent above - an external event's own e.days,
+          // and a multi-day row's, are already signed, so "how many days
+          // ago" is simply their negation instead of
+          // daysSincePrevOccurrence's yearly-recurrence math.
+          daysSince:
+            e.days === 0
+              ? 0
+              : e.isExternal || e.multiDayPart
+                ? -e.days
+                : daysSincePrevOccurrence(e.month, e.day, now),
         }))
-        .filter((e) => (e.daysSince === 0 ? showToday : showPast));
       // days_ahead only caps how far into the future upcoming events are
       // shown - applying it earlier (to `filtered`) would also cull recent
       // past events being considered for the hero section above, whose own
       // window is governed by days_past instead, not days_ahead.
       const upcoming = filtered
         .filter((e) => e.days > 0 && !this._isRecent(e, now))
-        .filter((e) => !config.days_ahead || config.days_ahead <= 0 || e.days <= config.days_ahead)
-        .filter((e) => e.days > soonDays || showSoon);
+        .filter((e) => !config.days_ahead || config.days_ahead <= 0 || e.days <= config.days_ahead);
       return { hero, upcoming };
     }
 
@@ -9898,7 +12207,12 @@
           if (timeDiff !== 0) return timeDiff;
           return (a.entityId || "").localeCompare(b.entityId || "");
         })
-        .slice(0, this._config.count || 10);
+        // A count of 0 has always meant "use the default"; a negative one
+        // used to reach slice() as-is, where it counts from the end and so
+        // dropped five events off the tail instead of limiting the list to
+        // five - a card written by hand with count: -5 showed 125 rows. Only
+        // a positive number is a limit; anything else falls back.
+        .slice(0, this._config.count > 0 ? Math.trunc(this._config.count) : 10);
     }
 
     // "when" text for the timeline layout - e.daysSince (attached in
@@ -9910,7 +12224,7 @@
       if (e.daysSince !== undefined && e.daysSince > 0) {
         return e.daysSince === 1 ? strings.dayAgo : strings.daysAgo(e.daysSince);
       }
-      return e.days === 0 ? strings.today : e.days === 1 ? strings.inDay : strings.inDays(e.days);
+      return this._countdownText(e, strings);
     }
 
     // The locale every date/time on this card is formatted in - the card's
@@ -9979,19 +12293,71 @@
       return { ...e, name: translated, fullName: translated };
     }
 
+    // The calendar day a row is actually about. Normally that is today plus
+    // the sensor's own countdown, but a multi-day one-time event that has
+    // already begun holds its countdown at 0 for as long as it runs (see
+    // sensor.py) - so the offset alone put a trip that started on the 16th
+    // on today's date, in both layouts. next_date is the sensor's own answer
+    // and is trusted wherever it applies. The offset stays for the
+    // recently-past rows: there next_date already points at next year's
+    // occurrence rather than at the one the row is describing.
+    _occurrenceDate(e) {
+      const target = new Date();
+      target.setHours(0, 0, 0, 0);
+      const isPast = e.daysSince !== undefined && e.daysSince > 0;
+      const match = !isPast && typeof e.nextDate === "string"
+        ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(e.nextDate)
+        : null;
+      if (match) {
+        target.setFullYear(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+        return target;
+      }
+      target.setDate(target.getDate() + (isPast ? -e.daysSince : e.days));
+      return target;
+    }
+
+    // Whether that day is today - which is not the same question as
+    // "countdown is 0" for an event already under way.
+    _occursToday(e) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return this._occurrenceDate(e).getTime() === today.getTime();
+    }
+
+    // Whether that day is already behind us. Only the timeline's sentence
+    // needs this, to pick its tense - "was" rather than "is" - which the
+    // clamped countdown alone would get wrong for a trip already under way.
+    _occurredAlready(e) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return this._occurrenceDate(e).getTime() < today.getTime();
+    }
+
+    // Days from today to that same day, negative once it has passed. The
+    // sensor's own countdown holds at 0 while a multi-day event runs, which
+    // is what its automations want; a row saying "today" about the day the
+    // trip started is not. Only that one row differs - for everything else
+    // this is exactly e.days.
+    _countdownText(e, strings) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const offset = Math.round((this._occurrenceDate(e) - today) / 86400000);
+      if (offset === 0) return strings.today;
+      if (offset === 1) return strings.inDay;
+      if (offset > 0) return strings.inDays(offset);
+      return offset === -1 ? strings.dayAgo : strings.daysAgo(-offset);
+    }
+
     // Short calendar date ("6 Aug") for config.timeline_show_date - same
-    // day-offset math and Intl.DateTimeFormat call as _row()'s own dateText,
+    // date and Intl.DateTimeFormat call as _row()'s own dateText,
     // kept separate since the timeline reads its offset off e.daysSince/
     // e.days the same way _timelineWhenText does. Returns null on the event's
     // own day - _timelineSentenceFragment already ends "...is today" there,
     // so a literal "(Today)" right after it would just repeat itself.
     _timelineDateText(e) {
       const isPast = e.daysSince !== undefined && e.daysSince > 0;
-      if (!isPast && e.days === 0) return null;
-      const target = new Date();
-      target.setHours(0, 0, 0, 0);
-      target.setDate(target.getDate() + (isPast ? -e.daysSince : e.days));
-      return this._formatEventDate(target);
+      if (!isPast && this._occursToday(e)) return null;
+      return this._formatEventDate(this._occurrenceDate(e));
     }
 
     // Full, unambiguous date ("Mon, 3 Aug 2026") for the timeline's own
@@ -10001,10 +12367,7 @@
     // swap in, including on the event's own day, where the sentence's
     // "...is today" is exactly what you'd tap to find out *which* day.
     _timelineFullDateText(e) {
-      const isPast = e.daysSince !== undefined && e.daysSince > 0;
-      const target = new Date();
-      target.setHours(0, 0, 0, 0);
-      target.setDate(target.getDate() + (isPast ? -e.daysSince : e.days));
+      const target = this._occurrenceDate(e);
       return new Intl.DateTimeFormat(this._locale(), {
         weekday: "short",
         day: "numeric",
@@ -10030,22 +12393,22 @@
 
     // VIP/Important flags for one event, resolved against this card's usual
     // show_vip_badge/show_important_badge toggles and icon config - both can
-    // be present on the same event, since the timeline draws them in two
-    // different places (see _buildTimeline): a small overlay badge beside
-    // the axis dot's own icon, and the same beside the header/expandable
-    // Details list's icon (those two share both the same look and the same
-    // color). Which color config drives them depends on `context`:
-    // "timeline" (the default) uses the Timeline's own Badge Color fields
-    // (vip_badge_timeline/important_badge_timeline) for the axis dots only;
-    // "list" uses the same Badge Color fields the classic List layout's own
-    // corner badges use (vip_badge/important_badge) for both the header and
-    // the expandable Details list - two independent colors so the compact
-    // axis view and the two textual views can each be themed on their own.
-    _timelineBadges(e, config, context) {
-      const vipColorVar =
-        context === "list" ? "--annuals-vip-badge-color" : "--annuals-vip-badge-timeline-color";
-      const importantColorVar =
-        context === "list" ? "--annuals-important-badge-color" : "--annuals-important-badge-timeline-color";
+    // be present on the same event, since the timeline draws them in three
+    // places (see _buildTimeline): a small overlay badge beside the axis
+    // dot's own icon, and the same beside the header's and the expandable
+    // Details list's icons.
+    //
+    // All three read the Timeline's own Badge color fields
+    // (vip_badge_timeline/important_badge_timeline). The axis used to be
+    // alone in that while the header and the Details list read the *list*
+    // layout's fields instead - which the editor does not offer while the
+    // Timeline layout is selected, so those two were left on a color with
+    // no way to reach it: setting the Timeline's Badge color moved the dots
+    // and nothing else. One field per layout now, which is what the editor
+    // has always presented.
+    _timelineBadges(e, config) {
+      const vipColorVar = "--annuals-timeline-vip-badge-color";
+      const importantColorVar = "--annuals-timeline-important-badge-color";
       const vip =
         e.vip && config.show_vip_badge !== false
           ? {
@@ -10059,7 +12422,7 @@
           ? {
               icon: config.important_badge_icon || "mdi:exclamation-thick",
               colorVar: importantColorVar,
-              fallback: "var(--annuals-soon-color, var(--warning-color))",
+              fallback: "var(--annuals-status-soon-color, var(--warning-color))",
             }
           : null;
       return { vip, important };
@@ -10070,9 +12433,8 @@
     // rendered row - returns the "anim-x" class (or "" for none/unset) to
     // add to that event's axis dot.
     _timelineAnimClass(e, config) {
-      const soonDays = config.soon_days;
-      const colorCategory = e.days === 0 ? "today" : e.days > 0 && e.days <= soonDays ? "soon" : "accent";
-      const animName = (config.icon_animation || {})[colorCategory];
+      const colorCategory = timelineStatusCategory(e, config);
+      const animName = resolveIconAnimation(config, e, colorCategory);
       return animName && animName !== "none" ? `anim-${animName}` : "";
     }
 
@@ -10213,6 +12575,12 @@
       // describe the occurrence that actually just happened.
       const isPast = e.daysSince !== undefined && e.daysSince > 0;
       const occurrence = isPast && e.occurrence != null ? e.occurrence - 1 : e.occurrence;
+      // Tense follows the day the sentence is actually about, not the
+      // sensor's countdown: a trip that began on Sunday reads "was 2 days
+      // ago", where the clamped 0 would have produced "is 2 days ago".
+      // Kept apart from isPast above, which answers a different question -
+      // which occurrence the badge is numbering.
+      const readsAsPast = isPast || this._occurredAlready(e);
       // Layout -> Timeline -> Options: "Pioneer Day (US-UT)" instead of just
       // "Pioneer Day" - hyphenated country-subdivision, distinct from the
       // list layout's own "US (UT)" country-suffix format (see _row()),
@@ -10252,7 +12620,7 @@
       const dateSuffix = parenParts.length ? ` (${parenParts.join(" · ")})` : "";
       if (!(config.show_badge !== false && occurrence != null)) {
         const tmpl =
-          (isPast ? strings.timelineSentenceSimplePast : strings.timelineSentenceSimple) || "{name} is {when}";
+          (readsAsPast ? strings.timelineSentenceSimplePast : strings.timelineSentenceSimple) || "{name} is {when}";
         appendTemplate(tmpl, (s) => s.replace("{name}", displayName));
         frag.appendChild(document.createTextNode(dateSuffix));
         return frag;
@@ -10273,7 +12641,7 @@
       // of replaced) so its value can become a real <sup> element; every
       // other placeholder is a plain string substitution.
       const tmpl =
-        (isPast ? strings.timelineSentencePast : strings.timelineSentence) ||
+        (readsAsPast ? strings.timelineSentencePast : strings.timelineSentence) ||
         "{possessive} {ordinal}{sup} {type} is {when}";
       const [before, after] = tmpl.split("{sup}");
       const fill = (s) =>
@@ -10355,13 +12723,23 @@
       const header = document.createElement("div");
       header.className = "timeline-header";
       nextGroup.forEach((ev) => {
-        // "list" context, not "timeline" - the header's icon+badge is the
-        // same visual (and now the same color) as the expandable Details
-        // list's own rows; only the axis dots use the Timeline's own Badge
-        // Color fields.
-        const badges = this._timelineBadges(ev, config, "list");
+        const badges = this._timelineBadges(ev, config);
         const row = document.createElement("div");
         row.className = "timeline-header-row";
+        // The header line is an entry for this event just as the list below
+        // is, so it follows the same switch (see row_color_targets).
+        const headerTargets = rowColorTargets(
+          config,
+          ev.isExternal && ev.calendarEntityId ? CALENDAR_COLOR_PREFIX + ev.calendarEntityId : ev.type
+        );
+        const headerStatusText = timelineStatusTextColor(config, ev);
+        if (headerStatusText || headerTargets.timeline_text) {
+          const dot = timelineDotColor(config, ev.type, (this._calendarColors || {})[ev.calendarEntityId], ev.calendarEntityId);
+          row.style.setProperty(
+            "--annuals-timeline-header-color",
+            headerStatusText || typeTargetColor(config, typeColorKey(ev), "entry", dot)
+          );
+        }
         // Same icon + small overlay badge structure the expandable Details
         // list uses (see events.forEach below) - exclamation top-left, star
         // top-right of the entity's own icon, rather than the older
@@ -10372,7 +12750,7 @@
 
         const mainIcon = document.createElement("ha-icon");
         mainIcon.setAttribute("icon", ev.icon);
-        mainIcon.style.color = timelineDotColor(config, ev.type, this._calendarColors?.[ev.calendarEntityId]);
+        mainIcon.style.color = timelineIconColor(config, ev, this._calendarColors);
         // Animated via a wrapping span, not the icon itself - the icon
         // already carries its own inline transform (translateY, set below by
         // _alignTimelineIconToText), and a CSS animation targeting the same
@@ -10559,7 +12937,7 @@
         // not fixed to the left edge, once any past event is on the axis.
         const ratio = (axisDaysOf(e) + maxPast) / totalSpan;
         const size = sizes[i];
-        const badges = this._timelineBadges(e, config, "timeline");
+        const badges = this._timelineBadges(e, config);
 
         const dotWrap = document.createElement("div");
         dotWrap.className = "timeline-dot-wrap" + (isNext ? " is-next" : "");
@@ -10577,7 +12955,7 @@
           // Filling the circle with the VIP badge color itself instead
           // (always red by default, regardless of event type) was the bug
           // report this fixed.
-          circle.style.background = timelineDotColor(config, e.type, this._calendarColors?.[e.calendarEntityId]);
+          circle.style.background = timelineIconColor(config, e, this._calendarColors);
           const vipIcon = document.createElement("ha-icon");
           vipIcon.setAttribute("icon", badges.vip.icon);
           // Explicit inline color, not just the CARD_STYLE default
@@ -10588,7 +12966,7 @@
           // whatever color the circle itself is), but a configured color now
           // actually takes effect on the star, same as it already did for
           // the Important glyph beside it.
-          vipIcon.style.color = `var(${badges.vip.colorVar}, #fff)`;
+          vipIcon.style.color = `var(${badges.vip.colorVar}, ${badges.vip.fallback})`;
           // display:flex directly on the ha-icon element (not just on its
           // parent) is what actually centers the glyph - ha-icon's own
           // internal layout otherwise leaves it off-center, which is what an
@@ -10609,7 +12987,7 @@
           // the edge rather than sitting in the circle.
           this._fitTimelineIcon(vipIcon, circle, { target: size * 0.94, fitBy: "both" });
         } else {
-          circle.style.background = timelineDotColor(config, e.type, this._calendarColors?.[e.calendarEntityId]);
+          circle.style.background = timelineIconColor(config, e, this._calendarColors);
         }
         dotWrap.appendChild(circle);
 
@@ -10778,12 +13156,26 @@
       events.forEach((e) => {
         const item = document.createElement("div");
         item.className = "timeline-list-item";
+        // The dot always carries the event type's color; this is what says
+        // whether the entry's text carries it too (see row_color_targets).
+        const entryTargets = rowColorTargets(
+          config,
+          e.isExternal && e.calendarEntityId ? CALENDAR_COLOR_PREFIX + e.calendarEntityId : e.type
+        );
+        const statusText = timelineStatusTextColor(config, e);
+        if (statusText || entryTargets.timeline_text) {
+          const dot = timelineDotColor(config, e.type, (this._calendarColors || {})[e.calendarEntityId], e.calendarEntityId);
+          item.style.setProperty(
+            "--annuals-timeline-list-color",
+            statusText || typeTargetColor(config, typeColorKey(e), "entry", dot)
+          );
+        }
 
         const iconWrap = document.createElement("div");
         iconWrap.className = "timeline-list-icon-wrap";
         const icon = document.createElement("ha-icon");
         icon.setAttribute("icon", e.icon);
-        icon.style.color = timelineDotColor(config, e.type, this._calendarColors?.[e.calendarEntityId]);
+        icon.style.color = timelineIconColor(config, e, this._calendarColors);
         // Same wrap-for-animation reasoning as the header icon above.
         const listAnimClass = this._timelineAnimClass(e, config);
         if (listAnimClass) {
@@ -10795,7 +13187,7 @@
           iconWrap.appendChild(icon);
         }
 
-        const badges = this._timelineBadges(e, config, "list");
+        const badges = this._timelineBadges(e, config);
         if (badges.important) {
           const excl = document.createElement("ha-icon");
           excl.className = "timeline-list-badge timeline-list-badge-important";
@@ -10901,13 +13293,26 @@
       // Which icon color category this row belongs to (past events fall
       // under "accent" unless they also happen to be today/soon) - used to
       // optionally match the row's text color to its icon color.
-      const colorCategory = iconClass || "accent";
-      const animName = (config.icon_animation || {})[colorCategory];
+      // Past beats the icon class, which only ever carries today/soon - and
+      // a past row can be neither, since those are what "past" excludes.
+      const colorCategory = isPast ? "past" : iconClass || "accent";
+      const animName = resolveIconAnimation(config, e, colorCategory);
       const iconAnimClass = animName && animName !== "none" ? ` anim-${animName}` : "";
-      const iconVisible = (config.icon_visibility || {})[colorCategory] !== false;
-      const matchClass = config.colors[`match_${colorCategory}`] ? ` match-${colorCategory}-text` : "";
+      const iconVisible =
+        statusValue(config.icon_visibility || {}, colorCategory, "accent") !== false;
+      // Three colors per row - icon, accent bar, text - resolved here and
+      // handed down as three variables, so an event type can color one of
+      // them and leave the others on the status color (see
+      // row_color_targets). Resolving them on the row rather than reading
+      // one off the icon is what lets the bar and the text keep a per-type
+      // color on a card that shows no icons at all.
+      const rowPaint = rowColors(config, e, colorCategory, this._calendarColors);
+      const matchClass = rowPaint.text ? " match-row-text" : "";
       div.className =
         "row" + (highlightClass ? ` ${highlightClass}` : "") + matchClass + (iconVisible ? "" : " icon-hidden");
+      div.style.setProperty("--annuals-row-resolved-icon-color", rowPaint.icon);
+      div.style.setProperty("--annuals-row-resolved-bar-color", rowPaint.bar);
+      if (rowPaint.text) div.style.setProperty("--annuals-row-resolved-text-color", rowPaint.text);
       // An external calendar event's own typeLabel (its source calendar's
       // name - see buildExternalEvent) always wins over the generic
       // strings.types.calendar fallback, the same way its name already
@@ -10946,7 +13351,7 @@
       if (isRecent && e.daysSince > 0) {
         when = e.daysSince === 1 ? strings.dayAgo : strings.daysAgo(e.daysSince);
       } else {
-        when = e.days === 0 ? strings.today : e.days === 1 ? strings.inDay : strings.inDays(e.days);
+        when = this._countdownText(e, strings);
       }
       // Short calendar date ("3 Aug") for the same occurrence "when" already
       // describes as a countdown - derived the same way, purely from the
@@ -10956,18 +13361,27 @@
       let dateText;
       // Same occurrence as dateText, but always a real date (never the
       // "Today" word) and in a fuller form - see ctx.fullDateText below.
-      const occurrenceDate = new Date();
-      occurrenceDate.setHours(0, 0, 0, 0);
-      occurrenceDate.setDate(
-        occurrenceDate.getDate() + (isRecent && e.daysSince > 0 ? -e.daysSince : e.days)
-      );
+      const occurrenceDate = this._occurrenceDate(e);
       const fullDateText = new Intl.DateTimeFormat(this._locale(), {
         weekday: "short",
         day: "numeric",
         month: "short",
         year: "numeric",
       }).format(occurrenceDate);
-      if (e.days === 0 && config.date_show_today !== false) {
+      // Which month, week and day this row falls in, for the three separator
+      // options - read back in _render, which is the only place that can see
+      // two rows at once and therefore the only place that can tell where any
+      // of them changes.
+      div.dataset.monthKey = `${occurrenceDate.getFullYear()}-${occurrenceDate.getMonth()}`;
+      div.dataset.weekKey = weekStartKey(
+        occurrenceDate,
+        weekStartIndex(this._hass && this._hass.locale, this._locale())
+      );
+      div.dataset.dayKey = `${div.dataset.monthKey}-${occurrenceDate.getDate()}`;
+      // Tested on the date itself rather than on a zero countdown: a
+      // multi-day event under way reports 0 for every day it runs, and
+      // "Today" against the day it started is simply the wrong date.
+      if (this._occursToday(e) && config.date_show_today !== false) {
         dateText = strings.today;
       } else {
         dateText = this._formatEventDate(occurrenceDate);
@@ -11031,11 +13445,12 @@
       if (typeLabel && showTypeLabel) typeParts.push({ text: typeLabel, calendar: !!e.isExternal });
       if (countrySuffix && config.show_type_country)
         typeParts.push({ text: countrySuffix, calendar: false });
-      if (config.show_type_time && timeText) typeParts.push({ text: timeText, calendar: true });
+      if (config.show_type_time && timeText)
+        typeParts.push({ text: timeText, calendar: true, field: "time", icon: "mdi:clock-outline" });
       if (config.show_type_location && locationText)
-        typeParts.push({ text: locationText, calendar: true });
+        typeParts.push({ text: locationText, calendar: true, field: "location", icon: "mdi:map-marker-outline" });
       if (config.show_type_description && descriptionText)
-        typeParts.push({ text: descriptionText, calendar: true });
+        typeParts.push({ text: descriptionText, calendar: true, field: "description", icon: "mdi:text-long" });
       // The same thing as one plain string, for everything that needs the
       // text rather than the markup (the {type} placeholder's neighbours,
       // tooltips, the timeline). typeLabel can be "" when
@@ -11099,6 +13514,15 @@
         // year included, rather than a second abbreviated form of what the
         // countdown already said.
         fullDateText: fullDateText,
+        // The row's occurrence as a real Date, for the column types that
+        // need the date itself rather than one of the strings already
+        // formatted from it - currently the stacked date block, which
+        // formats its three lines separately (see formatDateBlock).
+        occurrenceDate,
+        // accent/today/soon - which icon color category this row falls into,
+        // for the Accent bar column, so the bar and the icon can't disagree
+        // about it.
+        colorCategory,
         todos,
       };
       // Countdown ("when") reads as the sentence's opening word ("In 2
@@ -11343,19 +13767,22 @@
       switch (col.type) {
         case "icon": {
           const wrap = document.createElement("div");
-          wrap.className = "icon-wrap";
-          if (!iconVisible) wrap.style.display = "none";
+          wrap.className = "icon-wrap" + (iconVisible ? "" : " is-hidden");
+          // Each badge is drawn here only if its own placement says so (see
+          // badge_targets) - the same three can be on the Accent bar
+          // instead, or on both.
+          const onIcon = (badge) => badgeTargets(config, badge).icon === true;
           wrap.innerHTML = `
-            <ha-icon icon="${e.icon}" class="icon ${iconClass}${iconAnimClass}"></ha-icon>
-            ${e.vip && config.show_vip_badge !== false ? `<ha-icon class="vip-badge" icon="${config.vip_badge_icon || "mdi:star"}"></ha-icon>` : ""}
-            ${e.important && config.show_important_badge !== false ? `<ha-icon class="important-badge" icon="${config.important_badge_icon || "mdi:exclamation-thick"}"></ha-icon>` : ""}
+            <ha-icon icon="${attrText(e.icon)}" class="icon ${iconClass}${iconAnimClass}"></ha-icon>
+            ${onIcon("vip") && e.vip && config.show_vip_badge !== false ? `<ha-icon class="vip-badge" icon="${attrText(config.vip_badge_icon || "mdi:star")}"></ha-icon>` : ""}
+            ${onIcon("important") && e.important && config.show_important_badge !== false ? `<ha-icon class="important-badge" icon="${attrText(config.important_badge_icon || "mdi:exclamation-thick")}"></ha-icon>` : ""}
           `;
           // A third corner badge, on the same icon, once this event has any
           // still-open to-do item (see matchTodoItems). The icon it sits on
           // is also what completes those items when tapped - the badge is
           // deliberately small (a marker, not a target), so the whole icon
           // is the hit area rather than the badge itself.
-          if (ctx.todos.length) {
+          if (ctx.todos.length && onIcon("todo")) {
             const todoBadge = document.createElement("ha-icon");
             todoBadge.className = "todo-badge";
             todoBadge.setAttribute("icon", config.todo_badge_icon || "mdi:pin");
@@ -11368,11 +13795,16 @@
           const info = document.createElement("div");
           info.className = "info";
           const name = document.createElement("div");
-          name.className = "name";
+          name.className = "name info-name";
           name.textContent = nameText;
           const type = document.createElement("div");
-          type.className = "type";
+          type.className = "type info-type";
           type.appendChild(typeCellFragment(typeParts));
+          // Already a stacked block, so the time joins it as a further line
+          // rather than being wrapped in a second one - directly under the
+          // name, ahead of the Type line, which is what "second line under
+          // the name" means here and matches where the time sits in the
+          // single-line columns.
           info.append(name, type);
           return info;
         }
@@ -11380,10 +13812,10 @@
           const info = document.createElement("div");
           info.className = "info";
           const fullName = document.createElement("div");
-          fullName.className = "full-name";
+          fullName.className = "full-name fnt-name";
           fullName.textContent = fullNameText;
           const type = document.createElement("div");
-          type.className = "type";
+          type.className = "type fnt-type";
           type.appendChild(typeCellFragment(typeParts));
           info.append(fullName, type);
           return info;
@@ -11458,7 +13890,7 @@
           // Color/font-size/style are global (config.colors.text /
           // font_sizes.text / font_style.text, set in Colors/Fonts like
           // every other field) rather than per-column-instance, applied via
-          // the --annuals-text-color/-row-text-* CSS variables .text-col
+          // the --annuals-row-custom-text-color/-row-text-* CSS variables .text-col
           // already reads - see _render().
           const textEl = document.createElement("div");
           textEl.className = "text-col";
@@ -11480,26 +13912,93 @@
               : dateText.charAt(0).toUpperCase() + dateText.slice(1);
           return dateEl;
         }
-        // Time/location/description are the external-calendar fields and
-        // share one styling group (.calendar-col). They're simply empty for
-        // any non-external event (see _row's values.time/location/description)
-        // - rendering an empty div rather than hiding the column entirely,
-        // consistent with every other column type here.
+        // The same occurrence the Date column writes on one line, spread
+        // over three - weekday, a large day number, month (see
+        // formatDateBlock) - the way a paper agenda prints its dates. Its
+        // own column type rather than a ninth date_format, since it's a
+        // layout of the cell and not another way of writing the date:
+        // date_format keeps describing what the {date} placeholder and the
+        // Timeline render, and both stay single-line.
+        case "date_block": {
+          const blockEl = document.createElement("div");
+          blockEl.className = "date-col date-block";
+          // Always the real date, never the "Today" word date_show_today
+          // puts in the Date column: there's no sensible way to spread one
+          // word over a weekday/number/month block, and the row already
+          // says "today" through its countdown and its color.
+          if (!ctx.occurrenceDate) return blockEl;
+          const parts = formatDateBlock(ctx.occurrenceDate, this._locale());
+          for (const key of ["weekday", "day", "month"]) {
+            const line = document.createElement("span");
+            line.className = `date-block-${key}`;
+            line.textContent = parts[key];
+            blockEl.appendChild(line);
+          }
+          return blockEl;
+        }
+        // A colored bar the height of the row, in the row's own icon color
+        // category, for a list that should show at a glance which entries
+        // are today or soon. A column rather than a row-wide decoration, so
+        // it can sit wherever the columns put it - left edge, between two
+        // fields, or right edge - and so it takes part in the same shared
+        // grid tracks as everything else.
+        case "accent_bar": {
+          const bar = document.createElement("div");
+          bar.className = "accent-bar";
+          const onBar = (badge) => badgeTargets(config, badge).accent_bar === true;
+          if (!BADGE_KEYS.some(onBar)) return bar;
+          // The badges ride along with the bar rather than being a column of
+          // their own: that is what keeps them *next to* it wherever the
+          // columns put the bar, with no second track to configure and
+          // nothing left behind on a row that has no flags at all.
+          const stack = document.createElement("div");
+          stack.className = "badge-stack";
+          const addBadge = (cls, icon) => {
+            const el = document.createElement("ha-icon");
+            el.className = cls;
+            el.setAttribute("icon", icon);
+            stack.appendChild(el);
+          };
+          // Fixed top-to-bottom order, so a row with two flags and a row
+          // with three still read the same way down the column.
+          if (onBar("vip") && e.vip && config.show_vip_badge !== false) {
+            addBadge("vip-badge", config.vip_badge_icon || "mdi:star");
+          }
+          if (onBar("important") && e.important && config.show_important_badge !== false) {
+            addBadge("important-badge", config.important_badge_icon || "mdi:exclamation-thick");
+          }
+          if (onBar("todo") && ctx.todos.length) {
+            addBadge("todo-badge", config.todo_badge_icon || "mdi:pin");
+          }
+          const wrap = document.createElement("div");
+          wrap.className = "accent-bar-wrap";
+          wrap.appendChild(stack);
+          wrap.appendChild(bar);
+          return wrap;
+        }
+        // Time/location/description are the external-calendar fields, each
+        // with its own entry in the External calendar fields group - the
+        // same .calendar-line-* classes the stacked lines inside a Type cell
+        // carry, so a standalone column and an embedded line follow the one
+        // setting. They're simply empty for any non-external event (see
+        // _row's values.time/location/description) - rendering an empty div
+        // rather than hiding the column entirely, consistent with every
+        // other column type here.
         case "time": {
           const timeEl = document.createElement("div");
-          timeEl.className = "calendar-col";
+          timeEl.className = "calendar-col calendar-line-time";
           timeEl.textContent = values.time || "";
           return timeEl;
         }
         case "location": {
           const locationEl = document.createElement("div");
-          locationEl.className = "calendar-col";
+          locationEl.className = "calendar-col calendar-line-location";
           locationEl.textContent = values.location || "";
           return locationEl;
         }
         case "description": {
           const descriptionEl = document.createElement("div");
-          descriptionEl.className = "calendar-col";
+          descriptionEl.className = "calendar-col calendar-line-description";
           descriptionEl.textContent = values.description || "";
           return descriptionEl;
         }
@@ -11528,50 +14027,105 @@
 
       const card = this.shadowRoot.querySelector("ha-card");
       card.style.setProperty(
-        "--annuals-title-size",
-        config.font_size_title || "var(--annuals-title-size, 1.2em)"
+        "--annuals-card-title-size",
+        config.font_size_title || "var(--annuals-card-title-size, 1.2em)"
       );
-      if (config.colors.today) card.style.setProperty("--annuals-today-color", config.colors.today);
-      if (config.colors.soon) card.style.setProperty("--annuals-soon-color", config.colors.soon);
-      if (config.colors.accent) card.style.setProperty("--annuals-accent-color", config.colors.accent);
+      if (config.colors.today) card.style.setProperty("--annuals-status-today-color", config.colors.today);
+      if (config.colors.soon) card.style.setProperty("--annuals-status-soon-color", config.colors.soon);
+      if (config.colors.accent) card.style.setProperty("--annuals-status-accent-color", config.colors.accent);
       if (config.colors.card_title)
         card.style.setProperty("--annuals-card-title-color", config.colors.card_title);
-      if (config.colors.name) card.style.setProperty("--annuals-name-color", config.colors.name);
+      if (config.colors.no_events)
+        card.style.setProperty("--annuals-card-no-events-color", config.colors.no_events);
+      if (config.font_sizes.no_events)
+        card.style.setProperty("--annuals-card-no-events-size", config.font_sizes.no_events);
+      if (config.colors.name) card.style.setProperty("--annuals-row-name-color", config.colors.name);
       if (config.colors.type)
-        card.style.setProperty("--annuals-type-color", config.colors.type);
+        card.style.setProperty("--annuals-row-type-color", config.colors.type);
       if (config.colors.last_name)
-        card.style.setProperty("--annuals-last-name-color", config.colors.last_name);
+        card.style.setProperty("--annuals-row-last-name-color", config.colors.last_name);
       if (config.colors.full_name)
-        card.style.setProperty("--annuals-full-name-color", config.colors.full_name);
-      if (config.colors.badge) card.style.setProperty("--annuals-badge-color", config.colors.badge);
+        card.style.setProperty("--annuals-row-full-name-color", config.colors.full_name);
+      if (config.colors.badge) card.style.setProperty("--annuals-row-badge-color", config.colors.badge);
       if (config.colors.badge_background_color)
-        card.style.setProperty("--annuals-badge-bg-color", config.colors.badge_background_color);
-      if (config.colors.when) card.style.setProperty("--annuals-when-color", config.colors.when);
-      if (config.colors.text) card.style.setProperty("--annuals-text-color", config.colors.text);
-      if (config.colors.date) card.style.setProperty("--annuals-date-color", config.colors.date);
+        card.style.setProperty("--annuals-row-badge-background-color", config.colors.badge_background_color);
+      if (config.colors.when) card.style.setProperty("--annuals-row-when-color", config.colors.when);
+      if (config.colors.text) card.style.setProperty("--annuals-row-custom-text-color", config.colors.text);
+      if (config.colors.date) card.style.setProperty("--annuals-row-date-color", config.colors.date);
       if (config.colors.calendar)
-        card.style.setProperty("--annuals-calendar-color", config.colors.calendar);
+        card.style.setProperty("--annuals-row-calendar-color", config.colors.calendar);
+      // The External calendar fields group - one color, size and style set
+      // per line, each falling back to the shared `calendar` values above
+      // inside the CSS rather than here.
+      for (const field of ["time", "location", "description"]) {
+        const color = config.colors[`calendar_${field}`];
+        if (color) card.style.setProperty(`--annuals-row-calendar-${field}-color`, color);
+        const size = config.font_sizes[`calendar_${field}`];
+        if (size) card.style.setProperty(`--annuals-row-calendar-${field}-size`, size);
+      }
+      // Width/style/color per separator scale. Each is only set when the user
+      // actually filled it in, so an untouched one keeps the default baked
+      // into the CSS rule rather than being overridden with an empty value -
+      // and cleared first, so emptying a field in the editor really does go
+      // back to that default instead of leaving the last value stuck on the
+      // card's inline style.
+      for (const property of [
+        "--annuals-row-accent-bar-width",
+        "--annuals-row-accent-bar-color",
+        "--annuals-row-icon-color",
+      ]) {
+        card.style.removeProperty(property);
+      }
+      if (config.colors.icon) card.style.setProperty("--annuals-row-icon-color", config.colors.icon);
+      if (config.accent_bar_width)
+        card.style.setProperty("--annuals-row-accent-bar-width", config.accent_bar_width);
+      if (config.colors.accent_bar)
+        card.style.setProperty("--annuals-row-accent-bar-color", config.colors.accent_bar);
+      for (const [scale, prefix] of [
+        ["row-month-separator", "month_separator"],
+        ["row-week-separator", "week_separator"],
+        ["row-day-separator", "day_separator"],
+      ]) {
+        for (const [suffix, value] of [
+          ["width", config[`${prefix}_width`]],
+          ["style", config[`${prefix}_style`]],
+          ["color", config.colors[prefix]],
+          ["label-color", config.colors[`${prefix}_label`]],
+          ["label-background-color", config.colors[`${prefix}_label_background`]],
+        ]) {
+          const property = `--annuals-${scale}-${suffix}`;
+          card.style.removeProperty(property);
+          if (value) card.style.setProperty(property, value);
+        }
+      }
+      if (config.colors.past) card.style.setProperty("--annuals-status-past-color", config.colors.past);
       if (config.colors.highlight_past)
-        card.style.setProperty("--annuals-highlight-past-color", config.colors.highlight_past);
+        card.style.setProperty("--annuals-row-highlight-past-color", config.colors.highlight_past);
       if (config.colors.highlight_today)
-        card.style.setProperty("--annuals-highlight-today-color", config.colors.highlight_today);
+        card.style.setProperty("--annuals-row-highlight-today-color", config.colors.highlight_today);
       if (config.colors.highlight_soon)
-        card.style.setProperty("--annuals-highlight-soon-color", config.colors.highlight_soon);
+        card.style.setProperty("--annuals-row-highlight-soon-color", config.colors.highlight_soon);
       if (config.colors.vip_badge)
-        card.style.setProperty("--annuals-vip-badge-color", config.colors.vip_badge);
+        card.style.setProperty("--annuals-row-vip-badge-background-color", config.colors.vip_badge);
       if (config.colors.important_badge)
-        card.style.setProperty("--annuals-important-badge-color", config.colors.important_badge);
+        card.style.setProperty("--annuals-row-important-badge-background-color", config.colors.important_badge);
       if (config.colors.vip_badge_timeline)
-        card.style.setProperty("--annuals-vip-badge-timeline-color", config.colors.vip_badge_timeline);
+        card.style.setProperty("--annuals-timeline-vip-badge-color", config.colors.vip_badge_timeline);
       if (config.colors.important_badge_timeline)
         card.style.setProperty(
-          "--annuals-important-badge-timeline-color",
+          "--annuals-timeline-important-badge-color",
           config.colors.important_badge_timeline
         );
+      if (config.colors.vip_badge_fg)
+        card.style.setProperty("--annuals-row-vip-badge-color", config.colors.vip_badge_fg);
+      if (config.colors.important_badge_fg)
+        card.style.setProperty("--annuals-row-important-badge-color", config.colors.important_badge_fg);
+      if (config.colors.todo_badge_bg)
+        card.style.setProperty("--annuals-row-todo-badge-background-color", config.colors.todo_badge_bg);
       if (config.colors.todo_badge)
-        card.style.setProperty("--annuals-todo-badge-color", config.colors.todo_badge);
+        card.style.setProperty("--annuals-row-todo-badge-color", config.colors.todo_badge);
       if (config.colors.todo_badge_timeline)
-        card.style.setProperty("--annuals-todo-badge-timeline-color", config.colors.todo_badge_timeline);
+        card.style.setProperty("--annuals-timeline-todo-badge-color", config.colors.todo_badge_timeline);
       if (config.colors.timeline_header)
         card.style.setProperty("--annuals-timeline-header-color", config.colors.timeline_header);
       if (config.colors.timeline_tooltip)
@@ -11604,6 +14158,22 @@
         card.style.setProperty("--annuals-row-name-size", config.font_sizes.name);
       if (config.font_sizes.type)
         card.style.setProperty("--annuals-row-type-size", config.font_sizes.type);
+      if (config.font_sizes.info_name)
+        card.style.setProperty("--annuals-row-info-name-size", config.font_sizes.info_name);
+      if (config.colors.info_name)
+        card.style.setProperty("--annuals-row-info-name-color", config.colors.info_name);
+      if (config.font_sizes.info_type)
+        card.style.setProperty("--annuals-row-info-type-size", config.font_sizes.info_type);
+      if (config.colors.info_type)
+        card.style.setProperty("--annuals-row-info-type-color", config.colors.info_type);
+      if (config.font_sizes.full_name_type_name)
+        card.style.setProperty("--annuals-row-full-name-type-name-size", config.font_sizes.full_name_type_name);
+      if (config.colors.full_name_type_name)
+        card.style.setProperty("--annuals-row-full-name-type-name-color", config.colors.full_name_type_name);
+      if (config.font_sizes.full_name_type_type)
+        card.style.setProperty("--annuals-row-full-name-type-type-size", config.font_sizes.full_name_type_type);
+      if (config.colors.full_name_type_type)
+        card.style.setProperty("--annuals-row-full-name-type-type-color", config.colors.full_name_type_type);
       if (config.font_sizes.last_name)
         card.style.setProperty("--annuals-row-last-name-size", config.font_sizes.last_name);
       if (config.font_sizes.full_name)
@@ -11613,11 +14183,17 @@
       if (config.font_sizes.when)
         card.style.setProperty("--annuals-row-when-size", config.font_sizes.when);
       if (config.font_sizes.text)
-        card.style.setProperty("--annuals-row-text-size", config.font_sizes.text);
+        card.style.setProperty("--annuals-row-custom-text-size", config.font_sizes.text);
       if (config.font_sizes.date)
         card.style.setProperty("--annuals-row-date-size", config.font_sizes.date);
       if (config.font_sizes.calendar)
         card.style.setProperty("--annuals-row-calendar-size", config.font_sizes.calendar);
+      for (const line of ["weekday", "day", "month"]) {
+        const size = config.font_sizes[`date_block_${line}`];
+        if (size) card.style.setProperty(`--annuals-row-date-block-${line}-size`, size);
+        const color = config.colors[`date_block_${line}`];
+        if (color) card.style.setProperty(`--annuals-row-date-block-${line}-color`, color);
+      }
 
       const setFontStyle = (cssKey, style) => {
         card.style.removeProperty(`--annuals-${cssKey}-weight`);
@@ -11632,30 +14208,49 @@
         if (style.underline) card.style.setProperty(`--annuals-${cssKey}-decoration`, "underline");
         if (style.letter_spacing) card.style.setProperty(`--annuals-${cssKey}-spacing`, style.letter_spacing);
       };
-      setFontStyle("title", config.font_style.font_size_title);
+      setFontStyle("card-title", config.font_style.font_size_title);
+      setFontStyle("card-no-events", config.font_style.no_events);
       setFontStyle("row-name", config.font_style.name);
       setFontStyle("row-type", config.font_style.type);
+      setFontStyle("row-info-name", config.font_style.info_name);
+      setFontStyle("row-info-type", config.font_style.info_type);
+      setFontStyle("row-full-name-type-name", config.font_style.full_name_type_name);
+      setFontStyle("row-full-name-type-type", config.font_style.full_name_type_type);
       setFontStyle("row-last-name", config.font_style.last_name);
       setFontStyle("row-full-name", config.font_style.full_name);
       setFontStyle("row-badge", config.font_style.badge);
       setFontStyle("row-when", config.font_style.when);
-      setFontStyle("row-text", config.font_style.text);
+      setFontStyle("row-custom-text", config.font_style.text);
       setFontStyle("row-date", config.font_style.date);
+      for (const scale of ["day", "week", "month"]) {
+        const key = `${scale}_separator_label`;
+        const size = config.font_sizes[key];
+        const property = `--annuals-row-${scale}-separator-label-size`;
+        card.style.removeProperty(property);
+        if (size) card.style.setProperty(property, size);
+        setFontStyle(`row-${scale}-separator-label`, config.font_style[key]);
+      }
+      setFontStyle("row-date-block-weekday", config.font_style.date_block_weekday);
+      setFontStyle("row-date-block-day", config.font_style.date_block_day);
+      setFontStyle("row-date-block-month", config.font_style.date_block_month);
       setFontStyle("row-calendar", config.font_style.calendar);
+      setFontStyle("row-calendar-time", config.font_style.calendar_time);
+      setFontStyle("row-calendar-location", config.font_style.calendar_location);
+      setFontStyle("row-calendar-description", config.font_style.calendar_description);
       setFontStyle("timeline-header", config.font_style.timeline_header);
       setFontStyle("timeline-tooltip", config.font_style.timeline_tooltip);
       setFontStyle("timeline-list", config.font_style.timeline_list);
       setFontStyle("timeline-button", config.font_style.timeline_button);
 
       const bg = config.background;
-      card.style.removeProperty("--annuals-bg-color");
-      card.style.removeProperty("--annuals-bg-image");
-      card.style.removeProperty("--annuals-bg-size");
-      card.style.removeProperty("--annuals-bg-repeat");
-      card.style.removeProperty("--annuals-bg-opacity");
+      card.style.removeProperty("--annuals-card-background-color");
+      card.style.removeProperty("--annuals-card-background-image");
+      card.style.removeProperty("--annuals-card-background-size");
+      card.style.removeProperty("--annuals-card-background-repeat");
+      card.style.removeProperty("--annuals-card-background-opacity");
       if (bg.enabled) {
-        if (bg.color) card.style.setProperty("--annuals-bg-color", bg.color);
-        if (bg.image) card.style.setProperty("--annuals-bg-image", `url("${bg.image}")`);
+        if (bg.color) card.style.setProperty("--annuals-card-background-color", bg.color);
+        if (bg.image) card.style.setProperty("--annuals-card-background-image", `url("${bg.image}")`);
         const sizeMap = {
           cover: ["cover", "no-repeat"],
           contain: ["contain", "no-repeat"],
@@ -11663,10 +14258,10 @@
           repeat: ["auto", "repeat"],
         };
         const [size, repeat] = sizeMap[bg.size] || sizeMap.cover;
-        card.style.setProperty("--annuals-bg-size", size);
-        card.style.setProperty("--annuals-bg-repeat", repeat);
+        card.style.setProperty("--annuals-card-background-size", size);
+        card.style.setProperty("--annuals-card-background-repeat", repeat);
         const opacity = Math.max(0, Math.min(100, bg.opacity ?? 100)) / 100;
-        card.style.setProperty("--annuals-bg-opacity", String(opacity));
+        card.style.setProperty("--annuals-card-background-opacity", String(opacity));
       }
 
       const titleEl = this.shadowRoot.querySelector(".title");
@@ -11679,7 +14274,7 @@
       // timeline and the "no events" placeholder are single children that
       // must not be laid out against the previous render's column tracks.
       listEl.classList.remove("is-columns");
-      listEl.style.removeProperty("--annuals-row-template");
+      listEl.style.removeProperty("--annuals-row-grid-template");
       listEl.innerHTML = "";
 
       // Which categories get a highlighted row background is controlled
@@ -11690,7 +14285,10 @@
       if (!combined.length) {
         const empty = document.createElement("div");
         empty.className = "empty";
-        empty.textContent = strings.noEvents;
+        // Settings -> General. Trimmed so a field holding only spaces
+        // counts as empty rather than blanking the placeholder out.
+        const custom = (config.no_events_text || "").trim();
+        empty.textContent = custom || strings.noEvents;
         listEl.appendChild(empty);
       } else if (config.layout_style === "timeline") {
         listEl.appendChild(this._buildTimeline(combined, strings));
@@ -11706,9 +14304,64 @@
         // would be the opposite of what it's for.
         if (config.columns_compact !== true) {
           listEl.classList.add("is-columns");
-          listEl.style.setProperty("--annuals-row-template", rowColumnTemplate(config));
+          listEl.style.setProperty("--annuals-row-grid-template", rowColumnTemplate(config));
         }
-        combined.forEach((e) => listEl.appendChild(this._row(e, strings)));
+        // Switching off "Show icon" for one category only (Layout -> Icons)
+        // used to take that row's icon cell out of the grid entirely, so
+        // every field behind it slid one track to the left while the rows
+        // of the other two categories stayed put. The cell now keeps its
+        // place and only its contents are hidden, which holds the column's
+        // width for the rows that still have an icon. Only when no category
+        // shows one at all is the column genuinely worth reclaiming - that
+        // is what this class marks, and it applies to every row equally, so
+        // the list stays aligned there too.
+        const iconVis = config.icon_visibility || {};
+        if (["accent", "today", "soon"].every((key) => iconVis[key] === false)) {
+          listEl.classList.add("icons-off");
+        }
+        // A separator is drawn *above* the first row of each new month, so
+        // the very first row never gets one - there is no month above it to
+        // separate from. Rows keep the order _visibleEvents already put them
+        // in; this only marks where that order crosses a month boundary,
+        // which is why a card sorted by something other than date simply
+        // ends up with more (or no) separators rather than a wrong grouping.
+        // Coarsest boundary wins: a row that begins a month begins a week and
+        // a day too, and stacking all three rules on it would read as a
+        // heavier divider than the ones below, which is backwards.
+        const previous = { monthKey: null, weekKey: null, dayKey: null };
+        const scales = [
+          ["month_separators", "monthKey", "month-start"],
+          ["week_separators", "weekKey", "week-start"],
+          ["day_separators", "dayKey", "day-start"],
+        ];
+        combined.forEach((e) => {
+          const rowEl = this._row(e, strings);
+          for (const [option, key, className] of scales) {
+            if (config[option] === true && previous[key] !== null && rowEl.dataset[key] !== previous[key]) {
+              rowEl.classList.add(className);
+              // The rule can carry the boundary's own name. Read off dayKey,
+              // which _row already wrote as "year-month-date" - the row has
+              // no other date left by the time two of them can be compared,
+              // and re-deriving it here would be a second answer to a
+              // question _row has already answered.
+              const scale = className.replace("-start", "");
+              if (config[`${scale}_separator_label`] === true) {
+                const [y, m, d] = String(rowEl.dataset.dayKey).split("-").map(Number);
+                const label = separatorLabelText(
+                  scale,
+                  new Date(y, m, d),
+                  strings,
+                  this._locale(),
+                  weekStartIndex(this._hass && this._hass.locale, this._locale())
+                );
+                if (label) rowEl.dataset.sepLabel = label;
+              }
+              break;
+            }
+          }
+          for (const [, key] of scales) previous[key] = rowEl.dataset[key];
+          listEl.appendChild(rowEl);
+        });
       }
     }
   }
@@ -11722,7 +14375,10 @@
     {
       key: "layout",
       icon: "mdi:view-dashboard-outline",
-      groups: ["display", "fonts", "colors", "icons", "background", "timeline"],
+      // Six tabs in a 3x2 grid (see .tabs, which is repeat(3, 1fr)), read
+      // row by row: what both layouts share, then one tab per layout, then
+      // the three that dress whichever layout is active.
+      groups: ["display", "list", "timeline", "design", "highlight", "background"],
     },
   ];
 
@@ -11731,12 +14387,121 @@
     { key: "events", icon: "mdi:calendar-star" },
     { key: "period", icon: "mdi:calendar-range" },
     { key: "display", icon: "mdi:eye-outline" },
-    { key: "fonts", icon: "mdi:format-size" },
-    { key: "colors", icon: "mdi:palette" },
-    { key: "icons", icon: "mdi:shape-outline" },
-    { key: "background", icon: "mdi:image" },
+    { key: "list", icon: "mdi:format-list-bulleted" },
     { key: "timeline", icon: "mdi:chart-timeline-variant" },
+    { key: "design", icon: "mdi:palette" },
+    { key: "highlight", icon: "mdi:star-outline" },
+    { key: "background", icon: "mdi:image" },
   ];
+
+  // The Design tab, one entry per element the card can draw. Color and font
+  // used to be two separate tabs, which meant configuring one element's
+  // appearance in two places; here each element is a single block - its
+  // color, its size plus the four style toggles, and its letter spacing -
+  // and _applyLayoutStyleVisibility shows or hides the block as a whole.
+  // `color`/`font` are the config keys (they differ only for the card
+  // title); the three *Key/Desc fields name strings.editor entries.
+  const DESIGN_ELEMENTS = [
+    { id: "card_title", color: "card_title", font: "font_size_title", labelKey: "fontCardTitle", colorDesc: "cardTitleColorDesc", fontDesc: "fontCardTitleDesc" },
+    // The line the card shows in place of the list when it has nothing
+    // to list (its wording is Settings -> General). Like the title it is
+    // the card's own text rather than a row column's, so it sits next to
+    // it here and is never hidden by what the columns happen to be.
+    { id: "no_events", color: "no_events", font: "no_events", labelKey: "noEventsLabel", colorDesc: "noEventsColorDesc", fontDesc: "noEventsFontDesc" },
+    { id: "name", color: "name", font: "name", labelKey: "colorName", colorDesc: "colorNameDesc", fontDesc: "fontNameDesc" },
+    { id: "last_name", color: "last_name", font: "last_name", labelKey: "colorLastName", colorDesc: "colorLastNameDesc", fontDesc: "fontLastNameDesc" },
+    { id: "full_name", color: "full_name", font: "full_name", labelKey: "colorFullName", colorDesc: "colorFullNameDesc", fontDesc: "fontFullNameDesc" },
+    { id: "type", color: "type", font: "type", labelKey: "colorType", colorDesc: "colorTypeDesc", fontDesc: "fontTypeDesc" },
+    // The two combined columns: a heading with one indented block per line,
+    // since each column stacks two fields that are styled independently.
+    {
+      group: "info",
+      labelKey: "columnTypeInfo",
+      descKey: "combinedColorDesc",
+      members: [
+        { id: "info_name", color: "info_name", font: "info_name", labelKey: "colorName", colorDesc: "combinedColorDesc", fontDesc: "combinedFontDesc" },
+        { id: "info_type", color: "info_type", font: "info_type", labelKey: "colorType", colorDesc: "combinedColorDesc", fontDesc: "combinedFontDesc" },
+      ],
+    },
+    {
+      group: "full_name_type",
+      labelKey: "columnTypeFullNameType",
+      descKey: "combinedColorDesc",
+      members: [
+        { id: "full_name_type_name", color: "full_name_type_name", font: "full_name_type_name", labelKey: "colorFullName", colorDesc: "combinedColorDesc", fontDesc: "combinedFontDesc" },
+        { id: "full_name_type_type", color: "full_name_type_type", font: "full_name_type_type", labelKey: "colorType", colorDesc: "combinedColorDesc", fontDesc: "combinedFontDesc" },
+      ],
+    },
+    {
+      id: "badge",
+      color: "badge",
+      font: "badge",
+      labelKey: "colorBadge",
+      colorDesc: "colorBadgeDesc",
+      fontDesc: "fontBadgeDesc",
+      colorOptions: { bgToggle: true },
+      // The badge is the one element with a second color: the pill behind
+      // it, shown only while "Background" above is on.
+      extra: { color: "badge_background_color", labelKey: "colorBadgeBackground", colorDesc: "colorBadgeBackgroundDesc" },
+    },
+    { id: "when", color: "when", font: "when", labelKey: "colorWhen", colorDesc: "colorWhenDesc", fontDesc: "fontWhenDesc" },
+    { id: "date", color: "date", font: "date", labelKey: "colorDate", colorDesc: "colorDateDesc", fontDesc: "fontDateDesc" },
+    // Date and Date block are two different columns in Row columns, so
+    // these three get a heading of their own rather than sitting under Date.
+    {
+      group: "date_block",
+      labelKey: "columnTypeDateBlock",
+      descKey: "dateBlockColorDesc",
+      members: [
+        { id: "date_block_weekday", color: "date_block_weekday", font: "date_block_weekday", labelKey: "dateBlockWeekday", colorDesc: "dateBlockColorDesc", fontDesc: "dateBlockFontDesc" },
+        // No Uppercase on the day: it is a number, so the toggle would be a
+        // control that visibly does nothing.
+        { id: "date_block_day", color: "date_block_day", font: "date_block_day", labelKey: "dateBlockDay", colorDesc: "dateBlockColorDesc", fontDesc: "dateBlockFontDesc", fontOptions: { noUppercase: true } },
+        { id: "date_block_month", color: "date_block_month", font: "date_block_month", labelKey: "dateBlockMonth", colorDesc: "dateBlockColorDesc", fontDesc: "dateBlockFontDesc" },
+      ],
+    },
+    // The other agenda column, and the one element with no text of its own:
+    // a bar has a width where everything else has a font. Same block shape
+    // all the same, so it reads as one more element rather than a stray
+    // settings box - see _buildDesignBody, which builds this one by hand.
+    { id: "icon", custom: "icon", labelKey: "columnTypeIcon", colorDesc: "designIconColorDesc" },
+    { id: "accent_bar", custom: "accent_bar", labelKey: "columnTypeAccentBar", colorDesc: "accentBarColorDesc" },
+    // The three lines an external calendar event adds under its name. Time,
+    // Location and Description are three separate toggles in Row columns,
+    // so one shared entry could not tell them apart. Hidden entirely while
+    // no external calendar is configured.
+    {
+      group: "calendar",
+      labelKey: "colorCalendar",
+      descKey: "colorCalendarDesc",
+      members: [
+        { id: "calendar_time", color: "calendar_time", font: "calendar_time", labelKey: "columnTypeTime", colorDesc: "colorCalendarDesc", fontDesc: "fontCalendarDesc" },
+        { id: "calendar_location", color: "calendar_location", font: "calendar_location", labelKey: "columnTypeLocation", colorDesc: "colorCalendarDesc", fontDesc: "fontCalendarDesc" },
+        { id: "calendar_description", color: "calendar_description", font: "calendar_description", labelKey: "columnTypeDescription", colorDesc: "colorCalendarDesc", fontDesc: "fontCalendarDesc" },
+      ],
+    },
+    // Timeline layout only - see _applyLayoutStyleVisibility, which hides
+    // these four whenever layout_style isn't "timeline".
+    { id: "timeline_header", color: "timeline_header", font: "timeline_header", labelKey: "timelineHeaderLabel", colorDesc: "timelineHeaderColorDesc", fontDesc: "timelineHeaderFontDesc" },
+    { id: "timeline_tooltip", color: "timeline_tooltip", font: "timeline_tooltip", labelKey: "timelineTooltipLabel", colorDesc: "timelineTooltipColorDesc", fontDesc: "timelineTooltipFontDesc" },
+    { id: "timeline_list", color: "timeline_list", font: "timeline_list", labelKey: "timelineListLabel", colorDesc: "timelineListColorDesc", fontDesc: "timelineListFontDesc" },
+    { id: "timeline_button", color: "timeline_button", font: "timeline_button", labelKey: "timelineButtonLabel", colorDesc: "timelineButtonColorDesc", fontDesc: "timelineButtonFontDesc" },
+    // The axis itself and the rule between groups: a width and a stroke
+    // style where the text elements have a font, so both are built by hand
+    // (see _buildDesignBody) into the same block shape as everything else.
+    { id: "timeline_line", custom: "line", widthKey: "timeline_line_width", styleKey: "timeline_line_style", colorKey: "timeline_line", labelKey: "timelineLineHeading" },
+    { id: "timeline_divider", custom: "line", widthKey: "timeline_divider_width", styleKey: "timeline_divider_style", colorKey: "timeline_divider", labelKey: "timelineDividerHeading" },
+    // Last: unlike every element above it, Custom text isn't one of the
+    // card's own fields but whatever a Custom text column was told to write
+    // - so it reads as the odd one out at the top of the list.
+    { id: "text", color: "text", font: "text", labelKey: "colorText", colorDesc: "colorTextDesc", fontDesc: "fontTextDesc" },
+  ];
+
+  // Flat list of every element block, groups unwrapped - what the visibility
+  // pass and the wiring both walk.
+  const DESIGN_ELEMENTS_FLAT = DESIGN_ELEMENTS.flatMap((entry) =>
+    entry.group ? entry.members : [entry]
+  );
 
   const EDITOR_STYLE = `
     .super-panel {
@@ -11838,6 +14603,25 @@
       border-bottom: 1px solid var(--divider-color, #e0e0e0);
     }
     .section-heading:first-child { margin-top: 0; }
+    /* A section heading that carries its own on/off switch (the three
+       separator blocks): title and its "i" on the left, switch pushed to the
+       right edge, all still sitting on the heading's own underline. */
+    .section-heading.separator-heading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .separator-heading .toggle {
+      margin-left: auto;
+      /* The heading's uppercase letter-spacing would otherwise apply to the
+         switch's own box as trailing space. */
+      letter-spacing: normal;
+    }
+    /* The switch reveals these; hidden with display:none rather than removed
+       so their wiring survives being toggled off and on again. */
+    .separator-fields {
+      margin-bottom: 8px;
+    }
     /* The "Row columns" heading is the first child of its own wrapper div,
        so the generic :first-child reset above would zero its top margin -
        but it isn't the first thing in the panel (Show/Hide precedes it), so
@@ -11847,6 +14631,36 @@
       font-size: 0.85em;
       opacity: 0.7;
       margin: -4px 0 12px;
+    }
+    /* The starting-point buttons above the columns list. Wrapping rather
+       than a fixed grid: the labels are translated, and three of them fit
+       on one line in some languages and not in others. */
+    .column-presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .preset-chip {
+      padding: 6px 14px;
+      border: 1px solid var(--divider-color, rgba(127, 127, 127, 0.4));
+      border-radius: 16px;
+      background: transparent;
+      color: var(--primary-text-color);
+      font: inherit;
+      font-size: 0.85em;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .preset-chip:hover {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+    .preset-chip.active {
+      border-color: var(--primary-color);
+      background: var(--primary-color);
+      color: var(--text-primary-color, #fff);
+      font-weight: 600;
     }
     .columns-list { margin-bottom: 10px; }
     /* The to-do list picker is the one entity selector immediately followed
@@ -12003,6 +14817,58 @@
       padding-left: 12px;
       border-left: 2px solid var(--divider-color, #e0e0e0);
     }
+    /* A sub-row that is itself inside a sub-row - the letter-spacing line of
+       an already-indented font row (the Date block's three lines). One more
+       step in, so it reads as belonging to the row above it rather than as
+       another member of the group. */
+    .sub-field-row-nested { margin-left: 32px; }
+    /* Design tab: one block per element - its name, then color, font and
+       letter spacing indented under it - with air between blocks so a run
+       of them doesn't read as one long list of unrelated rows. */
+    /* Each of the four style toggles labels itself in the style it turns on -
+       a bold "Bold", an italic "Italic" and so on - so the row shows what the
+       switches do without reading a word of it. */
+    .toggle-label-bold { font-weight: 700; }
+    .toggle-label-italic { font-style: italic; }
+    .toggle-label-uppercase { text-transform: uppercase; }
+    .toggle-label-underline { text-decoration: underline; }
+    .design-element,
+    .design-group { margin-top: 20px; }
+    .design-body > div > *:first-child { margin-top: 0; }
+    .design-group .design-element { margin-top: 0; }
+    .design-element-sub { margin-left: 16px; }
+    /* A rule under the titles that head a block, the same one
+       .section-heading draws, so a long list reads as a list of blocks. Not
+       under an indented name inside a group: that one heads only the two
+       rows directly beneath it, and a line there cuts its own block in half
+       rather than separating it from anything. */
+    .design-body .group-label-row {
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--divider-color, #e0e0e0);
+    }
+    .design-element-sub > .group-label-row {
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+    /* One gap under every title, so a group heading sits as far above the
+       first name in it as that name sits above its own Color row. */
+    .design-body .group-label-row {
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+    .design-body .group-label-row + .sub-field-row,
+    .design-body .group-label-row + .design-element { margin-top: 0; }
+    /* Names the indented group that follows it and has no control of its
+       own, so the gap a field row leaves for one would just be a hole.
+       The extra top margin sets it apart from the field above - it starts a
+       group rather than continuing that one - and the first row of the group
+       has to give back .sub-field-row's -8px pull, which exists to tuck a
+       sub-row under its parent field and here would tuck the label away. */
+    .group-label-row {
+      margin-top: 20px;
+      margin-bottom: 0;
+    }
+    .group-label-row + .sub-field-row { margin-top: 0; }
     .sub-field-row .field-label { font-size: 0.8em; }
     .sub-field-row .field-label ha-icon,
     .sub-field-row .tooltip-anchor ha-icon { --mdc-icon-size: 14px; }
@@ -12029,6 +14895,7 @@
     }
     .field-label {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       gap: 4px;
       margin-bottom: 6px;
@@ -12039,7 +14906,59 @@
        that category's own heading line (field-label already spans the full
        row width) rather than a separate row below its color/animation
        controls. */
-    .field-label-toggle { margin-left: auto; }
+    /* Every switch that shares a row's heading line sits in here, and this
+       one box is what gets pushed to the line's right end - so a row keeps
+       its switches right-aligned whether it has one or two, and hiding one
+       of them (the "Override" switch follows row colors) cannot drag the
+       other back towards the label. */
+    /* Matches the label's own text size rather than the editor's default
+       icon size, so the name and its icon read as one line. */
+    .label-icon {
+      --mdc-icon-size: 1em;
+      width: 1em;
+      height: 1em;
+      flex-shrink: 0;
+      align-self: baseline;
+    }
+    .field-label-toggles {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    /* Two bare switches side by side say nothing about which is which, so
+       the Override one carries a small label of its own. */
+    .override-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    /* The event types' three "what does this color paint" switches (Icon /
+       Accent bar / Whole row), inline in the heading line after the type's
+       name. Wraps rather than squeezing: three labelled switches next to a
+       long type name are wider than a narrow sidebar, and a wrapped line
+       reads better than three clipped labels. */
+    .target-toggles {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px 14px;
+    }
+    .target-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .target-label {
+      font-size: 12px;
+      color: var(--secondary-text-color);
+      letter-spacing: normal;
+    }
+    .override-label {
+      font-size: 12px;
+      color: var(--secondary-text-color);
+      letter-spacing: normal;
+    }
     /* The tooltip is anchored on a plain <span> wrapper, not the ha-icon
        itself - ha-icon has its own shadow root, and Chromium paints
        ::after content generated on shadow-hosting elements in a way that
@@ -12226,6 +15145,20 @@
       cursor: pointer;
       flex-shrink: 0;
     }
+    /* border:none above only removes the border around the *control*; the
+       colored area inside it is a separate shadow part the browser draws
+       with a grey frame and a few pixels of padding of its own. At 28-36px
+       that frame is a sizeable share of the square, and it mutes the color
+       enough that a swatch no longer reads as the same color the card
+       actually renders - reported as "the icon colors look different from
+       the swatch". These two rules hand the whole square to the color. */
+    .field-input-row input[type="color"]::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+    .field-input-row input[type="color"]::-webkit-color-swatch {
+      border: none;
+      border-radius: 6px;
+    }
     .toggle-group {
       display: flex;
       align-items: center;
@@ -12238,6 +15171,15 @@
       justify-content: flex-start;
       gap: 12px;
       margin-bottom: 16px;
+    }
+    /* The label has to span the rest of the line, not just its own text:
+       field-label-toggles pushes itself to the right end with margin-left:
+       auto, and on a content-width label there is no right end to reach -
+       the switches ended up sitting immediately after the text instead of
+       aligned with every other row's. */
+    .toggle-row > .field-label {
+      flex: 1;
+      min-width: 0;
     }
     /* The explicit display:flex above beats the UA stylesheet's
        [hidden]{display:none} on specificity ties, so setting .hidden = true
@@ -12484,6 +15426,11 @@
         this._config = defaultConfig({ ...this._config, [key]: ev.detail.value || "" });
         this._emit();
       });
+      // Carries the field key across the swap, so anything that looks a row
+      // up by [data-field] (see _applyLayoutStyleVisibility, which hides the
+      // badge icon rows while their badge is switched off) still finds it
+      // once the plain input has been replaced by the picker.
+      picker.dataset.field = key;
       input.replaceWith(picker);
       this._iconPickers = this._iconPickers || {};
       this._iconPickers[key] = picker;
@@ -12678,7 +15625,12 @@
       body.innerHTML =
         this._fieldRowHtml("title", "text", strings.editor.titlePlaceholder) +
         this._visibilityRowHtml("hide_title") +
-        this._actionSelectorSplitHtml(["tap_action", "hold_action"]) +
+        // Under the title pair, since it is the card's other piece of
+        // fixed wording - and the one it falls back to when the list it
+        // was given turns out to be empty.
+        this._fieldRowHtml("no_events_text", "text", strings.noEvents) +
+        // Tap/hold live under Layout -> List view instead: they drive the
+        // list row's own click handling, and the timeline has no row to tap.
         this._actionSelectorSplitHtml(["date_format", "language"]) +
         // Directly under the Date format dropdown it belongs to, in the
         // same left-hand column.
@@ -12690,29 +15642,20 @@
       // rather than "Show", but still drives the same show_title config key
       // as before (checked means show_title === false) so no config
       // migration is needed.
-      const hideRow = body.querySelector('input[data-visibility="hide_title"]').closest(".toggle-row");
-      hideRow.querySelector(".label-text").textContent = strings.editor.hideCardTitle;
-      const hideTooltip = hideRow.querySelector(".tooltip-anchor");
-      if (hideTooltip) hideTooltip.dataset.tooltip = strings.editor.hideCardTitleDesc;
-      const hideToggle = hideRow.querySelector('input[data-visibility="hide_title"]');
-      hideToggle.addEventListener("change", () => {
-        this._config = defaultConfig({ ...this._config, show_title: !hideToggle.checked });
-        this._emit();
-      });
-
-      this._upgradeActionSelector(
+      this._wireVisibilityRow(
         body,
-        "tap_action",
-        strings.editor.tapAction,
-        strings.editor.tapActionDesc,
-        { action: "more-info" }
+        "hide_title",
+        strings.editor.hideCardTitle,
+        strings.editor.hideCardTitleDesc,
+        { apply: (config, checked) => ({ ...config, show_title: !checked }) }
       );
-      this._upgradeActionSelector(
+
+      this._wireFieldRow(
         body,
-        "hold_action",
-        strings.editor.holdAction,
-        strings.editor.holdActionDesc,
-        { action: "none" }
+        "no_events_text",
+        strings.editor.noEventsText,
+        strings.editor.noEventsTextDesc,
+        (v) => v
       );
 
       this._upgradeSelectField(
@@ -12728,7 +15671,12 @@
       // empty space under the Language dropdown - which is exactly where
       // someone who just looked for their own language and didn't find it
       // is looking.
-      const linkCol = body.querySelectorAll(".field-row-split")[2].children[1];
+      // Found through the toggle rather than by counting split rows, which
+      // silently pointed at the wrong one as soon as a row above it moved
+      // elsewhere.
+      const linkCol = body
+        .querySelector('input[data-visibility="date_show_today"]')
+        .closest(".field-row-split").children[1];
       linkCol.classList.add("align-bottom");
       const link = document.createElement("a");
       link.className = "editor-link";
@@ -12740,16 +15688,12 @@
       link.rel = "noopener noreferrer";
       linkCol.appendChild(link);
 
-      const todayRow = body
-        .querySelector('input[data-visibility="date_show_today"]')
-        .closest(".toggle-row");
-      todayRow.querySelector(".label-text").textContent = strings.editor.dateShowToday;
-      todayRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.dateShowTodayDesc;
-      const todayToggle = todayRow.querySelector('input[data-visibility="date_show_today"]');
-      todayToggle.addEventListener("change", () => {
-        this._config = defaultConfig({ ...this._config, date_show_today: todayToggle.checked });
-        this._emit();
-      });
+      this._wireVisibilityRow(
+        body,
+        "date_show_today",
+        strings.editor.dateShowToday,
+        strings.editor.dateShowTodayDesc
+      );
 
       // "" first, and labelled rather than left blank, so the default reads
       // as a deliberate choice ("follow the viewer") instead of an empty
@@ -12788,10 +15732,30 @@
       }));
     }
 
+    // Every pane's own sync, in one place. Both paths through
+    // _syncEditorInputs need all of them - the one that has just built the
+    // form and the one refreshing an existing one - and they used to spell
+    // the list out separately. Adding a pane meant remembering both, which
+    // is the same "one caller forgot" shape that left font rows unlabelled
+    // and visibility rows without a tooltip.
+    _syncAllInputs() {
+      this._syncGeneralInputs();
+      this._syncEventsInputs();
+      this._syncPeriodInputs();
+      this._syncColorInputs();
+      this._syncIconsInputs();
+      this._syncFontInputs();
+      this._syncDisplayInputs();
+      this._syncBackgroundInputs();
+      this._syncTimelineInputs();
+      this._applyLayoutStyleVisibility();
+    }
+
     _syncGeneralInputs() {
       this._syncFieldRow("title", this._config.title || "");
       const hideToggle = this.shadowRoot.querySelector('input[data-visibility="hide_title"]');
       if (hideToggle) hideToggle.checked = this._config.show_title === false;
+      this._syncFieldRow("no_events_text", this._config.no_events_text || "");
       this._syncActionSelector("tap_action", this._config.tap_action || { action: "more-info" });
       this._syncActionSelector("hold_action", this._config.hold_action || { action: "none" });
       const languageSelect = (this._selectFields || {}).language;
@@ -12937,20 +15901,12 @@
         // single independent on/off switch like this one).
         const mergeWrapper = document.createElement("div");
         mergeWrapper.innerHTML = this._visibilityTwoColHtml(["holiday_merge_observed"], []);
-        this._holidayMergeRowEl = mergeWrapper.querySelector(
-          'input[data-visibility="holiday_merge_observed"]'
-        ).closest(".toggle-row");
-        const mergeLabelEl = this._holidayMergeRowEl.querySelector(".label-text");
-        if (mergeLabelEl) mergeLabelEl.textContent = strings.editor.holidayMergeObserved;
-        const mergeTooltipEl = this._holidayMergeRowEl.querySelector(".tooltip-anchor");
-        if (mergeTooltipEl) mergeTooltipEl.dataset.tooltip = strings.editor.holidayMergeObservedDesc;
-        const mergeToggleEl = this._holidayMergeRowEl.querySelector(
-          'input[data-visibility="holiday_merge_observed"]'
-        );
-        mergeToggleEl.addEventListener("change", () => {
-          this._config = defaultConfig({ ...this._config, holiday_merge_observed: mergeToggleEl.checked });
-          this._emit();
-        });
+        this._holidayMergeRowEl = this._wireVisibilityRow(
+          mergeWrapper,
+          "holiday_merge_observed",
+          strings.editor.holidayMergeObserved,
+          strings.editor.holidayMergeObservedDesc
+        ).row;
         body.appendChild(mergeWrapper);
 
         // The other two holiday-only display choices: collapse the same
@@ -12958,22 +15914,12 @@
         // country/region reads as codes or spelled out.
         const regionsWrapper = document.createElement("div");
         regionsWrapper.innerHTML = this._visibilityTwoColHtml(["holiday_merge_regions"], []);
-        const regionsRow = regionsWrapper
-          .querySelector('input[data-visibility="holiday_merge_regions"]')
-          .closest(".toggle-row");
-        regionsRow.querySelector(".label-text").textContent = strings.editor.holidayMergeRegions;
-        regionsRow.querySelector(".tooltip-anchor").dataset.tooltip =
-          strings.editor.holidayMergeRegionsDesc;
-        const regionsToggle = regionsRow.querySelector(
-          'input[data-visibility="holiday_merge_regions"]'
+        const { row: regionsRow } = this._wireVisibilityRow(
+          regionsWrapper,
+          "holiday_merge_regions",
+          strings.editor.holidayMergeRegions,
+          strings.editor.holidayMergeRegionsDesc
         );
-        regionsToggle.addEventListener("change", () => {
-          this._config = defaultConfig({
-            ...this._config,
-            holiday_merge_regions: regionsToggle.checked,
-          });
-          this._emit();
-        });
         body.appendChild(regionsWrapper);
         this._holidayRegionsRowEl = regionsRow;
 
@@ -13061,16 +16007,12 @@
       );
       const todoCompleteWrap = document.createElement("div");
       todoCompleteWrap.innerHTML = this._visibilityTwoColHtml(["todo_complete_from_card"], []);
-      const todoCompleteRow = todoCompleteWrap
-        .querySelector('input[data-visibility="todo_complete_from_card"]')
-        .closest(".toggle-row");
-      todoCompleteRow.querySelector(".label-text").textContent = strings.editor.todoCompleteFromCard;
-      todoCompleteRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.todoCompleteFromCardDesc;
-      const todoCompleteInput = todoCompleteRow.querySelector('input[data-visibility="todo_complete_from_card"]');
-      todoCompleteInput.addEventListener("change", () => {
-        this._config = defaultConfig({ ...this._config, todo_complete_from_card: todoCompleteInput.checked });
-        this._emit();
-      });
+      this._wireVisibilityRow(
+        todoCompleteWrap,
+        "todo_complete_from_card",
+        strings.editor.todoCompleteFromCard,
+        strings.editor.todoCompleteFromCardDesc
+      );
       body.appendChild(todoCompleteWrap);
 
       const calendarsHeading = document.createElement("div");
@@ -13374,17 +16316,8 @@
         next_event_day_only: [strings.editor.nextEventDayOnly, strings.editor.nextEventDayOnlyDesc],
       };
       for (const key of Object.keys(periodVisLabels)) {
-        const row = body.querySelector(`input[data-visibility="${key}"]`).closest(".toggle-row");
         const [label, desc] = periodVisLabels[key];
-        row.querySelector(".label-text").textContent = label;
-        const tooltipEl = row.querySelector(".tooltip-anchor");
-        if (tooltipEl) tooltipEl.dataset.tooltip = desc;
-
-        const toggle = row.querySelector(`input[data-visibility="${key}"]`);
-        toggle.addEventListener("change", () => {
-          this._config = defaultConfig({ ...this._config, [key]: toggle.checked });
-          this._emit();
-        });
+        this._wireVisibilityRow(body, key, label, desc);
       }
 
       return body;
@@ -13410,9 +16343,9 @@
         events: [strings.editor.groupEvents, strings.editor.groupEventsDesc],
         period: [strings.editor.groupPeriod, strings.editor.groupPeriodDesc],
         display: [strings.editor.groupDisplay, strings.editor.groupDisplayDesc],
-        fonts: [strings.editor.fonts, ""],
-        colors: [strings.editor.colors, ""],
-        icons: [strings.editor.colorsIconsHeading, ""],
+        list: [strings.editor.groupListView, strings.editor.groupListViewDesc],
+        design: [strings.editor.groupDesign, ""],
+        highlight: [strings.editor.highlightHeading, ""],
         background: [strings.editor.cardBackgroundTabTitle, ""],
         timeline: [strings.editor.groupTimeline, strings.editor.groupTimelineDesc],
       };
@@ -13449,7 +16382,6 @@
           </span>
         </div>
       `;
-      const matchToggle = options.matchToggle ? toggleGroupHtml("match") : "";
       const bgToggle = options.bgToggle ? toggleGroupHtml("bg") : "";
       // Sits inline in the heading line itself (field-label is the row's
       // full-width first line, label text + "i" tooltip) rather than as its
@@ -13463,14 +16395,68 @@
           </label>
         `
         : "";
+      // Sits in the same heading line, left of the "Show icon" switch, with
+      // its own label so two bare switches side by side stay tellable apart.
+      // The background tint's on/off, inline in the Background color row's
+      // heading: the colour stays put while the tint is switched off, which
+      // is the whole reason it is a switch rather than an empty field.
+      const highlightToggle = options.highlightToggle
+        ? `
+          <label class="toggle field-label-toggle">
+            <input type="checkbox" data-highlight="${options.highlightToggle}">
+            <span class="track"></span>
+          </label>
+        `
+        : "";
+      // options.overrideToggle is "status:target" (e.g. "today:icon") - one
+      // switch per setting, so a status can take over the icon and leave
+      // the bar on the row's default.
+      const overrideToggle = options.overrideToggle
+        ? `
+          <label class="toggle field-label-toggle" data-override-for="${options.overrideToggle}">
+            <input type="checkbox" data-row-override="${options.overrideToggle}">
+            <span class="track"></span>
+          </label>
+        `
+        : "";
+      // The three "what does this color paint" switches an event type row
+      // carries (see row_color_targets). They go in the heading line with
+      // the type's name, in the same field-label-toggles box every other
+      // row's switches sit in, so the whole tab keeps one place to look for
+      // them. Both boxes wrap rather than squeezing, since three labelled
+      // switches next to a long type name can outgrow a narrow sidebar.
+      const targetToggles = options.targetToggles
+        ? `
+          <div class="target-toggles" data-targets-for="${options.targetToggles}">
+            ${ROW_COLOR_TARGET_KEYS.map(
+              (target) => `
+                <span class="target-toggle" data-target="${target}">
+                  <label class="toggle">
+                    <input type="checkbox" data-row-target="${options.targetToggles}:${target}">
+                    <span class="track"></span>
+                  </label>
+                  <span class="target-label"></span>
+                </span>
+              `
+            ).join("")}
+          </div>
+        `
+        : "";
+      // An event type's or a calendar's own icon, in front of its name, so
+      // the list reads the way the card does. Sized off the label's own
+      // font, not a fixed pixel value, so it stays with the text.
+      const leadingIcon = options.leadingIcon
+        ? `<ha-icon class="label-icon" icon="${attrText(options.leadingIcon)}"></ha-icon>`
+        : "";
       return `
         <div class="field-row${options.sub ? " sub-field-row" : ""}">
           <div class="field-label">
+            ${leadingIcon}
             <span class="label-text"></span>
             <span class="tooltip-anchor" data-tooltip="">
               <ha-icon icon="mdi:information-outline"></ha-icon>
             </span>
-            ${iconToggle}
+            ${overrideToggle || iconToggle || targetToggles || highlightToggle ? `<span class="field-label-toggles">${targetToggles}${overrideToggle}${iconToggle}${highlightToggle}</span>` : ""}
           </div>
           <div class="field-input-row">
             <div class="preset-select" data-preset-for="${key}">
@@ -13483,7 +16469,7 @@
             </div>
             <input type="text" data-color-text="${key}" placeholder="${placeholder}">
             <input type="color" data-color="${key}">
-            ${matchToggle}${bgToggle}
+            ${bgToggle}
           </div>
         </div>
       `;
@@ -13492,13 +16478,30 @@
     // Per-category (accent/today/soon) icon animation dropdown - a
     // sub-field-row directly under that category's color row, matching the
     // badge_background_color sub-row pattern elsewhere in this tab. The
-    // "Also color the text" toggle (see _colorRowHtml's old matchToggle
-    // option, before it moved here) sits inline right after the select
-    // instead of on its own row - the select carries its own narrow class
-    // (.anim-select) and the .anim-row modifier on the row itself overrides
-    // the generic "toggle-group always wraps to a full-width line" rule
-    // (see EDITOR_STYLE) so both fit on one line.
-    _animSelectRowHtml(key) {
+    // select carries its own narrow class (.anim-select) and the .anim-row
+    // modifier on the row itself overrides the generic "toggle-group always
+    // wraps to a full-width line" rule (see EDITOR_STYLE).
+    _animSelectRowHtml(key, options) {
+      options = options || {};
+      const overrideToggle = options.overrideToggle
+        ? `
+          <span class="field-label-toggles">
+            <label class="toggle field-label-toggle" data-override-for="${options.overrideToggle}">
+              <input type="checkbox" data-row-override="${options.overrideToggle}">
+              <span class="track"></span>
+            </label>
+          </span>
+        `
+        : options.enableToggle
+          ? `
+            <span class="field-label-toggles">
+              <label class="toggle field-label-toggle">
+                <input type="checkbox" data-anim-enable="${options.enableToggle}">
+                <span class="track"></span>
+              </label>
+            </span>
+          `
+          : "";
       return `
         <div class="field-row sub-field-row anim-row">
           <div class="field-label">
@@ -13506,6 +16509,7 @@
             <span class="tooltip-anchor" data-tooltip="">
               <ha-icon icon="mdi:information-outline"></ha-icon>
             </span>
+            ${overrideToggle}
           </div>
           <div class="field-input-row">
             <select class="anim-select" data-anim="${key}">
@@ -13516,16 +16520,6 @@
               <option value="spin"></option>
               <option value="flash"></option>
             </select>
-            <div class="toggle-group">
-              <label class="toggle">
-                <input type="checkbox" data-match="${key}">
-                <span class="track"></span>
-              </label>
-              <span class="toggle-label"></span>
-              <span class="tooltip-anchor" data-tooltip="">
-                <ha-icon icon="mdi:information-outline"></ha-icon>
-              </span>
-            </div>
           </div>
         </div>
       `;
@@ -13560,12 +16554,65 @@
     }
 
     _syncIconsInputs() {
-      for (const key of ["accent", "today", "soon"]) {
+      const config = this._config;
+      for (const key of STATUS_KEYS) {
+        // Past shows what it actually renders as, which for anything it has
+        // not set of its own is whatever Default is on.
         const select = this.shadowRoot.querySelector(`select[data-anim="${key}"]`);
-        if (select) select.value = this._config.icon_animation[key] || "none";
-        const toggle = this.shadowRoot.querySelector(`input[data-icon-visible="${key}"]`);
-        if (toggle) toggle.checked = this._config.icon_visibility[key] !== false;
+        if (select) select.value = statusValue(config.icon_animation, key, "accent") || "none";
+        const ov = statusOverride(config, key);
+        for (const target of STATUS_OVERRIDE_TARGETS) {
+          const box = this.shadowRoot.querySelector(
+            `input[data-row-override="${key}:${target}"]`
+          );
+          if (box) box.checked = ov[target] === true;
+        }
+        const tint = this.shadowRoot.querySelector(`.icons-body input[data-highlight="${key}"]`);
+        if (tint) tint.checked = config[`highlight_${key}`] === true;
+        this._syncColorSwatch(
+          `accent_bar_${key}`,
+          config.colors[`accent_bar_${key}`] || "",
+          STATUS_ROW_COLORS[key] || STATUS_ROW_COLORS.accent
+        );
+        this._syncColorSwatch(
+          `row_text_${key}`,
+          config.colors[`row_text_${key}`] || "",
+          STATUS_ROW_COLORS[key] || STATUS_ROW_COLORS.accent
+        );
+        this._syncColorSwatch(
+          `entry_text_${key}`,
+          config.colors[`entry_text_${key}`] || "",
+          STATUS_ROW_COLORS[key] || STATUS_ROW_COLORS.accent
+        );
+        this._syncColorSwatch(
+          `timeline_icon_${key}`,
+          config.colors[`timeline_icon_${key}`] || "",
+          STATUS_ROW_COLORS[key] || STATUS_ROW_COLORS.accent
+        );
       }
+      this._syncColorSwatch("past", config.colors.past || "", STATUS_ROW_COLORS.accent);
+      for (const [field, src] of Object.entries(this._typeSwatchBases || {})) {
+        this._syncColorSwatch(
+          field,
+          config.colors[field] || "",
+          this._typeBaseColor(src.colorKey, src.targetKey)
+        );
+      }
+    }
+
+    // The icon the card actually draws for a type, taken from the first of
+    // the user's own events of that type - there is no per-type icon in the
+    // config, each event carries its own, so this is what "the current
+    // icon" means. Falls back to the generic event icon for a type with no
+    // events yet.
+    _typeIcon(type) {
+      const states = (this._hass && this._hass.states) || {};
+      for (const id of Object.keys(states)) {
+        if (!id.startsWith(ENTITY_PREFIX)) continue;
+        const attrs = states[id].attributes || {};
+        if ((attrs.type || "custom") === type && attrs.icon) return attrs.icon;
+      }
+      return "mdi:calendar-star";
     }
 
     _matchPreset(value) {
@@ -13584,10 +16631,17 @@
     _resolveToHex(value) {
       if (!value) return null;
       if (/^#[0-9a-fA-F]{6}$/.test(value)) return value;
+      // Probed against the document, not this editor's own shadow root: the
+      // sync pass can run before the editor is in the DOM (setConfig is
+      // called on a freshly created element), and getComputedStyle on a
+      // detached node resolves nothing - every var() came back unresolved
+      // and every swatch fell through to the white below, staying white
+      // until some later hass update happened to re-run the sync. The theme
+      // variables these fallbacks name live on the document anyway.
       const probe = document.createElement("span");
       probe.style.display = "none";
       probe.style.color = value;
-      this.shadowRoot.appendChild(probe);
+      document.body.appendChild(probe);
       const rgb = getComputedStyle(probe).color;
       probe.remove();
       const m = rgb.match(/[\d.]+/g);
@@ -13629,14 +16683,35 @@
         today: "var(--error-color)",
         soon: "var(--warning-color)",
         card_title: "var(--primary-text-color)",
+        no_events: "var(--secondary-text-color)",
         name: "var(--primary-text-color)",
         last_name: "var(--primary-text-color)",
         full_name: "var(--primary-text-color)",
         type: "var(--primary-text-color)",
+        info_name: "var(--primary-text-color)",
+        info_type: "var(--secondary-text-color)",
+        full_name_type_name: "var(--primary-text-color)",
+        full_name_type_type: "var(--secondary-text-color)",
         badge: "var(--primary-text-color)",
         badge_background_color: "rgba(128, 128, 128, 0.25)",
         when: "var(--primary-text-color)",
         text: "var(--primary-text-color)",
+        // Date and Calendar fields inherit the row's own color when unset
+        // (see .date-col / .calendar-col), which is the primary text color.
+        // Without an entry here _resolveToHex has nothing to resolve and the
+        // preview falls back to plain white, which is not what those fields
+        // actually render in.
+        date: "var(--primary-text-color)",
+        // The External calendar fields group - all three lines default to the
+        // theme's secondary text color (see .calendar-line-* in CARD_STYLE).
+        calendar_time: "var(--secondary-text-color)",
+        calendar_location: "var(--secondary-text-color)",
+        calendar_description: "var(--secondary-text-color)",
+        // The Date block's own defaults - two muted lines around a
+        // full-strength number (see .date-block-* in CARD_STYLE).
+        date_block_weekday: "var(--secondary-text-color)",
+        date_block_day: "var(--primary-text-color)",
+        date_block_month: "var(--secondary-text-color)",
         timeline_header: "var(--primary-text-color)",
         timeline_tooltip: "var(--primary-text-color)",
         timeline_list: "var(--primary-text-color)",
@@ -13650,16 +16725,26 @@
         "today",
         "soon",
         "card_title",
+        "no_events",
         "name",
         "last_name",
         "full_name",
         "type",
+        "info_name",
+        "info_type",
+        "full_name_type_name",
+        "full_name_type_type",
         "badge",
         "badge_background_color",
         "when",
         "text",
         "date",
-        "calendar",
+        "date_block_weekday",
+        "date_block_day",
+        "date_block_month",
+        "calendar_time",
+        "calendar_location",
+        "calendar_description",
         "timeline_header",
         "timeline_tooltip",
         "timeline_list",
@@ -13668,12 +16753,40 @@
       ]) {
         this._syncColorSwatch(key, this._config.colors[key] || "", fallbacks[key]);
 
-        const matchToggle = this.shadowRoot.querySelector(`input[data-match="${key}"]`);
-        if (matchToggle) matchToggle.checked = this._config.colors[`match_${key}`] === true;
-
         const bgToggle = this.shadowRoot.querySelector(`input[data-bg="${key}"]`);
         if (bgToggle) bgToggle.checked = this._config.colors.badge_background !== false;
       }
+      for (const key of EVENT_TYPE_KEYS) {
+        this._syncColorSwatch(`type_${key}`, this._config.colors[`type_${key}`] || "", TIMELINE_TYPE_COLORS[key]);
+      }
+      const rowColorsToggle = this.shadowRoot.querySelector('input[data-toggle="row_colors"]');
+      if (rowColorsToggle) rowColorsToggle.checked = this._config.row_colors === true;
+      const targetKeys = EVENT_TYPE_COLOR_KEYS.concat(
+        (Array.isArray(this._config.external_calendars) ? this._config.external_calendars : []).map(
+          (id) => CALENDAR_COLOR_PREFIX + id
+        )
+      );
+      for (const key of targetKeys) {
+        const current = rowColorTargets(this._config, key);
+        for (const target of ROW_COLOR_TARGET_KEYS) {
+          const toggle = this.shadowRoot.querySelector(`input[data-row-target="${key}:${target}"]`);
+          if (toggle) toggle.checked = current[target] === true;
+        }
+      }
+      this._syncCalendarColorRows(t(this._hass));
+      this._syncBadgeBackgroundRow();
+    }
+
+    // The badge's Background color row only means anything while the badge
+    // actually has a background, so it follows the "Show background" toggle
+    // instead of sitting there greyed-in-spirit-only. Kept in the DOM rather
+    // than removed, so its wiring survives being switched off and on again.
+    _syncBadgeBackgroundRow(scope) {
+      const root = scope || this.shadowRoot;
+      const input = root.querySelector('input[data-color="badge_background_color"]');
+      if (!input) return;
+      const row = input.closest(".field-row");
+      if (row) row.style.display = this._config.colors.badge_background === false ? "none" : "";
     }
 
     _syncBackgroundInputs() {
@@ -13697,6 +16810,20 @@
 
       const opacityInput = this.shadowRoot.querySelector("input[data-bg-card-opacity]");
       if (opacityInput && !this._hasFocus(opacityInput)) opacityInput.value = bg.opacity ?? 100;
+
+      // Color, image, size and opacity all describe a background that isn't
+      // being drawn until the switch above them is on, so the switch is all
+      // this section shows until then. Kept in the DOM rather than removed,
+      // so the wiring (and the upload button's state) survives being
+      // switched off and on again.
+      const bgBody = this.shadowRoot.querySelector(".background-body");
+      if (bgBody && enabledToggle) {
+        const toggleRow = enabledToggle.closest(".toggle-row");
+        Array.from(bgBody.children).forEach((el) => {
+          if (el === toggleRow) return;
+          el.style.display = bg.enabled === true ? "" : "none";
+        });
+      }
     }
 
     _closeAllPresetMenus() {
@@ -13776,25 +16903,8 @@
         });
       });
 
-      // body-wide (not row-scoped) lookups - the "Also color the text"
-      // toggle now lives in its own sub-field-row after the animation
-      // picker (see _matchToggleRowHtml) rather than inline in this row,
-      // but bgToggle (badge's "show background") still renders inline here.
-      const matchToggle = body.querySelector(`input[data-match="${key}"]`);
-      if (matchToggle) {
-        const strings = t(this._hass);
-        const group = matchToggle.closest(".toggle-group");
-        group.querySelector(".toggle-label").textContent = strings.editor.matchTextLabel;
-        group.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.matchTextDesc;
-        matchToggle.addEventListener("change", () => {
-          this._config = defaultConfig({
-            ...this._config,
-            colors: { ...this._config.colors, [`match_${key}`]: matchToggle.checked },
-          });
-          this._emit();
-        });
-      }
-
+      // body-wide (not row-scoped) lookup - the badge's "show background"
+      // toggle renders inline in this row.
       const bgToggle = body.querySelector(`input[data-bg="${key}"]`);
       if (bgToggle) {
         const strings = t(this._hass);
@@ -13806,6 +16916,7 @@
             ...this._config,
             colors: { ...this._config.colors, badge_background: bgToggle.checked },
           });
+          this._syncBadgeBackgroundRow();
           this._emit();
         });
       }
@@ -13814,7 +16925,7 @@
     // Preset swatch colors/labels don't depend on the current config, so
     // they're painted once per color-picker row here rather than in
     // _syncColorInputs (which runs often) - shared by every body that
-    // contains a color row (colors-body and background-body), since each
+    // contains a color row (design-body and background-body), since each
     // builds its own <div class="preset-item"> markup independently.
     _paintPresetSwatches(body, strings) {
       body.querySelectorAll(".preset-item").forEach((item) => {
@@ -13829,87 +16940,207 @@
       });
     }
 
-    _buildColorsBody(strings) {
+    // One block per element (see DESIGN_ELEMENTS): the element's name, then
+    // its color, then its size plus the four style toggles, then its letter
+    // spacing. Replaces the old Fonts and Colors tabs, which split a single
+    // element's appearance across two panes.
+    _buildDesignBody(strings) {
       const body = document.createElement("div");
-      body.className = "colors-body";
+      body.className = "design-body";
 
-      const labelRows = document.createElement("div");
-      labelRows.innerHTML =
-        this._colorRowHtml("card_title", strings.editor.colorPlaceholder) +
-        this._colorRowHtml("name", strings.editor.colorPlaceholder) +
-        this._colorRowHtml("last_name", strings.editor.colorPlaceholder) +
-        this._colorRowHtml("full_name", strings.editor.colorPlaceholder) +
-        this._colorRowHtml("type", strings.editor.colorPlaceholder) +
-        this._colorRowHtml("badge", strings.editor.colorPlaceholder, { bgToggle: true }) +
-        this._colorRowHtml("badge_background_color", strings.editor.colorPlaceholder, { sub: true }) +
-        this._colorRowHtml("when", strings.editor.colorPlaceholder) +
-        this._colorRowHtml("date", strings.editor.colorPlaceholder) +
-        this._colorRowHtml("calendar", strings.editor.colorPlaceholder) +
-        // Timeline layout only - see _applyLayoutStyleVisibility, which
-        // hides these three whenever layout_style isn't "timeline".
-        this._colorRowHtml("timeline_header", strings.editor.colorPlaceholder) +
-        this._colorRowHtml("timeline_tooltip", strings.editor.colorPlaceholder) +
-        this._colorRowHtml("timeline_list", strings.editor.colorPlaceholder) +
-        this._colorRowHtml("timeline_button", strings.editor.colorPlaceholder) +
-        // Last: unlike every field above it, Custom text isn't one of the
-        // card's own fields but whatever a Custom text column was told to
-        // write - so it reads as the odd one out at the top of the list.
-        this._colorRowHtml("text", strings.editor.colorPlaceholder) +
-        // Timeline layout only, same as the four rows above - one row per
-        // event type (see EVENT_TYPE_KEYS/TIMELINE_TYPE_COLORS), each in the
-        // exact same field-row style as Header/Tooltip/etc above so it reads
-        // as one continuous list rather than a visually distinct grid.
+      const colorPh = strings.editor.colorPlaceholder;
+      const fontPh = strings.editor.fontPlaceholder;
+      const spacingPh = strings.editor.fontLetterSpacingPlaceholder;
+      // Wrapped in one element per block so the visibility pass can hide the
+      // whole thing - name, color, font, letter spacing - with a single
+      // selector instead of chasing four separate rows.
+      const elementHtml = (el, sub) =>
+        `<div class="design-element${sub ? " design-element-sub" : ""}" data-design-element="${el.id}">` +
+        this._groupLabelRowHtml(`el_${el.id}`) +
+        this._colorRowHtml(el.color, colorPh, { sub: true, ...(el.colorOptions || {}) }) +
+        (el.extra ? this._colorRowHtml(el.extra.color, colorPh, { sub: true }) : "") +
+        this._fontRowHtml(el.font, fontPh, spacingPh, { sub: true, ...(el.fontOptions || {}) }) +
+        `</div>`;
+      // The Accent bar has no text, so a width takes the font row's place.
+      // The Icon column's own block. Its Color is the row's default icon
+      // color - what every status falls back to unless it overrides - and
+      // its Animation the default animation, for the same reason.
+      const iconHtml = () =>
+        `<div class="design-element" data-design-element="icon">` +
+        this._groupLabelRowHtml("el_icon") +
+        this._colorRowHtml("accent", colorPh, { sub: true }) +
+        this._animSelectRowHtml("accent") +
+        `</div>`;
+      // Same block shape as every other element: the name on an underlined
+      // heading, the settings indented beneath it.
+      const lineHtml = (el) =>
+        `<div class="design-element" data-design-element="${el.id}">` +
+        this._groupLabelRowHtml(`el_${el.id}`) +
+        this._lineStyleRowsHtml(el.widthKey, el.colorKey, "e.g. 4px", true) +
+        `</div>`;
+      const accentBarHtml = () =>
+        `<div class="design-element" data-design-element="accent_bar">` +
+        this._groupLabelRowHtml("el_accent_bar") +
+        this._colorRowHtml("accent_bar", colorPh, { sub: true }) +
+        this._fieldRowHtml("accent_bar_width", "text", "e.g. 3px", "", true) +
+        `</div>`;
+
+      const rows = document.createElement("div");
+      rows.innerHTML =
+        DESIGN_ELEMENTS.map((entry) =>
+          entry.group
+            ? `<div class="design-group" data-design-group="${entry.group}">` +
+              this._groupLabelRowHtml(`${entry.group}_group`) +
+              entry.members.map((member) => elementHtml(member, true)).join("") +
+              `</div>`
+            : entry.custom === "line"
+              ? lineHtml(entry)
+              : entry.custom === "icon"
+                ? iconHtml()
+              : entry.custom === "accent_bar"
+                ? accentBarHtml()
+              : elementHtml(entry, false)
+        ).join("") +
+        // Row colors: one color per event type, and one per embedded
+        // calendar, replacing the single Default/Today/Soon color for the
+        // whole list. Shared with the timeline, which colors its dots from
+        // the same type_* keys - the two switches above them only govern
+        // the list layout, where there is a status to override and an
+        // accent bar to feed.
         `<div class="section-heading" data-heading="event_types"></div>` +
-        EVENT_TYPE_KEYS.map((key) => this._colorRowHtml(`type_${key}`, strings.editor.colorPlaceholder)).join("");
-      body.appendChild(labelRows);
+        this._toggleRowHtml("row_colors") +
+        EVENT_TYPE_COLOR_KEYS.map((key) =>
+          this._typeBlockHtml(`type_${key}`, key, colorPh, this._typeIcon(key))
+        ).join("") +
+        `<div class="section-heading" data-heading="calendar_colors"></div>` +
+        `<div data-calendar-colors></div>`;
+      body.appendChild(rows);
 
       this._paintPresetSwatches(body, strings);
 
-      const labels = {
-        card_title: [strings.editor.fontCardTitle, strings.editor.cardTitleColorDesc],
-        name: [strings.editor.colorName, strings.editor.colorNameDesc],
-        last_name: [strings.editor.colorLastName, strings.editor.colorLastNameDesc],
-        full_name: [strings.editor.colorFullName, strings.editor.colorFullNameDesc],
-        type: [strings.editor.colorType, strings.editor.colorTypeDesc],
-        badge: [strings.editor.colorBadge, strings.editor.colorBadgeDesc],
-        badge_background_color: [
-          strings.editor.colorBadgeBackground,
-          strings.editor.colorBadgeBackgroundDesc,
-        ],
-        when: [strings.editor.colorWhen, strings.editor.colorWhenDesc],
-        text: [strings.editor.colorText, strings.editor.colorTextDesc],
-        date: [strings.editor.colorDate, strings.editor.colorDateDesc],
-        calendar: [strings.editor.colorCalendar, strings.editor.colorCalendarDesc],
-        timeline_header: [strings.editor.timelineHeaderLabel, strings.editor.timelineHeaderColorDesc],
-        timeline_tooltip: [strings.editor.timelineTooltipLabel, strings.editor.timelineTooltipColorDesc],
-        timeline_list: [strings.editor.timelineListLabel, strings.editor.timelineListColorDesc],
-        timeline_button: [strings.editor.timelineButtonLabel, strings.editor.timelineButtonColorDesc],
+      const wireElement = (el) => {
+        // The heading describes the block, not any one field in it: the
+        // color row below keeps the color tooltip, the font row its own.
+        this._wireGroupLabelRow(
+          body,
+          `el_${el.id}`,
+          strings.editor[el.labelKey],
+          strings.editor.designElementDesc
+        );
+        this._wireColorRow(body, el.color, strings.editor.designColor, strings.editor[el.colorDesc] || "");
+        if (el.extra) {
+          this._wireColorRow(
+            body,
+            el.extra.color,
+            strings.editor[el.extra.labelKey],
+            strings.editor[el.extra.colorDesc] || ""
+          );
+        }
+        this._wireFontRow(body, el.font, strings.editor.designFont, strings.editor[el.fontDesc] || "", strings);
       };
-      for (const key of [
-        "card_title",
-        "name",
-        "last_name",
-        "full_name",
-        "type",
-        "badge",
-        "badge_background_color",
-        "when",
-        "text",
-        "date",
-        "calendar",
-        "timeline_header",
-        "timeline_tooltip",
-        "timeline_list",
-        "timeline_button",
-      ]) {
-        const [label, desc] = labels[key];
-        this._wireColorRow(body, key, label, desc);
+      for (const entry of DESIGN_ELEMENTS) {
+        if (entry.custom === "line") {
+          this._wireGroupLabelRow(
+            body,
+            `el_${entry.id}`,
+            strings.editor[entry.labelKey],
+            strings.editor.designLineBlockDesc
+          );
+          const isDivider = entry.id === "timeline_divider";
+          this._wireLineStyleRows(body, entry.widthKey, entry.styleKey, entry.colorKey, {
+            width: isDivider ? strings.editor.timelineDividerWidth : strings.editor.timelineLineWidth,
+            widthDesc: isDivider
+              ? strings.editor.timelineDividerWidthDesc
+              : strings.editor.timelineLineWidthDesc,
+            style: strings.editor.lineStyleLabel,
+            color: isDivider ? strings.editor.timelineDividerColor : strings.editor.timelineLineColor,
+            colorDesc: isDivider
+              ? strings.editor.timelineDividerColorDesc
+              : strings.editor.timelineLineColorDesc,
+          });
+        } else if (entry.custom === "icon") {
+          this._wireGroupLabelRow(
+            body,
+            "el_icon",
+            strings.editor.columnTypeIcon || "Icon",
+            strings.editor.designIconBlockDesc
+          );
+          this._wireColorRow(
+            body,
+            "accent",
+            strings.editor.designColor,
+            strings.editor.designIconColorDesc || "",
+            "colors"
+          );
+          this._wireAnimSelect(body, "accent", strings);
+        } else if (entry.custom === "accent_bar") {
+          this._wireGroupLabelRow(
+            body,
+            "el_accent_bar",
+            strings.editor.columnTypeAccentBar || "Accent bar",
+            strings.editor.designBarBlockDesc
+          );
+          this._wireColorRow(
+            body,
+            "accent_bar",
+            strings.editor.designColor,
+            strings.editor.accentBarColorDesc ||
+              "One fixed color for every bar. Left empty each bar follows its own row's icon color - Accent, Today or Soon.",
+            "colors"
+          );
+          this._wireFieldRow(
+            body,
+            "accent_bar_width",
+            strings.editor.separatorWidth || "Width",
+            strings.editor.accentBarWidthDesc || "Thickness of the bar, e.g. \"3px\". Left empty it is 3px.",
+            (v) => v
+          );
+        } else if (entry.group) {
+          // Same for a group: its members each have a block of their own
+          // below, so the heading says that rather than repeating one of
+          // their color tooltips verbatim three times over.
+          this._wireGroupLabelRow(
+            body,
+            `${entry.group}_group`,
+            strings.editor[entry.labelKey],
+            strings.editor.designGroupDesc
+          );
+          entry.members.forEach(wireElement);
+        } else {
+          wireElement(entry);
+        }
       }
+
+      // Also here, not only in _syncColorInputs: that runs on hass updates
+      // and when the Design tab is opened, so a card loaded with the badge
+      // background already off showed the Background color row until
+      // something else happened to trigger a sync.
+      this._syncBadgeBackgroundRow(body);
 
       const eventTypesHeading = body.querySelector('[data-heading="event_types"]');
       if (eventTypesHeading) eventTypesHeading.textContent = strings.editor.eventTypesHeading;
-      for (const key of EVENT_TYPE_KEYS) {
-        this._wireColorRow(body, `type_${key}`, strings.typesPlural[key] || strings.types[key] || key, strings.editor.eventTypeColorDesc);
+      const calendarColorsHeading = body.querySelector('[data-heading="calendar_colors"]');
+      if (calendarColorsHeading) {
+        calendarColorsHeading.textContent = strings.editor.calendarColorsHeading || "Embedded calendars";
+      }
+      this._wireToggleRow(
+        body,
+        "row_colors",
+        strings.editor.rowColorsLabel,
+        strings.editor.rowColorsDesc,
+        (config, checked) => ({ ...config, row_colors: checked })
+      );
+      for (const key of EVENT_TYPE_COLOR_KEYS) {
+        this._wireColorRow(
+          body,
+          `type_${key}`,
+          strings.typesPlural[key] || strings.types[key] || key,
+          strings.editor.eventTypeRowColorDesc || strings.editor.eventTypeColorDesc
+        );
+        this._wireRowColorTargets(body, key, strings);
+        this._wireTypeBlockColors(body, `type_${key}`, strings, key);
+        this._wireTypeAnimSelect(body, key, strings);
+        this._wireTypeAnimToggle(body, key, strings);
       }
 
       if (!this._presetOutsideClickWired) {
@@ -13924,28 +17155,100 @@
       const body = document.createElement("div");
       body.className = "icons-body";
 
+      const ph = strings.editor.colorPlaceholder;
+      // One block per status, all four built the same way: the status' name
+      // and its two switches on the heading line, then what that status
+      // paints, indented under it. Default is the one that differs - it has
+      // no background color, because tinting every ordinary row is the
+      // card's own background (Layout -> Card background) rather than a
+      // highlight, and no Override, because overriding every ordinary row
+      // is what switching "Color rows by event type" off already does.
+      const groupHtml = (key) =>
+        `<div class="status-group" data-status-group="${key}">` +
+        `<div class="field-row group-label-row" data-group-label="status_${key}">
+           <div class="field-label">
+             <span class="label-text"></span>
+             <span class="tooltip-anchor" data-tooltip="">
+               <ha-icon icon="mdi:information-outline"></ha-icon>
+             </span>
+           </div>
+         </div>` +
+        this._colorRowHtml(`highlight_${key}`, ph, { sub: true, highlightToggle: key }) +
+        this._colorRowHtml(`row_text_${key}`, ph, { sub: true, overrideToggle: `${key}:row` }) +
+        this._colorRowHtml(`entry_text_${key}`, ph, { sub: true, overrideToggle: `${key}:timeline_row` }) +
+        this._colorRowHtml(`accent_bar_${key}`, ph, {
+          sub: true,
+          overrideToggle: `${key}:accent_bar`,
+        }) +
+        this._colorRowHtml(key, ph, { sub: true, overrideToggle: `${key}:icon` }) +
+        this._colorRowHtml(`timeline_icon_${key}`, ph, {
+          sub: true,
+          overrideToggle: `${key}:timeline_icon`,
+        }) +
+        this._animSelectRowHtml(key, { overrideToggle: `${key}:animation` }) +
+        `</div>`;
+
       const rows = document.createElement("div");
-      rows.innerHTML =
-        this._colorRowHtml("accent", strings.editor.colorPlaceholder, { iconToggle: true }) +
-        this._animSelectRowHtml("accent") +
-        this._colorRowHtml("today", strings.editor.colorPlaceholder, { iconToggle: true }) +
-        this._animSelectRowHtml("today") +
-        this._colorRowHtml("soon", strings.editor.colorPlaceholder, { iconToggle: true }) +
-        this._animSelectRowHtml("soon");
+      rows.innerHTML = STATUS_KEYS.map(groupHtml).join("");
       body.appendChild(rows);
 
       this._paintPresetSwatches(body, strings);
 
       const labels = {
-        accent: [strings.editor.colorAccent, strings.editor.colorAccentDesc],
+        past: [strings.editor.highlightPast, strings.editor.statusPastDesc],
         today: [strings.editor.colorToday, strings.editor.colorTodayDesc],
         soon: [strings.editor.colorSoon, strings.editor.colorSoonDesc],
       };
-      for (const key of ["accent", "today", "soon"]) {
+      for (const key of STATUS_KEYS) {
         const [label, desc] = labels[key];
-        this._wireColorRow(body, key, label, desc);
+        const groupRow = body.querySelector(`[data-group-label="status_${key}"]`);
+        groupRow.querySelector(".label-text").textContent = label;
+        groupRow.querySelector(".tooltip-anchor").dataset.tooltip = desc || "";
+        this._wireColorRow(
+          body,
+          `highlight_${key}`,
+          strings.editor.highlightBgColor,
+          strings.editor.highlightBgColorDesc,
+          "colors"
+        );
+        this._wireHighlightToggle(body, key);
+        // Each of these three carries the same closing sentence about its
+        // switch, so the explanation sits where the switch is rather than
+        // in a label that only had room for one word.
+        const withHint = (desc) => `${desc} ${strings.editor.statusOverrideHint}`;
+        this._wireColorRow(
+          body,
+          `row_text_${key}`,
+          strings.editor.statusTextColor,
+          withHint(strings.editor.statusTextColorDesc)
+        );
+        this._wireColorRow(
+          body,
+          `entry_text_${key}`,
+          strings.editor.statusEntryTextColor,
+          withHint(strings.editor.statusEntryTextColorDesc)
+        );
+        this._wireColorRow(
+          body,
+          `accent_bar_${key}`,
+          strings.editor.statusBarColor,
+          withHint(strings.editor.statusBarColorDesc)
+        );
+        this._wireColorRow(body, key, strings.editor.statusIconColor, withHint(strings.editor.statusIconColorDesc));
+        this._wireColorRow(
+          body,
+          `timeline_icon_${key}`,
+          strings.editor.statusIconColor,
+          withHint(strings.editor.statusTimelineIconColorDesc)
+        );
         this._wireAnimSelect(body, key, strings);
-        this._wireIconVisibilityToggle(body, key, strings);
+        const animRow = body.querySelector(`select[data-anim="${key}"]`).closest(".field-row");
+        animRow.querySelector(".label-text").textContent = strings.editor.statusIconAnimation;
+        animRow.querySelector(".tooltip-anchor").dataset.tooltip =
+          strings.editor.statusIconAnimationDesc || "";
+        for (const target of STATUS_OVERRIDE_TARGETS) {
+          this._wireOverrideToggle(body, `${key}:${target}`, strings);
+        }
       }
 
       if (!this._presetOutsideClickWired) {
@@ -13956,24 +17259,326 @@
       return body;
     }
 
-    // Per-category "show icon" toggle (see icon_visibility in defaultConfig)
-    // - lives inline in that category's own field-label (see _colorRowHtml's
-    // iconToggle option), so it's wired separately from the color/preset
-    // inputs _wireColorRow already handles for the same row. Title comes
-    // from the tooltip alone (the row already has its own visible label,
-    // e.g. "Today") rather than duplicating the field-label's text.
-    _wireIconVisibilityToggle(body, key, strings) {
-      const toggle = body.querySelector(`input[data-icon-visible="${key}"]`);
-      if (!toggle) return;
-      toggle.closest("label").title = strings.editor.iconVisibleLabel || "Show icon";
-      toggle.checked = this._config.icon_visibility[key] !== false;
-      toggle.addEventListener("change", () => {
-        this._config = defaultConfig({
-          ...this._config,
-          icon_visibility: { ...this._config.icon_visibility, [key]: toggle.checked },
+    // The per-status "Override" switch (see row_color_override) - only on
+    // Today and Soon, and only meaningful while row colors are on, which is
+    // what _applyLayoutStyleVisibility gates its visibility on.
+    // The three per-type "what does this color paint" switches (see
+    // row_color_targets). Only the ones that differ from the defaults are
+    // written, and a type whose three all sit at their default drops out of
+    // the config entirely - the card fills them back in when it reads, so
+    // the saved YAML stays the list of what was actually changed.
+    _wireRowColorTargets(body, type, strings) {
+      const labels = {
+        icon: strings.editor.rowTargetIcon,
+        accent_bar: strings.editor.rowTargetAccentBar,
+        row: strings.editor.rowTargetRow,
+        timeline_text: strings.editor.rowTargetTimeline,
+      };
+      const descs = {
+        icon: strings.editor.rowTargetIconDesc,
+        accent_bar: strings.editor.rowTargetAccentBarDesc,
+        row: strings.editor.rowTargetRowDesc,
+        timeline_text: strings.editor.rowTargetTimelineDesc,
+      };
+      const current = rowColorTargets(this._config, type);
+      for (const target of ROW_COLOR_TARGET_KEYS) {
+        const toggle = body.querySelector(`input[data-row-target="${type}:${target}"]`);
+        if (!toggle) continue;
+        const wrap = toggle.closest(".target-toggle");
+        wrap.querySelector(".target-label").textContent = labels[target] || target;
+        wrap.title = descs[target] || "";
+        toggle.checked = current[target] === true;
+        toggle.addEventListener("change", () => {
+          const entry = {};
+          for (const other of ROW_COLOR_TARGET_KEYS) {
+            const input = body.querySelector(`input[data-row-target="${type}:${other}"]`);
+            if (input && input.checked !== ROW_COLOR_TARGET_DEFAULTS[other]) {
+              entry[other] = input.checked;
+            }
+          }
+          const targets = { ...(this._config.row_color_targets || {}) };
+          if (Object.keys(entry).length) targets[type] = entry;
+          else delete targets[type];
+          this._config = defaultConfig({ ...this._config, row_color_targets: targets });
+          this._emit();
         });
+      }
+    }
+
+    // The background tint's on/off switch (highlight_past/today/soon), which
+    // now rides in the Background color row's heading rather than owning a
+    // row of its own - so the colour it governs sits right beside it.
+    _wireHighlightToggle(body, key) {
+      const toggle = body.querySelector(`input[data-highlight="${key}"]`);
+      if (!toggle) return;
+      toggle.checked = this._config[`highlight_${key}`] === true;
+      toggle.addEventListener("change", () => {
+        this._config = defaultConfig({ ...this._config, [`highlight_${key}`]: toggle.checked });
+        this._emit();
+        this._applyLayoutStyleVisibility();
+      });
+    }
+
+    // The per-type animation select (see type_animation). Stored only when
+    // it differs from "follow the Design default", so an untouched type
+    // leaves nothing behind in the config.
+    // What a type renders in with nothing of its own set: its configured
+    // base color if a card still carries one, otherwise the built-in color
+    // for that type - or, for an embedded calendar, the one Home Assistant
+    // stores for it. Every swatch in the block previews this.
+    _typeBaseColor(colorKey, targetKey) {
+      const configured = this._config.colors[colorKey];
+      if (configured) return configured;
+      if (colorKey.startsWith(CALENDAR_COLOR_PREFIX)) {
+        const id = colorKey.slice(CALENDAR_COLOR_PREFIX.length);
+        const own = (this._editorCalendarColors || {})[id];
+        return own ? `var(--${own}-color, ${TIMELINE_TYPE_COLORS.calendar})` : TIMELINE_TYPE_COLORS.calendar;
+      }
+      return TIMELINE_TYPE_COLORS[targetKey] || TIMELINE_TYPE_COLORS.custom;
+    }
+
+    // The four per-target colors. Each falls back to the type's own color,
+    // which is what the swatch previews while the field is empty.
+    _wireTypeBlockColors(body, colorKey, strings, targetKey) {
+      const base = this._typeBaseColor(colorKey, targetKey);
+      const rows = [
+        ["row", strings.editor.typeRowColor, strings.editor.typeRowColorDesc],
+        ["entry", strings.editor.typeEntryColor, strings.editor.typeEntryColorDesc],
+        ["bar", strings.editor.typeBarColor, strings.editor.typeBarColorDesc],
+        ["icon", strings.editor.typeIconColor, strings.editor.typeIconColorDesc],
+      ];
+      for (const [suffix, label, desc] of rows) {
+        this._wireColorRow(body, `${colorKey}_${suffix}`, label, desc, "colors");
+        this._syncColorSwatch(`${colorKey}_${suffix}`, this._config.colors[`${colorKey}_${suffix}`] || "", base);
+        this._typeSwatchBases = this._typeSwatchBases || {};
+        this._typeSwatchBases[`${colorKey}_${suffix}`] = { colorKey, targetKey };
+      }
+    }
+
+    _wireTypeAnimSelect(body, type, strings) {
+      const select = body.querySelector(`select[data-anim="type_${type}"]`);
+      if (!select) return;
+      const row = select.closest(".field-row");
+      row.querySelector(".label-text").textContent = strings.editor.statusIconAnimation;
+      row.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.typeAnimationDesc || "";
+      const optionLabels = {
+        none: strings.editor.animationNone,
+        pulse: strings.editor.animationPulse,
+        bounce: strings.editor.animationBounce,
+        shake: strings.editor.animationShake,
+        spin: strings.editor.animationSpin,
+        flash: strings.editor.animationFlash,
+      };
+      Array.from(select.options).forEach((opt) => {
+        opt.textContent = optionLabels[opt.value] || opt.value;
+      });
+      select.value = (this._config.type_animation || {})[type] || "none";
+      select.addEventListener("change", () => {
+        const all = { ...(this._config.type_animation || {}) };
+        if (select.value && select.value !== "none") all[type] = select.value;
+        else delete all[type];
+        this._config = defaultConfig({ ...this._config, type_animation: all });
         this._emit();
       });
+    }
+
+    // A type's (or calendar's) block: its name and target switches on the
+    // heading line, then a color per target and the animation. colorKey is
+    // the config key its colors live under, targetKey the one its switches
+    // and animation are stored against.
+    _typeBlockHtml(colorKey, targetKey, placeholder, icon) {
+      return (
+        this._colorRowHtml(colorKey, placeholder, { targetToggles: targetKey, leadingIcon: icon }) +
+        this._colorRowHtml(`${colorKey}_row`, placeholder, { sub: true }) +
+        this._colorRowHtml(`${colorKey}_entry`, placeholder, { sub: true }) +
+        this._colorRowHtml(`${colorKey}_bar`, placeholder, { sub: true }) +
+        this._colorRowHtml(`${colorKey}_icon`, placeholder, { sub: true }) +
+        this._animSelectRowHtml(`type_${targetKey}`, { enableToggle: `type_${targetKey}` })
+      );
+    }
+
+    // The animation's own on/off, in the row's heading like the status
+    // blocks' switches - off, the dropdown folds away and the type follows
+    // the Icon block's animation in Design.
+    _wireTypeAnimToggle(body, targetKey, strings) {
+      const toggle = body.querySelector(`input[data-anim-enable="type_${targetKey}"]`);
+      if (!toggle) return;
+      toggle.checked = ((this._config.type_animation || {})[targetKey] || "") !== "";
+      toggle.addEventListener("change", () => {
+        const all = { ...(this._config.type_animation || {}) };
+        if (toggle.checked) all[targetKey] = all[targetKey] || "none";
+        else delete all[targetKey];
+        this._config = defaultConfig({ ...this._config, type_animation: all });
+        this._emit();
+        this._applyLayoutStyleVisibility();
+      });
+    }
+
+    _wireOverrideToggle(body, key, strings) {
+      const toggle = body.querySelector(`input[data-row-override="${key}"]`);
+      if (!toggle) return;
+      const [status, target] = key.split(":");
+      toggle.checked = statusOverride(this._config, status)[target] === true;
+      toggle.addEventListener("change", () => {
+        const all = { ...(this._config.row_color_override || {}) };
+        const entry = { ...statusOverride(this._config, status), [target]: toggle.checked };
+        const base = STATUS_OVERRIDE_DEFAULTS[status] || {};
+        const kept = {};
+        for (const t of STATUS_OVERRIDE_TARGETS) {
+          if (entry[t] !== base[t]) kept[t] = entry[t];
+        }
+        const carriedOver = ((this._config.icon_animation || {})[status] || "none") !== "none";
+        if (Object.keys(kept).length) all[status] = kept;
+        else if (carriedOver) all[status] = {};
+        else delete all[status];
+        this._config = defaultConfig({ ...this._config, row_color_override: all });
+        this._emit();
+        this._applyLayoutStyleVisibility();
+      });
+    }
+
+    // A plain switch on its own row, in the same visual language as the
+    // Highlight tab's toggles. The setter is passed in because these reach
+    // different places in the config - a top-level key for one row, a key
+    // under `colors` for the next.
+    _toggleRowHtml(key) {
+      return `
+        <div class="toggle-row" data-toggle-row="${key}">
+          <label class="toggle">
+            <input type="checkbox" data-toggle="${key}">
+            <span class="track"></span>
+          </label>
+          <div class="field-label">
+            <span class="label-text"></span>
+            <span class="tooltip-anchor" data-tooltip="">
+              <ha-icon icon="mdi:information-outline"></ha-icon>
+            </span>
+          </div>
+        </div>
+      `;
+    }
+
+    // One "Show / Hide" switch row: its label, its "i", and the config key
+    // it writes. _visibilityRowHtml renders the row with both text slots
+    // empty, and every caller used to fill them by hand - ten near-identical
+    // blocks, each free to forget the tooltip, which is how two rows ended up
+    // with no "i" at all. Filling them here means a row cannot be added
+    // without them.
+    //
+    // `configKey` defaults to the row's own key; pass one where the switch
+    // reads the opposite of what it writes (Hide vs show_title) or the config
+    // spells it differently (vip_only vs show_vip_only). `apply` takes over
+    // the whole write for a switch with side effects. Returns the row and its
+    // input, for the callers that keep a reference to hide it later.
+    _wireVisibilityRow(body, key, label, desc, options) {
+      options = options || {};
+      const toggle = body.querySelector(`input[data-visibility="${key}"]`);
+      if (!toggle) return {};
+      const row = toggle.closest(".toggle-row");
+      const labelEl = row.querySelector(".label-text");
+      if (labelEl) labelEl.textContent = label || "";
+      const tooltipEl = row.querySelector(".tooltip-anchor");
+      if (tooltipEl) tooltipEl.dataset.tooltip = desc || "";
+      const apply =
+        options.apply ||
+        ((config, checked) => ({ ...config, [options.configKey || key]: checked }));
+      toggle.addEventListener("change", () => {
+        this._config = defaultConfig(apply(this._config, toggle.checked));
+        this._emit();
+      });
+      return { row, toggle };
+    }
+
+    _wireToggleRow(body, key, label, desc, apply) {
+      const toggle = body.querySelector(`input[data-toggle="${key}"]`);
+      if (!toggle) return;
+      const row = toggle.closest(".toggle-row");
+      row.querySelector(".label-text").textContent = label;
+      row.querySelector(".tooltip-anchor").dataset.tooltip = desc || "";
+      toggle.addEventListener("change", () => {
+        this._config = defaultConfig(apply(this._config, toggle.checked));
+        this._emit();
+      });
+    }
+
+    // One color row per embedded calendar, rebuilt whenever the list of
+    // calendars changes - they come from the user's own entities, so unlike
+    // every other field in this tab they cannot be written out at build
+    // time. Each row's swatch previews the color Home Assistant itself
+    // stores for that calendar, which is what an unset field renders as.
+    _syncCalendarColorRows(strings) {
+      const host = this.shadowRoot.querySelector("[data-calendar-colors]");
+      if (!host) return;
+      const calendars = Array.isArray(this._config.external_calendars)
+        ? this._config.external_calendars
+        : [];
+      const signature = JSON.stringify(calendars);
+      this._fetchEditorCalendarColors(calendars);
+      if (host.dataset.signature !== signature) {
+        host.dataset.signature = signature;
+        host.innerHTML = calendars
+          .map((id) => {
+            const state = (this._hass && this._hass.states[id]) || null;
+            const icon = (state && state.attributes.icon) || "mdi:calendar-blank";
+            return this._typeBlockHtml(
+              CALENDAR_COLOR_PREFIX + id,
+              CALENDAR_COLOR_PREFIX + id,
+              strings.editor.colorPlaceholder,
+              icon
+            );
+          })
+          .join("");
+        this._paintPresetSwatches(host, strings);
+        for (const id of calendars) {
+          const name = (this._hass && this._hass.states[id] && this._hass.states[id].attributes.friendly_name) || id;
+          this._wireColorRow(host, CALENDAR_COLOR_PREFIX + id, name, strings.editor.calendarColorDesc || "");
+          // Same three switches an event type carries - a calendar is what an
+          // external row's color comes from, so it is where they belong.
+          this._wireRowColorTargets(host, CALENDAR_COLOR_PREFIX + id, strings);
+          this._wireTypeBlockColors(host, CALENDAR_COLOR_PREFIX + id, strings, CALENDAR_COLOR_PREFIX + id);
+          this._wireTypeAnimSelect(host, CALENDAR_COLOR_PREFIX + id, strings);
+          this._wireTypeAnimToggle(host, CALENDAR_COLOR_PREFIX + id, strings);
+        }
+      }
+      for (const id of calendars) {
+        const own = (this._editorCalendarColors || {})[id];
+        this._syncColorSwatch(
+          CALENDAR_COLOR_PREFIX + id,
+          this._config.colors[CALENDAR_COLOR_PREFIX + id] || "",
+          own ? `var(--${own}-color, ${TIMELINE_TYPE_COLORS.calendar})` : TIMELINE_TYPE_COLORS.calendar
+        );
+      }
+    }
+
+    // The editor needs Home Assistant's own per-calendar colors for the same
+    // reason the card does - here to preview what an unset field renders as,
+    // rather than a white square (which is a color it never renders in).
+    // The card fetches its own copy; the two are separate elements and this
+    // is a cheap registry read, so they are not shared.
+    async _fetchEditorCalendarColors(calendars) {
+      const key = JSON.stringify(calendars);
+      if (key === this._editorCalendarColorsKey || !this._hass) return;
+      this._editorCalendarColorsKey = key;
+      if (!calendars.length) {
+        this._editorCalendarColors = {};
+        return;
+      }
+      const entries = await Promise.all(
+        calendars.map(async (entityId) => {
+          try {
+            const reg = await this._hass.callWS({
+              type: "config/entity_registry/get",
+              entity_id: entityId,
+            });
+            return [entityId, reg?.options?.calendar?.color];
+          } catch (err) {
+            return [entityId, undefined];
+          }
+        })
+      );
+      this._editorCalendarColors = Object.fromEntries(entries);
+      const strings = t(this._hass);
+      this._syncCalendarColorRows(strings);
     }
 
     _buildBackgroundBody(strings) {
@@ -14185,7 +17790,31 @@
       return body;
     }
 
-    _highlightRowHtml(key) {
+    // `badgeTargets` names a badge (vip/important/todo) and adds that
+    // badge's two placement switches to the heading line, in the same
+    // field-label-toggles box the EVENT TYPES rows use - so both sections
+    // put "what does this apply to" in the same place.
+    _highlightRowHtml(key, options) {
+      options = options || {};
+      const targets = options.badgeTargets
+        ? `
+          <span class="field-label-toggles">
+            <div class="target-toggles" data-badge-targets-for="${options.badgeTargets}">
+              ${BADGE_TARGET_KEYS.map(
+                (target) => `
+                  <span class="target-toggle" data-target="${target}">
+                    <label class="toggle">
+                      <input type="checkbox" data-badge-target="${options.badgeTargets}:${target}">
+                      <span class="track"></span>
+                    </label>
+                    <span class="target-label"></span>
+                  </span>
+                `
+              ).join("")}
+            </div>
+          </span>
+        `
+        : "";
       return `
         <div class="toggle-row">
           <label class="toggle">
@@ -14197,9 +17826,58 @@
             <span class="tooltip-anchor" data-tooltip="">
               <ha-icon icon="mdi:information-outline"></ha-icon>
             </span>
+            ${targets}
           </div>
         </div>
       `;
+    }
+
+    // A badge's two placement switches (see badge_targets). Only what
+    // differs from the defaults is written, and a badge back at both
+    // defaults drops out of the config entirely.
+    _wireBadgeTargets(body, badge, strings) {
+      const labels = {
+        icon: strings.editor.badgeTargetIcon,
+        accent_bar: strings.editor.badgeTargetAccentBar,
+      };
+      const descs = {
+        icon: strings.editor.badgeTargetIconDesc,
+        accent_bar: strings.editor.badgeTargetAccentBarDesc,
+      };
+      const current = badgeTargets(this._config, badge);
+      for (const target of BADGE_TARGET_KEYS) {
+        const toggle = body.querySelector(`input[data-badge-target="${badge}:${target}"]`);
+        if (!toggle) continue;
+        const wrap = toggle.closest(".target-toggle");
+        wrap.querySelector(".target-label").textContent = labels[target] || target;
+        wrap.title = descs[target] || "";
+        toggle.checked = current[target] === true;
+        toggle.addEventListener("change", () => {
+          const entry = {};
+          let anyOn = false;
+          for (const other of BADGE_TARGET_KEYS) {
+            const input = body.querySelector(`input[data-badge-target="${badge}:${other}"]`);
+            if (!input) continue;
+            if (input.checked) anyOn = true;
+            if (input.checked !== BADGE_TARGET_DEFAULTS[other]) entry[other] = input.checked;
+          }
+          const targets = { ...(this._config.badge_targets || {}) };
+          if (Object.keys(entry).length) targets[badge] = entry;
+          else delete targets[badge];
+          // The badge's own switch follows: with neither placement left
+          // there is nothing for it to be on for, and its settings below
+          // collapse with it (see _applyLayoutStyleVisibility). Turning a
+          // placement back on brings it back.
+          this._config = defaultConfig({
+            ...this._config,
+            badge_targets: targets,
+            [BADGE_SWITCH_KEYS[badge]]: anyOn,
+          });
+          this._emit();
+          this._syncDisplayInputs();
+          this._applyLayoutStyleVisibility();
+        });
+      }
     }
 
     _syncDisplayInputs() {
@@ -14217,36 +17895,47 @@
         if (toggle) toggle.checked = map[key] === true;
       }
       const whenClickToggle = this.shadowRoot.querySelector(
-        '.display-body input[data-visibility="when_click_shows_date"]'
+        '.list-config-body input[data-visibility="when_click_shows_date"]'
       );
       if (whenClickToggle) whenClickToggle.checked = config.when_click_shows_date === true;
       this._syncColorSwatch("highlight_past", config.colors.highlight_past || "", "var(--secondary-text-color)");
       this._syncColorSwatch(
         "highlight_today",
         config.colors.highlight_today || "",
-        "var(--annuals-today-color, var(--error-color))"
+        "var(--annuals-status-today-color, var(--error-color))"
       );
       this._syncColorSwatch(
         "highlight_soon",
         config.colors.highlight_soon || "",
-        "var(--annuals-soon-color, var(--warning-color))"
+        "var(--annuals-status-soon-color, var(--warning-color))"
       );
       this._syncColorSwatch("vip_badge", config.colors.vip_badge || "", "var(--error-color)");
       this._syncColorSwatch(
         "important_badge",
         config.colors.important_badge || "",
-        "var(--annuals-soon-color, var(--warning-color))"
+        "var(--annuals-status-soon-color, var(--warning-color))"
       );
       // #fff, not --error-color like the List field above - the Timeline's
       // VIP star sits directly on top of the dot's own colored circle (see
       // _buildTimeline), so it defaults to white for contrast rather than
       // red; the swatch preview needs to match that real fallback or it
       // shows a color the star never actually renders in when unset.
-      this._syncColorSwatch("vip_badge_timeline", config.colors.vip_badge_timeline || "", "#fff");
+      this._syncColorSwatch("vip_badge_fg", config.colors.vip_badge_fg || "", "#fff");
+      this._syncColorSwatch("important_badge_fg", config.colors.important_badge_fg || "", "#fff");
+      this._syncColorSwatch(
+        "todo_badge_bg",
+        config.colors.todo_badge_bg || "",
+        "var(--ha-card-background, var(--card-background-color))"
+      );
+      this._syncColorSwatch(
+        "vip_badge_timeline",
+        config.colors.vip_badge_timeline || "",
+        "var(--error-color)"
+      );
       this._syncColorSwatch(
         "important_badge_timeline",
         config.colors.important_badge_timeline || "",
-        "var(--annuals-soon-color, var(--warning-color))"
+        "var(--annuals-status-soon-color, var(--warning-color))"
       );
       // Both to-do swatches preview the theme's own error color, which is
       // what an unset badge actually renders in - in both layouts, unlike
@@ -14260,18 +17949,41 @@
       );
       this._syncIconField("todo_badge_icon", config.todo_badge_icon || "");
       const visMap = {
-        past: config.show_past !== false,
-        today: config.show_today !== false,
-        soon: config.show_soon !== false,
         vip_only: config.show_vip_only === true,
         important_only: config.show_important_only === true,
         todo_only: config.show_todo_only === true,
         columns_compact: config.columns_compact === true,
+        month_separators: config.month_separators === true,
+        week_separators: config.week_separators === true,
+        day_separators: config.day_separators === true,
       };
       for (const key of Object.keys(visMap)) {
         const toggle = this.shadowRoot.querySelector(`input[data-visibility="${key}"]`);
         if (toggle) toggle.checked = visMap[key];
       }
+      // The three separator blocks show or hide their Width/Style/Color rows
+      // with their own switch, which the loop above may have just flipped.
+      for (const sync of this._separatorFieldSyncs || []) sync();
+      for (const prefix of ["month_separator", "week_separator", "day_separator"]) {
+        this._syncFieldRow(`${prefix}_width`, config[`${prefix}_width`] || "");
+        this._syncColorSwatch(prefix, config.colors[prefix] || "", "var(--primary-text-color, #e1e1e1)");
+        const labelToggle = this.shadowRoot.querySelector(`input[data-toggle="${prefix}_label"]`);
+        if (labelToggle) labelToggle.checked = config[`${prefix}_label`] === true;
+        // The two swatches preview what an empty field actually renders as:
+        // the theme's text color, and the card's own background - which is
+        // what makes the plate read as a gap in the line rather than a shape.
+        this._syncColorSwatch(
+          `${prefix}_label`,
+          config.colors[`${prefix}_label`] || "",
+          "var(--primary-text-color, #e1e1e1)"
+        );
+        this._syncColorSwatch(
+          `${prefix}_label_background`,
+          config.colors[`${prefix}_label_background`] || "",
+          "var(--card-background-color)"
+        );
+      }
+      this._syncAccentBarFields();
       this._syncIconField("vip_badge_icon", config.vip_badge_icon || "");
       this._syncIconField("important_badge_icon", config.important_badge_icon || "");
       // Config may have changed from outside this editor's own commit path
@@ -14279,6 +17991,20 @@
       // rebuild the columns list from scratch so it never drifts out of
       // sync with the actual saved config.
       this._renderColumnsList();
+    }
+
+    // Its own method because the Accent bar's two fields sit in the Design
+    // tab while the switches around them are elsewhere - both tabs need to
+    // be able to refresh them without dragging the other's sync along.
+    _syncAccentBarFields() {
+      this._syncFieldRow("accent_bar_width", this._config.accent_bar_width || "");
+      // Previews the Accent category's color, which is what an unset bar
+      // renders in for every row that isn't today or soon.
+      this._syncColorSwatch(
+        "accent_bar",
+        this._config.colors.accent_bar || "",
+        "var(--annuals-status-accent-color, var(--primary-text-color))"
+      );
     }
 
     _visibilityRowHtml(key, extraClass) {
@@ -14350,6 +18076,8 @@
         badge: strings.editor.colorBadge,
         when: strings.editor.colorWhen,
         date: strings.editor.columnTypeDate || "Date",
+        date_block: strings.editor.columnTypeDateBlock || "Date block",
+        accent_bar: strings.editor.columnTypeAccentBar || "Accent bar",
         time: strings.editor.columnTypeTime || "Time",
         location: strings.editor.columnTypeLocation || "Location",
         description: strings.editor.columnTypeDescription || "Description",
@@ -14361,6 +18089,9 @@
     _buildColumnsSection(strings) {
       const section = document.createElement("div");
       section.className = "columns-section";
+      // Rebuilt from scratch with the section, so stale closures over a
+      // previous build's elements never accumulate.
+      this._separatorFieldSyncs = [];
 
       const heading = document.createElement("div");
       heading.className = "section-heading";
@@ -14371,8 +18102,35 @@
       desc.className = "columns-desc";
       desc.textContent =
         strings.editor.columnsDesc ||
-        "Add, remove, and reorder what each row shows. Custom text columns can mix free text with placeholders: {name}, {last_name}, {full_name}, {type}, {occurrence}, {when}, {date}, {country}, {time}, {location}, {description}.";
+        "Add, remove, and reorder what each row shows, or start from one of these.";
       section.appendChild(desc);
+
+      // Three starting points, so the list below can be reached in one click
+      // rather than by adding and reordering four columns by hand. Each one
+      // replaces the whole arrangement - there is nothing to merge into,
+      // since a preset *is* the arrangement - and stays editable afterward
+      // like any other time the list gets touched.
+      const presets = document.createElement("div");
+      presets.className = "column-presets";
+      for (const preset of COLUMN_PRESETS) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "preset-chip";
+        btn.dataset.columnPreset = preset.key;
+        btn.textContent = strings.editor[preset.labelKey];
+        btn.addEventListener("click", () => {
+          this._config = defaultConfig({
+            ...this._config,
+            ...(preset.config || {}),
+            columns: preset.columns.map((col) => ({ ...col })),
+          });
+          this._emit();
+          this._renderColumnsList();
+        });
+        presets.appendChild(btn);
+      }
+      section.appendChild(presets);
+      this._presetsEl = presets;
 
       const list = document.createElement("div");
       list.className = "columns-list";
@@ -14393,6 +18151,8 @@
           <option value="badge"></option>
           <option value="when"></option>
           <option value="date"></option>
+          <option value="date_block"></option>
+          <option value="accent_bar"></option>
           <option value="time"></option>
           <option value="location"></option>
           <option value="description"></option>
@@ -14425,39 +18185,170 @@
 
       const compactRow = document.createElement("div");
       compactRow.innerHTML = this._visibilityRowHtml("columns_compact", "columns-compact-row");
-      compactRow.querySelector(".label-text").textContent =
-        strings.editor.columnsCompact || "Compact (no gaps, centered)";
-      const compactTooltip = compactRow.querySelector(".tooltip-anchor");
-      if (compactTooltip) {
-        compactTooltip.dataset.tooltip =
-          strings.editor.columnsCompactDesc ||
-          "Remove the spacing between columns, center the row, and make every field match in weight and opacity - useful when the columns form one continuous sentence.";
-      }
-      const compactToggle = compactRow.querySelector('input[data-visibility="columns_compact"]');
-      compactToggle.addEventListener("change", () => {
-        // Flipping this toggle immediately swaps the whole column
-        // arrangement - Compact's own Icon/Full name/Occurrence/Type/
-        // Countdown/Date (with its space columns) turning on, or back to
-        // the plain Icon/Full name + type/Occurrence/Countdown default
-        // turning off - rather than just changing spacing/weight under
-        // whatever columns happened to be configured already. Either
-        // arrangement stays fully user-customizable afterward, same as any
-        // other time the columns list gets touched.
-        const columns = compactToggle.checked
-          ? COMPACT_DEFAULT_COLUMNS.map((c) => ({ ...c }))
-          : undefined;
-        this._config = defaultConfig({
-          ...this._config,
-          columns_compact: compactToggle.checked,
-          columns,
-        });
-        this._emit();
-        this._renderColumnsList();
-      });
+      this._wireVisibilityRow(
+        compactRow,
+        "columns_compact",
+        strings.editor.columnsCompact || "Compact (no gaps, centered)",
+        strings.editor.columnsCompactDesc ||
+          "Remove the spacing between columns, center the row, and make every field match in weight and opacity - useful when the columns form one continuous sentence.",
+        {
+          // Flipping this toggle immediately swaps the whole column
+          // arrangement - Compact's own Icon/Full name/Occurrence/Countdown
+          // (with its space columns) turning on, or back to the plain
+          // Icon/Full name + type/Occurrence/Countdown default turning off -
+          // rather than just changing spacing/weight under whatever columns
+          // happened to be configured already. Either arrangement stays fully
+          // user-customizable afterward, same as any other time the columns
+          // list gets touched.
+          apply: (config, checked) => ({
+            ...config,
+            columns_compact: checked,
+            columns: checked ? COMPACT_DEFAULT_COLUMNS.map((c) => ({ ...c })) : undefined,
+          }),
+        }
+      );
+      // The list has to be rebuilt after the swap above, which the shared
+      // wiring knows nothing about.
+      compactRow
+        .querySelector('input[data-visibility="columns_compact"]')
+        .addEventListener("change", () => this._renderColumnsList());
       section.appendChild(compactRow);
 
       this._renderColumnsList(strings);
       return section;
+    }
+
+    // The Accent bar and separator blocks, appended after the columns list's
+    // own toggles rather than built with them, so "Compact" and "Tap
+    // countdown for date" - which belong to the list of columns above - stay
+    // together instead of being pushed apart by four styling sections.
+    _appendLineSections(section, strings) {
+      // The Accent bar's own Width and Color used to sit here, above the
+      // separators. They are the bar's appearance, so they live in the
+      // Design tab with every other element's - see DESIGN_ELEMENTS. The
+      // separators stay: they describe the whole list rather than a column
+      // in it, and each is its own on/off feature rather than an element.
+
+      // One block per separator scale. Each is a section heading carrying its
+      // own on/off switch, with that scale's Width/Style/Color underneath -
+      // the same three-field shape the Timeline's own line settings use, via
+      // the same helpers - revealed only once the switch is on, so three
+      // collapsed headings is all an unused feature costs in editor height.
+      for (const [key, prefix, headingKey, descKey, labelKey] of [
+        ["day_separators", "day_separator", "daySeparators", "daySeparatorsDesc", "Day"],
+        ["week_separators", "week_separator", "weekSeparators", "weekSeparatorsDesc", "Week"],
+        ["month_separators", "month_separator", "monthSeparators", "monthSeparatorsDesc", "Month"],
+      ]) {
+        const heading = document.createElement("div");
+        heading.className = "section-heading separator-heading";
+        heading.innerHTML = `
+          <span class="separator-heading-text"></span>
+          <span class="tooltip-anchor" data-tooltip="">
+            <ha-icon icon="mdi:information-outline"></ha-icon>
+          </span>
+          <label class="toggle">
+            <input type="checkbox" data-visibility="${key}">
+            <span class="track"></span>
+          </label>
+        `;
+        heading.querySelector(".separator-heading-text").textContent = strings.editor[headingKey] || key;
+        heading.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor[descKey] || "";
+        section.appendChild(heading);
+
+        const fields = document.createElement("div");
+        fields.className = "separator-fields";
+        // The line's own three fields, then what it can say: a switch, and
+        // behind it the text and the label's two colors. Same shape as the
+        // switch above them - the rows fold away rather than sitting there
+        // configuring something that isn't drawn.
+        fields.innerHTML =
+          this._lineStyleRowsHtml(`${prefix}_width`, prefix, "e.g. 1px") +
+          this._toggleRowHtml(`${prefix}_label`) +
+          this._colorRowHtml(`${prefix}_label`, strings.editor.colorPlaceholder, { sub: true }) +
+          this._colorRowHtml(`${prefix}_label_background`, strings.editor.colorPlaceholder, { sub: true }) +
+          this._fontRowHtml(
+            `${prefix}_label`,
+            strings.editor.fontPlaceholder,
+            strings.editor.fontLetterSpacingPlaceholder,
+            { sub: true }
+          );
+        section.appendChild(fields);
+        this._wireLineStyleRows(fields, `${prefix}_width`, `${prefix}_style`, prefix, {
+          width: strings.editor.separatorWidth || "Width",
+          widthDesc: strings.editor.separatorWidthDesc || "Thickness of the line, e.g. \"1px\".",
+          style: strings.editor.lineStyleLabel || "Style",
+          color: strings.editor.separatorColor || "Color",
+          colorDesc: strings.editor.separatorColorDesc || "Color of the line.",
+        });
+        this._wireToggleRow(
+          fields,
+          `${prefix}_label`,
+          strings.editor[`separatorShow${labelKey}Label`] || `Show ${labelKey.toLowerCase()}`,
+          strings.editor[`separatorShow${labelKey}LabelDesc`] || "",
+          (config, checked) => ({ ...config, [`${prefix}_label`]: checked })
+        );
+        this._wireColorRow(
+          fields,
+          `${prefix}_label`,
+          strings.editor.separatorLabelColor || "Label color",
+          strings.editor.separatorLabelColorDesc || ""
+        );
+        this._wireColorRow(
+          fields,
+          `${prefix}_label_background`,
+          strings.editor.separatorLabelBackground || "Label background",
+          strings.editor.separatorLabelBackgroundDesc || ""
+        );
+        this._wireFontRow(
+          fields,
+          `${prefix}_label`,
+          strings.editor.designFont || "Font",
+          strings.editor.separatorLabelFontDesc || "",
+          strings
+        );
+        // The three label rows follow the label's own switch, the way the
+        // whole block follows the scale's. Hidden row by row rather than
+        // behind a wrapper, so the "first visible row sits flush under its
+        // heading" rule still sees the rows themselves.
+        const labelRows = [
+          fields.querySelector(`input[data-color="${prefix}_label"]`),
+          fields.querySelector(`input[data-color="${prefix}_label_background"]`),
+          fields.querySelector(`input[data-font="${prefix}_label"]`),
+          fields.querySelector(`input[data-letterspacing="${prefix}_label"]`),
+        ].map((el) => el && el.closest(".field-row"));
+        const syncLabelFields = () => {
+          const on = this._config[`${prefix}_label`] === true;
+          for (const row of labelRows) if (row) row.style.display = on ? "" : "none";
+        };
+        syncLabelFields();
+        fields
+          .querySelector(`input[data-toggle="${prefix}_label"]`)
+          .addEventListener("change", syncLabelFields);
+        this._separatorFieldSyncs = this._separatorFieldSyncs || [];
+        this._separatorFieldSyncs.push(syncLabelFields);
+
+        const toggle = heading.querySelector(`input[data-visibility="${key}"]`);
+        toggle.checked = this._config[key] === true;
+        const syncFields = () => {
+          fields.style.display = toggle.checked ? "" : "none";
+        };
+        syncFields();
+        toggle.addEventListener("change", () => {
+          syncFields();
+          this._config = defaultConfig({ ...this._config, [key]: toggle.checked });
+          this._emit();
+        });
+        // _syncVisibilityToggles (see _syncEditorInputs) can flip the checkbox
+        // from outside this handler - e.g. when the raw YAML editor is used
+        // and comes back - so the fields have to follow the checkbox itself,
+        // not just this one change event.
+        this._separatorFieldSyncs = this._separatorFieldSyncs || [];
+        this._separatorFieldSyncs.push(syncFields);
+      }
+      // Every other body paints its own preset swatches; this one never did,
+      // so the separator colors' preset menu listed its colors as empty
+      // squares. Painted here, after all three blocks exist.
+      this._paintPresetSwatches(section, strings);
     }
 
     // Expands a column's suffixable fields (e.g. "info" -> name+type) into
@@ -14550,7 +18441,7 @@
               ? strings.editor.columnTypeName || "Name"
               : entry.fieldKey === "full_name"
                 ? strings.editor.columnTypeFullName || "Full name"
-                : strings.editor.columnTypeSubtitle || "Type"
+                : strings.editor.columnTypeType || "Type"
           })`
         : strings.editor.suffixLabel || "Suffix";
     }
@@ -14624,6 +18515,7 @@
           });
         }
       });
+      this._applySuffixGroupVisibility(row);
     }
 
     // One <group> block (a header + its own toggles) - every toggle in
@@ -14696,9 +18588,29 @@
       return JSON.stringify(columns.map((c) => [c.id, c.type]));
     }
 
+    // Which starting point the list currently matches, if any - so the
+    // buttons say where the card stands rather than only where it can go.
+    // Compared on what a preset actually decides (the column types, in
+    // order, plus a text column's own template), not on the ids, which the
+    // add button numbers per card.
+    _syncPresetChips() {
+      if (!this._presetsEl) return;
+      const shape = (columns) =>
+        columns.map((col) => (col.type === "text" ? `text:${col.template || ""}` : col.type)).join("|");
+      const current = shape(this._currentColumns());
+      for (const btn of this._presetsEl.querySelectorAll(".preset-chip")) {
+        const preset = COLUMN_PRESETS.find((p) => p.key === btn.dataset.columnPreset);
+        btn.classList.toggle("active", Boolean(preset) && shape(preset.columns) === current);
+      }
+    }
+
     _renderColumnsList(strings) {
       strings = strings || t(this._hass);
       if (!this._columnsListEl) return;
+      // Every path that changes the columns ends here - the preset buttons,
+      // the add/remove/reorder controls and the Compact switch alike - so
+      // this is the one place the chips need refreshing from.
+      this._syncPresetChips();
       const columns = this._currentColumns();
       const signature = this._columnsSignature(columns);
 
@@ -14828,21 +18740,63 @@
       // Which events appear at all (past/today/soon | VIP/Important
       // filters). The card's own title lives in Settings -> General now
       // (right under the title text field, as "Hide"), and which fields
-      // appear per row - and in what order - is the "Spalten" section
-      // below instead of a fixed icon/name/type/badge/when grid.
+      // appear per row - and in what order - is the List view tab
+      // instead of a fixed icon/name/type/badge/when grid.
       visRows.innerHTML = this._visibilityTwoColHtml(
-        ["past", "today", "soon"],
-        ["vip_only", "important_only", "todo_only"]
+        ["vip_only", "important_only"],
+        ["todo_only"]
       );
       body.appendChild(visRows);
 
-      // Row columns only apply to the classic list layout - the timeline
-      // layout has its own fixed header+axis shape, so this section would
-      // just be dead configuration with nothing to affect. Always built
-      // (rather than conditionally, the way this used to work) so
-      // _applyLayoutStyleVisibility can just hide/show it like every other
-      // layout-specific field, instead of this body needing its own special
-      // case for it.
+      const visLabels = {
+        vip_only: [strings.editor.visibilityVipOnly, strings.editor.visibilityVipOnlyDesc],
+        important_only: [strings.editor.visibilityImportantOnly, strings.editor.visibilityImportantOnlyDesc],
+        todo_only: [strings.editor.visibilityTodoOnly, strings.editor.visibilityTodoOnlyDesc],
+      };
+      const visConfigKeys = {
+        vip_only: "show_vip_only",
+        important_only: "show_important_only",
+        todo_only: "show_todo_only",
+      };
+      for (const key of Object.keys(visConfigKeys)) {
+        const [label, desc] = visLabels[key];
+        this._wireVisibilityRow(body, key, label, desc, { configKey: visConfigKeys[key] });
+      }
+
+      return body;
+    }
+
+    // Row columns: what each row of the classic list layout is made of, in
+    // what order, plus the separators and the accent bar that go with them.
+    // The timeline layout has its own fixed header+axis shape, so this whole
+    // tab is empty there and says so via its panel description.
+    _buildListBody(strings) {
+      const body = document.createElement("div");
+      body.className = "list-config-body";
+
+      // What tapping a row does, above what a row is made of. Both only
+      // drive the list layout's own row click handling - the timeline has
+      // no "row" to tap, since its axis dots (click for a tooltip) and its
+      // header sentence (no click at all) have their own fixed behavior -
+      // so they moved here out of Settings -> General.
+      const actions = document.createElement("div");
+      actions.innerHTML = this._actionSelectorSplitHtml(["tap_action", "hold_action"]);
+      body.appendChild(actions);
+      this._upgradeActionSelector(
+        body,
+        "tap_action",
+        strings.editor.tapAction,
+        strings.editor.tapActionDesc,
+        { action: "more-info" }
+      );
+      this._upgradeActionSelector(
+        body,
+        "hold_action",
+        strings.editor.holdAction,
+        strings.editor.holdActionDesc,
+        { action: "none" }
+      );
+
       const columnsSection = this._buildColumnsSection(strings);
       // Appended *inside* the Row columns section, not next to it: it
       // configures what that section's own Countdown column does when
@@ -14854,75 +18808,51 @@
       // lives under Timeline -> Options instead.
       const whenToggleWrap = document.createElement("div");
       whenToggleWrap.innerHTML = this._visibilityTwoColHtml(["when_click_shows_date"], []);
-      const whenToggleRow = whenToggleWrap
-        .querySelector('input[data-visibility="when_click_shows_date"]')
-        .closest(".toggle-row");
-      const whenToggleLabel = whenToggleRow.querySelector(".label-text");
-      if (whenToggleLabel) whenToggleLabel.textContent = strings.editor.whenClickShowsDate;
-      const whenToggleTip = whenToggleRow.querySelector(".tooltip-anchor");
-      if (whenToggleTip) whenToggleTip.dataset.tooltip = strings.editor.whenClickShowsDateDesc;
-      const whenToggleInput = whenToggleRow.querySelector('input[data-visibility="when_click_shows_date"]');
-      whenToggleInput.addEventListener("change", () => {
-        this._config = defaultConfig({ ...this._config, when_click_shows_date: whenToggleInput.checked });
-        this._emit();
-      });
+      this._wireVisibilityRow(
+        whenToggleWrap,
+        "when_click_shows_date",
+        strings.editor.whenClickShowsDate,
+        strings.editor.whenClickShowsDateDesc
+      );
       columnsSection.appendChild(whenToggleWrap);
+      this._appendLineSections(columnsSection, strings);
       body.appendChild(columnsSection);
 
-      const visLabels = {
-        past: [strings.editor.visibilityPast, strings.editor.visibilityPastDesc],
-        today: [strings.editor.visibilityToday, strings.editor.visibilityTodayDesc],
-        soon: [strings.editor.visibilitySoon, strings.editor.visibilitySoonDesc],
-        vip_only: [strings.editor.visibilityVipOnly, strings.editor.visibilityVipOnlyDesc],
-        important_only: [strings.editor.visibilityImportantOnly, strings.editor.visibilityImportantOnlyDesc],
-        todo_only: [strings.editor.visibilityTodoOnly, strings.editor.visibilityTodoOnlyDesc],
-      };
-      const visConfigKeys = {
-        past: "show_past",
-        today: "show_today",
-        soon: "show_soon",
-        vip_only: "show_vip_only",
-        important_only: "show_important_only",
-        todo_only: "show_todo_only",
-      };
-      for (const key of Object.keys(visConfigKeys)) {
-        const row = body.querySelector(`input[data-visibility="${key}"]`).closest(".toggle-row");
-        const [label, desc] = visLabels[key];
-        row.querySelector(".label-text").textContent = label;
-        const tooltipEl = row.querySelector(".tooltip-anchor");
-        if (tooltipEl) tooltipEl.dataset.tooltip = desc;
+      return body;
+    }
 
-        const toggle = row.querySelector(`input[data-visibility="${key}"]`);
-        const configKey = visConfigKeys[key];
-        toggle.addEventListener("change", () => {
-          this._config = defaultConfig({ ...this._config, [configKey]: toggle.checked });
-          this._emit();
-        });
-      }
+    // What makes single rows stand out: the past/today/soon tints, the
+    // VIP/Important/To-do badges, and - appended at the end, still in its
+    // own .icons-body wrapper - the leading icon those categories share.
+    // The icon is what the highlight categories actually paint in a row, so
+    // configuring it anywhere else meant setting one thing in two tabs.
+    _buildHighlightBody(strings) {
+      const body = document.createElement("div");
+      body.className = "highlight-body";
 
-      const heading = document.createElement("div");
-      heading.className = "section-heading";
-      heading.textContent = strings.editor.highlightHeading;
-      body.appendChild(heading);
+      // BADGES first: they mark a property of the event itself (VIP,
+      // Important, an open to-do), which is the thing a reader looks for
+      // before the by-date tinting below.
+      const badgesHeading = document.createElement("div");
+      badgesHeading.className = "section-heading";
+      badgesHeading.dataset.heading = "badges";
+      badgesHeading.textContent = strings.editor.badgesHeading;
+      body.appendChild(badgesHeading);
 
-      // Each highlight toggle (past/today/soon/VIP/Important) is followed
-      // by an indented sub-row for the color it controls - the tint's
-      // background color for past/today/soon, the badge icon + color for
-      // VIP/Important - so the customization reads as belonging to the
-      // toggle above it rather than as a separate peer field.
-      const rows = document.createElement("div");
-      rows.innerHTML =
-        this._highlightRowHtml("past") +
-        this._colorRowHtml("highlight_past", strings.editor.colorPlaceholder, { sub: true }) +
-        this._highlightRowHtml("today") +
-        this._colorRowHtml("highlight_today", strings.editor.colorPlaceholder, { sub: true }) +
-        this._highlightRowHtml("soon") +
-        this._colorRowHtml("highlight_soon", strings.editor.colorPlaceholder, { sub: true }) +
-        this._highlightRowHtml("vip") +
+      // Each badge: its on/off switch with the two placement switches beside
+      // it, then the glyph, the glyph's color, the disc's color, and the
+      // Timeline color. The two color halves are named the same way for all
+      // three even though the keys differ underneath - vip_badge and
+      // important_badge have always been the disc, todo_badge the glyph.
+      const badgeRows = document.createElement("div");
+      badgeRows.dataset.badgeRows = "";
+      badgeRows.innerHTML =
+        this._highlightRowHtml("vip", { badgeTargets: "vip" }) +
         this._fieldRowHtml("vip_badge_icon", "text", strings.editor.vipBadgeIconPlaceholder, "", true) +
+        this._colorRowHtml("vip_badge_fg", strings.editor.colorPlaceholder, { sub: true }) +
         this._colorRowHtml("vip_badge", strings.editor.colorPlaceholder, { sub: true }) +
         this._colorRowHtml("vip_badge_timeline", strings.editor.colorPlaceholder, { sub: true }) +
-        this._highlightRowHtml("important") +
+        this._highlightRowHtml("important", { badgeTargets: "important" }) +
         this._fieldRowHtml(
           "important_badge_icon",
           "text",
@@ -14930,31 +18860,28 @@
           "",
           true
         ) +
+        this._colorRowHtml("important_badge_fg", strings.editor.colorPlaceholder, { sub: true }) +
         this._colorRowHtml("important_badge", strings.editor.colorPlaceholder, { sub: true }) +
         this._colorRowHtml("important_badge_timeline", strings.editor.colorPlaceholder, { sub: true }) +
-        this._highlightRowHtml("todo") +
+        this._highlightRowHtml("todo", { badgeTargets: "todo" }) +
         this._fieldRowHtml("todo_badge_icon", "text", "mdi:pin", "", true) +
         this._colorRowHtml("todo_badge", strings.editor.colorPlaceholder, { sub: true }) +
+        this._colorRowHtml("todo_badge_bg", strings.editor.colorPlaceholder, { sub: true }) +
         this._colorRowHtml("todo_badge_timeline", strings.editor.colorPlaceholder, { sub: true });
-      body.appendChild(rows);
+      body.appendChild(badgeRows);
+      for (const badge of BADGE_KEYS) this._wireBadgeTargets(badgeRows, badge, strings);
 
       const labels = {
-        past: [strings.editor.highlightPast, strings.editor.highlightPastDesc],
-        today: [strings.editor.highlightToday, strings.editor.highlightTodayDesc],
-        soon: [strings.editor.highlightSoon, strings.editor.highlightSoonDesc],
         vip: [strings.editor.highlightVip, strings.editor.highlightVipDesc],
         important: [strings.editor.highlightImportant, strings.editor.highlightImportantDesc],
         todo: [strings.editor.highlightTodo, strings.editor.highlightTodoDesc],
       };
       const configKeys = {
-        past: "highlight_past",
-        today: "highlight_today",
-        soon: "highlight_soon",
         vip: "show_vip_badge",
         important: "show_important_badge",
         todo: "show_todo_badge",
       };
-      for (const key of ["past", "today", "soon", "vip", "important", "todo"]) {
+      for (const key of BADGE_KEYS) {
         const row = body.querySelector(`input[data-highlight="${key}"]`).closest(".toggle-row");
         const [label, desc] = labels[key];
         row.querySelector(".label-text").textContent = label;
@@ -14963,32 +18890,24 @@
         const toggle = row.querySelector(`input[data-highlight="${key}"]`);
         const configKey = configKeys[key];
         toggle.addEventListener("change", () => {
-          this._config = defaultConfig({ ...this._config, [configKey]: toggle.checked });
+          const next = { ...this._config, [configKey]: toggle.checked };
+          // Switching a badge back on with both its placements off would
+          // draw nothing at all, so it returns to where badges start: the
+          // event icon. Dropping the entry rather than writing icon:true
+          // keeps the config to what was actually changed.
+          if (toggle.checked && BADGE_SWITCH_KEYS[key]) {
+            const targets = badgeTargets(this._config, key);
+            if (!BADGE_TARGET_KEYS.some((t) => targets[t])) {
+              next.badge_targets = { ...(this._config.badge_targets || {}) };
+              delete next.badge_targets[key];
+            }
+          }
+          this._config = defaultConfig(next);
           this._emit();
+          this._syncDisplayInputs();
+          this._applyLayoutStyleVisibility();
         });
       }
-
-      this._wireColorRow(
-        body,
-        "highlight_past",
-        strings.editor.highlightBgColor,
-        strings.editor.highlightBgColorDesc,
-        "colors"
-      );
-      this._wireColorRow(
-        body,
-        "highlight_today",
-        strings.editor.highlightBgColor,
-        strings.editor.highlightBgColorDesc,
-        "colors"
-      );
-      this._wireColorRow(
-        body,
-        "highlight_soon",
-        strings.editor.highlightBgColor,
-        strings.editor.highlightBgColorDesc,
-        "colors"
-      );
 
       this._wireFieldRow(
         body,
@@ -15000,15 +18919,22 @@
       this._upgradeIconField(body, "vip_badge_icon");
       this._wireColorRow(
         body,
+        "vip_badge_fg",
+        strings.editor.badgeColor,
+        strings.editor.badgeColorDesc,
+        "colors"
+      );
+      this._wireColorRow(
+        body,
         "vip_badge",
-        strings.editor.vipBadgeColorList,
-        strings.editor.vipBadgeColorListDesc,
+        strings.editor.badgeBgColor,
+        strings.editor.badgeBgColorDesc,
         "colors"
       );
       this._wireColorRow(
         body,
         "vip_badge_timeline",
-        strings.editor.vipBadgeColorTimeline,
+        strings.editor.badgeColor,
         strings.editor.vipBadgeColorTimelineDesc,
         "colors"
       );
@@ -15023,15 +18949,22 @@
       this._upgradeIconField(body, "important_badge_icon");
       this._wireColorRow(
         body,
+        "important_badge_fg",
+        strings.editor.badgeColor,
+        strings.editor.badgeColorDesc,
+        "colors"
+      );
+      this._wireColorRow(
+        body,
         "important_badge",
-        strings.editor.importantBadgeColorList,
-        strings.editor.importantBadgeColorListDesc,
+        strings.editor.badgeBgColor,
+        strings.editor.badgeBgColorDesc,
         "colors"
       );
       this._wireColorRow(
         body,
         "important_badge_timeline",
-        strings.editor.importantBadgeColorTimeline,
+        strings.editor.badgeColor,
         strings.editor.importantBadgeColorTimelineDesc,
         "colors"
       );
@@ -15047,26 +18980,69 @@
       this._wireColorRow(
         body,
         "todo_badge",
-        strings.editor.todoBadgeColorList,
-        strings.editor.todoBadgeColorListDesc,
+        strings.editor.badgeColor,
+        strings.editor.badgeColorDesc,
+        "colors"
+      );
+      this._wireColorRow(
+        body,
+        "todo_badge_bg",
+        strings.editor.badgeBgColor,
+        strings.editor.badgeBgColorDesc,
         "colors"
       );
       this._wireColorRow(
         body,
         "todo_badge_timeline",
-        strings.editor.todoBadgeColorTimeline,
+        strings.editor.badgeColor,
         strings.editor.todoBadgeColorTimelineDesc,
         "colors"
       );
 
       this._paintPresetSwatches(body, strings);
 
+      // The four row statuses. Kept in its own .icons-body wrapper rather
+      // than merged row by row: it is a tab's worth of content with its own
+      // heading, and every selector that hides part of it (see
+      // _applyLayoutStyleVisibility) still scopes to that class.
+      const statusHeading = document.createElement("div");
+      statusHeading.className = "section-heading";
+      statusHeading.textContent = strings.editor.statusHeading;
+      body.appendChild(statusHeading);
+      body.appendChild(this._buildIconsBody(strings));
+
       return body;
     }
 
-    _fontRowHtml(key, placeholder, letterSpacingPlaceholder) {
+    // A label-only row at the same level as a regular field, naming the group
+    // of indented rows that follows it. Used where a set of sub-rows has no
+    // parent field of its own to hang off - the Date block's three lines
+    // configure the Date block column, not the Date column above them, so
+    // sitting directly under Date's own row would say the opposite.
+    _groupLabelRowHtml(key) {
       return `
-        <div class="field-row">
+        <div class="field-row group-label-row" data-group-label="${key}">
+          <div class="field-label">
+            <span class="label-text"></span>
+            <span class="tooltip-anchor" data-tooltip="">
+              <ha-icon icon="mdi:information-outline"></ha-icon>
+            </span>
+          </div>
+        </div>
+      `;
+    }
+
+    _wireGroupLabelRow(body, key, label, desc) {
+      const row = body.querySelector(`[data-group-label="${key}"]`);
+      if (!row) return;
+      row.querySelector(".label-text").textContent = label;
+      row.querySelector(".tooltip-anchor").dataset.tooltip = desc;
+    }
+
+    _fontRowHtml(key, placeholder, letterSpacingPlaceholder, options = {}) {
+      const sub = options.sub ? " sub-field-row" : "";
+      return `
+        <div class="field-row${sub}">
           <div class="field-label">
             <span class="label-text"></span>
             <span class="tooltip-anchor" data-tooltip="">
@@ -15081,35 +19057,38 @@
                   <input type="checkbox" data-bold="${key}">
                   <span class="track"></span>
                 </label>
-                <span class="toggle-label"></span>
+                <span class="toggle-label toggle-label-bold"></span>
               </div>
               <div class="toggle-group">
                 <label class="toggle">
                   <input type="checkbox" data-italic="${key}">
                   <span class="track"></span>
                 </label>
-                <span class="toggle-label"></span>
+                <span class="toggle-label toggle-label-italic"></span>
               </div>
-              <div class="toggle-group">
+              <div class="toggle-group"${options.noUppercase ? ' style="display:none"' : ""}>
                 <label class="toggle">
                   <input type="checkbox" data-uppercase="${key}">
                   <span class="track"></span>
                 </label>
-                <span class="toggle-label"></span>
+                <span class="toggle-label toggle-label-uppercase"></span>
               </div>
               <div class="toggle-group">
                 <label class="toggle">
                   <input type="checkbox" data-underline="${key}">
                   <span class="track"></span>
                 </label>
-                <span class="toggle-label"></span>
+                <span class="toggle-label toggle-label-underline"></span>
               </div>
             </div>
           </div>
         </div>
-        <div class="field-row sub-field-row">
+        <div class="field-row sub-field-row${options.sub ? " sub-field-row-nested" : ""}">
           <div class="field-label">
             <span class="label-text"></span>
+            <span class="tooltip-anchor" data-tooltip="">
+              <ha-icon icon="mdi:information-outline"></ha-icon>
+            </span>
           </div>
           <div class="field-input-row">
             <input type="text" data-letterspacing="${key}" placeholder="${letterSpacingPlaceholder}">
@@ -15122,15 +19101,34 @@
       const config = this._config;
       const rows = [
         { key: "font_size_title", value: config.font_size_title, style: config.font_style.font_size_title },
+        { key: "no_events", value: config.font_sizes.no_events, style: config.font_style.no_events },
         { key: "name", value: config.font_sizes.name, style: config.font_style.name },
         { key: "last_name", value: config.font_sizes.last_name, style: config.font_style.last_name },
         { key: "full_name", value: config.font_sizes.full_name, style: config.font_style.full_name },
         { key: "type", value: config.font_sizes.type, style: config.font_style.type },
+        { key: "info_name", value: config.font_sizes.info_name, style: config.font_style.info_name },
+        { key: "info_type", value: config.font_sizes.info_type, style: config.font_style.info_type },
+        { key: "full_name_type_name", value: config.font_sizes.full_name_type_name, style: config.font_style.full_name_type_name },
+        { key: "full_name_type_type", value: config.font_sizes.full_name_type_type, style: config.font_style.full_name_type_type },
         { key: "badge", value: config.font_sizes.badge, style: config.font_style.badge },
         { key: "when", value: config.font_sizes.when, style: config.font_style.when },
         { key: "text", value: config.font_sizes.text, style: config.font_style.text },
         { key: "date", value: config.font_sizes.date, style: config.font_style.date },
-        { key: "calendar", value: config.font_sizes.calendar, style: config.font_style.calendar },
+        ...["weekday", "day", "month"].map((line) => ({
+          key: `date_block_${line}`,
+          value: config.font_sizes[`date_block_${line}`],
+          style: config.font_style[`date_block_${line}`],
+        })),
+        ...["day", "week", "month"].map((scale) => ({
+          key: `${scale}_separator_label`,
+          value: config.font_sizes[`${scale}_separator_label`],
+          style: config.font_style[`${scale}_separator_label`],
+        })),
+        ...["time", "location", "description"].map((field) => ({
+          key: `calendar_${field}`,
+          value: config.font_sizes[`calendar_${field}`],
+          style: config.font_style[`calendar_${field}`],
+        })),
         { key: "timeline_header", value: config.font_sizes.timeline_header, style: config.font_style.timeline_header },
         { key: "timeline_tooltip", value: config.font_sizes.timeline_tooltip, style: config.font_style.timeline_tooltip },
         { key: "timeline_list", value: config.font_sizes.timeline_list, style: config.font_style.timeline_list },
@@ -15153,140 +19151,96 @@
       }
     }
 
-    _buildFontsBody(strings) {
-      const body = document.createElement("div");
-      body.className = "fonts-body";
+    // The font half of one Design block: size field, the four style toggles
+    // and the letter-spacing row underneath. Split out of the old Fonts tab
+    // so _buildDesignBody can wire it per element next to that element's
+    // color row.
+    _wireFontRow(body, key, label, desc, strings) {
+      const input = body.querySelector(`input[data-font="${key}"]`);
+      const row = input.closest(".field-row");
+      row.querySelector(".label-text").textContent = label;
+      row.querySelector(".tooltip-anchor").dataset.tooltip = desc;
 
-      const rows = document.createElement("div");
-      rows.innerHTML =
-        this._fontRowHtml("font_size_title", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        this._fontRowHtml("name", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        this._fontRowHtml("last_name", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        this._fontRowHtml("full_name", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        this._fontRowHtml("type", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        this._fontRowHtml("badge", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        this._fontRowHtml("when", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        this._fontRowHtml("date", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        this._fontRowHtml("calendar", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        // Timeline layout only - see _applyLayoutStyleVisibility, which
-        // hides these three whenever layout_style isn't "timeline".
-        this._fontRowHtml("timeline_header", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        this._fontRowHtml("timeline_tooltip", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        this._fontRowHtml("timeline_list", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        this._fontRowHtml("timeline_button", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder) +
-        // Last, same reasoning as in the Colors tab - Custom text isn't one
-        // of the card's own fields but whatever a Custom text column was
-        // told to write.
-        this._fontRowHtml("text", strings.editor.fontPlaceholder, strings.editor.fontLetterSpacingPlaceholder);
-      body.appendChild(rows);
-
-      const toggleLabels = [
-        ["[data-bold]", strings.editor.fontBold],
-        ["[data-italic]", strings.editor.fontItalic],
-        ["[data-uppercase]", strings.editor.fontUppercase],
-        ["[data-underline]", strings.editor.fontUnderline],
-      ];
-      body.querySelectorAll(".toggle-group").forEach((group) => {
-        const match = toggleLabels.find(([selector]) => group.querySelector(selector));
-        if (match) group.querySelector(".toggle-label").textContent = match[1];
-      });
-
-      const labels = {
-        font_size_title: [strings.editor.fontCardTitle, strings.editor.fontCardTitleDesc],
-        name: [strings.editor.colorName, strings.editor.fontNameDesc],
-        last_name: [strings.editor.colorLastName, strings.editor.fontLastNameDesc],
-        full_name: [strings.editor.colorFullName, strings.editor.fontFullNameDesc],
-        type: [strings.editor.colorType, strings.editor.fontTypeDesc],
-        badge: [strings.editor.colorBadge, strings.editor.fontBadgeDesc],
-        when: [strings.editor.colorWhen, strings.editor.fontWhenDesc],
-        text: [strings.editor.colorText, strings.editor.fontTextDesc],
-        date: [strings.editor.colorDate, strings.editor.fontDateDesc],
-        calendar: [strings.editor.colorCalendar, strings.editor.fontCalendarDesc],
-        timeline_header: [strings.editor.timelineHeaderLabel, strings.editor.timelineHeaderFontDesc],
-        timeline_tooltip: [strings.editor.timelineTooltipLabel, strings.editor.timelineTooltipFontDesc],
-        timeline_list: [strings.editor.timelineListLabel, strings.editor.timelineListFontDesc],
-        timeline_button: [strings.editor.timelineButtonLabel, strings.editor.timelineButtonFontDesc],
-      };
-      for (const key of [
-        "font_size_title",
-        "name",
-        "last_name",
-        "full_name",
-        "type",
-        "badge",
-        "when",
-        "text",
-        "date",
-        "calendar",
-        "timeline_header",
-        "timeline_tooltip",
-        "timeline_list",
-        "timeline_button",
+      // Bold/Italic/UPPERCASE/Underline, named here rather than by whichever
+      // tab happens to hold the row. They used to be painted by a loop that
+      // only ran over the Design body, so a font row built anywhere else came
+      // out with four unlabelled switches - the template rendered them, but
+      // only one caller finished the job. Every font row goes through this
+      // method (see _fontRowHtml's call sites), so this is the one place that
+      // sees all of them.
+      for (const [attr, text] of [
+        ["bold", strings.editor.fontBold],
+        ["italic", strings.editor.fontItalic],
+        ["uppercase", strings.editor.fontUppercase],
+        ["underline", strings.editor.fontUnderline],
       ]) {
-        const row = body.querySelector(`input[data-font="${key}"]`).closest(".field-row");
-        const [label, desc] = labels[key];
-        row.querySelector(".label-text").textContent = label;
-        row.querySelector(".tooltip-anchor").dataset.tooltip = desc;
-
-        const input = row.querySelector(`input[data-font="${key}"]`);
-        input.addEventListener("input", () => {
-          if (key === "font_size_title") {
-            this._config = defaultConfig({ ...this._config, font_size_title: input.value });
-          } else {
-            this._config = defaultConfig({
-              ...this._config,
-              font_sizes: { ...this._config.font_sizes, [key]: input.value },
-            });
-          }
-          this._emit();
-        });
-
-        const updateStyle = (patch) => {
-          this._config = defaultConfig({
-            ...this._config,
-            font_style: {
-              ...this._config.font_style,
-              [key]: { ...this._config.font_style[key], ...patch },
-            },
-          });
-          this._emit();
-        };
-
-        const boldToggle = row.querySelector(`input[data-bold="${key}"]`);
-        boldToggle.addEventListener("change", () => updateStyle({ bold: boldToggle.checked }));
-
-        const italicToggle = row.querySelector(`input[data-italic="${key}"]`);
-        italicToggle.addEventListener("change", () => updateStyle({ italic: italicToggle.checked }));
-
-        const uppercaseToggle = row.querySelector(`input[data-uppercase="${key}"]`);
-        uppercaseToggle.addEventListener("change", () => updateStyle({ uppercase: uppercaseToggle.checked }));
-
-        const underlineToggle = row.querySelector(`input[data-underline="${key}"]`);
-        underlineToggle.addEventListener("change", () => updateStyle({ underline: underlineToggle.checked }));
-
-        const letterInput = body.querySelector(`input[data-letterspacing="${key}"]`);
-        const letterRow = letterInput.closest(".sub-field-row");
-        letterRow.querySelector(".label-text").textContent = strings.editor.fontLetterSpacing;
-        letterInput.addEventListener("input", () => updateStyle({ letter_spacing: letterInput.value }));
+        const toggle = row.querySelector(`input[data-${attr}="${key}"]`);
+        if (!toggle) continue;
+        const group = toggle.closest(".toggle-group");
+        const labelEl = group && group.querySelector(".toggle-label");
+        if (labelEl) labelEl.textContent = text || attr;
       }
 
-      return body;
+      input.addEventListener("input", () => {
+        if (key === "font_size_title") {
+          this._config = defaultConfig({ ...this._config, font_size_title: input.value });
+        } else {
+          this._config = defaultConfig({
+            ...this._config,
+            font_sizes: { ...this._config.font_sizes, [key]: input.value },
+          });
+        }
+        this._emit();
+      });
+
+      const updateStyle = (patch) => {
+        this._config = defaultConfig({
+          ...this._config,
+          font_style: {
+            ...this._config.font_style,
+            [key]: { ...this._config.font_style[key], ...patch },
+          },
+        });
+        this._emit();
+      };
+
+      const boldToggle = row.querySelector(`input[data-bold="${key}"]`);
+      boldToggle.addEventListener("change", () => updateStyle({ bold: boldToggle.checked }));
+
+      const italicToggle = row.querySelector(`input[data-italic="${key}"]`);
+      italicToggle.addEventListener("change", () => updateStyle({ italic: italicToggle.checked }));
+
+      const uppercaseToggle = row.querySelector(`input[data-uppercase="${key}"]`);
+      uppercaseToggle.addEventListener("change", () => updateStyle({ uppercase: uppercaseToggle.checked }));
+
+      const underlineToggle = row.querySelector(`input[data-underline="${key}"]`);
+      underlineToggle.addEventListener("change", () => updateStyle({ underline: underlineToggle.checked }));
+
+      const letterInput = body.querySelector(`input[data-letterspacing="${key}"]`);
+      const letterRow = letterInput.closest(".sub-field-row");
+      letterRow.querySelector(".label-text").textContent = strings.editor.fontLetterSpacing;
+      letterRow.querySelector(".tooltip-anchor").dataset.tooltip =
+        strings.editor.fontLetterSpacingDesc || "";
+      letterInput.addEventListener("input", () => updateStyle({ letter_spacing: letterInput.value }));
     }
 
     // Timeline layout only: the footer's "More" button action. The header
     // sentence/tooltip/expandable-list font and color settings that used to
-    // live here moved into the Fonts/Colors tabs instead (see
-    // _buildFontsBody/_buildColorsBody) - same rows, same wiring, just
-    // appended there and hidden by _applyLayoutStyleVisibility unless
-    // layout_style is "timeline", so they sit next to every other font/color
-    // control instead of duplicating that tab elsewhere.
+    // live here moved into the Design tab instead (see DESIGN_ELEMENTS) -
+    // same rows, same wiring, just appended there and hidden by
+    // _applyLayoutStyleVisibility unless layout_style is "timeline", so they
+    // sit next to every other element's own block instead of duplicating
+    // that tab elsewhere.
     // One width input + line-style <select> + color row, shared by the axis
     // line and the past/future divider below - same three knobs for both,
     // just against different config keys.
-    _lineStyleRowsHtml(widthKey, colorKey) {
+    // widthPlaceholder defaults to the timeline axis's own typical thickness;
+    // the separator blocks pass their own, since a 4px example next to a
+    // field that defaults to 1px reads as the wrong order of magnitude.
+    _lineStyleRowsHtml(widthKey, colorKey, widthPlaceholder = "e.g. 4px", sub = false) {
       return (
         `
-        <div class="field-row">
+        <div class="field-row${sub ? " sub-field-row" : ""}">
           <div class="field-label">
             <span class="label-text"></span>
             <span class="tooltip-anchor" data-tooltip="">
@@ -15294,12 +19248,15 @@
             </span>
           </div>
           <div class="field-input-row">
-            <input type="text" data-field="${widthKey}" placeholder="e.g. 4px">
+            <input type="text" data-field="${widthKey}" placeholder="${widthPlaceholder}">
           </div>
         </div>
         <div class="field-row sub-field-row">
           <div class="field-label">
             <span class="label-text"></span>
+            <span class="tooltip-anchor" data-tooltip="">
+              <ha-icon icon="mdi:information-outline"></ha-icon>
+            </span>
           </div>
           <div class="field-input-row">
             <select data-line-style="${widthKey}">
@@ -15309,7 +19266,12 @@
             </select>
           </div>
         </div>
-      ` + this._colorRowHtml(colorKey, "e.g. #cccccc or var(--divider-color)", { sub: true })
+      ` +
+        // The same translated placeholder every other color field uses. It
+        // used to be a hardcoded English string naming var(--divider-color),
+        // which stopped being any of these fields' default and was never
+        // translated in the first place.
+        this._colorRowHtml(colorKey, t(this._hass).editor.colorPlaceholder, { sub: true })
       );
     }
 
@@ -15325,6 +19287,7 @@
       const select = body.querySelector(`select[data-line-style="${widthKey}"]`);
       const row = select.closest(".sub-field-row");
       row.querySelector(".label-text").textContent = labels.style;
+      row.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.lineStyleDesc || "";
       const optionLabels = {
         solid: strings.editor.lineStyleSolid || "Solid",
         dashed: strings.editor.lineStyleDashed || "Dashed",
@@ -15377,36 +19340,6 @@
         (v) => (v === "" ? "" : parseInt(v, 10))
       );
 
-      const lineHeading = document.createElement("div");
-      lineHeading.className = "section-heading";
-      lineHeading.textContent = strings.editor.timelineLineHeading;
-      body.appendChild(lineHeading);
-      const lineRows = document.createElement("div");
-      lineRows.innerHTML = this._lineStyleRowsHtml("timeline_line_width", "timeline_line");
-      body.appendChild(lineRows);
-      this._wireLineStyleRows(body, "timeline_line_width", "timeline_line_style", "timeline_line", {
-        width: strings.editor.timelineLineWidth,
-        widthDesc: strings.editor.timelineLineWidthDesc,
-        style: strings.editor.lineStyleLabel,
-        color: strings.editor.timelineLineColor,
-        colorDesc: strings.editor.timelineLineColorDesc,
-      });
-
-      const dividerHeading = document.createElement("div");
-      dividerHeading.className = "section-heading";
-      dividerHeading.textContent = strings.editor.timelineDividerHeading;
-      body.appendChild(dividerHeading);
-      const dividerRows = document.createElement("div");
-      dividerRows.innerHTML = this._lineStyleRowsHtml("timeline_divider_width", "timeline_divider");
-      body.appendChild(dividerRows);
-      this._wireLineStyleRows(body, "timeline_divider_width", "timeline_divider_style", "timeline_divider", {
-        width: strings.editor.timelineDividerWidth,
-        widthDesc: strings.editor.timelineDividerWidthDesc,
-        style: strings.editor.lineStyleLabel,
-        color: strings.editor.timelineDividerColor,
-        colorDesc: strings.editor.timelineDividerColorDesc,
-      });
-
       this._paintPresetSwatches(body, strings);
 
       const optionsHeading = document.createElement("div");
@@ -15419,67 +19352,29 @@
         ["show_holiday_suffix", "timeline_show_location", "timeline_show_description"]
       );
       body.appendChild(optionsRows);
-      const fullNameToggle = optionsRows.querySelector('input[data-visibility="timeline_show_full_name"]');
-      const fullNameRow = fullNameToggle.closest(".toggle-row");
-      fullNameRow.querySelector(".label-text").textContent = strings.editor.timelineShowFullName;
-      fullNameRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.timelineShowFullNameDesc;
-      fullNameToggle.addEventListener("change", () => {
-        this._config = defaultConfig({ ...this._config, timeline_show_full_name: fullNameToggle.checked });
-        this._emit();
-      });
-      const suffixToggle = optionsRows.querySelector('input[data-visibility="show_holiday_suffix"]');
-      const suffixRow = suffixToggle.closest(".toggle-row");
-      suffixRow.querySelector(".label-text").textContent = strings.editor.showHolidaySuffix;
-      suffixRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.showHolidaySuffixDesc;
-      suffixToggle.addEventListener("change", () => {
-        this._config = defaultConfig({ ...this._config, show_holiday_suffix: suffixToggle.checked });
-        this._emit();
-      });
-      const dateToggle = optionsRows.querySelector('input[data-visibility="timeline_show_date"]');
-      const dateRow = dateToggle.closest(".toggle-row");
-      dateRow.querySelector(".label-text").textContent = strings.editor.timelineShowDate;
-      dateRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.timelineShowDateDesc;
-      dateToggle.addEventListener("change", () => {
-        this._config = defaultConfig({ ...this._config, timeline_show_date: dateToggle.checked });
-        this._emit();
-      });
-      const tlWhenClickToggle = optionsRows.querySelector(
-        'input[data-visibility="timeline_when_click_shows_date"]'
-      );
-      const tlWhenClickRow = tlWhenClickToggle.closest(".toggle-row");
-      tlWhenClickRow.querySelector(".label-text").textContent = strings.editor.whenClickShowsDate;
-      tlWhenClickRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.timelineWhenClickShowsDateDesc;
-      tlWhenClickToggle.addEventListener("change", () => {
-        this._config = defaultConfig({
-          ...this._config,
-          timeline_when_click_shows_date: tlWhenClickToggle.checked,
-        });
-        this._emit();
-      });
-      const timeToggle = optionsRows.querySelector('input[data-visibility="timeline_show_time"]');
-      const timeRow = timeToggle.closest(".toggle-row");
-      timeRow.querySelector(".label-text").textContent = strings.editor.timelineShowTime;
-      timeRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.timelineShowTimeDesc;
-      timeToggle.addEventListener("change", () => {
-        this._config = defaultConfig({ ...this._config, timeline_show_time: timeToggle.checked });
-        this._emit();
-      });
-      const locationToggle = optionsRows.querySelector('input[data-visibility="timeline_show_location"]');
-      const locationRow = locationToggle.closest(".toggle-row");
-      locationRow.querySelector(".label-text").textContent = strings.editor.timelineShowLocation;
-      locationRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.timelineShowLocationDesc;
-      locationToggle.addEventListener("change", () => {
-        this._config = defaultConfig({ ...this._config, timeline_show_location: locationToggle.checked });
-        this._emit();
-      });
-      const descriptionToggle = optionsRows.querySelector('input[data-visibility="timeline_show_description"]');
-      const descriptionRow = descriptionToggle.closest(".toggle-row");
-      descriptionRow.querySelector(".label-text").textContent = strings.editor.timelineShowDescription;
-      descriptionRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.timelineShowDescriptionDesc;
-      descriptionToggle.addEventListener("change", () => {
-        this._config = defaultConfig({ ...this._config, timeline_show_description: descriptionToggle.checked });
-        this._emit();
-      });
+      // Seven switches that differ only in their key and their two strings.
+      // "Tap countdown for date" carries the list layout's own label with the
+      // timeline's own description - the control is the same idea, what it
+      // acts on is not.
+      for (const [key, label, desc] of [
+        ["timeline_show_full_name", strings.editor.timelineShowFullName, strings.editor.timelineShowFullNameDesc],
+        ["timeline_show_date", strings.editor.timelineShowDate, strings.editor.timelineShowDateDesc],
+        ["timeline_show_time", strings.editor.timelineShowTime, strings.editor.timelineShowTimeDesc],
+        [
+          "timeline_when_click_shows_date",
+          strings.editor.whenClickShowsDate,
+          strings.editor.timelineWhenClickShowsDateDesc,
+        ],
+        ["show_holiday_suffix", strings.editor.showHolidaySuffix, strings.editor.showHolidaySuffixDesc],
+        ["timeline_show_location", strings.editor.timelineShowLocation, strings.editor.timelineShowLocationDesc],
+        [
+          "timeline_show_description",
+          strings.editor.timelineShowDescription,
+          strings.editor.timelineShowDescriptionDesc,
+        ],
+      ]) {
+        this._wireVisibilityRow(optionsRows, key, label, desc);
+      }
 
       const moreWrap = document.createElement("div");
       moreWrap.innerHTML = this._actionSelectorSplitHtml(["more_action"]);
@@ -15507,14 +19402,14 @@
       this._syncFieldRow("timeline_line_width", this._config.timeline_line_width);
       const lineStyleSelect = this.shadowRoot.querySelector('select[data-line-style="timeline_line_width"]');
       if (lineStyleSelect) lineStyleSelect.value = this._config.timeline_line_style || "solid";
-      this._syncColorSwatch("timeline_line", this._config.colors.timeline_line || "", "var(--divider-color)");
+      this._syncColorSwatch("timeline_line", this._config.colors.timeline_line || "", "var(--secondary-text-color)");
 
       this._syncFieldRow("timeline_divider_width", this._config.timeline_divider_width);
       const dividerStyleSelect = this.shadowRoot.querySelector(
         'select[data-line-style="timeline_divider_width"]'
       );
       if (dividerStyleSelect) dividerStyleSelect.value = this._config.timeline_divider_style || "solid";
-      this._syncColorSwatch("timeline_divider", this._config.colors.timeline_divider || "", "var(--divider-color)");
+      this._syncColorSwatch("timeline_divider", this._config.colors.timeline_divider || "", "var(--secondary-text-color)");
 
       const suffixToggle = this.shadowRoot.querySelector('input[data-visibility="show_holiday_suffix"]');
       if (suffixToggle) suffixToggle.checked = this._config.show_holiday_suffix === true;
@@ -15541,61 +19436,402 @@
     // Hides whichever of this card's Layout fields the *current* layout
     // style doesn't read, instead of leaving them visible but silently
     // ignored - in both directions: list-only fields disappear in timeline
-    // mode, and the timeline-only fields (appended to the end of Fonts/
-    // Colors - see _buildFontsBody/_buildColorsBody) disappear in list mode.
+    // mode, and the timeline-only fields (appended to the end of Design -
+    // see DESIGN_ELEMENTS) disappear in list mode.
+    // Has the user given this element's color or font a value of its own? Such a
+    // field is never hidden, whatever the columns say - a setting you cannot
+    // see is a setting you cannot undo, and a card can be reconfigured in
+    // any order (drop the column first, clear its color later).
+    _fieldHasValue(key) {
+      const config = this._config;
+      // Compared against the defaults rather than tested for truthiness: some
+      // defaults are not empty (the Date block month ships with Uppercase on),
+      // and treating those as "the user set this" would keep their rows on
+      // screen for every card.
+      const defaults = defaultConfig({});
+      if (!sameConfigValue((config.colors || {})[key], (defaults.colors || {})[key])) return true;
+      if (!sameConfigValue((config.font_sizes || {})[key], (defaults.font_sizes || {})[key])) return true;
+      if (key === "font_size_title" && !sameConfigValue(config.font_size_title, defaults.font_size_title)) {
+        return true;
+      }
+      return !sameConfigValue((config.font_style || {})[key], (defaults.font_style || {})[key]);
+    }
+
+    // The Design elements this card's current configuration actually uses,
+    // so the Design tab can show those blocks and hide the rest. Errs towards
+    // showing: anything reachable through the configured columns, through a
+    // {placeholder} in a Custom text column, or through the Type cell's own
+    // calendar sub-toggles counts as used.
+    // Which event types this card can ever show. An empty list means every
+    // type, which is what a card that has never touched the filter carries.
+    _activeTypes() {
+      const types = this._config.types;
+      if (!Array.isArray(types) || !types.length) return null;
+      return new Set(types);
+    }
+    // A type stays listed once it carries a setting of its own, even after
+    // being filtered out - the same rule the Design fields follow, so a
+    // deselected type never silently loses what was configured for it.
+    _typeConfigured(key) {
+      const colors = this._config.colors || {};
+      const prefix = `type_${key}`;
+      if (Object.keys(colors).some((k) => k === prefix || k.startsWith(`${prefix}_`))) return true;
+      if ((this._config.type_animation || {})[key]) return true;
+      return Boolean((this._config.row_color_targets || {})[key]);
+    }
+    _suffixGroupUsed(groupKey) {
+      const defaults = SUFFIX_GROUP_DEFAULTS[groupKey] || {};
+      // Anything actually configured keeps its group on screen, the same
+      // escape hatch every other source-driven block has.
+      if (Object.keys(defaults).some((k) => this._config[k] !== defaults[k])) return true;
+      if (groupKey === "external") return this._hasExternalCalendars();
+      const active = this._activeTypes();
+      return !active || active.has("holiday");
+    }
+    // Runs over a single freshly built column row or over the whole editor,
+    // so the groups follow both a rebuilt list and a change made on another
+    // tab. A row left with neither group drops the wrapper too, rather than
+    // keeping its indent under the column name.
+    _applySuffixGroupVisibility(root) {
+      if (!root) return;
+      for (const groupKey of ["holiday", "external"]) {
+        const used = this._suffixGroupUsed(groupKey);
+        for (const el of root.querySelectorAll(`[data-suffix-group="${groupKey}"]`)) {
+          el.style.display = used ? "" : "none";
+        }
+      }
+      for (const wrap of root.querySelectorAll(".column-suffix-groups")) {
+        const anyShown = Array.from(wrap.querySelectorAll("[data-suffix-group]")).some(
+          (el) => el.style.display !== "none"
+        );
+        wrap.style.display = anyShown ? "" : "none";
+      }
+    }
+    _hasTodoLists() {
+      const lists = this._config.todo_lists;
+      return Array.isArray(lists) && lists.length > 0;
+    }
+    _hasExternalCalendars() {
+      const cals = this._config.external_calendars;
+      return Array.isArray(cals) && cals.length > 0;
+    }
+
+    _fieldsInUse() {
+      const config = this._config;
+      const used = new Set();
+      // Both layouts share the card title, which has its own switch.
+      if (config.show_title !== false) {
+        used.add("card_title");
+        used.add("font_size_title");
+      }
+      const columns = Array.isArray(config.columns) ? config.columns : DEFAULT_COLUMNS;
+      const types = new Set();
+      for (const col of columns) {
+        if (!col || typeof col !== "object") continue;
+        types.add(col.type);
+        if (col.type === "text") {
+          // Half of the Compact arrangement is space-only text columns (see
+          // COMPACT_DEFAULT_COLUMNS): they exist to separate two fields once
+          // the flex gap is zeroed, and a run of spaces has nothing to color
+          // or size. Only a column with actual content counts as using the
+          // Custom text field - otherwise switching Compact on brought a
+          // Custom text entry into both tabs that could not change anything
+          // on screen.
+          const template = typeof col.template === "string" ? col.template : "";
+          if (!template.trim()) continue;
+          used.add("text");
+          for (const match of template.matchAll(/\{(\w+)\}/g)) {
+            const key = PLACEHOLDER_FIELD_KEYS[match[1]];
+            if (key) used.add(key);
+          }
+          continue;
+        }
+        for (const key of COLUMN_FIELD_KEYS[col.type] || []) used.add(key);
+      }
+      // The Type cell can carry an embedded calendar's time, location and
+      // description (see typeCellFragment), each styled by its own entry in
+      // the External calendar fields group rather than by Type. Nothing ever
+      // fills those three in without an external calendar to read them from,
+      // so the whole group waits for one to be picked - a card showing only
+      // Annuals' own events has no line here to color.
+      const hasTypeCell = types.has("type") || types.has("info") || types.has("full_name_type");
+      const hasExternal =
+        Array.isArray(config.external_calendars) && config.external_calendars.length > 0;
+      if (hasTypeCell && hasExternal) {
+        if (config.show_type_time) used.add("calendar_time");
+        if (config.show_type_location) used.add("calendar_location");
+        if (config.show_type_description) used.add("calendar_description");
+      }
+      return { used, columnTypes: types };
+    }
+
+    // Puts the Design blocks in the order the list actually renders their
+    // columns, so scrolling the tab walks down a row rather than through a
+    // fixed catalogue. The card title leads either way - it is the one
+    // element that isn't a column at all. Anything the columns don't name
+    // (a block kept visible only because it still holds a value, the
+    // timeline's own four, the Event types section) keeps its build order
+    // behind them.
+    _orderDesignElements() {
+      const container = this.shadowRoot.querySelector(".design-body > div");
+      if (!container) return;
+      const nodeFor = (key) =>
+        key.startsWith("group:")
+          ? container.querySelector(`:scope > [data-design-group="${key.slice(6)}"]`)
+          : container.querySelector(`:scope > [data-design-element="${key}"]`);
+
+      const ordered = [];
+      const seen = new Set();
+      const push = (key) => {
+        const node = nodeFor(key);
+        if (node && !seen.has(node)) {
+          seen.add(node);
+          ordered.push(node);
+        }
+      };
+      const orderForTimeline = this._config.layout_style === "timeline";
+      push("card_title");
+      push("no_events");
+      for (const col of this._currentColumns()) {
+        if (!col || typeof col !== "object") continue;
+        for (const key of COLUMN_DESIGN_BLOCKS[col.type] || []) {
+          // The timeline has no icon column to be ordered by; its Icon block
+          // is placed with the timeline's own elements below.
+          if (orderForTimeline && key === "icon") continue;
+          push(key);
+        }
+        // A Type cell can carry an embedded calendar's three lines itself
+        // (see typeCellFragment), so the group follows that cell when no
+        // column of its own put it somewhere earlier.
+        if (col.type === "type" || col.type === "info" || col.type === "full_name_type") {
+          push("group:calendar");
+        }
+      }
+      if (orderForTimeline) {
+        push("timeline_header");
+        push("icon");
+      }
+      for (const node of [...container.children]) {
+        if (!seen.has(node)) {
+          seen.add(node);
+          ordered.push(node);
+        }
+      }
+
+      // Only touch the DOM when the order really changed: re-appending a
+      // node that is already in place still detaches it, which would blur
+      // whichever field the user is typing in - and every keystroke gets
+      // here through _emit -> setConfig -> _render.
+      const current = [...container.children];
+      if (ordered.length === current.length && ordered.every((node, i) => node === current[i])) return;
+      for (const node of ordered) container.appendChild(node);
+    }
+
+    // Run after everything else has decided what is hidden.
+    _fixBlockLeadingRows() {
+      const blocks = this.shadowRoot.querySelectorAll(
+        ".design-body .design-element, .design-body .design-group, .icons-body .status-group"
+      );
+      blocks.forEach((block) => {
+        let first = true;
+        block.querySelectorAll(":scope > .field-row").forEach((row) => {
+          if (row.classList.contains("group-label-row")) return;
+          if (row.style.display === "none") return;
+          row.style.marginTop = first ? "0" : "";
+          first = false;
+        });
+      });
+    }
+
     _applyLayoutStyleVisibility() {
+      this._orderDesignElements();
       const isTimeline = this._config.layout_style === "timeline";
+      const { used, columnTypes } = this._fieldsInUse();
+      // In the timeline layout none of the list's row fields apply at all;
+      // otherwise a field shows when the card uses it or already has a value.
+      const listFieldHidden = (key) => isTimeline || (!used.has(key) && !this._fieldHasValue(key));
+      // The title is the one field both layouts share, so it follows only
+      // its own switch, not the layout.
+      const listTitleHidden = () =>
+        !used.has("card_title") && !this._fieldHasValue("card_title") && !this._fieldHasValue("font_size_title");
       const setRowHidden = (input, hidden) => {
         if (!input) return;
         const row = input.closest(".field-row, .toggle-row");
         if (!row) return;
         row.style.display = hidden ? "none" : "";
       };
-      const setFontRowHidden = (bodyClass, key, hidden) => {
-        const input = this.shadowRoot.querySelector(`.${bodyClass} input[data-font="${key}"]`);
-        if (!input) return;
-        const row = input.closest(".field-row");
-        setRowHidden(input, hidden);
-        const sub = row && row.nextElementSibling;
-        if (sub && sub.classList.contains("sub-field-row")) sub.style.display = hidden ? "none" : "";
+
+      // Design: one decision per element block, since each block holds that
+      // element's name, color, font and letter spacing together. Everything
+      // but the card title (which both layouts share) belongs to the list
+      // layout's own row fields; the four timeline_* blocks are the reverse
+      // and only apply once the timeline layout is selected.
+      const setElementHidden = (id, hidden) => {
+        const el = this.shadowRoot.querySelector(`.design-body [data-design-element="${id}"]`);
+        if (el) el.style.display = hidden ? "none" : "";
       };
-
-      // Fonts/Colors: everything but the card title (which both layouts
-      // share) only applies to the list layout's own row fields.
-      for (const key of ["name", "last_name", "full_name", "type", "badge", "when", "date", "calendar", "text"]) {
-        setFontRowHidden("fonts-body", key, isTimeline);
+      // The Accent bar block configures a column, so it appears once that
+      // column is in the list - not on a color or font value the way the
+      // text elements do, since a bar with no width and no color set is
+      // still a bar.
+      const accentUsed = columnTypes.has("accent_bar") || this._fieldHasValue("accent_bar") ||
+        Boolean(this._config.accent_bar_width);
+      for (const el of DESIGN_ELEMENTS_FLAT) {
+        // Both layouts fall back to the same placeholder, and no column
+        // decides whether it appears - only whether the card found
+        // anything to show, which the editor cannot know.
+        if (el.id === "no_events") {
+          setElementHidden(el.id, false);
+        } else if (el.custom === "icon") {
+          // No column decides the timeline's glyphs, so only the list asks
+          // for the Icon column here.
+          setElementHidden(el.id, !isTimeline && !columnTypes.has("icon"));
+          setRowHidden(
+            this.shadowRoot.querySelector('.design-body [data-design-element="icon"] input[data-color="accent"]'),
+            isTimeline
+          );
+        } else if (el.custom === "accent_bar") {
+          setElementHidden(el.id, isTimeline || !accentUsed);
+        } else if (el.id === "card_title") {
+          // Shared by both layouts, but only worth configuring while the
+          // title is actually switched on (Settings -> General).
+          setElementHidden(el.id, listTitleHidden());
+        } else if (el.id.startsWith("timeline_")) {
+          setElementHidden(el.id, !isTimeline);
+        } else {
+          setElementHidden(el.id, listFieldHidden(el.id));
+        }
       }
-      for (const key of [
-        "name",
-        "last_name",
-        "full_name",
-        "type",
-        "badge",
-        "badge_background_color",
-        "when",
-        "date",
-        "calendar",
-        "text",
-      ]) {
-        setRowHidden(this.shadowRoot.querySelector(`.colors-body input[data-color="${key}"]`), isTimeline);
-      }
 
-      // The reverse: the timeline's own header/tooltip/expandable-list font
-      // and color rows, appended to the end of the same two tabs, only
-      // apply once the timeline layout is actually selected.
-      for (const key of ["timeline_header", "timeline_tooltip", "timeline_list", "timeline_button"]) {
-        setFontRowHidden("fonts-body", key, !isTimeline);
-        setRowHidden(this.shadowRoot.querySelector(`.colors-body input[data-color="${key}"]`), !isTimeline);
-      }
+      // A group wrapper (Name + type, Full name + type, Date block,
+      // External calendar fields) holds a heading plus the blocks it heads,
+      // so it goes when all of them do - otherwise the heading stayed behind
+      // with nothing under it. Every group here describes a list-layout
+      // column, so all of them follow the layout.
+      const groupKeys = {
+        info: ["info_name", "info_type"],
+        full_name_type: ["full_name_type_name", "full_name_type_type"],
+        date_block: ["date_block_weekday", "date_block_day", "date_block_month"],
+        calendar: ["calendar_time", "calendar_location", "calendar_description"],
+      };
+      this.shadowRoot.querySelectorAll(".design-body [data-design-group]").forEach((group) => {
+        const keys = groupKeys[group.dataset.designGroup] || [];
+        group.style.display = keys.some((key) => !listFieldHidden(key)) ? "" : "none";
+      });
 
-      // EVENT TYPES section (Colors tab): the per-type dot/icon color only
-      // means anything on the timeline axis, so the whole heading plus its
-      // one row per event type stays hidden in list mode, same as the four
-      // timeline_* rows above.
-      const eventTypesHeading = this.shadowRoot.querySelector('.colors-body [data-heading="event_types"]');
-      if (eventTypesHeading) eventTypesHeading.style.display = isTimeline ? "" : "none";
-      for (const key of EVENT_TYPE_KEYS) {
-        setRowHidden(this.shadowRoot.querySelector(`.colors-body input[data-color="type_${key}"]`), !isTimeline);
+      // EVENT TYPES: one color per type, shared by the timeline's dots and -
+      // once "Color rows by event type" is on - the list's rows. So the
+      // per-type rows show in the timeline layout either way, and in the
+      // list layout only behind that switch. The switch itself, the text
+      // switch and the per-calendar rows are list-only: the timeline has no
+      // status to override, no accent bar and no row text to follow along.
+      const rowColorsOn = this._config.row_colors === true;
+      const eventTypesHeading = this.shadowRoot.querySelector('.design-body [data-heading="event_types"]');
+      if (eventTypesHeading) eventTypesHeading.style.display = "";
+      const iconColumn = columnTypes.has("icon");
+      // One block's rows, for an event type or an embedded calendar alike.
+      const applyTypeBlock = (colorKey, targetKey, shown) => {
+        const head = this.shadowRoot.querySelector(`.design-body input[data-color="${colorKey}"]`);
+        const headRow = head ? head.closest(".field-row") : null;
+        if (headRow) {
+          headRow.style.display = shown ? "" : "none";
+          // The heading keeps the type's name, icon and switches; its own
+          // color field is gone - the four rows below set the colors now.
+          const headControls = headRow.querySelector(".field-input-row");
+          if (headControls) headControls.style.display = "none";
+        }
+        const targets = rowColorTargets(this._config, targetKey);
+        const rowFor = (suffix) => {
+          const input = this.shadowRoot.querySelector(
+            `.design-body input[data-color="${colorKey}_${suffix}"]`
+          );
+          return input ? input.closest(".field-row") : null;
+        };
+        const show = (suffix, visible) => {
+          const row = rowFor(suffix);
+          if (row) row.style.display = shown && visible ? "" : "none";
+        };
+        // Whole row and Accent bar only exist in the list; Entry text only
+        // in the timeline. Each shows once its own switch is on.
+        show("row", !isTimeline && targets.row === true);
+        show("bar", !isTimeline && targets.accent_bar === true && accentUsed);
+        show("entry", isTimeline && targets.timeline_text === true);
+        // The icon's own color: always in the timeline, which draws a glyph
+        // for every event; in the list once that target is on.
+        show("icon", isTimeline ? true : targets.icon === true && iconColumn);
+        const sel = this.shadowRoot.querySelector(`.design-body select[data-anim="type_${targetKey}"]`);
+        const animRow = sel ? sel.closest(".field-row") : null;
+        if (animRow) {
+          animRow.style.display = shown && (isTimeline || iconColumn) ? "" : "none";
+          const controls = animRow.querySelector(".field-input-row");
+          const on = ((this._config.type_animation || {})[targetKey] || "") !== "";
+          if (controls) controls.style.display = on ? "" : "none";
+        }
+      };
+      const typesShown = isTimeline || rowColorsOn;
+      const activeTypes = this._activeTypes();
+      for (const key of EVENT_TYPE_COLOR_KEYS) {
+        // A type the filter excludes can never appear on this card, so its
+        // block goes - unless it still carries a setting of its own.
+        const typeUsed = !activeTypes || activeTypes.has(key) || this._typeConfigured(key);
+        applyTypeBlock(`type_${key}`, key, typesShown && typeUsed);
+      }
+      const embedded = Array.isArray(this._config.external_calendars) ? this._config.external_calendars : [];
+      for (const id of embedded) {
+        applyTypeBlock(CALENDAR_COLOR_PREFIX + id, CALENDAR_COLOR_PREFIX + id, typesShown && embedded.length > 0);
+      }
+      const rowColorsRow = this.shadowRoot.querySelector('.design-body [data-toggle-row="row_colors"]');
+      if (rowColorsRow) rowColorsRow.style.display = isTimeline ? "none" : "";
+      // A badge's placement switches go with the badge: switched off there
+      // is nothing to place, so they fold away like the settings below it.
+      // They are list-only besides - the timeline draws its badges on the
+      // dots - and the Accent bar one needs that column to put anything on,
+      // the same condition its Design block uses.
+      const anyPlacement = columnTypes.has("icon") || columnTypes.has("accent_bar");
+      const badgesShown = isTimeline || anyPlacement;
+      const badgesHeadingEl = this.shadowRoot.querySelector('.highlight-body [data-heading="badges"]');
+      if (badgesHeadingEl) badgesHeadingEl.style.display = badgesShown ? "" : "none";
+      const badgeRowsEl = this.shadowRoot.querySelector(".highlight-body [data-badge-rows]");
+      if (badgeRowsEl) badgeRowsEl.style.display = badgesShown ? "" : "none";
+      const bothPlacements = columnTypes.has("icon") && columnTypes.has("accent_bar");
+      this.shadowRoot.querySelectorAll(".highlight-body [data-badge-targets-for]").forEach((box) => {
+        const badgeOff = this._config[BADGE_SWITCH_KEYS[box.dataset.badgeTargetsFor]] !== true;
+        box.style.display = isTimeline || badgeOff || !bothPlacements ? "none" : "";
+      });
+      // The three per-type target switches are list-only - the timeline has
+      // no icon color to split from its dot, no accent bar and no row text.
+      // Accent bar goes further and follows the column itself, the same
+      // condition its Design block above uses.
+      // The list's three switches paint an icon, a bar and the row's text -
+      // none of which the timeline has. Its own switch decides whether an
+      // entry's text follows its dot, which the list has no use for.
+      this.shadowRoot.querySelectorAll(".design-body [data-targets-for]").forEach((targets) => {
+        targets.style.display = "";
+        targets.querySelectorAll(".target-toggle").forEach((t) => {
+          const forTimeline = t.dataset.target === "timeline_text";
+          t.style.display = forTimeline === isTimeline ? "" : "none";
+        });
+        const bar = targets.querySelector('.target-toggle[data-target="accent_bar"]');
+        if (bar && !isTimeline) bar.style.display = accentUsed ? "" : "none";
+      });
+      const calendars = Array.isArray(this._config.external_calendars)
+        ? this._config.external_calendars
+        : [];
+      // Both layouts color something from these rows - the list's rows and
+      // the timeline's dots - so the section follows the calendars alone.
+      // "Color rows by event type" still gates it in the list layout, since
+      // that is the switch the list's own colors hang off; the timeline has
+      // no such switch and needs none.
+      const calendarColorsShown = calendars.length > 0 && (isTimeline || rowColorsOn);
+      const calendarHeading = this.shadowRoot.querySelector('.design-body [data-heading="calendar_colors"]');
+      if (calendarHeading) calendarHeading.style.display = calendarColorsShown ? "" : "none";
+      const calendarHost = this.shadowRoot.querySelector(".design-body [data-calendar-colors]");
+      if (calendarHost) calendarHost.style.display = calendarColorsShown ? "" : "none";
+      if (calendarHost) {
+        calendarHost.querySelectorAll("select[data-anim]").forEach((sel) => {
+          const row = sel.closest(".field-row");
+          if (row) row.style.display = isTimeline || columnTypes.has("icon") ? "" : "none";
+        });
       }
 
       // Icons tab: Default/Today/Soon stay visible either way, but their
@@ -15604,42 +19840,241 @@
       // layout-agnostic (applied to the list row's icon in _row(), and to
       // the timeline's own header/list MDI icons in _buildTimeline via
       // _timelineAnimClass), so it stays configurable in both modes.
-      for (const key of ["accent", "today", "soon"]) {
-        const colorInput = this.shadowRoot.querySelector(`.icons-body input[data-color="${key}"]`);
-        if (colorInput) {
-          const inputRow = colorInput.closest(".field-row").querySelector(".field-input-row");
-          if (inputRow) inputRow.style.display = isTimeline ? "none" : "";
-        }
-        const iconToggle = this.shadowRoot.querySelector(`.icons-body input[data-icon-visible="${key}"]`);
-        if (iconToggle) {
-          const toggleLabel = iconToggle.closest("label");
-          if (toggleLabel) toggleLabel.style.display = isTimeline ? "none" : "";
-        }
-        const matchToggle = this.shadowRoot.querySelector(`.icons-body input[data-match="${key}"]`);
-        if (matchToggle) {
-          const toggleGroup = matchToggle.closest(".toggle-group");
-          if (toggleGroup) toggleGroup.style.display = isTimeline ? "none" : "";
+      // A status can only style what its rows actually have: the icon color
+      // and animation go with the Icon column, the bar color with the
+      // Accent bar column. The timeline has neither, and styles its dots
+      // from the event type instead.
+      const iconUsed = columnTypes.has("icon");
+      const hideRow = (el, hidden) => {
+        const row = el && el.closest(".field-row");
+        if (row) row.style.display = hidden ? "none" : "";
+      };
+      // With the switch off there is nothing for the field to set, so it
+      // folds away and only the heading with its switch stays - the same
+      // shape the background tint has always had.
+      const foldControls = (el, off) => {
+        const row = el && el.closest(".field-row");
+        const controls = row && row.querySelector(".field-input-row");
+        if (controls) controls.style.display = off ? "none" : "";
+      };
+      for (const key of STATUS_KEYS) {
+        const ov = statusOverride(this._config, key);
+        foldControls(this.shadowRoot.querySelector(`.icons-body input[data-color="row_text_${key}"]`), !ov.row);
+        foldControls(
+          this.shadowRoot.querySelector(`.icons-body input[data-color="entry_text_${key}"]`),
+          !ov.timeline_row
+        );
+        foldControls(this.shadowRoot.querySelector(`.icons-body input[data-color="${key}"]`), !ov.icon);
+        foldControls(
+          this.shadowRoot.querySelector(`.icons-body input[data-color="timeline_icon_${key}"]`),
+          !ov.timeline_icon
+        );
+        foldControls(
+          this.shadowRoot.querySelector(`.icons-body input[data-color="accent_bar_${key}"]`),
+          !ov.accent_bar
+        );
+        foldControls(this.shadowRoot.querySelector(`.icons-body select[data-anim="${key}"]`), !ov.animation);
+        hideRow(
+          this.shadowRoot.querySelector(`.icons-body input[data-color="${key}"]`),
+          isTimeline || !iconUsed
+        );
+        // The timeline draws a glyph for every event, so its own icon colour
+        // needs no column - but it is a separate setting from the list's,
+        // with a switch that starts off.
+        hideRow(
+          this.shadowRoot.querySelector(`.icons-body input[data-color="timeline_icon_${key}"]`),
+          !isTimeline
+        );
+        // Same reason: a status' animation reaches the timeline's glyphs
+        // too, its icon color does not.
+        hideRow(
+          this.shadowRoot.querySelector(`.icons-body select[data-anim="${key}"]`),
+          !isTimeline && !iconUsed
+        );
+        hideRow(
+          this.shadowRoot.querySelector(`.icons-body input[data-color="accent_bar_${key}"]`),
+          isTimeline || !accentUsed
+        );
+        hideRow(
+          this.shadowRoot.querySelector(`.icons-body input[data-color="row_text_${key}"]`),
+          isTimeline
+        );
+        hideRow(
+          this.shadowRoot.querySelector(`.icons-body input[data-color="entry_text_${key}"]`),
+          !isTimeline
+        );
+        const bg = this.shadowRoot.querySelector(`.icons-body input[data-color="highlight_${key}"]`);
+        hideRow(bg, isTimeline);
+        if (bg) {
+          const controls = bg.closest(".field-row").querySelector(".field-input-row");
+          if (controls) {
+            controls.style.display = this._config[`highlight_${key}`] === true ? "" : "none";
+          }
         }
       }
-
       // Display: past/today/soon row-highlighting has no "row" to highlight
       // in the timeline layout.
+      // Each one's background color is the color of a tint that isn't being
+      // applied at all while its own switch is off, so the sub-row follows
+      // the switch above it rather than sitting there configuring nothing.
       for (const key of ["past", "today", "soon"]) {
-        const toggle = this.shadowRoot.querySelector(`.display-body input[data-highlight="${key}"]`);
-        setRowHidden(toggle, isTimeline);
-        const colorInput = this.shadowRoot.querySelector(`.display-body input[data-color="highlight_${key}"]`);
-        setRowHidden(colorInput, isTimeline);
+        for (const badge of BADGE_KEYS) {
+          const current = badgeTargets(this._config, badge);
+          for (const target of BADGE_TARGET_KEYS) {
+            const box = this.shadowRoot.querySelector(
+              `.highlight-body input[data-badge-target="${badge}:${target}"]`
+            );
+            if (box) box.checked = current[target] === true;
+          }
+        }
+        const bgInput = this.shadowRoot.querySelector(
+          `.highlight-body input[data-color="highlight_${key}"]`
+        );
+        if (bgInput) {
+          const bgRow = bgInput.closest(".field-row");
+          setRowHidden(bgInput, isTimeline);
+          const controls = bgRow.querySelector(".field-input-row");
+          if (controls) {
+            controls.style.display = this._config[`highlight_${key}`] === true ? "" : "none";
+          }
+        }
       }
       // The VIP/Important/To-do icon fields apply to both layouts (the list
       // layout's corner badges, the timeline's dot/list glyphs), so they
       // stay put. Their two Badge Color fields don't: each colors one
       // layout only, so only the active layout's field is shown.
-      for (const key of ["vip_badge", "important_badge", "todo_badge"]) {
-        setRowHidden(this.shadowRoot.querySelector(`.display-body input[data-color="${key}"]`), isTimeline);
-        setRowHidden(
-          this.shadowRoot.querySelector(`.display-body input[data-color="${key}_timeline"]`),
-          !isTimeline
+      // ...and the icon field goes with them: with the badge switched off
+      // there is no glyph to choose or color in either layout.
+      // Every to-do control needs a to-do list to read from; without one the
+      // card can neither badge an event nor filter by open items. Kept once
+      // the badge has been configured, so a card that had one keeps its
+      // settings reachable after the list is removed.
+      const todoUsed =
+        this._hasTodoLists() ||
+        this._config.show_todo_only === true ||
+        this._config.todo_complete_from_card === false ||
+        this._config.todo_badge_icon !== "mdi:pin" ||
+        Object.keys(this._config.colors || {}).some(
+          (k) => k.startsWith("todo_badge") && this._config.colors[k]
         );
+      setRowHidden(this.shadowRoot.querySelector('input[data-visibility="todo_only"]'), !todoUsed);
+      setRowHidden(
+        this.shadowRoot.querySelector('input[data-visibility="todo_complete_from_card"]'),
+        !todoUsed
+      );
+      setRowHidden(this.shadowRoot.querySelector('.highlight-body input[data-highlight="todo"]'), !todoUsed);
+      this._applySuffixGroupVisibility(this.shadowRoot);
+      // Time, Location and Description write an embedded calendar event's
+      // own fields and stay blank on every Annuals event, so there is
+      // nothing to add them for until a calendar is embedded. A card that
+      // already has one of them in the list keeps them offered.
+      const addSelect = this.shadowRoot.querySelector("select[data-column-add-type]");
+      if (addSelect) {
+        const calendarColumnTypes = ["time", "location", "description"];
+        const columns = this._currentColumns() || [];
+        const calendarColumnsUsed =
+          this._hasExternalCalendars() ||
+          columns.some((c) => c && calendarColumnTypes.includes(c.type));
+        for (const opt of addSelect.options) {
+          const hide = !calendarColumnsUsed && calendarColumnTypes.includes(opt.value);
+          opt.hidden = hide;
+          opt.style.display = hide ? "none" : "";
+        }
+        const picked = addSelect.options[addSelect.selectedIndex];
+        if (picked && picked.hidden) {
+          const first = Array.from(addSelect.options).find((o) => !o.hidden);
+          if (first) addSelect.value = first.value;
+        }
+      }
+      const badgeSwitches = {
+        vip_badge: "show_vip_badge",
+        important_badge: "show_important_badge",
+        todo_badge: "show_todo_badge",
+      };
+      // Both halves of the list badge - the symbol and the disc behind it -
+      // are list-only, so each layout shows only its own colour fields: two
+      // in the list, the Timeline's single one in the timeline.
+      const listOnlyColors = {
+        vip_badge: ["vip_badge_fg", "vip_badge"],
+        important_badge: ["important_badge_fg", "important_badge"],
+        todo_badge: ["todo_badge", "todo_badge_bg"],
+      };
+      for (const key of ["vip_badge", "important_badge", "todo_badge"]) {
+        const off = this._config[badgeSwitches[key]] !== true || (key === "todo_badge" && !todoUsed);
+        setRowHidden(
+          this.shadowRoot.querySelector(`.highlight-body [data-field="${key}_icon"]`),
+          off
+        );
+        for (const field of listOnlyColors[key]) {
+          setRowHidden(
+            this.shadowRoot.querySelector(`.highlight-body input[data-color="${field}"]`),
+            isTimeline || off
+          );
+        }
+        setRowHidden(
+          this.shadowRoot.querySelector(`.highlight-body input[data-color="${key}_timeline"]`),
+          !isTimeline || off
+        );
+      }
+
+      // The Timeline tab configures one layout only, so in the list layout
+      // there is nothing in it to set - the tab keeps its panel description
+      // ("Only used when Layout style is set to Timeline"), which says how to
+      // get the settings back, and drops everything below it.
+      // Guarded on the tab actually being the active one: _selectTab owns
+      // this element's display while another tab is open, and un-hiding it
+      // here would show the timeline settings underneath whatever tab the
+      // user is really looking at.
+      this._fixBlockLeadingRows();
+      const calendarFieldsUsed =
+        this._hasExternalCalendars() ||
+        this._config.timeline_show_time === true ||
+        this._config.timeline_show_location === true ||
+        this._config.timeline_show_description === true;
+      for (const key of ["timeline_show_time", "timeline_show_location", "timeline_show_description"]) {
+        setRowHidden(
+          this.shadowRoot.querySelector(`.timeline-config-body input[data-visibility="${key}"]`),
+          !calendarFieldsUsed
+        );
+      }
+      // Holiday settings need holidays among the selected types.
+      const activeForHolidays = this._activeTypes();
+      const holidaysUsed =
+        !activeForHolidays ||
+        activeForHolidays.has("holiday") ||
+        this._config.holiday_merge_observed === true ||
+        this._config.holiday_merge_regions === true ||
+        this._config.show_holiday_suffix === true;
+      for (const key of ["holiday_merge_observed", "holiday_merge_regions", "show_holiday_suffix"]) {
+        setRowHidden(
+          this.shadowRoot.querySelector(`input[data-visibility="${key}"]`),
+          !holidaysUsed
+        );
+      }
+      const timelineBody = this.shadowRoot.querySelector(".timeline-config-body");
+      if (timelineBody && this._activeGroup === "timeline") {
+        timelineBody.style.display = isTimeline ? "" : "none";
+      }
+      // The mirror image: the List view tab holds the row columns and
+      // nothing else, so in the timeline layout it keeps only its panel
+      // description ("Only used when Layout style is set to List"). Same
+      // _activeGroup guard as above - _selectTab owns this element's
+      // display while another tab is open.
+      const listBody = this.shadowRoot.querySelector(".list-config-body");
+      if (listBody && this._activeGroup === "list") {
+        listBody.style.display = isTimeline ? "none" : "";
+      }
+      // Both of those notes exist to explain an empty tab. Once the tab has
+      // its settings in it they explain nothing and just push everything
+      // down a line, so each one shows only while its own layout is the
+      // inactive one. Runs after _selectTab has set the text, which is what
+      // decides whether there is a note at all.
+      if (this._activeGroup === "list" || this._activeGroup === "timeline") {
+        const note = this.shadowRoot.querySelector(
+          '.super-panel[data-super="layout"] .panel-description'
+        );
+        const tabIsEmpty = this._activeGroup === "timeline" ? !isTimeline : isTimeline;
+        if (note) note.style.display = tabIsEmpty ? "" : "none";
       }
 
       // Row columns has nothing to configure in the timeline layout either
@@ -15647,13 +20082,18 @@
       const columnsSection = this.shadowRoot.querySelector(".columns-section");
       if (columnsSection) columnsSection.style.display = isTimeline ? "none" : "";
 
-      // Settings -> General: tap/hold only drive the list layout's own row
-      // click handling - the timeline has no "row" to tap, since its axis
-      // dots (click to open a tooltip) and header sentence (no click at all)
-      // already have their own fixed behavior.
-      const tapSlot = this.shadowRoot.querySelector('[data-action-slot="tap_action"]');
-      const tapSplitRow = tapSlot && tapSlot.closest(".field-row-split");
-      if (tapSplitRow) tapSplitRow.style.display = isTimeline ? "none" : "";
+      // Tap/hold need no rule of their own any more: they sit in the List
+      // view tab, which is hidden whole in the timeline layout.
+
+      // Last, because the loop above owns `display` for every color row and
+      // would otherwise re-show the badge's Background color row that
+      // _syncColorInputs had just hidden - this runs after it and has the
+      // final say. It only ever hides further, never un-hides in the
+      // timeline layout, since it returns early there via the same rows.
+      // Only when the Occurrence badge itself is on screen: otherwise the
+      // loop above already hid this row for having no column, and this call
+      // would put it back.
+      if (!listFieldHidden("badge")) this._syncBadgeBackgroundRow();
     }
 
     _superForGroup(key) {
@@ -15680,9 +20120,9 @@
         events: this.shadowRoot.querySelector(".events-body"),
         period: this.shadowRoot.querySelector(".period-body"),
         display: this.shadowRoot.querySelector(".display-body"),
-        colors: this.shadowRoot.querySelector(".colors-body"),
-        icons: this.shadowRoot.querySelector(".icons-body"),
-        fonts: this.shadowRoot.querySelector(".fonts-body"),
+        list: this.shadowRoot.querySelector(".list-config-body"),
+        design: this.shadowRoot.querySelector(".design-body"),
+        highlight: this.shadowRoot.querySelector(".highlight-body"),
         background: this.shadowRoot.querySelector(".background-body"),
         timeline: this.shadowRoot.querySelector(".timeline-config-body"),
       };
@@ -15701,13 +20141,21 @@
       if (key === "general") this._syncGeneralInputs();
       if (key === "events") this._syncEventsInputs();
       if (key === "period") this._syncPeriodInputs();
-      if (key === "fonts") this._syncFontInputs();
-      if (key === "display") this._syncDisplayInputs();
-      if (key === "icons") { this._syncColorInputs(); this._syncIconsInputs(); }
+      if (key === "design") {
+        this._syncColorInputs();
+        this._syncFontInputs();
+        this._syncAccentBarFields();
+      }
+      if (key === "list") this._syncDisplayInputs();
+      if (key === "highlight") {
+        this._syncDisplayInputs();
+        this._syncColorInputs();
+        this._syncIconsInputs();
+      }
       if (key === "background") this._syncBackgroundInputs();
       if (key === "timeline") this._syncTimelineInputs();
       // Re-applied after the body-swap above, which unconditionally shows
-      // whichever body just became active (including icons-body) - without
+      // whichever body just became active (including the Highlight tab) - without
       // this, switching to a hidden-when-timeline tab would instantly
       // un-hide it again.
       this._applyLayoutStyleVisibility();
@@ -15790,9 +20238,9 @@
         this.shadowRoot.appendChild(this._buildEventsBody(strings));
         this.shadowRoot.appendChild(this._buildPeriodBody(strings));
         this.shadowRoot.appendChild(this._buildDisplayBody(strings));
-        this.shadowRoot.appendChild(this._buildColorsBody(strings));
-        this.shadowRoot.appendChild(this._buildIconsBody(strings));
-        this.shadowRoot.appendChild(this._buildFontsBody(strings));
+        this.shadowRoot.appendChild(this._buildListBody(strings));
+        this.shadowRoot.appendChild(this._buildDesignBody(strings));
+        this.shadowRoot.appendChild(this._buildHighlightBody(strings));
         this.shadowRoot.appendChild(this._buildBackgroundBody(strings));
         this.shadowRoot.appendChild(this._buildTimelineBody(strings));
 
@@ -15801,16 +20249,7 @@
         // whichever section the user opens first shows the right content,
         // it just isn't forced open on load.
         this._selectTab(this._activeGroup);
-        this._syncGeneralInputs();
-        this._syncEventsInputs();
-        this._syncPeriodInputs();
-        this._syncColorInputs();
-        this._syncIconsInputs();
-        this._syncFontInputs();
-        this._syncDisplayInputs();
-        this._syncBackgroundInputs();
-        this._syncTimelineInputs();
-        this._applyLayoutStyleVisibility();
+        this._syncAllInputs();
         return;
       }
 
@@ -15833,16 +20272,7 @@
       const descText = this._groupText(this._activeGroup, strings)[1];
       activeDesc.textContent = descText;
       activeDesc.style.display = descText ? "" : "none";
-      this._syncGeneralInputs();
-      this._syncEventsInputs();
-      this._syncPeriodInputs();
-      this._syncColorInputs();
-      this._syncIconsInputs();
-      this._syncFontInputs();
-      this._syncDisplayInputs();
-      this._syncBackgroundInputs();
-      this._syncTimelineInputs();
-      this._applyLayoutStyleVisibility();
+      this._syncAllInputs();
     }
   }
 
@@ -15855,5 +20285,45 @@
     name: "Annuals Card",
     description: "Upcoming yearly-recurring events (birthdays, anniversaries, ...) with a today highlight.",
     preview: true,
+    // Offers this card in the "Add card -> By entity" picker's Community
+    // section whenever the picked entity is one this card is actually for.
+    // Deliberately narrow: an entity of any other kind returns null, since a
+    // card suggested for everything only makes the picker harder to use.
+    //
+    // Note this card is not entity-bound the way most cards are - it finds
+    // every Annuals event itself (see getEvents). So picking an Annuals
+    // sensor suggests the plain card rather than one pinned to that single
+    // sensor, which is what the user gets by adding it any other way.
+    // A calendar entity is different: those are opt-in per card, so the
+    // suggestion pre-fills the one that was picked.
+    getEntitySuggestion: (hass, entityId) => {
+      if (typeof entityId !== "string") return null;
+      if (entityId.startsWith(ENTITY_PREFIX)) {
+        return { config: { type: "custom:annuals-card" } };
+      }
+      if (!entityId.startsWith("calendar.")) return null;
+
+      // Annuals publishes a calendar entity per event type of its own
+      // (calendar.annuals_birthday, ...). Those must NOT be suggested as
+      // external calendars: the card already shows those events natively,
+      // and embedding them would list every one of them twice. Picking one
+      // is a good hint about intent though, so it suggests the card
+      // narrowed to that event type.
+      const registry = hass && hass.entities && hass.entities[entityId];
+      const isOwn = registry
+        ? registry.platform === "annuals"
+        : entityId.startsWith("calendar.annuals_");
+      if (isOwn) {
+        const type = entityId.slice("calendar.annuals_".length);
+        return {
+          config: EVENT_TYPE_KEYS.includes(type)
+            ? { type: "custom:annuals-card", types: [type] }
+            : { type: "custom:annuals-card" },
+        };
+      }
+      return {
+        config: { type: "custom:annuals-card", external_calendars: [entityId] },
+      };
+    },
   });
 })();

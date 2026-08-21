@@ -8,6 +8,7 @@ from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.util import dt as dt_util
 from homeassistant.util import slugify
 
 from .const import (
@@ -144,7 +145,15 @@ class AnnualEventSensor(SensorEntity):
     def _update_state(self) -> None:
         data = self._config_entry.data
         event_type: str = data[CONF_EVENT_TYPE]
-        today = date.today()
+        # Home Assistant's own configured time zone, not the OS's. The two
+        # are usually the same and then this changes nothing - but they do
+        # not have to be, and the midnight refresh that drives this is
+        # scheduled in HA's zone (see async_track_time_change in
+        # __init__.py). Reading the day from the OS instead left every
+        # countdown a day out for the offset between them, right after the
+        # refresh that was supposed to roll it over. The calendar entity has
+        # always used this (see calendar.py); now the sensor agrees with it.
+        today = dt_util.now().date()
 
         if event_type == TYPE_HOLIDAY:
             self._update_holiday_state(data, today)

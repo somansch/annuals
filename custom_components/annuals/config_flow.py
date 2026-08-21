@@ -17,6 +17,9 @@ from homeassistant.data_entry_flow import section
 from homeassistant.components.http.auth import async_sign_path
 from homeassistant.config_entries import ConfigEntry, SOURCE_IMPORT, ConfigFlow, OptionsFlow
 from homeassistant.core import HomeAssistant, callback
+# The same list CountrySelector validates the submitted value against - see
+# _SUPPORTED_HOLIDAY_COUNTRIES below for why this has to be consulted here.
+from homeassistant.generated.countries import COUNTRIES
 from homeassistant.helpers.selector import selector
 
 from .const import (
@@ -124,12 +127,32 @@ FORM_BREAK_START = "break_start"
 FORM_BREAK_END = "break_end"
 FORM_BREAK_DAYS = "break_days"
 
-# Every 2-letter country code the `holidays` library supports - it also
-# registers 3-letter ISO 3166-1 alpha-3 aliases for the same countries, which
-# are deliberately excluded here so the picker (and HA's built-in country
-# selector, which expects alpha-2) shows each country exactly once.
+# Every country code the `holidays` library supports that HA's built-in
+# country selector will actually accept, which is narrower than "everything
+# two letters long" in two ways.
+#
+# The library also registers 3-letter ISO 3166-1 alpha-3 aliases for the same
+# countries; the length check drops those, so each country is offered once.
+#
+# COUNTRIES is what CountrySelector itself validates the submitted value
+# against, and two of the library's 2-letter codes are not in it:
+#
+#   UK - the library's own alias for the United Kingdom, whose ISO 3166-1
+#        alpha-2 code is GB. Both are registered, so without this the picker
+#        listed the UK twice and choosing the alias was rejected by the
+#        selector with "Value UK is not a valid option" - an option that
+#        could be picked but never submitted. GB is offered instead and
+#        covers exactly the same four subdivisions.
+#   XK - Kosovo, which has no official alpha-2 code at all (XK is
+#        user-assigned), so HA does not know it and it cannot be offered
+#        here. Its holidays stay unreachable through this form.
+#
+# Intersecting rather than listing the two by name, so a future library
+# release adding another non-ISO code can't reintroduce the same dead option.
 _SUPPORTED_HOLIDAY_COUNTRIES = sorted(
-    code for code in holidays_lib.list_supported_countries() if len(code) == 2
+    code
+    for code in holidays_lib.list_supported_countries()
+    if len(code) == 2 and code in COUNTRIES
 )
 
 def _event_type_selector():
@@ -1482,7 +1505,14 @@ class AnnualsOptionsFlow(OptionsFlow):
                 rows, row_errors = await self.hass.async_add_executor_job(
                     _parse_uploaded_csv, self.hass, user_input["csv_file"]
                 )
-            except (OSError, UnicodeDecodeError, csv.Error):
+            # ValueError covers a stale upload id: process_uploaded_file
+            # deletes the file once it has been read, so re-submitting the same
+            # form - after a "no valid rows" error, or after a restart - hands
+            # it an id that no longer exists. Without this the flow died with
+            # "Unknown error occurred" instead of its own message. The ICS and
+            # vCard steps have always caught it; these two had not.
+            # UnicodeDecodeError is a ValueError, so it is covered too.
+            except (OSError, ValueError, csv.Error):
                 errors["base"] = "invalid_csv"
             else:
                 for message in row_errors:
@@ -2443,7 +2473,14 @@ class AnnualsOptionsFlow(OptionsFlow):
                     _read_uploaded_text, self.hass, user_input["csv_file"]
                 )
                 rows = list(csv.DictReader(io.StringIO(text)))
-            except (OSError, UnicodeDecodeError, csv.Error):
+            # ValueError covers a stale upload id: process_uploaded_file
+            # deletes the file once it has been read, so re-submitting the same
+            # form - after a "no valid rows" error, or after a restart - hands
+            # it an id that no longer exists. Without this the flow died with
+            # "Unknown error occurred" instead of its own message. The ICS and
+            # vCard steps have always caught it; these two had not.
+            # UnicodeDecodeError is a ValueError, so it is covered too.
+            except (OSError, ValueError, csv.Error):
                 errors["base"] = "invalid_csv"
             else:
                 by_identity: dict[tuple, ConfigEntry] = {}

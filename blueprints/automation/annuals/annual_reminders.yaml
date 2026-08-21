@@ -477,7 +477,13 @@ variables:
   tts_engine: !input tts_engine
   tts_media_players: !input tts_media_players
   todo_list: !input todo_list
-  reminder_days_list: "{{ reminder_days.split(',') | map('trim') | map('int') | list }}"
+  # Anything that is not a plain number is dropped rather than handed to
+  # `int`, whose default is 0 - so a trailing comma ("7,1,0,"), a stray
+  # blank or a typo used to add a silent "remind on the day" nobody asked
+  # for, and clearing the field meant [0] rather than "never remind".
+  reminder_days_list: >-
+    {{ reminder_days.split(',') | map('trim')
+       | select('match', '^\d+$') | map('int') | list }}
   # "Event types" is a multi-select, but it used to be a single-choice
   # dropdown storing a plain string (and "" for "none") - an automation
   # created back then still has that shape, so it's normalised to a list
@@ -775,7 +781,12 @@ action:
              and (trigger.event.data.action | default('')).startswith('annuals_reminder_done|') }}
         sequence:
           - variables:
-              action_parts: "{{ trigger.event.data.action.split('|') }}"
+              # Split at most twice: the third part is the item summary,
+              # which is the rendered notification title and therefore free
+              # text. A pipe in it used to cut the summary short here, so
+              # todo.update_item looked for an item that does not exist and
+              # the "Done" button quietly did nothing.
+              action_parts: "{{ trigger.event.data.action.split('|', 2) }}"
               done_todo_list: "{{ action_parts[1] }}"
               done_summary: "{{ action_parts[2] }}"
           - action: todo.update_item

@@ -13,6 +13,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.event import async_track_time_change
 from homeassistant.helpers.storage import Store
+from homeassistant.util import dt as dt_util
 from homeassistant.helpers.typing import ConfigType
 
 from .const import (
@@ -85,7 +86,10 @@ async def _async_purge_expired_one_time_events(hass: HomeAssistant) -> None:
     to, so (unlike everything else in this integration) it's cleaned up
     automatically instead of sticking around until manually removed.
     """
-    today = date.today()
+    # HA's configured time zone, not the OS's - see _update_state in
+    # sensor.py. This decides whether a one-time event is over, so an
+    # hour's disagreement is a whole event removed a day early.
+    today = dt_util.now().date()
     for entry in list(hass.config_entries.async_entries(DOMAIN)):
         data = entry.data
         if data.get(CONF_EVENT_TYPE) != TYPE_ONE_TIME:

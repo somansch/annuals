@@ -76,15 +76,17 @@ That's the whole setup - everything below covers the individual features and opt
   - [Events that span several days](#events-that-span-several-days)
 - [Native Calendar card](#native-calendar-card)
 - [Custom dashboard card](#custom-dashboard-card)
+  - [The visual editor](#the-visual-editor) - and why it only shows part of itself
   - [Date format](#date-format)
-  - [The visual editor](#the-visual-editor)
-  - [Row columns](#row-columns)
   - [Holidays from several places](#holidays-from-several-places)
   - [To-dos](#to-dos)
   - [External calendars](#external-calendars)
+  - [Row columns](#row-columns) - List view
+  - [Day, week and month separators](#day-week-and-month-separators) - List view
+  - [Row click/tap behavior](#row-clicktap-behavior) - List view
   - [Timeline layout](#timeline-layout)
-  - [Icon animations](#icon-animations)
-  - [Row click/tap behavior](#row-clicktap-behavior)
+  - [Row colors](#row-colors) - Design and Highlight
+  - [Icon animations](#icon-animations) - Design and Highlight
   - [Example configurations](#example-configurations)
   - [Theming with CSS variables](#theming-with-css-variables)
 
@@ -232,7 +234,10 @@ data:
 ## Importing events from an ICS calendar
 
 1. **Upload** the `.ics` file. Only all-day entries are read; timed (non-birthday-style) entries are skipped automatically.
-2. **Settings** - optionally **swap first/last name for every entry at once** (useful if the source calendar lists last name first), optionally **use the year found in each entry's description instead of its start date** (many exported "Birthdays" calendars set every event to a fixed placeholder year, while the real birth year - if known - is buried as text in the event's description, e.g. "born 1985"; enabling this searches for a plausible year there and uses it whenever one is found, otherwise falling back to the start date's year), and pick the **event type** to import as (defaults to Birthday).
+2. **Settings** - three, all optional:
+   - **Swap first/last name for every entry at once**, for a source calendar that lists the last name first.
+   - **Use the year found in each entry's description instead of its start date.** Many exported "Birthdays" calendars set every event to a fixed placeholder year and bury the real birth year in the description as text, e.g. "born 1985". This searches there for a plausible year and uses it whenever one is found, falling back to the start date's year otherwise.
+   - **Event type** to import as - Birthday by default.
 3. **Review** - every entry, one page at a time for large contact lists, with its proposed first/last name split (split on the last space, e.g. "Anna Maria Miller" → first name "Anna Maria", last name "Miller") and the birthday itself, all pre-filled and editable, plus a checkbox to leave out any entry you don't want. A **"Go back"** field at the top returns to the previous page, or to the Settings step from the first page, without losing anything already entered. Field labels on this page are shown in English only regardless of your language setting.
 
 If an entry's day/month and name overlap with an event you already have (of the same type), it's flagged as a possible duplicate right there in the review step, naming the existing entry - leave the "create as new entry" box unchecked to update that existing entry instead of adding a second one, or check it to bring both in side by side.
@@ -250,12 +255,17 @@ Re-running either branch later for the same contacts/dates updates exactly-match
 
 ## Importing public holidays
 
-Find the **"Annuals Settings" hub entry** under **Settings → Devices & Services → Annuals**, click **Configure**, and pick **"Import events" → "Holidays"**. Annuals uses the [`holidays`](https://pypi.org/project/holidays/) Python library - already a dependency of this integration, not a separate download - which covers **250+ countries and territories and 150+ languages** for holiday names, so most countries' holidays are available out of the box.
+Find the **"Annuals Settings" hub entry** under **Settings → Devices & Services → Annuals**, click **Configure**, and pick **"Import events" → "Holidays"**. Annuals uses the [`holidays`](https://pypi.org/project/holidays/) Python library - already a dependency of this integration, not a separate download - which covers **250+ countries and territories and 150+ languages** for holiday names, so most countries' holidays are available out of the box. The picker offers the 249 of them that Home Assistant's own country selector recognises - the United Kingdom appears as `GB` (its ISO code) rather than the library's `UK` alias, and Kosovo is unavailable because it has no official two-letter code at all.
 
 The wizard is two steps:
 
 1. **Country** - pick from the full list the `holidays` library supports.
-2. For that country: whether to import each holiday's **actual date**, its practically-**observed date** (many countries shift a holiday that falls on a weekend to a nearby weekday - e.g. a Saturday US federal holiday is observed the preceding Friday), or both as separate events (actual only, by default) - which parts of a **multi-day break** to import, for countries that have them (see [School holidays](#school-holidays-and-other-multi-day-breaks) below) - one or more optional **states/provinces** (leave empty for national holidays only; picking some adds those regions' own holidays on top), **categories** (which ones are offered depends entirely on what that country's holiday data provides - e.g. `public`, `bank`, `school`, `catholic` - see the table below), and **language** for the holiday names (also country-dependent).
+2. **What to import for that country** - five choices:
+   - **Which date**: each holiday's **actual date**, its practically-**observed date**, or both as separate events. Actual only, by default. Many countries shift a holiday that falls on a weekend to a nearby weekday - a Saturday US federal holiday is observed the preceding Friday.
+   - **Which parts of a multi-day break**, for countries that have them - see [School holidays](#school-holidays-and-other-multi-day-breaks) below.
+   - **States/provinces**: leave empty for national holidays only; picking some adds those regions' own holidays on top.
+   - **Categories** such as `public`, `bank`, `school` or `catholic`. Which ones are offered depends entirely on what that country's holiday data provides - see the table below.
+   - **Language** for the holiday names, also country-dependent.
 
 A holiday the whole country observes is stored **once**, without a region, no matter how many of that country's regions you import; only holidays a region has to itself are kept per region. So importing California and Utah gives you one Thanksgiving, plus Cesar Chavez Day for California and Pioneer Day for Utah.
 
@@ -594,7 +604,7 @@ What changes once it has one:
 - Extra attributes come along: `end_date`, `days_until_end`, `duration_days`, `in_progress` and `reminder_message_end` (the translated countdown phrase for the *end*, e.g. "in 3 days"). They're absent on single-day events, so anything reading them can use their presence as "this one spans several days".
 - The event is **removed after its last day**, not after its first - a two-week holiday stays on the dashboard for the whole two weeks.
 - On the **calendar entity** it's one all-day event covering the whole range, instead of a single day at the start.
-- The **[dashboard card](#custom-dashboard-card)** can list it as its first day, its last day, both, or one row per day - Events → *Multi-day events*, shown only while **One-time event** is among the types the card displays. Each row says which part it is - `Vacation (start)`, `(end)`, `(day 3)`, in the language the card is read in - so it can't be mistaken for an ordinary single-day row. Days already past are dropped, so on day five of a fortnight the list starts at day five.
+- The **[dashboard card](#custom-dashboard-card)** can list it as its first day, its last day, both, or one row per day - Events → *Multi-day events*, shown only while **One-time event** is among the types the card displays. Each row says which part it is - `Vacation (start)`, `(end)`, `(day 3)`, in the language the card is read in - so it can't be mistaken for an ordinary single-day row. Every row counts from the day it is about, so each one is subject to the card's own past-event settings: on day five of a fortnight the per-day list starts at day five, and the *first day* row is gone unless the card shows past events. A card set to *Only the first day* therefore stops listing a trip once it has begun - *First and last day* keeps it through its end row, *Every day* through the day it is on.
 - The **[reminder blueprint](#blueprint-upcoming-event-reminders)** can count down to the start, to the end, or both, each using the same "days before" thresholds - Multi-day events → *Remind about*. With to-do tracking on, departure and return become two separate items rather than one that either can tick off.
 
 The **end_date** column also rides along in the [event CSV](#exporting-events-to-csv), as an ISO `YYYY-MM-DD` date in the last column. A CSV written before this existed imports unchanged.
@@ -637,11 +647,50 @@ Add a **Calendar card** pointed at one or more of the `calendar.annuals_<type>` 
 
 ## Custom dashboard card
 
-Annuals bundles its own Lovelace card (`custom:annuals-card`) - no separate frontend package to install via HACS, it ships with the integration and registers itself automatically. Add it to a dashboard the normal way (search for "Annuals Card" in the card picker) and configure it entirely through its visual editor, no YAML required: which event categories to show, whether to show a holiday's actual date and/or its observed (shifted) date if you imported both (or a **"Prefer observed date"** toggle that merges an actual/observed pair into one clean entry - drops the "(observed)" suffix and hides the actual duplicate), the time window, VIP/Important filters, per-field colors and fonts, highlight tinting for past/today/soon rows, and an optional card background image or color.
+Annuals bundles its own Lovelace card (`custom:annuals-card`). There is no separate frontend package to install: it ships with the integration and registers itself automatically.
+
+Add it to a dashboard the normal way - search for "Annuals Card" in the card picker - or add it **by entity**. Picking an Annuals event sensor, one of Annuals' own calendars or any other calendar there offers the card among the suggestions, already configured for what you picked.
+
+Everything after that is set in the visual editor, no YAML required: which event types to show, the time window, the VIP and Important filters, the appearance of every element in a row, what past, today and soon rows look like, and an optional background image or color. If you imported a holiday's actual *and* observed date, **Prefer observed date** (Settings → Events) folds the pair into one entry - it drops the "(observed)" suffix and hides the duplicate.
 
 The card's own UI text (not the integration's entities/config-flow, which follow your server's language setting) follows **your personal profile language** - Settings → People → your user → Language - and is available in the same 15 languages as the rest of the integration.
 
 To override that per card, set **Language** (Settings → General) to one of those 15 language codes: the card then reads the same for everyone who sees it, no matter whose profile is looking at it - useful for a wall-mounted tablet, a shared household dashboard, or simply a card you want in a specific language. It covers the card's own text and its date/time formatting together, so the two never end up in different languages. Left on **Automatic**, each viewer keeps seeing their own language, exactly as before. The card *editor* always stays in your own profile language, so pinning a card to a language you don't read never leaves you stuck in a form you can't find your way back out of. Missing a language? The **"Missing your language?"** link right below opens a pre-filled feature request for it.
+
+**No events text** (Settings → General) is what the card writes in place of the list when it has nothing to show. Left empty it stays the built-in phrase, translated into whichever language the card is read in - the same way an empty **Card title** keeps the default one. Its own appearance sits in Layout → **Design**, in a block directly under Card title: a color, a size and the four style toggles, like every other element. Both layouts fall back to the same line, so the block is always listed rather than following the row columns.
+
+A List card, a Timeline card, and a Compact one-line card, side by side - all the same integration, three different layouts:
+
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-summary.png" alt="List, Timeline, and Compact layouts side by side" width="90%">
+
+### The visual editor
+
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-editor.png" alt="Annuals card visual editor" width="45%">
+
+The editor is split into two panels. **Settings** holds what the card shows - **General** (title, language, date format), **Events** (which types to include, holidays, to-dos, external calendars) and **Time period** (days ahead, days past, the "soon" threshold). **Layout** holds how it looks - **General** (list or timeline, and the event filters), **List view** (the row columns, separators, tap actions), **Timeline**, **Design** (one block per element: its color, its font, its style), **Highlight** (badges and the per-status colors) and **Card Background**.
+
+That is a lot of settings, and a form listing all of them at once would be unusable. So the editor shows only what your card can actually use, and nothing else. A control appears when either of two things is true:
+
+- **The data exists.** The Time, Location and Description settings wait until an [external calendar](#external-calendars) is embedded; the to-do filter and badge wait for a [to-do list](#to-dos); the holiday settings wait for holidays to be among the selected event types, and each event type gets a block of its own only while that type is selected.
+- **The function is switched on.** A color field appears once its own switch is on; the Accent bar's block appears once that column is in the row; the Date block's three lines appear with the Date block column; every list-only setting disappears in the Timeline layout, and vice versa; and the whole Timeline panel collapses to a one-line note while the card is in list layout.
+
+Two rules keep that from hiding something you still need. **Anything you have actually configured stays visible**, even after its source goes away - remove a to-do list and the to-do settings you had set are still there, ready for the next one. And a `{placeholder}` inside a [Custom text column](#row-columns) counts as using that field, so `{name} turns {occurrence}` keeps the Name and Occurrence entries listed in Design.
+
+Every row carries an **"i"** with a sentence on what it does, so nothing depends on guessing from the label alone.
+
+The sections below follow that same path, so reading on walks the editor rather than jumping between its tabs:
+
+| Where in the editor | Covered in |
+| --- | --- |
+| Settings → **General** | [Date format](#date-format) - and Card title, Language and the ["no events" line](#custom-dashboard-card) above |
+| Settings → **Events** | [Holidays from several places](#holidays-from-several-places), [To-dos](#to-dos), [External calendars](#external-calendars) |
+| Settings → **Time period** | Days ahead, days past and the "soon" threshold - three plain number fields |
+| Layout → **General** | The layout switch, and the VIP / Important / open-to-do filters |
+| Layout → **List view** | [Row columns](#row-columns), [Day, week and month separators](#day-week-and-month-separators), [Row click/tap behavior](#row-clicktap-behavior) |
+| Layout → **Timeline** | [Timeline layout](#timeline-layout) |
+| Layout → **Design** and **Highlight** | [Row colors](#row-colors), [Icon animations](#icon-animations) - and, through them, every element's own color and font |
+| Layout → **Card Background** | A color, an image, its sizing and its opacity, all behind one switch |
+
 
 ### Date format
 
@@ -664,37 +713,9 @@ The same setting drives the `{date}` placeholder in [Custom text columns](#row-c
 
 **Say "Today"** (right below) controls whether the Date column writes "Today" instead of the date on an event's own day. On by default; turn it off for a card meant to read as a plain date list.
 
-A List card, a Timeline card, and a Compact one-line card, side by side - all the same integration, three different layouts:
-
-<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-summary.png" alt="List, Timeline, and Compact layouts side by side" width="90%">
-
-### The visual editor
-
-<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-editor.png" alt="Annuals card visual editor" width="45%">
-
-The editor is split into two tabs - **Settings** (general settings, which event types to include, and the days-ahead/days-past/soon-threshold time window) and **Layout** (display/row columns, fonts, colors, icons, card background, and timeline) - each further grouped into collapsible sections so the form stays manageable even with this many options.
-
-### Row columns
-
-Each row's layout is fully configurable from Layout → Display → **Row columns**: add, remove, and reorder as many columns as you like, choosing from Icon, Name, Last name, Full name, Type, Name + Type, Full name + Type, Occurrence, Countdown, Date, Time, Location, Description, or free-form **Custom text**. **Date** shows the next occurrence in whichever of the eight formats **Date format** is set to (see [Date format](#date-format) below) - or "Today" once it's actually today, same as the Countdown column does. **Time**, **Location**, and **Description** only ever show anything for an [embedded external calendar event](#external-calendars) - they render empty for every Annuals event, which has none of the three. A custom text column mixes any text you like with placeholders - `{name}`, `{last_name}`, `{full_name}`, `{type}`, `{occurrence}`, `{when}`, `{date}`, `{country}`, `{time}`, `{location}`, `{description}` - so a row can read as one continuous sentence instead of a fixed table layout, e.g. turning "Anna · Birthday · 30 · Today" into "🎉 Anna turns 30 today! 🎉". Each placeholder keeps its own field's color and font (Layout → Colors/Fonts), so `{occurrence}` in a sentence still looks like an occurrence number - only the typography carries over, not the pill behind a real Occurrence badge. Sizes given in `em` compound with the Custom text size; use `px` for an absolute one. The default arrangement (before you change anything) is **Icon, Full name + Type, Occurrence, Countdown**.
-
-**Tap countdown for date** (same section, off by default) makes the Countdown column tappable: tapping swaps "in 2 days" for the event's actual date ("Mon, 3 Aug 2026"), tapping again swaps back - the same way Home Assistant's own activity feed toggles a relative time for an exact one. The rest of the row keeps triggering its usual [tap/hold action](#row-clicktap-behavior). The [Timeline layout](#timeline-layout) has its own equivalent under Layout → Timeline → Options, applying to the countdown at the end of its sentence.
-
-**Name flexibility for non-holiday events:** set a Last name on an event (Adding an event, above) to get first/last name apart - e.g. a **Name** column showing just "Anna" for a compact card, and a separate **Full name** column ("Anna Miller") elsewhere. Both Colors and Fonts have dedicated rows for Last name and Full name, right next to Name.
-
-Any column that includes a Type field - the standalone **Type** column, or the combined **Name + Type**/**Full name + Type** - shows its extra options grouped under two headings:
-- **Holidays only**: a **Suffix** toggle per name field (Name/Full name/Type on the combined columns, just Type on the standalone one) that appends the imported country (+ subdivision) for holiday rows, e.g. "· US (UT)". Plus a **Type label** toggle (on by default) that drops the type text itself for holidays - "Holiday (Public) · US (Hawaii)" becomes "US (Hawaii)" - for whom the category adds nothing next to the place. Holidays only: every other event type keeps its label, which is often all that cell says.
-- **External calendars only**: **Calendar name** (on by default - the source calendar's own name filling the Type cell), **Time**, **Location**, and **Description** - each only ever has an effect on an [embedded external calendar event](#external-calendars); every Annuals event, including a one-time event, ignores them. Turn **Calendar name** off once Time/Location/Description already say enough on their own, e.g. "10:00 AM–10:45 AM · YMCA Pool · Level 2" instead of "Personal · 10:00 AM–10:45 AM · YMCA Pool · Level 2". Joined the same " · " way as everything else on this card.
-
-Every toggle in both groups has its own "i" tooltip explaining exactly what it does.
-
-Turning on **Compact** mode removes the spacing between columns, centers the row, and equalizes the weight/opacity of every field - meant for exactly that sentence-style layout. Switching it on immediately swaps the columns to **Icon, Full name, Occurrence, Type, Countdown, Date**, with a plain space column automatically inserted before each of the last five so nothing runs together with no gap - a starting point you're still free to add, remove, or reorder from there. Switching Compact back off resets the columns to the standard (non-compact) default above. This is also how to build a small "today only" card: duplicate the card, turn on the **Today only** filter (Settings), reduce the columns to a single custom-text one, and enable Compact:
-
-<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/birthday_small_animated.gif" alt="Compact today-only birthday card" width="40%">
-
 ### Holidays from several places
 
-Once a card carries holidays from more than one country or region, three settings under Settings → Events → Holidays decide how that reads.
+Once a card carries holidays from more than one country or region, three settings on the Settings → Events tab decide how that reads.
 
 **Merge holidays shared by several countries** collapses one holiday observed in several places into a single row, listing the places after the name. **Region format** writes a region as `US (California)` rather than `US (CA)`; the country stays a code either way.
 
@@ -734,9 +755,9 @@ This pairs naturally with the bundled [reminder blueprint](#blueprint-upcoming-e
 
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-todo-tasks.gif" alt="Clicking a badged event's icon to complete its to-do item from the card" width="45%">
 
-**Open to-dos only** (Layout → Display → **Show / Hide**) turns the same matching into a filter: only events that still have an open item are shown. It narrows the neighboring **VIP only** / **Important only** toggles rather than joining them - those two combine with each other as "either", and this one then applies on top, so all three on means "the VIP or Important events that still have something to do". An embedded [external calendar](#external-calendars) event never carries a to-do the card can see, so it's filtered out too while this is on.
+**Open to-dos only** (Layout → General → **Show / Hide**) turns the same matching into a filter: only events that still have an open item are shown. It narrows the neighboring **VIP only** / **Important only** toggles rather than joining them - those two combine with each other as "either", and this one then applies on top, so all three on means "the VIP or Important events that still have something to do". Like the other two, it only narrows Annuals' own events: an embedded [external calendar](#external-calendars) event can never carry a to-do the card can see, so it stays in the list rather than being filtered out by a test it could never pass.
 
-The badge's icon and colors live with the other badges under Layout → Colors → **Highlight**: a **To-do tasks** on/off toggle, the MDI icon to use (`mdi:pin` by default), and separate List/Timeline colors (the theme's red by default) - exactly the same set of controls VIP and Important have.
+The badge's icon and colors live with the other badges under Layout → Highlight: a **To-do tasks** on/off toggle, the MDI icon to use (`mdi:pin` by default), and separate List/Timeline colors (the theme's red by default) - exactly the same set of controls VIP and Important have.
 
 ### External calendars
 
@@ -744,16 +765,70 @@ Settings → Events → **External calendars** lets you embed one or more of you
 
 Pick any number of calendars from the entity picker; each one's events within the card's configured day window (`days_ahead`/`days_past`/`soon_days`, same as everything else) are pulled in automatically - no import step, no separate entry, and no effect on Annuals' own `types`/`categories`/VIP/Important filters, which simply don't apply to a calendar event. To also show a calendar event's own time range, location, or description:
 
-- **List layout**: add a **Time**, **Location**, and/or **Description** column ([Row columns](#row-columns) above), or use the same three toggles inline on the Type field itself (see the **External calendars only** group above) - either way, they render empty for every non-calendar event.
+- **List layout**: add a **Time**, **Location**, and/or **Description** column ([Row columns](#row-columns)), or use the same three toggles inline on the Type field itself (see the **External calendars only** group above) - either way, they render empty for every non-calendar event.
 - **Timeline layout**: turn on **Show time** / **Show location** / **Show description** (Layout → Timeline → Options) - each appends into the same trailing parenthetical **Show date** already uses, e.g. "...is in 3 days (03:00 PM–04:00 PM · Home · Weekly sync)". All four are independent toggles; any combination (or none) can be on at once.
 
 A calendar event's icon comes from the source calendar's own icon. Its dot/text color follows that specific calendar's own **Calendar color** - each embedded calendar keeps its own color rather than sharing one. Its "type" text - wherever a row or Timeline sentence would otherwise show one - is the source calendar's own name by default, e.g. "Team meeting - Family", the same way an Annuals event shows "Anna - Birthday" (turn this off with the **Calendar name** toggle above once Time/Location/Description already say enough).
 
-Everything a calendar contributes - that calendar name plus Time, Location and Description - shares one **Calendar fields** entry in the Colors and Fonts tabs, whether it sits in a column of its own or inline on a Type column. Setting it apart from the Annuals fields around it is usually enough to tell an embedded calendar entry from an Annuals event at a glance, without adding a column that says so.
+Time, Location and Description each get their own row under **External calendar fields** in the Design tab, whether the field sits in a column of its own or inline on a Type column, so a long description can be sized down without shrinking the time above it. All three default to the theme's secondary text color. Setting them apart from the Annuals fields around them is usually enough to tell an embedded calendar entry from an Annuals event at a glance, without adding a column that says so. The group appears only once a calendar is actually embedded.
+
+### Row columns
+
+Each row's layout is set in Layout → List view → **Row columns**: add, remove and reorder as many columns as you like, choosing from Icon, Name, Last name, Full name, Type, Name + Type, Full name + Type, Occurrence, Countdown, Date, Date block, Accent bar, Time, Location, Description, or free-form **Custom text**. Three of them are worth a word:
+
+- **Date** writes the next occurrence in whichever of the eight formats **Date format** is set to (see [Date format](#date-format)) - or "Today" once it actually is, the same as the Countdown column.
+- **Time**, **Location** and **Description** only ever show anything for an [embedded external calendar event](#external-calendars). They render empty for every Annuals event, which has none of the three.
+- **Custom text** mixes your own text with placeholders - `{name}`, `{last_name}`, `{full_name}`, `{type}`, `{occurrence}`, `{when}`, `{date}`, `{country}`, `{time}`, `{location}`, `{description}` - so a row can read as one continuous sentence instead of a table: "Anna · Birthday · 30 · Today" becomes "🎉 Anna turns 30 today! 🎉". Each placeholder keeps its own field's color and font (Layout → Design), so `{occurrence}` still looks like an occurrence number - the typography carries over, not the pill behind a real Occurrence badge. Sizes in `em` compound with the Custom text size; use `px` for an absolute one.
+
+A new card starts on **Icon, Full name + Type, Occurrence, Countdown**. Three buttons above the list set the whole arrangement in one click, each still fully editable afterward:
+
+- **Default** - that same starting arrangement.
+- **Agenda** - Date block, Accent bar, Full name + Type, Occurrence, Icon, for a list that reads like a paper agenda rather than a table. It brings the week rule with it.
+- **Minimal** - Name, Occurrence and Countdown, for a card with room for nothing else.
+
+Whichever button matches the list as it stands is highlighted, so the buttons say where the card is and not only where it can go - touch a single column and none of them is marked any more. The Agenda arrangement was inspired by [Calendar Card Pro](https://github.com/alexpfau/calendar-card-pro) by [@alexpfau](https://github.com/alexpfau) – worth a look if a calendar-first card is what you are after.
+
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-listview-presets.png" alt="The Default, Agenda and Minimal row-column presets side by side" width="90%">
+
+**Date block** and **Accent bar** are the two columns that make a list read like a calendar agenda rather than a table. **Date block** writes the occurrence as three stacked lines - weekday, a large day number, and the month in capitals - instead of one line of text. It's a column of its own rather than a ninth [date format](#date-format): `{date}` in a custom text column and the [Timeline layout](#timeline-layout) keep using whatever Date format is set to. It always shows the real date, so *Say "Today"* has no effect on it; the row still says "today" through its countdown and its color. **Accent bar** is a colored bar the height of the row, in that row's own icon color - Accent, Today or Soon, as set under Layout → Design - so today and the next few days stand out before you read anything. Put it first for the usual left-edge stripe, or anywhere else you want a divider. Both are ordinary columns, so they move, repeat and disappear like the rest.
+
+Each of the Date block's three lines has its own block in Layout → **Design**, under a **Date block** heading of their own: *Weekday*, *Day* and *Month*. They are independent of the **Date** entry, which belongs to the separate Date column - sizes are relative to the card's own font size (0.75 / 1.5 / 0.75 when left empty), and an empty color means the weekday and month take the theme's secondary text color while the day takes its primary one. The month's small-caps look is the **Uppercase** toggle on its own row (on by default); switch it off for a plain "Aug". The day has no Uppercase toggle - it is a number.
+
+The **Accent bar** column has its own block in Layout → **Design**, alongside every other element: a **Color** and, where the others have a font, a **Width** (3px if left empty). Left empty, the color is the one thing the column is for - each bar takes its own row's color - and setting it here pins every bar to one fixed color instead. There is no on/off switch: the bar appears exactly when its column is in the row columns, and its block in Design appears with it.
+
+The bar can also carry the row's badges. Layout → Highlight opens with a **Badges** section holding the VIP, Important and to-do settings, and each of the three carries two switches of its own: **Event icon** draws that badge in the corner of the row's event icon, **Accent bar** draws it in a stack immediately left of the bar - centered against the row, and always ordered VIP, Important, to-do from the top. They are independent, so one badge can move to the bar while the others stay on the icon, or run in both places at once. Useful on a card that shows no icons at all, or one that wants the flags read as a column rather than as decoration on something else. The stack takes a badge's width whether it holds three or none, so every row's bar stays on the same vertical line. *Accent bar* is listed only while that column is in use, and neither switch appears in the timeline layout.
+
+Each badge is a symbol on a disc, and both are configurable: **Badge color** is the symbol, **Badge background color** the disc behind it.
+
+**Tap countdown for date** (Layout → List view, off by default) makes the Countdown column tappable: tapping swaps "in 2 days" for the event's actual date ("Mon, 3 Aug 2026"), tapping again swaps back - the same way Home Assistant's own activity feed toggles a relative time for an exact one. The rest of the row keeps triggering its usual [tap/hold action](#row-clicktap-behavior). The [Timeline layout](#timeline-layout) has its own equivalent under Layout → Timeline → Options, applying to the countdown at the end of its sentence.
+
+**Name flexibility for non-holiday events:** set a Last name on an event (Adding an event, above) to get first/last name apart - e.g. a **Name** column showing just "Anna" for a compact card, and a separate **Full name** column ("Anna Miller") elsewhere. The Design tab has dedicated blocks for Last name and Full name, right next to Name.
+
+Any column that includes a Type field - the standalone **Type** column, or the combined **Name + Type**/**Full name + Type** - shows its extra options grouped under two headings:
+- **Holidays only**: a **Suffix** toggle per name field (Name/Full name/Type on the combined columns, just Type on the standalone one) that appends the imported country (+ subdivision) for holiday rows, e.g. "· US (UT)". Plus a **Type label** toggle (on by default) that drops the type text itself for holidays - "Holiday (Public) · US (Hawaii)" becomes "US (Hawaii)" - for whom the category adds nothing next to the place. Holidays only: every other event type keeps its label, which is often all that cell says.
+- **External calendars only**: **Calendar name** (on by default - the source calendar's own name filling the Type cell), **Time**, **Location**, and **Description** - each only ever has an effect on an [embedded external calendar event](#external-calendars); every Annuals event, including a one-time event, ignores them. Each of the four gets its own line in the cell, with Time, Location and Description led by a clock, pin and text icon so they're recognizable at a glance; they used to run together on one " · " line, which became an unbroken string as soon as more than one was switched on. Turn **Calendar name** off once Time/Location/Description already say enough without it. Only these four stack - a holiday's own "Holiday (Public) · US (Hawaii)" still reads as a single line.
+
+Both groups follow the same rule as the rest of the editor: **Holidays only** is listed while holidays are among the selected event types, **External calendars only** while a calendar is embedded, and a column left with neither group simply has no block under it. Every toggle in both has its own "i" explaining exactly what it does.
+
+Turning on **Compact** mode removes the spacing between columns, centers the row, and equalizes the weight/opacity of every field - meant for exactly that sentence-style layout. Switching it on immediately swaps the columns to **Icon, Full name, Occurrence, Type, Countdown, Date**, with a plain space column automatically inserted before each of the last five so nothing runs together with no gap - a starting point you're still free to add, remove, or reorder from there. Switching Compact back off resets the columns to the standard (non-compact) default above. This is also how to build a small "today only" card: duplicate the card, turn on the **Today only** filter (Settings), reduce the columns to a single custom-text one, and enable Compact:
+
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/birthday_small_animated.gif" alt="Compact today-only birthday card" width="40%">
+
+### Day, week and month separators
+
+**Day separators**, **Week separators** and **Month separators** (Layout → List view) draw a line wherever two consecutive rows fall on different days, in different weeks, or in different months, breaking a long list into blocks. Nothing is re-sorted or grouped: they only mark the boundaries the list order already has. Where a week starts is Home Assistant's own **First day of the week**, the setting on each viewer's profile page (click your name at the bottom of the sidebar), next to Language and Time format. Left on its default, *Language*, the week starts wherever the language the card is being read in starts it - Monday across most of Europe, Sunday in the US - so the lines fall where the reader's own calendar breaks either way. A row that begins two boundaries at once gets only the coarser line.
+
+Each is its own block with a switch in its heading; turning one on reveals that scale's **Width**, **Style** (solid, dashed or dotted) and **Color**. Left unset, a line is 1px in the theme's own text color - dotted for days, dashed for weeks and solid for months, so a list with more than one on reads as a hierarchy.
+
+A line can also say which boundary it marks. **Show weekday**, **Show calendar week** and **Show month** write that name on the rule itself: centered, on a plate with strongly rounded corners in the card's own background color, so the line breaks around the text instead of running through it. The plate follows the text's own width, so "Monday" and "9" each leave exactly the gap they need. Switching one on reveals the label's own appearance, laid out like any Design block - **Label color** and **Label background**, empty meaning the theme's text color and the card's background, then **Font** with Bold/Italic/UPPERCASE/Underline and **Letter spacing**. The calendar week is counted from the same **First day of the week** that decides where the week lines fall, so a line and the number on it can never disagree; with a Monday start that is ISO-8601 week numbering. All three labels are off by default.
+
+### Row click/tap behavior
+
+Clicking or tapping a row opens its more-info dialog by default, and **Layout → List view** has a **Tap action** and a **Hold action** field to change that: More info, Navigate, URL, Perform action, Toggle, Assist, or Nothing. They sit with the row columns because they configure the list layout's own rows - the [Timeline layout](#timeline-layout) has no row to tap, its axis dots and header sentence having their own fixed behavior.
 
 ### Timeline layout
 
-**Layout style** (Layout → Display) switches the whole card from the classic row list to a **Timeline**: a compact horizontal axis with a dot per visible event (sized and positioned by how close it is to today), a header sentence for whichever day is soonest/most recent, and a "Details" toggle that expands the full chronological list. Handy for a narrow Sections-view column where a full row list doesn't fit.
+**Layout style** (Layout → General) switches the whole card from the classic row list to a **Timeline**: a compact horizontal axis with a dot per visible event (sized and positioned by how close it is to today), a header sentence for whichever day is soonest/most recent, and a "Details" toggle that expands the full chronological list. Handy for a narrow Sections-view column where a full row list doesn't fit.
 
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-timeline-example-1.png" alt="Timeline layout, collapsed" width="45%">
 
@@ -762,26 +837,51 @@ Tapping **Details** expands the same axis into the full chronological list, olde
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-timeline-example-2.png" alt="Timeline layout, expanded Details list" width="45%">
 
 - **Header** (Layout → Timeline): by default, the header shows one sentence per event tied for the very next (or most recent) day, with no cap and nothing pulled in from later days. **Max events per day** caps how many header lines a single day of tied events contributes - anything beyond the cap for that day still gets its own dot on the axis, just without a header line. **Always show N upcoming** always shows at least that many header lines in total, pulling in further days beyond the very next one if needed (each still subject to the cap above). Both are optional; leave either empty for the original, uncapped single-day behavior.
-- **Timeline line** / **Divider line** (Layout → Timeline): the axis's own width, style (solid/dashed/dotted), and color, and the same three for the vertical line marking the boundary between past and future events (only drawn once past events are visible).
 - **Options** (Layout → Timeline): **Show full name** shows each event's full name (first + last) instead of just the first name, everywhere the layout uses a name - the header, a dot's tooltip, and the expandable list. **Show holiday suffix** appends the imported country (+ subdivision) after a holiday's name, e.g. "Pioneer Day (US-UT)". **Show date** appends the short calendar date in parentheses at the very end, e.g. "...is in 3 days (6 Aug)" - left off on the event's own day, since the sentence there already ends "...is today". **Show location** / **Show time** / **Show description** each append an [embedded external calendar event's](#external-calendars) own location/time range/description into that same trailing parenthetical - see there for details. **Tap countdown for date** (off by default) makes just the countdown at the end of the sentence tappable, swapping "...is in 2 days" for "...is Mon, 3 Aug 2026" and back - in the header, a dot's tooltip, and the expanded list alike, each with its own state. Unlike **Show date**, this one works on the event's own day too, since "which day is 'today'?" is exactly what you'd tap to find out.
 - **"More" button** (Layout → Timeline): the footer button next to "Details" runs its own configurable action - typically a Navigate action pointing at a dashboard using the full List layout - and is hidden entirely while left on "Nothing".
-- **Colors** tab (Layout → Colors) adds Header, Tooltip, List (Details), and Details/More button rows (only shown while Timeline is the active layout style), plus an **Event types** section listing every event type (Birthdays, Anniversaries, Name days, …) with its own color - this drives that type's dot and icon color on the axis, header, and list, replacing the built-in default palette.
+- **Design** tab (Layout → Design) lists this layout's own elements, and only while Timeline is the active layout style. **Header**, **Tooltip**, **List (Details)** and **Details / More button** each get a color and a font. **Timeline line** and **Divider line** each get a width, a style (solid, dashed or dotted) and a color – the second for the vertical line marking the boundary between past and future events, which is only drawn once past events are visible. Below them, [Design rows by event type](#row-colors) drives each type's dot and icon color on the axis, in the header and in the list, replacing the built-in default palette.
 
-VIP, Important, and [to-do](#to-dos) badges each get their own Timeline-specific badge color (Colors tab → Highlight), independent from the List layout's own, since the two layouts render them differently: here a VIP star replaces the dot itself, while an Important exclamation mark sits immediately left of it and a to-do pin immediately right - versus a corner badge on the row icon in List. Only the active layout's color field is shown, since each one colors exactly one layout.
+VIP, Important, and [to-do](#to-dos) badges each get their own Timeline-specific badge color (Layout → Highlight), independent from the List layout's own, since the two layouts render them differently: here a VIP star replaces the dot itself, while an Important exclamation mark sits immediately left of it and a to-do pin immediately right - versus a corner badge on the row icon in List. Only the active layout's color field is shown, since each one colors exactly one layout.
 
 Everything above - per-event-type dot colors, header/tooltip/list fonts and colors, icons - is just as themeable as the classic List layout:
 
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-timeline-example-3.gif" alt="Timeline layout with custom fonts, colors, and event type colors" width="45%">
 
+### Row colors
+
+Out of the box a row's color says how near its event is: ordinary rows take the **Accent** color, today's rows **Today**, and the next few days **Soon**. Everything below is a chain, each step overriding the one before it, so you can go as far as you want and stop:
+
+1. **The card's own defaults** - what an untouched card renders in.
+2. **Design** - the color of each element in a row (Layout → Design): the Icon block, the Accent bar, the name, the type, the countdown, and so on. Set here, it applies to every row.
+3. **Event types** - switch on **Design rows by event type** (Layout → Design) and each type overrides Design for its own rows.
+4. **Event status** - the **Past events**, **Today** and **Soon** blocks (Layout → Highlight) override both, for the rows in that state.
+
+**Design rows by event type** gives every event type - and every [embedded calendar](#external-calendars), which belongs to its calendar rather than to a shared type - a block of its own. In the List layout each block carries four settings, every one behind its own switch so the block stays as short as what you actually use:
+
+| Setting | Paints |
+| --- | --- |
+| **Whole row color** | the row's text, its icon and its accent bar together |
+| **Accent bar color** | the [Accent bar](#row-columns) column only - listed while that column is in use |
+| **Icon color** | the row's leading icon only |
+| **Icon animation** | that type's icons - Pulse, Bounce, Shake, Spin or Flash |
+
+The Timeline layout has no row to tint and no bar to color, so its blocks carry **Entry text color** (the header sentence and the event's line in the Details list), **Icon color** (the dot, and the glyphs in the header and Details list) and the same **Icon animation**.
+
+Each color field is empty by default, meaning "this type's own color" - the one the Timeline draws its dots in - and each field's swatch previews that color, so an untouched row already shows what it will render as. Every embedded calendar starts on the color Home Assistant itself stores for that calendar entity, so two calendars are told apart before anything is configured.
+
+**Event status** (Layout → Highlight) is the last word. Three blocks - **Past events**, **Today**, **Soon** - each with a **Background color** (a tint across the whole row), a **Whole text color**, an **Accent bar color**, an **Icon color** and an **Icon animation**. Each of the last four carries a plain on/off switch: off, the setting folds away and the row takes whatever applied before it - the event type's color where *Design rows by event type* is on, the Design default where it is not. Today and Soon start with their colors overridden, which is what makes them stand out; Past overrides nothing, and no status starts with an animation, since every animation starts at *None* and an open field that changes nothing is just a row in the way. The Timeline gets the same blocks, minus *Background color* and *Accent bar color* - it has neither.
+
 ### Icon animations
 
-An **Icons** tab in Layout lets you give each of the three icon colors - Default, Today, Soon - a looping animation: Pulse, Bounce, Shake, Spin, or Flash. Handy for making today's or upcoming events stand out at a glance:
+An icon can carry a looping animation - **Pulse**, **Bounce**, **Shake**, **Spin** or **Flash** - and it follows the same chain the colors do, so you can set one for the whole card and then override it where it matters:
+
+1. **Layout → Design → Icon → Animation** sets one animation for every icon on the card.
+2. Each **event type** can override it, on its own *Icon animation* row under [Design rows by event type](#row-colors) - as can each [embedded calendar](#external-calendars), under the same row.
+3. Each **event status** can override both, on its own *Icon animation* row under Layout → Highlight.
+
+All three apply in the List and Timeline layouts alike. Every step starts at *None*, so nothing animates until you ask for it - handy for making today's or upcoming events stand out at a glance:
 
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/holiday_small_animated.gif" alt="Pulsing icon animation on an upcoming holiday" width="40%">
-
-### Row click/tap behavior
-
-Clicking or tapping a row used to always open its more-info dialog - that's still the default, but it's now configurable. **Settings → General** has **Tap** and **Hold** action fields: More info, Navigate, URL, Perform action, Toggle, Assist, or Nothing.
 
 ### Example configurations
 
@@ -876,48 +976,181 @@ Both are set through the visual editor above - shown here as YAML just to make w
 
 ### Theming with CSS variables
 
-Every color, font size, and font style set in the card's editor is also exposed as a CSS custom property, with a fallback chain down to Home Assistant's own theme variables. This means:
+Every color, font size and font style the card's editor can set is also a CSS custom property, with a fallback chain ending at Home Assistant's own theme variables. So:
 
-- Leaving a color/font field **empty** in the card's own editor lets it inherit from your **theme** (or any custom CSS) instead of a hardcoded value.
-- Setting a value in the card's editor always overrides the theme for that one card, same as any other per-card setting.
+- Leaving a field **empty** in the card's editor lets it inherit from your **theme** (or any custom CSS) instead of a hardcoded value.
+- Setting it in the editor overrides the theme for that one card, like any other per-card setting.
 
-To theme every Annuals card at once, add these under a theme's `styles` (or set them globally via `card-mod`/custom CSS targeting `annuals-card`):
+To theme every Annuals card at once, set these under a theme's `styles`, or globally via `card-mod`/custom CSS targeting `annuals-card`.
+
+**Naming.** Every variable reads `--annuals-<scope>-<element>-<property>`:
+
+| Part | Values |
+| --- | --- |
+| **scope** | `card` (the card as a whole), `row` (anything in a List row), `timeline` (the Timeline layout's own elements), `status` (the four colors both layouts share) |
+| **element** | the field's own name, spelled out - `full-name-type-name`, `day-separator-label`, `vip-badge` |
+| **property** | `color`, `background-color`, `size`, `weight`, `style`, `transform`, `decoration`, `spacing`, `width`, `image`, `opacity`, `repeat` |
+
+#### Coming from 3.0.0
+
+Every variable moved to the scheme above, so a theme written against 3.0.0 needs its Annuals names updated. Nothing about a card's own configuration changed and no card looks different - only the names a theme or `card-mod` rule targets. Where you stand:
+
+| | |
+| --- | --- |
+| **83 names are unchanged** | every `--annuals-row-<field>-size` / `-weight` / `-style` / `-transform` / `-decoration` / `-spacing`, plus `--annuals-card-title-color` and the four Timeline text and line variables. Nothing to do. |
+| **40 names changed** | listed below. |
+| **125 names are new** | marked *3.1.0* in the reference tables further down. |
+
+> **Two of them changed meaning, not just spelling.** In 3.0.0, `--annuals-vip-badge-color` and `--annuals-important-badge-color` painted the **disc** behind the badge, and the symbol on it was always white. In 3.1.0 both halves are separate, and the name without `background` is the **symbol**. So these two must become `--annuals-row-vip-badge-background-color` and `--annuals-row-important-badge-background-color` - note the **background** in the middle. Simply adding the `row` scope would leave you coloring the other half without noticing. The to-do badge is unaffected: its `-color` always meant the symbol, and still does.
 
 <details>
-<summary>CSS variables</summary>
+<summary>All 40 renames</summary>
 
-| Variable | Affects | Falls back to |
-| --- | --- | --- |
-| `--annuals-accent-color` | Icon color for events with no special status | `--primary-text-color` |
-| `--annuals-today-color` | Icon color for today's events | `--error-color` |
-| `--annuals-soon-color` | Icon color for events within the "soon" threshold | `--warning-color` |
-| `--annuals-card-title-color` | Card's own title text color | inherit |
-| `--annuals-name-color` | Event name text color | inherit |
-| `--annuals-type-color` | Event type text color | inherit |
-| `--annuals-badge-color` | Occurrence number badge text color | inherit |
-| `--annuals-badge-bg-color` | Occurrence number badge background color | `rgba(128, 128, 128, 0.25)` |
-| `--annuals-when-color` | Countdown text color | inherit |
-| `--annuals-text-color` | Custom text column text color | inherit |
-| `--annuals-date-color` | [Date column](#date-format) text color | inherit |
-| `--annuals-calendar-color` | Text color for the Time, Location and Description columns, and for the source calendar's own name - [external calendar events](#external-calendars) only | inherit |
-| `--annuals-highlight-past-color` | Row tint for past events | `--secondary-text-color` |
-| `--annuals-highlight-today-color` | Row tint for today's events | `--annuals-today-color` |
-| `--annuals-highlight-soon-color` | Row tint for "soon" events | `--annuals-soon-color` |
-| `--annuals-vip-badge-color` | VIP badge background color | `--error-color` |
-| `--annuals-important-badge-color` | Important badge background color | `--annuals-soon-color` |
-| `--annuals-todo-badge-color` | [To-do](#to-dos) pin badge color on the row icon | `--error-color` |
-| `--annuals-title-size` | Card title font size | `1.2em` |
-| `--annuals-row-name-size` / `-row-type-size` / `-row-badge-size` / `-row-when-size` / `-row-text-size` / `-row-date-size` / `-row-calendar-size` | Per-field row font sizes (`-row-text-size` is for custom text columns, `-row-calendar-size` for the external-calendar Time/Location/Description fields) | inherit |
-| `--annuals-title-weight` / `-style` / `-transform` / `-decoration` / `-spacing` | Card title bold/italic/uppercase/underline/letter-spacing | normal |
-| `--annuals-row-name-weight` / `-row-type-weight` / `-row-badge-weight` / `-row-when-weight` / `-row-text-weight` / `-row-date-weight` / `-row-calendar-weight` (+ matching `-style`/`-transform`/`-decoration`/`-spacing`) | Same style options per row field, including custom text, Date and the external-calendar fields | normal |
-| `--annuals-bg-color` / `-bg-image` / `-bg-size` / `-bg-repeat` / `-bg-opacity` | Card background color/image/behavior/opacity | transparent / none |
-| `--annuals-vip-badge-timeline-color` / `--annuals-important-badge-timeline-color` / `--annuals-todo-badge-timeline-color` | Timeline layout only - VIP star / Important exclamation / [to-do](#to-dos) pin glyph color, on the axis dots and in the header and expandable list | white / `--annuals-soon-color` / `--error-color` |
-| `--annuals-timeline-header-color` / `-timeline-tooltip-color` / `-timeline-list-color` / `-timeline-button-color` | Timeline layout only - header sentence, dot tooltip, expandable list, and Details/More button text colors | inherit / `--secondary-text-color` |
-| `--annuals-timeline-header-size` / `-timeline-tooltip-size` / `-timeline-list-size` / `-timeline-button-size` (+ matching `-weight`/`-style`/`-transform`/`-decoration`/`-spacing`) | Timeline layout only - same four fields' font size/style | inherit / normal |
-| `--annuals-timeline-line-color` / `-width` / `-style` and `-timeline-divider-color` / `-width` / `-style` | Timeline layout only - the horizontal axis line and the vertical past/future divider | `--divider-color` / `4px` / solid |
+**The four status colors gain a `status` scope**
+
+| 3.0.0 | 3.1.0 |
+| --- | --- |
+| `--annuals-accent-color` | `--annuals-status-accent-color` |
+| `--annuals-soon-color` | `--annuals-status-soon-color` |
+| `--annuals-today-color` | `--annuals-status-today-color` |
+
+**The card's own title and background gain a `card` scope**
+
+| 3.0.0 | 3.1.0 |
+| --- | --- |
+| `--annuals-bg-color` | `--annuals-card-background-color` |
+| `--annuals-bg-image` | `--annuals-card-background-image` |
+| `--annuals-bg-opacity` | `--annuals-card-background-opacity` |
+| `--annuals-bg-repeat` | `--annuals-card-background-repeat` |
+| `--annuals-bg-size` | `--annuals-card-background-size` |
+| `--annuals-title-decoration` | `--annuals-card-title-decoration` |
+| `--annuals-title-size` | `--annuals-card-title-size` |
+| `--annuals-title-spacing` | `--annuals-card-title-spacing` |
+| `--annuals-title-style` | `--annuals-card-title-style` |
+| `--annuals-title-transform` | `--annuals-card-title-transform` |
+| `--annuals-title-weight` | `--annuals-card-title-weight` |
+
+**Row fields gain the `row` scope their font properties already had**
+
+| 3.0.0 | 3.1.0 |
+| --- | --- |
+| `--annuals-badge-bg-color` | `--annuals-row-badge-background-color` |
+| `--annuals-badge-color` | `--annuals-row-badge-color` |
+| `--annuals-calendar-color` | `--annuals-row-calendar-color` |
+| `--annuals-date-color` | `--annuals-row-date-color` |
+| `--annuals-full-name-color` | `--annuals-row-full-name-color` |
+| `--annuals-highlight-past-color` | `--annuals-row-highlight-past-color` |
+| `--annuals-highlight-soon-color` | `--annuals-row-highlight-soon-color` |
+| `--annuals-highlight-today-color` | `--annuals-row-highlight-today-color` |
+| `--annuals-last-name-color` | `--annuals-row-last-name-color` |
+| `--annuals-name-color` | `--annuals-row-name-color` |
+| `--annuals-row-template` | `--annuals-row-grid-template` |
+| `--annuals-row-text-decoration` | `--annuals-row-custom-text-decoration` |
+| `--annuals-row-text-size` | `--annuals-row-custom-text-size` |
+| `--annuals-row-text-spacing` | `--annuals-row-custom-text-spacing` |
+| `--annuals-row-text-style` | `--annuals-row-custom-text-style` |
+| `--annuals-row-text-transform` | `--annuals-row-custom-text-transform` |
+| `--annuals-row-text-weight` | `--annuals-row-custom-text-weight` |
+| `--annuals-text-color` | `--annuals-row-custom-text-color` |
+| `--annuals-type-color` | `--annuals-row-type-color` |
+| `--annuals-when-color` | `--annuals-row-when-color` |
+
+**The Timeline's badges put the layout in front, like every other timeline variable**
+
+| 3.0.0 | 3.1.0 |
+| --- | --- |
+| `--annuals-important-badge-timeline-color` | `--annuals-timeline-important-badge-color` |
+| `--annuals-todo-badge-timeline-color` | `--annuals-timeline-todo-badge-color` |
+| `--annuals-vip-badge-timeline-color` | `--annuals-timeline-vip-badge-color` |
+
+**The two halves of a badge are now named for what they paint**
+
+| 3.0.0 | 3.1.0 |
+| --- | --- |
+| `--annuals-important-badge-color` | `--annuals-row-important-badge-background-color` |
+| `--annuals-todo-badge-color` | `--annuals-row-todo-badge-color` |
+| `--annuals-vip-badge-color` | `--annuals-row-vip-badge-background-color` |
 
 </details>
 
+Where a row below lists a font's properties together (`-size` / `-weight` / …), each is a variable of its own, e.g. `--annuals-row-name-size` and `--annuals-row-name-weight`.
+
+#### Reference
+
+The **Since** column reads: **3.0.0** - this exact name has worked since 3.0.0; **3.0.0 · renamed** - the variable existed then under a different name, see the table above; **3.1.0** - new, there was nothing to set before. A row showing two releases has two halves that arrived at different times, and the badge rows are the ones to read carefully.
+
+<details>
+<summary>Card</summary>
+
+| Variable | Affects | Falls back to | Since |
+| --- | --- | --- | --- |
+| `--annuals-card-title-color` | Card title text color | inherit | 3.0.0 |
+| `--annuals-card-title-size` / `-weight` / `-style` / `-transform` / `-decoration` / `-spacing` | Card title font | `1.2em` / normal | 3.0.0 · renamed |
+| `--annuals-card-no-events-color` | The ["no events" line](#custom-dashboard-card) | `--secondary-text-color` | 3.1.0 |
+| `--annuals-card-no-events-size` / `-weight` / `-style` / `-transform` / `-decoration` / `-spacing` | That line's font | inherit / normal | 3.1.0 |
+| `--annuals-card-background-color` / `-image` / `-size` / `-repeat` / `-opacity` | Card background | transparent / none | 3.0.0 · renamed |
+
+</details>
+
+<details>
+<summary>Status - shared by both layouts</summary>
+
+| Variable | Affects | Falls back to | Since |
+| --- | --- | --- | --- |
+| `--annuals-status-accent-color` | Events with no special status | `--primary-text-color` | 3.0.0 · renamed |
+| `--annuals-status-today-color` | Today's events | `--error-color` | 3.0.0 · renamed |
+| `--annuals-status-soon-color` | Events within the "soon" threshold | `--warning-color` | 3.0.0 · renamed |
+| `--annuals-status-past-color` | Past events | `--secondary-text-color` | 3.1.0 |
+
+</details>
+
+<details>
+<summary>Row - the List layout</summary>
+
+| Variable | Affects | Falls back to | Since |
+| --- | --- | --- | --- |
+| `--annuals-row-icon-color` | One fixed color for every row icon | the row's own status color | 3.1.0 |
+| `--annuals-row-name-color` + font | [Name column](#row-columns) | inherit / normal | 3.0.0 · renamed |
+| `--annuals-row-last-name-color` + font | Last name column | inherit / normal | 3.0.0 · renamed |
+| `--annuals-row-full-name-color` + font | Full name column | inherit / normal | 3.0.0 · renamed |
+| `--annuals-row-type-color` + font | Type column | inherit / normal | 3.0.0 · renamed |
+| `--annuals-row-info-name-color` / `--annuals-row-info-type-color` + fonts | The two lines inside **Name + Type** | inherit / normal | 3.1.0 |
+| `--annuals-row-full-name-type-name-color` / `--annuals-row-full-name-type-type-color` + fonts | The two lines inside **Full name + Type** | inherit / normal | 3.1.0 |
+| `--annuals-row-badge-color` / `--annuals-row-badge-background-color` + font | Occurrence badge, text and pill | inherit / `rgba(128, 128, 128, 0.25)` | 3.0.0 · renamed |
+| `--annuals-row-when-color` + font | Countdown column | inherit / normal | 3.0.0 · renamed |
+| `--annuals-row-date-color` + font | [Date column](#date-format) | inherit / normal | 3.0.0 · renamed |
+| `--annuals-row-custom-text-color` + font | [Custom text column](#row-columns) | inherit / normal | 3.0.0 · renamed |
+| `--annuals-row-date-block-weekday-color` / `-day-` / `-month-` + fonts | The [Date block](#row-columns)'s three lines | secondary / primary / secondary text color | 3.1.0 |
+| `--annuals-row-accent-bar-color` / `-width` | The [Accent bar](#row-columns) column | the row's own color / `3px` | 3.1.0 |
+| `--annuals-row-calendar-color` + font | Shared fallback for an [external calendar event](#external-calendars)'s own fields | `--secondary-text-color` | 3.0.0 · renamed |
+| `--annuals-row-calendar-time-color` / `-location-` / `-description-` + fonts | Those three fields, each on its own | `--annuals-row-calendar-color` | 3.1.0 |
+| `--annuals-row-highlight-past-color` / `-today-` / `-soon-` | Row tint per status | `--secondary-text-color` / the matching status color | 3.0.0 · renamed |
+| `--annuals-row-vip-badge-color` / `-background-color` | VIP badge - the star, and the disc behind it | white / `--error-color` | 3.1.0 / 3.0.0 |
+| `--annuals-row-important-badge-color` / `-background-color` | Important badge - glyph and disc | white / `--annuals-status-soon-color` | 3.1.0 / 3.0.0 |
+| `--annuals-row-todo-badge-color` / `-background-color` | [To-do](#to-dos) pin - glyph and disc | `--error-color` / transparent | 3.0.0 / 3.1.0 |
+| `--annuals-row-day-separator-color` / `-width` / `-style` | The [day separator](#day-week-and-month-separators) line | `--primary-text-color` / `1px` / dotted | 3.1.0 |
+| `--annuals-row-week-separator-…` / `--annuals-row-month-separator-…` | The same three, per scale | dashed / solid | 3.1.0 |
+| `--annuals-row-day-separator-label-color` / `-background-color` + font | That line's [label](#day-week-and-month-separators) and its plate | `--primary-text-color` / the card background / `0.75em` | 3.1.0 |
+| `--annuals-row-week-separator-label-…` / `--annuals-row-month-separator-label-…` | The same, per scale | as above | 3.1.0 |
+
+Three more are written by the card onto each row rather than read from a theme, and are listed only so a `card-mod` rule can read them: `--annuals-row-resolved-icon-color`, `--annuals-row-resolved-bar-color` and `--annuals-row-resolved-text-color` hold what that row actually resolved to after [the whole chain](#row-colors). Setting them from a theme has no effect.
+
+</details>
+
+<details>
+<summary>Timeline</summary>
+
+| Variable | Affects | Falls back to | Since |
+| --- | --- | --- | --- |
+| `--annuals-timeline-header-color` + font | Header sentence | inherit / normal | 3.0.0 |
+| `--annuals-timeline-tooltip-color` + font | A dot's tooltip | `--secondary-text-color` / normal | 3.0.0 |
+| `--annuals-timeline-list-color` + font | The expandable Details list | inherit / normal | 3.0.0 |
+| `--annuals-timeline-button-color` + font | Details / More button | `--secondary-text-color` / normal | 3.0.0 |
+| `--annuals-timeline-line-color` / `-width` / `-style` | The horizontal axis | `--divider-color` / `4px` / solid | 3.0.0 |
+| `--annuals-timeline-divider-color` / `-width` / `-style` | The vertical past/future divider | `--divider-color` / `4px` / solid | 3.0.0 |
+| `--annuals-timeline-vip-badge-color` / `--annuals-timeline-important-badge-color` / `--annuals-timeline-todo-badge-color` | VIP star / Important glyph / [to-do](#to-dos) pin, on the dots and in the header and Details list | `--error-color` / `--annuals-status-soon-color` / `--error-color` | 3.0.0 · renamed |
+
+</details>
 
 ## Installation
 
@@ -942,7 +1175,7 @@ unzip annuals.zip
 rm annuals.zip
 ```
 
-The [custom dashboard card](#custom-dashboard-card) works identically either way - it's part of the same `annuals.zip`/`custom_components/annuals` tree, and the integration registers and serves it itself on every startup, so a manual install needs no separate Lovelace resource step.
+A manual install needs no separate Lovelace resource step for the [custom dashboard card](#custom-dashboard-card): it sits in the same tree, and the integration serves it itself on every startup.
 
 ## Help and Contribution
 
