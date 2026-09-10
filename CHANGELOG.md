@@ -2,6 +2,11 @@
 
 All notable changes to this integration are documented here.
 
+## v3.2.1
+
+### Fixed
+- **The repository’s own validation failed on v3.2.0.** Home Assistant’s `hassfest` requires every translation key to match `[a-z0-9-_]+` and to neither start nor end with a hyphen - and a select selector with a `translation_key` looks its labels up at `selector.<key>.options.<option value>`, so an option’s value *is* a translation key. The recurrence rule’s **Last** was offered as `-1`, the number it is stored as, and that is not a legal key. The dropdown offers `last` instead, mapped back to the number when the form is submitted and to the word when the form is built. **Nothing you can see changes:** the stored configuration, the `nth` CSV column and the sensor’s `nth` attribute all still carry `-1`, so a CSV file or a template written against v3.2.0 is unaffected, and the README’s description of them still holds. Home Assistant itself never minded - it loaded and resolved the file either way, which is precisely why the validator has to be run rather than reasoned about.
+
 ## v3.2.0
 
 ### Added
