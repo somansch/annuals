@@ -80,7 +80,7 @@
                 "2": "İkinci",
                 "3": "Üçüncü",
                 "4": "Dördüncü",
-                "-1": "Sonuncu"
+                "last": "Sonuncu"
             }
         },
         "weekday": {

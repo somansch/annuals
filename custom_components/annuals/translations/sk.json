@@ -80,7 +80,7 @@
                 "2": "Druhý",
                 "3": "Tretí",
                 "4": "Štvrtý",
-                "-1": "Posledný"
+                "last": "Posledný"
             }
         },
         "weekday": {

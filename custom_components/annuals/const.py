@@ -59,7 +59,16 @@ CONF_WEEKDAY = "weekday"
 NTH_LAST = -1
 
 # What the two selectors offer, as the strings a select selector deals in.
-NTH_OPTIONS = ["1", "2", "3", "4", str(NTH_LAST)]
+# What the dropdown offers, and therefore what its translation keys are:
+# hassfest requires every key to match [a-z0-9-_]+ and to not start with a
+# hyphen, so "last" stands in for NTH_LAST here. The stored value, the CSV
+# column and the sensor attribute all keep the number - see _nth_option and
+# _nth_stored in config_flow.
+NTH_LAST_OPTION = "last"
+NTH_OPTIONS = ["1", "2", "3", "4", NTH_LAST_OPTION]
+# What the CSV column accepts, which is the documented number rather than the
+# dropdown's word (see the README's import table).
+NTH_CSV_VALUES = ["1", "2", "3", "4", str(NTH_LAST)]
 
 # Monday..Sunday, numbered as date.weekday() numbers them. In that order
 # because that is the order the numbers have - not the order any one

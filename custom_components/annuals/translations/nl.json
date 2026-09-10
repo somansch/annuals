@@ -80,7 +80,7 @@
                 "2": "Tweede",
                 "3": "Derde",
                 "4": "Vierde",
-                "-1": "Laatste"
+                "last": "Laatste"
             }
         },
         "weekday": {

@@ -80,7 +80,7 @@
                 "2": "Second",
                 "3": "Third",
                 "4": "Fourth",
-                "-1": "Last"
+                "last": "Last"
             }
         },
         "weekday": {

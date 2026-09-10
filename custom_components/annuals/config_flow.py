@@ -61,6 +61,9 @@ from .const import (
     DATA_TYPE_LABELS,
     MILESTONE_EVENT_TYPES,
     NAME_TRANSLATION_LANGUAGES,
+    NTH_CSV_VALUES,
+    NTH_LAST,
+    NTH_LAST_OPTION,
     NTH_OPTIONS,
     SPAN_DAY,
     SPAN_END,
@@ -236,7 +239,7 @@ def _rule_fields(defaults: dict) -> dict:
     return {
         vol.Optional(
             CONF_NTH,
-            description={"suggested_value": _as_option(defaults.get(CONF_NTH))},
+            description={"suggested_value": _nth_option(defaults.get(CONF_NTH))},
         ): _nth_selector(),
         vol.Optional(
             CONF_WEEKDAY,
@@ -248,6 +251,29 @@ def _rule_fields(defaults: dict) -> dict:
 def _as_option(value: int | str | None) -> str | None:
     """A stored number as the string its select selector deals in."""
     return None if _blank(value) else str(value)
+
+
+def _nth_option(value: int | str | None) -> str | None:
+    """A stored nth as the option the dropdown carries it under.
+
+    Every other one is its own number; NTH_LAST is "last", because an
+    option's value doubles as its translation key and hassfest rejects one
+    starting with a hyphen (see NTH_LAST_OPTION).
+    """
+    if _blank(value):
+        return None
+    return NTH_LAST_OPTION if int(value) == NTH_LAST else str(value)
+
+
+def _nth_stored(value: int | str | None) -> int | None:
+    """The other direction: what the dropdown submitted, as it is stored.
+
+    The number is what the config, the CSV column and the sensor attribute
+    have always held, so the word never travels past this point.
+    """
+    if _blank(value):
+        return None
+    return NTH_LAST if value == NTH_LAST_OPTION else int(value)
 
 
 def _blank(value) -> bool:
@@ -469,7 +495,7 @@ def _validate_and_normalise(user_input: dict) -> tuple[dict | None, dict[str, st
         CONF_END_DATE: end_date,
         # The same reasoning: clearing a rule has to actually clear it, and
         # the day/month the event still carries is what it goes back to.
-        CONF_NTH: None if _blank(nth) else int(nth),
+        CONF_NTH: _nth_stored(nth),
         CONF_WEEKDAY: None if _blank(weekday) else int(weekday),
     }
     return data, errors
@@ -574,7 +600,7 @@ def _parse_csv_rows(text: str) -> tuple[list[dict], list[str]]:
             if event_type != TYPE_CUSTOM:
                 errors.append(f"line {line_no}: nth/weekday are for custom events only")
                 continue
-            if nth not in NTH_OPTIONS or weekday not in WEEKDAY_OPTIONS:
+            if nth not in NTH_CSV_VALUES or weekday not in WEEKDAY_OPTIONS:
                 errors.append(
                     f"line {line_no}: nth must be 1-4 or -1, weekday 0 (Monday) to 6"
                 )

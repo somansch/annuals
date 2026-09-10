@@ -80,7 +80,7 @@
                 "2": "Andre",
                 "3": "Tredje",
                 "4": "Fjerde",
-                "-1": "Siste"
+                "last": "Siste"
             }
         },
         "weekday": {
