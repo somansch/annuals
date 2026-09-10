@@ -29,6 +29,7 @@ from .const import (
     CONF_SUBDIVISION,
     CONF_HUB,
     CONF_MONTH,
+    CONF_NAME_TRANSLATIONS,
     CONF_YEAR,
     DATA_REMINDER_STRINGS,
     DATA_SENSORS,
@@ -39,7 +40,17 @@ from .const import (
     TYPE_ONE_TIME,
 )
 from .dates import _holiday_calendar, holiday_key_from_name, one_time_span
-from .helpers import async_event_type_labels, async_reminder_strings, full_name, hub_title
+from .helpers import (
+    CATEGORY_PUBLIC,
+    async_event_type_labels,
+    async_reminder_strings,
+    full_name,
+    holiday_date,
+    hub_title,
+    merge_group,
+    mergeable,
+    outranks,
+)
 from .http import AnnualsExportCsvView, AnnualsExportTranslationsView
 from .services import async_register_services
 from .todo_match import (
@@ -67,6 +78,13 @@ _HUB_FLOW_STARTED = "hub_flow_started"
 # is served from this URL and auto-loaded on every dashboard via
 # frontend.add_extra_js_url - no manual "Add resource" step required.
 FRONTEND_JS_URL = "/annuals-frontend/annuals-card.js"
+
+# What is actually handed to add_extra_js_url. Home Assistant imports it
+# once per page, awaited by nothing and retried by nothing, so one fetch
+# that does not arrive left the card missing until that page was reloaded.
+# The loader is a few hundred bytes and fetches the card itself, for as
+# many attempts as it takes - see annuals-card-loader.js.
+FRONTEND_LOADER_URL = "/annuals-frontend/annuals-card-loader.js"
 
 # Remembers the frontend JS's own mtime (see FRONTEND_JS_URL's cache-busting
 # "?v=" below) across restarts, purely so a persistent notification can be
@@ -128,6 +146,12 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Register the bundled Lovelace card once at startup."""
     hass.data.setdefault(DOMAIN, {})
 
+    # Before any entry is set up, so nothing is loaded that is about to be
+    # removed, and so the entries the platforms then see are the ones that
+    # survive.
+    await _async_migrate_holiday_keys(hass)
+    await _async_merge_holiday_categories(hass)
+
     # A few seconds of slack after midnight, not exactly on it, so this
     # doesn't race the moment the date actually rolls over. functools.partial
     # (not a lambda) so HA's event helper still recognises this as a
@@ -136,11 +160,190 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         hass, functools.partial(_async_midnight_tasks, hass), hour=0, minute=0, second=5
     )
 
-    frontend_path = Path(__file__).parent / "frontend" / "annuals-card.js"
-    version = int(frontend_path.stat().st_mtime)
-    await hass.http.async_register_static_paths(
-        [StaticPathConfig(FRONTEND_JS_URL, str(frontend_path), False)]
-    )
+    await _async_register_frontend(hass)
+
+    async_register_services(hass)
+    hass.http.register_view(AnnualsExportCsvView())
+    hass.http.register_view(AnnualsExportTranslationsView())
+    return True
+
+
+def _capitals(text: str) -> int:
+    """How many capital letters a name carries."""
+    return sum(1 for char in text if char.isupper())
+
+
+async def _async_migrate_holiday_keys(hass: HomeAssistant) -> None:
+    """Fold the case out of every imported holiday's identity, once.
+
+    A holiday is identified by its name in the `holidays` library's own
+    default language (see CONF_HOLIDAY_KEY), and that library rewrites its
+    names from time to time - sometimes changing nothing but a capital
+    letter. Measured on the Netherlands across two releases: five of the
+    ten public holidays changed that way, "Eerste kerstdag" to "Eerste
+    Kerstdag" among them. The unique id those entries were stored under
+    compared the name exactly, so after such a release "Import public
+    holidays" no longer recognised them and added a second entry beside
+    each - the same holiday twice, one capital letter apart.
+
+    The id ignores case now (see config_flow._import_unique_id). This
+    brings the entries already on disk onto it. Where two of them turn out
+    to be one holiday, the one whose name carries the capitals is kept -
+    that is the spelling the library has settled on, and the one a fresh
+    import produces - and the other is removed after handing over any
+    holiday-name translations that were typed into it, which are the one
+    thing on such an entry that is laborious to re-enter.
+
+    Idempotent: on every later start the ids already agree and nothing
+    happens.
+    """
+    # Imported here rather than at module level: config_flow pulls in the
+    # calendar and vCard parsers, which nothing else at startup needs.
+    from .config_flow import _import_unique_id
+
+    by_id: dict[str, list] = {}
+    for entry in hass.config_entries.async_entries(DOMAIN):
+        if entry.data.get(CONF_EVENT_TYPE) != TYPE_HOLIDAY:
+            continue
+        by_id.setdefault(_import_unique_id(entry.data), []).append(entry)
+
+    for unique_id, group in by_id.items():
+        # Stable sort, so entries that tie keep the order they were
+        # created in and the oldest wins.
+        group.sort(key=lambda entry: -_capitals(entry.data.get(CONF_HOLIDAY_KEY) or ""))
+        keep, duplicates = group[0], group[1:]
+
+        await _async_absorb(
+            hass,
+            keep,
+            duplicates,
+            "the same holiday, which the holidays library used to spell differently",
+        )
+        if keep.unique_id != unique_id:
+            hass.config_entries.async_update_entry(keep, unique_id=unique_id)
+
+
+async def _async_absorb(hass: HomeAssistant, keep, losers: list, why: str) -> None:
+    """Remove `losers`, moving what was typed into them onto `keep` first.
+
+    The holiday names someone wrote themselves are the one thing on an
+    imported holiday that is laborious to re-enter, so they are carried
+    across rather than deleted with the entry. The kept entry's own wording
+    always wins; this only fills its gaps.
+    """
+    if not losers:
+        return
+    translations = dict(keep.data.get(CONF_NAME_TRANSLATIONS) or {})
+    for entry in losers:
+        for language, name in (entry.data.get(CONF_NAME_TRANSLATIONS) or {}).items():
+            translations.setdefault(language, name)
+        # With the category, because the two can be told apart by nothing
+        # else: merged categories often carry the very same name.
+        _LOGGER.warning(
+            "Annuals: removing %s (%s) - %s as %s (%s). See the changelog for v3.2.0",
+            entry.title,
+            entry.data.get(CONF_CATEGORY),
+            why,
+            keep.title,
+            keep.data.get(CONF_CATEGORY),
+        )
+        await hass.config_entries.async_remove(entry.entry_id)
+    if translations != (keep.data.get(CONF_NAME_TRANSLATIONS) or {}):
+        hass.config_entries.async_update_entry(
+            keep, data={**keep.data, CONF_NAME_TRANSLATIONS: translations}
+        )
+
+
+async def _async_merge_holiday_categories(hass: HomeAssistant) -> None:
+    """One entry per holiday, whatever categories it was imported under.
+
+    The `holidays` library files the same date under several categories at
+    once - a US statutory holiday is typically both public and government -
+    and often under a different name in each, so only the date says they are
+    the same day. Importing those categories together has always collapsed
+    them (see config_flow._build_holiday_rows); importing them one after the
+    other did not, and left the same holiday standing twice.
+
+    **Public wins.** Where two entries share a date, a public one replaces
+    the rest; between two non-public ones the older stays. New imports are
+    folded against what is stored by the same rule, in
+    config_flow._resolve_category_clashes - this is the one-time pass for
+    what is already on disk.
+
+    Costs nothing where there is nothing to do: a country/region whose
+    holidays all came from one category is skipped before a single date is
+    resolved, which is every instance that imported once.
+    """
+    groups: dict[tuple, list] = {}
+    for entry in hass.config_entries.async_entries(DOMAIN):
+        if mergeable(entry.data):
+            groups.setdefault(merge_group(entry.data), []).append(entry)
+
+    candidates = {
+        group: entries
+        for group, entries in groups.items()
+        if len({entry.data.get(CONF_CATEGORY) for entry in entries}) > 1
+    }
+    if not candidates:
+        return
+
+    year = date.today().year
+    by_date = await hass.async_add_executor_job(_holiday_dates, candidates, year)
+
+    for entries in by_date.values():
+        if len(entries) < 2:
+            continue
+        # Stable: among entries no one outranks, the one that was there
+        # first stays - the same tie-break the in-import merge uses.
+        entries.sort(key=lambda entry: entry.data.get(CONF_CATEGORY) != CATEGORY_PUBLIC)
+        # Whoever leads now speaks for the date: a public entry if there is
+        # one, otherwise the oldest of two categories that neither outrank.
+        keep, losers = entries[0], entries[1:]
+        await _async_absorb(hass, keep, losers, "the same date, already imported")
+
+
+def _holiday_dates(groups: dict, year: int) -> dict:
+    """Every entry bucketed by the date it lands on - blocking, so it runs
+    in an executor (each bucket builds a holiday calendar).
+    """
+    buckets: dict[tuple, list] = {}
+    for group, entries in groups.items():
+        for entry in entries:
+            occurrence = holiday_date(entry.data, year)
+            if occurrence is not None:
+                buckets.setdefault((group, occurrence), []).append(entry)
+    return buckets
+
+
+async def _async_register_frontend(hass: HomeAssistant) -> None:
+    """Serve the bundled card and have every dashboard load it.
+
+    Kept out of async_setup and unable to raise into it. Reading the file's
+    own mtime used to be the first thing that happened here, so a card that
+    was not on disk - an incomplete download is the realistic way to get
+    there - took the whole integration down with it: no events, no
+    calendars, no services, over a dashboard card.
+    """
+    frontend_dir = Path(__file__).parent / "frontend"
+    card_path = frontend_dir / "annuals-card.js"
+    loader_path = frontend_dir / "annuals-card-loader.js"
+
+    try:
+        version = int(card_path.stat().st_mtime)
+    except OSError as err:
+        _LOGGER.warning(
+            "The bundled dashboard card is missing (%s): %s. Everything else is "
+            "set up as usual - reinstall the integration to get the card back.",
+            card_path,
+            err,
+        )
+        return
+
+    paths = [StaticPathConfig(FRONTEND_JS_URL, str(card_path), False)]
+    if loader_path.is_file():
+        paths.append(StaticPathConfig(FRONTEND_LOADER_URL, str(loader_path), False))
+    await hass.http.async_register_static_paths(paths)
+
     # cache_headers=False omits an explicit Cache-Control header - browsers
     # still apply heuristic caching from Last-Modified/ETag, so a stale copy
     # can survive a reload after the card is updated. Busting the URL with
@@ -165,7 +368,19 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     # a normal F5 kept re-showing stale content instead of even the usual
     # "custom element doesn't exist" race, which is a worse failure mode
     # than what this was trying to fix in the first place.
-    frontend.add_extra_js_url(hass, f"{FRONTEND_JS_URL}?v={version}")
+    #
+    # What is handed over is the loader, not the card. Home Assistant imports
+    # what it is given exactly once per page and never retries, so a single
+    # fetch that did not arrive left the card missing until that page was
+    # reloaded. The loader fetches the card itself, for as many attempts as
+    # it takes - see annuals-card-loader.js. The "?v=" travels with it and
+    # the loader carries it over to the card's own URL, so the cache-busting
+    # described above is unchanged.
+    #
+    # Without the loader on disk the card is handed over directly: a card
+    # that cannot retry still beats no card at all.
+    url = FRONTEND_LOADER_URL if loader_path.is_file() else FRONTEND_JS_URL
+    frontend.add_extra_js_url(hass, f"{url}?v={version}")
 
     # The cache-busting "?v=" above only takes effect on a browser tab's next
     # *full* page load - restarting HA (e.g. after a HACS update) doesn't by
@@ -188,11 +403,6 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             notification_id=f"{DOMAIN}_frontend_updated",
         )
     await store.async_save({"version": version})
-
-    async_register_services(hass)
-    hass.http.register_view(AnnualsExportCsvView())
-    hass.http.register_view(AnnualsExportTranslationsView())
-    return True
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:

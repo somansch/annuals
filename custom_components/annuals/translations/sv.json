@@ -73,26 +73,89 @@
                 "turkish": "Turkisk",
                 "vlach": "Vlakisk"
             }
+        },
+        "nth": {
+            "options": {
+                "1": "Första",
+                "2": "Andra",
+                "3": "Tredje",
+                "4": "Fjärde",
+                "-1": "Sista"
+            }
+        },
+        "weekday": {
+            "options": {
+                "0": "Måndag",
+                "1": "Tisdag",
+                "2": "Onsdag",
+                "3": "Torsdag",
+                "4": "Fredag",
+                "5": "Lördag",
+                "6": "Söndag"
+            }
         }
     },
     "config": {
         "step": {
             "user": {
                 "title": "Lägg till händelse",
-                "description": "Varje händelse får en egen post, som du senare kan hitta och redigera under Inställningar → Enheter och tjänster genom att söka på namnet.",
+                "description": "Vilken sorts händelse är detta?\n\n**Årlig** omfattar födelsedag, årsdag, namnsdag, bröllopsdag, dödsdag, husdjurets födelsedag och arbetsjubileum. **Engångs** är ett enda datum, som raderar sig självt när det har passerat. **Anpassad** är ditt eget årliga datum – på en bestämd dag eller enligt en regel.",
+                "menu_options": {
+                    "recurring": "{icon_recurring} Ett årligt datum för någon",
+                    "one_time": "{icon_one_time} En engångshändelse",
+                    "custom": "{icon_custom} En anpassad händelse"
+                }
+            },
+            "recurring": {
+                "title": "Lägg till en årlig händelse",
                 "data": {
                     "name": "Namn",
                     "last_name": "Efternamn (valfritt)",
                     "type": "Händelsetyp",
                     "day": "Dag",
                     "month": "Månad",
-                    "year": "År (lämna tomt om okänt; krävs för engångshändelser)",
-                    "end_date": "Slutdatum (endast engångshändelser, valfritt - gör den till en flerdagshändelse)",
+                    "year": "År (lämna tomt om okänt)",
                     "icon": "Åsidosätt ikon (valfritt)",
                     "vip": "VIP Annual"
+                },
+                "description": "Varje händelse får en egen post, som du senare kan hitta och redigera under Inställningar → Enheter och tjänster → Annuals genom att söka på namnet."
+            },
+            "one_time": {
+                "title": "Lägg till en engångshändelse",
+                "data": {
+                    "name": "Namn",
+                    "last_name": "Efternamn (valfritt)",
+                    "type": "Händelsetyp",
+                    "day": "Dag",
+                    "month": "Månad",
+                    "year": "År",
+                    "end_date": "Slutdatum (valfritt – gör den till en flerdagshändelse)",
+                    "icon": "Åsidosätt ikon (valfritt)",
+                    "vip": "VIP Annual"
+                },
+                "description": "Ett enda datum att räkna ned till. Det upprepas aldrig, så året är obligatoriskt, och posten raderas automatiskt vid midnatt efter att det har passerat.\n\nMed ett slutdatum blir det en flerdagshändelse – en resa, en konferens, en vistelse."
+            },
+            "custom": {
+                "title": "Lägg till en anpassad händelse",
+                "data": {
+                    "name": "Namn",
+                    "last_name": "Efternamn (valfritt)",
+                    "type": "Händelsetyp",
+                    "day": "Dag",
+                    "month": "Månad",
+                    "year": "År",
+                    "icon": "Åsidosätt ikon (valfritt)",
+                    "vip": "VIP Annual",
+                    "nth": "Placering i månaden",
+                    "weekday": "Veckodag"
+                },
+                "description": "Ditt eget årliga datum, för allt som de andra typerna inte beskriver.\n\nDet kan följa en **regel** i stället för en bestämd dag: mors dag är den andra söndagen i maj, fars dag i Australien den första söndagen i september. Fyll i de två fälten längst ned – **Månad** ovanför anger vilken månad regeln gäller, och **Dag** används då inte. Lämna dem tomma för ett fast datum.",
+                "data_description": {
+                    "nth": "Första, andra, tredje, fjärde eller den sista i månaden.",
+                    "weekday": "Ange tillsammans med fältet ovanför – eller lämna båda tomma."
                 }
             },
-            "reconfigure": {
+            "reconfigure_recurring": {
                 "title": "Redigera händelse",
                 "description": "Ändra valfritt fält nedan och skicka in för att uppdatera händelsen.",
                 "data": {
@@ -101,10 +164,44 @@
                     "type": "Händelsetyp",
                     "day": "Dag",
                     "month": "Månad",
-                    "year": "År (lämna tomt om okänt; krävs för engångshändelser)",
-                    "end_date": "Slutdatum (endast engångshändelser, valfritt - gör den till en flerdagshändelse)",
+                    "year": "År (lämna tomt om okänt)",
                     "icon": "Åsidosätt ikon (valfritt)",
                     "vip": "VIP Annual"
+                }
+            },
+            "reconfigure_one_time": {
+                "title": "Redigera engångshändelse",
+                "description": "Ändra valfritt fält nedan och skicka in för att uppdatera händelsen.\n\nEtt slutdatum gör den till en flerdagshändelse; tömmer du det blir det åter en enda dag.",
+                "data": {
+                    "name": "Namn",
+                    "last_name": "Efternamn (valfritt)",
+                    "type": "Händelsetyp",
+                    "day": "Dag",
+                    "month": "Månad",
+                    "year": "År",
+                    "end_date": "Slutdatum (valfritt – gör den till en flerdagshändelse)",
+                    "icon": "Åsidosätt ikon (valfritt)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "reconfigure_custom": {
+                "title": "Redigera anpassad händelse",
+                "description": "Ändra valfritt fält nedan och skicka in för att uppdatera händelsen.\n\nDet kan följa en **regel** i stället för en bestämd dag – *den andra söndagen i maj*. Fyll i de två fälten längst ned; **Månad** ovanför anger vilken månad regeln gäller, och **Dag** används då inte. Tömmer du dem infaller händelsen åter på den dagen.",
+                "data": {
+                    "name": "Namn",
+                    "last_name": "Efternamn (valfritt)",
+                    "type": "Händelsetyp",
+                    "day": "Dag",
+                    "month": "Månad",
+                    "year": "År",
+                    "icon": "Åsidosätt ikon (valfritt)",
+                    "vip": "VIP Annual",
+                    "nth": "Placering i månaden",
+                    "weekday": "Veckodag"
+                },
+                "data_description": {
+                    "nth": "Första, andra, tredje, fjärde eller den sista i månaden.",
+                    "weekday": "Ange tillsammans med fältet ovanför – eller lämna båda tomma."
                 }
             }
         },
@@ -113,7 +210,8 @@
             "end_date_one_time_only": "Ett slutdatum kan bara anges för en engångshändelse.",
             "end_date_before_start": "Slutdatumet måste vara efter startdatumet.",
             "invalid_date": "Den här kombinationen av dag/månad/år är inte ett giltigt datum.",
-            "year_required": "Engångshändelser kräver ett år."
+            "year_required": "Engångshändelser kräver ett år.",
+            "rule_needs_both": "En upprepningsregel kräver båda fälten – eller inget av dem."
         },
         "abort": {
             "hub_not_configurable": "Annuals-huben har inga egna inställningar - den innehåller bara de delade kalendrarna.",
@@ -123,21 +221,6 @@
     },
     "options": {
         "step": {
-            "init": {
-                "title": "Redigera händelse",
-                "description": "Ändra valfritt fält nedan och skicka in för att uppdatera händelsen.",
-                "data": {
-                    "name": "Namn",
-                    "last_name": "Efternamn (valfritt)",
-                    "type": "Händelsetyp",
-                    "day": "Dag",
-                    "month": "Månad",
-                    "year": "År (lämna tomt om okänt; krävs för engångshändelser)",
-                    "end_date": "Slutdatum (endast engångshändelser, valfritt - gör den till en flerdagshändelse)",
-                    "icon": "Åsidosätt ikon (valfritt)",
-                    "vip": "VIP Annual"
-                }
-            },
             "import_csv": {
                 "title": "Importera händelser från CSV",
                 "description": "Kolumner: name, type, day, month, year (valfritt, krävs för one_time), icon (valfritt), vip (valfritt), last_name (valfritt). \"type\" måste vara en av dessa engelska nycklar: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (alltid på engelska, oavsett språkinställning). \"vip\" accepterar 1/true/yes/y/x (skiftlägesokänsligt); lämna tomt eller utelämna kolumnen för en icke-VIP-händelse. Behåll alla kolumner även när ett värde är tomt - en rad utan avslutande kommatecken förskjuter efterföljande värden ett steg åt vänster. Ogiltiga rader hoppas över och loggas.\n\nExempel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamiljesemester,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -228,16 +311,16 @@
                 }
             },
             "holiday_translations": {
-                "title": "🌐 Holiday translations",
-                "description": "Export and import the holiday names you wrote yourself.",
+                "title": "🌐 Översättningar av helgdagar",
+                "description": "Exportera och importera de helgdagsnamn du har skrivit själv.",
                 "menu_options": {
-                    "export_translations": "📤 Export translations",
-                    "import_translations": "📥 Import translations"
+                    "export_translations": "📤 Exportera översättningar",
+                    "import_translations": "📥 Importera översättningar"
                 }
             },
             "import_translations": {
-                "title": "Import translations",
-                "description": "Upload a translations CSV. Columns: `country,subdivision,category,holiday_key,observed,language,name`. Rows are matched onto holidays by country, subdivision, category, holiday key and observed flag - not by entry id, so a file exported before re-importing a country still applies. Rows whose holiday isn't present are skipped and counted.",
+                "title": "Importera översättningar",
+                "description": "Ladda upp en CSV med översättningar. Kolumner: `country,subdivision,category,holiday_key,observed,language,name`. Rader matchas mot helgdagar på land, underindelning, kategori, helgdagsnyckel och observed-flagga – inte på post-id, så en fil som exporterats innan ett land importeras om gäller fortfarande. Rader vars helgdag saknas hoppas över och räknas.",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -248,7 +331,7 @@
                     "annual_settings": "{icon_annual_settings} Annual Inställningar",
                     "import_events": "{icon_import_events} Importera händelser",
                     "export_csv": "{icon_export_csv} Exportera händelser till CSV",
-                    "holiday_translations": "{icon_holiday_translations} Holiday translations",
+                    "holiday_translations": "{icon_holiday_translations} Översättningar av helgdagar",
                     "remove_events": "{icon_remove_events} Ta bort händelser",
                     "delete_all": "{icon_delete_all} Ta bort all Annuals-data"
                 }
@@ -336,6 +419,55 @@
             "delete_all": {
                 "title": "Ta bort all Annuals-data",
                 "description": "Detta tar bort alla {count} händelse(r), de delade kalendrarna och Annuals-huben permanent - hela integrationen och allt den skapat. Detta kan inte ångras. Klicka på \"OK\" för att bekräfta."
+            },
+            "edit_recurring": {
+                "title": "Redigera händelse",
+                "description": "Ändra valfritt fält nedan och skicka in för att uppdatera händelsen.",
+                "data": {
+                    "name": "Namn",
+                    "last_name": "Efternamn (valfritt)",
+                    "type": "Händelsetyp",
+                    "day": "Dag",
+                    "month": "Månad",
+                    "year": "År (lämna tomt om okänt)",
+                    "icon": "Åsidosätt ikon (valfritt)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "edit_one_time": {
+                "title": "Redigera engångshändelse",
+                "description": "Ändra valfritt fält nedan och skicka in för att uppdatera händelsen.\n\nEtt slutdatum gör den till en flerdagshändelse; tömmer du det blir det åter en enda dag.",
+                "data": {
+                    "name": "Namn",
+                    "last_name": "Efternamn (valfritt)",
+                    "type": "Händelsetyp",
+                    "day": "Dag",
+                    "month": "Månad",
+                    "year": "År",
+                    "end_date": "Slutdatum (valfritt – gör den till en flerdagshändelse)",
+                    "icon": "Åsidosätt ikon (valfritt)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "edit_custom": {
+                "title": "Redigera anpassad händelse",
+                "description": "Ändra valfritt fält nedan och skicka in för att uppdatera händelsen.\n\nDet kan följa en **regel** i stället för en bestämd dag – *den andra söndagen i maj*. Fyll i de två fälten längst ned; **Månad** ovanför anger vilken månad regeln gäller, och **Dag** används då inte. Tömmer du dem infaller händelsen åter på den dagen.",
+                "data": {
+                    "name": "Namn",
+                    "last_name": "Efternamn (valfritt)",
+                    "type": "Händelsetyp",
+                    "day": "Dag",
+                    "month": "Månad",
+                    "year": "År",
+                    "icon": "Åsidosätt ikon (valfritt)",
+                    "vip": "VIP Annual",
+                    "nth": "Placering i månaden",
+                    "weekday": "Veckodag"
+                },
+                "data_description": {
+                    "nth": "Första, andra, tredje, fjärde eller den sista i månaden.",
+                    "weekday": "Ange tillsammans med fältet ovanför – eller lämna båda tomma."
+                }
             }
         },
         "error": {
@@ -351,12 +483,13 @@
             "invalid_vcard": "Kunde inte läsa den här filen som en vCard. Kontrollera formatet.",
             "no_valid_vcard_entries": "Inga kontakter med en användbar födelsedag hittades i den här filen. Se loggen för detaljer om överhoppade poster.",
             "no_valid_vcard_dates": "Inga årsdagar eller övriga datum (förutom födelsedagar) hittades i den här filen. Se loggen för detaljer om överhoppade poster.",
-            "no_batch_selected": "Markera \"Ta bort alla importerade helgdagar\", eller välj en grupp."
+            "no_batch_selected": "Markera \"Ta bort alla importerade helgdagar\", eller välj en grupp.",
+            "rule_needs_both": "En upprepningsregel kräver båda fälten – eller inget av dem."
         },
         "abort": {
             "translations_exported": "{count} översättning(ar) exporterade. [Ladda ner annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+klick för att ladda ner - ett vanligt klick fungerar inte här)\n\nEller kopiera CSV:n nedan:\n\n```\n{csv}\n```",
-            "translations_imported": "{updated} holiday(s) updated, {skipped} row(s) skipped.",
-            "no_translations_to_export": "No holiday names have been written yet - there is nothing to export.",
+            "translations_imported": "{updated} helgdag(ar) uppdaterade, {skipped} rad(er) överhoppade.",
+            "no_translations_to_export": "Inga helgdagsnamn har skrivits ännu – det finns inget att exportera.",
             "hub_not_configurable": "Annuals-huben har inga egna inställningar - den innehåller bara de delade kalendrarna.",
             "import_started": "Import startad: {created} händelse(r) i kö, {skipped} rad(er) överhoppade (se loggen för detaljer).",
             "ics_import_started": "Import startad: {created} händelse(r) skapade, {updated} uppdaterade, {skipped} post(er) överhoppade eller uteslutna.",

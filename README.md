@@ -4,7 +4,7 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/default)
 [![License](https://img.shields.io/github/license/somansch/annuals)](https://github.com/somansch/annuals/blob/main/LICENSE)
 
-**Available languages:** English, Deutsch, Français, Nederlands, Polski, Español, Italiano, Português (Brasil), Русский, Svenska, 简体中文, Čeština, Norsk bokmål, Dansk, Türkçe
+**Available languages:** English, Deutsch, Français, Nederlands, Polski, Español, Italiano, Português (Brasil), Русский, Svenska, 简体中文, Čeština, Norsk bokmål, Dansk, Türkçe, Slovenčina
 
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-summary.png" alt="List view, Timeline, Compact, to-dos and an Agenda-style list, side by side" width="45%">
 
@@ -47,6 +47,7 @@ That's the whole setup - everything below covers the individual features and opt
 
 - [First-time setup](#first-time-setup)
 - [Adding an event](#adding-an-event)
+  - [Dates that are a rule, not a day](#dates-that-are-a-rule-not-a-day) - the second Sunday in May
 - [Annuals Settings](#annuals-settings) (milestones, to-do lists, import, export, remove, delete all)
 
 **Getting events in and out**
@@ -77,6 +78,7 @@ That's the whole setup - everything below covers the individual features and opt
 - [Native Calendar card](#native-calendar-card)
 - [Custom dashboard card](#custom-dashboard-card)
   - [The visual editor](#the-visual-editor) - and why it only shows part of itself
+  - [Card size](#card-size) - resizing, the fold, and a one-row card
   - [Date format](#date-format)
   - [Holidays from several places](#holidays-from-several-places)
   - [To-dos](#to-dos)
@@ -103,13 +105,27 @@ The first time you go to **Settings → Devices & Services → Add Integration �
 
 **Settings → Devices & Services**, click the **"Annuals"** integration tile to open the list of existing entries, then **Add entry** - once per event. (You only go through **Add Integration** once, during first-time setup above; every event after that is added from within the "Annuals" tile.)
 
+The first screen asks **what kind of event this is**, because the answer decides what the form after it needs to ask:
+
+| | Kind | Covers |
+|---|---|---|
+| 🎂 | **A yearly date for someone** | Birthday, Anniversary, Name day, Wedding anniversary, Memorial, Pet birthday, Work anniversary |
+| ⏳ | **A one-time event** | One-time event - a single date, deleted automatically once it is over |
+| 🗓️ | **A custom event** | Custom - your own yearly date, on a day or on a [rule](#dates-that-are-a-rule-not-a-day) |
+
+Each kind then gets a form carrying only its own fields, instead of one form carrying every field with labels explaining which types they do not apply to. Editing an event later skips this screen: the event has already chosen its kind, so **Configure** opens its form directly.
+
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-add-event.png" alt="The first screen when adding an event, offering a yearly date for someone, a one-time event or a custom event" width="60%">
+
 | Field | Description |
 |---|---|
 | **Name** | Whose event this is (e.g. "Anna"). Becomes the entry's title and the entity name (together with Last name, if set). |
 | **Last name** | Optional, not offered for holidays. Lets you keep first and last name separate - e.g. use just the first name for a compact card, or the full name elsewhere. Exposed as the `last_name` and `full_name` (first + last, or just first if no last name is set) sensor attributes, and as `{last_name}`/`{full_name}` placeholders and dedicated column types in the [custom dashboard card](#custom-dashboard-card). |
-| **Event type** | One of the nine types below - each gets a matching icon and its own aggregate calendar. |
-| **Day** / **Month** | The recurring date. Deliberately separate fields instead of a date picker - a picker would make you click back month by month to reach a birth year like 1970. |
-| **Year** | Optional for every type except **One-time event**, where it's required (see below). Type it directly (one keystroke instead of a picker). Leave empty when unknown - the `occurrence_number` attribute is then hidden, since it can't be computed without a starting year. |
+| **Event type** | The types this kind covers - each gets a matching icon and its own aggregate calendar. One-time and Custom each cover a single type, so their dropdown says which it is rather than offering a choice. Changing an event from one kind to another isn't possible for the same reason; delete it and add it again. |
+| **Day** / **Month** | The recurring date. Deliberately separate fields instead of a date picker - a picker would make you click back month by month to reach a birth year like 1970. A **Custom** event can be given a rule instead of a day - *the first Sunday in September* - see [Dates that are a rule, not a day](#dates-that-are-a-rule-not-a-day) below. |
+| **Year** | Type it directly (one keystroke instead of a picker). Optional on a yearly or custom event - leave it empty when unknown and the `occurrence_number` attribute is hidden, since it can't be computed without a starting year. Required on a **one-time event**, which is one exact date and has no unknown year to leave empty. |
+| **End date** | **One-time events only**, optional - see [Events that span several days](#events-that-span-several-days). |
+| **Repeats on the** / **…weekday of the month** | **Custom events only**, optional, both together - see [Dates that are a rule, not a day](#dates-that-are-a-rule-not-a-day). |
 | **Icon override** | Optional. Home Assistant's native icon picker. Leave empty to use the type's default icon. |
 | **VIP annual** | Optional, off by default. Marks this one event as VIP - independent of type or occurrence number, e.g. a close family member's birthday you always want to stand out. Purely a display flag: the [custom dashboard card](#custom-dashboard-card) below can filter to VIP-only and show a distinct badge. |
 
@@ -133,9 +149,37 @@ To edit or remove an event afterwards, find its entry under **Settings → Devic
 
 To add many events at once instead of one at a time see [Annuals Settings](#annuals-settings) below.
 
+### Dates that are a rule, not a day
+
+Some dates are not a date. Mother's Day is the second Sunday in May, so it is 10 May one year and 9 May the next; Father's Day in Australia is the first Sunday in September. Days like these are observances rather than public holidays, so the database behind [Importing public holidays](#importing-public-holidays) mostly does not carry them - and a fixed day and month would be right in one year and wrong in every other.
+
+So a **Custom** event can be given a rule instead of a day. Its form carries two more fields for it: **Repeats on the** (*First*, *Second*, *Third*, *Fourth* or *Last*) and the **...weekday of the month**. Together with the **Month** above them, that is the whole rule. Leave both empty - which is how the form opens - and the event keeps the plain day and month you entered, exactly as before.
+
+The two fields are on the custom event's form and on no other, which is what picking the kind of event first buys - see [Adding an event](#adding-an-event) above. Every other type is one particular person's own date: a birthday happens on the day it happened, not on the second Sunday of anything.
+
+| Observance | Rule |
+|---|---|
+| Mother's Day (US, and most countries) | Second Sunday in May |
+| Father's Day (US, UK, Canada) | Third Sunday in June |
+| Father's Day (Australia, New Zealand) | First Sunday in September |
+| Grandparents' Day (US) | First Sunday in September |
+| Friendship Day (US) | First Sunday in August |
+| Sweetest Day (US) | Third Saturday in October |
+
+A few notes on the edges:
+
+- **The two fields go together.** Setting one and not the other is refused rather than half-applied, so an event never ends up on a date nobody chose.
+- **The Day field is not read while a rule is set** - it is left exactly as you typed it, so clearing the rule puts the event back on that date.
+- **There is no *Fifth*.** Three months in four have no fifth Sunday, so it would be a choice that quietly produces nothing in most years. ***Last*** is what anyone reaching for it means, and it is a rule in its own right: *last Monday in May* is the fourth Monday in some years and the fifth in others.
+- **Valentine's Day is not a candidate**, although it looks like one - it is 14 February every year. Add it as a Custom event with a day and a month, as before.
+- **Two shapes a rule of this kind cannot express**: a date counted from another one (Black Friday is the day after Thanksgiving; US Election Day is the Tuesday after the first Monday in November), and anything tied to Easter, which moves by arithmetic of its own. Both still need a fixed date each year, or a calendar of their own.
+- **Holidays that *are* in the holidays database are unaffected.** Thanksgiving, Memorial Day and the rest already resolve per year on their own - import them as usual and nothing here applies to them.
+
+The sensor reports where the rule landed in `next_date`, as it does for every event, and carries the rule itself as the `weekday` (Monday = 0) and `nth` (`-1` for last) attributes. An event without a rule has neither and is unchanged in every respect.
+
 ## Annuals Settings
 
-A handful of cross-event tools - milestone thresholds, to-do list matching, bulk import/export, and bulk removal - live in one place, separate from any single event: the **"Annuals Settings" hub entry**, created during [first-time setup](#first-time-setup). Find it under **Settings → Devices & Services → Annuals** and click **Configure**:
+A handful of cross-event tools - milestone thresholds, to-do list matching, bulk import/export, holiday name translations, and bulk removal - live in one place, separate from any single event: the **"Annuals Settings" hub entry**, created during [first-time setup](#first-time-setup). Find it under **Settings → Devices & Services → Annuals** and click **Configure**:
 
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-settings-summary.png" alt="Annuals Settings hub menu" width="45%">
 
@@ -189,16 +233,19 @@ The file needs a header row with these columns:
 | `icon` | No | An MDI icon name (e.g. `mdi:cake-variant`) to override the type's default. |
 | `vip` | No | Accepts `1`/`true`/`yes`/`y`/`x` (case-insensitive) to mark the event VIP. Leave empty or omit the column otherwise. |
 | `last_name` | No | Kept separate from `name` - see [Adding an event](#adding-an-event) above. |
+| `end_date` | No | `one_time` rows only - an ISO `YYYY-MM-DD` date after the row's own date, which makes it a multi-day event (see [Events that span several days](#events-that-span-several-days)). |
+| `nth`, `weekday` | No | `custom` rows only, and only both together - the recurrence rule described under [Dates that are a rule, not a day](#dates-that-are-a-rule-not-a-day). `nth` is `1` to `4`, or `-1` for the last one in the month; `weekday` is `0` for Monday to `6` for Sunday. The row's own `month` is the month the rule applies to, and its `day` is then not read. |
 
 Keep every column even when a value is empty - a row with a missing trailing comma shifts the following values left.
 
 ```csv
-name,type,day,month,year,icon,vip,last_name
-Anna,birthday,12,4,1988,,,Miller
-Max,pet_birthday,3,9,2020,mdi:dog,,
-Acme Corp,work_anniversary,1,7,2015,,,
-Test Custom,custom,1,1,,mdi:test-tube,1,
-Family Vacation,one_time,15,7,2026,mdi:airplane,,
+name,type,day,month,year,icon,vip,last_name,end_date,nth,weekday
+Anna,birthday,12,4,1988,,,Miller,,,
+Max,pet_birthday,3,9,2020,mdi:dog,,,,,
+Acme Corp,work_anniversary,1,7,2015,,,,,,
+Test Custom,custom,1,1,,mdi:test-tube,1,,,,
+Family Vacation,one_time,15,7,2026,mdi:airplane,,,2026-07-29,,
+Mothers Day,custom,1,5,,mdi:flower,,,,2,6
 ```
 
 Re-importing the same CSV later - e.g. a centrally maintained file synced on a schedule - does not create duplicate events. Each row is matched against existing entries by type + day/month + name (not year or last_name, so correcting a wrong birth year or filling in a previously-missing last name still matches the same person); a match updates that event's data in place instead of adding a second one. This only applies to CSV-imported events - manually added events are never touched or matched by a later import.
@@ -286,7 +333,9 @@ A holiday the whole country observes is stored **once**, without a region, no ma
 
 Which categories are offered for a given country depends entirely on what that country's `holidays` library data provides - most only ever expose Public (and maybe Bank/School); the ethnic and minority-specific ones above are rare, country-specific exceptions.
 
-Re-running the wizard later for the same country (and subdivision) updates the existing imported events instead of creating duplicates - safe to repeat if a country adds or removes a holiday. The result says which is which, e.g. `16 holiday event(s) queued for US (7 new, 9 updated)`.
+Re-running the wizard later for the same country (and subdivision) updates the existing imported events instead of creating duplicates - safe to repeat if a country adds or removes a holiday. The result says which is which, e.g. `16 holiday event(s) queued for US (7 new, 9 updated)`. A holiday is matched by its name in the library’s own default language, ignoring capitalisation - that library occasionally rewrites a name’s capitals and nothing else (five of the ten Dutch public holidays changed that way between two releases), which used to make a re-import add a second copy of each. Where such a pair already exists, the first start after updating to v3.2.0 keeps the capitalised spelling, moves any holiday names you typed onto it, and removes the other, naming both in the log.
+
+Picking **several categories at once has always produced one entry per holiday** where they cover the same date - the library files a statutory holiday under *public* and *government* alike, often under a different name in each. Since v3.2.0 that also holds when the categories are imported one after the other, and across the categories already imported: **public wins**. A public holiday replaces whatever else stands on its date, an import of another category is skipped where something already covers it, and between two non-public categories the one imported first stays. Multi-day school breaks are left out of this, and so is a holiday's *(observed)* entry, which is deliberately separate from its literal one.
 
 ### School holidays and other multi-day breaks
 
@@ -328,7 +377,7 @@ Giving several countries' versions of one holiday the same name also lets the ca
 
 ## Exporting events to CSV
 
-Find the **"Annuals Settings" hub entry** under **Settings → Devices & Services → Annuals**, click **Configure**, and pick **"Export events to CSV"** - it immediately generates the file, offers a **download link** (real file, using the exact same columns as CSV import - `name,type,day,month,year,icon,vip,last_name` - so a freshly exported file can be re-imported unchanged), and also shows it inline as a copyable code block as a fallback. Only manually added and CSV/ICS/vCard-imported events are included; imported holidays aren't, re-import them via [Importing public holidays](#importing-public-holidays) instead.
+Find the **"Annuals Settings" hub entry** under **Settings → Devices & Services → Annuals**, click **Configure**, and pick **"Export events to CSV"** - it immediately generates the file, offers a **download link** (real file, using the exact same columns as CSV import - `name,type,day,month,year,icon,vip,last_name,end_date,nth,weekday` - so a freshly exported file can be re-imported unchanged), and also shows it inline as a copyable code block as a fallback. Only manually added and CSV/ICS/vCard-imported events are included; imported holidays aren't, re-import them via [Importing public holidays](#importing-public-holidays) instead.
 
 **Use Ctrl/Cmd+click (or right-click → "Save link as") on the download link, not a plain click** - Home Assistant's own UI intercepts a plain click on any link inside this kind of dialog for its own in-app navigation, which never lets the download happen. This is spelled out in the dialog itself as a reminder.
 
@@ -391,7 +440,8 @@ Attributes on each event's sensor:
 | `next_date` | Date (ISO format) of the next occurrence - for `one_time` events, its fixed, non-recurring date, handy for building a countdown display. |
 | `occurrence_number` | Which occurrence the next date will be (e.g. `30` for a 30th birthday) - `null` when no year was entered. Always `null` for `holiday` and `one_time` events, since neither recurs in a way "occurrence number" applies to. |
 | `reminder_message` | A ready-made, translated countdown phrase for `state`, e.g. "in 7 days", "Tomorrow", or "Today" - same language as `type_label`. |
-| `day`, `month`, `year` | The event's date as entered (`year` is `null` when unknown - always set for `one_time` events, see [Adding an event](#adding-an-event) above). Not applicable to `holiday` events - see `next_date` instead, since a public holiday's date shifts by year. |
+| `day`, `month`, `year` | The event's date as entered (`year` is `null` when unknown - always set for `one_time` events, see [Adding an event](#adding-an-event) above). Not applicable to `holiday` events - see `next_date` instead, since a public holiday's date shifts by year. On a `custom` event with a recurrence rule, `day` is the date it would fall back to rather than the one it is on - `next_date` is where it actually lands. |
+| `weekday`, `nth` | `custom` events with a recurrence rule only (see [Dates that are a rule, not a day](#dates-that-are-a-rule-not-a-day)) - `weekday` is `0` for Monday to `6` for Sunday, `nth` is `1` to `4` or `-1` for the last one in the month. Both absent on every event without a rule, so their mere presence means "this date is a rule". |
 | `todo` | `true` if a still-open item on one of the to-do lists picked under [Annual Settings](#annual-settings-automatic-milestones) is currently matched to this event, `false` otherwise (and always `false` while no list is picked). |
 | `vip` | `true` if the **VIP annual** flag is set on this event, `false` otherwise. |
 | `important` | `true` if the upcoming occurrence number matches one of that type's milestones in [Annual Settings](#annual-settings-automatic-milestones), `false` otherwise (always `false` when no year was entered, since there's no occurrence number to check - always `false` for `one_time` events for the same reason). |
@@ -604,7 +654,7 @@ What changes once it has one:
 - Extra attributes come along: `end_date`, `days_until_end`, `duration_days`, `in_progress` and `reminder_message_end` (the translated countdown phrase for the *end*, e.g. "in 3 days"). They're absent on single-day events, so anything reading them can use their presence as "this one spans several days".
 - The event is **removed after its last day**, not after its first - a two-week holiday stays on the dashboard for the whole two weeks.
 - On the **calendar entity** it's one all-day event covering the whole range, instead of a single day at the start.
-- The **[dashboard card](#custom-dashboard-card)** can list it as its first day, its last day, both, or one row per day - Events → *Multi-day events*, shown only while **One-time event** is among the types the card displays. Each row says which part it is - `Vacation (start)`, `(end)`, `(day 3)`, in the language the card is read in - so it can't be mistaken for an ordinary single-day row. Every row counts from the day it is about, so each one is subject to the card's own past-event settings: on day five of a fortnight the per-day list starts at day five, and the *first day* row is gone unless the card shows past events. A card set to *Only the first day* therefore stops listing a trip once it has begun - *First and last day* keeps it through its end row, *Every day* through the day it is on.
+- The **[dashboard card](#custom-dashboard-card)** can list it as its first day, its last day, both, or one row per day - Events → *Multi-day events*. The same setting governs a multi-day entry from an [embedded calendar](#external-calendars), so the card is shown whenever either source can produce one. Each row says which part it is - `Vacation (start)`, `(end)`, `(day 3)`, in the language the card is read in - so it can't be mistaken for an ordinary single-day row. Every row counts from the day it is about, so each one is subject to the card's own past-event settings: on day five of a fortnight the per-day list starts at day five, and the *first day* row is gone unless the card shows past events. A card set to *Only the first day* therefore stops listing a trip once it has begun - *First and last day* keeps it through its end row, *Every day* through the day it is on.
 - The **[reminder blueprint](#blueprint-upcoming-event-reminders)** can count down to the start, to the end, or both, each using the same "days before" thresholds - Multi-day events → *Remind about*. With to-do tracking on, departure and return become two separate items rather than one that either can tick off.
 
 The **end_date** column also rides along in the [event CSV](#exporting-events-to-csv), as an ISO `YYYY-MM-DD` date in the last column. A CSV written before this existed imports unchanged.
@@ -653,9 +703,9 @@ Add it to a dashboard the normal way - search for "Annuals Card" in the card pic
 
 Everything after that is set in the visual editor, no YAML required: which event types to show, the time window, the VIP and Important filters, the appearance of every element in a row, what past, today and soon rows look like, and an optional background image or color. If you imported a holiday's actual *and* observed date, **Prefer observed date** (Settings → Events) folds the pair into one entry - it drops the "(observed)" suffix and hides the duplicate.
 
-The card's own UI text (not the integration's entities/config-flow, which follow your server's language setting) follows **your personal profile language** - Settings → People → your user → Language - and is available in the same 15 languages as the rest of the integration.
+The card's own UI text (not the integration's entities/config-flow, which follow your server's language setting) follows **your personal profile language** - Settings → People → your user → Language - and is available in the same 16 languages as the rest of the integration.
 
-To override that per card, set **Language** (Settings → General) to one of those 15 language codes: the card then reads the same for everyone who sees it, no matter whose profile is looking at it - useful for a wall-mounted tablet, a shared household dashboard, or simply a card you want in a specific language. It covers the card's own text and its date/time formatting together, so the two never end up in different languages. Left on **Automatic**, each viewer keeps seeing their own language, exactly as before. The card *editor* always stays in your own profile language, so pinning a card to a language you don't read never leaves you stuck in a form you can't find your way back out of. Missing a language? The **"Missing your language?"** link right below opens a pre-filled feature request for it.
+To override that per card, set **Language** (Settings → General) to one of those 16 language codes: the card then reads the same for everyone who sees it, no matter whose profile is looking at it - useful for a wall-mounted tablet, a shared household dashboard, or simply a card you want in a specific language. It covers the card's own text and its date/time formatting together, so the two never end up in different languages. Left on **Automatic**, each viewer keeps seeing their own language, exactly as before. The card *editor* always stays in your own profile language, so pinning a card to a language you don't read never leaves you stuck in a form you can't find your way back out of. Missing a language? The **"Missing your language?"** link right below opens a pre-filled feature request for it.
 
 **No events text** (Settings → General) is what the card writes in place of the list when it has nothing to show. Left empty it stays the built-in phrase, translated into whichever language the card is read in - the same way an empty **Card title** keeps the default one. Its own appearance sits in Layout → **Design**, in a block directly under Card title: a color, a size and the four style toggles, like every other element. Both layouts fall back to the same line, so the block is always listed rather than following the row columns.
 
@@ -669,7 +719,7 @@ One integration, five ways to read the same events - the List view, the Timeline
 
 The editor is split into two panels. **Settings** holds what the card shows - **General** (title, language, date format), **Events** (which types to include, holidays, to-dos, external calendars) and **Time period** (days ahead, days past, the "soon" threshold). **Layout** holds how it looks - **General** (list or timeline, and the event filters), **List view** (the row columns, separators, tap actions), **Timeline**, **Design** (one block per element: its color, its font, its style), **Highlight** (badges and the per-status colors) and **Card Background**.
 
-That is a lot of settings, and a form listing all of them at once would be unusable. So the editor shows only what your card can actually use, and nothing else. A control appears when either of two things is true:
+That is a lot of settings, and a form listing all of them at once would be unusable. So the editor shows only what your card can actually use, and nothing else. On the **Design** and **Highlight** tabs, each block also folds to a single line: the tab lists what can be set, and clicking a line opens it - an element's colour and font on Design, an event type's or an embedded calendar's colours further down that same tab, a badge's icon and colours or a status's own colours on Highlight. Opening one closes the previous. The switches that sit on such a line keep working as switches, so a badge is still turned on and placed from the line that names it. A control appears when either of two things is true:
 
 - **The data exists.** The Time, Location and Description settings wait until an [external calendar](#external-calendars) is embedded; the to-do filter and badge wait for a [to-do list](#to-dos); the holiday settings wait for holidays to be among the selected event types, and each event type gets a block of its own only while that type is selected.
 - **The function is switched on.** A color field appears once its own switch is on; the Accent bar's block appears once that column is in the row; the Date block's three lines appear with the Date block column; every list-only setting disappears in the Timeline layout, and vice versa; and the whole Timeline panel collapses to a one-line note while the card is in list layout.
@@ -686,11 +736,23 @@ The sections below follow that same path, so reading on walks the editor rather 
 | Settings → **Events** | [Holidays from several places](#holidays-from-several-places), [To-dos](#to-dos), [External calendars](#external-calendars) |
 | Settings → **Time period** | Days ahead, days past and the "soon" threshold - three plain number fields |
 | Layout → **General** | The layout switch, and the VIP / Important / open-to-do filters |
-| Layout → **List view** | [Row columns](#row-columns), [Day, week and month separators](#day-week-and-month-separators), [Row click/tap behavior](#row-clicktap-behavior) |
+| Layout → **List view** | [Row columns](#row-columns), [Day, week and month separators](#day-week-and-month-separators), [Row click/tap behavior](#row-clicktap-behavior), and the fold and *Minimal* under [Card size](#card-size) |
 | Layout → **Timeline** | [Timeline layout](#timeline-layout) |
 | Layout → **Design** and **Highlight** | [Row colors](#row-colors), [Icon animations](#icon-animations) - and, through them, every element's own color and font |
 | Layout → **Card Background** | A color, an image, its sizing and its opacity, all behind one switch |
 
+
+### Card size
+
+A card in a **sections** view can be resized: open its editor, pick the **Layout** tab, and one slider sets the width in twelfths of the section while the other sets the height in rows of 56px. The card takes exactly what it is given. Height follows the content until you pin a row count - **Auto height** - because that is what this card is: a list as long as the events in it. Pinned shorter than its events, the list scrolls inside the height it has.
+
+The floor is **one row**, and **six of twelve columns** in the List layout: below about 240px the rows start overflowing their own width and names wrap until the card is twice as tall. The **Timeline** asks for four, being a single horizontal axis that holds together much narrower.
+
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-flexible-sizing.png" alt="A tall list card folded after five events with a chevron below them, a Timeline card, and a card one row tall showing a single event" width="70%">
+
+**Fold the rest away** (Layout → **List view**) shows only the first few events and puts the rest behind a chevron, with **Events shown** saying how many stand before it - three unless you say otherwise. The rest are not built at all until the chevron is tapped, so a long list behind the fold costs nothing. The chevron sits below the list rather than in it, staying put while the list scrolls under it. Tapping it is a look, not a setting: it is never written to the dashboard, so unfolding a card on your phone does not unfold it for everyone else. List layout only - the [Timeline](#timeline-layout) already has its own **Details** under the axis.
+
+**Minimal (one row, tight edges)** sits directly under *Compact* on that same tab, and is offered while Compact is on. It trims the card's own edges from 16px to 6px and the row's own spacing from 6px to 2px, which is what makes a single row fit a card one grid row tall - the usual edges alone take more than half of it, and a row with an icon needs 42px of the 56. The row is centred in whatever height is left rather than hanging from the top edge. Both trims are for a card showing **one event**: with more, the rest is cut off or has to be scrolled, exactly as before.
 
 ### Date format
 
@@ -707,7 +769,7 @@ The sections below follow that same path, so reading on walks the editor rather 
 | Weekday only | Wednesday | Mittwoch |
 | Full | Wed, Aug 11, 2027 | Mi., 11. Aug. 2027 |
 
-Day/month order, separators and month spelling come from the browser's own locale data, so every one of the 15 languages gets its own conventions without you configuring anything. The second option adds the year only for dates outside the current year - handy on a card of yearly-recurring events, where the year is noise right up until the one entry it isn't (a [one-time event](#countdown-for-one-time-events) two years out, or an event that just crossed the new year).
+Day/month order, separators and month spelling come from the browser's own locale data, so every one of the 16 languages gets its own conventions without you configuring anything. The second option adds the year only for dates outside the current year - handy on a card of yearly-recurring events, where the year is noise right up until the one entry it isn't (a [one-time event](#countdown-for-one-time-events) two years out, or an event that just crossed the new year).
 
 The same setting drives the `{date}` placeholder in [Custom text columns](#row-columns) and the [Timeline layout](#timeline-layout)'s **Show date**, so one card reads consistently. The full date revealed by tapping a countdown is deliberately left out of it: its job is to spell the day out unambiguously, whatever the columns are set to.
 
@@ -735,7 +797,7 @@ Give the four non-German ones the German name once, and the whole set collapses 
 
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-holiday-joined.png" alt="One holiday observed in five places across four countries, merged into a single row" width="60%">
 
-The same trick handles a country whose language the library doesn't cover at all: whatever it imported under, you can give it a name in each of the 15 languages and the card will use the one matching its own Language setting.
+The same trick handles a country whose language the library doesn't cover at all: whatever it imported under, you can give it a name in each of the 16 languages and the card will use the one matching its own Language setting.
 
 ### To-dos
 
@@ -764,6 +826,8 @@ The badge's icon and colors live with the other badges under Layout → Highligh
 Settings → Events → **External calendars** lets you embed one or more of your existing Home Assistant `calendar.*` entities (Google, CalDAV, a Local Calendar helper, another integration's calendar, ...) alongside Annuals' own events, in the same card. Unlike an Annuals event, an external calendar event lands on its own real date - not a yearly-recurring "next occurrence" - and, within a day it shares with other events, sorts by its own time of day (all-day events first, then timed events earliest-first); an Annuals event has no time of day of its own and always sorts as if it were all-day.
 
 Pick any number of calendars from the entity picker; each one's events within the card's configured day window (`days_ahead`/`days_past`/`soon_days`, same as everything else) are pulled in automatically - no import step, no separate entry, and no effect on Annuals' own `types`/`categories`/VIP/Important filters, which simply don't apply to a calendar event. To also show a calendar event's own time range, location, or description:
+
+An entry that covers several days - a holiday in a shared family calendar, a conference, a school break - follows **Multi-day events** (Settings → Events), the same setting a [one-time event with an end date](#events-that-span-several-days) does: its first day, its last day, both, or one row per day. Each row says which part it is, *Ski trip (start)* / *(end)* / *(day 3)*, in the card's own language. An all-day entry is read the way Home Assistant reports it, whose end is the morning after - so a Monday-to-Friday entry is five days, not six - and a timed one that runs past midnight counts the days it actually touches, keeping its start time on the first row and its end time on the last. An ordinary appointment, beginning and ending on one day, is untouched.
 
 - **List layout**: add a **Time**, **Location**, and/or **Description** column ([Row columns](#row-columns)), or use the same three toggles inline on the Type field itself (see the **External calendars only** group above) - either way, they render empty for every non-calendar event.
 - **Timeline layout**: turn on **Show time** / **Show location** / **Show description** (Layout → Timeline → Options) - each appends into the same trailing parenthetical **Show date** already uses, e.g. "...is in 3 days (03:00 PM–04:00 PM · Home · Weekly sync)". All four are independent toggles; any combination (or none) can be on at once.
@@ -856,7 +920,7 @@ Out of the box a row's color says how near its event is: ordinary rows take the 
 3. **Event types** - switch on **Design rows by event type** (Layout → Design) and each type overrides Design for its own rows.
 4. **Event status** - the **Past events**, **Today** and **Soon** blocks (Layout → Highlight) override both, for the rows in that state.
 
-**Design rows by event type** gives every event type - and every [embedded calendar](#external-calendars), which belongs to its calendar rather than to a shared type - a block of its own. In the List layout each block carries four settings, every one behind its own switch so the block stays as short as what you actually use:
+**Design rows by event type** gives every event type - and every [embedded calendar](#external-calendars), which belongs to its calendar rather than to a shared type - a block of its own, folded to the line that names it. In the List layout each block carries four settings, every one behind its own switch - **Icon**, **Accent bar** and **Whole row**, which lead the block, each with an **i** saying what it paints and each bringing its own colour row up directly beneath it - so the block stays as short as what you actually use:
 
 | Setting | Paints |
 | --- | --- |

@@ -73,26 +73,89 @@
                 "turkish": "Tyrkisk",
                 "vlach": "Vlakisk"
             }
+        },
+        "nth": {
+            "options": {
+                "1": "Første",
+                "2": "Anden",
+                "3": "Tredje",
+                "4": "Fjerde",
+                "-1": "Sidste"
+            }
+        },
+        "weekday": {
+            "options": {
+                "0": "Mandag",
+                "1": "Tirsdag",
+                "2": "Onsdag",
+                "3": "Torsdag",
+                "4": "Fredag",
+                "5": "Lørdag",
+                "6": "Søndag"
+            }
         }
     },
     "config": {
         "step": {
             "user": {
                 "title": "Tilføj begivenhed",
-                "description": "Hver begivenhed får sin egen post, som du senere kan finde og redigere under Indstillinger → Enheder og tjenester ved at søge på navnet.",
+                "description": "Hvilken slags begivenhed er det?\n\n**Årlig** dækker fødselsdag, mærkedag, navnedag, bryllupsdag, mindedag, kæledyrs fødselsdag og jubilæum på arbejdet. **Engangs** er en enkelt dato, som sletter sig selv, når den er overstået. **Tilpasset** er din egen årlige dato – på en bestemt dag eller efter en regel.",
+                "menu_options": {
+                    "recurring": "{icon_recurring} En årlig dato for nogen",
+                    "one_time": "{icon_one_time} En engangsbegivenhed",
+                    "custom": "{icon_custom} En tilpasset begivenhed"
+                }
+            },
+            "recurring": {
+                "title": "Tilføj en årlig begivenhed",
                 "data": {
                     "name": "Navn",
                     "last_name": "Efternavn (valgfrit)",
                     "type": "Begivenhedstype",
                     "day": "Dag",
                     "month": "Måned",
-                    "year": "År (lad stå tomt hvis ukendt; påkrævet for engangsbegivenheder)",
-                    "end_date": "Slutdato (kun engangsbegivenheder, valgfrit - gør den til en flerdagsbegivenhed)",
+                    "year": "År (lad stå tomt hvis ukendt)",
                     "icon": "Tilsidesæt ikon (valgfrit)",
                     "vip": "VIP Annual"
+                },
+                "description": "Hver begivenhed får sin egen post, som du senere kan finde og redigere under Indstillinger → Enheder og tjenester → Annuals ved at søge på navnet."
+            },
+            "one_time": {
+                "title": "Tilføj en engangsbegivenhed",
+                "data": {
+                    "name": "Navn",
+                    "last_name": "Efternavn (valgfrit)",
+                    "type": "Begivenhedstype",
+                    "day": "Dag",
+                    "month": "Måned",
+                    "year": "År",
+                    "end_date": "Slutdato (valgfrit – gør den til en flerdagsbegivenhed)",
+                    "icon": "Tilsidesæt ikon (valgfrit)",
+                    "vip": "VIP Annual"
+                },
+                "description": "En enkelt dato at tælle ned til. Den gentages aldrig, så året er påkrævet, og posten slettes automatisk ved midnat efter, den er overstået.\n\nGiv den en slutdato, så bliver det en flerdagsbegivenhed – en rejse, en konference, et ophold."
+            },
+            "custom": {
+                "title": "Tilføj en tilpasset begivenhed",
+                "data": {
+                    "name": "Navn",
+                    "last_name": "Efternavn (valgfrit)",
+                    "type": "Begivenhedstype",
+                    "day": "Dag",
+                    "month": "Måned",
+                    "year": "År",
+                    "icon": "Tilsidesæt ikon (valgfrit)",
+                    "vip": "VIP Annual",
+                    "nth": "Placering i måneden",
+                    "weekday": "Ugedag"
+                },
+                "description": "Din egen årlige dato til alt det, de andre typer ikke dækker.\n\nDen kan følge en **regel** i stedet for en bestemt dag: mors dag er den anden søndag i maj, fars dag i Australien den første søndag i september. Udfyld de to felter nederst – **Måned** ovenfor angiver, hvilken måned reglen gælder for, og **Dag** bruges så ikke. Lad dem stå tomme for en fast dato.",
+                "data_description": {
+                    "nth": "Første, anden, tredje, fjerde eller den sidste i måneden.",
+                    "weekday": "Sæt den sammen med feltet ovenfor – eller lad begge stå tomme."
                 }
             },
-            "reconfigure": {
+            "reconfigure_recurring": {
                 "title": "Rediger begivenhed",
                 "description": "Ændr et vilkårligt felt nedenfor, og indsend for at opdatere denne begivenhed.",
                 "data": {
@@ -101,10 +164,44 @@
                     "type": "Begivenhedstype",
                     "day": "Dag",
                     "month": "Måned",
-                    "year": "År (lad stå tomt hvis ukendt; påkrævet for engangsbegivenheder)",
-                    "end_date": "Slutdato (kun engangsbegivenheder, valgfrit - gør den til en flerdagsbegivenhed)",
+                    "year": "År (lad stå tomt hvis ukendt)",
                     "icon": "Tilsidesæt ikon (valgfrit)",
                     "vip": "VIP Annual"
+                }
+            },
+            "reconfigure_one_time": {
+                "title": "Rediger engangsbegivenhed",
+                "description": "Ændr et vilkårligt felt nedenfor, og indsend for at opdatere denne begivenhed.\n\nEn slutdato gør den til en flerdagsbegivenhed; ryddes den, bliver det igen én dag.",
+                "data": {
+                    "name": "Navn",
+                    "last_name": "Efternavn (valgfrit)",
+                    "type": "Begivenhedstype",
+                    "day": "Dag",
+                    "month": "Måned",
+                    "year": "År",
+                    "end_date": "Slutdato (valgfrit – gør den til en flerdagsbegivenhed)",
+                    "icon": "Tilsidesæt ikon (valgfrit)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "reconfigure_custom": {
+                "title": "Rediger tilpasset begivenhed",
+                "description": "Ændr et vilkårligt felt nedenfor, og indsend for at opdatere denne begivenhed.\n\nDen kan følge en **regel** i stedet for en bestemt dag – *den anden søndag i maj*. Udfyld de to felter nederst; **Måned** ovenfor angiver, hvilken måned reglen gælder for, og **Dag** bruges så ikke. Ryddes de, falder begivenheden igen på den dag.",
+                "data": {
+                    "name": "Navn",
+                    "last_name": "Efternavn (valgfrit)",
+                    "type": "Begivenhedstype",
+                    "day": "Dag",
+                    "month": "Måned",
+                    "year": "År",
+                    "icon": "Tilsidesæt ikon (valgfrit)",
+                    "vip": "VIP Annual",
+                    "nth": "Placering i måneden",
+                    "weekday": "Ugedag"
+                },
+                "data_description": {
+                    "nth": "Første, anden, tredje, fjerde eller den sidste i måneden.",
+                    "weekday": "Sæt den sammen med feltet ovenfor – eller lad begge stå tomme."
                 }
             }
         },
@@ -113,7 +210,8 @@
             "end_date_one_time_only": "En slutdato kan kun sættes på en engangsbegivenhed.",
             "end_date_before_start": "Slutdatoen skal være efter startdatoen.",
             "invalid_date": "Denne kombination af dag/måned/år er ikke en gyldig dato.",
-            "year_required": "Engangsbegivenheder kræver et år."
+            "year_required": "Engangsbegivenheder kræver et år.",
+            "rule_needs_both": "En gentagelsesregel kræver begge felter – eller ingen af dem."
         },
         "abort": {
             "hub_not_configurable": "Annuals-hubben har ingen egne indstillinger - den indeholder kun de delte kalendere.",
@@ -123,21 +221,6 @@
     },
     "options": {
         "step": {
-            "init": {
-                "title": "Rediger begivenhed",
-                "description": "Ændr et vilkårligt felt nedenfor, og indsend for at opdatere denne begivenhed.",
-                "data": {
-                    "name": "Navn",
-                    "last_name": "Efternavn (valgfrit)",
-                    "type": "Begivenhedstype",
-                    "day": "Dag",
-                    "month": "Måned",
-                    "year": "År (lad stå tomt hvis ukendt; påkrævet for engangsbegivenheder)",
-                    "end_date": "Slutdato (kun engangsbegivenheder, valgfrit - gør den til en flerdagsbegivenhed)",
-                    "icon": "Tilsidesæt ikon (valgfrit)",
-                    "vip": "VIP Annual"
-                }
-            },
             "import_csv": {
                 "title": "Importer begivenheder fra CSV",
                 "description": "Kolonner: name, type, day, month, year (valgfrit, påkrævet for one_time), icon (valgfrit), vip (valgfrit), last_name (valgfrit). \"type\" skal være en af følgende engelske nøgler: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (altid på engelsk, uanset dit sprogvalg). \"vip\" accepterer 1/true/yes/y/x (der skelnes ikke mellem store/små bogstaver); lad stå tomt eller undlad kolonnen for en ikke-VIP-begivenhed. Behold alle kolonner, selv når en værdi er tom - en række uden afsluttende komma rykker de følgende værdier et trin til venstre. Ugyldige rækker springes over og logges.\n\nEksempel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamilieferie,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -228,16 +311,16 @@
                 }
             },
             "holiday_translations": {
-                "title": "🌐 Holiday translations",
-                "description": "Export and import the holiday names you wrote yourself.",
+                "title": "🌐 Oversættelser af helligdage",
+                "description": "Eksportér og importér de helligdagsnavne, du selv har skrevet.",
                 "menu_options": {
-                    "export_translations": "📤 Export translations",
-                    "import_translations": "📥 Import translations"
+                    "export_translations": "📤 Eksportér oversættelser",
+                    "import_translations": "📥 Importér oversættelser"
                 }
             },
             "import_translations": {
-                "title": "Import translations",
-                "description": "Upload a translations CSV. Columns: `country,subdivision,category,holiday_key,observed,language,name`. Rows are matched onto holidays by country, subdivision, category, holiday key and observed flag - not by entry id, so a file exported before re-importing a country still applies. Rows whose holiday isn't present are skipped and counted.",
+                "title": "Importér oversættelser",
+                "description": "Upload en CSV med oversættelser. Kolonner: `country,subdivision,category,holiday_key,observed,language,name`. Rækker matches til helligdage på land, region, kategori, helligdagsnøgle og observed-flag – ikke på post-id, så en fil, der er eksporteret før et land genimporteres, gælder stadig. Rækker, hvis helligdag ikke findes, springes over og tælles.",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -248,7 +331,7 @@
                     "annual_settings": "{icon_annual_settings} Annual Indstillinger",
                     "import_events": "{icon_import_events} Importer begivenheder",
                     "export_csv": "{icon_export_csv} Eksporter begivenheder til CSV",
-                    "holiday_translations": "{icon_holiday_translations} Holiday translations",
+                    "holiday_translations": "{icon_holiday_translations} Oversættelser af helligdage",
                     "remove_events": "{icon_remove_events} Fjern begivenheder",
                     "delete_all": "{icon_delete_all} Slet alle Annuals-data"
                 }
@@ -336,6 +419,55 @@
             "delete_all": {
                 "title": "Slet alle Annuals-data",
                 "description": "Dette sletter permanent alle {count} begivenhed(er), de delte kalendere og selve Annuals-hubben - hele integrationen og alt, den har oprettet. Dette kan ikke fortrydes. Klik på \"OK\" for at bekræfte."
+            },
+            "edit_recurring": {
+                "title": "Rediger begivenhed",
+                "description": "Ændr et vilkårligt felt nedenfor, og indsend for at opdatere denne begivenhed.",
+                "data": {
+                    "name": "Navn",
+                    "last_name": "Efternavn (valgfrit)",
+                    "type": "Begivenhedstype",
+                    "day": "Dag",
+                    "month": "Måned",
+                    "year": "År (lad stå tomt hvis ukendt)",
+                    "icon": "Tilsidesæt ikon (valgfrit)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "edit_one_time": {
+                "title": "Rediger engangsbegivenhed",
+                "description": "Ændr et vilkårligt felt nedenfor, og indsend for at opdatere denne begivenhed.\n\nEn slutdato gør den til en flerdagsbegivenhed; ryddes den, bliver det igen én dag.",
+                "data": {
+                    "name": "Navn",
+                    "last_name": "Efternavn (valgfrit)",
+                    "type": "Begivenhedstype",
+                    "day": "Dag",
+                    "month": "Måned",
+                    "year": "År",
+                    "end_date": "Slutdato (valgfrit – gør den til en flerdagsbegivenhed)",
+                    "icon": "Tilsidesæt ikon (valgfrit)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "edit_custom": {
+                "title": "Rediger tilpasset begivenhed",
+                "description": "Ændr et vilkårligt felt nedenfor, og indsend for at opdatere denne begivenhed.\n\nDen kan følge en **regel** i stedet for en bestemt dag – *den anden søndag i maj*. Udfyld de to felter nederst; **Måned** ovenfor angiver, hvilken måned reglen gælder for, og **Dag** bruges så ikke. Ryddes de, falder begivenheden igen på den dag.",
+                "data": {
+                    "name": "Navn",
+                    "last_name": "Efternavn (valgfrit)",
+                    "type": "Begivenhedstype",
+                    "day": "Dag",
+                    "month": "Måned",
+                    "year": "År",
+                    "icon": "Tilsidesæt ikon (valgfrit)",
+                    "vip": "VIP Annual",
+                    "nth": "Placering i måneden",
+                    "weekday": "Ugedag"
+                },
+                "data_description": {
+                    "nth": "Første, anden, tredje, fjerde eller den sidste i måneden.",
+                    "weekday": "Sæt den sammen med feltet ovenfor – eller lad begge stå tomme."
+                }
             }
         },
         "error": {
@@ -351,12 +483,13 @@
             "invalid_vcard": "Kunne ikke læse denne fil som en vCard. Tjek formatet.",
             "no_valid_vcard_entries": "Ingen kontakter med en brugbar fødselsdag fundet i denne fil. Se loggen for detaljer om sprungede poster.",
             "no_valid_vcard_dates": "Ingen mærkedage eller øvrige datoer (ud over fødselsdage) fundet i denne fil. Se loggen for detaljer om sprungede poster.",
-            "no_batch_selected": "Markér \"Fjern alle importerede helligdage\", eller vælg en gruppe."
+            "no_batch_selected": "Markér \"Fjern alle importerede helligdage\", eller vælg en gruppe.",
+            "rule_needs_both": "En gentagelsesregel kræver begge felter – eller ingen af dem."
         },
         "abort": {
             "translations_exported": "{count} oversættelse(r) eksporteret. [Download annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+klik for at downloade - et almindeligt klik virker ikke her)\n\nEller kopiér CSV'en herunder:\n\n```\n{csv}\n```",
-            "translations_imported": "{updated} holiday(s) updated, {skipped} row(s) skipped.",
-            "no_translations_to_export": "No holiday names have been written yet - there is nothing to export.",
+            "translations_imported": "{updated} helligdag(e) opdateret, {skipped} række(r) sprunget over.",
+            "no_translations_to_export": "Der er endnu ikke skrevet nogen helligdagsnavne – der er intet at eksportere.",
             "hub_not_configurable": "Annuals-hubben har ingen egne indstillinger - den indeholder kun de delte kalendere.",
             "import_started": "Import startet: {created} begivenhed(er) i kø, {skipped} række(r) sprunget over (se loggen for detaljer).",
             "ics_import_started": "Import startet: {created} begivenhed(er) oprettet, {updated} opdateret, {skipped} post(er) sprunget over eller udeladt.",

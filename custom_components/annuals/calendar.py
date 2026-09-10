@@ -28,11 +28,11 @@ from .const import (
     TYPE_ONE_TIME,
 )
 from .dates import (
+    event_occurrence_in_year,
     holiday_occurrence_in_year,
     holiday_span_kwargs,
+    next_event_occurrence,
     next_holiday_occurrence,
-    next_occurrence,
-    occurrence_in_year,
     occurrence_number,
     one_time_date,
     one_time_span,
@@ -138,11 +138,11 @@ class AnnualsTypeCalendar(CalendarEntity):
                 **holiday_span_kwargs(data),
             )
         if data[CONF_EVENT_TYPE] == TYPE_ONE_TIME:
-            # Never wraps to "next year" like next_occurrence() does below -
-            # a one-time event simply has no next year. None once it's in
-            # the past, same as a holiday with no more occurrences; in
-            # practice this entry is removed entirely by the midnight purge
-            # (see __init__.py) before that ever shows up here.
+            # Never wraps to "next year" like next_event_occurrence() does
+            # below - a one-time event simply has no next year. None once
+            # it's in the past, same as a holiday with no more occurrences;
+            # in practice this entry is removed entirely by the midnight
+            # purge (see __init__.py) before that ever shows up here.
             # Judged on the last day, not the first: an event that is
             # currently running (see CONF_END_DATE) has not passed, and must
             # keep showing on the calendar for the rest of its span rather
@@ -151,7 +151,9 @@ class AnnualsTypeCalendar(CalendarEntity):
                 data[CONF_YEAR], data[CONF_MONTH], data[CONF_DAY], data.get(CONF_END_DATE)
             )
             return occurrence if last_day >= today else None
-        return next_occurrence(data[CONF_MONTH], data[CONF_DAY], today)
+        # Its stored day/month, or the rule a custom event can carry
+        # instead (see CONF_WEEKDAY in const.py) - dates.py decides which.
+        return next_event_occurrence(data, today)
 
     @staticmethod
     def _occurrence_in_year_for_entry(entry: ConfigEntry, year: int) -> date | None:
@@ -170,7 +172,7 @@ class AnnualsTypeCalendar(CalendarEntity):
             # Only ever occurs in its own stored year, unlike every other
             # type which repeats in every year of a multi-year range query.
             return one_time_date(data[CONF_YEAR], data[CONF_MONTH], data[CONF_DAY]) if data[CONF_YEAR] == year else None
-        return occurrence_in_year(data[CONF_MONTH], data[CONF_DAY], year)
+        return event_occurrence_in_year(data, year)
 
     def _compute_event(self) -> CalendarEvent | None:
         """The soonest upcoming occurrence across all events of this type -

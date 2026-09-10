@@ -73,26 +73,89 @@
                 "turkish": "Türkisch",
                 "vlach": "Vlachisch"
             }
+        },
+        "nth": {
+            "options": {
+                "1": "Ersten",
+                "2": "Zweiten",
+                "3": "Dritten",
+                "4": "Vierten",
+                "-1": "Letzten"
+            }
+        },
+        "weekday": {
+            "options": {
+                "0": "Montag",
+                "1": "Dienstag",
+                "2": "Mittwoch",
+                "3": "Donnerstag",
+                "4": "Freitag",
+                "5": "Samstag",
+                "6": "Sonntag"
+            }
         }
     },
     "config": {
         "step": {
             "user": {
                 "title": "Ereignis hinzufügen",
-                "description": "Jedes Ereignis bekommt einen eigenen Eintrag, den du später unter Einstellungen → Geräte & Dienste über die Suche nach seinem Namen findest und bearbeiten kannst.",
+                "description": "Um welche Art von Ereignis geht es?\n\n**Jährlich** umfasst Geburtstag, Jahrestag, Namenstag, Hochzeitstag, Gedenktag, Haustier-Geburtstag und Arbeitsjubiläum. **Einmalig** ist ein einzelnes Datum, das sich nach Ablauf selbst löscht. **Frei wählbar** ist dein eigenes jährliches Ereignis, an einem Tag oder nach einer Regel.",
+                "menu_options": {
+                    "recurring": "{icon_recurring} Ein jährliches Ereignis für jemanden",
+                    "one_time": "{icon_one_time} Ein einmaliges Ereignis",
+                    "custom": "{icon_custom} Ein frei wählbares Ereignis"
+                }
+            },
+            "recurring": {
+                "title": "Jährliches Ereignis hinzufügen",
+                "description": "Jedes Ereignis bekommt einen eigenen Eintrag, sodass du ihn später unter Einstellungen → Geräte & Dienste → Annuals über seinen Namen wiederfindest und bearbeiten kannst.",
                 "data": {
                     "name": "Name",
                     "last_name": "Nachname (optional)",
                     "type": "Ereignistyp",
                     "day": "Tag",
                     "month": "Monat",
-                    "year": "Jahr (leer lassen, wenn unbekannt; bei einmaligen Ereignissen erforderlich)",
-                    "end_date": "Enddatum (nur einmalige Ereignisse, optional - macht daraus ein mehrtägiges Ereignis)",
+                    "year": "Jahr (leer lassen, wenn unbekannt)",
                     "icon": "Icon überschreiben (optional)",
                     "vip": "VIP Annual"
                 }
             },
-            "reconfigure": {
+            "one_time": {
+                "title": "Einmaliges Ereignis hinzufügen",
+                "description": "Ein einzelnes Datum, auf das heruntergezählt wird. Es wiederholt sich nie, deshalb ist das Jahr Pflicht, und der Eintrag wird in der Mitternacht nach dem Ereignis automatisch gelöscht.\n\nMit einem Enddatum wird daraus ein mehrtägiges Ereignis – eine Reise, eine Konferenz, ein Aufenthalt.",
+                "data": {
+                    "name": "Name",
+                    "last_name": "Nachname (optional)",
+                    "type": "Ereignistyp",
+                    "day": "Tag",
+                    "month": "Monat",
+                    "year": "Jahr",
+                    "end_date": "Enddatum (optional – macht daraus ein mehrtägiges Ereignis)",
+                    "icon": "Icon überschreiben (optional)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "custom": {
+                "title": "Frei wählbares Ereignis hinzufügen",
+                "description": "Dein eigenes jährliches Ereignis, für alles, was die anderen Typen nicht beschreiben.\n\nEr kann statt auf einem Tag auf einer **Regel** liegen: Der Muttertag ist der zweite Sonntag im Mai, der Vatertag in Australien der erste Sonntag im September. Fülle die beiden Felder unten aus – der **Monat** darüber sagt, für welchen Monat die Regel gilt, der **Tag** wird dann nicht verwendet. Beide leer lassen ergibt ein festes Datum.",
+                "data": {
+                    "name": "Name",
+                    "last_name": "Nachname (optional)",
+                    "type": "Ereignistyp",
+                    "day": "Tag",
+                    "month": "Monat",
+                    "year": "Jahr",
+                    "icon": "Icon überschreiben (optional)",
+                    "vip": "VIP Annual",
+                    "nth": "Wiederholt sich am",
+                    "weekday": "…Wochentag des Monats"
+                },
+                "data_description": {
+                    "nth": "Erster, zweiter, dritter, vierter oder der letzte im Monat.",
+                    "weekday": "Zusammen mit dem Feld darüber setzen – oder beide leer lassen."
+                }
+            },
+            "reconfigure_recurring": {
                 "title": "Ereignis bearbeiten",
                 "description": "Ändere ein beliebiges Feld unten und speichere, um dieses Ereignis zu aktualisieren.",
                 "data": {
@@ -101,10 +164,44 @@
                     "type": "Ereignistyp",
                     "day": "Tag",
                     "month": "Monat",
-                    "year": "Jahr (leer lassen, wenn unbekannt; bei einmaligen Ereignissen erforderlich)",
-                    "end_date": "Enddatum (nur einmalige Ereignisse, optional - macht daraus ein mehrtägiges Ereignis)",
+                    "year": "Jahr (leer lassen, wenn unbekannt)",
                     "icon": "Icon überschreiben (optional)",
                     "vip": "VIP Annual"
+                }
+            },
+            "reconfigure_one_time": {
+                "title": "Einmaliges Ereignis bearbeiten",
+                "description": "Ändere ein beliebiges Feld unten und speichere, um dieses Ereignis zu aktualisieren.\n\nMit einem Enddatum wird daraus ein mehrtägiges Ereignis; ohne es wieder ein einzelner Tag.",
+                "data": {
+                    "name": "Name",
+                    "last_name": "Nachname (optional)",
+                    "type": "Ereignistyp",
+                    "day": "Tag",
+                    "month": "Monat",
+                    "year": "Jahr",
+                    "end_date": "Enddatum (optional – macht daraus ein mehrtägiges Ereignis)",
+                    "icon": "Icon überschreiben (optional)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "reconfigure_custom": {
+                "title": "Frei wählbares Ereignis bearbeiten",
+                "description": "Ändere ein beliebiges Feld unten und speichere, um dieses Ereignis zu aktualisieren.\n\nEr kann statt auf einem Tag auf einer **Regel** liegen – *der zweite Sonntag im Mai*. Fülle die beiden Felder unten aus; der **Monat** darüber sagt, für welchen Monat die Regel gilt, der **Tag** wird dann nicht verwendet. Leerst du sie, liegt das Ereignis wieder auf diesem Tag.",
+                "data": {
+                    "name": "Name",
+                    "last_name": "Nachname (optional)",
+                    "type": "Ereignistyp",
+                    "day": "Tag",
+                    "month": "Monat",
+                    "year": "Jahr",
+                    "icon": "Icon überschreiben (optional)",
+                    "vip": "VIP Annual",
+                    "nth": "Wiederholt sich am",
+                    "weekday": "…Wochentag des Monats"
+                },
+                "data_description": {
+                    "nth": "Erster, zweiter, dritter, vierter oder der letzte im Monat.",
+                    "weekday": "Zusammen mit dem Feld darüber setzen – oder beide leer lassen."
                 }
             }
         },
@@ -113,7 +210,8 @@
             "end_date_one_time_only": "Ein Enddatum kann nur bei einem einmaligen Ereignis gesetzt werden.",
             "end_date_before_start": "Das Enddatum muss nach dem Startdatum liegen.",
             "invalid_date": "Diese Tag/Monat/Jahr-Kombination ist kein gültiges Datum.",
-            "year_required": "Einmalige Ereignisse benötigen ein Jahr."
+            "year_required": "Einmalige Ereignisse benötigen ein Jahr.",
+            "rule_needs_both": "Eine wiederkehrende Regel braucht beide Felder – oder keines."
         },
         "abort": {
             "hub_not_configurable": "Der Annuals-Hub hat keine eigenen Einstellungen – er hält nur die gemeinsamen Kalender.",
@@ -123,21 +221,6 @@
     },
     "options": {
         "step": {
-            "init": {
-                "title": "Ereignis bearbeiten",
-                "description": "Ändere ein beliebiges Feld unten und speichere, um dieses Ereignis zu aktualisieren.",
-                "data": {
-                    "name": "Name",
-                    "last_name": "Nachname (optional)",
-                    "type": "Ereignistyp",
-                    "day": "Tag",
-                    "month": "Monat",
-                    "year": "Jahr (leer lassen, wenn unbekannt; bei einmaligen Ereignissen erforderlich)",
-                    "end_date": "Enddatum (nur einmalige Ereignisse, optional - macht daraus ein mehrtägiges Ereignis)",
-                    "icon": "Icon überschreiben (optional)",
-                    "vip": "VIP Annual"
-                }
-            },
             "import_csv": {
                 "title": "Ereignisse aus CSV importieren",
                 "description": "Spalten: name, type, day, month, year (optional), icon (optional), vip (optional), last_name (optional). Bei „type“ ist ausschließlich einer der folgenden englischen Schlüssel gültig: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (unabhängig von deiner Spracheinstellung). Bei one_time ist year zwingend erforderlich. „vip“ akzeptiert 1/true/yes/y/x (Groß-/Kleinschreibung egal); leer lassen oder Spalte weglassen für ein nicht-VIP-Ereignis. Jede Spalte muss auch bei einem leeren Wert erhalten bleiben - fehlt ein Komma am Zeilenende, rutschen die folgenden Werte nach links. Ungültige Zeilen werden übersprungen und protokolliert.\n\nBeispiel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamilienurlaub,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -336,6 +419,55 @@
             "delete_all": {
                 "title": "Alle Annuals-Daten löschen",
                 "description": "Dies löscht dauerhaft alle {count} Ereignis(se), die gemeinsamen Kalender und den Annuals-Hub selbst – die komplette Integration inklusive aller angelegten Entitäten. Das kann nicht rückgängig gemacht werden. Zum Bestätigen auf „OK“ klicken."
+            },
+            "edit_recurring": {
+                "title": "Ereignis bearbeiten",
+                "description": "Ändere ein beliebiges Feld unten und speichere, um dieses Ereignis zu aktualisieren.",
+                "data": {
+                    "name": "Name",
+                    "last_name": "Nachname (optional)",
+                    "type": "Ereignistyp",
+                    "day": "Tag",
+                    "month": "Monat",
+                    "year": "Jahr (leer lassen, wenn unbekannt)",
+                    "icon": "Icon überschreiben (optional)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "edit_one_time": {
+                "title": "Einmaliges Ereignis bearbeiten",
+                "description": "Ändere ein beliebiges Feld unten und speichere, um dieses Ereignis zu aktualisieren.\n\nMit einem Enddatum wird daraus ein mehrtägiges Ereignis; ohne es wieder ein einzelner Tag.",
+                "data": {
+                    "name": "Name",
+                    "last_name": "Nachname (optional)",
+                    "type": "Ereignistyp",
+                    "day": "Tag",
+                    "month": "Monat",
+                    "year": "Jahr",
+                    "end_date": "Enddatum (optional – macht daraus ein mehrtägiges Ereignis)",
+                    "icon": "Icon überschreiben (optional)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "edit_custom": {
+                "title": "Frei wählbares Ereignis bearbeiten",
+                "description": "Ändere ein beliebiges Feld unten und speichere, um dieses Ereignis zu aktualisieren.\n\nEr kann statt auf einem Tag auf einer **Regel** liegen – *der zweite Sonntag im Mai*. Fülle die beiden Felder unten aus; der **Monat** darüber sagt, für welchen Monat die Regel gilt, der **Tag** wird dann nicht verwendet. Leerst du sie, liegt das Ereignis wieder auf diesem Tag.",
+                "data": {
+                    "name": "Name",
+                    "last_name": "Nachname (optional)",
+                    "type": "Ereignistyp",
+                    "day": "Tag",
+                    "month": "Monat",
+                    "year": "Jahr",
+                    "icon": "Icon überschreiben (optional)",
+                    "vip": "VIP Annual",
+                    "nth": "Wiederholt sich am",
+                    "weekday": "…Wochentag des Monats"
+                },
+                "data_description": {
+                    "nth": "Erster, zweiter, dritter, vierter oder der letzte im Monat.",
+                    "weekday": "Zusammen mit dem Feld darüber setzen – oder beide leer lassen."
+                }
             }
         },
         "error": {
@@ -351,7 +483,8 @@
             "invalid_vcard": "Diese Datei konnte nicht als vCard gelesen werden. Prüfe das Format.",
             "no_valid_vcard_entries": "Keine Kontakte mit verwertbarem Geburtsdatum in dieser Datei gefunden. Details zu übersprungenen Einträgen stehen im Log.",
             "no_valid_vcard_dates": "Keine Jubiläen oder weiteren Termine (außer Geburtstagen) in dieser Datei gefunden. Details zu übersprungenen Einträgen stehen im Log.",
-            "no_batch_selected": "Aktiviere \"Alle importierten Feiertage entfernen\" oder wähle einen Import aus."
+            "no_batch_selected": "Aktiviere \"Alle importierten Feiertage entfernen\" oder wähle einen Import aus.",
+            "rule_needs_both": "Eine wiederkehrende Regel braucht beide Felder – oder keines."
         },
         "abort": {
             "translations_exported": "{count} Übersetzung(en) exportiert. [annuals_holiday_translations.csv herunterladen]({url}) (Strg/Cmd-Klick zum Herunterladen - ein einfacher Klick funktioniert hier nicht)\n\nOder kopiere die CSV unten:\n\n```\n{csv}\n```",

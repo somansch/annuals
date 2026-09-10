@@ -73,26 +73,89 @@
                 "turkish": "Turque",
                 "vlach": "Valaque"
             }
+        },
+        "nth": {
+            "options": {
+                "1": "Premier",
+                "2": "Deuxième",
+                "3": "Troisième",
+                "4": "Quatrième",
+                "-1": "Dernier"
+            }
+        },
+        "weekday": {
+            "options": {
+                "0": "Lundi",
+                "1": "Mardi",
+                "2": "Mercredi",
+                "3": "Jeudi",
+                "4": "Vendredi",
+                "5": "Samedi",
+                "6": "Dimanche"
+            }
         }
     },
     "config": {
         "step": {
             "user": {
                 "title": "Ajouter un événement",
-                "description": "Chaque événement obtient sa propre entrée, que vous pouvez retrouver et modifier plus tard depuis Paramètres → Appareils et services en recherchant son nom.",
+                "description": "De quel type d'événement s'agit-il ?\n\n**Annuel** couvre anniversaire, date commémorative, fête, anniversaire de mariage, commémoration, anniversaire d'animal et anniversaire professionnel. **Ponctuel** est une date unique, qui se supprime d'elle-même une fois passée. **Personnalisé** est votre propre date annuelle, à un jour donné ou selon une règle.",
+                "menu_options": {
+                    "recurring": "{icon_recurring} Une date annuelle pour quelqu'un",
+                    "one_time": "{icon_one_time} Un événement ponctuel",
+                    "custom": "{icon_custom} Un événement personnalisé"
+                }
+            },
+            "recurring": {
+                "title": "Ajouter un événement annuel",
                 "data": {
                     "name": "Nom",
                     "last_name": "Nom de famille (optionnel)",
                     "type": "Type d'événement",
                     "day": "Jour",
                     "month": "Mois",
-                    "year": "Année (laisser vide si inconnue ; obligatoire pour les événements ponctuels)",
-                    "end_date": "Date de fin (événements uniques seulement, facultatif - en fait un événement sur plusieurs jours)",
+                    "year": "Année (laisser vide si inconnue)",
                     "icon": "Icône personnalisée (optionnel)",
                     "vip": "VIP Annual"
+                },
+                "description": "Chaque événement obtient sa propre entrée, que vous pouvez retrouver et modifier plus tard depuis Paramètres → Appareils et services → Annuals en recherchant son nom."
+            },
+            "one_time": {
+                "title": "Ajouter un événement ponctuel",
+                "data": {
+                    "name": "Nom",
+                    "last_name": "Nom de famille (optionnel)",
+                    "type": "Type d'événement",
+                    "day": "Jour",
+                    "month": "Mois",
+                    "year": "Année",
+                    "end_date": "Date de fin (facultatif – en fait un événement sur plusieurs jours)",
+                    "icon": "Icône personnalisée (optionnel)",
+                    "vip": "VIP Annual"
+                },
+                "description": "Une date unique jusqu'à laquelle décompter. Elle ne se répète jamais, l'année est donc obligatoire, et l'entrée est supprimée automatiquement à minuit après son terme.\n\nAjoutez une date de fin pour en faire un événement sur plusieurs jours : un voyage, une conférence, un séjour."
+            },
+            "custom": {
+                "title": "Ajouter un événement personnalisé",
+                "data": {
+                    "name": "Nom",
+                    "last_name": "Nom de famille (optionnel)",
+                    "type": "Type d'événement",
+                    "day": "Jour",
+                    "month": "Mois",
+                    "year": "Année",
+                    "icon": "Icône personnalisée (optionnel)",
+                    "vip": "VIP Annual",
+                    "nth": "Position dans le mois",
+                    "weekday": "Jour de la semaine"
+                },
+                "description": "Votre propre date annuelle, pour tout ce que les autres types ne décrivent pas.\n\nElle peut suivre une **règle** au lieu d'un jour donné : la fête des Mères est le deuxième dimanche de mai, la fête des Pères en Australie le premier dimanche de septembre. Renseignez les deux champs en bas ; le **Mois** ci-dessus indique le mois auquel la règle s'applique, et le **Jour** n'est alors plus utilisé. Laissez-les vides pour une date fixe.",
+                "data_description": {
+                    "nth": "Premier, deuxième, troisième, quatrième ou le dernier du mois.",
+                    "weekday": "À renseigner avec le champ ci-dessus, ou laisser les deux vides."
                 }
             },
-            "reconfigure": {
+            "reconfigure_recurring": {
                 "title": "Modifier l'événement",
                 "description": "Modifiez n'importe quel champ ci-dessous et validez pour mettre à jour cet événement.",
                 "data": {
@@ -101,10 +164,44 @@
                     "type": "Type d'événement",
                     "day": "Jour",
                     "month": "Mois",
-                    "year": "Année (laisser vide si inconnue ; obligatoire pour les événements ponctuels)",
-                    "end_date": "Date de fin (événements uniques seulement, facultatif - en fait un événement sur plusieurs jours)",
+                    "year": "Année (laisser vide si inconnue)",
                     "icon": "Icône personnalisée (optionnel)",
                     "vip": "VIP Annual"
+                }
+            },
+            "reconfigure_one_time": {
+                "title": "Modifier l'événement ponctuel",
+                "description": "Modifiez n'importe quel champ ci-dessous et validez pour mettre à jour cet événement.\n\nUne date de fin en fait un événement sur plusieurs jours ; en l'effaçant, il redevient d'un seul jour.",
+                "data": {
+                    "name": "Nom",
+                    "last_name": "Nom de famille (optionnel)",
+                    "type": "Type d'événement",
+                    "day": "Jour",
+                    "month": "Mois",
+                    "year": "Année",
+                    "end_date": "Date de fin (facultatif – en fait un événement sur plusieurs jours)",
+                    "icon": "Icône personnalisée (optionnel)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "reconfigure_custom": {
+                "title": "Modifier l'événement personnalisé",
+                "description": "Modifiez n'importe quel champ ci-dessous et validez pour mettre à jour cet événement.\n\nElle peut suivre une **règle** au lieu d'un jour donné – *le deuxième dimanche de mai*. Renseignez les deux champs en bas ; le **Mois** ci-dessus indique le mois auquel la règle s'applique, et le **Jour** n'est alors plus utilisé. En les effaçant, l'événement retombe sur ce jour.",
+                "data": {
+                    "name": "Nom",
+                    "last_name": "Nom de famille (optionnel)",
+                    "type": "Type d'événement",
+                    "day": "Jour",
+                    "month": "Mois",
+                    "year": "Année",
+                    "icon": "Icône personnalisée (optionnel)",
+                    "vip": "VIP Annual",
+                    "nth": "Position dans le mois",
+                    "weekday": "Jour de la semaine"
+                },
+                "data_description": {
+                    "nth": "Premier, deuxième, troisième, quatrième ou le dernier du mois.",
+                    "weekday": "À renseigner avec le champ ci-dessus, ou laisser les deux vides."
                 }
             }
         },
@@ -113,7 +210,8 @@
             "end_date_one_time_only": "Une date de fin ne peut être définie que sur un événement unique.",
             "end_date_before_start": "La date de fin doit être postérieure à la date de début.",
             "invalid_date": "Cette combinaison jour/mois/année n'est pas une date valide.",
-            "year_required": "Les événements ponctuels nécessitent une année."
+            "year_required": "Les événements ponctuels nécessitent une année.",
+            "rule_needs_both": "Une règle de répétition nécessite les deux champs, ou aucun."
         },
         "abort": {
             "hub_not_configurable": "Le hub Annuals n'a pas de paramètres propres - il contient uniquement les calendriers partagés.",
@@ -123,21 +221,6 @@
     },
     "options": {
         "step": {
-            "init": {
-                "title": "Modifier l'événement",
-                "description": "Modifiez n'importe quel champ ci-dessous et validez pour mettre à jour cet événement.",
-                "data": {
-                    "name": "Nom",
-                    "last_name": "Nom de famille (optionnel)",
-                    "type": "Type d'événement",
-                    "day": "Jour",
-                    "month": "Mois",
-                    "year": "Année (laisser vide si inconnue ; obligatoire pour les événements ponctuels)",
-                    "end_date": "Date de fin (événements uniques seulement, facultatif - en fait un événement sur plusieurs jours)",
-                    "icon": "Icône personnalisée (optionnel)",
-                    "vip": "VIP Annual"
-                }
-            },
             "import_csv": {
                 "title": "Importer des événements depuis un CSV",
                 "description": "Colonnes : name, type, day, month, year (optionnel, obligatoire pour one_time), icon (optionnel), vip (optionnel), last_name (optionnel). « type » doit être l'une des clés anglaises suivantes : birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (toujours en anglais, quel que soit votre paramètre de langue). « vip » accepte 1/true/yes/y/x (peu importe la casse) ; laissez vide ou omettez la colonne pour un événement non-VIP. Conservez toutes les colonnes même si une valeur est vide - une ligne sans virgule finale décale les valeurs suivantes vers la gauche. Les lignes invalides sont ignorées et journalisées.\n\nExemple :\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nVacances en famille,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -228,16 +311,16 @@
                 }
             },
             "holiday_translations": {
-                "title": "🌐 Holiday translations",
-                "description": "Export and import the holiday names you wrote yourself.",
+                "title": "🌐 Traductions des jours fériés",
+                "description": "Exportez et importez les noms de jours fériés que vous avez écrits vous-même.",
                 "menu_options": {
-                    "export_translations": "📤 Export translations",
-                    "import_translations": "📥 Import translations"
+                    "export_translations": "📤 Exporter les traductions",
+                    "import_translations": "📥 Importer les traductions"
                 }
             },
             "import_translations": {
-                "title": "Import translations",
-                "description": "Upload a translations CSV. Columns: `country,subdivision,category,holiday_key,observed,language,name`. Rows are matched onto holidays by country, subdivision, category, holiday key and observed flag - not by entry id, so a file exported before re-importing a country still applies. Rows whose holiday isn't present are skipped and counted.",
+                "title": "Importer les traductions",
+                "description": "Téléversez un CSV de traductions. Colonnes : `country,subdivision,category,holiday_key,observed,language,name`. Les lignes sont associées aux jours fériés par pays, subdivision, catégorie, clé de jour férié et indicateur observed – et non par identifiant d'entrée, de sorte qu'un fichier exporté avant de réimporter un pays reste valable. Les lignes dont le jour férié est absent sont ignorées et comptées.",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -248,7 +331,7 @@
                     "annual_settings": "{icon_annual_settings} Annual Paramètres",
                     "import_events": "{icon_import_events} Importer des événements",
                     "export_csv": "{icon_export_csv} Exporter les événements en CSV",
-                    "holiday_translations": "{icon_holiday_translations} Holiday translations",
+                    "holiday_translations": "{icon_holiday_translations} Traductions des jours fériés",
                     "remove_events": "{icon_remove_events} Supprimer des événements",
                     "delete_all": "{icon_delete_all} Supprimer toutes les données Annuals"
                 }
@@ -336,6 +419,55 @@
             "delete_all": {
                 "title": "Supprimer toutes les données Annuals",
                 "description": "Cette action supprime définitivement les {count} événement(s), les calendriers partagés et le hub Annuals lui-même - toute l'intégration et tout ce qu'elle a créé. Cette action est irréversible. Cliquez sur « OK » pour confirmer."
+            },
+            "edit_recurring": {
+                "title": "Modifier l'événement",
+                "description": "Modifiez n'importe quel champ ci-dessous et validez pour mettre à jour cet événement.",
+                "data": {
+                    "name": "Nom",
+                    "last_name": "Nom de famille (optionnel)",
+                    "type": "Type d'événement",
+                    "day": "Jour",
+                    "month": "Mois",
+                    "year": "Année (laisser vide si inconnue)",
+                    "icon": "Icône personnalisée (optionnel)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "edit_one_time": {
+                "title": "Modifier l'événement ponctuel",
+                "description": "Modifiez n'importe quel champ ci-dessous et validez pour mettre à jour cet événement.\n\nUne date de fin en fait un événement sur plusieurs jours ; en l'effaçant, il redevient d'un seul jour.",
+                "data": {
+                    "name": "Nom",
+                    "last_name": "Nom de famille (optionnel)",
+                    "type": "Type d'événement",
+                    "day": "Jour",
+                    "month": "Mois",
+                    "year": "Année",
+                    "end_date": "Date de fin (facultatif – en fait un événement sur plusieurs jours)",
+                    "icon": "Icône personnalisée (optionnel)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "edit_custom": {
+                "title": "Modifier l'événement personnalisé",
+                "description": "Modifiez n'importe quel champ ci-dessous et validez pour mettre à jour cet événement.\n\nElle peut suivre une **règle** au lieu d'un jour donné – *le deuxième dimanche de mai*. Renseignez les deux champs en bas ; le **Mois** ci-dessus indique le mois auquel la règle s'applique, et le **Jour** n'est alors plus utilisé. En les effaçant, l'événement retombe sur ce jour.",
+                "data": {
+                    "name": "Nom",
+                    "last_name": "Nom de famille (optionnel)",
+                    "type": "Type d'événement",
+                    "day": "Jour",
+                    "month": "Mois",
+                    "year": "Année",
+                    "icon": "Icône personnalisée (optionnel)",
+                    "vip": "VIP Annual",
+                    "nth": "Position dans le mois",
+                    "weekday": "Jour de la semaine"
+                },
+                "data_description": {
+                    "nth": "Premier, deuxième, troisième, quatrième ou le dernier du mois.",
+                    "weekday": "À renseigner avec le champ ci-dessus, ou laisser les deux vides."
+                }
             }
         },
         "error": {
@@ -351,12 +483,13 @@
             "invalid_vcard": "Impossible de lire ce fichier en tant que vCard. Vérifiez le format.",
             "no_valid_vcard_entries": "Aucun contact avec un anniversaire utilisable trouvé dans ce fichier. Consultez le journal pour le détail des entrées ignorées.",
             "no_valid_vcard_dates": "Aucune date commémorative ou autre date (hormis les anniversaires) trouvée dans ce fichier. Consultez le journal pour le détail des entrées ignorées.",
-            "no_batch_selected": "Cochez « Supprimer tous les jours fériés importés », ou choisissez un lot."
+            "no_batch_selected": "Cochez « Supprimer tous les jours fériés importés », ou choisissez un lot.",
+            "rule_needs_both": "Une règle de répétition nécessite les deux champs, ou aucun."
         },
         "abort": {
             "translations_exported": "{count} traduction(s) exporté(s). [Télécharger annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+clic pour télécharger - un simple clic ne fonctionne pas ici)\n\nOu copiez le CSV ci-dessous :\n\n```\n{csv}\n```",
-            "translations_imported": "{updated} holiday(s) updated, {skipped} row(s) skipped.",
-            "no_translations_to_export": "No holiday names have been written yet - there is nothing to export.",
+            "translations_imported": "{updated} jour(s) férié(s) mis à jour, {skipped} ligne(s) ignorée(s).",
+            "no_translations_to_export": "Aucun nom de jour férié n'a encore été écrit – il n'y a rien à exporter.",
             "hub_not_configurable": "Le hub Annuals n'a pas de paramètres propres - il contient uniquement les calendriers partagés.",
             "import_started": "Import démarré : {created} événement(s) en cours d'ajout, {skipped} ligne(s) ignorée(s) (voir le journal pour le détail).",
             "ics_import_started": "Import démarré : {created} événement(s) créé(s), {updated} mis à jour, {skipped} entrée(s) ignorée(s) ou exclue(s).",

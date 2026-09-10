@@ -11,6 +11,13 @@ weekday of month" holidays, ...). Their date is instead resolved live, every
 time it's needed, from the `holidays` PyPI library - so there is nothing to
 go stale and nothing to migrate when a year turns over, unlike a naive
 "cache the date we last computed" approach would require.
+
+A custom event can carry a rule of the same shape - "the first Sunday in
+September", see CONF_WEEKDAY in const.py - for the observances that library
+does not carry because they are not public holidays. It keeps its stored
+day/month, which the rule simply supersedes while it is set, and it too is
+resolved per year rather than stored. event_occurrence_in_year below is the
+one place that tells the two apart.
 """
 
 from __future__ import annotations
@@ -21,9 +28,14 @@ from functools import lru_cache
 import holidays as holidays_lib
 
 from .const import (
+    CONF_DAY,
     CONF_HOLIDAY_BLOCK,
     CONF_HOLIDAY_DAY,
     CONF_HOLIDAY_SPAN,
+    CONF_MONTH,
+    CONF_NTH,
+    CONF_WEEKDAY,
+    NTH_LAST,
     SPAN_DAY,
     SPAN_END,
     SPAN_START,
@@ -42,11 +54,59 @@ def occurrence_in_year(month: int, day: int, year: int) -> date:
         return date(year, 2, 28)
 
 
-def next_occurrence(month: int, day: int, today: date) -> date:
-    """The next occurrence of the event's month/day on or after today."""
-    candidate = occurrence_in_year(month, day, today.year)
+def weekday_rule(data: dict) -> tuple[int, int] | None:
+    """The (weekday, nth) a custom event recurs by, or None if it has a date.
+
+    One place decides what counts as "this event is a rule", so the sensor,
+    the calendar and the config flow can never drift apart on it. Both halves
+    have to be there - half a rule is not one - and without them the event's
+    stored day/month is what it falls back to, exactly as before.
+    """
+    weekday = data.get(CONF_WEEKDAY)
+    nth = data.get(CONF_NTH)
+    if weekday is None or nth is None:
+        return None
+    return int(weekday), int(nth)
+
+
+def nth_weekday_in_year(month: int, weekday: int, nth: int, year: int) -> date:
+    """The nth <weekday> of <month> in the given year.
+
+    weekday is Monday=0..Sunday=6, as date.weekday() has it; nth is 1..4 or
+    NTH_LAST. No leap-year special case is needed the way occurrence_in_year
+    has one: a rule always lands on a day the month actually has.
+    """
+    if nth == NTH_LAST:
+        # Counted back from the first of the next month rather than forward
+        # from the first of this one, so month lengths and February never
+        # come into it.
+        after = date(year + 1, 1, 1) if month == 12 else date(year, month + 1, 1)
+        last = after - timedelta(days=1)
+        return last - timedelta(days=(last.weekday() - weekday) % 7)
+
+    first = date(year, month, 1)
+    first_match = first + timedelta(days=(weekday - first.weekday()) % 7)
+    return first_match + timedelta(weeks=nth - 1)
+
+
+def event_occurrence_in_year(data: dict, year: int) -> date:
+    """Where a yearly-recurring event falls in the given year.
+
+    The one entry point for both shapes an event can have: its rule if it
+    carries one, its stored day/month otherwise.
+    """
+    rule = weekday_rule(data)
+    if rule is None:
+        return occurrence_in_year(data[CONF_MONTH], data[CONF_DAY], year)
+    weekday, nth = rule
+    return nth_weekday_in_year(data[CONF_MONTH], weekday, nth, year)
+
+
+def next_event_occurrence(data: dict, today: date) -> date:
+    """The same, for the next occurrence on or after today."""
+    candidate = event_occurrence_in_year(data, today.year)
     if candidate < today:
-        candidate = occurrence_in_year(month, day, today.year + 1)
+        candidate = event_occurrence_in_year(data, today.year + 1)
     return candidate
 
 

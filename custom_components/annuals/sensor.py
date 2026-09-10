@@ -52,12 +52,13 @@ from .dates import (
     holiday_label,
     holiday_span_kwargs,
     is_important,
+    next_event_occurrence,
     next_holiday_occurrence,
-    next_occurrence,
     occurrence_number,
     one_time_span,
     parse_thresholds,
     subdivision_name,
+    weekday_rule,
 )
 from .helpers import holiday_span_suffix, ui_language
 
@@ -165,7 +166,7 @@ class AnnualEventSensor(SensorEntity):
 
         # A one-time event (see TYPE_ONE_TIME in const.py) never recurs - its
         # "occurrence" is just the literal stored date, not the next yearly
-        # repeat next_occurrence() would compute, and occurrence_number/
+        # repeat next_event_occurrence() would compute, and occurrence_number/
         # "important" (which both describe *which* repeat this is) simply
         # don't apply. year is always set for this type (enforced in
         # config_flow._validate_and_normalise), so the plain int() is safe.
@@ -180,7 +181,11 @@ class AnnualEventSensor(SensorEntity):
             occurrence_num = None
             important = False
         else:
-            occurrence = next_occurrence(month, day, today)
+            # A custom event can carry a rule - "the first Sunday in
+            # September" - instead of using its stored day; dates.py is
+            # where the two are told apart. Every other type, and every
+            # custom event without one, is the stored day/month as before.
+            occurrence = next_event_occurrence(data, today)
             occurrence_num = occurrence_number(year, occurrence)
             important = is_important(occurrence_num, self._important_thresholds(event_type))
 
@@ -200,6 +205,10 @@ class AnnualEventSensor(SensorEntity):
             "full_name": f"{self._name} {self._last_name}".strip() if self._last_name else self._name,
             "next_date": occurrence.isoformat(),
             "occurrence_number": occurrence_num,
+            # What the event is stored on. On a custom event with a rule
+            # this is not what next_date was computed from and nothing
+            # reads it - it is the date the event goes back to if the rule
+            # is cleared. The rule itself is reported below.
             "day": day,
             "month": month,
             "year": year,
@@ -208,6 +217,16 @@ class AnnualEventSensor(SensorEntity):
             "reminder_message": self._reminder_message(days),
             "todo": self._has_open_todo(),
         }
+        rule = weekday_rule(data)
+        if rule is not None:
+            # Only on an event that actually has one (see CONF_WEEKDAY in
+            # const.py), so anything reading these can take their presence
+            # as "this date is a rule" without a second check - the same
+            # way the multi-day attributes below work. weekday is
+            # Monday=0..Sunday=6, nth is 1..4 or -1 for the last one.
+            self._attr_extra_state_attributes.update(
+                {"weekday": rule[0], "nth": rule[1]}
+            )
         if end_day is not None:
             # Only present on a one-time event that spans several days (see
             # CONF_END_DATE) - absent everywhere else, so anything reading

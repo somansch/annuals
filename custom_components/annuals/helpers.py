@@ -11,6 +11,7 @@ they are stored/global strings, not per-viewing-user UI.
 from __future__ import annotations
 
 import csv
+from datetime import date
 import io
 
 from homeassistant.core import HomeAssistant
@@ -25,14 +26,17 @@ from .const import (
     CONF_COUNTRY,
     CONF_HOLIDAY_KEY,
     CONF_HOLIDAY_OBSERVED,
+    CONF_HOLIDAY_SPAN,
     CONF_HUB,
     CONF_SUBDIVISION,
     CONF_ICON,
     CONF_END_DATE,
     CONF_LAST_NAME,
     CONF_MONTH,
+    CONF_NTH,
     CONF_NAME_TRANSLATIONS,
     CONF_VIP,
+    CONF_WEEKDAY,
     CONF_YEAR,
     DOMAIN,
     NAME_TRANSLATION_LANGUAGES,
@@ -41,6 +45,7 @@ from .const import (
     SPAN_START,
     TYPE_HOLIDAY,
 )
+from .dates import holiday_occurrence_in_year, holiday_span_kwargs
 
 
 def ui_language(library_code: str | None) -> str | None:
@@ -112,6 +117,11 @@ def export_rows(hass: HomeAssistant) -> list[dict]:
     ]
 
 
+def _csv_number(value: int | None) -> str:
+    """A number for the CSV, or an empty cell where there is none."""
+    return "" if value is None else str(value)
+
+
 def export_csv_text(hass: HomeAssistant) -> tuple[str, int]:
     """Render every exportable event as CSV text (same columns as import,
     so the result can be re-imported unchanged) and how many rows it has.
@@ -119,11 +129,24 @@ def export_csv_text(hass: HomeAssistant) -> tuple[str, int]:
     rows = export_rows(hass)
     buffer = io.StringIO()
     writer = csv.writer(buffer)
-    # "end_date" is last, after the columns that were there before it, so an
-    # older CSV without it still imports and a newer one still opens in
-    # whatever the last spreadsheet did with the file.
+    # "end_date" and the two rule columns come last, after the columns that
+    # were there before them, so an older CSV without them still imports and
+    # a newer one still opens in whatever the last spreadsheet did with the
+    # file. Same reason a column is never removed from this list.
     writer.writerow(
-        ["name", "type", "day", "month", "year", "icon", "vip", "last_name", "end_date"]
+        [
+            "name",
+            "type",
+            "day",
+            "month",
+            "year",
+            "icon",
+            "vip",
+            "last_name",
+            "end_date",
+            "nth",
+            "weekday",
+        ]
     )
     for data in rows:
         writer.writerow(
@@ -137,6 +160,12 @@ def export_csv_text(hass: HomeAssistant) -> tuple[str, int]:
                 "1" if data.get(CONF_VIP) else "",
                 data.get(CONF_LAST_NAME) or "",
                 data.get(CONF_END_DATE) or "",
+                # Empty on every event without a recurrence rule, which is
+                # every event but a custom one that was given one - see
+                # CONF_WEEKDAY in const.py. 0 is Monday, so "or" would be
+                # wrong here.
+                _csv_number(data.get(CONF_NTH)),
+                _csv_number(data.get(CONF_WEEKDAY)),
             ]
         )
     return buffer.getvalue(), len(rows)
@@ -198,13 +227,88 @@ def translations_csv_text(hass: HomeAssistant) -> tuple[str, int]:
     return buffer.getvalue(), len(rows)
 
 
+# The category that wins when one date arrives under more than one of them.
+# "public" is the broadest and most meaningful classification a date can
+# have; below it nothing outranks anything, and a tie is settled by which
+# entry was there first.
+CATEGORY_PUBLIC = "public"
+
+
+def outranks(category: str, other: str) -> bool:
+    """Whether `category` should replace `other` for the same date."""
+    return category == CATEGORY_PUBLIC and other != CATEGORY_PUBLIC
+
+
+def holiday_date(data: dict, year: int) -> date | None:
+    """Where one holiday entry or import row falls in the given year.
+
+    The date, not the name, is what says two entries are the same holiday
+    across categories: the `holidays` library often files one date under
+    several of them, and under a different name in each - "Washington's
+    Birthday" as government, "Washington and Lincoln Day" as public. Blocking
+    (it builds a calendar), so callers run it in an executor.
+
+    None where the date cannot be worked out at all - the library refuses a
+    country, region or category it does not know, and a stored entry can
+    name one it has since dropped. Such an entry simply takes no part in the
+    merge, which is the safe answer: nothing is removed on account of a date
+    nobody could resolve.
+    """
+    try:
+        return holiday_occurrence_in_year(
+            data.get(CONF_COUNTRY),
+            data.get(CONF_SUBDIVISION),
+            data.get(CONF_CATEGORY),
+            data.get(CONF_HOLIDAY_KEY),
+            year,
+            bool(data.get(CONF_HOLIDAY_OBSERVED)),
+            **holiday_span_kwargs(data),
+        )
+    except (KeyError, NotImplementedError, ValueError):
+        return None
+
+
+def merge_group(data: dict) -> tuple:
+    """Which holidays are even comparable by date.
+
+    A region's own calendar and the country's are different lists, and a
+    holiday's observed variant is deliberately a second entry beside its
+    literal one (see CONF_HOLIDAY_OBSERVED) - in a year with no shift the
+    two land on the same day, and merging them would delete one for good.
+    """
+    return (
+        (data.get(CONF_COUNTRY) or "").upper(),
+        (data.get(CONF_SUBDIVISION) or "").upper(),
+        bool(data.get(CONF_HOLIDAY_OBSERVED)),
+    )
+
+
+def mergeable(data: dict) -> bool:
+    """Whether this entry takes part in the by-date merge at all.
+
+    Multi-day breaks do not: a break's first day coinciding with a statutory
+    holiday (Christmas Eve is the obvious one) would let the single-day
+    holiday swallow the whole break - the same reason _build_holiday_rows
+    keeps them out of its own merge.
+    """
+    return data.get(CONF_EVENT_TYPE) == TYPE_HOLIDAY and not data.get(CONF_HOLIDAY_SPAN)
+
+
 def holiday_identity(data: dict) -> tuple[str, str, str, str, bool]:
-    """The composite key a holiday translation row is matched back onto."""
+    """The composite key a holiday translation row is matched back onto.
+
+    Every part case-folded, the holiday key included: it is the holiday's
+    name in the library's own default language, and the library has been
+    known to change nothing about a name but its capitalisation (see
+    config_flow._import_unique_id). A translations file exported before
+    such a release would otherwise stop matching the very holidays it was
+    written for.
+    """
     return (
         (data.get(CONF_COUNTRY) or "").strip().upper(),
         (data.get(CONF_SUBDIVISION) or "").strip().upper(),
         (data.get(CONF_CATEGORY) or "").strip().lower(),
-        (data.get(CONF_HOLIDAY_KEY) or "").strip(),
+        (data.get(CONF_HOLIDAY_KEY) or "").strip().casefold(),
         bool(data.get(CONF_HOLIDAY_OBSERVED)),
     )
 
@@ -345,6 +449,7 @@ _HUB_TITLE_WORD = {
     "nb": "Innstillinger",
     "da": "Indstillinger",
     "tr": "Ayarları",
+    "sk": "Nastavenia",
 }
 
 

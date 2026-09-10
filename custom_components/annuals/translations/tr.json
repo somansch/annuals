@@ -73,26 +73,89 @@
                 "turkish": "Türk",
                 "vlach": "Ulah"
             }
+        },
+        "nth": {
+            "options": {
+                "1": "Birinci",
+                "2": "İkinci",
+                "3": "Üçüncü",
+                "4": "Dördüncü",
+                "-1": "Sonuncu"
+            }
+        },
+        "weekday": {
+            "options": {
+                "0": "Pazartesi",
+                "1": "Salı",
+                "2": "Çarşamba",
+                "3": "Perşembe",
+                "4": "Cuma",
+                "5": "Cumartesi",
+                "6": "Pazar"
+            }
         }
     },
     "config": {
         "step": {
             "user": {
                 "title": "Etkinlik ekle",
-                "description": "Her etkinlik kendi girişini alır; daha sonra Ayarlar → Cihazlar ve hizmetler bölümünden adını arayarak bulup düzenleyebilirsiniz.",
+                "description": "Bu ne tür bir etkinlik?\n\n**Yıllık**; doğum günü, yıl dönümü, isim günü, evlilik yıl dönümü, ölüm yıl dönümü, evcil hayvan doğum günü ve iş yıl dönümünü kapsar. **Tek seferlik**, geçtikten sonra kendini silen tek bir tarihtir. **Özel** ise kendi yıllık tarihinizdir: belirli bir günde ya da bir kurala göre.",
+                "menu_options": {
+                    "recurring": "{icon_recurring} Birine ait yıllık bir tarih",
+                    "one_time": "{icon_one_time} Tek seferlik bir etkinlik",
+                    "custom": "{icon_custom} Özel bir etkinlik"
+                }
+            },
+            "recurring": {
+                "title": "Yıllık etkinlik ekle",
                 "data": {
                     "name": "Ad",
                     "last_name": "Soyad (isteğe bağlı)",
                     "type": "Etkinlik türü",
                     "day": "Gün",
                     "month": "Ay",
-                    "year": "Yıl (bilinmiyorsa boş bırakın; tek seferlik etkinlikler için zorunludur)",
-                    "end_date": "Bitiş tarihi (yalnızca tek seferlik etkinlikler, isteğe bağlı - çok günlü etkinliğe dönüştürür)",
+                    "year": "Yıl (bilinmiyorsa boş bırakın)",
                     "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
                     "vip": "VIP Annual"
+                },
+                "description": "Her etkinlik kendi girişini alır; daha sonra Ayarlar → Cihazlar ve hizmetler → Annuals bölümünden adını arayarak bulup düzenleyebilirsiniz."
+            },
+            "one_time": {
+                "title": "Tek seferlik etkinlik ekle",
+                "data": {
+                    "name": "Ad",
+                    "last_name": "Soyad (isteğe bağlı)",
+                    "type": "Etkinlik türü",
+                    "day": "Gün",
+                    "month": "Ay",
+                    "year": "Yıl",
+                    "end_date": "Bitiş tarihi (isteğe bağlı – çok günlü etkinliğe dönüştürür)",
+                    "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
+                    "vip": "VIP Annual"
+                },
+                "description": "Geri sayım yapılacak tek bir tarih. Hiç tekrarlanmaz, bu yüzden yıl zorunludur ve giriş, bittikten sonraki gece yarısı otomatik olarak silinir.\n\nBitiş tarihi verirseniz çok günlü bir etkinliğe dönüşür: bir seyahat, bir konferans, bir konaklama."
+            },
+            "custom": {
+                "title": "Özel etkinlik ekle",
+                "data": {
+                    "name": "Ad",
+                    "last_name": "Soyad (isteğe bağlı)",
+                    "type": "Etkinlik türü",
+                    "day": "Gün",
+                    "month": "Ay",
+                    "year": "Yıl",
+                    "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
+                    "vip": "VIP Annual",
+                    "nth": "Ay içindeki sıra",
+                    "weekday": "Haftanın günü"
+                },
+                "description": "Diğer türlerin anlatmadığı her şey için kendi yıllık tarihiniz.\n\nBelirli bir gün yerine bir **kurala** göre de düşebilir: Anneler Günü mayısın ikinci pazarıdır, Avustralya'da Babalar Günü eylülün ilk pazarı. Aşağıdaki iki alanı doldurun; yukarıdaki **Ay**, kuralın hangi aya uygulandığını söyler ve **Gün** o zaman kullanılmaz. Sabit bir tarih için ikisini de boş bırakın.",
+                "data_description": {
+                    "nth": "Ayın birinci, ikinci, üçüncü, dördüncü ya da sonuncusu.",
+                    "weekday": "Yukarıdaki alanla birlikte ayarlayın ya da ikisini de boş bırakın."
                 }
             },
-            "reconfigure": {
+            "reconfigure_recurring": {
                 "title": "Etkinliği düzenle",
                 "description": "Aşağıdaki herhangi bir alanı değiştirin ve bu etkinliği güncellemek için gönderin.",
                 "data": {
@@ -101,10 +164,44 @@
                     "type": "Etkinlik türü",
                     "day": "Gün",
                     "month": "Ay",
-                    "year": "Yıl (bilinmiyorsa boş bırakın; tek seferlik etkinlikler için zorunludur)",
-                    "end_date": "Bitiş tarihi (yalnızca tek seferlik etkinlikler, isteğe bağlı - çok günlü etkinliğe dönüştürür)",
+                    "year": "Yıl (bilinmiyorsa boş bırakın)",
                     "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
                     "vip": "VIP Annual"
+                }
+            },
+            "reconfigure_one_time": {
+                "title": "Tek seferlik etkinliği düzenle",
+                "description": "Aşağıdaki herhangi bir alanı değiştirin ve bu etkinliği güncellemek için gönderin.\n\nBitiş tarihi onu çok günlü bir etkinliğe dönüştürür; temizlerseniz yine tek gün olur.",
+                "data": {
+                    "name": "Ad",
+                    "last_name": "Soyad (isteğe bağlı)",
+                    "type": "Etkinlik türü",
+                    "day": "Gün",
+                    "month": "Ay",
+                    "year": "Yıl",
+                    "end_date": "Bitiş tarihi (isteğe bağlı – çok günlü etkinliğe dönüştürür)",
+                    "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "reconfigure_custom": {
+                "title": "Özel etkinliği düzenle",
+                "description": "Aşağıdaki herhangi bir alanı değiştirin ve bu etkinliği güncellemek için gönderin.\n\nBelirli bir gün yerine bir **kurala** göre de düşebilir – *mayısın ikinci pazarı*. Aşağıdaki iki alanı doldurun; yukarıdaki **Ay**, kuralın hangi aya uygulandığını söyler ve **Gün** o zaman kullanılmaz. Alanları temizlerseniz etkinlik yine o güne düşer.",
+                "data": {
+                    "name": "Ad",
+                    "last_name": "Soyad (isteğe bağlı)",
+                    "type": "Etkinlik türü",
+                    "day": "Gün",
+                    "month": "Ay",
+                    "year": "Yıl",
+                    "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
+                    "vip": "VIP Annual",
+                    "nth": "Ay içindeki sıra",
+                    "weekday": "Haftanın günü"
+                },
+                "data_description": {
+                    "nth": "Ayın birinci, ikinci, üçüncü, dördüncü ya da sonuncusu.",
+                    "weekday": "Yukarıdaki alanla birlikte ayarlayın ya da ikisini de boş bırakın."
                 }
             }
         },
@@ -113,7 +210,8 @@
             "end_date_one_time_only": "Bitiş tarihi yalnızca tek seferlik bir etkinlikte ayarlanabilir.",
             "end_date_before_start": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır.",
             "invalid_date": "Bu gün/ay/yıl kombinasyonu geçerli bir tarih değil.",
-            "year_required": "Tek seferlik etkinlikler için yıl gereklidir."
+            "year_required": "Tek seferlik etkinlikler için yıl gereklidir.",
+            "rule_needs_both": "Yinelenme kuralı her iki alanı da gerektirir – ya da hiçbirini."
         },
         "abort": {
             "hub_not_configurable": "Annuals merkezinin kendine ait ayarları yoktur - yalnızca paylaşılan takvimleri içerir.",
@@ -123,21 +221,6 @@
     },
     "options": {
         "step": {
-            "init": {
-                "title": "Etkinliği düzenle",
-                "description": "Aşağıdaki herhangi bir alanı değiştirin ve bu etkinliği güncellemek için gönderin.",
-                "data": {
-                    "name": "Ad",
-                    "last_name": "Soyad (isteğe bağlı)",
-                    "type": "Etkinlik türü",
-                    "day": "Gün",
-                    "month": "Ay",
-                    "year": "Yıl (bilinmiyorsa boş bırakın; tek seferlik etkinlikler için zorunludur)",
-                    "end_date": "Bitiş tarihi (yalnızca tek seferlik etkinlikler, isteğe bağlı - çok günlü etkinliğe dönüştürür)",
-                    "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
-                    "vip": "VIP Annual"
-                }
-            },
             "import_csv": {
                 "title": "CSV'den etkinlik içe aktar",
                 "description": "Sütunlar: name, type, day, month, year (isteğe bağlı, one_time için zorunlu), icon (isteğe bağlı), vip (isteğe bağlı), last_name (isteğe bağlı). \"type\" şu İngilizce anahtarlardan biri olmalıdır: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (dil ayarınızdan bağımsız olarak her zaman İngilizce). \"vip\" 1/true/yes/y/x değerlerini kabul eder (büyük/küçük harf duyarlı değildir); VIP olmayan bir etkinlik için boş bırakın veya sütunu atlayın. Bir değer boş olsa bile her sütunu koruyun - sonundaki virgülü eksik bir satır, sonraki değerleri sola kaydırır. Geçersiz satırlar atlanır ve günlüğe kaydedilir.\n\nÖrnek:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nAile Tatili,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -228,16 +311,16 @@
                 }
             },
             "holiday_translations": {
-                "title": "🌐 Holiday translations",
-                "description": "Export and import the holiday names you wrote yourself.",
+                "title": "🌐 Tatil çevirileri",
+                "description": "Kendi yazdığınız tatil adlarını dışa ve içe aktarın.",
                 "menu_options": {
-                    "export_translations": "📤 Export translations",
-                    "import_translations": "📥 Import translations"
+                    "export_translations": "📤 Çevirileri dışa aktar",
+                    "import_translations": "📥 Çevirileri içe aktar"
                 }
             },
             "import_translations": {
-                "title": "Import translations",
-                "description": "Upload a translations CSV. Columns: `country,subdivision,category,holiday_key,observed,language,name`. Rows are matched onto holidays by country, subdivision, category, holiday key and observed flag - not by entry id, so a file exported before re-importing a country still applies. Rows whose holiday isn't present are skipped and counted.",
+                "title": "Çevirileri içe aktar",
+                "description": "Bir çeviri CSV'si yükleyin. Sütunlar: `country,subdivision,category,holiday_key,observed,language,name`. Satırlar tatillerle ülke, alt bölge, kategori, tatil anahtarı ve observed bayrağı üzerinden eşleştirilir – giriş kimliğiyle değil; bu yüzden bir ülke yeniden içe aktarılmadan önce dışa aktarılmış bir dosya hâlâ geçerlidir. Tatili bulunmayan satırlar atlanır ve sayılır.",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -248,7 +331,7 @@
                     "annual_settings": "{icon_annual_settings} Annual Ayarları",
                     "import_events": "{icon_import_events} Etkinlikleri içe aktar",
                     "export_csv": "{icon_export_csv} Etkinlikleri CSV olarak dışa aktar",
-                    "holiday_translations": "{icon_holiday_translations} Holiday translations",
+                    "holiday_translations": "{icon_holiday_translations} Tatil çevirileri",
                     "remove_events": "{icon_remove_events} Etkinlikleri kaldır",
                     "delete_all": "{icon_delete_all} Tüm Annuals verilerini sil"
                 }
@@ -336,6 +419,55 @@
             "delete_all": {
                 "title": "Tüm Annuals verilerini sil",
                 "description": "Bu işlem, {count} etkinliği, paylaşılan takvimleri ve Annuals merkezinin kendisini - yani tüm entegrasyonu ve oluşturduğu her şeyi - kalıcı olarak siler. Bu işlem geri alınamaz. Onaylamak için \"OK\"a tıklayın."
+            },
+            "edit_recurring": {
+                "title": "Etkinliği düzenle",
+                "description": "Aşağıdaki herhangi bir alanı değiştirin ve bu etkinliği güncellemek için gönderin.",
+                "data": {
+                    "name": "Ad",
+                    "last_name": "Soyad (isteğe bağlı)",
+                    "type": "Etkinlik türü",
+                    "day": "Gün",
+                    "month": "Ay",
+                    "year": "Yıl (bilinmiyorsa boş bırakın)",
+                    "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "edit_one_time": {
+                "title": "Tek seferlik etkinliği düzenle",
+                "description": "Aşağıdaki herhangi bir alanı değiştirin ve bu etkinliği güncellemek için gönderin.\n\nBitiş tarihi onu çok günlü bir etkinliğe dönüştürür; temizlerseniz yine tek gün olur.",
+                "data": {
+                    "name": "Ad",
+                    "last_name": "Soyad (isteğe bağlı)",
+                    "type": "Etkinlik türü",
+                    "day": "Gün",
+                    "month": "Ay",
+                    "year": "Yıl",
+                    "end_date": "Bitiş tarihi (isteğe bağlı – çok günlü etkinliğe dönüştürür)",
+                    "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "edit_custom": {
+                "title": "Özel etkinliği düzenle",
+                "description": "Aşağıdaki herhangi bir alanı değiştirin ve bu etkinliği güncellemek için gönderin.\n\nBelirli bir gün yerine bir **kurala** göre de düşebilir – *mayısın ikinci pazarı*. Aşağıdaki iki alanı doldurun; yukarıdaki **Ay**, kuralın hangi aya uygulandığını söyler ve **Gün** o zaman kullanılmaz. Alanları temizlerseniz etkinlik yine o güne düşer.",
+                "data": {
+                    "name": "Ad",
+                    "last_name": "Soyad (isteğe bağlı)",
+                    "type": "Etkinlik türü",
+                    "day": "Gün",
+                    "month": "Ay",
+                    "year": "Yıl",
+                    "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
+                    "vip": "VIP Annual",
+                    "nth": "Ay içindeki sıra",
+                    "weekday": "Haftanın günü"
+                },
+                "data_description": {
+                    "nth": "Ayın birinci, ikinci, üçüncü, dördüncü ya da sonuncusu.",
+                    "weekday": "Yukarıdaki alanla birlikte ayarlayın ya da ikisini de boş bırakın."
+                }
             }
         },
         "error": {
@@ -351,12 +483,13 @@
             "invalid_vcard": "Bu dosya vCard olarak okunamadı. Biçimi kontrol edin.",
             "no_valid_vcard_entries": "Bu dosyada kullanılabilir bir doğum günü olan kişi bulunamadı. Atlanan girişlerin ayrıntıları için günlüğe bakın.",
             "no_valid_vcard_dates": "Bu dosyada yıl dönümü veya doğum günü dışında başka bir tarih bulunamadı. Atlanan girişlerin ayrıntıları için günlüğe bakın.",
-            "no_batch_selected": "\"Tüm içe aktarılan tatilleri kaldır\" seçeneğini işaretleyin veya bir grup seçin."
+            "no_batch_selected": "\"Tüm içe aktarılan tatilleri kaldır\" seçeneğini işaretleyin veya bir grup seçin.",
+            "rule_needs_both": "Yinelenme kuralı her iki alanı da gerektirir – ya da hiçbirini."
         },
         "abort": {
             "translations_exported": "{count} çeviri dışa aktarıldı. [annuals_holiday_translations.csv dosyasını indir]({url}) (indirmek için Ctrl/Cmd+tıklayın - normal tıklama burada işe yaramaz)\n\nVeya aşağıdaki CSV'yi kopyalayın:\n\n```\n{csv}\n```",
-            "translations_imported": "{updated} holiday(s) updated, {skipped} row(s) skipped.",
-            "no_translations_to_export": "No holiday names have been written yet - there is nothing to export.",
+            "translations_imported": "{updated} tatil güncellendi, {skipped} satır atlandı.",
+            "no_translations_to_export": "Henüz hiçbir tatil adı yazılmadı – dışa aktarılacak bir şey yok.",
             "hub_not_configurable": "Annuals merkezinin kendine ait ayarları yoktur - yalnızca paylaşılan takvimleri içerir.",
             "import_started": "İçe aktarma başladı: {created} etkinlik kuyruğa alındı, {skipped} satır atlandı (ayrıntılar için günlüğe bakın).",
             "ics_import_started": "İçe aktarma başladı: {created} etkinlik oluşturuldu, {updated} güncellendi, {skipped} giriş atlandı veya hariç tutuldu.",

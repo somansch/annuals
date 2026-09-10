@@ -33,7 +33,7 @@ blueprint:
     <summary><b>Available template variables</b> (for the notification title/message and any additional actions)</summary>
 
     - `{{ ev_name }}` - the event's name (name + last name combined)
-    - `{{ ev_type }}` - the event type, translated into your HA's configured language, e.g. "Birthday"/"Geburtstag" (15 languages translated, see Annuals readme)
+    - `{{ ev_type }}` - the event type, translated into your HA's configured language, e.g. "Birthday"/"Geburtstag" (16 languages translated, see Annuals readme)
     - `{{ occurrence }}` - the occurrence number, e.g. "30"
     - `{{ days_until }}` - number of days until the event, e.g. "7"
     - `{{ reminder_message }}` - a ready-made, translated countdown phrase, e.g. "in 7 days (#30)", "Tomorrow" or "Today"
@@ -194,7 +194,11 @@ blueprint:
             since it simply has no events in them. Which categories exist at
             all depends on the country: most only have Public, some add Bank
             or School, and the religious and minority ones are rare
-            country-specific exceptions.
+            country-specific exceptions. Where a country files the same day
+            under several categories, Annuals keeps one entry for it and
+            Public wins - so filtering on a secondary category such as
+            Government can match nothing even where the country does provide
+            it.
           default: []
           selector:
             select:

@@ -73,26 +73,89 @@
                 "turkish": "土耳其",
                 "vlach": "弗拉赫"
             }
+        },
+        "nth": {
+            "options": {
+                "1": "第一个",
+                "2": "第二个",
+                "3": "第三个",
+                "4": "第四个",
+                "-1": "最后一个"
+            }
+        },
+        "weekday": {
+            "options": {
+                "0": "星期一",
+                "1": "星期二",
+                "2": "星期三",
+                "3": "星期四",
+                "4": "星期五",
+                "5": "星期六",
+                "6": "星期日"
+            }
         }
     },
     "config": {
         "step": {
             "user": {
                 "title": "添加事件",
-                "description": "每个事件都会创建独立的条目，之后可以在“设置 → 设备与服务”中通过搜索名称找到并编辑。",
+                "description": "这是哪一类事件？\n\n**每年**包括生日、纪念日、命名日、结婚纪念日、忌日、宠物生日和工作纪念日。**单次**是一个日期，过期后会自动删除。**自定义**是你自己的每年日期，可以固定在某一天，也可以按规则计算。",
+                "menu_options": {
+                    "recurring": "{icon_recurring} 某人的每年日期",
+                    "one_time": "{icon_one_time} 单次事件",
+                    "custom": "{icon_custom} 自定义事件"
+                }
+            },
+            "recurring": {
+                "title": "添加每年事件",
                 "data": {
                     "name": "姓名",
                     "last_name": "姓氏（可选）",
                     "type": "事件类型",
                     "day": "日",
                     "month": "月",
-                    "year": "年份（未知可留空；单次事件必填）",
-                    "end_date": "结束日期（仅限一次性事件，可选——设置后即成为多日事件）",
+                    "year": "年份（未知可留空）",
                     "icon": "自定义图标（可选）",
                     "vip": "VIP Annual"
+                },
+                "description": "每个事件都会创建独立的条目，之后可以在“设置 → 设备与服务 → Annuals”中通过搜索名称找到并编辑。"
+            },
+            "one_time": {
+                "title": "添加单次事件",
+                "data": {
+                    "name": "姓名",
+                    "last_name": "姓氏（可选）",
+                    "type": "事件类型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年份",
+                    "end_date": "结束日期（可选——设置后即成为多日事件）",
+                    "icon": "自定义图标（可选）",
+                    "vip": "VIP Annual"
+                },
+                "description": "一个用来倒计时的日期。它不会重复，因此年份是必填项；结束后的午夜，条目会被自动删除。\n\n填写结束日期即可变成多日事件——旅行、会议、住院等。"
+            },
+            "custom": {
+                "title": "添加自定义事件",
+                "data": {
+                    "name": "姓名",
+                    "last_name": "姓氏（可选）",
+                    "type": "事件类型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年份",
+                    "icon": "自定义图标（可选）",
+                    "vip": "VIP Annual",
+                    "nth": "在当月的第几个",
+                    "weekday": "星期几"
+                },
+                "description": "你自己的每年日期，用于其他类型无法描述的一切。\n\n它可以按**规则**计算，而不是固定在某一天：母亲节是五月的第二个星期日，澳大利亚的父亲节是九月的第一个星期日。填写下面两个字段，上面的**月份**决定规则适用于哪个月，此时**日**不再使用。两个字段留空即为固定日期。",
+                "data_description": {
+                    "nth": "当月的第一个、第二个、第三个、第四个或最后一个。",
+                    "weekday": "请与上面的字段一起设置，或两者都留空。"
                 }
             },
-            "reconfigure": {
+            "reconfigure_recurring": {
                 "title": "编辑事件",
                 "description": "修改下方任意字段并提交以更新此事件。",
                 "data": {
@@ -101,10 +164,44 @@
                     "type": "事件类型",
                     "day": "日",
                     "month": "月",
-                    "year": "年份（未知可留空；单次事件必填）",
-                    "end_date": "结束日期（仅限一次性事件，可选——设置后即成为多日事件）",
+                    "year": "年份（未知可留空）",
                     "icon": "自定义图标（可选）",
                     "vip": "VIP Annual"
+                }
+            },
+            "reconfigure_one_time": {
+                "title": "编辑单次事件",
+                "description": "修改下方任意字段并提交以更新此事件。\n\n填写结束日期会变成多日事件；清空后又恢复为一天。",
+                "data": {
+                    "name": "姓名",
+                    "last_name": "姓氏（可选）",
+                    "type": "事件类型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年份",
+                    "end_date": "结束日期（可选——设置后即成为多日事件）",
+                    "icon": "自定义图标（可选）",
+                    "vip": "VIP Annual"
+                }
+            },
+            "reconfigure_custom": {
+                "title": "编辑自定义事件",
+                "description": "修改下方任意字段并提交以更新此事件。\n\n它可以按**规则**计算，而不是固定在某一天——*五月的第二个星期日*。填写下面两个字段，上面的**月份**决定规则适用于哪个月，此时**日**不再使用。清空后，事件会回到该日期。",
+                "data": {
+                    "name": "姓名",
+                    "last_name": "姓氏（可选）",
+                    "type": "事件类型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年份",
+                    "icon": "自定义图标（可选）",
+                    "vip": "VIP Annual",
+                    "nth": "在当月的第几个",
+                    "weekday": "星期几"
+                },
+                "data_description": {
+                    "nth": "当月的第一个、第二个、第三个、第四个或最后一个。",
+                    "weekday": "请与上面的字段一起设置，或两者都留空。"
                 }
             }
         },
@@ -113,7 +210,8 @@
             "end_date_one_time_only": "只有一次性事件才能设置结束日期。",
             "end_date_before_start": "结束日期必须晚于开始日期。",
             "invalid_date": "此日/月/年组合不是有效日期。",
-            "year_required": "单次事件必须填写年份。"
+            "year_required": "单次事件必须填写年份。",
+            "rule_needs_both": "重复规则需要同时填写两个字段，或者都不填。"
         },
         "abort": {
             "hub_not_configurable": "Annuals 中心没有自身设置 —— 它只保存共享日历。",
@@ -123,21 +221,6 @@
     },
     "options": {
         "step": {
-            "init": {
-                "title": "编辑事件",
-                "description": "修改下方任意字段并提交以更新此事件。",
-                "data": {
-                    "name": "姓名",
-                    "last_name": "姓氏（可选）",
-                    "type": "事件类型",
-                    "day": "日",
-                    "month": "月",
-                    "year": "年份（未知可留空；单次事件必填）",
-                    "end_date": "结束日期（仅限一次性事件，可选——设置后即成为多日事件）",
-                    "icon": "自定义图标（可选）",
-                    "vip": "VIP Annual"
-                }
-            },
             "import_csv": {
                 "title": "从 CSV 导入事件",
                 "description": "列：name、type、day、month、year（可选，单次事件必填）、icon（可选）、vip（可选）、last_name（可选）。“type”必须是以下英文键之一：birthday、anniversary、name_day、wedding_anniversary、memorial、pet_birthday、work_anniversary、custom、one_time（始终使用英文，与语言设置无关）。“vip”接受 1/true/yes/y/x（不区分大小写）；留空或省略该列表示非 VIP 事件。即使某个值为空，也要保留该列 —— 缺少末尾逗号会导致后面的值向左移位。无效行会被跳过并记录到日志中。\n\n示例：\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n家庭度假,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -228,16 +311,16 @@
                 }
             },
             "holiday_translations": {
-                "title": "🌐 Holiday translations",
-                "description": "Export and import the holiday names you wrote yourself.",
+                "title": "🌐 节假日翻译",
+                "description": "导出和导入你自己填写的节假日名称。",
                 "menu_options": {
-                    "export_translations": "📤 Export translations",
-                    "import_translations": "📥 Import translations"
+                    "export_translations": "📤 导出翻译",
+                    "import_translations": "📥 导入翻译"
                 }
             },
             "import_translations": {
-                "title": "Import translations",
-                "description": "Upload a translations CSV. Columns: `country,subdivision,category,holiday_key,observed,language,name`. Rows are matched onto holidays by country, subdivision, category, holiday key and observed flag - not by entry id, so a file exported before re-importing a country still applies. Rows whose holiday isn't present are skipped and counted.",
+                "title": "导入翻译",
+                "description": "上传翻译 CSV。列：`country,subdivision,category,holiday_key,observed,language,name`。各行按国家、行政区、类别、节假日键和 observed 标记与节假日匹配，而不是按条目 ID，因此在重新导入某个国家之前导出的文件仍然适用。找不到对应节假日的行会被跳过并计数。",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -248,7 +331,7 @@
                     "annual_settings": "{icon_annual_settings} Annual 设置",
                     "import_events": "{icon_import_events} 导入事件",
                     "export_csv": "{icon_export_csv} 将事件导出为 CSV",
-                    "holiday_translations": "{icon_holiday_translations} Holiday translations",
+                    "holiday_translations": "{icon_holiday_translations} 节假日翻译",
                     "remove_events": "{icon_remove_events} 删除事件",
                     "delete_all": "{icon_delete_all} 删除所有 Annuals 数据"
                 }
@@ -336,6 +419,55 @@
             "delete_all": {
                 "title": "删除所有 Annuals 数据",
                 "description": "此操作将永久删除全部 {count} 个事件、共享日历以及 Annuals 中心本身 —— 整个集成及其创建的所有内容。此操作无法撤销。点击“确定”确认。"
+            },
+            "edit_recurring": {
+                "title": "编辑事件",
+                "description": "修改下方任意字段并提交以更新此事件。",
+                "data": {
+                    "name": "姓名",
+                    "last_name": "姓氏（可选）",
+                    "type": "事件类型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年份（未知可留空）",
+                    "icon": "自定义图标（可选）",
+                    "vip": "VIP Annual"
+                }
+            },
+            "edit_one_time": {
+                "title": "编辑单次事件",
+                "description": "修改下方任意字段并提交以更新此事件。\n\n填写结束日期会变成多日事件；清空后又恢复为一天。",
+                "data": {
+                    "name": "姓名",
+                    "last_name": "姓氏（可选）",
+                    "type": "事件类型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年份",
+                    "end_date": "结束日期（可选——设置后即成为多日事件）",
+                    "icon": "自定义图标（可选）",
+                    "vip": "VIP Annual"
+                }
+            },
+            "edit_custom": {
+                "title": "编辑自定义事件",
+                "description": "修改下方任意字段并提交以更新此事件。\n\n它可以按**规则**计算，而不是固定在某一天——*五月的第二个星期日*。填写下面两个字段，上面的**月份**决定规则适用于哪个月，此时**日**不再使用。清空后，事件会回到该日期。",
+                "data": {
+                    "name": "姓名",
+                    "last_name": "姓氏（可选）",
+                    "type": "事件类型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年份",
+                    "icon": "自定义图标（可选）",
+                    "vip": "VIP Annual",
+                    "nth": "在当月的第几个",
+                    "weekday": "星期几"
+                },
+                "data_description": {
+                    "nth": "当月的第一个、第二个、第三个、第四个或最后一个。",
+                    "weekday": "请与上面的字段一起设置，或两者都留空。"
+                }
             }
         },
         "error": {
@@ -351,12 +483,13 @@
             "invalid_vcard": "无法将此文件读取为 vCard。请检查格式。",
             "no_valid_vcard_entries": "此文件中未找到包含可用生日的联系人。请查看日志了解被跳过条目的详情。",
             "no_valid_vcard_dates": "此文件中未找到除生日外的纪念日或其他日期。请查看日志了解被跳过条目的详情。",
-            "no_batch_selected": "请勾选“删除所有已导入的节假日”，或选择一个批次。"
+            "no_batch_selected": "请勾选“删除所有已导入的节假日”，或选择一个批次。",
+            "rule_needs_both": "重复规则需要同时填写两个字段，或者都不填。"
         },
         "abort": {
             "translations_exported": "已导出 {count} 条翻译。[下载 annuals_holiday_translations.csv]({url})（按住 Ctrl/Cmd 点击以下载 - 普通点击在此处无效）\n\n或复制下方的 CSV：\n\n```\n{csv}\n```",
-            "translations_imported": "{updated} holiday(s) updated, {skipped} row(s) skipped.",
-            "no_translations_to_export": "No holiday names have been written yet - there is nothing to export.",
+            "translations_imported": "已更新 {updated} 个节假日，跳过 {skipped} 行。",
+            "no_translations_to_export": "尚未填写任何节假日名称——没有可导出的内容。",
             "hub_not_configurable": "Annuals 中心没有自身设置 —— 它只保存共享日历。",
             "import_started": "导入已开始：{created} 个事件已加入队列，{skipped} 行被跳过（详情见日志）。",
             "ics_import_started": "导入已开始：已创建 {created} 个事件，更新 {updated} 个，跳过或排除 {skipped} 个条目。",

@@ -95,6 +95,10 @@
       timelineSentenceSimplePast: "{name} was {when}",
       timelineExpand: "Details",
       timelineCollapse: "Less",
+      // The chevron under a folded list (see collapse_list). {count} is how
+      // many events are still behind it.
+      foldShowMore: "Show {count} more",
+      foldShowLess: "Show fewer",
       timelineMore: "More",
       types: {
         birthday: "Birthday",
@@ -204,6 +208,11 @@
           "List shows the classic icon/name/type/badge/countdown rows. Timeline shows a compact horizontal axis with the next event highlighted and the rest as clickable dots - handy for a narrow Sections-view column.",
         layoutStyleList: "List",
         layoutStyleTimeline: "Timeline",
+        collapseList: "Fold the rest away",
+        collapseListDesc:
+          "Shows only the first few events and puts the rest behind a chevron. A card given a fixed height then ends at the fold instead of growing a scrollbar. List layout only - the timeline has its own Details expander.",
+        collapseAfter: "Events shown",
+        collapseAfterDesc: "How many are on screen before the rest has to be unfolded.",
         timelineLineHeading: "Timeline line",
         timelineLineWidth: "Width",
         timelineLineWidthDesc: "Thickness of the horizontal axis line, e.g. \"4px\".",
@@ -322,7 +331,7 @@
         suffixShowHolidayTypeDesc:
           "Show a holiday's own type label, e.g. \u201cHoliday (Public)\u201d. Turn off to leave only the country/region suffix in this cell.",
         multiDayDisplay: "Multi-day events",
-        multiDayDisplayDesc: "How a one-time event that spans several days - a holiday trip, a conference - is listed. Only affects events that actually have an end date; everything else is a single entry either way.",
+        multiDayDisplayDesc: "How an event that spans several days - a holiday trip, a conference - is listed. Covers a one-time event with an end date and a multi-day entry from an embedded calendar alike; everything else is a single entry either way.",
         multiDayStartOnly: "Only the first day",
         multiDayEndOnly: "Only the last day",
         multiDayStartEnd: "First and last day",
@@ -350,6 +359,9 @@
         columnTemplatePlaceholder: "e.g. {name} turns {occurrence} today",
         columnsCompact: "Compact (no gaps, centered)",
         columnsCompactDesc: "Remove the spacing between columns, center the row, and make every field match in weight and opacity - useful when the columns form one continuous sentence.",
+        minimalCard: "Minimal (one row, tight edges)",
+        minimalCardDesc:
+          "Trims the card's own padding so a single row fits a card one grid row tall, where the usual edges alone would take more than half its height. Only worth turning on for a card showing one event - with more, the rest is cut off or has to be scrolled.",
         monthSeparators: "Month separators",
         monthSeparatorsDesc: "Draw a line wherever consecutive rows fall in different months, splitting a long list into month blocks. The order of the rows themselves is unchanged.",
         weekSeparators: "Week separators",
@@ -624,6 +636,8 @@
       timelineSentenceSimplePast: "{name} war {when}",
       timelineExpand: "Details",
       timelineCollapse: "Weniger",
+      foldShowMore: "{count} weitere anzeigen",
+      foldShowLess: "Weniger anzeigen",
       timelineMore: "Mehr",
       types: {
         birthday: "Geburtstag",
@@ -757,6 +771,11 @@
           "Liste zeigt die klassischen Zeilen mit Icon/Name/Untertitel/Abzeichen/Countdown. Timeline zeigt eine kompakte horizontale Achse mit hervorgehobenem nächsten Ereignis und den übrigen als anklickbare Punkte - praktisch für eine schmale Spalte in der Sections-Ansicht.",
         layoutStyleList: "Liste",
         layoutStyleTimeline: "Timeline",
+        collapseList: "Rest einklappen",
+        collapseListDesc:
+          "Zeigt nur die ersten Ereignisse und legt den Rest hinter einen Pfeil. Eine Karte mit fester Höhe endet dann an der Faltung, statt einen Scrollbalken zu bekommen. Nur im Listenlayout - die Timeline hat ihr eigenes „Details“.",
+        collapseAfter: "Sichtbare Ereignisse",
+        collapseAfterDesc: "Wie viele zu sehen sind, bevor der Rest aufgeklappt werden muss.",
         timelineLineHeading: "Timeline-Linie",
         timelineLineWidth: "Breite",
         timelineLineWidthDesc: "Dicke der horizontalen Achsenlinie, z. B. „4px“.",
@@ -875,7 +894,7 @@
         suffixShowHolidayTypeDesc:
           "Die Typ-Bezeichnung eines Feiertags anzeigen, z. B. \u201eHoliday (Public)\u201c. Ausschalten, damit in dieser Zelle nur noch der Land-/Regions-Zusatz steht.",
         multiDayDisplay: "Mehrtägige Ereignisse",
-        multiDayDisplayDesc: "Wie ein einmaliges Ereignis über mehrere Tage - eine Urlaubsreise, eine Konferenz - dargestellt wird. Betrifft nur Ereignisse, die tatsächlich ein Enddatum haben; alles andere ist ohnehin ein einzelner Eintrag.",
+        multiDayDisplayDesc: "Wie ein Ereignis über mehrere Tage - eine Urlaubsreise, eine Konferenz - dargestellt wird. Gilt für einmalige Ereignisse mit Enddatum ebenso wie für mehrtägige Einträge aus einem eingebundenen Kalender; alles andere ist ohnehin ein einzelner Eintrag.",
         multiDayStartOnly: "Nur der erste Tag",
         multiDayEndOnly: "Nur der letzte Tag",
         multiDayStartEnd: "Erster und letzter Tag",
@@ -903,6 +922,9 @@
         columnTemplatePlaceholder: "z. B. {name} wird heute {occurrence}",
         columnsCompact: "Kompakt (kein Abstand, zentriert)",
         columnsCompactDesc: "Entfernt den Abstand zwischen den Spalten, zentriert die Zeile und gleicht Schriftstärke und Deckkraft aller Felder an - nützlich, wenn die Spalten einen zusammenhängenden Satz ergeben.",
+        minimalCard: "Minimal (eine Zeile, schmaler Rand)",
+        minimalCardDesc:
+          "Verkleinert den Rand der Karte, sodass eine einzelne Zeile in eine Karte von einer Rasterzeile Höhe passt - dort nimmt der normale Rand allein mehr als die halbe Höhe ein. Nur sinnvoll für eine Karte, die ein einziges Ereignis zeigt: bei mehr wird der Rest abgeschnitten oder muss gescrollt werden.",
         monthSeparators: "Monatstrenner",
         monthSeparatorsDesc: "Zeichnet überall dort eine Linie, wo aufeinanderfolgende Zeilen in verschiedene Monate fallen, und teilt eine lange Liste so in Monatsblöcke. An der Reihenfolge der Zeilen selbst ändert sich nichts.",
         weekSeparators: "Wochentrenner",
@@ -1170,6 +1192,8 @@
       timelineSentenceSimplePast: "{name} était {when}",
       timelineExpand: "Détails",
       timelineCollapse: "Réduire",
+      foldShowMore: "Afficher {count} de plus",
+      foldShowLess: "Afficher moins",
       timelineMore: "Plus",
       types: {
         birthday: "Anniversaire",
@@ -1298,6 +1322,11 @@
           "Liste affiche les lignes classiques icône/nom/sous-titre/badge/compte à rebours. Timeline affiche un axe horizontal compact avec le prochain événement mis en évidence et les autres sous forme de points cliquables - pratique pour une colonne étroite en vue Sections.",
         layoutStyleList: "Liste",
         layoutStyleTimeline: "Timeline",
+        collapseList: "Replier le reste",
+        collapseListDesc:
+          "N’affiche que les premiers événements et place le reste derrière un chevron. Une carte à hauteur fixe s’arrête alors au pli au lieu de se doter d’une barre de défilement. Uniquement en mise en page Liste - la timeline a son propre « Détails ».",
+        collapseAfter: "Événements affichés",
+        collapseAfterDesc: "Combien sont à l’écran avant qu’il faille déplier le reste.",
         timelineLineHeading: "Ligne de la timeline",
         timelineLineWidth: "Épaisseur",
         timelineLineWidthDesc: "Épaisseur de la ligne horizontale de l'axe, par ex. « 4px ».",
@@ -1416,7 +1445,7 @@
         suffixShowHolidayTypeDesc:
           "Afficher le libellé de type d'un jour férié, par ex. \u00ab\u00a0Holiday (Public)\u00a0\u00bb. Désactiver pour ne laisser que le suffixe pays/région dans cette cellule.",
         multiDayDisplay: "Événements sur plusieurs jours",
-        multiDayDisplayDesc: "Comment un événement ponctuel s'étalant sur plusieurs jours - un voyage, une conférence - est affiché. N'affecte que les événements qui ont réellement une date de fin ; tout le reste est une seule entrée de toute façon.",
+        multiDayDisplayDesc: "Comment un événement s'étalant sur plusieurs jours - un voyage, une conférence - est affiché. Vaut aussi bien pour un événement ponctuel ayant une date de fin que pour une entrée sur plusieurs jours issue d'un calendrier intégré ; tout le reste est une seule entrée de toute façon.",
         multiDayStartOnly: "Uniquement le premier jour",
         multiDayEndOnly: "Uniquement le dernier jour",
         multiDayStartEnd: "Premier et dernier jour",
@@ -1444,6 +1473,9 @@
         columnTemplatePlaceholder: "par ex. {name} a {occurrence} ans aujourd'hui",
         columnsCompact: "Compact (sans espace, centré)",
         columnsCompactDesc: "Supprime l'espace entre les colonnes, centre la ligne, et harmonise la graisse et l'opacité de tous les champs - utile lorsque les colonnes forment une seule phrase continue.",
+        minimalCard: "Minimal (une ligne, bords réduits)",
+        minimalCardDesc:
+          "Réduit les marges de la carte pour qu’une seule ligne tienne dans une carte haute d’une ligne de grille, où les marges habituelles occupent à elles seules plus de la moitié de la hauteur. Utile uniquement pour une carte affichant un seul événement : au-delà, le reste est coupé ou doit être fait défiler.",
         monthSeparators: "Séparateurs de mois",
         monthSeparatorsDesc: "Trace une ligne partout où des lignes consécutives tombent dans des mois différents, découpant une longue liste en blocs mensuels. L'ordre des lignes lui-même reste inchangé.",
         weekSeparators: "Séparateurs de semaine",
@@ -1711,6 +1743,8 @@
       timelineSentenceSimplePast: "{name} was {when}",
       timelineExpand: "Details",
       timelineCollapse: "Minder",
+      foldShowMore: "Nog {count} tonen",
+      foldShowLess: "Minder tonen",
       timelineMore: "Meer",
       types: {
         birthday: "Verjaardag",
@@ -1723,7 +1757,7 @@
         custom: "Aangepast",
         one_time: "Eenmalig evenement",
         holiday: "Feestdag",
-        calendar: "Kalendergebeurtenis",
+        calendar: "Kalenderevenement",
       },
       typesPlural: {
         birthday: "Verjaardagen",
@@ -1736,7 +1770,7 @@
         custom: "Aangepast",
         one_time: "Eenmalige evenementen",
         holiday: "Feestdagen",
-        calendar: "Kalendergebeurtenissen",
+        calendar: "Kalenderevenementen",
       },
       categories: {
         public: "Nationaal",
@@ -1839,6 +1873,11 @@
           "Lijst toont de klassieke rijen met icoon/naam/subtitel/badge/aftellen. Timeline toont een compacte horizontale as met het eerstvolgende evenement uitgelicht en de rest als klikbare punten - handig voor een smalle kolom in de Sections-weergave.",
         layoutStyleList: "Lijst",
         layoutStyleTimeline: "Timeline",
+        collapseList: "De rest inklappen",
+        collapseListDesc:
+          "Toont alleen de eerste evenementen en zet de rest achter een pijl. Een kaart met een vaste hoogte eindigt dan bij de vouw in plaats van een schuifbalk te krijgen. Alleen in de lijstlayout - de timeline heeft zijn eigen „Details”.",
+        collapseAfter: "Zichtbare evenementen",
+        collapseAfterDesc: "Hoeveel er op het scherm staan voordat de rest uitgeklapt moet worden.",
         timelineLineHeading: "Timeline-lijn",
         timelineLineWidth: "Dikte",
         timelineLineWidthDesc: "Dikte van de horizontale aslijn, bijv. „4px”.",
@@ -1897,15 +1936,15 @@
         timelineButtonLabel: "Details-/Meer-knop",
         timelineButtonFontDesc: "Lettertype voor de Details- en Meer-knoppen in de voettekst.",
         timelineButtonColorDesc: "Tekstkleur voor de Details- en Meer-knoppen in de voettekst.",
-        eventTypesHeading: "Gebeurtenistypen",
-        eventTypeColorDesc: "Kleur voor het icoon en de stip van dit gebeurtenistype op de tijdlijn.",
+        eventTypesHeading: "Evenementtypen",
+        eventTypeColorDesc: "Kleur voor het icoon en de stip van dit evenementtype op de tijdlijn.",
         visibilityHeading: "Tonen / Verbergen",
         hideCardTitle: "Verbergen",
         hideCardTitleDesc: "Verberg de eigen titel van de kaart, ook als deze hierboven is ingesteld",
-        noEventsText: "Tekst zonder gebeurtenissen",
+        noEventsText: "Tekst zonder evenementen",
         noEventsTextDesc:
           "Wat de kaart toont wanneer er niets te tonen is (leeg laten voor de standaardtekst).",
-        noEventsLabel: "Geen gebeurtenissen",
+        noEventsLabel: "Geen evenementen",
         noEventsColorDesc: "Tekstkleur van de regel die de kaart toont wanneer er niets te tonen is.",
         noEventsFontDesc: "Lettertype van de regel die de kaart toont wanneer er niets te tonen is.",
         tapAction: "Actie bij tikken",
@@ -1956,8 +1995,8 @@
         suffixShowHolidayType: "Type-aanduiding",
         suffixShowHolidayTypeDesc:
           "De type-aanduiding van een feestdag tonen, bijv. \u201cHoliday (Public)\u201d. Uitschakelen om alleen het land-/regiosuffix in deze cel te laten staan.",
-        multiDayDisplay: "Meerdaagse gebeurtenissen",
-        multiDayDisplayDesc: "Hoe een eenmalige gebeurtenis over meerdere dagen - een vakantiereis, een conferentie - wordt weergegeven. Betreft alleen gebeurtenissen die daadwerkelijk een einddatum hebben; al het andere is sowieso één item.",
+        multiDayDisplay: "Meerdaagse evenementen",
+        multiDayDisplayDesc: "Hoe een evenement over meerdere dagen - een vakantiereis, een conferentie - wordt weergegeven. Geldt zowel voor een eenmalig evenement met een einddatum als voor een meerdaagse afspraak uit een ingesloten kalender; al het andere is sowieso één item.",
         multiDayStartOnly: "Alleen de eerste dag",
         multiDayEndOnly: "Alleen de laatste dag",
         multiDayStartEnd: "Eerste en laatste dag",
@@ -1967,12 +2006,12 @@
           "Toont hier de eigen naam van de externe kalender (bijv. „Privé”). Zet dit uit zodra Tijd/Locatie/Beschrijving hieronder al genoeg zeggen.",
         externalCalendarsHeading: "Externe kalenders",
         externalCalendarsDesc:
-          "Neem een of meer van je bestaande Home Assistant-kalenders op naast de eigen evenementen van Annuals - elk komt op zijn werkelijke dag terecht (en, voor evenementen met een vaste tijd, gesorteerd op tijdstip binnen die dag) in plaats van enige „eerstvolgende gebeurtenis”-berekening. Voeg hierboven een kolom Tijd/Locatie/Beschrijving toe om deze velden voor deze evenementen te tonen.",
+          "Neem een of meer van je bestaande Home Assistant-kalenders op naast de eigen evenementen van Annuals - elk komt op zijn werkelijke dag terecht (en, voor evenementen met een vaste tijd, gesorteerd op tijdstip binnen die dag) in plaats van enige „eerstvolgenhet evenement”-berekening. Voeg hierboven een kolom Tijd/Locatie/Beschrijving toe om deze velden voor deze evenementen te tonen.",
         externalCalendarsLabel: "Kalenders",
         externalCalendarsLabelDesc: "Welke calendar.*-entiteiten moeten worden opgenomen.",
         todoHeading: "Taken",
         todoDesc:
-          "Markeert gebeurtenissen met een nog openstaande taak - meestal de lijst waarin de meegeleverde herinneringsblueprint schrijft. Koppeling gebeurt eerst op vervaldatum en daarna op wat de tekst van de taak zegt (volledige naam, naam, type, volgnummer): een taak die de gebeurtenis noemt wint van een die alleen de datum deelt; een taak die even goed bij twee gebeurtenissen past blijft ongekoppeld. Passende gebeurtenissen krijgen in beide indelingen een kleine badge op hun pictogram - zie Markeren voor pictogram en kleur.",
+          "Markeert evenementen met een nog openstaande taak - meestal de lijst waarin de meegeleverde herinneringsblueprint schrijft. Koppeling gebeurt eerst op vervaldatum en daarna op wat de tekst van de taak zegt (volledige naam, naam, type, volgnummer): een taak die het evenement noemt wint van een die alleen de datum deelt; een taak die even goed bij twee evenementen past blijft ongekoppeld. Passende evenementen krijgen in beide indelingen een kleine badge op hun pictogram - zie Markeren voor pictogram en kleur.",
         todoListsLabel: "Takenlijsten",
         todoListsLabelDesc: "Welke todo.*-entiteiten doorzocht worden. Leeg laten om de functie uit te schakelen.",
         todoCompleteFromCard: "Voltooien vanaf de kaart",
@@ -1985,6 +2024,9 @@
         columnTemplatePlaceholder: "bijv. {name} wordt vandaag {occurrence}",
         columnsCompact: "Compact (geen ruimte, gecentreerd)",
         columnsCompactDesc: "Verwijdert de ruimte tussen de kolommen, centreert de rij, en laat alle velden overeenkomen in dikte en dekking - handig wanneer de kolommen één doorlopende zin vormen.",
+        minimalCard: "Minimaal (één regel, smalle rand)",
+        minimalCardDesc:
+          "Verkleint de rand van de kaart, zodat één regel past in een kaart van één rasterregel hoog, waar de gewone rand alleen al meer dan de halve hoogte inneemt. Alleen zinvol voor een kaart die één evenement toont: bij meer wordt de rest afgesneden of moet er gescrold worden.",
         monthSeparators: "Maandscheidingen",
         monthSeparatorsDesc: "Tekent een lijn overal waar opeenvolgende rijen in verschillende maanden vallen, waardoor een lange lijst in maandblokken uiteenvalt. De volgorde van de rijen zelf verandert niet.",
         weekSeparators: "Weekscheidingen",
@@ -2007,7 +2049,7 @@
         separatorLabelBackgroundDesc: "Kleur van het vlak achter het bijschrift – dat is wat de lijn eronder afdekt. Leeg gelaten is het de achtergrondkleur van de kaart, zodat het bijschrift leest als een onderbreking in de lijn.",
         separatorLabelFontDesc: "Grootte van het bijschrift, bijv. \"0.8em\" of \"11px\". Leeg gelaten is het 0.75em, relatief aan de lettergrootte van de kaart, plus de vier stijlschakelaars en de letterafstand hieronder.",
         accentBarWidthDesc: "Dikte van de balk, bijv. \"3px\". Leeg gelaten is het 3px. Voeg hierboven de kolom Accentbalk toe om hem überhaupt te tonen.",
-        accentBarColorDesc: "Standaardkleur van de balk. Het gebeurtenistype en de status van de rij kunnen hem elk overschrijven.",
+        accentBarColorDesc: "Standaardkleur van de balk. Het evenementtype en de status van de rij kunnen hem elk overschrijven.",
         whenClickShowsDate: "Datum bij klik op aftelling",
         whenClickShowsDateDesc:
           "Klikken op het aftellen van een rij toont in plaats daarvan de werkelijke datum (bijv. „ma 3 aug 2026”), nogmaals klikken schakelt terug - de tik-/houdactie van de rij werkt elders in de rij gewoon door.",
@@ -2022,7 +2064,7 @@
         visibilityTodoOnlyDesc:
           "Toon alleen evenementen met een nog openstaande taak (zie Taken onder Instellingen → Evenementen). Beperkt de twee filters hierboven in plaats van zich ermee te verenigen: met ook „Alleen VIP“ aan worden de VIP-evenementen getoond waarvoor nog iets te doen is.",
         badgesHeading: "Badges",
-        badgeTargetIcon: "Gebeurtenisicoon",
+        badgeTargetIcon: "Evenementicoon",
         badgeTargetIconDesc: "Tekent dit badge in de hoek van het rij-icoon.",
         badgeTargetAccentBar: "Accentbalk",
         badgeTargetAccentBarDesc: "Tekent dit badge in de kolom links van de accentbalk, gecentreerd op de rij. Vereist de kolom Accentbalk.",
@@ -2031,24 +2073,24 @@
         badgeBgColor: "Achtergrondkleur van het badge",
         badgeBgColorDesc: "Kleur van de schijf achter het symbool.",
         vipBadgeIcon: "Badge-icoon",
-        vipBadgeIconDesc: "MDI-icoon dat als badge wordt gebruikt bij VIP-gebeurtenissen.",
+        vipBadgeIconDesc: "MDI-icoon dat als badge wordt gebruikt bij VIP-evenementen.",
         vipBadgeIconPlaceholder: "mdi:star",
         importantBadgeIcon: "Badge-icoon",
-        importantBadgeIconDesc: "MDI-icoon dat als badge wordt gebruikt bij gebeurtenissen die automatisch als belangrijk zijn gemarkeerd.",
+        importantBadgeIconDesc: "MDI-icoon dat als badge wordt gebruikt bij evenementen die automatisch als belangrijk zijn gemarkeerd.",
         importantBadgeIconPlaceholder: "mdi:exclamation-thick",
         todoBadgeIcon: "Badge-icoon",
-        todoBadgeIconDesc: "MDI-icoon dat als badge wordt gebruikt bij gebeurtenissen met een nog openstaande taak (zie Taken onder Gebeurtenissen).",
+        todoBadgeIconDesc: "MDI-icoon dat als badge wordt gebruikt bij evenementen met een nog openstaande taak (zie Taken onder Evenementen).",
         todoBadgeColorTimelineDesc: "Kleur van die badge in de Tijdlijn-indeling - standaard het rood van het thema",
         highlightHeading: "Markeren",
         highlightPast: "Vergane evenementen",
         highlightBgColor: "Achtergrondkleur",
         highlightBgColorDesc: "Achtergrondkleur voor deze markering",
         highlightVip: "VIP-evenementen",
-        highlightVipDesc: "Toont een badge bij gebeurtenissen met VIP-markering.",
+        highlightVipDesc: "Toont een badge bij evenementen met VIP-markering.",
         highlightImportant: "Belangrijke evenementen",
-        highlightImportantDesc: "Toont een badge bij gebeurtenissen die automatisch als belangrijk zijn gemarkeerd.",
+        highlightImportantDesc: "Toont een badge bij evenementen die automatisch als belangrijk zijn gemarkeerd.",
         highlightTodo: "Taken",
-        highlightTodoDesc: "Toont een badge bij gebeurtenissen met een nog openstaande taak.",
+        highlightTodoDesc: "Toont een badge bij evenementen met een nog openstaande taak.",
         vipBadgeColorTimelineDesc: "Kleur van die badge in de Tijdlijn-indeling - standaard het rood van het thema",
         importantBadgeColorTimelineDesc:
           "Kleur van die badge in de Tijdlijn-indeling - standaard het amber van het thema",
@@ -2073,26 +2115,26 @@
         cardBackgroundSizeRepeat: "Tegels",
         cardBackgroundOpacity: "Dekking",
         cardBackgroundOpacityDesc: "Dekking van de achtergrondkleur/-afbeelding, in procenten",
-        statusHeading: "Gebeurtenisstatus",
+        statusHeading: "Evenementstatus",
         statusTimelineIconColorDesc: "De punt en glyphs van deze status op de tijdlijn.",
         statusEntryTextColor: "Kleur van de itemtekst",
         statusEntryTextColorDesc: "De tekst van deze status op de tijdlijn. Leeg neemt de kleur van deze status.",
         typeRowColor: "Kleur van de hele rij",
         typeRowColorDesc: "Kleur van de rijtekst als Hele rij aan staat. Leeg neemt de kleur van dit type.",
         typeEntryColor: "Kleur van de itemtekst",
-        typeEntryColorDesc: "Kleur van de tekst van de gebeurtenis in de tijdlijn als Tekst van het item aan staat. Leeg neemt de kleur van dit type.",
+        typeEntryColorDesc: "Kleur van de tekst van het evenement in de tijdlijn als Tekst van het item aan staat. Leeg neemt de kleur van dit type.",
         typeBarColor: "Kleur van de accentbalk",
         typeBarColorDesc: "Kleur van de accentbalk als Accentbalk aan staat. Leeg neemt de kleur van dit type.",
         typeIconColor: "Kleur van het icoon",
         typeIconColorDesc: "Kleur van het icoon - in de lijst dat van de rij, op de tijdlijn de punt. Leeg neemt de kleur van dit type.",
-        typeAnimationDesc: "Animatie voor de iconen van dit gebeurtenistype; overschrijft die van het Icoon-blok in Design. Op Geen volgt ze die standaard. Een status kan haar opnieuw overschrijven.",
+        typeAnimationDesc: "Animatie voor de iconen van dit evenementtype; overschrijft die van het Icoon-blok in Design. Op Geen volgt ze die standaard. Een status kan haar opnieuw overschrijven.",
         rowTargetTimeline: "Tekst van het item",
-        rowTargetTimelineDesc: "Kleurt ook de tekst van de gebeurtenis in de lijst onder de as, niet alleen haar punt.",
+        rowTargetTimelineDesc: "Kleurt ook de tekst van het evenement in de lijst onder de as, niet alleen zijn punt.",
         fontLetterSpacingDesc: "Ruimte tussen de letters, bijv. 0.05em of 1px. Leeg laat de spatiëring van het lettertype.",
         lineStyleDesc: "Of de lijn doorgetrokken, gestreept of gestippeld wordt getekend.",
         designLineBlockDesc: "De breedte, lijnstijl en kleur van de lijn.",
-        statusOverrideHint: "Uit geldt de kleur van het gebeurtenistype of de standaard uit Design.",
-        designIconBlockDesc: "De standaardkleur en -animatie voor de iconen van de kaart. Elk gebeurtenistype en elke status valt hierop terug zolang het ze niet overschrijft.",
+        statusOverrideHint: "Uit geldt de kleur van het evenementtype of de standaard uit Design.",
+        designIconBlockDesc: "De standaardkleur en -animatie voor de iconen van de kaart. Elk evenementtype en elke status valt hierop terug zolang het ze niet overschrijft.",
         designBarBlockDesc: "Standaardkleur van de balk en zijn breedte.",
         designElementDesc: "Alles wat dit deel van de kaart vormgeeft: de kleur, het lettertype en de schakelaars hieronder.",
         designGroupDesc: "De regels waaruit deze kolom bestaat. Elke regel wordt hieronder apart vormgegeven.",
@@ -2101,15 +2143,15 @@
         statusIconAnimation: "Icoonanimatie",
         statusIconAnimationDesc: "De animatie van het icoon. Uit geldt de standaard uit Design.",
         designIconColorDesc: "Standaardkleur van het rij-icoon. Elke status valt erop terug zolang hij hem niet overschrijft.",
-        statusPastDesc: "Gebeurtenissen die al voorbij zijn.",
+        statusPastDesc: "Evenementen die al voorbij zijn.",
         statusIconColor: "Icoonkleur",
         statusIconColorDesc: "Het icoon van de rij.",
         statusBarColor: "Accentbalkkleur",
         statusBarColorDesc: "De accentbalk van de rij. Leeg volgt de icoonkleur.",
         colorToday: "Vandaag",
         colorSoon: "Binnenkort",
-        colorTodayDesc: "Gebeurtenissen die vandaag plaatsvinden.",
-        colorSoonDesc: "Gebeurtenissen binnen de drempel \"binnenkort\".",
+        colorTodayDesc: "Evenementen die vandaag plaatsvinden.",
+        colorSoonDesc: "Evenementen binnen de drempel \"binnenkort\".",
         animationLabel: "Animatie",
         animationDesc: "Voeg een herhalende animatie toe aan dit icoon",
         animationNone: "Geen",
@@ -2118,11 +2160,11 @@
         animationShake: "Schudden",
         animationSpin: "Draaien",
         animationFlash: "Knipperen",
-        rowColorsLabel: "Rijen vormgeven per gebeurtenistype",
-        rowColorsDesc: "Geeft elk gebeurtenistype zijn eigen vormgeving - de kleur en welke delen van een rij of tijdlijnitem ze kleurt - in plaats van de standaarden uit Design. De status van een rij kan haar nog steeds overschrijven.",
+        rowColorsLabel: "Rijen vormgeven per evenementtype",
+        rowColorsDesc: "Geeft elk evenementtype zijn eigen vormgeving - de kleur en welke delen van een rij of tijdlijnitem ze kleurt - in plaats van de standaarden uit Design. De status van een rij kan haar nog steeds overschrijven.",
         calendarColorsHeading: "Ingesloten agenda's",
         calendarColorDesc: "Kleur voor deze agenda - haar rijen in de lijst, haar punt op de tijdlijn. Leeg gelaten wordt de kleur gebruikt die Home Assistant zelf voor de agenda bewaart.",
-        eventTypeRowColorDesc: "Kleur voor dit gebeurtenistype - zijn rijen in de lijst, zijn punt op de tijdlijn. In de lijst bepalen de schakelaars ernaast welke delen van een rij ze kleurt.",
+        eventTypeRowColorDesc: "Kleur voor dit evenementtype - zijn rijen in de lijst, zijn punt op de tijdlijn. In de lijst bepalen de schakelaars ernaast welke delen van een rij ze kleurt.",
         rowTargetIcon: "Icoon",
         rowTargetIconDesc: "Kleurt het icoon van dit type.",
         rowTargetAccentBar: "Accentbalk",
@@ -2258,6 +2300,8 @@
       timelineSentenceSimplePast: "{name} — {when}",
       timelineExpand: "Szczegóły",
       timelineCollapse: "Mniej",
+      foldShowMore: "Pokaż jeszcze {count}",
+      foldShowLess: "Pokaż mniej",
       timelineMore: "Więcej",
       types: {
         birthday: "Urodziny",
@@ -2386,6 +2430,11 @@
           "Lista pokazuje klasyczne wiersze ikona/nazwa/podtytuł/odznaka/odliczanie. Timeline pokazuje kompaktową poziomą oś z wyróżnionym najbliższym wydarzeniem, a resztą jako klikalne punkty - przydatne w wąskiej kolumnie widoku Sekcje.",
         layoutStyleList: "Lista",
         layoutStyleTimeline: "Timeline",
+        collapseList: "Zwiń resztę",
+        collapseListDesc:
+          "Pokazuje tylko pierwsze wydarzenia, a resztę chowa za strzałką. Karta o stałej wysokości kończy się wtedy na zwinięciu, zamiast dostawać pasek przewijania. Tylko w układzie listy - oś czasu ma własne „Szczegóły”.",
+        collapseAfter: "Widoczne wydarzenia",
+        collapseAfterDesc: "Ile jest widocznych, zanim trzeba rozwinąć resztę.",
         timelineLineHeading: "Linia osi czasu",
         timelineLineWidth: "Grubość",
         timelineLineWidthDesc: "Grubość poziomej linii osi, np. „4px”.",
@@ -2504,7 +2553,7 @@
         suffixShowHolidayTypeDesc:
           "Pokaż etykietę typu święta, np. \u201eHoliday (Public)\u201d. Wyłącz, aby w tej komórce został tylko sufiks kraju/regionu.",
         multiDayDisplay: "Wydarzenia wielodniowe",
-        multiDayDisplayDesc: "Jak przedstawiane jest jednorazowe wydarzenie trwające kilka dni - wyjazd, konferencja. Dotyczy tylko wydarzeń, które faktycznie mają datę końcową; wszystko inne i tak jest pojedynczym wpisem.",
+        multiDayDisplayDesc: "Jak przedstawiane jest wydarzenie trwające kilka dni - wyjazd, konferencja. Dotyczy zarówno wydarzenia jednorazowego z datą końcową, jak i wielodniowego wpisu z osadzonego kalendarza; wszystko inne i tak jest pojedynczym wpisem.",
         multiDayStartOnly: "Tylko pierwszy dzień",
         multiDayEndOnly: "Tylko ostatni dzień",
         multiDayStartEnd: "Pierwszy i ostatni dzień",
@@ -2532,6 +2581,9 @@
         columnTemplatePlaceholder: "np. {name} kończy dziś {occurrence} lat",
         columnsCompact: "Kompaktowy (bez odstępów, wyśrodkowany)",
         columnsCompactDesc: "Usuwa odstępy między kolumnami, wyśrodkowuje wiersz i ujednolica grubość oraz krycie wszystkich pól - przydatne, gdy kolumny tworzą jedno spójne zdanie.",
+        minimalCard: "Minimalna (jeden wiersz, wąskie marginesy)",
+        minimalCardDesc:
+          "Zmniejsza margines karty, aby pojedynczy wiersz zmieścił się w karcie o wysokości jednego wiersza siatki, gdzie zwykły margines sam zajmuje ponad połowę wysokości. Ma sens tylko dla karty pokazującej jedno wydarzenie: przy większej liczbie reszta zostaje ucięta albo trzeba ją przewijać.",
         monthSeparators: "Separatory miesięcy",
         monthSeparatorsDesc: "Rysuje linię wszędzie tam, gdzie kolejne wiersze przypadają na różne miesiące, dzieląc długą listę na bloki miesięczne. Kolejność samych wierszy pozostaje bez zmian.",
         weekSeparators: "Separatory tygodni",
@@ -2798,6 +2850,8 @@
       timelineSentenceSimplePast: "{name} fue {when}",
       timelineExpand: "Detalles",
       timelineCollapse: "Menos",
+      foldShowMore: "Mostrar {count} más",
+      foldShowLess: "Mostrar menos",
       timelineMore: "Más",
       types: {
         birthday: "Cumpleaños",
@@ -2926,6 +2980,11 @@
           "Lista muestra las filas clásicas de icono/nombre/subtítulo/insignia/cuenta atrás. Timeline muestra un eje horizontal compacto con el próximo evento resaltado y el resto como puntos pulsables - útil para una columna estrecha en la vista Secciones.",
         layoutStyleList: "Lista",
         layoutStyleTimeline: "Timeline",
+        collapseList: "Plegar el resto",
+        collapseListDesc:
+          "Muestra solo los primeros eventos y deja el resto tras una flecha. Una tarjeta con altura fija termina entonces en el pliegue en lugar de obtener una barra de desplazamiento. Solo en el diseño de lista - la línea de tiempo tiene su propio «Detalles».",
+        collapseAfter: "Eventos visibles",
+        collapseAfterDesc: "Cuántos se ven antes de tener que desplegar el resto.",
         timelineLineHeading: "Línea de la timeline",
         timelineLineWidth: "Grosor",
         timelineLineWidthDesc: "Grosor de la línea horizontal del eje, p. ej. «4px».",
@@ -3044,7 +3103,7 @@
         suffixShowHolidayTypeDesc:
           "Mostrar la etiqueta de tipo de un festivo, p. ej. \u201cHoliday (Public)\u201d. Desactívalo para dejar solo el sufijo de país/región en esta celda.",
         multiDayDisplay: "Eventos de varios días",
-        multiDayDisplayDesc: "Cómo se muestra un evento único que abarca varios días - un viaje, un congreso. Solo afecta a los eventos que realmente tienen fecha de fin; todo lo demás es una sola entrada de todos modos.",
+        multiDayDisplayDesc: "Cómo se muestra un evento que abarca varios días - un viaje, un congreso. Vale tanto para un evento único con fecha de fin como para una entrada de varios días de un calendario incorporado; todo lo demás es una sola entrada de todos modos.",
         multiDayStartOnly: "Solo el primer día",
         multiDayEndOnly: "Solo el último día",
         multiDayStartEnd: "Primer y último día",
@@ -3072,6 +3131,9 @@
         columnTemplatePlaceholder: "p. ej. {name} cumple {occurrence} hoy",
         columnsCompact: "Compacto (sin espacios, centrado)",
         columnsCompactDesc: "Elimina el espacio entre columnas, centra la fila y iguala el grosor y la opacidad de todos los campos - útil cuando las columnas forman una sola frase continua.",
+        minimalCard: "Mínima (una fila, bordes ajustados)",
+        minimalCardDesc:
+          "Reduce el margen de la tarjeta para que una sola fila quepa en una tarjeta de una fila de rejilla de alto, donde el margen habitual ocupa por sí solo más de la mitad de la altura. Solo tiene sentido en una tarjeta que muestra un único evento: con más, el resto se corta o hay que desplazarlo.",
         monthSeparators: "Separadores de mes",
         monthSeparatorsDesc: "Dibuja una línea allí donde filas consecutivas caen en meses distintos, dividiendo una lista larga en bloques mensuales. El orden de las filas en sí no cambia.",
         weekSeparators: "Separadores de semana",
@@ -3339,6 +3401,8 @@
       timelineSentenceSimplePast: "{name} era {when}",
       timelineExpand: "Dettagli",
       timelineCollapse: "Meno",
+      foldShowMore: "Mostra altri {count}",
+      foldShowLess: "Mostra meno",
       timelineMore: "Altro",
       types: {
         birthday: "Compleanno",
@@ -3467,6 +3531,11 @@
           "Lista mostra le righe classiche icona/nome/sottotitolo/badge/conto alla rovescia. Timeline mostra un asse orizzontale compatto con il prossimo evento evidenziato e gli altri come punti cliccabili - utile per una colonna stretta nella vista Sezioni.",
         layoutStyleList: "Lista",
         layoutStyleTimeline: "Timeline",
+        collapseList: "Ripiega il resto",
+        collapseListDesc:
+          "Mostra solo i primi eventi e mette il resto dietro una freccia. Una scheda con altezza fissa termina allora alla piega invece di ottenere una barra di scorrimento. Solo nel layout a elenco - la timeline ha il suo «Dettagli».",
+        collapseAfter: "Eventi visibili",
+        collapseAfterDesc: "Quanti sono a schermo prima che il resto vada aperto.",
         timelineLineHeading: "Linea della timeline",
         timelineLineWidth: "Spessore",
         timelineLineWidthDesc: "Spessore della linea orizzontale dell'asse, ad es. «4px».",
@@ -3585,7 +3654,7 @@
         suffixShowHolidayTypeDesc:
           "Mostra l'etichetta di tipo di una festività, ad es. \u201cHoliday (Public)\u201d. Disattiva per lasciare in questa cella solo il suffisso paese/regione.",
         multiDayDisplay: "Eventi di più giorni",
-        multiDayDisplayDesc: "Come viene mostrato un evento singolo che dura più giorni - un viaggio, una conferenza. Riguarda solo gli eventi che hanno davvero una data di fine; tutto il resto è comunque una voce sola.",
+        multiDayDisplayDesc: "Come viene mostrato un evento che dura più giorni - un viaggio, una conferenza. Vale sia per un evento singolo con data di fine sia per una voce di più giorni proveniente da un calendario incorporato; tutto il resto è comunque una voce sola.",
         multiDayStartOnly: "Solo il primo giorno",
         multiDayEndOnly: "Solo l'ultimo giorno",
         multiDayStartEnd: "Primo e ultimo giorno",
@@ -3613,6 +3682,9 @@
         columnTemplatePlaceholder: "ad es. {name} compie {occurrence} anni oggi",
         columnsCompact: "Compatto (senza spazi, centrato)",
         columnsCompactDesc: "Rimuove lo spazio tra le colonne, centra la riga e uniforma spessore e opacità di tutti i campi - utile quando le colonne formano un'unica frase continua.",
+        minimalCard: "Minimale (una riga, bordi stretti)",
+        minimalCardDesc:
+          "Riduce il margine della scheda perché una sola riga entri in una scheda alta una riga di griglia, dove il margine normale da solo occupa più di metà dell’altezza. Ha senso solo per una scheda che mostra un unico evento: con di più, il resto viene tagliato o va scorso.",
         monthSeparators: "Separatori dei mesi",
         monthSeparatorsDesc: "Disegna una linea ovunque righe consecutive cadano in mesi diversi, dividendo un elenco lungo in blocchi mensili. L'ordine delle righe stesse resta invariato.",
         weekSeparators: "Separatori delle settimane",
@@ -3880,6 +3952,8 @@
       timelineSentenceSimplePast: "{name} foi {when}",
       timelineExpand: "Detalhes",
       timelineCollapse: "Menos",
+      foldShowMore: "Mostrar mais {count}",
+      foldShowLess: "Mostrar menos",
       timelineMore: "Mais",
       types: {
         birthday: "Aniversário",
@@ -4008,6 +4082,11 @@
           "Lista mostra as linhas clássicas de ícone/nome/subtítulo/selo/contagem regressiva. Timeline mostra um eixo horizontal compacto com o próximo evento destacado e o restante como pontos clicáveis - útil para uma coluna estreita na visualização de Seções.",
         layoutStyleList: "Lista",
         layoutStyleTimeline: "Timeline",
+        collapseList: "Recolher o restante",
+        collapseListDesc:
+          "Mostra apenas os primeiros eventos e deixa o restante atrás de uma seta. Um cartão com altura fixa termina então na dobra em vez de ganhar uma barra de rolagem. Apenas no layout de lista - a timeline tem o seu próprio «Detalhes».",
+        collapseAfter: "Eventos visíveis",
+        collapseAfterDesc: "Quantos ficam na tela antes de o restante ter de ser expandido.",
         timelineLineHeading: "Linha da timeline",
         timelineLineWidth: "Espessura",
         timelineLineWidthDesc: "Espessura da linha horizontal do eixo, ex.: \"4px\".",
@@ -4126,7 +4205,7 @@
         suffixShowHolidayTypeDesc:
           "Mostrar o rótulo de tipo de um feriado, por ex. \u201cHoliday (Public)\u201d. Desative para deixar apenas o sufixo de país/região nesta célula.",
         multiDayDisplay: "Eventos de vários dias",
-        multiDayDisplayDesc: "Como é apresentado um evento único que se estende por vários dias - uma viagem, uma conferência. Afeta apenas eventos que têm realmente data de fim; todo o resto é uma única entrada de qualquer forma.",
+        multiDayDisplayDesc: "Como é apresentado um evento que se estende por vários dias - uma viagem, uma conferência. Vale tanto para um evento único com data de fim quanto para uma entrada de vários dias de um calendário incorporado; todo o resto é uma única entrada de qualquer forma.",
         multiDayStartOnly: "Apenas o primeiro dia",
         multiDayEndOnly: "Apenas o último dia",
         multiDayStartEnd: "Primeiro e último dia",
@@ -4154,6 +4233,9 @@
         columnTemplatePlaceholder: "por ex. {name} completa {occurrence} anos hoje",
         columnsCompact: "Compacto (sem espaços, centralizado)",
         columnsCompactDesc: "Remove o espaçamento entre as colunas, centraliza a linha e uniformiza a espessura e a opacidade de todos os campos - útil quando as colunas formam uma única frase contínua.",
+        minimalCard: "Mínimo (uma linha, bordas estreitas)",
+        minimalCardDesc:
+          "Reduz a margem do cartão para que uma única linha caiba num cartão com a altura de uma linha da grade, onde a margem normal sozinha ocupa mais da metade da altura. Só faz sentido para um cartão que mostra um único evento: com mais, o restante é cortado ou precisa ser rolado.",
         monthSeparators: "Separadores de mês",
         monthSeparatorsDesc: "Desenha uma linha onde linhas consecutivas caem em meses diferentes, dividindo uma lista longa em blocos mensais. A ordem das linhas em si não muda.",
         weekSeparators: "Separadores de semana",
@@ -4425,6 +4507,8 @@
       timelineSentenceSimplePast: "{name} — {when}",
       timelineExpand: "Подробнее",
       timelineCollapse: "Свернуть",
+      foldShowMore: "Показать ещё {count}",
+      foldShowLess: "Показать меньше",
       timelineMore: "Ещё",
       types: {
         birthday: "День рождения",
@@ -4553,6 +4637,11 @@
           "Список показывает классические строки значок/имя/подзаголовок/значок-badge/обратный отсчёт. Timeline показывает компактную горизонтальную ось с выделенным ближайшим событием и остальными в виде кликабельных точек - удобно для узкой колонки в виде Секции.",
         layoutStyleList: "Список",
         layoutStyleTimeline: "Timeline",
+        collapseList: "Свернуть остальное",
+        collapseListDesc:
+          "Показывает только первые события, а остальные прячет за стрелкой. Карточка с фиксированной высотой заканчивается на сгибе, а не обзаводится полосой прокрутки. Только в списочной раскладке - у шкалы времени есть своё «Подробнее».",
+        collapseAfter: "Видимые события",
+        collapseAfterDesc: "Сколько видно, прежде чем остальное нужно развернуть.",
         timelineLineHeading: "Линия таймлайна",
         timelineLineWidth: "Толщина",
         timelineLineWidthDesc: "Толщина горизонтальной линии оси, напр. «4px».",
@@ -4671,7 +4760,7 @@
         suffixShowHolidayTypeDesc:
           "Показывать метку типа праздника, например \u201cHoliday (Public)\u201d. Отключите, чтобы в этой ячейке остался только суффикс страны/региона.",
         multiDayDisplay: "Многодневные события",
-        multiDayDisplayDesc: "Как отображается разовое событие длиной в несколько дней - поездка, конференция. Касается только событий, у которых действительно есть дата окончания; всё остальное и так одна запись.",
+        multiDayDisplayDesc: "Как отображается событие длиной в несколько дней - поездка, конференция. Относится и к разовому событию с датой окончания, и к многодневной записи из встроенного календаря; всё остальное и так одна запись.",
         multiDayStartOnly: "Только первый день",
         multiDayEndOnly: "Только последний день",
         multiDayStartEnd: "Первый и последний день",
@@ -4699,6 +4788,9 @@
         columnTemplatePlaceholder: "напр. {name} исполняется {occurrence} сегодня",
         columnsCompact: "Компактно (без промежутков, по центру)",
         columnsCompactDesc: "Убирает промежутки между столбцами, центрирует строку и выравнивает толщину и прозрачность всех полей - полезно, когда столбцы образуют одно связное предложение.",
+        minimalCard: "Минимальная (одна строка, узкие поля)",
+        minimalCardDesc:
+          "Уменьшает поля карточки, чтобы одна строка помещалась в карточку высотой в одну строку сетки, где обычные поля сами по себе занимают больше половины высоты. Имеет смысл только для карточки с одним событием: при большем количестве остальное обрезается или требует прокрутки.",
         monthSeparators: "Разделители месяцев",
         monthSeparatorsDesc: "Рисует линию везде, где соседние строки попадают в разные месяцы, разбивая длинный список на блоки по месяцам. Сам порядок строк не меняется.",
         weekSeparators: "Разделители недель",
@@ -4970,6 +5062,8 @@
       timelineSentenceSimplePast: "{name} var {when}",
       timelineExpand: "Detaljer",
       timelineCollapse: "Mindre",
+      foldShowMore: "Visa {count} till",
+      foldShowLess: "Visa färre",
       timelineMore: "Mer",
       types: {
         birthday: "Födelsedag",
@@ -5098,6 +5192,11 @@
           "Lista visar de klassiska raderna med ikon/namn/undertext/badge/nedräkning. Timeline visar en kompakt horisontell axel med nästa händelse markerad och resten som klickbara punkter - praktiskt för en smal kolumn i Sektioner-vyn.",
         layoutStyleList: "Lista",
         layoutStyleTimeline: "Timeline",
+        collapseList: "Fäll ihop resten",
+        collapseListDesc:
+          "Visar bara de första händelserna och lägger resten bakom en pil. Ett kort med fast höjd slutar då vid vikningen i stället för att få en rullningslist. Endast i listlayouten - tidslinjen har sin egen ”Detaljer”.",
+        collapseAfter: "Synliga händelser",
+        collapseAfterDesc: "Hur många som syns innan resten måste fällas ut.",
         timelineLineHeading: "Tidslinje",
         timelineLineWidth: "Tjocklek",
         timelineLineWidthDesc: "Tjocklek på den horisontella axellinjen, t.ex. \"4px\".",
@@ -5216,7 +5315,7 @@
         suffixShowHolidayTypeDesc:
           "Visa en helgdags egen typetikett, t.ex. \u201dHoliday (Public)\u201d. Stäng av för att bara lämna land-/regionsuffixet i den här cellen.",
         multiDayDisplay: "Flerdagshändelser",
-        multiDayDisplayDesc: "Hur en engångshändelse som sträcker sig över flera dagar - en semesterresa, en konferens - visas. Påverkar bara händelser som faktiskt har ett slutdatum; allt annat är ändå en enda post.",
+        multiDayDisplayDesc: "Hur en händelse som sträcker sig över flera dagar - en semesterresa, en konferens - visas. Gäller både en engångshändelse med slutdatum och en flerdagspost från en inbäddad kalender; allt annat är ändå en enda post.",
         multiDayStartOnly: "Bara första dagen",
         multiDayEndOnly: "Bara sista dagen",
         multiDayStartEnd: "Första och sista dagen",
@@ -5245,6 +5344,9 @@
         columnsCompact: "Kompakt (inga mellanrum, centrerad)",
         columnsCompactDesc:
           "Tar bort mellanrummet mellan kolumnerna, centrerar raden och gör vikt och opacitet lika för alla fält - användbart när kolumnerna bildar en sammanhängande mening.",
+        minimalCard: "Minimalt (en rad, smala kanter)",
+        minimalCardDesc:
+          "Minskar kortets marginal så att en enda rad får plats i ett kort som är en rutnätsrad högt, där den vanliga marginalen ensam tar mer än halva höjden. Bara meningsfullt för ett kort som visar en enda händelse: med fler kapas resten eller måste rullas.",
         monthSeparators: "Månadsavdelare",
         monthSeparatorsDesc: "Ritar en linje överallt där två rader efter varandra hamnar i olika månader, och delar en lång lista i månadsblock. Ordningen på raderna själva ändras inte.",
         weekSeparators: "Veckoavdelare",
@@ -5516,6 +5618,8 @@
       timelineSentenceSimplePast: "{name} {when}",
       timelineExpand: "详情",
       timelineCollapse: "收起",
+      foldShowMore: "再显示 {count} 条",
+      foldShowLess: "收起",
       timelineMore: "更多",
       types: {
         birthday: "生日",
@@ -5646,6 +5750,11 @@
           "「列表」显示经典的图标/姓名/副标题/徽章/倒计时行。「时间轴」显示一条紧凑的水平轴，突出显示最近的事件，其余事件以可点击的圆点表示 - 适合分区视图中的窄列。",
         layoutStyleList: "列表",
         layoutStyleTimeline: "时间轴",
+        collapseList: "折叠其余部分",
+        collapseListDesc:
+          "只显示最前面的几个事件，其余的收在箭头后面。固定高度的卡片会在折叠处结束，而不是出现滚动条。仅适用于列表布局——时间线有自己的「详情」。",
+        collapseAfter: "显示的事件数",
+        collapseAfterDesc: "在需要展开其余部分之前，屏幕上显示多少个。",
         timelineLineHeading: "时间轴线",
         timelineLineWidth: "粗细",
         timelineLineWidthDesc: "水平轴线的粗细，例如「4px」。",
@@ -5755,7 +5864,7 @@
         suffixShowHolidayTypeDesc:
           "显示节假日自身的类型标签，例如\u201cHoliday (Public)\u201d。关闭后此单元格中仅保留国家/地区后缀。",
         multiDayDisplay: "多日事件",
-        multiDayDisplayDesc: "跨越多天的一次性事件（如假期旅行、会议）如何显示。仅影响确实有结束日期的事件；其余无论如何都是单条记录。",
+        multiDayDisplayDesc: "跨越多天的事件（如假期旅行、会议）如何显示。既适用于有结束日期的一次性事件，也适用于内嵌日历中的多日条目；其余无论如何都是单条记录。",
         multiDayStartOnly: "仅第一天",
         multiDayEndOnly: "仅最后一天",
         multiDayStartEnd: "第一天和最后一天",
@@ -5784,6 +5893,9 @@
         columnsCompact: "紧凑（无间距，居中）",
         columnsCompactDesc:
           "移除各列之间的间距，使该行居中，并让所有字段的粗细和不透明度保持一致——适用于各列组成一个连贯句子的情况。",
+        minimalCard: "极简（单行，窄边距）",
+        minimalCardDesc:
+          "缩小卡片自身的边距，使单行内容能放进高度为一个网格行的卡片——在那里，常规边距本身就占去一半以上的高度。仅适用于只显示一个事件的卡片：更多的话，其余内容会被截断或需要滚动。",
         monthSeparators: "月份分隔线",
         monthSeparatorsDesc: "在相邻两行落入不同月份的位置绘制一条线，把长列表分成按月的区块。行本身的顺序不变。",
         weekSeparators: "周分隔线",
@@ -6055,6 +6167,8 @@
       timelineSentenceSimplePast: "{name} — {when}",
       timelineExpand: "Podrobnosti",
       timelineCollapse: "Méně",
+      foldShowMore: "Zobrazit dalších {count}",
+      foldShowLess: "Zobrazit méně",
       timelineMore: "Více",
       types: {
         birthday: "Narozeniny",
@@ -6183,6 +6297,11 @@
           "Seznam zobrazuje klasické řádky s ikonou/jménem/podtitulem/odznakem/odpočtem. Timeline zobrazuje kompaktní vodorovnou osu se zvýrazněnou nejbližší událostí a ostatními jako klikatelné body - vhodné pro úzký sloupec v zobrazení Sekce.",
         layoutStyleList: "Seznam",
         layoutStyleTimeline: "Timeline",
+        collapseList: "Sbalit zbytek",
+        collapseListDesc:
+          "Zobrazí jen první události a zbytek schová za šipku. Karta s pevnou výškou pak končí u sbalení, místo aby dostala posuvník. Jen v rozvržení seznamu - časová osa má vlastní „Podrobnosti“.",
+        collapseAfter: "Viditelné události",
+        collapseAfterDesc: "Kolik jich je na obrazovce, než je nutné zbytek rozbalit.",
         timelineLineHeading: "Čára osy",
         timelineLineWidth: "Tloušťka",
         timelineLineWidthDesc: "Tloušťka vodorovné čáry osy, např. „4px“.",
@@ -6301,7 +6420,7 @@
         suffixShowHolidayTypeDesc:
           "Zobrazit vlastní označení typu svátku, např. \u201eHoliday (Public)\u201c. Vypněte, aby v této buňce zůstal jen přípona země/regionu.",
         multiDayDisplay: "Vícedenní události",
-        multiDayDisplayDesc: "Jak se zobrazuje jednorázová událost trvající několik dní - dovolená, konference. Týká se jen událostí, které skutečně mají datum konce; vše ostatní je stejně jedna položka.",
+        multiDayDisplayDesc: "Jak se zobrazuje událost trvající několik dní - dovolená, konference. Platí jak pro jednorázovou událost s datem konce, tak pro vícedenní položku z vloženého kalendáře; vše ostatní je stejně jedna položka.",
         multiDayStartOnly: "Jen první den",
         multiDayEndOnly: "Jen poslední den",
         multiDayStartEnd: "První a poslední den",
@@ -6330,6 +6449,9 @@
         columnsCompact: "Kompaktní (bez mezer, na střed)",
         columnsCompactDesc:
           "Odstraní mezery mezi sloupci, vystředí řádek a sjednotí váhu a krytí všech polí - užitečné, když sloupce tvoří jednu souvislou větu.",
+        minimalCard: "Minimální (jeden řádek, úzké okraje)",
+        minimalCardDesc:
+          "Zmenší okraje karty, aby se jediný řádek vešel do karty vysoké jeden řádek mřížky, kde běžné okraje samy zaberou víc než polovinu výšky. Má smysl jen u karty s jednou událostí: při více se zbytek ořízne nebo je nutné jej posouvat.",
         monthSeparators: "Oddělovače měsíců",
         monthSeparatorsDesc: "Nakreslí čáru všude tam, kde po sobě jdoucí řádky spadají do různých měsíců, a rozdělí tak dlouhý seznam na měsíční bloky. Pořadí samotných řádků se nemění.",
         weekSeparators: "Oddělovače týdnů",
@@ -6599,6 +6721,8 @@
       timelineSentenceSimplePast: "{name} var {when}",
       timelineExpand: "Detaljer",
       timelineCollapse: "Mindre",
+      foldShowMore: "Vis {count} til",
+      foldShowLess: "Vis færre",
       timelineMore: "Mer",
       types: {
         birthday: "Bursdag",
@@ -6727,6 +6851,11 @@
           "Liste viser de klassiske radene med ikon/navn/undertittel/merke/nedtelling. Timeline viser en kompakt horisontal akse med den neste hendelsen uthevet og resten som klikkbare punkter - praktisk for en smal kolonne i Seksjoner-visningen.",
         layoutStyleList: "Liste",
         layoutStyleTimeline: "Timeline",
+        collapseList: "Fold sammen resten",
+        collapseListDesc:
+          "Viser bare de første hendelsene og legger resten bak en pil. Et kort med fast høyde slutter da ved bretten i stedet for å få et rullefelt. Bare i listeoppsettet - tidslinjen har sin egen «Detaljer».",
+        collapseAfter: "Synlige hendelser",
+        collapseAfterDesc: "Hvor mange som vises før resten må foldes ut.",
         timelineLineHeading: "Tidslinje",
         timelineLineWidth: "Tykkelse",
         timelineLineWidthDesc: "Tykkelse på den horisontale akselinjen, f.eks. «4px».",
@@ -6845,7 +6974,7 @@
         suffixShowHolidayTypeDesc:
           "Vis en helligdags egen typebetegnelse, f.eks. \u201cHoliday (Public)\u201d. Slå av for å bare la land-/regionssuffikset stå igjen i denne cellen.",
         multiDayDisplay: "Flerdagshendelser",
-        multiDayDisplayDesc: "Hvordan en engangshendelse som strekker seg over flere dager - en ferietur, en konferanse - vises. Gjelder bare hendelser som faktisk har en sluttdato; alt annet er uansett én oppføring.",
+        multiDayDisplayDesc: "Hvordan en hendelse som strekker seg over flere dager - en ferietur, en konferanse - vises. Gjelder både en engangshendelse med sluttdato og en flerdagsoppføring fra en innebygd kalender; alt annet er uansett én oppføring.",
         multiDayStartOnly: "Bare første dag",
         multiDayEndOnly: "Bare siste dag",
         multiDayStartEnd: "Første og siste dag",
@@ -6874,6 +7003,9 @@
         columnsCompact: "Kompakt (ingen mellomrom, sentrert)",
         columnsCompactDesc:
           "Fjerner mellomrommet mellom kolonnene, sentrerer raden og gjør vekt og opasitet lik for alle felt - nyttig når kolonnene danner én sammenhengende setning.",
+        minimalCard: "Minimal (én rad, smale kanter)",
+        minimalCardDesc:
+          "Reduserer kortets marg slik at én enkelt rad får plass i et kort som er én rutenettsrad høyt, der den vanlige margen alene tar mer enn halve høyden. Bare nyttig for et kort som viser én hendelse: med flere blir resten klippet eller må rulles.",
         monthSeparators: "Månedsskiller",
         monthSeparatorsDesc: "Tegner en linje overalt der påfølgende rader faller i ulike måneder, og deler en lang liste i månedsblokker. Rekkefølgen på radene selv endres ikke.",
         weekSeparators: "Ukeskiller",
@@ -7143,6 +7275,8 @@
       timelineSentenceSimplePast: "{name} var {when}",
       timelineExpand: "Detaljer",
       timelineCollapse: "Mindre",
+      foldShowMore: "Vis {count} mere",
+      foldShowLess: "Vis færre",
       timelineMore: "Mere",
       types: {
         birthday: "Fødselsdag",
@@ -7271,6 +7405,11 @@
           "Liste viser de klassiske rækker med ikon/navn/undertekst/badge/nedtælling. Timeline viser en kompakt vandret akse med den næste begivenhed fremhævet og resten som klikbare punkter - praktisk til en smal kolonne i Sektioner-visningen.",
         layoutStyleList: "Liste",
         layoutStyleTimeline: "Timeline",
+        collapseList: "Fold resten sammen",
+        collapseListDesc:
+          "Viser kun de første begivenheder og lægger resten bag en pil. Et kort med fast højde slutter så ved foldningen i stedet for at få en rullebjælke. Kun i listelayoutet - tidslinjen har sin egen »Detaljer«.",
+        collapseAfter: "Synlige begivenheder",
+        collapseAfterDesc: "Hvor mange der er på skærmen, før resten skal foldes ud.",
         timelineLineHeading: "Tidslinje",
         timelineLineWidth: "Tykkelse",
         timelineLineWidthDesc: "Tykkelse på den vandrette akselinje, f.eks. „4px”.",
@@ -7389,7 +7528,7 @@
         suffixShowHolidayTypeDesc:
           "Vis en helligdags egen typebetegnelse, f.eks. \u201cHoliday (Public)\u201d. Slå fra for kun at lade land-/regionssuffikset stå i denne celle.",
         multiDayDisplay: "Flerdagsbegivenheder",
-        multiDayDisplayDesc: "Hvordan en engangsbegivenhed, der strækker sig over flere dage - en ferierejse, en konference - vises. Vedrører kun begivenheder, der faktisk har en slutdato; alt andet er alligevel én post.",
+        multiDayDisplayDesc: "Hvordan en begivenhed, der strækker sig over flere dage - en ferierejse, en konference - vises. Gælder både en engangsbegivenhed med slutdato og en flerdagspost fra en indlejret kalender; alt andet er alligevel én post.",
         multiDayStartOnly: "Kun den første dag",
         multiDayEndOnly: "Kun den sidste dag",
         multiDayStartEnd: "Første og sidste dag",
@@ -7418,6 +7557,9 @@
         columnsCompact: "Kompakt (ingen mellemrum, centreret)",
         columnsCompactDesc:
           "Fjerner mellemrummet mellem kolonnerne, centrerer rækken og gør vægt og opacitet ens for alle felter - nyttigt når kolonnerne danner én sammenhængende sætning.",
+        minimalCard: "Minimal (én række, smalle kanter)",
+        minimalCardDesc:
+          "Reducerer kortets margen, så en enkelt række kan være i et kort, der er én gitterrække højt, hvor den almindelige margen alene tager mere end den halve højde. Kun relevant for et kort, der viser én begivenhed: med flere bliver resten skåret af eller skal rulles.",
         monthSeparators: "Månedsskillelinjer",
         monthSeparatorsDesc: "Tegner en linje alle steder, hvor rækker efter hinanden falder i forskellige måneder, og deler dermed en lang liste op i månedsblokke. Rækkefølgen af selve rækkerne ændres ikke.",
         weekSeparators: "Ugeskillelinjer",
@@ -7693,6 +7835,8 @@
       timelineSentenceSimplePast: "{name} — {when}",
       timelineExpand: "Ayrıntılar",
       timelineCollapse: "Daha az",
+      foldShowMore: "{count} tane daha göster",
+      foldShowLess: "Daha az göster",
       timelineMore: "Daha fazla",
       types: {
         birthday: "Doğum günü",
@@ -7821,6 +7965,11 @@
           "Liste, klasik simge/ad/alt başlık/rozet/geri sayım satırlarını gösterir. Timeline, bir sonraki etkinliğin vurgulandığı ve geri kalanının tıklanabilir noktalar olarak gösterildiği kompakt bir yatay eksen gösterir - Bölümler görünümünde dar bir sütun için kullanışlıdır.",
         layoutStyleList: "Liste",
         layoutStyleTimeline: "Timeline",
+        collapseList: "Gerisini katla",
+        collapseListDesc:
+          "Yalnızca ilk etkinlikleri gösterir, gerisini bir okun arkasına koyar. Sabit yükseklikli bir kart o zaman kaydırma çubuğu almak yerine katlama yerinde biter. Yalnızca liste düzeninde - zaman çizelgesinin kendi «Ayrıntılar» düğmesi var.",
+        collapseAfter: "Görünen etkinlikler",
+        collapseAfterDesc: "Gerisinin açılması gerekmeden önce ekranda kaç tane olduğu.",
         timelineLineHeading: "Zaman çizelgesi çizgisi",
         timelineLineWidth: "Kalınlık",
         timelineLineWidthDesc: "Yatay eksen çizgisinin kalınlığı, örn. \"4px\".",
@@ -7939,7 +8088,7 @@
         suffixShowHolidayTypeDesc:
           "Bir tatilin kendi tür etiketini göster, ör. \u201cHoliday (Public)\u201d. Bu hücrede yalnızca ülke/bölge son ekinin kalması için kapatın.",
         multiDayDisplay: "Çok günlü etkinlikler",
-        multiDayDisplayDesc: "Birden çok güne yayılan tek seferlik bir etkinliğin - tatil gezisi, konferans - nasıl gösterileceği. Yalnızca gerçekten bitiş tarihi olan etkinlikleri etkiler; diğer her şey zaten tek bir kayıttır.",
+        multiDayDisplayDesc: "Birden çok güne yayılan bir etkinliğin - tatil gezisi, konferans - nasıl gösterileceği. Bitiş tarihi olan tek seferlik bir etkinlik için de, gömülü bir takvimden gelen çok günlü bir kayıt için de geçerlidir; diğer her şey zaten tek bir kayıttır.",
         multiDayStartOnly: "Yalnızca ilk gün",
         multiDayEndOnly: "Yalnızca son gün",
         multiDayStartEnd: "İlk ve son gün",
@@ -7968,6 +8117,9 @@
         columnsCompact: "Kompakt (boşluksuz, ortalanmış)",
         columnsCompactDesc:
           "Sütunlar arasındaki boşluğu kaldırır, satırı ortalar ve tüm alanların kalınlık ve saydamlığını eşitler - sütunların tek bir cümle oluşturduğu durumlarda kullanışlıdır.",
+        minimalCard: "Minimal (tek satır, dar kenarlar)",
+        minimalCardDesc:
+          "Tek bir satırın, yüksekliği bir ızgara satırı olan bir karta sığması için kartın kendi kenar boşluğunu daraltır; orada normal kenar boşluğu tek başına yüksekliğin yarısından fazlasını kaplar. Yalnızca tek bir etkinlik gösteren kart için anlamlıdır: daha fazlasında gerisi kesilir veya kaydırılması gerekir.",
         monthSeparators: "Ay ayırıcıları",
         monthSeparatorsDesc: "Ardışık satırların farklı aylara düştüğü her yere bir çizgi çizerek uzun bir listeyi aylık bloklara böler. Satırların kendi sırası değişmez.",
         weekSeparators: "Hafta ayırıcıları",
@@ -8211,6 +8363,557 @@
         groupDisplayDesc: "",
       },
     },
+    sk: {
+      defaultTitle: "Nadchádzajúce udalosti",
+      today: "Dnes",
+      inDay: "Zajtra",
+      inDays: (n) => `o ${n} ${n < 5 ? "dni" : "dní"}`,
+      dayAgo: "Včera",
+      daysAgo: (n) => `pred ${n} dňami`,
+      multiDayStart: "začiatok",
+      multiDayEnd: "koniec",
+      multiDayDay: "deň {day}",
+      noEvents: "Žiadne nadchádzajúce udalosti",
+      separatorWeekLabel: "Týždeň {week}",
+      todoCompleteConfirm: "Označiť „{item}“ ako dokončené?",
+      todoCompleteConfirmMultiple: "Označiť všetky úlohy tejto udalosti ({count}) ako dokončené?",
+      todoCompleteFailed: "Túto úlohu sa nepodarilo dokončiť.",
+      possessive: (name) => name,
+      ordinalParts: (n) => ({ num: `${n}.`, sup: "" }),
+      timelineSentence: "{possessive}: {ordinal}{sup} {type} — {when}",
+      timelineSentenceSimple: "{name} — {when}",
+      timelineSentencePast: "{possessive}: {ordinal}{sup} {type} — {when}",
+      timelineSentenceSimplePast: "{name} — {when}",
+      timelineExpand: "Podrobnosti",
+      timelineCollapse: "Menej",
+      foldShowMore: "Zobraziť ďalších {count}",
+      foldShowLess: "Zobraziť menej",
+      timelineMore: "Viac",
+      types: {
+        birthday: "Narodeniny",
+        anniversary: "Výročie",
+        name_day: "Meniny",
+        wedding_anniversary: "Výročie svadby",
+        memorial: "Spomienka",
+        pet_birthday: "Narodeniny maznáčika",
+        work_anniversary: "Pracovné výročie",
+        custom: "Vlastná udalosť",
+        one_time: "Jednorazová udalosť",
+        holiday: "Sviatok",
+        calendar: "Udalosť z kalendára",
+      },
+      typesPlural: {
+        birthday: "Narodeniny",
+        anniversary: "Výročia",
+        name_day: "Meniny",
+        wedding_anniversary: "Výročia svadby",
+        memorial: "Spomienky",
+        pet_birthday: "Narodeniny maznáčikov",
+        work_anniversary: "Pracovné výročia",
+        custom: "Vlastné udalosti",
+        one_time: "Jednorazové udalosti",
+        holiday: "Sviatky",
+        calendar: "Udalosti z kalendára",
+      },
+      categories: {
+        public: "Štátny/Verejný sviatok",
+        bank: "Bankový sviatok",
+        government: "Vládny sviatok",
+        school: "Školské prázdniny",
+        optional: "Nepovinný sviatok",
+        unofficial: "Neoficiálny sviatok",
+        half_day: "Pol dňa voľna",
+        armed_forces: "Ozbrojené sily",
+        workday: "Pracovný deň",
+        catholic: "Katolícky",
+        christian: "Kresťanský",
+        orthodox: "Ortodoxný",
+        hebrew: "Židovský",
+        islamic: "Islamský",
+        hindu: "Hinduistický",
+        de_facto: "De facto",
+        protestant: "Protestantský",
+        sabian: "Sabiánsky",
+        yazidi: "Jazídsky",
+        albanian: "Albánsky",
+        armenian: "Arménsky",
+        bosnian: "Bosniacky",
+        roma: "Rómsky",
+        serbian: "Srbský",
+        turkish: "Turecký",
+        vlach: "Valašský",
+      },
+      // Slovak adjectives inflect for plural, so the editor's Holiday
+      // categories grid - which filters a whole category at a time - needs
+      // its own forms rather than the singular labels above.
+      categoriesPlural: {
+        public: "Štátne/Verejné",
+        bank: "Bankové",
+        government: "Vládne",
+        school: "Školské prázdniny",
+        optional: "Nepovinné",
+        unofficial: "Neoficiálne",
+        half_day: "Poldne voľna",
+        armed_forces: "Ozbrojené sily",
+        workday: "Pracovné dni",
+        catholic: "Katolícke",
+        christian: "Kresťanské",
+        orthodox: "Ortodoxné",
+        hebrew: "Židovské",
+        islamic: "Islamské",
+        hindu: "Hinduistické",
+        de_facto: "De facto",
+        protestant: "Protestantské",
+        sabian: "Sabiánske",
+        yazidi: "Jazídske",
+        albanian: "Albánske",
+        armenian: "Arménske",
+        bosnian: "Bosniacke",
+        roma: "Rómske",
+        serbian: "Srbské",
+        turkish: "Turecké",
+        vlach: "Valašské",
+      },
+      editor: {
+        title: "Názov karty",
+        titleDesc: "Vlastný text názvu karty (prázdne = predvolený)",
+        titlePlaceholder: "napr. Nadchádzajúce udalosti",
+        count: "Počet udalostí",
+        countDesc: "Celkový počet udalostí zobrazených na karte",
+        todayOnly: "Iba dnes",
+        todayOnlyDesc: "Ignorovať všetky ostatné filtre nižšie a zobraziť iba udalosti, ktoré sú dnes",
+        nextEventDayOnly: "Iba najbližší deň s udalosťou",
+        nextEventDayOnlyDesc:
+          "Zobraziť iba udalosti jediného najbližšieho dňa – dnešné, ak nejaké sú, inak najbližší deň s udalosťami (môže ich byť viac)",
+        daysAhead: "Dní dopredu (0 = bez obmedzenia)",
+        daysAheadDesc: "Zobraziť iba udalosti v rámci tohto počtu dní (0 = bez obmedzenia)",
+        daysPast: "Dní do minulosti (0 = iba dnes)",
+        daysPastDesc: "Koľko dní dozadu sa udalosť ešte počíta ako nedávna (0 = iba dnes)",
+        soonDays: "Prah pre „čoskoro“ (dni)",
+        soonDaysDesc: "Udalosti v rámci tohto počtu dní sa počítajú ako „čoskoro“",
+        types: "Typy udalostí",
+        typesDesc: "Zobraziť iba začiarknuté typy udalostí",
+        categories: "Kategórie sviatkov",
+        categoriesDesc: "Zobraziť iba sviatky v začiarknutých kategóriách (ostatných typov udalostí sa to netýka)",
+        holidayDates: "Dátum sviatku",
+        holidayDatesDesc:
+          "Sviatok, ktorý pripadne na víkend, sa v praxi často slávi v blízky pracovný deň (pozri krok „Importovať sviatky“ v integrácii) – vyberte, ktorý z importovaných dátumov sa tu má zobraziť.",
+        holidayDateActual: "Skutočný",
+        holidayDateObserved: "Náhradný",
+        holidayMergeObserved: "Uprednostniť náhradný dátum",
+        holidayMergeRegions: "Zlúčiť sviatky spoločné pre viac krajín",
+        holidayMergeRegionsDesc: "Jeden záznam na sviatok namiesto jedného na krajinu, s výpisom všetkých regiónov, ktoré ho slávia. Zoskupuje sa podľa dátumu a podľa názvu, pod ktorým sa sviatok skutočne zobrazuje – takže dva rôzne sviatky v ten istý deň zostanú oddelené a krajiny s odlišným znením sa zlúčia až vtedy, keď im dáte rovnaký názov (pozri Názov a preklady v nastaveniach samotného sviatku).",
+        regionFormat: "Formát regiónu",
+        regionFormatDesc: "Ako sa píše krajina a región sviatku všade, kde sa zobrazujú.",
+        regionFormatShort: "US (CA)",
+        regionFormatLong: "US (California)",
+        holidayRegions: "Krajiny a regióny",
+        holidayRegionsDesc:
+          "Ktoré z importovaných krajín a regiónov karta zobrazuje. Ak sú vybraté všetky, neplatí žiadny filter, takže neskôr importovaná krajina sa zobrazí sama od seba.",
+        holidayMergeObservedDesc:
+          "Keď má sviatok skutočný aj náhradný záznam, zobraziť iba náhradný (bez označenia „(náhradný)“) a skutočný duplikát skryť – hodí sa na prehľadný zoznam dní, ktoré sú naozaj voľné.",
+        showAll: "Zobraziť všetko",
+        hideAll: "Skryť všetko",
+        layoutStyleLabel: "Štýl rozloženia",
+        layoutStyleDesc:
+          "Zoznam zobrazuje klasické riadky s ikonou, menom, typom, odznakom a odpočtom. Časová os zobrazuje kompaktnú vodorovnú os so zvýraznenou najbližšou udalosťou a ostatnými ako klikateľnými bodmi – hodí sa do úzkeho stĺpca v zobrazení Sekcie.",
+        layoutStyleList: "Zoznam",
+        layoutStyleTimeline: "Časová os",
+        collapseList: "Zbaliť zvyšok",
+        collapseListDesc:
+          "Zobrazí len prvé udalosti a zvyšok skryje za šípku. Karta s pevnou výškou potom končí pri zbalení namiesto toho, aby dostala posuvník. Len v rozložení zoznamu - časová os má vlastné „Podrobnosti“.",
+        collapseAfter: "Viditeľné udalosti",
+        collapseAfterDesc: "Koľko ich je na obrazovke, kým treba zvyšok rozbaliť.",
+        timelineLineHeading: "Čiara časovej osi",
+        timelineLineWidth: "Hrúbka",
+        timelineLineWidthDesc: "Hrúbka vodorovnej čiary osi, napr. „4px“.",
+        timelineLineColor: "Farba",
+        timelineLineColorDesc: "Farba vodorovnej čiary osi.",
+        timelineDividerHeading: "Deliaca čiara",
+        timelineDividerWidth: "Hrúbka",
+        timelineDividerWidthDesc:
+          "Hrúbka zvislej čiary, ktorá označuje hranicu medzi minulosťou a budúcnosťou, napr. „1px“.",
+        timelineDividerColor: "Farba",
+        timelineDividerColorDesc: "Farba zvislej čiary medzi minulosťou a budúcnosťou.",
+        lineStyleLabel: "Štýl",
+        lineStyleSolid: "Plná",
+        lineStyleDashed: "Čiarkovaná",
+        lineStyleDotted: "Bodkovaná",
+        timelineOptionsHeading: "Možnosti",
+        timelineShowFullName: "Zobraziť celé meno",
+        timelineShowFullNameDesc:
+          "Zobraziť celé meno udalosti (krstné meno aj priezvisko) namiesto samotného krstného mena – v hlavičke, bubline aj rozbaliteľnom zozname.",
+        showHolidaySuffix: "Zobraziť príponu sviatku",
+        showHolidaySuffixDesc:
+          "Za názov sviatku pripojiť v zátvorke jeho krajinu (a prípadne územnú jednotku), napr. „Pioneer Day (US-UT)“.",
+        timelineShowDate: "Zobraziť dátum",
+        timelineShowDateDesc:
+          "Na koniec pripojiť v zátvorke krátky dátum, napr. „...o 3 dni (6. aug)“. V deň samotnej udalosti sa skryje, keďže veta tesne predtým už končí slovom „dnes“.",
+        timelineShowTime: "Zobraziť čas",
+        timelineShowTimeDesc:
+          "Do tej istej zátvorky pripojiť časový rozsah udalosti z externého kalendára, napr. „...o 3 dni (15:00 – 16:00)“. Zobrazuje sa iba pri časovo ohraničenej (nie celodennej) udalosti z externého kalendára. Formát času sa riadi jazykom Home Assistanta.",
+        timelineShowLocation: "Zobraziť miesto",
+        timelineShowLocationDesc:
+          "Do tej istej zátvorky pripojiť miesto udalosti z externého kalendára. Zobrazuje sa iba pri udalosti z externého kalendára, ktorá ho má nastavené.",
+        timelineShowDescription: "Zobraziť popis",
+        timelineShowDescriptionDesc:
+          "Do tej istej zátvorky pripojiť popis udalosti z externého kalendára. Zobrazuje sa iba pri udalosti z externého kalendára, ktorá ho má nastavený.",
+        timelineHeaderMaxEvents: "Max. udalostí na deň",
+        timelineHeaderMaxEventsDesc:
+          "Obmedzuje, koľko riadkov hlavičky prispeje jeden deň so zhodnými udalosťami, napr. 3 narodeniny v ten istý deň. Ďalšie udalosti toho dňa aj tak dostanú svoj bod na osi, len bez riadku v hlavičke. Prázdne = bez obmedzenia.",
+        timelineHeaderMinEvents: "Vždy zobraziť N nadchádzajúcich",
+        timelineHeaderMinEventsDesc:
+          "Vždy zobrazí aspoň toľkoto riadkov hlavičky – v prípade potreby pritiahne ďalšie nadchádzajúce dni (a keď tie dôjdu, ďalšie nedávno minulé) za ten úplne najbližší, pričom každý je stále obmedzený nastavením „max. udalostí na deň“ vyššie. Prázdne (alebo 0) = iba udalosti najbližšieho dňa.",
+        moreAction: "Tlačidlo „Viac“",
+        moreActionDesc:
+          "Čo robí tlačidlo „Viac“ vpravo dole na časovej osi. Zvyčajne akcia Navigovať smerujúca na nástenku, ktorá zobrazuje tie isté udalosti v plnom rozložení Zoznam. Ponechajte na „Nič“, ak chcete tlačidlo skryť.",
+        groupTimeline: "Časová os",
+        groupTimelineDesc: "Používa sa len vtedy, keď je štýl rozloženia nastavený na Časovú os.",
+        timelineHeaderLabel: "Hlavička",
+        timelineHeaderFontDesc:
+          "Písmo popisného riadku nad osou, napr. „Kevin: 27. narodeniny — dnes“.",
+        timelineHeaderColorDesc: "Farba textu popisného riadku nad osou.",
+        timelineTooltipLabel: "Bublina",
+        timelineTooltipFontDesc: "Písmo textu, ktorý sa zobrazí po kliknutí na bod na osi.",
+        timelineTooltipColorDesc: "Farba textu, ktorý sa zobrazí po kliknutí na bod na osi.",
+        timelineListLabel: "Zoznam (Podrobnosti)",
+        timelineListFontDesc: "Písmo rozbaliteľného chronologického zoznamu pod osou.",
+        timelineListColorDesc: "Farba textu rozbaliteľného chronologického zoznamu pod osou.",
+        timelineButtonLabel: "Tlačidlo Podrobnosti / Viac",
+        timelineButtonFontDesc: "Písmo tlačidiel Podrobnosti a Viac v pätičke.",
+        timelineButtonColorDesc: "Farba textu tlačidiel Podrobnosti a Viac v pätičke.",
+        eventTypesHeading: "Typy udalostí",
+        eventTypeColorDesc: "Farba ikony tohto typu udalosti a jeho bodu na časovej osi.",
+        visibilityHeading: "Zobraziť / Skryť",
+        hideCardTitle: "Skryť",
+        hideCardTitleDesc: "Skryť vlastný názov karty, aj keď je nastavený vyššie",
+        noEventsText: "Text bez udalostí",
+        noEventsTextDesc:
+          "Čo karta napíše, keď nemá čo vypísať (prázdne = predvolený text).",
+        noEventsLabel: "Žiadne udalosti",
+        noEventsColorDesc: "Farba textu riadku, ktorý karta zobrazí, keď nemá čo vypísať.",
+        noEventsFontDesc: "Písmo riadku, ktorý karta zobrazí, keď nemá čo vypísať.",
+        tapAction: "Akcia pri kliknutí",
+        tapActionDesc: "Čo sa stane po ťuknutí alebo kliknutí na riadok",
+        holdAction: "Akcia pri podržaní",
+        holdActionDesc: "Čo sa stane po stlačení a podržaní riadku",
+        cardLanguage: "Jazyk",
+        missingLanguage: "Chýba váš jazyk?",
+        dateFormat: "Formát dátumu",
+        dateFormatDesc:
+          "Ako stĺpec Dátum píše dátum udalosti – každá možnosť je zobrazená ako samotný dátum, takže vidíte, čo vyberáte. Platí aj pre zástupný text {date} vo vlastnom textovom stĺpci a pre „Zobraziť dátum“ na časovej osi. Celý dátum za ťuknutým odpočtom zostáva vždy vypísaný, nech je tu vybraté čokoľvek.",
+        dateShowToday: "Písať „Dnes“",
+        dateShowTodayDesc:
+          "V deň samotnej udalosti napísať „Dnes“ namiesto dátumu toho dňa. Vypnite pre kartu, ktorá sa má čítať ako obyčajný zoznam dátumov.",
+        cardLanguageDesc:
+          "Pripne túto kartu na jeden jazyk pre všetkých, ktorí ju vidia, namiesto toho, aby sa riadila jazykom profilu každého diváka. Týka sa textov samotnej karty aj formátovania dátumov – nie názvov udalostí, ktoré pochádzajú z integrácie. Tento editor sa tak či tak naďalej riadi vaším vlastným jazykom.",
+        cardLanguageAuto: "Automaticky",
+        visibilityCountrySuffixDesc: "Za názov/typ sviatku pripojiť krajinu (a prípadne územnú jednotku), napr. „Deň nezávislosti · US (UT)“",
+        columnsHeading: "Stĺpce riadku",
+        columnsDesc:
+          "Pridajte, odoberte a presúvajte to, čo každý riadok zobrazuje, alebo začnite od niektorej z týchto predlôh.",
+        columnsPresetDefault: "Predvolené",
+        columnsPresetAgenda: "Agenda",
+        columnsPresetMinimal: "Minimálne",
+        columnTypeIcon: "Ikona",
+        columnTypeInfo: "Meno + typ",
+        columnTypeName: "Meno",
+        columnTypeLastName: "Priezvisko",
+        columnTypeFullName: "Celé meno",
+        columnTypeFullNameType: "Celé meno + typ",
+        columnTypeType: "Typ",
+        columnTypeText: "Vlastný text",
+        columnTypeDate: "Dátum",
+        columnTypeDateBlock: "Blok s dátumom",
+        columnTypeAccentBar: "Farebný prúžok",
+        columnTypeTime: "Čas",
+        columnTypeLocation: "Miesto",
+        columnTypeDescription: "Popis",
+        columnTypeTimeDesc:
+          "Pripojiť časový rozsah udalosti z externého kalendára, napr. „...15:00 – 17:00“. Zobrazuje sa iba pri časovo ohraničenej (nie celodennej) udalosti z externého kalendára.",
+        columnTypeLocationDesc:
+          "Pripojiť miesto udalosti z externého kalendára. Zobrazuje sa iba pri udalosti z externého kalendára, ktorá ho má nastavené.",
+        columnTypeDescriptionDesc:
+          "Pripojiť popis udalosti z externého kalendára. Zobrazuje sa iba pri udalosti z externého kalendára, ktorá ho má nastavený.",
+        suffixLabel: "Prípona",
+        suffixGroupHolidayTitle: "Iba sviatky",
+        suffixGroupExternalTitle: "Iba externé kalendáre",
+        suffixShowHolidayType: "Označenie typu",
+        suffixShowHolidayTypeDesc:
+          "Zobraziť vlastné označenie typu sviatku, napr. „Sviatok (štátny)“. Vypnite, ak má v tejto bunke zostať iba prípona s krajinou/regiónom.",
+        multiDayDisplay: "Viacdňové udalosti",
+        multiDayDisplayDesc: "Ako sa vypisuje udalosť trvajúca viac dní – dovolenka, konferencia. Platí pre jednorazovú udalosť s dátumom ukončenia aj pre viacdňovú položku z vloženého kalendára; všetko ostatné je tak či tak jeden záznam.",
+        multiDayStartOnly: "Iba prvý deň",
+        multiDayEndOnly: "Iba posledný deň",
+        multiDayStartEnd: "Prvý a posledný deň",
+        multiDayEveryDay: "Každý deň",
+        suffixShowCalendarName: "Názov kalendára",
+        suffixShowCalendarNameDesc:
+          "Zobraziť tu vlastný názov externého kalendára (napr. „Osobný“). Vypnite, keď Čas/Miesto/Popis nižšie už povedia dosť samy.",
+        externalCalendarsHeading: "Externé kalendáre",
+        externalCalendarsDesc:
+          "Vložte jeden alebo viac svojich existujúcich kalendárov Home Assistanta popri vlastných udalostiach Ročenky – každý pristane na svojom skutočnom dni (a pri časovo ohraničených udalostiach sa v rámci dňa zoradí podľa času) namiesto akéhokoľvek počítania „najbližšieho výskytu“. Ak chcete pre tieto udalosti zobraziť aj tieto polia, pridajte vyššie stĺpec Čas/Miesto/Popis.",
+        externalCalendarsLabel: "Kalendáre",
+        externalCalendarsLabelDesc: "Ktoré entity calendar.* sa majú vložiť.",
+        todoHeading: "Úlohy",
+        todoDesc:
+          "Označiť každú udalosť, ktorá má ešte otvorenú úlohu – zvyčajne v zozname, do ktorého píše priložený blueprint na pripomienky. Položky sa k udalosti priraďujú najprv podľa dátumu splatnosti, potom podľa toho, čo o nej hovorí text položky (celé meno, meno, typ, poradové číslo), takže položka, ktorá udalosť spomína, vyhrá nad tou, ktorá s ňou zdieľa iba dátum; položka, ktorá rovnako dobre sedí na dve udalosti, zostane nepriradená. Zodpovedajúce udalosti dostanú malý odznak na ikone, v oboch rozloženiach – jeho ikonu a farbu nájdete v časti Zvýraznenie.",
+        todoListsLabel: "Zoznamy úloh",
+        todoListsLabelDesc: "Ktoré entity todo.* sa majú prehľadávať. Prázdne = funkcia vypnutá.",
+        todoCompleteFromCard: "Dokončiť z karty",
+        todoCompleteFromCardDesc:
+          "Kliknutie na ikonu označenej udalosti si vyžiada potvrdenie a potom označí všetky jej otvorené úlohy ako dokončené – aj na časovej osi vrátane udalostí odhalených rozbalením zoznamu. Vypnite, ak má odznak zostať iba značkou na čítanie.",
+        columnAdd: "Pridať",
+        columnMoveUp: "Posunúť hore",
+        columnMoveDown: "Posunúť dole",
+        columnRemove: "Odstrániť",
+        columnTemplatePlaceholder: "napr. {name} má dnes {occurrence}",
+        columnsCompact: "Kompaktne (bez medzier, na stred)",
+        columnsCompactDesc: "Odstrániť medzery medzi stĺpcami, zarovnať riadok na stred a zjednotiť hrúbku aj krytie všetkých polí – užitočné, keď stĺpce tvoria jednu súvislú vetu.",
+        minimalCard: "Minimálna (jeden riadok, úzke okraje)",
+        minimalCardDesc:
+          "Zmenší okraje karty, aby sa jediný riadok zmestil do karty vysokej jeden riadok mriežky, kde bežné okraje samy zaberú viac než polovicu výšky. Má zmysel len pri karte s jednou udalosťou: pri viacerých sa zvyšok oreže alebo ho treba posúvať.",
+        monthSeparators: "Oddeľovače mesiacov",
+        monthSeparatorsDesc: "Nakresliť čiaru všade tam, kde po sebe idúce riadky patria do rôznych mesiacov, a rozdeliť tak dlhý zoznam na mesačné bloky. Poradie samotných riadkov sa nemení.",
+        weekSeparators: "Oddeľovače týždňov",
+        weekSeparatorsDesc: "To isté o stupeň jemnejšie: čiara všade tam, kde po sebe idúce riadky patria do rôznych týždňov, podľa nastavenia prvého dňa týždňa v Home Assistantovi. Ak sú zapnuté aj oddeľovače mesiacov, riadok, ktorý začína oboje, dostane jednu čiaru.",
+        daySeparators: "Oddeľovače dní",
+        daySeparatorsDesc: "Čiara všade tam, kde po sebe idúce riadky pripadajú na rôzne dni, čím sa zoznam rozdelí na jeden blok na deň. Najjemnejší z tejto trojice – ak sú zapnuté aj oddeľovače týždňov alebo mesiacov, riadok, ktorý začína dva z nich, dostane iba tú hrubšiu čiaru.",
+        separatorWidth: "Hrúbka",
+        separatorWidthDesc: "Hrúbka čiary, napr. „1px“. Ak zostane prázdne, je to 1px.",
+        separatorColor: "Farba",
+        separatorColorDesc: "Farba čiary. Ak zostane prázdne, riadi sa farbou textu témy – tou istou, akú používa názov karty.",
+        separatorShowDayLabel: "Zobraziť deň v týždni",
+        separatorShowDayLabelDesc: "Napísať deň v týždni priamo na čiaru, vycentrovane na elipse vo farbe pozadia karty, takže sa čiara okolo textu preruší namiesto toho, aby ním prechádzala.",
+        separatorShowWeekLabel: "Zobraziť kalendárny týždeň",
+        separatorShowWeekLabelDesc: "Napísať kalendárny týždeň priamo na čiaru, vycentrovane na elipse vo farbe pozadia karty. Číslo sa riadi nastavením prvého dňa týždňa v Home Assistantovi – tým istým, ktoré rozhoduje, kam čiary padnú.",
+        separatorShowMonthLabel: "Zobraziť mesiac",
+        separatorShowMonthLabelDesc: "Napísať mesiac priamo na čiaru, vycentrovane na elipse vo farbe pozadia karty, takže sa čiara okolo textu preruší namiesto toho, aby ním prechádzala.",
+        separatorLabelColor: "Farba popisu",
+        separatorLabelColorDesc: "Farba textu popisu. Ak zostane prázdne, riadi sa farbou textu témy – tou istou, akú používa názov karty.",
+        separatorLabelBackground: "Pozadie popisu",
+        separatorLabelBackgroundDesc: "Farba plochy za popisom – práve tá zakrýva čiaru pod ním. Ak zostane prázdne, je to vlastná farba pozadia karty, takže popis pôsobí ako medzera v čiare.",
+        separatorLabelFontDesc: "Veľkosť textu popisu, napr. „0.8em“ alebo „11px“. Ak zostane prázdne, je to 0.75em vzhľadom na veľkosť písma karty, plus štyri prepínače štýlu a rozostup písmen nižšie.",
+        accentBarWidthDesc: "Hrúbka prúžku, napr. „3px“. Ak zostane prázdne, sú to 3px. Aby sa vôbec zobrazil, pridajte vyššie stĺpec Farebný prúžok.",
+        accentBarColorDesc: "Predvolená farba prúžku. Typ udalosti aj stav riadku ju môžu prebiť.",
+        whenClickShowsDate: "Ťuknutím na odpočet zobraziť dátum",
+        whenClickShowsDateDesc:
+          "Ťuknutie na odpočet v riadku ho vymení za skutočný dátum udalosti (napr. „po 3. aug 2026“), ďalšie ťuknutie ho vráti späť – vlastná akcia riadku pri ťuknutí/podržaní funguje všade inde v riadku ďalej.",
+        timelineWhenClickShowsDateDesc:
+          "Ťuknutie na odpočet na konci vety („...o 2 dni“) vymení iba túto časť za skutočný dátum udalosti (napr. „po 3. aug 2026“), ďalšie ťuknutie ju vráti späť – rovnako v hlavičke, v bubline bodu aj v rozbalenom zozname.",
+        visibilityVipOnly: "Iba VIP",
+        visibilityVipOnlyDesc: "Zobraziť iba udalosti označené ako „VIP ročenka“",
+        visibilityImportantOnly: "Iba dôležité",
+        visibilityImportantOnlyDesc:
+          "Zobraziť iba udalosti automaticky označené ako dôležité (nastavuje sa v integrácii v časti Nastavenia výročí)",
+        visibilityTodoOnly: "Iba s otvorenými úlohami",
+        visibilityTodoOnlyDesc:
+          "Zobraziť iba udalosti, ktoré majú ešte otvorenú úlohu (pozri Úlohy v Nastavenia → Udalosti). Zužuje dva filtre vyššie, nespája ich: so zapnutým „Iba VIP“ zobrazí tie VIP udalosti, ktoré ešte niečo čaká.",
+        badgesHeading: "Odznaky",
+        badgeTargetIcon: "Ikona udalosti",
+        badgeTargetIconDesc: "Vykresliť tento odznak v rohu ikony udalosti v riadku.",
+        badgeTargetAccentBar: "Farebný prúžok",
+        badgeTargetAccentBarDesc: "Vykresliť tento odznak v stĺpci vľavo od farebného prúžku, vycentrovane k riadku. Vyžaduje stĺpec Farebný prúžok.",
+        badgeColor: "Farba odznaku",
+        badgeColorDesc: "Farba symbolu vnútri odznaku.",
+        badgeBgColor: "Farba pozadia odznaku",
+        badgeBgColorDesc: "Farba kruhu za symbolom.",
+        vipBadgeIcon: "Ikona odznaku",
+        vipBadgeIconDesc: "Ikona MDI použitá ako odznak na udalostiach označených ako VIP.",
+        vipBadgeIconPlaceholder: "mdi:star",
+        importantBadgeIcon: "Ikona odznaku",
+        importantBadgeIconDesc: "Ikona MDI použitá ako odznak na udalostiach automaticky označených ako dôležité.",
+        importantBadgeIconPlaceholder: "mdi:exclamation-thick",
+        todoBadgeIcon: "Ikona odznaku",
+        todoBadgeIconDesc: "Ikona MDI použitá ako odznak na udalostiach s ešte otvorenou úlohou (pozri Úlohy v časti Udalosti).",
+        todoBadgeColorTimelineDesc: "Farba tohto odznaku v rozložení Časová os – predvolene červená z témy",
+        highlightHeading: "Zvýraznenie",
+        highlightPast: "Minulé udalosti",
+        highlightBgColor: "Farba pozadia",
+        highlightBgColorDesc: "Farba podfarbenia pre toto zvýraznenie",
+        highlightVip: "VIP udalosti",
+        highlightVipDesc: "Zobraziť odznak na udalostiach označených ako VIP.",
+        highlightImportant: "Dôležité udalosti",
+        highlightImportantDesc: "Zobraziť odznak na udalostiach automaticky označených ako dôležité.",
+        highlightTodo: "Úlohy",
+        highlightTodoDesc: "Zobraziť odznak na udalostiach s ešte otvorenou úlohou.",
+        vipBadgeColorTimelineDesc: "Farba tohto odznaku v rozložení Časová os – predvolene červená z témy",
+        importantBadgeColorTimelineDesc:
+          "Farba tohto odznaku v rozložení Časová os – predvolene jantárová z témy",
+        colors: "Farby",
+        cardBackgroundTabTitle: "Pozadie karty",
+        cardBackgroundEnable: "Zobraziť pozadie",
+        cardBackgroundEnableDesc: "Zobraziť vlastnú farbu a/alebo obrázok za celou kartou",
+        cardBackgroundColor: "Farba",
+        cardBackgroundColorDesc: "Farba pozadia karty",
+        cardBackgroundImage: "Obrázok",
+        cardBackgroundImageDesc:
+          "Nahrajte obrázok alebo vložte URL či lokálnu cestu k médiu (napr. z prehliadača médií Home Assistanta), ktoré sa má použiť ako pozadie karty. Podporované formáty: JPEG, PNG, GIF, WebP. Kvôli rýchlemu načítaniu nechajte súbor primerane malý (nanajvýš pár MB).",
+        cardBackgroundImagePlaceholder: "napr. /local/moj-obrazok.jpg",
+        cardBackgroundUpload: "Nahrať obrázok",
+        cardBackgroundClear: "Odstrániť obrázok",
+        cardBackgroundSize: "Správanie obrázka",
+        cardBackgroundSizeDesc:
+          "Vyplniť (cover): obrázok sa zväčší tak, aby celkom vyplnil kartu, v prípade potreby sa oreže. Zmestiť (contain): obrázok sa zmenší tak, aby sa zmestil do karty bez orezania, môže zostať prázdne miesto. Skutočná veľkosť: obrázok sa zobrazí v pôvodnej veľkosti, na stred. Opakovať (dlaždice): obrázok sa v pôvodnej veľkosti opakuje po celej karte.",
+        cardBackgroundSizeCover: "Vyplniť (cover)",
+        cardBackgroundSizeContain: "Zmestiť (contain)",
+        cardBackgroundSizeAuto: "Skutočná veľkosť",
+        cardBackgroundSizeRepeat: "Opakovať (dlaždice)",
+        cardBackgroundOpacity: "Krytie",
+        cardBackgroundOpacityDesc: "Krytie farby/obrázka pozadia v percentách",
+        statusHeading: "Stav udalosti",
+        statusTimelineIconColorDesc: "Bod a značky tohto stavu na časovej osi.",
+        statusEntryTextColor: "Farba textu záznamu",
+        statusEntryTextColorDesc: "Text tohto stavu na časovej osi. Prázdne prevezme vlastnú farbu tohto stavu.",
+        typeRowColor: "Farba celého riadku",
+        typeRowColorDesc: "Farba textu riadku, keď je zapnutý Celý riadok. Prázdne prevezme vlastnú farbu tohto typu.",
+        typeEntryColor: "Farba textu záznamu",
+        typeEntryColorDesc: "Farba textu udalosti na časovej osi, keď je zapnutý Text záznamu. Prázdne prevezme vlastnú farbu tohto typu.",
+        typeBarColor: "Farba farebného prúžku",
+        typeBarColorDesc: "Farba farebného prúžku, keď je zapnutý Farebný prúžok. Prázdne prevezme vlastnú farbu tohto typu.",
+        typeIconColor: "Farba ikony",
+        typeIconColorDesc: "Farba ikony – v zozname ikony riadku, na časovej osi bodu. Prázdne prevezme vlastnú farbu tohto typu.",
+        typeAnimationDesc: "Animácia ikon tohto typu udalosti, ktorá prebíja vlastné nastavenie bloku Ikona v časti Vzhľad. Ponechané na Žiadna sa riadi tým predvoleným. Stav ju môže prebiť znova.",
+        rowTargetTimeline: "Text záznamu",
+        rowTargetTimelineDesc: "Zafarbiť touto farbou aj text udalosti v zozname pod osou, nielen jej bod.",
+        fontLetterSpacingDesc: "Rozostup medzi písmenami, napr. 0.05em alebo 1px. Prázdne ponechá vlastný rozostup písma.",
+        lineStyleDesc: "Či sa čiara kreslí ako plná, čiarkovaná alebo bodkovaná.",
+        designLineBlockDesc: "Hrúbka čiary, štýl ťahu a farba.",
+        statusOverrideHint: "Vypnuté platí farba typu udalosti alebo predvolené nastavenie z Vzhľadu.",
+        designIconBlockDesc: "Predvolená farba a animácia ikon karty. Každý typ udalosti a každý stav sa riadi týmto, pokiaľ to sám neprebije.",
+        designBarBlockDesc: "Predvolená farba prúžku a jeho hrúbka.",
+        designElementDesc: "Všetko, čo určuje vzhľad tejto časti karty: jej farba, písmo a prepínače nižšie.",
+        designGroupDesc: "Riadky, z ktorých je tento stĺpec zložený. Vzhľad každého z nich sa nastavuje samostatne nižšie.",
+        statusTextColor: "Farba celého textu",
+        statusTextColorDesc: "Text riadku, okrem jeho ikony a farebného prúžku. Prázdne prevezme vlastnú farbu tohto stavu.",
+        statusIconAnimation: "Animácia ikony",
+        statusIconAnimationDesc: "Animácia ikony. Vypnuté platí predvolené nastavenie z Vzhľadu.",
+        designIconColorDesc: "Predvolená farba ikony riadku. Každý stav sa ňou riadi, pokiaľ ju sám neprebije.",
+        statusPastDesc: "Udalosti, ktoré už boli a pominuli.",
+        statusIconColor: "Farba ikony",
+        statusIconColorDesc: "Ikona riadku.",
+        statusBarColor: "Farba farebného prúžku",
+        statusBarColorDesc: "Farebný prúžok riadku. Prázdne sa riadi farbou ikony.",
+        colorToday: "Dnes",
+        colorSoon: "Čoskoro",
+        colorTodayDesc: "Udalosti, ktoré sú dnes.",
+        colorSoonDesc: "Udalosti v rámci prahu „čoskoro“.",
+        animationLabel: "Animácia",
+        animationDesc: "Pridať tejto ikone opakujúcu sa animáciu",
+        animationNone: "Žiadna",
+        animationPulse: "Pulzovanie",
+        animationBounce: "Poskakovanie",
+        animationShake: "Trasenie",
+        animationSpin: "Otáčanie",
+        animationFlash: "Blikanie",
+        rowColorsLabel: "Vzhľad riadkov podľa typu udalosti",
+        rowColorsDesc: "Nech si každý typ udalosti nesie vlastný vzhľad – svoju farbu a to, ktoré časti riadku alebo záznamu na časovej osi zafarbí – namiesto predvoleného nastavenia z Vzhľadu. Stav riadku ho stále môže prebiť.",
+        calendarColorsHeading: "Vložené kalendáre",
+        calendarColorDesc: "Farba tohto kalendára – jeho riadkov v zozname, jeho bodu na časovej osi. Ak zostane prázdne, použije sa farba, ktorú si pre kalendár ukladá samotný Home Assistant.",
+        eventTypeRowColorDesc: "Farba tohto typu udalosti – jeho riadkov v zozname, jeho bodu na časovej osi. V zozname prepínače vedľa nej určujú, ktoré časti riadku zafarbí.",
+        rowTargetIcon: "Ikona",
+        rowTargetIconDesc: "Zafarbiť ikonu tohto typu.",
+        rowTargetAccentBar: "Farebný prúžok",
+        rowTargetAccentBarDesc: "Zafarbiť farebný prúžok tohto typu.",
+        rowTargetRow: "Celý riadok",
+        rowTargetRowDesc: "Zafarbiť celý riadok vrátane textu – a s ním aj ikonu a farebný prúžok, nech ich vlastné prepínače hovoria čokoľvek.",
+        colorName: "Meno",
+        colorType: "Typ",
+        combinedFontDesc: "Veľkosť a štýl tohto riadku kombinovaného stĺpca.",
+        combinedColorDesc: "Farba tohto riadku kombinovaného stĺpca.",
+        colorBadge: "Poradie",
+        colorWhen: "Odpočet",
+        colorText: "Vlastný text",
+        colorDate: "Dátum",
+        dateBlockWeekday: "Deň v týždni",
+        dateBlockDay: "Deň",
+        dateBlockMonth: "Mesiac",
+        dateBlockFontDesc: "Týka sa iba stĺpca Blok s dátumom. Veľkosti sú relatívne k veľkosti písma karty – 0.75 / 1.5 / 0.75, ak zostanú prázdne.",
+        dateBlockColorDesc: "Týka sa iba stĺpca Blok s dátumom. Ak zostane prázdne, deň v týždni a mesiac prevezmú sekundárnu farbu textu témy a deň jej primárnu.",
+        colorCalendar: "Polia externého kalendára",
+        colorDateDesc:
+          "Farba textu stĺpca Dátum",
+        colorCalendarDesc:
+          "Týka sa iba udalostí z externých kalendárov. Ak zostane prázdne, každý riadok prevezme sekundárnu farbu textu témy.",
+        fontDateDesc:
+          "Veľkosť písma stĺpca Dátum (pozri Stĺpce riadku v Rozloženie → Zobrazenie)",
+        fontCalendarDesc:
+          "Týka sa iba udalostí z externých kalendárov. Veľkosti sú relatívne k veľkosti písma karty.",
+        cardTitleColorDesc: "Farba textu vlastného názvu karty",
+        colorNameDesc: "Farba textu názvu udalosti",
+        colorLastName: "Priezvisko",
+        colorLastNameDesc: "Farba textu priezviska udalosti",
+        colorFullName: "Celé meno",
+        colorFullNameDesc: "Farba textu celého mena udalosti (krstné meno + priezvisko)",
+        colorTypeDesc: "Farba textu typu udalosti",
+        colorBadgeDesc: "Farba textu odznaku s poradovým číslom",
+        colorWhenDesc: "Farba textu odpočtu (napr. „o 3 dni“)",
+        colorTextDesc: "Farba textu vlastných textových stĺpcov (pozri Stĺpce riadku v Rozloženie → Zobrazenie)",
+        backgroundLabel: "Zobraziť pozadie",
+        backgroundDesc: "Zobraziť zaoblené pozadie za poradovým číslom",
+        colorBadgeBackground: "Farba pozadia",
+        colorBadgeBackgroundDesc: "Farba pozadia za poradovým číslom",
+        colorPlaceholder: "napr. #ff5722 alebo var(--my-red)",
+        presetDefault: "Predvolená",
+        presetPrimary: "Primárna",
+        presetAccent: "Akcentová",
+        presetCustom: "Vlastná",
+        presetRed: "Červená",
+        presetPink: "Ružová",
+        presetPurple: "Fialová",
+        presetDeepPurple: "Tmavofialová",
+        presetIndigo: "Indigová",
+        presetBlue: "Modrá",
+        presetLightBlue: "Svetlomodrá",
+        presetCyan: "Azúrová",
+        presetTeal: "Modrozelená",
+        presetGreen: "Zelená",
+        presetLightGreen: "Svetlozelená",
+        presetLime: "Limetková",
+        presetYellow: "Žltá",
+        presetAmber: "Jantárová",
+        presetOrange: "Oranžová",
+        presetDeepOrange: "Tmavooranžová",
+        presetBrown: "Hnedá",
+        presetGrey: "Sivá",
+        presetBlueGrey: "Modrosivá",
+        fonts: "Písma",
+        fontCardTitle: "Názov karty",
+        fontCardTitleDesc: "Veľkosť písma vlastného názvu karty",
+        fontNameDesc: "Veľkosť písma názvu udalosti",
+        fontLastNameDesc: "Veľkosť písma priezviska udalosti",
+        fontFullNameDesc: "Veľkosť písma celého mena udalosti (krstné meno + priezvisko)",
+        fontTypeDesc: "Veľkosť písma typu udalosti",
+        fontBadgeDesc: "Veľkosť písma odznaku s poradovým číslom",
+        fontWhenDesc: "Veľkosť písma odpočtu (napr. „o 3 dni“)",
+        fontTextDesc: "Veľkosť písma vlastných textových stĺpcov (pozri Stĺpce riadku v Rozloženie → Zobrazenie)",
+        fontPlaceholder: "napr. 1.2em alebo 20px",
+        fontBold: "Tučné",
+        fontItalic: "Kurzíva",
+        fontUppercase: "Veľké písmená",
+        fontUnderline: "Podčiarknuté",
+        fontLetterSpacing: "Rozostup písmen",
+        fontLetterSpacingPlaceholder: "napr. 0.05em alebo 1px",
+        panelSettings: "Nastavenia",
+        panelSettingsDesc: "Všeobecné, udalosti a časové obdobie",
+        panelLayout: "Rozloženie",
+        panelLayoutDesc: "Všeobecné, zobrazenie zoznamu a časovej osi, vzhľad, zvýraznenie a pozadie karty",
+        groupGeneral: "Všeobecné",
+        groupGeneralDesc: "",
+        groupEvents: "Udalosti",
+        groupEventsDesc: "",
+        groupPeriod: "Časové obdobie",
+        groupPeriodDesc: "",
+        groupDisplay: "Všeobecné",
+        groupListView: "Zobrazenie zoznamu",
+        groupListViewDesc:
+          "Používa sa len vtedy, keď je štýl rozloženia nastavený na Zoznam.",
+        groupDesign: "Vzhľad",
+        designColor: "Farba",
+        designFont: "Písmo",
+        groupDisplayDesc: "",
+      },
+    },
   };
 
   // Every language the card itself is translated into, as BCP-47 codes -
@@ -8239,7 +8942,7 @@
   // The name a user typed in for `locale`, if any. Matched leniently on the
   // primary subtag as well, so a viewer whose Home Assistant profile says
   // "de-DE" still gets the name entered under "de" - the integration stores
-  // these under its own 15 language codes, the browser hands out whatever
+  // these under its own 16 language codes, the browser hands out whatever
   // the profile happens to be set to.
   function translatedName(translations, locale) {
     if (!translations || !locale) return null;
@@ -8859,6 +9562,17 @@
       // is the new compact horizontal-axis layout (see _buildTimeline).
       layout_style: "list",
       count: 10,
+      // Whether the list stops after the first few events and puts the
+      // rest behind a chevron, and after how many. Off by default: a card
+      // that has always shown its whole list must not start hiding half of
+      // it because it was updated. List layout only - the timeline has its
+      // own "Details" expander under its axis.
+      collapse_list: false,
+      collapse_after: 3,
+      // Trims the card's own padding so a single row fits a card one grid
+      // row tall. Off by default - it is only right for a card showing one
+      // event, and every other card wants the normal edges.
+      minimal_card: false,
       days_ahead: 0,
       days_past: 0,
       soon_days: 7,
@@ -9606,6 +10320,15 @@
         icon: state.attributes.icon || "mdi:calendar-star",
         month: state.attributes.month,
         day: state.attributes.day,
+        // Present only on a custom event whose date is a rule rather than
+        // a day - "the first Sunday in September" (see CONF_WEEKDAY in the
+        // integration's const.py). weekday is Monday=0..Sunday=6 and nth is
+        // 1..4 or -1 for the last one in the month; `day` above is then the
+        // date the event would go back to, not the one it is on. Only
+        // eventOccurrenceDate below needs them - everything else reads
+        // next_date, which the sensor has already resolved.
+        weekday: state.attributes.weekday,
+        nth: state.attributes.nth,
         // ISO date (YYYY-MM-DD) of the next occurrence - the anchor to-do
         // matching keys off (see matchTodoItems). Already accounts for the
         // yearly roll-over, so it points at *next* year's date once this
@@ -9690,16 +10413,23 @@
   function expandMultiDay(events, mode, todayIso, strings) {
     const out = [];
     for (const e of events) {
-      if (!e.endDate || e.type !== "one_time" || !e.nextDate) {
+      // A one-time event with an end date, or an embedded calendar entry
+      // that covers more than one day - both are one thing spread over
+      // several days, and the setting means the same for either.
+      const startIso = e.nextDate || e.startDate;
+      if (!e.endDate || !startIso || (e.type !== "one_time" && !e.isExternal)) {
         out.push(e);
         continue;
       }
-      const startIso = e.nextDate;
       // Always applied, even when only one part is listed: on a card of
       // single-day events, a row that silently means "the day this one
       // *begins*" is indistinguishable from every other row, and a holiday
       // trip is exactly where that distinction matters.
+      // Applied to both names: the Name column, a {name} placeholder and
+      // the Timeline all read `name` rather than `fullName`, and without
+      // it every day of one trip drew identically there.
       const label = (text) => (text ? `${e.fullName} (${text})` : e.fullName);
+      const shortLabel = (text) => (text ? `${e.name} (${text})` : e.name);
       const rows = [];
       if (mode === "start" || mode === "start_end") {
         rows.push({
@@ -9710,7 +10440,13 @@
           // to a departure and wrong for a row that has to say which day it
           // is about.
           days: isoDayDiff(todayIso, startIso),
+          nextDate: startIso,
           multiDayPart: "start",
+          // A timed calendar entry starts on this row and ends on another,
+          // so only the half that happens today is shown. Undefined on an
+          // Annuals event, which has no time of day at all.
+          endTime: null,
+          name: shortLabel(strings.multiDayStart),
           fullName: label(strings.multiDayStart),
         });
       }
@@ -9720,6 +10456,8 @@
           days: isoDayDiff(todayIso, e.endDate),
           nextDate: e.endDate,
           multiDayPart: "end",
+          startTime: null,
+          name: shortLabel(strings.multiDayEnd),
           fullName: label(strings.multiDayEnd),
         });
       }
@@ -9735,6 +10473,13 @@
             nextDate: dayIso,
             multiDayPart: "day",
             multiDayIndex: offset + 1,
+            // The first day is when it starts and the last when it ends;
+            // the days in between carry neither time.
+            startTime: offset === 0 ? e.startTime : null,
+            endTime: offset === total ? e.endTime : null,
+            name: shortLabel(
+              (strings.multiDayDay || "day {day}").replace("{day}", String(offset + 1))
+            ),
             fullName: label(
               (strings.multiDayDay || "day {day}").replace("{day}", String(offset + 1))
             ),
@@ -9809,6 +10554,23 @@
     const startDay0 = new Date(startInfo.date);
     startDay0.setHours(0, 0, 0, 0);
     const days = Math.round((startDay0 - today0) / 86400000);
+    // Which calendar days this event covers, as the Multi-day events
+    // setting works in (see expandMultiDay). `endDate` is the last day
+    // *inclusive*, and is left off entirely where the event begins and
+    // ends on one day - which is every ordinary appointment.
+    //
+    // Home Assistant reports an all-day event's end as the day after it,
+    // and a timed event can legitimately end at midnight; both mean the
+    // day before, so an end sitting exactly on midnight steps back one.
+    let endDate;
+    if (endInfo && !Number.isNaN(endInfo.date.getTime())) {
+      const endDay0 = new Date(endInfo.date);
+      const atMidnight =
+        endDay0.getHours() === 0 && endDay0.getMinutes() === 0 && endDay0.getSeconds() === 0;
+      endDay0.setHours(0, 0, 0, 0);
+      if (atMidnight) endDay0.setDate(endDay0.getDate() - 1);
+      if (endDay0 > startDay0) endDate = localIsoDay(endDay0);
+    }
     return {
       entityId: `${entityId}:${raw.uid || startInfo.date.toISOString()}`,
       // The raw calendar.* entity id, distinct from the composite entityId
@@ -9834,6 +10596,11 @@
       icon: calendarIcon,
       month: startInfo.date.getMonth() + 1,
       day: startInfo.date.getDate(),
+      // Deliberately not `nextDate`, which an Annuals sensor answers with
+      // and which the to-do matcher keys off (see matchTodoItems): a
+      // calendar entry is not something Annuals matches a to-do to.
+      startDate: localIsoDay(startDay0),
+      endDate,
       occurrence: null,
       vip: false,
       important: false,
@@ -9987,19 +10754,41 @@
     return d;
   }
 
+  // Where an event falls in one given year: on its stored day, or where its
+  // rule puts it if it has one (see `weekday`/`nth` on the event above).
+  // The same arithmetic as dates.nth_weekday_in_year in the integration,
+  // and the only place this card needs it - the sensor resolves every
+  // forward-looking date itself.
+  function eventOccurrenceDate(e, year) {
+    if (e.weekday == null || e.nth == null) return occurrenceDate(e.month, e.day, year);
+    if (e.nth === -1) {
+      // Counted back from the last day of the month, so month lengths and
+      // February never come into it.
+      const last = new Date(year, e.month, 0);
+      // getDay() is Sunday=0; the attribute is Monday=0, as Python has it.
+      const lastWeekday = (last.getDay() + 6) % 7;
+      last.setDate(last.getDate() - ((lastWeekday - e.weekday + 7) % 7));
+      return last;
+    }
+    const first = new Date(year, e.month - 1, 1);
+    const firstWeekday = (first.getDay() + 6) % 7;
+    first.setDate(first.getDate() + ((e.weekday - firstWeekday + 7) % 7) + (e.nth - 1) * 7);
+    return first;
+  }
+
   // Independent of the sensor's own "days until next occurrence" state
   // (which is never negative - it jumps forward the day after an event), so
   // that a "days in the past" window can be computed client-side from the
-  // raw day/month attributes alone.
-  function daysSincePrevOccurrence(month, day, now) {
+  // event's own recurrence alone.
+  function daysSincePrevOccurrence(e, now) {
     const today0 = new Date(now);
     today0.setHours(0, 0, 0, 0);
-    const thisYear = occurrenceDate(month, day, today0.getFullYear());
+    const thisYear = eventOccurrenceDate(e, today0.getFullYear());
     thisYear.setHours(0, 0, 0, 0);
     if (thisYear <= today0) {
       return Math.round((today0 - thisYear) / 86400000);
     }
-    const prevYear = occurrenceDate(month, day, today0.getFullYear() - 1);
+    const prevYear = eventOccurrenceDate(e, today0.getFullYear() - 1);
     prevYear.setHours(0, 0, 0, 0);
     return Math.round((today0 - prevYear) / 86400000);
   }
@@ -10180,7 +10969,51 @@
   }
 
   const CARD_STYLE = `
-    ha-card { padding: 16px; position: relative; overflow: hidden; }
+    /* A sections view hands the card a height and expects it to be that
+       tall. Without these the card drew its natural height inside that
+       box - measured: 644px whether it was given 700 (a hole below it) or
+       200 (444px spilling over whatever came next). The column is what
+       lets the list below take whatever the title leaves. Harmless in a
+       masonry view, where the parent has no height of its own and 100%
+       resolves to auto exactly as before. */
+    :host { display: block; height: 100%; }
+    /* A card holding a single row, in a card one grid row tall. Measured
+       with a compact row: 16px above and below leave 24px of a 56px card
+       for a row that needs 36, so the row is cut and the list grows a
+       scrollbar. Six leaves 42 - the row fits with room for one that runs
+       a little taller. The sides keep more, since width was never the
+       problem and text against a rounded corner reads badly. */
+    ha-card[data-minimal] { padding: 6px 12px; }
+    /* The row gives up its own vertical padding too. With an icon column a
+       compact row is 42px, which is exactly what 6px edges leave in a 56px
+       card - it fitted on the pixel and any rounding tipped it back into a
+       scrollbar. At 2px the row is 34px and has 8px to spare, which is what
+       makes an icon usable here at all. */
+    ha-card[data-minimal] .row { padding-top: 2px; padding-bottom: 2px; }
+    /* And the row sits in the middle of whatever height is left rather than
+       against the top edge - a one-row card given more than one row of space
+       otherwise hangs its single line from the ceiling. Compact is always on
+       here (Minimal is only offered above it), so .list is the flex column it
+       started as and never the grid is-columns turns it into.
+
+       "safe center" so a list that does overflow - Minimal left on with more
+       than one event - falls back to aligning at the start instead of
+       centering its overflow out of reach above the scroll origin. The plain
+       center before it is what an engine that does not know the keyword
+       keeps. */
+    ha-card[data-minimal] .list {
+      justify-content: center;
+      justify-content: safe center;
+    }
+    ha-card {
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      box-sizing: border-box;
+    }
     /* Custom card background (color/image) lives on its own layer behind
        the content rather than on ha-card itself, so its opacity can be
        adjusted without fading the title/list text above it. */
@@ -10200,6 +11033,9 @@
     .title {
       position: relative;
       z-index: 1;
+      /* Never squeezed: the list is what gives way when the card is
+         short. */
+      flex: 0 0 auto;
       font-size: var(--annuals-card-title-size, 1.2em);
       font-weight: var(--annuals-card-title-weight, 500);
       font-style: var(--annuals-card-title-style, normal);
@@ -10216,7 +11052,56 @@
       flex-direction: column;
       gap: 4px;
       font-size: 1em;
+      /* Takes whatever the title leaves and scrolls the rest away, so a
+         card made shorter than its events shows fewer of them instead of
+         spilling over the card below. min-height:0 is what allows a flex
+         item to be shorter than its content at all. The timeline's own
+         tooltip sits inside .timeline-axis in here, so it scrolls with
+         the axis rather than being clipped by this. */
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      /* Scrolling makes this box a clip boundary, and it sat exactly on the
+         rows: the Important badge hangs 6px off the left of its icon while a
+         row pads only 4, so 2px of it was cut off - measured, on every row
+         carrying one. The padding pushes the content back in by exactly what
+         the negative margin pulls the box out by, so the rows do not move
+         and only the clip edge does, out into the card's own padding where
+         the badge had room before this box existed. */
+      padding-inline: 6px;
+      margin-inline: -6px;
     }
+    /* The chevron under a folded list. A sibling of .list rather than a
+       child: .list is a grid in columns mode, where a child would be laid
+       out as one more cell - and out here it also stays put while the list
+       scrolls under it. */
+    .fold {
+      position: relative;
+      z-index: 1;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 4px 0;
+      margin: 0;
+      background: none;
+      border: none;
+      color: var(--secondary-text-color);
+      cursor: pointer;
+    }
+    .fold:hover { color: var(--primary-text-color); }
+    .fold:focus-visible {
+      outline: 2px solid var(--primary-color);
+      outline-offset: -2px;
+      border-radius: 8px;
+    }
+    /* display:flex above would otherwise beat the UA stylesheet's
+       [hidden]{display:none} on a specificity tie, the same way
+       .toggle-row needs it in the editor. */
+    .fold[hidden] { display: none; }
+    .fold ha-icon { --mdc-icon-size: 24px; width: 24px; height: 24px; }
     .row {
       display: flex;
       align-items: center;
@@ -11741,6 +12626,10 @@
       // _filteredEvents/_visibleEvents' callers except through that method.
       this._externalEvents = [];
       this._externalSignature = undefined;
+      // Whether the folded list is currently open. Deliberately not in the
+      // config: unfolding is a look, not a setting, and writing it to the
+      // dashboard would unfold the card for everyone else too.
+      this._expanded = false;
       // entity_id -> configured "Calendar color" name (see
       // _fetchCalendarColors) - undefined until that resolves, same
       // "starts empty, fills in asynchronously" shape as _externalEvents.
@@ -11944,9 +12833,67 @@
       this._render();
     }
 
+    // How many events stand before the fold. Anything that is not a
+    // positive number - an emptied field, a pasted "3 events" - falls back
+    // to three rather than to none: a list of nothing above a chevron says
+    // nothing at all.
+    get _foldAt() {
+      const many = Number.parseInt(this._config.collapse_after, 10);
+      return Number.isFinite(many) && many > 0 ? many : 3;
+    }
+
+    // Whether this list folds: asked for, in the layout that grows
+    // downwards, and with more events than the fold would leave standing.
+    // Without the last condition a complete list would carry a chevron
+    // that opens nothing. The timeline is excluded because it has its own
+    // "Details" expander under the axis - two of them on one card would be
+    // two answers to the same question.
+    _listFolds(events) {
+      return (
+        this._config.collapse_list === true &&
+        this._config.layout_style !== "timeline" &&
+        events.length > this._foldAt
+      );
+    }
+
     getCardSize() {
       if (!this._hass || !this._config) return 3;
-      return 1 + this._visibleEvents().length;
+      const events = this._visibleEvents();
+      // What is drawn, not what is held: a folded list is as tall as its
+      // fold.
+      const rows =
+        this._listFolds(events) && !this._expanded ? this._foldAt : events.length;
+      return 1 + rows;
+    }
+
+    // What sizes a sections view may give the card. Answering at all is
+    // what tells the layout editor it can be resized - without it the
+    // editor says so in a notice and offers only the old coarse sizing.
+    // Columns are twelfths of the section; rows are 56px each.
+    //
+    // The height is left to the content, because that is what this card
+    // is: a list as long as the events in it. A fixed number of rows is
+    // still offered and honoured - the list then scrolls inside it (see
+    // .list in CARD_STYLE) - but nobody has to pin one to get a card that
+    // fits.
+    getGridOptions() {
+      const timeline = this._config && this._config.layout_style === "timeline";
+      // Measured on a full list: below about 240px the rows start
+      // overflowing their own width and names wrap until the card is
+      // twice as tall. Six twelfths clears that at the section widths
+      // this normally lands in, and is what Home Assistant's own cards
+      // ask for. The timeline is one horizontal axis that holds together
+      // much narrower - measured unchanged down to 180px - so it asks for
+      // less rather than borrowing the list's floor.
+      return {
+        columns: 12,
+        rows: "auto",
+        min_columns: timeline ? 4 : 6,
+        // One row is a real card: the title line and the next event, which
+        // is what someone pinning a card to a single date wants. The list
+        // scrolls or folds from there (see collapse_list).
+        min_rows: 1,
+      };
     }
 
 
@@ -11989,7 +12936,7 @@
       // the trip's start for all of them alike - which had the end row of a
       // running trip counting back from the departure it is five days after.
       if (e.isExternal || e.multiDayPart) return e.days < 0 && e.days >= -pastWindow;
-      const since = daysSincePrevOccurrence(e.month, e.day, now);
+      const since = daysSincePrevOccurrence(e, now);
       return since > 0 && since <= pastWindow;
     }
 
@@ -12176,7 +13123,7 @@
               ? 0
               : e.isExternal || e.multiDayPart
                 ? -e.days
-                : daysSincePrevOccurrence(e.month, e.day, now),
+                : daysSincePrevOccurrence(e, now),
         }))
       // days_ahead only caps how far into the future upcoming events are
       // shown - applying it earlier (to `filtered`) would also cull recent
@@ -12381,13 +13328,17 @@
     // formatting _row()'s own values.time uses, only ever non-null for a
     // timed (non-all-day) external calendar event (see buildExternalEvent).
     _timelineTimeText(e) {
-      if (!e.isExternal || e.allDay || !e.startTime) return null;
+      if (!e.isExternal || e.allDay || (!e.startTime && !e.endTime)) return null;
       const timeFmt = new Intl.DateTimeFormat(this._locale(), {
         hour: "2-digit",
         minute: "2-digit",
       });
-      const startStr = timeFmt.format(e.startTime);
+      // One of the two can be missing on a row of a multi-day entry: the
+      // day it starts does not end it, and the day it ends did not start
+      // it (see expandMultiDay).
+      const startStr = e.startTime ? timeFmt.format(e.startTime) : "";
       const endStr = e.endTime ? timeFmt.format(e.endTime) : "";
+      if (!startStr) return endStr;
       return endStr && endStr !== startStr ? `${startStr}–${endStr}` : startStr;
     }
 
@@ -13081,30 +14032,39 @@
             tip.style.width = `${tipWidth}px`;
             const tipHeight = tip.offsetHeight;
 
-            // ha-card sets overflow:hidden (its background-image support
-            // needs it), so anything spilling past the card is silently cut
-            // off rather than just overhanging - the tooltip is therefore
-            // clamped inside the card on both axes.
+            // Anything spilling past the list is silently cut off rather
+            // than just overhanging, so the tooltip is clamped inside it on
+            // both axes. The list rather than ha-card: the list scrolls (see
+            // .list in CARD_STYLE, which is what lets a card shorter than
+            // its events show fewer of them instead of overflowing), which
+            // makes it the tighter box of the two - measured on a real card,
+            // ha-card 174-320 against a list of 191-303, so clamping to the
+            // card would have left the tooltip cut off by 13px at either
+            // end. The tooltip lives inside the list too, which is what
+            // keeps it with its own dot when the list is scrolled.
             const axisRect = axis.getBoundingClientRect();
-            const cardRect = this.shadowRoot.querySelector("ha-card").getBoundingClientRect();
+            const clipRect = (
+              this.shadowRoot.querySelector(".list") ||
+              this.shadowRoot.querySelector("ha-card")
+            ).getBoundingClientRect();
             const dotRect = dotWrap.getBoundingClientRect();
             const pad = 4;
             const gap = 6;
 
             const centerX = dotRect.left + dotRect.width / 2 - axisRect.left;
-            const minLeft = tipWidth / 2 + (cardRect.left + pad - axisRect.left);
-            const maxLeft = cardRect.right - pad - axisRect.left - tipWidth / 2;
+            const minLeft = tipWidth / 2 + (clipRect.left + pad - axisRect.left);
+            const maxLeft = clipRect.right - pad - axisRect.left - tipWidth / 2;
             tip.style.left = `${Math.min(Math.max(centerX, minLeft), Math.max(minLeft, maxLeft))}px`;
             tip.style.transform = "translateX(-50%)";
 
             // Above the dot by default; flipped below when that would clip
-            // against the card's top (which is the common case, since the
-            // axis sits just under the header), then clamped so a card too
-            // short for either placement still shows the whole tooltip.
+            // against the top (which is the common case, since the axis sits
+            // just under the header), then clamped so a card too short for
+            // either placement still shows the whole tooltip.
             let topAbs = dotRect.top - gap - tipHeight;
-            if (topAbs < cardRect.top + pad) topAbs = dotRect.bottom + gap;
-            if (topAbs + tipHeight > cardRect.bottom - pad) topAbs = cardRect.bottom - pad - tipHeight;
-            if (topAbs < cardRect.top + pad) topAbs = cardRect.top + pad;
+            if (topAbs < clipRect.top + pad) topAbs = dotRect.bottom + gap;
+            if (topAbs + tipHeight > clipRect.bottom - pad) topAbs = clipRect.bottom - pad - tipHeight;
+            if (topAbs < clipRect.top + pad) topAbs = clipRect.top + pad;
             tip.style.top = `${topAbs - axisRect.top}px`;
             state.activeWrap = dotWrap;
           });
@@ -13408,14 +14368,20 @@
       // external event has no time of day to show either. A single time
       // (no dash) when there's no end time, or the end equals the start.
       let timeText = "";
-      if (e.isExternal && !e.allDay && e.startTime) {
+      if (e.isExternal && !e.allDay && (e.startTime || e.endTime)) {
         const timeFmt = new Intl.DateTimeFormat(this._locale(), {
           hour: "2-digit",
           minute: "2-digit",
         });
-        const startStr = timeFmt.format(e.startTime);
+        // See _timelineTimeText: a row of a multi-day entry carries only
+        // the half of the range that happens on its own day.
+        const startStr = e.startTime ? timeFmt.format(e.startTime) : "";
         const endStr = e.endTime ? timeFmt.format(e.endTime) : "";
-        timeText = endStr && endStr !== startStr ? `${startStr}–${endStr}` : startStr;
+        timeText = !startStr
+          ? endStr
+          : endStr && endStr !== startStr
+            ? `${startStr}–${endStr}`
+            : startStr;
       }
       const locationText = e.location || "";
       const descriptionText = e.description || "";
@@ -14020,6 +14986,7 @@
           <ha-card>
             <div class="title"></div>
             <div class="list"></div>
+            <button type="button" class="fold" hidden></button>
           </ha-card>
         `;
         this._built = true;
@@ -14264,6 +15231,11 @@
         card.style.setProperty("--annuals-card-background-opacity", String(opacity));
       }
 
+      // Only ever an attribute the stylesheet keys off, so the padding
+      // stays in CARD_STYLE with every other measurement instead of being
+      // half here and half there.
+      card.toggleAttribute("data-minimal", config.minimal_card === true);
+
       const titleEl = this.shadowRoot.querySelector(".title");
       titleEl.style.display = config.show_title === false ? "none" : "";
       titleEl.textContent = config.title || strings.defaultTitle;
@@ -14276,6 +15248,17 @@
       listEl.classList.remove("is-columns");
       listEl.style.removeProperty("--annuals-row-grid-template");
       listEl.innerHTML = "";
+      // Hidden unless the list branch below puts it back: the timeline and
+      // the "no events" placeholder have nothing to fold.
+      const foldEl = this.shadowRoot.querySelector(".fold");
+      foldEl.hidden = true;
+      if (!foldEl.dataset.wired) {
+        foldEl.dataset.wired = "1";
+        foldEl.addEventListener("click", () => {
+          this._expanded = !this._expanded;
+          this._render();
+        });
+      }
 
       // Which categories get a highlighted row background is controlled
       // independently per-row in _row() (highlight_past/today/soon).
@@ -14328,13 +15311,18 @@
         // Coarsest boundary wins: a row that begins a month begins a week and
         // a day too, and stacking all three rules on it would read as a
         // heavier divider than the ones below, which is backwards.
+        // Folded, only the first few are built - the rest are not created
+        // rather than created and hidden, so a long list behind the fold
+        // costs nothing until it is asked for.
+        const folded = this._listFolds(combined) && !this._expanded;
+        const shown = folded ? combined.slice(0, this._foldAt) : combined;
         const previous = { monthKey: null, weekKey: null, dayKey: null };
         const scales = [
           ["month_separators", "monthKey", "month-start"],
           ["week_separators", "weekKey", "week-start"],
           ["day_separators", "dayKey", "day-start"],
         ];
-        combined.forEach((e) => {
+        shown.forEach((e) => {
           const rowEl = this._row(e, strings);
           for (const [option, key, className] of scales) {
             if (config[option] === true && previous[key] !== null && rowEl.dataset[key] !== previous[key]) {
@@ -14362,6 +15350,21 @@
           for (const [, key] of scales) previous[key] = rowEl.dataset[key];
           listEl.appendChild(rowEl);
         });
+
+        if (this._listFolds(combined)) {
+          const hidden = combined.length - this._foldAt;
+          foldEl.hidden = false;
+          foldEl.setAttribute("aria-expanded", folded ? "false" : "true");
+          const label = folded
+            ? (strings.foldShowMore || "").replace("{count}", hidden)
+            : strings.foldShowLess || "";
+          foldEl.title = label;
+          foldEl.setAttribute("aria-label", label);
+          foldEl.innerHTML = "";
+          const chevron = document.createElement("ha-icon");
+          chevron.setAttribute("icon", `mdi:chevron-${folded ? "down" : "up"}`);
+          foldEl.appendChild(chevron);
+        }
       }
     }
   }
@@ -14858,6 +15861,48 @@
     }
     .design-body .group-label-row + .sub-field-row,
     .design-body .group-label-row + .design-element { margin-top: 0; }
+    /* Folded, a block is its heading and nothing else - see
+       _wireDesignCollapse. Everything but the heading goes, whatever it is:
+       a field row, a switch, or the names inside a group. A row the
+       visibility pass has hidden for its own reason keeps its inline
+       display:none and stays hidden when the block is opened. */
+    .design-foldable:not(.open) > *:not(.fold-handle) { display: none; }
+    .design-foldable:not(.open) { margin-top: 8px; }
+    .design-foldable:not(.open) > .fold-handle { margin-bottom: 0; }
+    /* A badge's handle is its switch row, which carries the switch, the
+       name and the two placement switches - it needs the rule under it
+       that a heading has, so the list of badges reads as a list. */
+    .badge-group > .fold-handle {
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--divider-color, #e0e0e0);
+    }
+    .badge-group:not(:first-child) { margin-top: 12px; }
+    /* An event type's line and an embedded calendar's are headings in the
+       same sense - the name, its icon and the three target switches - so
+       they carry the same rule under them as every other block's. */
+    .type-block > .fold-handle {
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--divider-color, #e0e0e0);
+    }
+    .type-block:not(:first-child) { margin-top: 12px; }
+    /* Folded, a handle that is a full field row keeps only its label line;
+       its controls fold away with the rest. A heading row has none, so
+       this costs those nothing. */
+    .design-foldable:not(.open) > .fold-handle > .field-input-row { display: none; }
+    .fold-handle { cursor: pointer; }
+    .fold-handle:focus-visible {
+      outline: 2px solid var(--primary-color);
+      outline-offset: 2px;
+    }
+    /* Pushed to the label's right edge, and turned over while the block is
+       open - the same handle the two super-panels above the tabs use. */
+    .design-chevron {
+      --mdc-icon-size: 16px;
+      margin-left: auto;
+      color: var(--secondary-text-color);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .design-foldable.open > .fold-handle .design-chevron { transform: rotate(180deg); }
     /* Names the indented group that follows it and has no control of its
        own, so the gap a field row leaves for one would just be a hole.
        The extra top margin sets it apart from the field above - it starts a
@@ -14920,6 +15965,10 @@
       flex-shrink: 0;
       align-self: baseline;
     }
+    /* A row that is only its label - what the switch paints, an "i" saying
+       so, and the switch itself - keeps no gap for the input line it does
+       not have. */
+    .field-row[data-target-row] > .field-label { margin-bottom: 0; }
     .field-label-toggles {
       margin-left: auto;
       display: flex;
@@ -15748,7 +16797,21 @@
       this._syncDisplayInputs();
       this._syncBackgroundInputs();
       this._syncTimelineInputs();
+      this._syncListInputs();
       this._applyLayoutStyleVisibility();
+    }
+
+    // The fold's own two rows. The count follows its switch: shown while
+    // the fold is on, gone while it is off - its own switch, nothing the
+    // reader cannot see.
+    _syncListInputs() {
+      const on = this._config.collapse_list === true;
+      const toggle = this.shadowRoot.querySelector('input[data-toggle="collapse_list"]');
+      if (toggle) toggle.checked = on;
+      this._syncFieldRow("collapse_after", this._config.collapse_after || 3);
+      const input = this.shadowRoot.querySelector('input[data-field="collapse_after"]');
+      const row = input && input.closest(".field-row");
+      if (row) row.hidden = !on;
     }
 
     _syncGeneralInputs() {
@@ -16057,9 +17120,13 @@
       return types.length === 0 || types.includes("one_time");
     }
 
+    // Two sources can produce something that spans several days: a
+    // one-time event with an end date, and an embedded calendar's own
+    // entries. Either one makes the setting mean something.
     _updateMultiDayRowVisibility() {
       if (this._multiDayRowEl) {
-        this._multiDayRowEl.hidden = !this._oneTimeTypeEnabled();
+        this._multiDayRowEl.hidden =
+          !this._oneTimeTypeEnabled() && !this._hasExternalCalendars();
       }
     }
 
@@ -16423,25 +17490,11 @@
       // carries (see row_color_targets). They go in the heading line with
       // the type's name, in the same field-label-toggles box every other
       // row's switches sit in, so the whole tab keeps one place to look for
-      // them. Both boxes wrap rather than squeezing, since three labelled
-      // switches next to a long type name can outgrow a narrow sidebar.
-      const targetToggles = options.targetToggles
-        ? `
-          <div class="target-toggles" data-targets-for="${options.targetToggles}">
-            ${ROW_COLOR_TARGET_KEYS.map(
-              (target) => `
-                <span class="target-toggle" data-target="${target}">
-                  <label class="toggle">
-                    <input type="checkbox" data-row-target="${options.targetToggles}:${target}">
-                    <span class="track"></span>
-                  </label>
-                  <span class="target-label"></span>
-                </span>
-              `
-            ).join("")}
-          </div>
-        `
-        : "";
+      // The row-colour targets used to ride here, beside the type's name.
+      // They are rows of their own inside the block now (see
+      // _rowTargetRowHtml): a bare "Entry text" next to a name explained
+      // nothing, and sat wherever that name happened to end.
+      const targetToggles = "";
       // An event type's or a calendar's own icon, in front of its name, so
       // the list reads the way the card does. Sized off the label's own
       // font, not a fixed pixel value, so it stays with the text.
@@ -16481,6 +17534,30 @@
     // select carries its own narrow class (.anim-select) and the .anim-row
     // modifier on the row itself overrides the generic "toggle-group always
     // wraps to a full-width line" rule (see EDITOR_STYLE).
+    // One row-colour target, as a row of its own: what it paints, an "i"
+    // saying so, and its switch at the row's right end like every other
+    // switch that belongs to a row. Which of them a card can use depends on
+    // the layout and on the columns in the list - see
+    // _applyLayoutStyleVisibility, which shows and hides these rows.
+    _rowTargetRowHtml(type, target) {
+      return `
+        <div class="field-row sub-field-row" data-target-row="${type}:${target}">
+          <div class="field-label">
+            <span class="label-text"></span>
+            <span class="tooltip-anchor" data-tooltip="">
+              <ha-icon icon="mdi:information-outline"></ha-icon>
+            </span>
+            <span class="field-label-toggles">
+              <label class="toggle field-label-toggle">
+                <input type="checkbox" data-row-target="${type}:${target}">
+                <span class="track"></span>
+              </label>
+            </span>
+          </div>
+        </div>
+      `;
+    }
+
     _animSelectRowHtml(key, options) {
       options = options || {};
       const overrideToggle = options.overrideToggle
@@ -16956,7 +18033,7 @@
       // selector instead of chasing four separate rows.
       const elementHtml = (el, sub) =>
         `<div class="design-element${sub ? " design-element-sub" : ""}" data-design-element="${el.id}">` +
-        this._groupLabelRowHtml(`el_${el.id}`) +
+        this._groupLabelRowHtml(`el_${el.id}`, !sub) +
         this._colorRowHtml(el.color, colorPh, { sub: true, ...(el.colorOptions || {}) }) +
         (el.extra ? this._colorRowHtml(el.extra.color, colorPh, { sub: true }) : "") +
         this._fontRowHtml(el.font, fontPh, spacingPh, { sub: true, ...(el.fontOptions || {}) }) +
@@ -16967,7 +18044,7 @@
       // its Animation the default animation, for the same reason.
       const iconHtml = () =>
         `<div class="design-element" data-design-element="icon">` +
-        this._groupLabelRowHtml("el_icon") +
+        this._groupLabelRowHtml("el_icon", true) +
         this._colorRowHtml("accent", colorPh, { sub: true }) +
         this._animSelectRowHtml("accent") +
         `</div>`;
@@ -16975,12 +18052,12 @@
       // heading, the settings indented beneath it.
       const lineHtml = (el) =>
         `<div class="design-element" data-design-element="${el.id}">` +
-        this._groupLabelRowHtml(`el_${el.id}`) +
+        this._groupLabelRowHtml(`el_${el.id}`, true) +
         this._lineStyleRowsHtml(el.widthKey, el.colorKey, "e.g. 4px", true) +
         `</div>`;
       const accentBarHtml = () =>
         `<div class="design-element" data-design-element="accent_bar">` +
-        this._groupLabelRowHtml("el_accent_bar") +
+        this._groupLabelRowHtml("el_accent_bar", true) +
         this._colorRowHtml("accent_bar", colorPh, { sub: true }) +
         this._fieldRowHtml("accent_bar_width", "text", "e.g. 3px", "", true) +
         `</div>`;
@@ -16990,7 +18067,7 @@
         DESIGN_ELEMENTS.map((entry) =>
           entry.group
             ? `<div class="design-group" data-design-group="${entry.group}">` +
-              this._groupLabelRowHtml(`${entry.group}_group`) +
+              this._groupLabelRowHtml(`${entry.group}_group`, true) +
               entry.members.map((member) => elementHtml(member, true)).join("") +
               `</div>`
             : entry.custom === "line"
@@ -17015,6 +18092,15 @@
         `<div class="section-heading" data-heading="calendar_colors"></div>` +
         `<div data-calendar-colors></div>`;
       body.appendChild(rows);
+      this._wireFoldableBlocks(
+        rows,
+        (el) =>
+          el.classList.contains("design-element") || el.classList.contains("design-group")
+      );
+      // Event types are a section of their own under their own heading, so
+      // they are their own accordion: opening a type has no business
+      // folding away the element someone was just working on above it.
+      this._wireFoldableBlocks(rows, (el) => el.classList.contains("type-block"));
 
       this._paintPresetSwatches(body, strings);
 
@@ -17191,6 +18277,7 @@
       const rows = document.createElement("div");
       rows.innerHTML = STATUS_KEYS.map(groupHtml).join("");
       body.appendChild(rows);
+      this._wireFoldableBlocks(rows, (el) => el.classList.contains("status-group"));
 
       this._paintPresetSwatches(body, strings);
 
@@ -17284,9 +18371,11 @@
       for (const target of ROW_COLOR_TARGET_KEYS) {
         const toggle = body.querySelector(`input[data-row-target="${type}:${target}"]`);
         if (!toggle) continue;
-        const wrap = toggle.closest(".target-toggle");
-        wrap.querySelector(".target-label").textContent = labels[target] || target;
-        wrap.title = descs[target] || "";
+        const row = toggle.closest("[data-target-row]");
+        if (row) {
+          row.querySelector(".label-text").textContent = labels[target] || target;
+          row.querySelector(".tooltip-anchor").dataset.tooltip = descs[target] || "";
+        }
         toggle.checked = current[target] === true;
         toggle.addEventListener("change", () => {
           const entry = {};
@@ -17386,15 +18475,24 @@
     // heading line, then a color per target and the animation. colorKey is
     // the config key its colors live under, targetKey the one its switches
     // and animation are stored against.
+    // Wrapped in a block of its own so the whole type - or embedded
+    // calendar - folds to the line that names it (see _wireFoldableBlocks).
+    // That line is already a heading and nothing else: its own color field
+    // is hidden for good (see applyTypeBlock), leaving the icon, the name
+    // and the three target switches.
     _typeBlockHtml(colorKey, targetKey, placeholder, icon) {
-      return (
+      return `<div class="type-block" data-type-block="${colorKey}">` +
         this._colorRowHtml(colorKey, placeholder, { targetToggles: targetKey, leadingIcon: icon }) +
+        // What this type's colour paints comes first: switching one on
+        // brings its own colour row up right underneath, rather than
+        // somewhere above a switch at the foot of the block.
+        ROW_COLOR_TARGET_KEYS.map((target) => this._rowTargetRowHtml(targetKey, target)).join("") +
         this._colorRowHtml(`${colorKey}_row`, placeholder, { sub: true }) +
         this._colorRowHtml(`${colorKey}_entry`, placeholder, { sub: true }) +
         this._colorRowHtml(`${colorKey}_bar`, placeholder, { sub: true }) +
         this._colorRowHtml(`${colorKey}_icon`, placeholder, { sub: true }) +
-        this._animSelectRowHtml(`type_${targetKey}`, { enableToggle: `type_${targetKey}` })
-      );
+        this._animSelectRowHtml(`type_${targetKey}`, { enableToggle: `type_${targetKey}` }) +
+        `</div>`;
     }
 
     // The animation's own on/off, in the row's heading like the status
@@ -17529,6 +18627,10 @@
           })
           .join("");
         this._paintPresetSwatches(host, strings);
+        // Rebuilt from scratch whenever the list changes, so the fold is
+        // wired again with it - and being its own container, it is its own
+        // accordion, like the types above.
+        this._wireFoldableBlocks(host, (el) => el.classList.contains("type-block"));
         for (const id of calendars) {
           const name = (this._hass && this._hass.states[id] && this._hass.states[id].attributes.friendly_name) || id;
           this._wireColorRow(host, CALENDAR_COLOR_PREFIX + id, name, strings.editor.calendarColorDesc || "");
@@ -17953,6 +19055,7 @@
         important_only: config.show_important_only === true,
         todo_only: config.show_todo_only === true,
         columns_compact: config.columns_compact === true,
+        minimal_card: config.minimal_card === true,
         month_separators: config.month_separators === true,
         week_separators: config.week_separators === true,
         day_separators: config.day_separators === true,
@@ -17961,6 +19064,13 @@
         const toggle = this.shadowRoot.querySelector(`input[data-visibility="${key}"]`);
         if (toggle) toggle.checked = visMap[key];
       }
+      // Minimal belongs to Compact: it is the compact row that is short
+      // enough for tight edges to be worth anything, so it is offered only
+      // while Compact is on. Switching Compact off takes it with it (see
+      // that row's own apply), so nothing is left switched on out of sight.
+      const minimalRow = this.shadowRoot.querySelector(".minimal-card-row");
+      if (minimalRow) minimalRow.hidden = config.columns_compact !== true;
+
       // The three separator blocks show or hide their Width/Style/Color rows
       // with their own switch, which the loop above may have just flipped.
       for (const sync of this._separatorFieldSyncs || []) sync();
@@ -18204,6 +19314,11 @@
             ...config,
             columns_compact: checked,
             columns: checked ? COMPACT_DEFAULT_COLUMNS.map((c) => ({ ...c })) : undefined,
+            // Minimal is only offered above a compact row, so it goes when
+            // Compact does rather than staying on with no switch to see it
+            // by. undefined rather than false: defaultConfig fills it back
+            // in and pruneDefaults then leaves it out of the dashboard.
+            minimal_card: checked ? config.minimal_card : undefined,
           }),
         }
       );
@@ -18213,6 +19328,19 @@
         .querySelector('input[data-visibility="columns_compact"]')
         .addEventListener("change", () => this._renderColumnsList());
       section.appendChild(compactRow);
+
+      // Directly under Compact, because the two are what a one-row card is
+      // made of: Compact makes the row short, this makes the card's edges
+      // small enough for it.
+      const minimalRow = document.createElement("div");
+      minimalRow.innerHTML = this._visibilityRowHtml("minimal_card", "minimal-card-row");
+      this._wireVisibilityRow(
+        minimalRow,
+        "minimal_card",
+        strings.editor.minimalCard,
+        strings.editor.minimalCardDesc
+      );
+      section.appendChild(minimalRow);
 
       this._renderColumnsList(strings);
       return section;
@@ -18774,6 +19902,39 @@
       const body = document.createElement("div");
       body.className = "list-config-body";
 
+      // How much of the list stands before it folds, above what a row is
+      // made of: it decides how much of this tab's work is on screen at
+      // all. The count is a sub-row of the switch, and hidden while the
+      // switch is off - there is nothing to count to without a fold.
+      const foldWrap = document.createElement("div");
+      foldWrap.innerHTML =
+        this._toggleRowHtml("collapse_list") +
+        this._fieldRowHtml("collapse_after", "number", "", 'min="1" max="50"', true);
+      body.appendChild(foldWrap);
+      this._wireToggleRow(
+        foldWrap,
+        "collapse_list",
+        strings.editor.collapseList,
+        strings.editor.collapseListDesc,
+        (config, checked) => {
+          const next = { ...config, collapse_list: checked };
+          // Switching the fold off takes its count with it rather than
+          // leaving a number in the dashboard that nothing reads - the same
+          // way switching the Holiday type off clears its categories.
+          // Deleted rather than set: defaultConfig fills it back in, and a
+          // value equal to the default is what pruneDefaults drops.
+          if (!checked) delete next.collapse_after;
+          return next;
+        }
+      );
+      this._wireFieldRow(
+        foldWrap,
+        "collapse_after",
+        strings.editor.collapseAfter,
+        strings.editor.collapseAfterDesc,
+        (v) => Math.max(1, Number(v) || 3)
+      );
+
       // What tapping a row does, above what a row is made of. Both only
       // drive the list layout's own row click handling - the timeline has
       // no "row" to tap, since its axis dots (click for a tooltip) and its
@@ -18846,29 +20007,52 @@
       // important_badge have always been the disc, todo_badge the glyph.
       const badgeRows = document.createElement("div");
       badgeRows.dataset.badgeRows = "";
+      // One wrapper per badge: its switch row names it, and everything
+      // under that row belongs to it - which is what lets the whole badge
+      // fold to that one line (see _wireFoldableBlocks).
+      const badgeBlock = (key, rows) =>
+        `<div class="badge-group" data-badge-group="${key}">${rows}</div>`;
       badgeRows.innerHTML =
-        this._highlightRowHtml("vip", { badgeTargets: "vip" }) +
-        this._fieldRowHtml("vip_badge_icon", "text", strings.editor.vipBadgeIconPlaceholder, "", true) +
-        this._colorRowHtml("vip_badge_fg", strings.editor.colorPlaceholder, { sub: true }) +
-        this._colorRowHtml("vip_badge", strings.editor.colorPlaceholder, { sub: true }) +
-        this._colorRowHtml("vip_badge_timeline", strings.editor.colorPlaceholder, { sub: true }) +
-        this._highlightRowHtml("important", { badgeTargets: "important" }) +
-        this._fieldRowHtml(
-          "important_badge_icon",
-          "text",
-          strings.editor.importantBadgeIconPlaceholder,
-          "",
-          true
+        badgeBlock(
+          "vip",
+          this._highlightRowHtml("vip", { badgeTargets: "vip" }) +
+            this._fieldRowHtml(
+              "vip_badge_icon",
+              "text",
+              strings.editor.vipBadgeIconPlaceholder,
+              "",
+              true
+            ) +
+            this._colorRowHtml("vip_badge_fg", strings.editor.colorPlaceholder, { sub: true }) +
+            this._colorRowHtml("vip_badge", strings.editor.colorPlaceholder, { sub: true }) +
+            this._colorRowHtml("vip_badge_timeline", strings.editor.colorPlaceholder, { sub: true })
         ) +
-        this._colorRowHtml("important_badge_fg", strings.editor.colorPlaceholder, { sub: true }) +
-        this._colorRowHtml("important_badge", strings.editor.colorPlaceholder, { sub: true }) +
-        this._colorRowHtml("important_badge_timeline", strings.editor.colorPlaceholder, { sub: true }) +
-        this._highlightRowHtml("todo", { badgeTargets: "todo" }) +
-        this._fieldRowHtml("todo_badge_icon", "text", "mdi:pin", "", true) +
-        this._colorRowHtml("todo_badge", strings.editor.colorPlaceholder, { sub: true }) +
-        this._colorRowHtml("todo_badge_bg", strings.editor.colorPlaceholder, { sub: true }) +
-        this._colorRowHtml("todo_badge_timeline", strings.editor.colorPlaceholder, { sub: true });
+        badgeBlock(
+          "important",
+          this._highlightRowHtml("important", { badgeTargets: "important" }) +
+            this._fieldRowHtml(
+              "important_badge_icon",
+              "text",
+              strings.editor.importantBadgeIconPlaceholder,
+              "",
+              true
+            ) +
+            this._colorRowHtml("important_badge_fg", strings.editor.colorPlaceholder, { sub: true }) +
+            this._colorRowHtml("important_badge", strings.editor.colorPlaceholder, { sub: true }) +
+            this._colorRowHtml("important_badge_timeline", strings.editor.colorPlaceholder, {
+              sub: true,
+            })
+        ) +
+        badgeBlock(
+          "todo",
+          this._highlightRowHtml("todo", { badgeTargets: "todo" }) +
+            this._fieldRowHtml("todo_badge_icon", "text", "mdi:pin", "", true) +
+            this._colorRowHtml("todo_badge", strings.editor.colorPlaceholder, { sub: true }) +
+            this._colorRowHtml("todo_badge_bg", strings.editor.colorPlaceholder, { sub: true }) +
+            this._colorRowHtml("todo_badge_timeline", strings.editor.colorPlaceholder, { sub: true })
+        );
       body.appendChild(badgeRows);
+      this._wireFoldableBlocks(badgeRows, (el) => el.classList.contains("badge-group"));
       for (const badge of BADGE_KEYS) this._wireBadgeTargets(badgeRows, badge, strings);
 
       const labels = {
@@ -18906,6 +20090,12 @@
           this._emit();
           this._syncDisplayInputs();
           this._applyLayoutStyleVisibility();
+          // Switching a badge on with its block folded would look like
+          // nothing happened - what it just enabled is exactly what is
+          // folded away. So turning it on opens it; turning it off leaves
+          // the fold alone, since there is nothing left to look at.
+          const block = row.closest(".badge-group");
+          if (toggle.checked && block && block._annualsOpen) block._annualsOpen();
         });
       }
 
@@ -19019,7 +20209,70 @@
     // parent field of its own to hang off - the Date block's three lines
     // configure the Date block column, not the Date column above them, so
     // sitting directly under Date's own row would say the opposite.
-    _groupLabelRowHtml(key) {
+    // `collapsible` adds the chevron that marks the heading as the block's
+    // own handle - see _wireDesignCollapse. A name inside a group does not
+    // get one: a group is one thing to style, and its names open with it.
+    // A block folds to the one line that names it, and opening one folds
+    // the rest of its section. One element is four rows - colour, font,
+    // four style switches, letter spacing - and a dozen of them stacked is
+    // a wall to scroll past to reach the last. Folded, a tab reads as a
+    // list of what can be set; the same shape the blitzer card's editor
+    // already has.
+    //
+    // Used by three sections: the Design elements, the Highlight badges,
+    // and the Highlight status blocks. Each is its own accordion - Badges
+    // and Event status are two lists, and opening one of them has no
+    // business closing something in the other.
+    //
+    // `isBlock` decides what folds, so nesting never has to be guessed at:
+    // a Design group's members carry .design-element too, and must not.
+    _wireFoldableBlocks(container, isBlock) {
+      const blocks = () => [...container.children].filter(isBlock);
+      for (const block of blocks()) {
+        // The block's first row is its handle: the heading where there is
+        // one, and the switch row that names it where there is not - a
+        // badge is switched on and off from that very line.
+        const head = block.querySelector(
+          ":scope > .group-label-row, :scope > .toggle-row, :scope > .field-row"
+        );
+        if (!head) continue;
+        block.classList.add("design-foldable");
+        head.classList.add("fold-handle");
+        if (!head.querySelector(".design-chevron")) {
+          const chevron = document.createElement("ha-icon");
+          chevron.className = "design-chevron";
+          chevron.icon = "mdi:chevron-down";
+          (head.querySelector(".field-label") || head).appendChild(chevron);
+        }
+        head.tabIndex = 0;
+        head.setAttribute("role", "button");
+        head.setAttribute("aria-expanded", "false");
+        // A switch on the handle is the badge's own on/off, or one of its
+        // two placements; the "i" is its tooltip. None of them may fold
+        // the block away under the cursor.
+        head.querySelectorAll("label.toggle, .tooltip-anchor").forEach((el) =>
+          el.addEventListener("click", (ev) => ev.stopPropagation())
+        );
+        const toggle = (force) => {
+          const open = force === undefined ? !block.classList.contains("open") : force;
+          for (const el of blocks()) {
+            const on = el === block && open;
+            el.classList.toggle("open", on);
+            const label = el.querySelector(":scope > .fold-handle");
+            if (label) label.setAttribute("aria-expanded", on ? "true" : "false");
+          }
+        };
+        block._annualsOpen = () => toggle(true);
+        head.addEventListener("click", () => toggle());
+        head.addEventListener("keydown", (ev) => {
+          if (ev.key !== "Enter" && ev.key !== " ") return;
+          ev.preventDefault();
+          toggle();
+        });
+      }
+    }
+
+    _groupLabelRowHtml(key, collapsible = false) {
       return `
         <div class="field-row group-label-row" data-group-label="${key}">
           <div class="field-label">
@@ -19027,6 +20280,7 @@
             <span class="tooltip-anchor" data-tooltip="">
               <ha-icon icon="mdi:information-outline"></ha-icon>
             </span>
+            ${collapsible ? '<ha-icon class="design-chevron" icon="mdi:chevron-down"></ha-icon>' : ""}
           </div>
         </div>
       `;
@@ -19659,6 +20913,13 @@
         const row = input.closest(".field-row, .toggle-row");
         if (!row) return;
         row.style.display = hidden ? "none" : "";
+        // A badge is a block of its own (see _wireFoldableBlocks), and the
+        // row being hidden here is the line that names it - the to-do
+        // badge with no to-do list embedded. The block goes with it, or an
+        // empty box would be left where that line was.
+        if (!row.classList.contains("fold-handle")) return;
+        const block = row.closest(".badge-group");
+        if (block) block.style.display = hidden ? "none" : "";
       };
 
       // Design: one decision per element block, since each block holds that
@@ -19739,6 +21000,10 @@
           // color field is gone - the four rows below set the colors now.
           const headControls = headRow.querySelector(".field-input-row");
           if (headControls) headControls.style.display = "none";
+          // The block goes with its heading, or a folded type that is not
+          // shown would leave an empty box where its line was.
+          const block = headRow.closest(".type-block");
+          if (block) block.style.display = shown ? "" : "none";
         }
         const targets = rowColorTargets(this._config, targetKey);
         const rowFor = (suffix) => {
@@ -19800,19 +21065,17 @@
       });
       // The three per-type target switches are list-only - the timeline has
       // no icon color to split from its dot, no accent bar and no row text.
-      // Accent bar goes further and follows the column itself, the same
-      // condition its Design block above uses.
-      // The list's three switches paint an icon, a bar and the row's text -
-      // none of which the timeline has. Its own switch decides whether an
-      // entry's text follows its dot, which the list has no use for.
-      this.shadowRoot.querySelectorAll(".design-body [data-targets-for]").forEach((targets) => {
-        targets.style.display = "";
-        targets.querySelectorAll(".target-toggle").forEach((t) => {
-          const forTimeline = t.dataset.target === "timeline_text";
-          t.style.display = forTimeline === isTimeline ? "" : "none";
-        });
-        const bar = targets.querySelector('.target-toggle[data-target="accent_bar"]');
-        if (bar && !isTimeline) bar.style.display = accentUsed ? "" : "none";
+      // The list's three targets paint an icon, a bar and the row's text -
+      // none of which the timeline has. Its own target decides whether an
+      // entry's text follows its dot, which the list has no use for. Accent
+      // bar goes further and follows the column itself, the same condition
+      // its Design block above uses.
+      this.shadowRoot.querySelectorAll(".design-body [data-target-row]").forEach((row) => {
+        const target = row.dataset.targetRow.split(":").pop();
+        const forTimeline = target === "timeline_text";
+        let shown = forTimeline === isTimeline;
+        if (shown && target === "accent_bar") shown = accentUsed;
+        row.style.display = shown ? "" : "none";
       });
       const calendars = Array.isArray(this._config.external_calendars)
         ? this._config.external_calendars

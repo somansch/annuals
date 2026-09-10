@@ -73,26 +73,89 @@
                 "turkish": "Turca",
                 "vlach": "Valáquia"
             }
+        },
+        "nth": {
+            "options": {
+                "1": "Primeiro",
+                "2": "Segundo",
+                "3": "Terceiro",
+                "4": "Quarto",
+                "-1": "Último"
+            }
+        },
+        "weekday": {
+            "options": {
+                "0": "Segunda-feira",
+                "1": "Terça-feira",
+                "2": "Quarta-feira",
+                "3": "Quinta-feira",
+                "4": "Sexta-feira",
+                "5": "Sábado",
+                "6": "Domingo"
+            }
         }
     },
     "config": {
         "step": {
             "user": {
                 "title": "Adicionar evento",
-                "description": "Cada evento recebe sua própria entrada, que você pode encontrar e editar depois em Configurações → Dispositivos e serviços pesquisando pelo nome.",
+                "description": "Que tipo de evento é este?\n\n**Anual** abrange aniversário, data comemorativa, dia do nome, aniversário de casamento, aniversário de falecimento, aniversário de animal de estimação e aniversário de trabalho. **Único** é uma só data, que se exclui sozinha depois de passar. **Personalizado** é a sua própria data anual, em um dia fixo ou segundo uma regra.",
+                "menu_options": {
+                    "recurring": "{icon_recurring} Uma data anual de alguém",
+                    "one_time": "{icon_one_time} Um evento único",
+                    "custom": "{icon_custom} Um evento personalizado"
+                }
+            },
+            "recurring": {
+                "title": "Adicionar um evento anual",
                 "data": {
                     "name": "Nome",
                     "last_name": "Sobrenome (opcional)",
                     "type": "Tipo de evento",
                     "day": "Dia",
                     "month": "Mês",
-                    "year": "Ano (deixe vazio se desconhecido; obrigatório para eventos únicos)",
-                    "end_date": "Data de término (apenas eventos únicos, opcional - transforma em evento de vários dias)",
+                    "year": "Ano (deixe vazio se desconhecido)",
                     "icon": "Substituir ícone (opcional)",
                     "vip": "VIP Annual"
+                },
+                "description": "Cada evento recebe sua própria entrada, que você pode encontrar e editar depois em Configurações → Dispositivos e serviços → Annuals pesquisando pelo nome."
+            },
+            "one_time": {
+                "title": "Adicionar um evento único",
+                "data": {
+                    "name": "Nome",
+                    "last_name": "Sobrenome (opcional)",
+                    "type": "Tipo de evento",
+                    "day": "Dia",
+                    "month": "Mês",
+                    "year": "Ano",
+                    "end_date": "Data de término (opcional – transforma em evento de vários dias)",
+                    "icon": "Substituir ícone (opcional)",
+                    "vip": "VIP Annual"
+                },
+                "description": "Uma única data para a qual fazer a contagem regressiva. Ela nunca se repete, por isso o ano é obrigatório, e a entrada é excluída automaticamente na meia-noite seguinte ao seu término.\n\nCom uma data de término vira um evento de vários dias: uma viagem, um congresso, uma estadia."
+            },
+            "custom": {
+                "title": "Adicionar um evento personalizado",
+                "data": {
+                    "name": "Nome",
+                    "last_name": "Sobrenome (opcional)",
+                    "type": "Tipo de evento",
+                    "day": "Dia",
+                    "month": "Mês",
+                    "year": "Ano",
+                    "icon": "Substituir ícone (opcional)",
+                    "vip": "VIP Annual",
+                    "nth": "Posição no mês",
+                    "weekday": "Dia da semana"
+                },
+                "description": "A sua própria data anual, para tudo o que os outros tipos não descrevem.\n\nEla pode seguir uma **regra** em vez de um dia fixo: o Dia das Mães é o segundo domingo de maio e o Dia dos Pais na Austrália o primeiro domingo de setembro. Preencha os dois campos abaixo; o **Mês** acima indica a que mês a regra se aplica e o **Dia** deixa de ser usado. Deixe-os vazios para uma data fixa.",
+                "data_description": {
+                    "nth": "Primeiro, segundo, terceiro, quarto ou o último do mês.",
+                    "weekday": "Defina junto com o campo acima, ou deixe os dois vazios."
                 }
             },
-            "reconfigure": {
+            "reconfigure_recurring": {
                 "title": "Editar evento",
                 "description": "Altere qualquer campo abaixo e envie para atualizar este evento.",
                 "data": {
@@ -101,10 +164,44 @@
                     "type": "Tipo de evento",
                     "day": "Dia",
                     "month": "Mês",
-                    "year": "Ano (deixe vazio se desconhecido; obrigatório para eventos únicos)",
-                    "end_date": "Data de término (apenas eventos únicos, opcional - transforma em evento de vários dias)",
+                    "year": "Ano (deixe vazio se desconhecido)",
                     "icon": "Substituir ícone (opcional)",
                     "vip": "VIP Annual"
+                }
+            },
+            "reconfigure_one_time": {
+                "title": "Editar evento único",
+                "description": "Altere qualquer campo abaixo e envie para atualizar este evento.\n\nUma data de término transforma o evento em um evento de vários dias; ao limpá-la, ele volta a ser de um dia só.",
+                "data": {
+                    "name": "Nome",
+                    "last_name": "Sobrenome (opcional)",
+                    "type": "Tipo de evento",
+                    "day": "Dia",
+                    "month": "Mês",
+                    "year": "Ano",
+                    "end_date": "Data de término (opcional – transforma em evento de vários dias)",
+                    "icon": "Substituir ícone (opcional)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "reconfigure_custom": {
+                "title": "Editar evento personalizado",
+                "description": "Altere qualquer campo abaixo e envie para atualizar este evento.\n\nEla pode seguir uma **regra** em vez de um dia fixo – *o segundo domingo de maio*. Preencha os dois campos abaixo; o **Mês** acima indica a que mês a regra se aplica e o **Dia** deixa de ser usado. Ao limpá-los, o evento volta para esse dia.",
+                "data": {
+                    "name": "Nome",
+                    "last_name": "Sobrenome (opcional)",
+                    "type": "Tipo de evento",
+                    "day": "Dia",
+                    "month": "Mês",
+                    "year": "Ano",
+                    "icon": "Substituir ícone (opcional)",
+                    "vip": "VIP Annual",
+                    "nth": "Posição no mês",
+                    "weekday": "Dia da semana"
+                },
+                "data_description": {
+                    "nth": "Primeiro, segundo, terceiro, quarto ou o último do mês.",
+                    "weekday": "Defina junto com o campo acima, ou deixe os dois vazios."
                 }
             }
         },
@@ -113,7 +210,8 @@
             "end_date_one_time_only": "Uma data de término só pode ser definida em um evento único.",
             "end_date_before_start": "A data de término deve ser posterior à data de início.",
             "invalid_date": "Essa combinação de dia/mês/ano não é uma data válida.",
-            "year_required": "Eventos únicos exigem um ano."
+            "year_required": "Eventos únicos exigem um ano.",
+            "rule_needs_both": "Uma regra de repetição precisa dos dois campos, ou de nenhum."
         },
         "abort": {
             "hub_not_configurable": "O hub do Annuals não tem configurações próprias - ele apenas mantém os calendários compartilhados.",
@@ -123,21 +221,6 @@
     },
     "options": {
         "step": {
-            "init": {
-                "title": "Editar evento",
-                "description": "Altere qualquer campo abaixo e envie para atualizar este evento.",
-                "data": {
-                    "name": "Nome",
-                    "last_name": "Sobrenome (opcional)",
-                    "type": "Tipo de evento",
-                    "day": "Dia",
-                    "month": "Mês",
-                    "year": "Ano (deixe vazio se desconhecido; obrigatório para eventos únicos)",
-                    "end_date": "Data de término (apenas eventos únicos, opcional - transforma em evento de vários dias)",
-                    "icon": "Substituir ícone (opcional)",
-                    "vip": "VIP Annual"
-                }
-            },
             "import_csv": {
                 "title": "Importar eventos de um CSV",
                 "description": "Colunas: name, type, day, month, year (opcional, obrigatório para one_time), icon (opcional), vip (opcional), last_name (opcional). \"type\" deve ser uma destas chaves em inglês: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (sempre em inglês, independente do seu idioma). \"vip\" aceita 1/true/yes/y/x (sem diferenciar maiúsculas/minúsculas); deixe vazio ou omita a coluna para um evento que não seja VIP. Mantenha todas as colunas mesmo quando um valor estiver vazio - uma linha sem a vírgula final desloca os valores seguintes para a esquerda. Linhas inválidas são ignoradas e registradas.\n\nExemplo:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFérias em família,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -228,16 +311,16 @@
                 }
             },
             "holiday_translations": {
-                "title": "🌐 Holiday translations",
-                "description": "Export and import the holiday names you wrote yourself.",
+                "title": "🌐 Traduções de feriados",
+                "description": "Exporte e importe os nomes de feriados que você mesmo escreveu.",
                 "menu_options": {
-                    "export_translations": "📤 Export translations",
-                    "import_translations": "📥 Import translations"
+                    "export_translations": "📤 Exportar traduções",
+                    "import_translations": "📥 Importar traduções"
                 }
             },
             "import_translations": {
-                "title": "Import translations",
-                "description": "Upload a translations CSV. Columns: `country,subdivision,category,holiday_key,observed,language,name`. Rows are matched onto holidays by country, subdivision, category, holiday key and observed flag - not by entry id, so a file exported before re-importing a country still applies. Rows whose holiday isn't present are skipped and counted.",
+                "title": "Importar traduções",
+                "description": "Envie um CSV de traduções. Colunas: `country,subdivision,category,holiday_key,observed,language,name`. As linhas são associadas aos feriados por país, subdivisão, categoria, chave do feriado e sinalizador observed – não pelo id da entrada, então um arquivo exportado antes de reimportar um país continua valendo. Linhas cujo feriado não existe são ignoradas e contadas.",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -248,7 +331,7 @@
                     "annual_settings": "{icon_annual_settings} Annual Configurações",
                     "import_events": "{icon_import_events} Importar eventos",
                     "export_csv": "{icon_export_csv} Exportar eventos para CSV",
-                    "holiday_translations": "{icon_holiday_translations} Holiday translations",
+                    "holiday_translations": "{icon_holiday_translations} Traduções de feriados",
                     "remove_events": "{icon_remove_events} Remover eventos",
                     "delete_all": "{icon_delete_all} Excluir todos os dados do Annuals"
                 }
@@ -336,6 +419,55 @@
             "delete_all": {
                 "title": "Excluir todos os dados do Annuals",
                 "description": "Isso exclui permanentemente todos os {count} evento(s), os calendários compartilhados e o próprio hub do Annuals - toda a integração e tudo o que ela criou. Isso não pode ser desfeito. Clique em \"OK\" para confirmar."
+            },
+            "edit_recurring": {
+                "title": "Editar evento",
+                "description": "Altere qualquer campo abaixo e envie para atualizar este evento.",
+                "data": {
+                    "name": "Nome",
+                    "last_name": "Sobrenome (opcional)",
+                    "type": "Tipo de evento",
+                    "day": "Dia",
+                    "month": "Mês",
+                    "year": "Ano (deixe vazio se desconhecido)",
+                    "icon": "Substituir ícone (opcional)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "edit_one_time": {
+                "title": "Editar evento único",
+                "description": "Altere qualquer campo abaixo e envie para atualizar este evento.\n\nUma data de término transforma o evento em um evento de vários dias; ao limpá-la, ele volta a ser de um dia só.",
+                "data": {
+                    "name": "Nome",
+                    "last_name": "Sobrenome (opcional)",
+                    "type": "Tipo de evento",
+                    "day": "Dia",
+                    "month": "Mês",
+                    "year": "Ano",
+                    "end_date": "Data de término (opcional – transforma em evento de vários dias)",
+                    "icon": "Substituir ícone (opcional)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "edit_custom": {
+                "title": "Editar evento personalizado",
+                "description": "Altere qualquer campo abaixo e envie para atualizar este evento.\n\nEla pode seguir uma **regra** em vez de um dia fixo – *o segundo domingo de maio*. Preencha os dois campos abaixo; o **Mês** acima indica a que mês a regra se aplica e o **Dia** deixa de ser usado. Ao limpá-los, o evento volta para esse dia.",
+                "data": {
+                    "name": "Nome",
+                    "last_name": "Sobrenome (opcional)",
+                    "type": "Tipo de evento",
+                    "day": "Dia",
+                    "month": "Mês",
+                    "year": "Ano",
+                    "icon": "Substituir ícone (opcional)",
+                    "vip": "VIP Annual",
+                    "nth": "Posição no mês",
+                    "weekday": "Dia da semana"
+                },
+                "data_description": {
+                    "nth": "Primeiro, segundo, terceiro, quarto ou o último do mês.",
+                    "weekday": "Defina junto com o campo acima, ou deixe os dois vazios."
+                }
             }
         },
         "error": {
@@ -351,12 +483,13 @@
             "invalid_vcard": "Não foi possível ler este arquivo como um vCard. Verifique o formato.",
             "no_valid_vcard_entries": "Nenhum contato com um aniversário utilizável foi encontrado neste arquivo. Consulte o log para detalhes das entradas ignoradas.",
             "no_valid_vcard_dates": "Nenhuma data comemorativa ou outra data (além de aniversários) foi encontrada neste arquivo. Consulte o log para detalhes das entradas ignoradas.",
-            "no_batch_selected": "Marque \"Remover todos os feriados importados\" ou escolha um lote."
+            "no_batch_selected": "Marque \"Remover todos os feriados importados\" ou escolha um lote.",
+            "rule_needs_both": "Uma regra de repetição precisa dos dois campos, ou de nenhum."
         },
         "abort": {
             "translations_exported": "{count} tradução(ões) exportado(s). [Baixar annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+clique para baixar - um clique simples não funciona aqui)\n\nOu copie o CSV abaixo:\n\n```\n{csv}\n```",
-            "translations_imported": "{updated} holiday(s) updated, {skipped} row(s) skipped.",
-            "no_translations_to_export": "No holiday names have been written yet - there is nothing to export.",
+            "translations_imported": "{updated} feriado(s) atualizado(s), {skipped} linha(s) ignorada(s).",
+            "no_translations_to_export": "Nenhum nome de feriado foi escrito ainda – não há nada para exportar.",
             "hub_not_configurable": "O hub do Annuals não tem configurações próprias - ele apenas mantém os calendários compartilhados.",
             "import_started": "Importação iniciada: {created} evento(s) na fila, {skipped} linha(s) ignorada(s) (veja o log para detalhes).",
             "ics_import_started": "Importação iniciada: {created} evento(s) criado(s), {updated} atualizado(s), {skipped} entrada(s) ignorada(s) ou excluída(s).",

@@ -43,17 +43,25 @@ from .const import (
     CONF_LAST_NAME,
     CONF_MONTH,
     CONF_NAME_TRANSLATIONS,
+    CONF_NTH,
     CONF_SUBDIVISION,
     CONF_TODO_LISTS,
     CONF_VIP,
+    CONF_WEEKDAY,
     CONF_YEAR,
     DEFAULT_IMPORTANT_THRESHOLDS,
     DOMAIN,
     EVENT_TYPES,
+    EVENT_TYPE_GROUP,
+    EVENT_TYPE_GROUPS,
+    GROUP_CUSTOM,
+    GROUP_ONE_TIME,
+    GROUP_RECURRING,
     HUB_UNIQUE_ID,
     DATA_TYPE_LABELS,
     MILESTONE_EVENT_TYPES,
     NAME_TRANSLATION_LANGUAGES,
+    NTH_OPTIONS,
     SPAN_DAY,
     SPAN_END,
     SPAN_START,
@@ -62,6 +70,7 @@ from .const import (
     TYPE_HOLIDAY,
     TYPE_ONE_TIME,
     TYPE_WEDDING_ANNIVERSARY,
+    WEEKDAY_OPTIONS,
 )
 from .dates import (
     _holiday_calendar,
@@ -78,6 +87,10 @@ from .dates import (
 )
 from .helpers import (
     async_break_note,
+    holiday_date,
+    merge_group,
+    mergeable,
+    outranks,
     async_event_type_labels,
     async_span_labels,
     export_csv_text,
@@ -155,11 +168,18 @@ _SUPPORTED_HOLIDAY_COUNTRIES = sorted(
     if len(code) == 2 and code in COUNTRIES
 )
 
-def _event_type_selector():
+def _event_type_selector(options: list[str]):
+    """The types one shape of event can be (see EVENT_TYPE_GROUPS).
+
+    A list of one for the one-time and custom shapes: the dropdown is then
+    a statement rather than a choice, but the form still says what it is
+    editing, and nothing on it can be switched to a type its fields do not
+    fit.
+    """
     return selector(
         {
             "select": {
-                "options": EVENT_TYPES,
+                "options": options,
                 "translation_key": "event_type",
                 "mode": "dropdown",
             }
@@ -179,8 +199,131 @@ def _month_selector():
     )
 
 
-def _event_schema(defaults: dict | None = None) -> vol.Schema:
+def _nth_selector():
+    return selector(
+        {
+            "select": {
+                "options": NTH_OPTIONS,
+                "translation_key": "nth",
+                "mode": "dropdown",
+            }
+        }
+    )
+
+
+def _weekday_selector():
+    return selector(
+        {
+            "select": {
+                "options": WEEKDAY_OPTIONS,
+                "translation_key": "weekday",
+                "mode": "dropdown",
+            }
+        }
+    )
+
+
+def _rule_fields(defaults: dict) -> dict:
+    """The two halves of a recurrence rule (see CONF_WEEKDAY in const.py).
+
+    On the custom event's own form and on no other, which is what asking
+    for the shape of the event first (see EVENT_TYPE_GROUPS) buys: the
+    fields are only built where they can apply.
+
+    Both optional: leaving them empty is the plain day/month event a
+    custom event has always been, which is what most of them are.
+    """
+    return {
+        vol.Optional(
+            CONF_NTH,
+            description={"suggested_value": _as_option(defaults.get(CONF_NTH))},
+        ): _nth_selector(),
+        vol.Optional(
+            CONF_WEEKDAY,
+            description={"suggested_value": _as_option(defaults.get(CONF_WEEKDAY))},
+        ): _weekday_selector(),
+    }
+
+
+def _as_option(value: int | str | None) -> str | None:
+    """A stored number as the string its select selector deals in."""
+    return None if _blank(value) else str(value)
+
+
+def _blank(value) -> bool:
+    """Empty as the frontend means it.
+
+    An emptied optional field is left out of the submitted payload
+    altogether, so it arrives as None; an empty string means the same
+    thing here. Written out rather than leaning on falsiness, because
+    "0" is Monday and 0 is a real weekday.
+    """
+    return value is None or value == ""
+
+
+def _year_field(defaults: dict, group: str) -> dict:
+    """The year, required where it is the event's whole identity.
+
+    A one-time event is a single exact date, so there is no "unknown year"
+    to leave empty and the field is required - which is also what puts the
+    asterisk on it, where the label used to have to say so in words.
+
+    It needs a default for that: a required number field with nothing in it
+    opens on the selector's own minimum, and a form offering to create an
+    event in the year 1 is worse than one that guesses. This year is the
+    guess, since a one-time event is something being counted down to - and
+    an existing event's own year, which arrives as the suggested value,
+    wins over it.
+    """
+    number = selector({"number": {"min": 1, "max": 9999, "mode": "box"}})
+    if group == GROUP_ONE_TIME:
+        return {
+            vol.Required(
+                CONF_YEAR,
+                default=date.today().year,
+                description={"suggested_value": defaults.get(CONF_YEAR)},
+            ): number
+        }
+    return {
+        vol.Optional(
+            CONF_YEAR,
+            description={"suggested_value": defaults.get(CONF_YEAR)},
+        ): number
+    }
+
+
+def _end_date_field(defaults: dict, group: str) -> dict:
+    """The last day of a multi-day event - one-time events only.
+
+    See CONF_END_DATE: every other shape repeats every year, so an end date
+    in one particular year has no meaning for it. A native date picker
+    here, unlike the split day/month/year above: an end date is always
+    fully known and always near, so none of the reasons for the split
+    fields apply.
+    """
+    if group != GROUP_ONE_TIME:
+        return {}
+    return {
+        vol.Optional(
+            CONF_END_DATE,
+            description={"suggested_value": defaults.get(CONF_END_DATE)},
+        ): selector({"date": {}})
+    }
+
+
+def _event_schema(defaults: dict | None, *, group: str) -> vol.Schema:
+    """The form for one shape of event (see EVENT_TYPE_GROUPS in const.py).
+
+    Each shape gets only the fields that can apply to it: the year is
+    required and an end date offered on a one-time event, a recurrence
+    rule offered on a custom one, and neither appears on the seven yearly
+    types. A config-flow form cannot show a field conditionally on another
+    field in the same form - and the type is another field - so the shape
+    is settled before this is built, on the menu the add flow opens with
+    or by what the event being edited already is.
+    """
     defaults = defaults or {}
+    types = EVENT_TYPE_GROUPS[group]
     return vol.Schema(
         {
             vol.Required(CONF_EVENT_NAME, default=defaults.get(CONF_EVENT_NAME, "")): str,
@@ -200,8 +343,8 @@ def _event_schema(defaults: dict | None = None) -> vol.Schema:
                 description={"suggested_value": defaults.get(CONF_LAST_NAME)},
             ): str,
             vol.Required(
-                CONF_EVENT_TYPE, default=defaults.get(CONF_EVENT_TYPE, TYPE_BIRTHDAY)
-            ): _event_type_selector(),
+                CONF_EVENT_TYPE, default=defaults.get(CONF_EVENT_TYPE, types[0])
+            ): _event_type_selector(types),
             vol.Required(
                 CONF_DAY, default=defaults.get(CONF_DAY, 1)
             ): selector({"number": {"min": 1, "max": 31, "mode": "box"}}),
@@ -220,22 +363,13 @@ def _event_schema(defaults: dict | None = None) -> vol.Schema:
             # field on reconfigure would silently restore the stored year
             # (the frontend omits empty optional fields from the payload and
             # voluptuous would re-fill them from the schema default).
-            vol.Optional(
-                CONF_YEAR,
-                description={"suggested_value": defaults.get(CONF_YEAR)},
-            ): selector({"number": {"min": 1, "max": 9999, "mode": "box"}}),
-            # One-time events only (see CONF_END_DATE) - the day a multi-day
-            # event ends, leaving it empty keeping the single-day behaviour
-            # every event had before. A native date picker here, unlike the
-            # split day/month/year above: an end date is always fully known
-            # and always near, so none of the reasons for the split fields
-            # apply. A config-flow form can't show a field conditionally on
-            # another field's value, so this is offered for every type and
-            # rejected in _validate_and_normalise for the ones that recur.
-            vol.Optional(
-                CONF_END_DATE,
-                description={"suggested_value": defaults.get(CONF_END_DATE)},
-            ): selector({"date": {}}),
+            #
+            # Required on a one-time event, which is a single exact date and
+            # has no "unknown year" to leave empty - so the frontend's own
+            # asterisk says so, where the label used to have to.
+            **_year_field(defaults, group),
+            **_end_date_field(defaults, group),
+            **(_rule_fields(defaults) if group == GROUP_CUSTOM else {}),
             # Native icon picker (searchable MDI grid) instead of a plain
             # text field - still stores/returns a plain "mdi:..." string.
             vol.Optional(
@@ -283,7 +417,10 @@ def _validate_and_normalise(user_input: dict) -> tuple[dict | None, dict[str, st
     # CONF_END_DATE). Every other type repeats every year, so an end date in
     # one particular year has no meaning for it - rejected rather than
     # silently dropped, so nobody sets one on a birthday and waits for
-    # something to happen.
+    # something to happen. No form can produce this any more, only a CSV
+    # row could - and _parse_csv_rows catches that first, with the line
+    # number - but this is the one place event data is written, so it
+    # states the rule rather than trusting every caller to have.
     end_date = (user_input.get(CONF_END_DATE) or "").strip() or None
     if end_date is not None:
         if user_input[CONF_EVENT_TYPE] != TYPE_ONE_TIME:
@@ -298,6 +435,25 @@ def _validate_and_normalise(user_input: dict) -> tuple[dict | None, dict[str, st
             return None, errors
         end_date = parsed_end.isoformat()
 
+    # A recurrence rule (see CONF_WEEKDAY in const.py), which reaches this
+    # from the rule step below - both halves of one, or neither. Half a
+    # rule is not a rule, and applying the half that was given would put
+    # the event on a date nobody chose.
+    nth = user_input.get(CONF_NTH)
+    weekday = user_input.get(CONF_WEEKDAY)
+    if _blank(nth) != _blank(weekday):
+        errors[CONF_WEEKDAY if _blank(weekday) else CONF_NTH] = "rule_needs_both"
+        return None, errors
+
+    # Every other type is one particular person's own date, which happened
+    # on the day it happened - so a rule there is dropped rather than
+    # refused, unlike the end date above: an event whose type says it has
+    # no rule and whose stored data carries one should come out of here
+    # without one, not fail to save. Reachable only through an entry
+    # written by an older version, or by a hand-built import row.
+    if user_input[CONF_EVENT_TYPE] != TYPE_CUSTOM:
+        nth = weekday = None
+
     data = {
         CONF_EVENT_NAME: name,
         CONF_LAST_NAME: user_input.get(CONF_LAST_NAME, "").strip(),
@@ -311,6 +467,10 @@ def _validate_and_normalise(user_input: dict) -> tuple[dict | None, dict[str, st
         # to a single day has to actually clear the stored end date, which a
         # "only set it when present" would silently fail to do.
         CONF_END_DATE: end_date,
+        # The same reasoning: clearing a rule has to actually clear it, and
+        # the day/month the event still carries is what it goes back to.
+        CONF_NTH: None if _blank(nth) else int(nth),
+        CONF_WEEKDAY: None if _blank(weekday) else int(weekday),
     }
     return data, errors
 
@@ -329,9 +489,11 @@ def _parse_csv_rows(text: str) -> tuple[list[dict], list[str]]:
     """Parse CSV text into validated event data dicts, plus per-line errors.
 
     Columns: name, type, day, month, year (optional), icon (optional),
-    vip (optional), last_name (optional). `type` must be one of the internal
-    English keys (e.g. "birthday"), case-insensitively - translated labels
-    are deliberately not accepted, so the same file works regardless of the
+    vip (optional), last_name (optional), end_date (optional), and nth +
+    weekday (optional, both together, and on custom rows only - see
+    CONF_WEEKDAY in const.py). `type` must be one of the internal English
+    keys (e.g. "birthday"), case-insensitively - translated labels are
+    deliberately not accepted, so the same file works regardless of the
     server's language. `vip` accepts 1/true/yes/y/x (case-insensitive);
     anything else (including a missing column) means not VIP. `last_name`
     is never applied to holiday-type rows in practice, since holidays are
@@ -398,6 +560,26 @@ def _parse_csv_rows(text: str) -> tuple[list[dict], list[str]]:
                 continue
             end_date = parsed_end.isoformat()
 
+        # Optional columns, absent from any CSV written before recurrence
+        # rules existed - see CONF_WEEKDAY in const.py, and
+        # _validate_and_normalise, which states the same two rules once for
+        # the form. Restated here rather than shared, so a bad row names its
+        # own line number the way every other check in this loop does.
+        nth = row.get("nth", "")
+        weekday = row.get("weekday", "")
+        if bool(nth) != bool(weekday):
+            errors.append(f"line {line_no}: nth and weekday go together")
+            continue
+        if nth:
+            if event_type != TYPE_CUSTOM:
+                errors.append(f"line {line_no}: nth/weekday are for custom events only")
+                continue
+            if nth not in NTH_OPTIONS or weekday not in WEEKDAY_OPTIONS:
+                errors.append(
+                    f"line {line_no}: nth must be 1-4 or -1, weekday 0 (Monday) to 6"
+                )
+                continue
+
         rows.append(
             {
                 CONF_EVENT_NAME: name,
@@ -409,6 +591,8 @@ def _parse_csv_rows(text: str) -> tuple[list[dict], list[str]]:
                 CONF_ICON: icon_raw,
                 CONF_VIP: row.get("vip", "").lower() in _CSV_TRUE_VALUES,
                 CONF_END_DATE: end_date or None,
+                CONF_NTH: int(nth) if nth else None,
+                CONF_WEEKDAY: int(weekday) if nth else None,
             }
         )
     return rows, errors
@@ -889,6 +1073,18 @@ def _import_unique_id(data: dict) -> str:
     as it was before that field existed, so re-importing after upgrading
     still matches every already-imported holiday instead of duplicating it.
 
+    The holiday key is compared case-insensitively, like the subdivision
+    beside it and the CSV name below. The key is a holiday's name in the
+    library's own default language, and the `holidays` library rewrites
+    those names from time to time - sometimes changing nothing but their
+    capitalisation. Measured on NL between two releases: "Eerste kerstdag"
+    became "Eerste Kerstdag", and four more like it. Compared exactly,
+    those stop matching the entries already imported, and the next import
+    adds a second entry beside each - the same holiday twice, differing
+    only in a capital letter. Entries stored under the old, exact form are
+    brought over to this one at startup, once - see
+    __init__._async_migrate_holiday_keys.
+
     Multi-day breaks (see CONF_HOLIDAY_SPAN) are keyed the same way, with a
     suffix for which block of the break and which part of it this entry
     tracks. Both suffixes are omitted for the first block's first day, which
@@ -899,9 +1095,10 @@ def _import_unique_id(data: dict) -> str:
     """
     if data[CONF_EVENT_TYPE] == TYPE_HOLIDAY:
         subdivision_key = (data.get(CONF_SUBDIVISION) or "").casefold()
+        holiday_key = (data.get(CONF_HOLIDAY_KEY) or "").casefold()
         base = (
             f"holiday:{data[CONF_COUNTRY]}:{subdivision_key}:"
-            f"{data[CONF_CATEGORY]}:{data[CONF_HOLIDAY_KEY]}"
+            f"{data[CONF_CATEGORY]}:{holiday_key}"
         )
         if block := int(data.get(CONF_HOLIDAY_BLOCK) or 0):
             base = f"{base}:block{block}"
@@ -1140,6 +1337,70 @@ def _holiday_options_schema(country_code: str) -> vol.Schema:
     return vol.Schema(fields)
 
 
+def _resolve_category_clashes(entries: list, rows: list[dict]) -> tuple[list[dict], list]:
+    """Drop the rows a stored holiday already covers, and name the ones it loses.
+
+    The `holidays` library files the same date under several categories at
+    once, often under a different name in each - "Washington's Birthday" as
+    government, "Washington and Lincoln Day" as public. Within one import
+    _build_holiday_rows merges those by date; across two imports it cannot,
+    because the second one does not see what the first created, and the
+    identity carries the category (see _import_unique_id). So importing
+    public today and government tomorrow used to leave the same holiday
+    twice.
+
+    Resolved here by the same rule, against the entries already stored:
+    **public wins**. A public row supersedes any other category standing on
+    its date, which is returned for the caller to remove; a row of any other
+    category is dropped where public - or anything else - is already there,
+    since something already speaks for that date. Same-category rows are
+    left alone entirely: those are a re-import, and the unique id updates
+    them in place.
+
+    Blocking - it resolves every date involved - so it runs in an executor.
+    Two genuinely different holidays from two categories falling on one date
+    do collapse here, the same trade-off _build_holiday_rows already makes:
+    next to how routinely one date is filed under several categories, that
+    is a rare coincidence.
+    """
+    year = date.today().year
+    stored: dict[tuple, dict[date, list]] = {}
+    for entry in entries:
+        if not mergeable(entry.data):
+            continue
+        occurrence = holiday_date(entry.data, year)
+        if occurrence is None:
+            continue
+        stored.setdefault(merge_group(entry.data), {}).setdefault(occurrence, []).append(entry)
+
+    keep: list[dict] = []
+    superseded: list = []
+    for row in rows:
+        if not mergeable(row):
+            keep.append(row)
+            continue
+        occurrence = holiday_date(row, year)
+        on_that_day = stored.get(merge_group(row), {}).get(occurrence, []) if occurrence else []
+        # A re-import of this very entry is an update, not a clash.
+        clashing = [
+            entry
+            for entry in on_that_day
+            if entry.data.get(CONF_CATEGORY) != row[CONF_CATEGORY]
+        ]
+        if not clashing:
+            keep.append(row)
+            continue
+        losers = [e for e in clashing if outranks(row[CONF_CATEGORY], e.data.get(CONF_CATEGORY))]
+        if len(losers) == len(clashing):
+            # This row outranks everything standing on the date.
+            keep.append(row)
+            superseded.extend(losers)
+        # Otherwise something already covers the date and outranks, or ties
+        # with, this row - and what is already there wins a tie.
+
+    return keep, superseded
+
+
 def _build_holiday_rows(
     country: str,
     subdivision: str | None,
@@ -1270,17 +1531,23 @@ def _build_holiday_rows(
     # region - they all resolve to the same identity and collapse into one
     # entry (see _import_unique_id), while the genuinely regional holidays
     # stay separate per region.
+    # Case-folded, for the reason _import_unique_id gives: the library has
+    # been known to change a name's capitalisation alone, and a region's
+    # calendar and the country's need not have been built from the same
+    # release of it.
     nationwide_keys: set[str] = set()
     if subdivision:
         for category in categories:
             country_cal = _holiday_calendar(country, None, category, year, None)
-            nationwide_keys.update(holiday_key_from_name(name) for name in country_cal.values())
+            nationwide_keys.update(
+                holiday_key_from_name(name).casefold() for name in country_cal.values()
+            )
 
     def _common(category: str, key: str) -> dict:
         return {
             CONF_EVENT_TYPE: TYPE_HOLIDAY,
             CONF_COUNTRY: country,
-            CONF_SUBDIVISION: None if key in nationwide_keys else subdivision,
+            CONF_SUBDIVISION: None if key.casefold() in nationwide_keys else subdivision,
             CONF_CATEGORY: category,
             CONF_LANGUAGE: language,
             CONF_HOLIDAY_KEY: key,
@@ -1354,6 +1621,31 @@ def _build_holiday_rows(
     return rows
 
 
+# Which step each shape's form lives on, in each of the two flows. Written
+# out rather than built from the group name, so searching the file for a
+# step id finds it.
+_RECONFIGURE_STEPS = {
+    GROUP_RECURRING: "async_step_reconfigure_recurring",
+    GROUP_ONE_TIME: "async_step_reconfigure_one_time",
+    GROUP_CUSTOM: "async_step_reconfigure_custom",
+}
+_EDIT_STEPS = {
+    GROUP_RECURRING: "async_step_edit_recurring",
+    GROUP_ONE_TIME: "async_step_edit_one_time",
+    GROUP_CUSTOM: "async_step_edit_custom",
+}
+
+
+def _group_of(entry: ConfigEntry) -> str:
+    """Which shape a stored event has (see EVENT_TYPE_GROUPS in const.py).
+
+    Falls back to the yearly group, which is what an entry written by some
+    future version with a type this one does not know should be shown as:
+    a name, a type, a day and a month, which every event has.
+    """
+    return EVENT_TYPE_GROUP.get(entry.data.get(CONF_EVENT_TYPE), GROUP_RECURRING)
+
+
 async def _entry_title(hass: HomeAssistant, data: dict) -> str:
     """Type-prefixed entry title, e.g. "Geburtstag: Anna Miller" (or just
     "Geburtstag: Anna" with no last name set) - the prefix makes the
@@ -1384,6 +1676,34 @@ class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
         if not hub_exists:
             return await self.async_step_hub()
 
+        # Which shape the event has decides which fields its form can even
+        # sensibly ask for (see EVENT_TYPE_GROUPS in const.py), and a
+        # config-flow form cannot decide that from a field on itself - so it
+        # is a menu, and each answer leads to a form carrying only its own
+        # fields. Icons are supplied here rather than baked into each
+        # translation string, so every language renders them identically
+        # and changing one never means touching all 16 files.
+        return self.async_show_menu(
+            step_id="user",
+            menu_options=[GROUP_RECURRING, GROUP_ONE_TIME, GROUP_CUSTOM],
+            description_placeholders={
+                "icon_recurring": "\U0001F382",
+                "icon_one_time": "\u23F3",
+                "icon_custom": "\U0001F5D3\uFE0F",
+            },
+        )
+
+    async def async_step_recurring(self, user_input=None):
+        return await self._async_add_event(GROUP_RECURRING, user_input)
+
+    async def async_step_one_time(self, user_input=None):
+        return await self._async_add_event(GROUP_ONE_TIME, user_input)
+
+    async def async_step_custom(self, user_input=None):
+        return await self._async_add_event(GROUP_CUSTOM, user_input)
+
+    async def _async_add_event(self, group: str, user_input):
+        """One of the three add forms - the step id is the group's name."""
         errors: dict[str, str] = {}
         if user_input is not None:
             data, errors = _validate_and_normalise(user_input)
@@ -1392,8 +1712,8 @@ class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
                 return self.async_create_entry(title=title, data=data)
 
         return self.async_show_form(
-            step_id="user",
-            data_schema=_event_schema(user_input),
+            step_id=group,
+            data_schema=_event_schema(user_input, group=group),
             errors=errors,
         )
 
@@ -1444,6 +1764,24 @@ class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
         if entry.data.get(CONF_HUB):
             return self.async_abort(reason="hub_not_configurable")
 
+        # No menu when editing: this event has already chosen its shape, so
+        # it goes straight to that shape's form. Which also means the type
+        # dropdown there offers only that group's types - see
+        # _event_type_selector.
+        return await getattr(self, _RECONFIGURE_STEPS[_group_of(entry)])()
+
+    async def async_step_reconfigure_recurring(self, user_input=None):
+        return await self._async_reconfigure_event(GROUP_RECURRING, user_input)
+
+    async def async_step_reconfigure_one_time(self, user_input=None):
+        return await self._async_reconfigure_event(GROUP_ONE_TIME, user_input)
+
+    async def async_step_reconfigure_custom(self, user_input=None):
+        return await self._async_reconfigure_event(GROUP_CUSTOM, user_input)
+
+    async def _async_reconfigure_event(self, group: str, user_input):
+        """One of the three edit forms behind the overflow menu."""
+        entry = self._get_reconfigure_entry()
         errors: dict[str, str] = {}
         if user_input is not None:
             data, errors = _validate_and_normalise(user_input)
@@ -1452,8 +1790,8 @@ class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
                 return self.async_update_reload_and_abort(entry, title=title, data=data)
 
         return self.async_show_form(
-            step_id="reconfigure",
-            data_schema=_event_schema(user_input or dict(entry.data)),
+            step_id=f"reconfigure_{group}",
+            data_schema=_event_schema(user_input or dict(entry.data), group=group),
             errors=errors,
         )
 
@@ -1482,6 +1820,21 @@ class AnnualsOptionsFlow(OptionsFlow):
         if self.config_entry.data.get(CONF_EVENT_TYPE) == TYPE_HOLIDAY:
             return await self.async_step_holiday_menu()
 
+        # Same as reconfigure above: the event's own shape decides which
+        # form it gets, so there is no menu and no field it cannot use.
+        return await getattr(self, _EDIT_STEPS[_group_of(self.config_entry)])()
+
+    async def async_step_edit_recurring(self, user_input=None):
+        return await self._async_edit_event(GROUP_RECURRING, user_input)
+
+    async def async_step_edit_one_time(self, user_input=None):
+        return await self._async_edit_event(GROUP_ONE_TIME, user_input)
+
+    async def async_step_edit_custom(self, user_input=None):
+        return await self._async_edit_event(GROUP_CUSTOM, user_input)
+
+    async def _async_edit_event(self, group: str, user_input):
+        """One of the three edit forms behind the Configure button."""
         entry = self.config_entry
         errors: dict[str, str] = {}
         if user_input is not None:
@@ -1493,8 +1846,8 @@ class AnnualsOptionsFlow(OptionsFlow):
                 return self.async_create_entry(title="", data={})
 
         return self.async_show_form(
-            step_id="init",
-            data_schema=_event_schema(user_input or dict(entry.data)),
+            step_id=f"edit_{group}",
+            data_schema=_event_schema(user_input or dict(entry.data), group=group),
             errors=errors,
         )
 
@@ -2149,6 +2502,23 @@ class AnnualsOptionsFlow(OptionsFlow):
         # now that nationwide holidays are shared across a country's regions
         # (see _build_holiday_rows): importing a second region legitimately
         # re-queues them, and a bare total would look like nothing happened.
+        # One entry per holiday, whatever categories it has been imported
+        # under. _build_holiday_rows already merges the categories of *this*
+        # import by date; this does the same against the entries already on
+        # disk, which it cannot see. See _resolve_category_clashes.
+        rows, superseded = await self.hass.async_add_executor_job(
+            _resolve_category_clashes,
+            list(self.hass.config_entries.async_entries(DOMAIN)),
+            rows,
+        )
+        for entry in superseded:
+            _LOGGER.warning(
+                "Annuals: removing %s (%s) - the same date is being imported as public",
+                entry.title,
+                entry.data.get(CONF_CATEGORY),
+            )
+            await self.hass.config_entries.async_remove(entry.entry_id)
+
         known = {entry.unique_id for entry in self.hass.config_entries.async_entries(DOMAIN)}
         updated = sum(1 for row in rows if _import_unique_id(row) in known)
 
@@ -2542,7 +2912,7 @@ class AnnualsOptionsFlow(OptionsFlow):
     async def async_step_hub_menu(self, user_input=None):
         # Icons are supplied here rather than baked into each translation
         # string, so every language renders them identically and adding/
-        # changing an icon never requires touching all 15 translation files.
+        # changing an icon never requires touching all 16 translation files.
         return self.async_show_menu(
             step_id="hub_menu",
             menu_options=[

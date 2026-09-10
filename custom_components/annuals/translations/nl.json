@@ -73,26 +73,89 @@
                 "turkish": "Turks",
                 "vlach": "Vlachs"
             }
+        },
+        "nth": {
+            "options": {
+                "1": "Eerste",
+                "2": "Tweede",
+                "3": "Derde",
+                "4": "Vierde",
+                "-1": "Laatste"
+            }
+        },
+        "weekday": {
+            "options": {
+                "0": "Maandag",
+                "1": "Dinsdag",
+                "2": "Woensdag",
+                "3": "Donderdag",
+                "4": "Vrijdag",
+                "5": "Zaterdag",
+                "6": "Zondag"
+            }
         }
     },
     "config": {
         "step": {
             "user": {
                 "title": "Evenement toevoegen",
-                "description": "Elk evenement krijgt een eigen item, dat je later kunt terugvinden en bewerken via Instellingen → Apparaten en diensten door op de naam te zoeken.",
+                "description": "Wat voor soort evenement is dit?\n\n**Jaarlijks** omvat verjaardag, jaardag, naamdag, trouwdag, sterfdag, verjaardag huisdier en werkjubileum. **Eenmalig** is één datum, die zichzelf verwijdert zodra hij voorbij is. **Aangepast** is je eigen jaarlijkse datum – op een vaste dag of volgens een regel.",
+                "menu_options": {
+                    "recurring": "{icon_recurring} Een jaarlijkse datum van iemand",
+                    "one_time": "{icon_one_time} Een eenmalig evenement",
+                    "custom": "{icon_custom} Een aangepast evenement"
+                }
+            },
+            "recurring": {
+                "title": "Een jaarlijks evenement toevoegen",
                 "data": {
                     "name": "Naam",
                     "last_name": "Achternaam (optioneel)",
                     "type": "Type evenement",
                     "day": "Dag",
                     "month": "Maand",
-                    "year": "Jaar (leeg laten indien onbekend; verplicht voor eenmalige evenementen)",
-                    "end_date": "Einddatum (alleen eenmalige gebeurtenissen, optioneel - maakt er een meerdaagse gebeurtenis van)",
+                    "year": "Jaar (leeg laten indien onbekend)",
                     "icon": "Icoon overschrijven (optioneel)",
                     "vip": "VIP Annual"
+                },
+                "description": "Elk evenement krijgt een eigen item, dat je later kunt terugvinden en bewerken via Instellingen → Apparaten en diensten → Annuals door op de naam te zoeken."
+            },
+            "one_time": {
+                "title": "Een eenmalig evenement toevoegen",
+                "data": {
+                    "name": "Naam",
+                    "last_name": "Achternaam (optioneel)",
+                    "type": "Type evenement",
+                    "day": "Dag",
+                    "month": "Maand",
+                    "year": "Jaar",
+                    "end_date": "Einddatum (optioneel – maakt er een meerdaags evenement van)",
+                    "icon": "Icoon overschrijven (optioneel)",
+                    "vip": "VIP Annual"
+                },
+                "description": "Eén datum om naar af te tellen. Hij komt nooit terug, dus het jaar is verplicht, en het item wordt automatisch verwijderd om middernacht nadat hij voorbij is.\n\nMet een einddatum wordt het een meerdaags evenement – een reis, een congres, een verblijf."
+            },
+            "custom": {
+                "title": "Een aangepast evenement toevoegen",
+                "data": {
+                    "name": "Naam",
+                    "last_name": "Achternaam (optioneel)",
+                    "type": "Type evenement",
+                    "day": "Dag",
+                    "month": "Maand",
+                    "year": "Jaar",
+                    "icon": "Icoon overschrijven (optioneel)",
+                    "vip": "VIP Annual",
+                    "nth": "Positie in de maand",
+                    "weekday": "Dag van de week"
+                },
+                "description": "Je eigen jaarlijkse datum, voor alles wat de andere typen niet beschrijven.\n\nHij kan een **regel** volgen in plaats van een vaste dag: Moederdag is de tweede zondag van mei, Vaderdag in Australië de eerste zondag van september. Vul de twee velden onderaan in – de **Maand** hierboven zegt voor welke maand de regel geldt, en de **Dag** wordt dan niet gebruikt. Laat ze leeg voor een vaste datum.",
+                "data_description": {
+                    "nth": "Eerste, tweede, derde, vierde of de laatste van de maand.",
+                    "weekday": "Samen met het veld hierboven instellen, of beide leeg laten."
                 }
             },
-            "reconfigure": {
+            "reconfigure_recurring": {
                 "title": "Evenement bewerken",
                 "description": "Wijzig een willekeurig veld hieronder en verzend om dit evenement bij te werken.",
                 "data": {
@@ -101,19 +164,54 @@
                     "type": "Type evenement",
                     "day": "Dag",
                     "month": "Maand",
-                    "year": "Jaar (leeg laten indien onbekend; verplicht voor eenmalige evenementen)",
-                    "end_date": "Einddatum (alleen eenmalige gebeurtenissen, optioneel - maakt er een meerdaagse gebeurtenis van)",
+                    "year": "Jaar (leeg laten indien onbekend)",
                     "icon": "Icoon overschrijven (optioneel)",
                     "vip": "VIP Annual"
+                }
+            },
+            "reconfigure_one_time": {
+                "title": "Eenmalig evenement bewerken",
+                "description": "Wijzig een willekeurig veld hieronder en verzend om dit evenement bij te werken.\n\nEen einddatum maakt er een meerdaags evenement van; wis je hem, dan is het weer één dag.",
+                "data": {
+                    "name": "Naam",
+                    "last_name": "Achternaam (optioneel)",
+                    "type": "Type evenement",
+                    "day": "Dag",
+                    "month": "Maand",
+                    "year": "Jaar",
+                    "end_date": "Einddatum (optioneel – maakt er een meerdaags evenement van)",
+                    "icon": "Icoon overschrijven (optioneel)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "reconfigure_custom": {
+                "title": "Aangepast evenement bewerken",
+                "description": "Wijzig een willekeurig veld hieronder en verzend om dit evenement bij te werken.\n\nHet kan een **regel** volgen in plaats van een vaste dag – *de tweede zondag van mei*. Vul de twee velden onderaan in; de **Maand** hierboven zegt voor welke maand de regel geldt, en de **Dag** wordt dan niet gebruikt. Wis je ze, dan valt het evenement weer op die dag.",
+                "data": {
+                    "name": "Naam",
+                    "last_name": "Achternaam (optioneel)",
+                    "type": "Type evenement",
+                    "day": "Dag",
+                    "month": "Maand",
+                    "year": "Jaar",
+                    "icon": "Icoon overschrijven (optioneel)",
+                    "vip": "VIP Annual",
+                    "nth": "Positie in de maand",
+                    "weekday": "Dag van de week"
+                },
+                "data_description": {
+                    "nth": "Eerste, tweede, derde, vierde of de laatste van de maand.",
+                    "weekday": "Samen met het veld hierboven instellen, of beide leeg laten."
                 }
             }
         },
         "error": {
             "name_required": "Voer een naam in.",
-            "end_date_one_time_only": "Een einddatum kan alleen bij een eenmalige gebeurtenis worden ingesteld.",
+            "end_date_one_time_only": "Een einddatum kan alleen bij een eenmalig evenement worden ingesteld.",
             "end_date_before_start": "De einddatum moet na de startdatum liggen.",
             "invalid_date": "Deze combinatie van dag/maand/jaar is geen geldige datum.",
-            "year_required": "Eenmalige evenementen vereisen een jaar."
+            "year_required": "Eenmalige evenementen vereisen een jaar.",
+            "rule_needs_both": "Een herhalingsregel heeft beide velden nodig, of geen van beide."
         },
         "abort": {
             "hub_not_configurable": "De Annuals-hub heeft geen eigen instellingen - hij bevat alleen de gedeelde kalenders.",
@@ -123,21 +221,6 @@
     },
     "options": {
         "step": {
-            "init": {
-                "title": "Evenement bewerken",
-                "description": "Wijzig een willekeurig veld hieronder en verzend om dit evenement bij te werken.",
-                "data": {
-                    "name": "Naam",
-                    "last_name": "Achternaam (optioneel)",
-                    "type": "Type evenement",
-                    "day": "Dag",
-                    "month": "Maand",
-                    "year": "Jaar (leeg laten indien onbekend; verplicht voor eenmalige evenementen)",
-                    "end_date": "Einddatum (alleen eenmalige gebeurtenissen, optioneel - maakt er een meerdaagse gebeurtenis van)",
-                    "icon": "Icoon overschrijven (optioneel)",
-                    "vip": "VIP Annual"
-                }
-            },
             "import_csv": {
                 "title": "Evenementen importeren vanuit CSV",
                 "description": "Kolommen: name, type, day, month, year (optioneel, verplicht voor one_time), icon (optioneel), vip (optioneel), last_name (optioneel). „type” moet een van de volgende Engelse sleutels zijn: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (altijd in het Engels, ongeacht je taalinstelling). „vip” accepteert 1/true/yes/y/x (hoofdlettergevoeligheid maakt niet uit); laat leeg of laat de kolom weg voor een niet-VIP-evenement. Houd elke kolom aan, ook als een waarde leeg is - een rij zonder komma aan het einde schuift de volgende waarden naar links. Ongeldige rijen worden overgeslagen en gelogd.\n\nVoorbeeld:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamilievakantie,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -228,16 +311,16 @@
                 }
             },
             "holiday_translations": {
-                "title": "🌐 Holiday translations",
-                "description": "Export and import the holiday names you wrote yourself.",
+                "title": "🌐 Vertalingen van feestdagen",
+                "description": "Exporteer en importeer de feestdagnamen die je zelf hebt geschreven.",
                 "menu_options": {
-                    "export_translations": "📤 Export translations",
-                    "import_translations": "📥 Import translations"
+                    "export_translations": "📤 Vertalingen exporteren",
+                    "import_translations": "📥 Vertalingen importeren"
                 }
             },
             "import_translations": {
-                "title": "Import translations",
-                "description": "Upload a translations CSV. Columns: `country,subdivision,category,holiday_key,observed,language,name`. Rows are matched onto holidays by country, subdivision, category, holiday key and observed flag - not by entry id, so a file exported before re-importing a country still applies. Rows whose holiday isn't present are skipped and counted.",
+                "title": "Vertalingen importeren",
+                "description": "Upload een CSV met vertalingen. Kolommen: `country,subdivision,category,holiday_key,observed,language,name`. Rijen worden aan feestdagen gekoppeld op land, onderverdeling, categorie, feestdagsleutel en observed-vlag – niet op item-id, dus een bestand dat is geëxporteerd voordat een land opnieuw werd geïmporteerd, blijft geldig. Rijen waarvan de feestdag ontbreekt, worden overgeslagen en geteld.",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -248,7 +331,7 @@
                     "annual_settings": "{icon_annual_settings} Annual Instellingen",
                     "import_events": "{icon_import_events} Evenementen importeren",
                     "export_csv": "{icon_export_csv} Evenementen exporteren naar CSV",
-                    "holiday_translations": "{icon_holiday_translations} Holiday translations",
+                    "holiday_translations": "{icon_holiday_translations} Vertalingen van feestdagen",
                     "remove_events": "{icon_remove_events} Evenementen verwijderen",
                     "delete_all": "{icon_delete_all} Alle Annuals-gegevens verwijderen"
                 }
@@ -336,11 +419,60 @@
             "delete_all": {
                 "title": "Alle Annuals-gegevens verwijderen",
                 "description": "Dit verwijdert definitief alle {count} evenement(en), de gedeelde kalenders en de Annuals-hub zelf - de volledige integratie en alles wat hij heeft aangemaakt. Dit kan niet ongedaan worden gemaakt. Klik op „OK” om te bevestigen."
+            },
+            "edit_recurring": {
+                "title": "Evenement bewerken",
+                "description": "Wijzig een willekeurig veld hieronder en verzend om dit evenement bij te werken.",
+                "data": {
+                    "name": "Naam",
+                    "last_name": "Achternaam (optioneel)",
+                    "type": "Type evenement",
+                    "day": "Dag",
+                    "month": "Maand",
+                    "year": "Jaar (leeg laten indien onbekend)",
+                    "icon": "Icoon overschrijven (optioneel)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "edit_one_time": {
+                "title": "Eenmalig evenement bewerken",
+                "description": "Wijzig een willekeurig veld hieronder en verzend om dit evenement bij te werken.\n\nEen einddatum maakt er een meerdaags evenement van; wis je hem, dan is het weer één dag.",
+                "data": {
+                    "name": "Naam",
+                    "last_name": "Achternaam (optioneel)",
+                    "type": "Type evenement",
+                    "day": "Dag",
+                    "month": "Maand",
+                    "year": "Jaar",
+                    "end_date": "Einddatum (optioneel – maakt er een meerdaags evenement van)",
+                    "icon": "Icoon overschrijven (optioneel)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "edit_custom": {
+                "title": "Aangepast evenement bewerken",
+                "description": "Wijzig een willekeurig veld hieronder en verzend om dit evenement bij te werken.\n\nHet kan een **regel** volgen in plaats van een vaste dag – *de tweede zondag van mei*. Vul de twee velden onderaan in; de **Maand** hierboven zegt voor welke maand de regel geldt, en de **Dag** wordt dan niet gebruikt. Wis je ze, dan valt het evenement weer op die dag.",
+                "data": {
+                    "name": "Naam",
+                    "last_name": "Achternaam (optioneel)",
+                    "type": "Type evenement",
+                    "day": "Dag",
+                    "month": "Maand",
+                    "year": "Jaar",
+                    "icon": "Icoon overschrijven (optioneel)",
+                    "vip": "VIP Annual",
+                    "nth": "Positie in de maand",
+                    "weekday": "Dag van de week"
+                },
+                "data_description": {
+                    "nth": "Eerste, tweede, derde, vierde of de laatste van de maand.",
+                    "weekday": "Samen met het veld hierboven instellen, of beide leeg laten."
+                }
             }
         },
         "error": {
             "name_required": "Voer een naam in.",
-            "end_date_one_time_only": "Een einddatum kan alleen bij een eenmalige gebeurtenis worden ingesteld.",
+            "end_date_one_time_only": "Een einddatum kan alleen bij een eenmalig evenement worden ingesteld.",
             "end_date_before_start": "De einddatum moet na de startdatum liggen.",
             "invalid_date": "Deze combinatie van dag/maand/jaar is geen geldige datum.",
             "year_required": "Eenmalige evenementen vereisen een jaar.",
@@ -351,19 +483,20 @@
             "invalid_vcard": "Dit bestand kon niet als vCard worden gelezen. Controleer de indeling.",
             "no_valid_vcard_entries": "Geen contacten met een bruikbare verjaardag gevonden in dit bestand. Bekijk het logboek voor details over overgeslagen items.",
             "no_valid_vcard_dates": "Geen jaardagen of andere datums (naast verjaardagen) gevonden in dit bestand. Bekijk het logboek voor details over overgeslagen items.",
-            "no_batch_selected": "Vink „Alle geïmporteerde feestdagen verwijderen” aan, of kies een batch."
+            "no_batch_selected": "Vink „Alle geïmporteerde feestdagen verwijderen” aan, of kies een batch.",
+            "rule_needs_both": "Een herhalingsregel heeft beide velden nodig, of geen van beide."
         },
         "abort": {
             "translations_exported": "{count} vertaling(en) geëxporteerd. [annuals_holiday_translations.csv downloaden]({url}) (Ctrl/Cmd+klik om te downloaden - een gewone klik werkt hier niet)\n\nOf kopieer de CSV hieronder:\n\n```\n{csv}\n```",
-            "translations_imported": "{updated} holiday(s) updated, {skipped} row(s) skipped.",
-            "no_translations_to_export": "No holiday names have been written yet - there is nothing to export.",
+            "translations_imported": "{updated} feestdag(en) bijgewerkt, {skipped} rij(en) overgeslagen.",
+            "no_translations_to_export": "Er zijn nog geen feestdagnamen geschreven – er valt niets te exporteren.",
             "hub_not_configurable": "De Annuals-hub heeft geen eigen instellingen - hij bevat alleen de gedeelde kalenders.",
             "import_started": "Import gestart: {created} evenement(en) in de wachtrij, {skipped} rij(en) overgeslagen (zie het logboek voor details).",
             "ics_import_started": "Import gestart: {created} evenement(en) aangemaakt, {updated} bijgewerkt, {skipped} item(s) overgeslagen of uitgesloten.",
             "csv_exported": "{count} evenement(en) geëxporteerd. [annuals_export.csv downloaden]({url}) (Ctrl/Cmd+klik om te downloaden - een gewone klik werkt hier niet)\n\nOf kopieer de CSV hieronder:\n\n```\n{csv}\n```",
             "no_events_to_export": "Er zijn nog geen evenementen om te exporteren.",
             "deleted_all": "Alle Annuals-evenementen, kalenders en de hub zijn verwijderd.",
-            "holiday_import_started": "Import gestart: {count} feestdag-gebeurtenis(sen) in de wachtrij voor {country} ({new} nieuw, {updated} bijgewerkt).",
+            "holiday_import_started": "Import gestart: {count} feestdag-evenement(en) in de wachtrij voor {country} ({new} nieuw, {updated} bijgewerkt).",
             "no_holidays_imported": "Er zijn nog geen feestdagen geïmporteerd.",
             "holidays_removed": "{count} feestdag(en) verwijderd.",
             "no_ics_imports": "Er zijn geen door een ICS-import aangemaakte evenementen gevonden.",

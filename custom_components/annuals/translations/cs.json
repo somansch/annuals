@@ -73,26 +73,89 @@
                 "turkish": "Turecká",
                 "vlach": "Vlašská"
             }
+        },
+        "nth": {
+            "options": {
+                "1": "První",
+                "2": "Druhý",
+                "3": "Třetí",
+                "4": "Čtvrtý",
+                "-1": "Poslední"
+            }
+        },
+        "weekday": {
+            "options": {
+                "0": "Pondělí",
+                "1": "Úterý",
+                "2": "Středa",
+                "3": "Čtvrtek",
+                "4": "Pátek",
+                "5": "Sobota",
+                "6": "Neděle"
+            }
         }
     },
     "config": {
         "step": {
             "user": {
                 "title": "Přidat událost",
-                "description": "Každá událost má vlastní záznam, který později najdeš a upravíš v Nastavení → Zařízení a služby vyhledáním podle jména.",
+                "description": "O jaký druh události jde?\n\n**Roční** zahrnuje narozeniny, výročí, svátek, výročí svatby, výročí úmrtí, narozeniny mazlíčka a pracovní výročí. **Jednorázová** je jediné datum, které se po uplynutí samo smaže. **Vlastní** je tvoje vlastní roční datum – v konkrétní den, nebo podle pravidla.",
+                "menu_options": {
+                    "recurring": "{icon_recurring} Roční datum pro někoho",
+                    "one_time": "{icon_one_time} Jednorázová událost",
+                    "custom": "{icon_custom} Vlastní událost"
+                }
+            },
+            "recurring": {
+                "title": "Přidat roční událost",
                 "data": {
                     "name": "Jméno",
                     "last_name": "Příjmení (volitelné)",
                     "type": "Typ události",
                     "day": "Den",
                     "month": "Měsíc",
-                    "year": "Rok (ponechte prázdné, pokud není znám; u jednorázových událostí povinné)",
-                    "end_date": "Datum konce (jen jednorázové události, volitelné - udělá z ní vícedenní událost)",
+                    "year": "Rok (ponechte prázdné, pokud není znám)",
                     "icon": "Vlastní ikona (volitelné)",
                     "vip": "VIP Annual"
+                },
+                "description": "Každá událost má vlastní záznam, který později najdeš a upravíš v Nastavení → Zařízení a služby → Annuals vyhledáním podle jména."
+            },
+            "one_time": {
+                "title": "Přidat jednorázovou událost",
+                "data": {
+                    "name": "Jméno",
+                    "last_name": "Příjmení (volitelné)",
+                    "type": "Typ události",
+                    "day": "Den",
+                    "month": "Měsíc",
+                    "year": "Rok",
+                    "end_date": "Datum konce (volitelné – udělá z ní vícedenní událost)",
+                    "icon": "Vlastní ikona (volitelné)",
+                    "vip": "VIP Annual"
+                },
+                "description": "Jediné datum, ke kterému se odpočítává. Nikdy se neopakuje, proto je rok povinný, a záznam se automaticky smaže o půlnoci po jeho skončení.\n\nS datem konce z něj bude vícedenní událost – cesta, konference, pobyt."
+            },
+            "custom": {
+                "title": "Přidat vlastní událost",
+                "data": {
+                    "name": "Jméno",
+                    "last_name": "Příjmení (volitelné)",
+                    "type": "Typ události",
+                    "day": "Den",
+                    "month": "Měsíc",
+                    "year": "Rok",
+                    "icon": "Vlastní ikona (volitelné)",
+                    "vip": "VIP Annual",
+                    "nth": "Pořadí v měsíci",
+                    "weekday": "Den v týdnu"
+                },
+                "description": "Tvoje vlastní roční datum pro vše, co ostatní typy nepopisují.\n\nMísto na konkrétní den může připadnout na **pravidlo**: Den matek je druhá neděle v květnu, Den otců v Austrálii první neděle v září. Vyplň dvě pole dole – **Měsíc** výše určuje, pro který měsíc pravidlo platí, a **Den** se pak nepoužije. Nech je prázdná pro pevné datum.",
+                "data_description": {
+                    "nth": "První, druhý, třetí, čtvrtý nebo poslední v měsíci.",
+                    "weekday": "Nastav spolu s polem výše – nebo nech obě prázdná."
                 }
             },
-            "reconfigure": {
+            "reconfigure_recurring": {
                 "title": "Upravit událost",
                 "description": "Změňte libovolné pole níže a odešlete pro aktualizaci této události.",
                 "data": {
@@ -101,10 +164,44 @@
                     "type": "Typ události",
                     "day": "Den",
                     "month": "Měsíc",
-                    "year": "Rok (ponechte prázdné, pokud není znám; u jednorázových událostí povinné)",
-                    "end_date": "Datum konce (jen jednorázové události, volitelné - udělá z ní vícedenní událost)",
+                    "year": "Rok (ponechte prázdné, pokud není znám)",
                     "icon": "Vlastní ikona (volitelné)",
                     "vip": "VIP Annual"
+                }
+            },
+            "reconfigure_one_time": {
+                "title": "Upravit jednorázovou událost",
+                "description": "Změňte libovolné pole níže a odešlete pro aktualizaci této události.\n\nS datem konce je to vícedenní událost; po jeho vymazání zase jeden den.",
+                "data": {
+                    "name": "Jméno",
+                    "last_name": "Příjmení (volitelné)",
+                    "type": "Typ události",
+                    "day": "Den",
+                    "month": "Měsíc",
+                    "year": "Rok",
+                    "end_date": "Datum konce (volitelné – udělá z ní vícedenní událost)",
+                    "icon": "Vlastní ikona (volitelné)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "reconfigure_custom": {
+                "title": "Upravit vlastní událost",
+                "description": "Změňte libovolné pole níže a odešlete pro aktualizaci této události.\n\nMísto na konkrétní den může připadnout na **pravidlo** – *druhá neděle v květnu*. Vyplň dvě pole dole; **Měsíc** výše určuje, pro který měsíc pravidlo platí, a **Den** se pak nepoužije. Po jejich vymazání připadne událost zase na tento den.",
+                "data": {
+                    "name": "Jméno",
+                    "last_name": "Příjmení (volitelné)",
+                    "type": "Typ události",
+                    "day": "Den",
+                    "month": "Měsíc",
+                    "year": "Rok",
+                    "icon": "Vlastní ikona (volitelné)",
+                    "vip": "VIP Annual",
+                    "nth": "Pořadí v měsíci",
+                    "weekday": "Den v týdnu"
+                },
+                "data_description": {
+                    "nth": "První, druhý, třetí, čtvrtý nebo poslední v měsíci.",
+                    "weekday": "Nastav spolu s polem výše – nebo nech obě prázdná."
                 }
             }
         },
@@ -113,7 +210,8 @@
             "end_date_one_time_only": "Datum konce lze nastavit jen u jednorázové události.",
             "end_date_before_start": "Datum konce musí být po datu začátku.",
             "invalid_date": "Tato kombinace den/měsíc/rok není platné datum.",
-            "year_required": "Jednorázové události vyžadují rok."
+            "year_required": "Jednorázové události vyžadují rok.",
+            "rule_needs_both": "Opakovací pravidlo potřebuje obě pole – nebo žádné."
         },
         "abort": {
             "hub_not_configurable": "Hub Annuals nemá vlastní nastavení – obsahuje pouze sdílené kalendáře.",
@@ -123,21 +221,6 @@
     },
     "options": {
         "step": {
-            "init": {
-                "title": "Upravit událost",
-                "description": "Změňte libovolné pole níže a odešlete pro aktualizaci této události.",
-                "data": {
-                    "name": "Jméno",
-                    "last_name": "Příjmení (volitelné)",
-                    "type": "Typ události",
-                    "day": "Den",
-                    "month": "Měsíc",
-                    "year": "Rok (ponechte prázdné, pokud není znám; u jednorázových událostí povinné)",
-                    "end_date": "Datum konce (jen jednorázové události, volitelné - udělá z ní vícedenní událost)",
-                    "icon": "Vlastní ikona (volitelné)",
-                    "vip": "VIP Annual"
-                }
-            },
             "import_csv": {
                 "title": "Import událostí z CSV",
                 "description": "Sloupce: name, type, day, month, year (volitelné, u one_time povinné), icon (volitelné), vip (volitelné), last_name (volitelné). „type“ musí být jeden z těchto anglických klíčů: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (vždy anglicky, bez ohledu na nastavení jazyka). „vip“ přijímá 1/true/yes/y/x (nezáleží na velikosti písmen); ponechte prázdné nebo sloupec vynechte pro událost bez VIP statusu. Zachovejte všechny sloupce i při prázdné hodnotě – řádek bez koncové čárky posune následující hodnoty o jednu doleva. Neplatné řádky se přeskočí a zaznamenají do protokolu.\n\nPříklad:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nRodinná dovolená,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -228,16 +311,16 @@
                 }
             },
             "holiday_translations": {
-                "title": "🌐 Holiday translations",
-                "description": "Export and import the holiday names you wrote yourself.",
+                "title": "🌐 Překlady svátků",
+                "description": "Export a import názvů svátků, které jsi napsal(a) sám/sama.",
                 "menu_options": {
-                    "export_translations": "📤 Export translations",
-                    "import_translations": "📥 Import translations"
+                    "export_translations": "📤 Exportovat překlady",
+                    "import_translations": "📥 Importovat překlady"
                 }
             },
             "import_translations": {
-                "title": "Import translations",
-                "description": "Upload a translations CSV. Columns: `country,subdivision,category,holiday_key,observed,language,name`. Rows are matched onto holidays by country, subdivision, category, holiday key and observed flag - not by entry id, so a file exported before re-importing a country still applies. Rows whose holiday isn't present are skipped and counted.",
+                "title": "Import překladů",
+                "description": "Nahraj CSV s překlady. Sloupce: `country,subdivision,category,holiday_key,observed,language,name`. Řádky se ke svátkům přiřazují podle země, regionu, kategorie, klíče svátku a příznaku observed – ne podle ID záznamu, takže soubor exportovaný před opětovným importem země stále platí. Řádky, jejichž svátek neexistuje, se přeskočí a spočítají.",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -248,7 +331,7 @@
                     "annual_settings": "{icon_annual_settings} Annual Nastavení",
                     "import_events": "{icon_import_events} Import událostí",
                     "export_csv": "{icon_export_csv} Exportovat události do CSV",
-                    "holiday_translations": "{icon_holiday_translations} Holiday translations",
+                    "holiday_translations": "{icon_holiday_translations} Překlady svátků",
                     "remove_events": "{icon_remove_events} Odstranit události",
                     "delete_all": "{icon_delete_all} Smazat všechna data Annuals"
                 }
@@ -336,6 +419,55 @@
             "delete_all": {
                 "title": "Smazat všechna data Annuals",
                 "description": "Tímto trvale smažete všech {count} událostí, sdílené kalendáře a samotný hub Annuals – celou integraci a vše, co vytvořila. Tuto akci nelze vrátit zpět. Potvrďte kliknutím na „OK“."
+            },
+            "edit_recurring": {
+                "title": "Upravit událost",
+                "description": "Změňte libovolné pole níže a odešlete pro aktualizaci této události.",
+                "data": {
+                    "name": "Jméno",
+                    "last_name": "Příjmení (volitelné)",
+                    "type": "Typ události",
+                    "day": "Den",
+                    "month": "Měsíc",
+                    "year": "Rok (ponechte prázdné, pokud není znám)",
+                    "icon": "Vlastní ikona (volitelné)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "edit_one_time": {
+                "title": "Upravit jednorázovou událost",
+                "description": "Změňte libovolné pole níže a odešlete pro aktualizaci této události.\n\nS datem konce je to vícedenní událost; po jeho vymazání zase jeden den.",
+                "data": {
+                    "name": "Jméno",
+                    "last_name": "Příjmení (volitelné)",
+                    "type": "Typ události",
+                    "day": "Den",
+                    "month": "Měsíc",
+                    "year": "Rok",
+                    "end_date": "Datum konce (volitelné – udělá z ní vícedenní událost)",
+                    "icon": "Vlastní ikona (volitelné)",
+                    "vip": "VIP Annual"
+                }
+            },
+            "edit_custom": {
+                "title": "Upravit vlastní událost",
+                "description": "Změňte libovolné pole níže a odešlete pro aktualizaci této události.\n\nMísto na konkrétní den může připadnout na **pravidlo** – *druhá neděle v květnu*. Vyplň dvě pole dole; **Měsíc** výše určuje, pro který měsíc pravidlo platí, a **Den** se pak nepoužije. Po jejich vymazání připadne událost zase na tento den.",
+                "data": {
+                    "name": "Jméno",
+                    "last_name": "Příjmení (volitelné)",
+                    "type": "Typ události",
+                    "day": "Den",
+                    "month": "Měsíc",
+                    "year": "Rok",
+                    "icon": "Vlastní ikona (volitelné)",
+                    "vip": "VIP Annual",
+                    "nth": "Pořadí v měsíci",
+                    "weekday": "Den v týdnu"
+                },
+                "data_description": {
+                    "nth": "První, druhý, třetí, čtvrtý nebo poslední v měsíci.",
+                    "weekday": "Nastav spolu s polem výše – nebo nech obě prázdná."
+                }
             }
         },
         "error": {
@@ -351,12 +483,13 @@
             "invalid_vcard": "Tento soubor se nepodařilo přečíst jako vCard. Zkontrolujte formát.",
             "no_valid_vcard_entries": "V tomto souboru nebyly nalezeny žádné kontakty s použitelným datem narození. Podrobnosti o přeskočených záznamech najdete v protokolu.",
             "no_valid_vcard_dates": "V tomto souboru nebyla nalezena žádná výročí ani jiná data (kromě narozenin). Podrobnosti o přeskočených záznamech najdete v protokolu.",
-            "no_batch_selected": "Zaškrtněte „Odstranit všechny importované svátky“, nebo vyberte dávku."
+            "no_batch_selected": "Zaškrtněte „Odstranit všechny importované svátky“, nebo vyberte dávku.",
+            "rule_needs_both": "Opakovací pravidlo potřebuje obě pole – nebo žádné."
         },
         "abort": {
             "translations_exported": "Exportováno {count} překladů. [Stáhnout annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+klik pro stažení - obyčejné kliknutí zde nefunguje)\n\nNebo zkopírujte níže uvedené CSV:\n\n```\n{csv}\n```",
-            "translations_imported": "{updated} holiday(s) updated, {skipped} row(s) skipped.",
-            "no_translations_to_export": "No holiday names have been written yet - there is nothing to export.",
+            "translations_imported": "Aktualizováno svátků: {updated}, přeskočeno řádků: {skipped}.",
+            "no_translations_to_export": "Zatím nebyly napsány žádné názvy svátků – není co exportovat.",
             "hub_not_configurable": "Hub Annuals nemá vlastní nastavení – obsahuje pouze sdílené kalendáře.",
             "import_started": "Import zahájen: {created} událostí zařazeno do fronty, {skipped} řádků přeskočeno (podrobnosti v protokolu).",
             "ics_import_started": "Import zahájen: {created} událostí vytvořeno, {updated} aktualizováno, {skipped} záznamů přeskočeno nebo vyloučeno.",
