@@ -93,6 +93,12 @@
                 "5": "Saturday",
                 "6": "Sunday"
             }
+        },
+        "interval_unit": {
+            "options": {
+                "months": "months",
+                "years": "years"
+            }
         }
     },
     "config": {
@@ -112,12 +118,16 @@
                 "data": {
                     "name": "Name",
                     "last_name": "Last name (optional)",
+                    "person": "Person (optional)",
                     "type": "Event type",
                     "day": "Day",
                     "month": "Month",
                     "year": "Year (leave empty if unknown)",
                     "icon": "Icon override (optional)",
                     "vip": "VIP annual"
+                },
+                "data_description": {
+                    "person": "A person in Home Assistant whose picture stands for this event – on the dashboard card and in the reminder's notification."
                 }
             },
             "one_time": {
@@ -131,8 +141,14 @@
                     "month": "Month",
                     "year": "Year",
                     "end_date": "End date (optional – makes it a multi-day event)",
+                    "time": "Time (optional)",
+                    "end_time": "End time (optional)",
                     "icon": "Icon override (optional)",
                     "vip": "VIP annual"
+                },
+                "data_description": {
+                    "time": "When it starts on that day. The calendar entry then has a time, and the dashboard card shows it.",
+                    "end_time": "When it ends – on the end date if there is one, otherwise the same day. Needs a start time; left empty, the calendar entry is an hour long."
                 }
             },
             "custom": {
@@ -147,10 +163,13 @@
                     "year": "Year",
                     "icon": "Icon override (optional)",
                     "vip": "VIP annual",
+                    "interval": "Repeats every",
+                    "interval_unit": "…months or years",
                     "nth": "Repeats on the",
                     "weekday": "…weekday of the month"
                 },
                 "data_description": {
+                    "interval": "Together with the unit beside it – every 6 months, every 2 years. Counted from the date above, which then needs its year. Leave both empty for once a year.",
                     "nth": "First, second, third, fourth, or the last one in the month.",
                     "weekday": "Set this together with the field above, or leave both empty."
                 }
@@ -161,12 +180,16 @@
                 "data": {
                     "name": "Name",
                     "last_name": "Last name (optional)",
+                    "person": "Person (optional)",
                     "type": "Event type",
                     "day": "Day",
                     "month": "Month",
                     "year": "Year (leave empty if unknown)",
                     "icon": "Icon override (optional)",
                     "vip": "VIP annual"
+                },
+                "data_description": {
+                    "person": "A person in Home Assistant whose picture stands for this event – on the dashboard card and in the reminder's notification."
                 }
             },
             "reconfigure_one_time": {
@@ -180,8 +203,14 @@
                     "month": "Month",
                     "year": "Year",
                     "end_date": "End date (optional – makes it a multi-day event)",
+                    "time": "Time (optional)",
+                    "end_time": "End time (optional)",
                     "icon": "Icon override (optional)",
                     "vip": "VIP annual"
+                },
+                "data_description": {
+                    "time": "When it starts on that day. The calendar entry then has a time, and the dashboard card shows it.",
+                    "end_time": "When it ends – on the end date if there is one, otherwise the same day. Needs a start time; left empty, the calendar entry is an hour long."
                 }
             },
             "reconfigure_custom": {
@@ -196,10 +225,13 @@
                     "year": "Year",
                     "icon": "Icon override (optional)",
                     "vip": "VIP annual",
+                    "interval": "Repeats every",
+                    "interval_unit": "…months or years",
                     "nth": "Repeats on the",
                     "weekday": "…weekday of the month"
                 },
                 "data_description": {
+                    "interval": "Together with the unit beside it – every 6 months, every 2 years. Counted from the date above, which then needs its year. Leave both empty for once a year.",
                     "nth": "First, second, third, fourth, or the last one in the month.",
                     "weekday": "Set this together with the field above, or leave both empty."
                 }
@@ -211,7 +243,12 @@
             "end_date_before_start": "The end date must be after the start date.",
             "invalid_date": "This day/month/year combination is not a valid date.",
             "year_required": "One-time events require a year.",
-            "rule_needs_both": "A recurring rule needs both fields, or neither."
+            "rule_needs_both": "A recurring rule needs both fields, or neither.",
+            "interval_needs_both": "A repeat interval needs both fields, or neither.",
+            "interval_needs_year": "A repeat interval is counted from the date above, so the year is needed.",
+            "interval_no_rule": "A repeat interval cannot be combined with a weekday rule.",
+            "end_time_needs_time": "An end time needs a start time.",
+            "end_time_before_start": "The end time must be after the start time."
         },
         "abort": {
             "hub_not_configurable": "The Annuals hub has no settings of its own - it just holds the shared calendars.",
@@ -426,12 +463,16 @@
                 "data": {
                     "name": "Name",
                     "last_name": "Last name (optional)",
+                    "person": "Person (optional)",
                     "type": "Event type",
                     "day": "Day",
                     "month": "Month",
                     "year": "Year (leave empty if unknown)",
                     "icon": "Icon override (optional)",
                     "vip": "VIP annual"
+                },
+                "data_description": {
+                    "person": "A person in Home Assistant whose picture stands for this event – on the dashboard card and in the reminder's notification."
                 }
             },
             "edit_one_time": {
@@ -445,8 +486,14 @@
                     "month": "Month",
                     "year": "Year",
                     "end_date": "End date (optional – makes it a multi-day event)",
+                    "time": "Time (optional)",
+                    "end_time": "End time (optional)",
                     "icon": "Icon override (optional)",
                     "vip": "VIP annual"
+                },
+                "data_description": {
+                    "time": "When it starts on that day. The calendar entry then has a time, and the dashboard card shows it.",
+                    "end_time": "When it ends – on the end date if there is one, otherwise the same day. Needs a start time; left empty, the calendar entry is an hour long."
                 }
             },
             "edit_custom": {
@@ -461,10 +508,13 @@
                     "year": "Year",
                     "icon": "Icon override (optional)",
                     "vip": "VIP annual",
+                    "interval": "Repeats every",
+                    "interval_unit": "…months or years",
                     "nth": "Repeats on the",
                     "weekday": "…weekday of the month"
                 },
                 "data_description": {
+                    "interval": "Together with the unit beside it – every 6 months, every 2 years. Counted from the date above, which then needs its year. Leave both empty for once a year.",
                     "nth": "First, second, third, fourth, or the last one in the month.",
                     "weekday": "Set this together with the field above, or leave both empty."
                 }
@@ -484,7 +534,12 @@
             "no_valid_vcard_entries": "No contacts with a usable birthday found in this file. Check the log for details on skipped entries.",
             "no_valid_vcard_dates": "No anniversaries or other dates (besides birthdays) found in this file. Check the log for details on skipped entries.",
             "no_batch_selected": "Check \"Remove all imported holidays\", or pick a batch to remove.",
-            "rule_needs_both": "A recurring rule needs both fields, or neither."
+            "rule_needs_both": "A recurring rule needs both fields, or neither.",
+            "interval_needs_both": "A repeat interval needs both fields, or neither.",
+            "interval_needs_year": "A repeat interval is counted from the date above, so the year is needed.",
+            "interval_no_rule": "A repeat interval cannot be combined with a weekday rule.",
+            "end_time_needs_time": "An end time needs a start time.",
+            "end_time_before_start": "The end time must be after the start time."
         },
         "abort": {
             "translations_exported": "{count} translation(s) exported. [Download annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+click to download - a plain click won't work here)\n\nOr copy the CSV below:\n\n```\n{csv}\n```",

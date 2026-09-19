@@ -93,6 +93,12 @@
                 "5": "星期六",
                 "6": "星期日"
             }
+        },
+        "interval_unit": {
+            "options": {
+                "months": "个月",
+                "years": "年"
+            }
         }
     },
     "config": {
@@ -111,6 +117,7 @@
                 "data": {
                     "name": "姓名",
                     "last_name": "姓氏（可选）",
+                    "person": "人员（可选）",
                     "type": "事件类型",
                     "day": "日",
                     "month": "月",
@@ -118,7 +125,10 @@
                     "icon": "自定义图标（可选）",
                     "vip": "VIP Annual"
                 },
-                "description": "每个事件都会创建独立的条目，之后可以在“设置 → 设备与服务 → Annuals”中通过搜索名称找到并编辑。"
+                "description": "每个事件都会创建独立的条目，之后可以在“设置 → 设备与服务 → Annuals”中通过搜索名称找到并编辑。",
+                "data_description": {
+                    "person": "Home Assistant 中的一个人员，其照片代表此事件——显示在仪表板卡片和提醒通知中。"
+                }
             },
             "one_time": {
                 "title": "添加单次事件",
@@ -130,10 +140,16 @@
                     "month": "月",
                     "year": "年份",
                     "end_date": "结束日期（可选——设置后即成为多日事件）",
+                    "time": "时间（可选）",
+                    "end_time": "结束时间（可选）",
                     "icon": "自定义图标（可选）",
                     "vip": "VIP Annual"
                 },
-                "description": "一个用来倒计时的日期。它不会重复，因此年份是必填项；结束后的午夜，条目会被自动删除。\n\n填写结束日期即可变成多日事件——旅行、会议、住院等。"
+                "description": "一个用来倒计时的日期。它不会重复，因此年份是必填项；结束后的午夜，条目会被自动删除。\n\n填写结束日期即可变成多日事件——旅行、会议、住院等。",
+                "data_description": {
+                    "time": "当天开始的时间。日历条目随后带有时间，仪表板卡片也会显示。",
+                    "end_time": "结束的时间——有结束日期时在结束日期，否则在同一天。需要开始时间；留空则日历条目时长为一小时。"
+                }
             },
             "custom": {
                 "title": "添加自定义事件",
@@ -146,11 +162,14 @@
                     "year": "年份",
                     "icon": "自定义图标（可选）",
                     "vip": "VIP Annual",
+                    "interval": "重复间隔",
+                    "interval_unit": "…个月或年",
                     "nth": "在当月的第几个",
                     "weekday": "星期几"
                 },
                 "description": "你自己的每年日期，用于其他类型无法描述的一切。\n\n它可以按**规则**计算，而不是固定在某一天：母亲节是五月的第二个星期日，澳大利亚的父亲节是九月的第一个星期日。填写下面两个字段，上面的**月份**决定规则适用于哪个月，此时**日**不再使用。两个字段留空即为固定日期。",
                 "data_description": {
+                    "interval": "与旁边的单位一起使用：每 6 个月、每 2 年。从上面的日期起计算，因此需要填写年份。两者都留空表示每年一次。",
                     "nth": "当月的第一个、第二个、第三个、第四个或最后一个。",
                     "weekday": "请与上面的字段一起设置，或两者都留空。"
                 }
@@ -161,12 +180,16 @@
                 "data": {
                     "name": "姓名",
                     "last_name": "姓氏（可选）",
+                    "person": "人员（可选）",
                     "type": "事件类型",
                     "day": "日",
                     "month": "月",
                     "year": "年份（未知可留空）",
                     "icon": "自定义图标（可选）",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "person": "Home Assistant 中的一个人员，其照片代表此事件——显示在仪表板卡片和提醒通知中。"
                 }
             },
             "reconfigure_one_time": {
@@ -180,8 +203,14 @@
                     "month": "月",
                     "year": "年份",
                     "end_date": "结束日期（可选——设置后即成为多日事件）",
+                    "time": "时间（可选）",
+                    "end_time": "结束时间（可选）",
                     "icon": "自定义图标（可选）",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "time": "当天开始的时间。日历条目随后带有时间，仪表板卡片也会显示。",
+                    "end_time": "结束的时间——有结束日期时在结束日期，否则在同一天。需要开始时间；留空则日历条目时长为一小时。"
                 }
             },
             "reconfigure_custom": {
@@ -196,10 +225,13 @@
                     "year": "年份",
                     "icon": "自定义图标（可选）",
                     "vip": "VIP Annual",
+                    "interval": "重复间隔",
+                    "interval_unit": "…个月或年",
                     "nth": "在当月的第几个",
                     "weekday": "星期几"
                 },
                 "data_description": {
+                    "interval": "与旁边的单位一起使用：每 6 个月、每 2 年。从上面的日期起计算，因此需要填写年份。两者都留空表示每年一次。",
                     "nth": "当月的第一个、第二个、第三个、第四个或最后一个。",
                     "weekday": "请与上面的字段一起设置，或两者都留空。"
                 }
@@ -211,7 +243,12 @@
             "end_date_before_start": "结束日期必须晚于开始日期。",
             "invalid_date": "此日/月/年组合不是有效日期。",
             "year_required": "单次事件必须填写年份。",
-            "rule_needs_both": "重复规则需要同时填写两个字段，或者都不填。"
+            "rule_needs_both": "重复规则需要同时填写两个字段，或者都不填。",
+            "interval_needs_both": "重复间隔需要同时填写两个字段，或者都不填。",
+            "interval_needs_year": "重复间隔从上面的日期起计算，因此需要年份。",
+            "interval_no_rule": "重复间隔不能与星期规则同时使用。",
+            "end_time_needs_time": "结束时间需要开始时间。",
+            "end_time_before_start": "结束时间必须晚于开始时间。"
         },
         "abort": {
             "hub_not_configurable": "Annuals 中心没有自身设置 —— 它只保存共享日历。",
@@ -426,12 +463,16 @@
                 "data": {
                     "name": "姓名",
                     "last_name": "姓氏（可选）",
+                    "person": "人员（可选）",
                     "type": "事件类型",
                     "day": "日",
                     "month": "月",
                     "year": "年份（未知可留空）",
                     "icon": "自定义图标（可选）",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "person": "Home Assistant 中的一个人员，其照片代表此事件——显示在仪表板卡片和提醒通知中。"
                 }
             },
             "edit_one_time": {
@@ -445,8 +486,14 @@
                     "month": "月",
                     "year": "年份",
                     "end_date": "结束日期（可选——设置后即成为多日事件）",
+                    "time": "时间（可选）",
+                    "end_time": "结束时间（可选）",
                     "icon": "自定义图标（可选）",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "time": "当天开始的时间。日历条目随后带有时间，仪表板卡片也会显示。",
+                    "end_time": "结束的时间——有结束日期时在结束日期，否则在同一天。需要开始时间；留空则日历条目时长为一小时。"
                 }
             },
             "edit_custom": {
@@ -461,10 +508,13 @@
                     "year": "年份",
                     "icon": "自定义图标（可选）",
                     "vip": "VIP Annual",
+                    "interval": "重复间隔",
+                    "interval_unit": "…个月或年",
                     "nth": "在当月的第几个",
                     "weekday": "星期几"
                 },
                 "data_description": {
+                    "interval": "与旁边的单位一起使用：每 6 个月、每 2 年。从上面的日期起计算，因此需要填写年份。两者都留空表示每年一次。",
                     "nth": "当月的第一个、第二个、第三个、第四个或最后一个。",
                     "weekday": "请与上面的字段一起设置，或两者都留空。"
                 }
@@ -484,7 +534,12 @@
             "no_valid_vcard_entries": "此文件中未找到包含可用生日的联系人。请查看日志了解被跳过条目的详情。",
             "no_valid_vcard_dates": "此文件中未找到除生日外的纪念日或其他日期。请查看日志了解被跳过条目的详情。",
             "no_batch_selected": "请勾选“删除所有已导入的节假日”，或选择一个批次。",
-            "rule_needs_both": "重复规则需要同时填写两个字段，或者都不填。"
+            "rule_needs_both": "重复规则需要同时填写两个字段，或者都不填。",
+            "interval_needs_both": "重复间隔需要同时填写两个字段，或者都不填。",
+            "interval_needs_year": "重复间隔从上面的日期起计算，因此需要年份。",
+            "interval_no_rule": "重复间隔不能与星期规则同时使用。",
+            "end_time_needs_time": "结束时间需要开始时间。",
+            "end_time_before_start": "结束时间必须晚于开始时间。"
         },
         "abort": {
             "translations_exported": "已导出 {count} 条翻译。[下载 annuals_holiday_translations.csv]({url})（按住 Ctrl/Cmd 点击以下载 - 普通点击在此处无效）\n\n或复制下方的 CSV：\n\n```\n{csv}\n```",

@@ -86,6 +86,38 @@ WEEKDAY_OPTIONS = [str(n) for n in range(7)]
 # retroactively make it bulk-removable as "an ICS import".
 CONF_IMPORT_SOURCE = "import_source"
 
+# A Home Assistant person whose picture stands for the event - the seven
+# yearly types only, which are one particular person's own date. The
+# sensor carries the picture as its entity_picture (see sensor.py), which
+# is what the dashboard card and the reminder blueprint's notification
+# show in place of the icon. Absent, or None, on every event without one.
+CONF_PERSON = "person"
+
+# Custom events only (TYPE_CUSTOM): repeat every N months or years from the
+# stored day/month/year instead of once a year - a dentist every 6 months,
+# a car inspection every 2 years, a passport every 10. Counted from the
+# stored date, which therefore has to carry its year; the occurrence
+# number is then the number of steps taken since it, the stored date
+# itself being 0. Never combined with a weekday rule (see CONF_WEEKDAY):
+# a rule is a yearly shape and an interval is not. Both None, or absent
+# on every event created before this existed, means once a year as before.
+CONF_INTERVAL = "interval"
+CONF_INTERVAL_UNIT = "interval_unit"
+INTERVAL_MONTHS = "months"
+INTERVAL_YEARS = "years"
+# What the unit dropdown offers - and therefore its translation keys.
+INTERVAL_UNIT_OPTIONS = [INTERVAL_MONTHS, INTERVAL_YEARS]
+
+# One-time events only (TYPE_ONE_TIME): a time of day, "HH:MM", for the
+# concert at 20:00 and the flight at 06:15, and optionally when it ends.
+# The end time falls on the end date where the event has one (see
+# CONF_END_DATE), on the same day otherwise. The sensor's countdown stays
+# a count of days - the time is carried as attributes, and it is the
+# calendar entity and the dashboard card that show it. Absent, or None,
+# on every event without one, which is every all-day event.
+CONF_TIME = "time"
+CONF_END_TIME = "end_time"
+
 TYPE_BIRTHDAY = "birthday"
 TYPE_ANNIVERSARY = "anniversary"
 TYPE_NAME_DAY = "name_day"

@@ -93,6 +93,12 @@
                 "5": "Sábado",
                 "6": "Domingo"
             }
+        },
+        "interval_unit": {
+            "options": {
+                "months": "meses",
+                "years": "anos"
+            }
         }
     },
     "config": {
@@ -111,6 +117,7 @@
                 "data": {
                     "name": "Nome",
                     "last_name": "Sobrenome (opcional)",
+                    "person": "Pessoa (opcional)",
                     "type": "Tipo de evento",
                     "day": "Dia",
                     "month": "Mês",
@@ -118,7 +125,10 @@
                     "icon": "Substituir ícone (opcional)",
                     "vip": "VIP Annual"
                 },
-                "description": "Cada evento recebe sua própria entrada, que você pode encontrar e editar depois em Configurações → Dispositivos e serviços → Annuals pesquisando pelo nome."
+                "description": "Cada evento recebe sua própria entrada, que você pode encontrar e editar depois em Configurações → Dispositivos e serviços → Annuals pesquisando pelo nome.",
+                "data_description": {
+                    "person": "Uma pessoa no Home Assistant cuja foto representa este evento: no cartão do painel e na notificação do lembrete."
+                }
             },
             "one_time": {
                 "title": "Adicionar um evento único",
@@ -130,10 +140,16 @@
                     "month": "Mês",
                     "year": "Ano",
                     "end_date": "Data de término (opcional – transforma em evento de vários dias)",
+                    "time": "Hora (opcional)",
+                    "end_time": "Hora de término (opcional)",
                     "icon": "Substituir ícone (opcional)",
                     "vip": "VIP Annual"
                 },
-                "description": "Uma única data para a qual fazer a contagem regressiva. Ela nunca se repete, por isso o ano é obrigatório, e a entrada é excluída automaticamente na meia-noite seguinte ao seu término.\n\nCom uma data de término vira um evento de vários dias: uma viagem, um congresso, uma estadia."
+                "description": "Uma única data para a qual fazer a contagem regressiva. Ela nunca se repete, por isso o ano é obrigatório, e a entrada é excluída automaticamente na meia-noite seguinte ao seu término.\n\nCom uma data de término vira um evento de vários dias: uma viagem, um congresso, uma estadia.",
+                "data_description": {
+                    "time": "A que horas começa nesse dia. A entrada do calendário passa a ter um horário, e o cartão do painel o mostra.",
+                    "end_time": "A que horas termina: na data de término, se houver, senão no mesmo dia. Precisa de uma hora de início; vazio, a entrada do calendário dura uma hora."
+                }
             },
             "custom": {
                 "title": "Adicionar um evento personalizado",
@@ -146,11 +162,14 @@
                     "year": "Ano",
                     "icon": "Substituir ícone (opcional)",
                     "vip": "VIP Annual",
+                    "interval": "Repete-se a cada",
+                    "interval_unit": "…meses ou anos",
                     "nth": "Posição no mês",
                     "weekday": "Dia da semana"
                 },
                 "description": "A sua própria data anual, para tudo o que os outros tipos não descrevem.\n\nEla pode seguir uma **regra** em vez de um dia fixo: o Dia das Mães é o segundo domingo de maio e o Dia dos Pais na Austrália o primeiro domingo de setembro. Preencha os dois campos abaixo; o **Mês** acima indica a que mês a regra se aplica e o **Dia** deixa de ser usado. Deixe-os vazios para uma data fixa.",
                 "data_description": {
+                    "interval": "Junto com a unidade ao lado: a cada 6 meses, a cada 2 anos. Contado a partir da data acima, que então precisa do ano. Deixe ambos vazios para uma vez por ano.",
                     "nth": "Primeiro, segundo, terceiro, quarto ou o último do mês.",
                     "weekday": "Defina junto com o campo acima, ou deixe os dois vazios."
                 }
@@ -161,12 +180,16 @@
                 "data": {
                     "name": "Nome",
                     "last_name": "Sobrenome (opcional)",
+                    "person": "Pessoa (opcional)",
                     "type": "Tipo de evento",
                     "day": "Dia",
                     "month": "Mês",
                     "year": "Ano (deixe vazio se desconhecido)",
                     "icon": "Substituir ícone (opcional)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "person": "Uma pessoa no Home Assistant cuja foto representa este evento: no cartão do painel e na notificação do lembrete."
                 }
             },
             "reconfigure_one_time": {
@@ -180,8 +203,14 @@
                     "month": "Mês",
                     "year": "Ano",
                     "end_date": "Data de término (opcional – transforma em evento de vários dias)",
+                    "time": "Hora (opcional)",
+                    "end_time": "Hora de término (opcional)",
                     "icon": "Substituir ícone (opcional)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "time": "A que horas começa nesse dia. A entrada do calendário passa a ter um horário, e o cartão do painel o mostra.",
+                    "end_time": "A que horas termina: na data de término, se houver, senão no mesmo dia. Precisa de uma hora de início; vazio, a entrada do calendário dura uma hora."
                 }
             },
             "reconfigure_custom": {
@@ -196,10 +225,13 @@
                     "year": "Ano",
                     "icon": "Substituir ícone (opcional)",
                     "vip": "VIP Annual",
+                    "interval": "Repete-se a cada",
+                    "interval_unit": "…meses ou anos",
                     "nth": "Posição no mês",
                     "weekday": "Dia da semana"
                 },
                 "data_description": {
+                    "interval": "Junto com a unidade ao lado: a cada 6 meses, a cada 2 anos. Contado a partir da data acima, que então precisa do ano. Deixe ambos vazios para uma vez por ano.",
                     "nth": "Primeiro, segundo, terceiro, quarto ou o último do mês.",
                     "weekday": "Defina junto com o campo acima, ou deixe os dois vazios."
                 }
@@ -211,7 +243,12 @@
             "end_date_before_start": "A data de término deve ser posterior à data de início.",
             "invalid_date": "Essa combinação de dia/mês/ano não é uma data válida.",
             "year_required": "Eventos únicos exigem um ano.",
-            "rule_needs_both": "Uma regra de repetição precisa dos dois campos, ou de nenhum."
+            "rule_needs_both": "Uma regra de repetição precisa dos dois campos, ou de nenhum.",
+            "interval_needs_both": "Um intervalo de repetição precisa dos dois campos, ou de nenhum.",
+            "interval_needs_year": "Um intervalo de repetição é contado a partir da data acima, então o ano é necessário.",
+            "interval_no_rule": "Um intervalo de repetição não pode ser combinado com uma regra de dia da semana.",
+            "end_time_needs_time": "Uma hora de término precisa de uma hora de início.",
+            "end_time_before_start": "A hora de término deve ser depois da hora de início."
         },
         "abort": {
             "hub_not_configurable": "O hub do Annuals não tem configurações próprias - ele apenas mantém os calendários compartilhados.",
@@ -426,12 +463,16 @@
                 "data": {
                     "name": "Nome",
                     "last_name": "Sobrenome (opcional)",
+                    "person": "Pessoa (opcional)",
                     "type": "Tipo de evento",
                     "day": "Dia",
                     "month": "Mês",
                     "year": "Ano (deixe vazio se desconhecido)",
                     "icon": "Substituir ícone (opcional)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "person": "Uma pessoa no Home Assistant cuja foto representa este evento: no cartão do painel e na notificação do lembrete."
                 }
             },
             "edit_one_time": {
@@ -445,8 +486,14 @@
                     "month": "Mês",
                     "year": "Ano",
                     "end_date": "Data de término (opcional – transforma em evento de vários dias)",
+                    "time": "Hora (opcional)",
+                    "end_time": "Hora de término (opcional)",
                     "icon": "Substituir ícone (opcional)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "time": "A que horas começa nesse dia. A entrada do calendário passa a ter um horário, e o cartão do painel o mostra.",
+                    "end_time": "A que horas termina: na data de término, se houver, senão no mesmo dia. Precisa de uma hora de início; vazio, a entrada do calendário dura uma hora."
                 }
             },
             "edit_custom": {
@@ -461,10 +508,13 @@
                     "year": "Ano",
                     "icon": "Substituir ícone (opcional)",
                     "vip": "VIP Annual",
+                    "interval": "Repete-se a cada",
+                    "interval_unit": "…meses ou anos",
                     "nth": "Posição no mês",
                     "weekday": "Dia da semana"
                 },
                 "data_description": {
+                    "interval": "Junto com a unidade ao lado: a cada 6 meses, a cada 2 anos. Contado a partir da data acima, que então precisa do ano. Deixe ambos vazios para uma vez por ano.",
                     "nth": "Primeiro, segundo, terceiro, quarto ou o último do mês.",
                     "weekday": "Defina junto com o campo acima, ou deixe os dois vazios."
                 }
@@ -484,7 +534,12 @@
             "no_valid_vcard_entries": "Nenhum contato com um aniversário utilizável foi encontrado neste arquivo. Consulte o log para detalhes das entradas ignoradas.",
             "no_valid_vcard_dates": "Nenhuma data comemorativa ou outra data (além de aniversários) foi encontrada neste arquivo. Consulte o log para detalhes das entradas ignoradas.",
             "no_batch_selected": "Marque \"Remover todos os feriados importados\" ou escolha um lote.",
-            "rule_needs_both": "Uma regra de repetição precisa dos dois campos, ou de nenhum."
+            "rule_needs_both": "Uma regra de repetição precisa dos dois campos, ou de nenhum.",
+            "interval_needs_both": "Um intervalo de repetição precisa dos dois campos, ou de nenhum.",
+            "interval_needs_year": "Um intervalo de repetição é contado a partir da data acima, então o ano é necessário.",
+            "interval_no_rule": "Um intervalo de repetição não pode ser combinado com uma regra de dia da semana.",
+            "end_time_needs_time": "Uma hora de término precisa de uma hora de início.",
+            "end_time_before_start": "A hora de término deve ser depois da hora de início."
         },
         "abort": {
             "translations_exported": "{count} tradução(ões) exportado(s). [Baixar annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+clique para baixar - um clique simples não funciona aqui)\n\nOu copie o CSV abaixo:\n\n```\n{csv}\n```",

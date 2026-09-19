@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, time, timedelta
 import logging
 
 from homeassistant.components.calendar import CalendarEntity, CalendarEvent
@@ -15,11 +15,13 @@ from .const import (
     CONF_COUNTRY,
     CONF_DAY,
     CONF_END_DATE,
+    CONF_END_TIME,
     CONF_EVENT_TYPE,
     CONF_HOLIDAY_KEY,
     CONF_HOLIDAY_OBSERVED,
     CONF_MONTH,
     CONF_SUBDIVISION,
+    CONF_TIME,
     CONF_YEAR,
     DOMAIN,
     TYPE_CUSTOM,
@@ -31,11 +33,15 @@ from .dates import (
     event_occurrence_in_year,
     holiday_occurrence_in_year,
     holiday_span_kwargs,
+    interval_occurrence,
+    interval_occurrences_between,
+    interval_rule,
     next_event_occurrence,
     next_holiday_occurrence,
     occurrence_number,
     one_time_date,
     one_time_span,
+    parse_time,
 )
 from .helpers import async_event_type_labels, full_name
 
@@ -100,7 +106,12 @@ class AnnualsTypeCalendar(CalendarEntity):
         # number (see dates.py). Every other type still gets "name - type".
         if self._event_type in (TYPE_CUSTOM, TYPE_ONE_TIME, TYPE_HOLIDAY):
             return name
-        number = occurrence_number(entry.data.get(CONF_YEAR), occurrence)
+        # An interval event numbers its steps from the stored date (see
+        # interval_occurrence); everything else counts years.
+        if interval_rule(entry.data) is not None:
+            number = interval_occurrence(entry.data, occurrence)[1]
+        else:
+            number = occurrence_number(entry.data.get(CONF_YEAR), occurrence)
         suffix = f" ({number})" if number is not None else ""
         return f"{name} - {self._type_label}{suffix}"
 
@@ -117,6 +128,32 @@ class AnnualsTypeCalendar(CalendarEntity):
                 entry.data[CONF_DAY],
                 entry.data.get(CONF_END_DATE),
             )
+            # With a time of day (see CONF_TIME) it is a timed entry rather
+            # than an all-day one: from that time on the first day to the
+            # end time on the last, or an hour long where no end was given
+            # - the length every calendar app assumes for an appointment.
+            start_time = parse_time(entry.data.get(CONF_TIME))
+            if start_time is not None:
+                zone = dt_util.get_default_time_zone()
+                start = datetime.combine(occurrence, start_time, tzinfo=zone)
+                end_time = parse_time(entry.data.get(CONF_END_TIME))
+                if end_time is not None:
+                    end = datetime.combine(last_day, end_time, tzinfo=zone)
+                elif last_day != occurrence:
+                    # A multi-day event with a start time and no end time
+                    # runs to the end of its last day - an hour from its
+                    # start would cut a week's trip down to a morning.
+                    end = datetime.combine(last_day + timedelta(days=1), time.min, tzinfo=zone)
+                else:
+                    end = start + timedelta(hours=1)
+                if end <= start:
+                    end = start + timedelta(hours=1)
+                return CalendarEvent(
+                    start=start,
+                    end=end,
+                    summary=self._summary(entry, occurrence),
+                    uid=f"{DOMAIN}-{entry.entry_id}-{occurrence.isoformat()}",
+                )
         return CalendarEvent(
             start=occurrence,
             end=last_day + timedelta(days=1),
@@ -151,6 +188,9 @@ class AnnualsTypeCalendar(CalendarEntity):
                 data[CONF_YEAR], data[CONF_MONTH], data[CONF_DAY], data.get(CONF_END_DATE)
             )
             return occurrence if last_day >= today else None
+        # Every N months or years from its stored date (see CONF_INTERVAL).
+        if interval_rule(data) is not None:
+            return interval_occurrence(data, today)[0]
         # Its stored day/month, or the rule a custom event can carry
         # instead (see CONF_WEEKDAY in const.py) - dates.py decides which.
         return next_event_occurrence(data, today)
@@ -188,7 +228,10 @@ class AnnualsTypeCalendar(CalendarEntity):
         ]
         if not upcoming:
             return None
-        return min(upcoming, key=lambda e: e.start)
+        # Compared as local datetimes: a timed one-time event's start is a
+        # datetime (see _calendar_event) and an all-day event's a date, and
+        # Python refuses to order the two against each other.
+        return min(upcoming, key=lambda e: e.start_datetime_local)
 
     @property
     def event(self) -> CalendarEvent | None:
@@ -215,11 +258,19 @@ class AnnualsTypeCalendar(CalendarEntity):
             start = start_date.date()
             end = end_date.date()
             for entry in _entries_for_type(hass, self._event_type):
+                # An interval event is not one per year - a six-monthly
+                # one falls twice in a year, a five-yearly one mostly not
+                # at all - so it is asked for the range as a whole.
+                if interval_rule(entry.data) is not None:
+                    for occurrence, _step in interval_occurrences_between(entry.data, start, end):
+                        events.append(self._calendar_event(entry, occurrence))
+                    continue
                 for year in range(start.year, end.year + 1):
                     occurrence = self._occurrence_in_year_for_entry(entry, year)
                     if occurrence is not None and start <= occurrence <= end:
                         events.append(self._calendar_event(entry, occurrence))
-            return sorted(events, key=lambda e: e.start)
+            # See _compute_event: date and datetime starts do not compare.
+            return sorted(events, key=lambda e: e.start_datetime_local)
 
         # Same blocking-I/O concern as event/async_update above for holidays;
         # negligible overhead either way for the other types.

@@ -6,8 +6,9 @@ from typing import Any
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.util import dt as dt_util
 from homeassistant.util import slugify
 
@@ -18,6 +19,7 @@ from .const import (
     CONF_DAY,
     CONF_EVENT_NAME,
     CONF_END_DATE,
+    CONF_END_TIME,
     CONF_EVENT_TYPE,
     CONF_HOLIDAY_KEY,
     CONF_HOLIDAY_OBSERVED,
@@ -26,11 +28,15 @@ from .const import (
     CONF_HUB,
     CONF_ICON,
     CONF_IMPORTANT_THRESHOLDS,
+    CONF_INTERVAL,
+    CONF_INTERVAL_UNIT,
     CONF_LANGUAGE,
     CONF_LAST_NAME,
     CONF_MONTH,
     CONF_NAME_TRANSLATIONS,
+    CONF_PERSON,
     CONF_SUBDIVISION,
+    CONF_TIME,
     CONF_VIP,
     CONF_YEAR,
     DATA_REMINDER_STRINGS,
@@ -51,6 +57,8 @@ from .dates import (
     holiday_key_from_name,
     holiday_label,
     holiday_span_kwargs,
+    interval_occurrence,
+    interval_rule,
     is_important,
     next_event_occurrence,
     next_holiday_occurrence,
@@ -180,6 +188,13 @@ class AnnualEventSensor(SensorEntity):
             in_progress = occurrence <= today <= last_day
             occurrence_num = None
             important = False
+        elif interval_rule(data) is not None:
+            # A custom event repeating every N months or years from its
+            # stored date (see CONF_INTERVAL in const.py): the next step on
+            # or after today, and the occurrence number counts those steps
+            # - the stored date is 0, one interval later is 1.
+            occurrence, occurrence_num = interval_occurrence(data, today)
+            important = is_important(occurrence_num, self._important_thresholds(event_type))
         else:
             # A custom event can carry a rule - "the first Sunday in
             # September" - instead of using its stored day; dates.py is
@@ -217,6 +232,26 @@ class AnnualEventSensor(SensorEntity):
             "reminder_message": self._reminder_message(days),
             "todo": self._has_open_todo(),
         }
+        # The person whose picture stands for this event (see CONF_PERSON):
+        # the entity id as an attribute, and their picture as this sensor's
+        # own entity_picture, which is what the card and the blueprint's
+        # notification show. Read live from the person's state, so a new
+        # photo on the person is a new photo here at the next update.
+        person = data.get(CONF_PERSON) or None
+        if person:
+            self._attr_extra_state_attributes["person"] = person
+        self._attr_entity_picture = self._person_picture(person)
+        # A repeat interval (see CONF_INTERVAL), only where there is one.
+        interval = interval_rule(data)
+        if interval is not None:
+            self._attr_extra_state_attributes["interval"] = interval[0]
+            self._attr_extra_state_attributes["interval_unit"] = interval[1]
+        # A one-time event's time of day (see CONF_TIME), only where set -
+        # the countdown above stays a count of days either way.
+        if event_type == TYPE_ONE_TIME and data.get(CONF_TIME):
+            self._attr_extra_state_attributes["time"] = data[CONF_TIME]
+            if data.get(CONF_END_TIME):
+                self._attr_extra_state_attributes["end_time"] = data[CONF_END_TIME]
         rule = weekday_rule(data)
         if rule is not None:
             # Only on an event that actually has one (see CONF_WEEKDAY in
@@ -347,6 +382,24 @@ class AnnualEventSensor(SensorEntity):
             "todo": self._has_open_todo(),
         }
 
+    def _person_picture(self, person: str | None) -> str | None:
+        """The linked person's picture (see CONF_PERSON), or None without
+        one - or while that person has no picture, or is not loaded yet,
+        which the state-change listener in async_added_to_hass catches up
+        with the moment it is.
+        """
+        if not person:
+            return None
+        state = self._hass_ref.states.get(person)
+        return state.attributes.get("entity_picture") if state else None
+
+    @callback
+    def _person_changed(self, _event) -> None:
+        """The linked person's state changed - a new picture, or the person
+        arriving after this sensor did at startup.
+        """
+        self.async_schedule_update_ha_state(True)
+
     def _type_label(self, event_type: str) -> str:
         """This event type's translated label - see DATA_TYPE_LABELS/
         helpers.async_event_type_labels, cached at integration setup since
@@ -410,6 +463,11 @@ class AnnualEventSensor(SensorEntity):
         __init__ - see the comment there).
         """
         self._hass_ref.data.setdefault(DOMAIN, {}).setdefault(DATA_SENSORS, set()).add(self)
+        person = self._config_entry.data.get(CONF_PERSON)
+        if person:
+            self.async_on_remove(
+                async_track_state_change_event(self._hass_ref, [person], self._person_changed)
+            )
         if self._config_entry.data[CONF_EVENT_TYPE] == TYPE_HOLIDAY:
             await self._hass_ref.async_add_executor_job(self._update_state)
 

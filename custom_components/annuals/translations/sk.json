@@ -93,6 +93,12 @@
                 "5": "Sobota",
                 "6": "Nedeľa"
             }
+        },
+        "interval_unit": {
+            "options": {
+                "months": "mesiacov",
+                "years": "rokov"
+            }
         }
     },
     "config": {
@@ -112,12 +118,16 @@
                 "data": {
                     "name": "Meno",
                     "last_name": "Priezvisko (voliteľné)",
+                    "person": "Osoba (voliteľné)",
                     "type": "Typ udalosti",
                     "day": "Deň",
                     "month": "Mesiac",
                     "year": "Rok (ak je neznámy, nechajte prázdne)",
                     "icon": "Vlastná ikona (voliteľné)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "person": "Osoba v Home Assistante, ktorej fotka zastupuje túto udalosť – na karte dashboardu a v oznámení pripomienky."
                 }
             },
             "one_time": {
@@ -131,8 +141,14 @@
                     "month": "Mesiac",
                     "year": "Rok",
                     "end_date": "Dátum ukončenia (voliteľné – vytvorí viacdňovú udalosť)",
+                    "time": "Čas (voliteľné)",
+                    "end_time": "Čas konca (voliteľné)",
                     "icon": "Vlastná ikona (voliteľné)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "time": "O koľkej sa v ten deň začína. Záznam v kalendári má potom čas a karta dashboardu ho zobrazí.",
+                    "end_time": "O koľkej sa končí – v deň konca, ak je zadaný, inak v ten istý deň. Vyžaduje čas začiatku; prázdny znamená hodinový záznam v kalendári."
                 }
             },
             "custom": {
@@ -147,10 +163,13 @@
                     "year": "Rok",
                     "icon": "Vlastná ikona (voliteľné)",
                     "vip": "VIP Annual",
+                    "interval": "Opakuje sa každých",
+                    "interval_unit": "…mesiacov alebo rokov",
                     "nth": "Poradie v mesiaci",
                     "weekday": "Deň v týždni"
                 },
                 "data_description": {
+                    "interval": "Spolu s jednotkou vedľa – každých 6 mesiacov, každé 2 roky. Počíta sa od dátumu vyššie, ktorý potom potrebuje rok. Obe polia nechajte prázdne pre raz za rok.",
                     "nth": "Prvý, druhý, tretí, štvrtý alebo posledný v mesiaci.",
                     "weekday": "Nastavte spolu s poľom vyššie – alebo nechajte obe prázdne."
                 }
@@ -161,12 +180,16 @@
                 "data": {
                     "name": "Meno",
                     "last_name": "Priezvisko (voliteľné)",
+                    "person": "Osoba (voliteľné)",
                     "type": "Typ udalosti",
                     "day": "Deň",
                     "month": "Mesiac",
                     "year": "Rok (ak je neznámy, nechajte prázdne)",
                     "icon": "Vlastná ikona (voliteľné)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "person": "Osoba v Home Assistante, ktorej fotka zastupuje túto udalosť – na karte dashboardu a v oznámení pripomienky."
                 }
             },
             "reconfigure_one_time": {
@@ -180,8 +203,14 @@
                     "month": "Mesiac",
                     "year": "Rok",
                     "end_date": "Dátum ukončenia (voliteľné – vytvorí viacdňovú udalosť)",
+                    "time": "Čas (voliteľné)",
+                    "end_time": "Čas konca (voliteľné)",
                     "icon": "Vlastná ikona (voliteľné)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "time": "O koľkej sa v ten deň začína. Záznam v kalendári má potom čas a karta dashboardu ho zobrazí.",
+                    "end_time": "O koľkej sa končí – v deň konca, ak je zadaný, inak v ten istý deň. Vyžaduje čas začiatku; prázdny znamená hodinový záznam v kalendári."
                 }
             },
             "reconfigure_custom": {
@@ -196,10 +225,13 @@
                     "year": "Rok",
                     "icon": "Vlastná ikona (voliteľné)",
                     "vip": "VIP Annual",
+                    "interval": "Opakuje sa každých",
+                    "interval_unit": "…mesiacov alebo rokov",
                     "nth": "Poradie v mesiaci",
                     "weekday": "Deň v týždni"
                 },
                 "data_description": {
+                    "interval": "Spolu s jednotkou vedľa – každých 6 mesiacov, každé 2 roky. Počíta sa od dátumu vyššie, ktorý potom potrebuje rok. Obe polia nechajte prázdne pre raz za rok.",
                     "nth": "Prvý, druhý, tretí, štvrtý alebo posledný v mesiaci.",
                     "weekday": "Nastavte spolu s poľom vyššie – alebo nechajte obe prázdne."
                 }
@@ -211,7 +243,12 @@
             "end_date_before_start": "Dátum ukončenia musí byť po dátume začiatku.",
             "invalid_date": "Táto kombinácia dňa/mesiaca/roka nie je platným dátumom.",
             "year_required": "Jednorazové udalosti vyžadujú rok.",
-            "rule_needs_both": "Pravidlo opakovania potrebuje obe polia – alebo žiadne."
+            "rule_needs_both": "Pravidlo opakovania potrebuje obe polia – alebo žiadne.",
+            "interval_needs_both": "Interval opakovania potrebuje obe polia, alebo žiadne.",
+            "interval_needs_year": "Interval opakovania sa počíta od dátumu vyššie, takže je potrebný rok.",
+            "interval_no_rule": "Interval opakovania nemožno kombinovať s pravidlom dňa v týždni.",
+            "end_time_needs_time": "Čas konca potrebuje čas začiatku.",
+            "end_time_before_start": "Čas konca musí byť po čase začiatku."
         },
         "abort": {
             "hub_not_configurable": "Centrum Annuals nemá vlastné nastavenia – iba zastrešuje zdieľané kalendáre.",
@@ -227,12 +264,16 @@
                 "data": {
                     "name": "Meno",
                     "last_name": "Priezvisko (voliteľné)",
+                    "person": "Osoba (voliteľné)",
                     "type": "Typ udalosti",
                     "day": "Deň",
                     "month": "Mesiac",
                     "year": "Rok (ak je neznámy, nechajte prázdne)",
                     "icon": "Vlastná ikona (voliteľné)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "person": "Osoba v Home Assistante, ktorej fotka zastupuje túto udalosť – na karte dashboardu a v oznámení pripomienky."
                 }
             },
             "edit_one_time": {
@@ -246,8 +287,14 @@
                     "month": "Mesiac",
                     "year": "Rok",
                     "end_date": "Dátum ukončenia (voliteľné – vytvorí viacdňovú udalosť)",
+                    "time": "Čas (voliteľné)",
+                    "end_time": "Čas konca (voliteľné)",
                     "icon": "Vlastná ikona (voliteľné)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "time": "O koľkej sa v ten deň začína. Záznam v kalendári má potom čas a karta dashboardu ho zobrazí.",
+                    "end_time": "O koľkej sa končí – v deň konca, ak je zadaný, inak v ten istý deň. Vyžaduje čas začiatku; prázdny znamená hodinový záznam v kalendári."
                 }
             },
             "edit_custom": {
@@ -262,10 +309,13 @@
                     "year": "Rok",
                     "icon": "Vlastná ikona (voliteľné)",
                     "vip": "VIP Annual",
+                    "interval": "Opakuje sa každých",
+                    "interval_unit": "…mesiacov alebo rokov",
                     "nth": "Poradie v mesiaci",
                     "weekday": "Deň v týždni"
                 },
                 "data_description": {
+                    "interval": "Spolu s jednotkou vedľa – každých 6 mesiacov, každé 2 roky. Počíta sa od dátumu vyššie, ktorý potom potrebuje rok. Obe polia nechajte prázdne pre raz za rok.",
                     "nth": "Prvý, druhý, tretí, štvrtý alebo posledný v mesiaci.",
                     "weekday": "Nastavte spolu s poľom vyššie – alebo nechajte obe prázdne."
                 }
@@ -484,7 +534,12 @@
             "no_valid_vcard_entries": "V tomto súbore sa nenašli žiadne kontakty s použiteľnými narodeninami. Podrobnosti o preskočených záznamoch nájdete v denníku.",
             "no_valid_vcard_dates": "V tomto súbore sa nenašli žiadne výročia ani iné dátumy (okrem narodenín). Podrobnosti o preskočených záznamoch nájdete v denníku.",
             "no_batch_selected": "Začiarknite „Odstrániť všetky importované sviatky“ alebo vyberte dávku na odstránenie.",
-            "rule_needs_both": "Pravidlo opakovania potrebuje obe polia – alebo žiadne."
+            "rule_needs_both": "Pravidlo opakovania potrebuje obe polia – alebo žiadne.",
+            "interval_needs_both": "Interval opakovania potrebuje obe polia, alebo žiadne.",
+            "interval_needs_year": "Interval opakovania sa počíta od dátumu vyššie, takže je potrebný rok.",
+            "interval_no_rule": "Interval opakovania nemožno kombinovať s pravidlom dňa v týždni.",
+            "end_time_needs_time": "Čas konca potrebuje čas začiatku.",
+            "end_time_before_start": "Čas konca musí byť po čase začiatku."
         },
         "abort": {
             "translations_exported": "Exportovaných prekladov: {count}. [Stiahnuť annuals_holiday_translations.csv]({url}) (stiahnete kliknutím s Ctrl/Cmd – samotné kliknutie tu nefunguje)\n\nAlebo skopírujte CSV nižšie:\n\n```\n{csv}\n```",

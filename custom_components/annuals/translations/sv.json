@@ -93,6 +93,12 @@
                 "5": "Lördag",
                 "6": "Söndag"
             }
+        },
+        "interval_unit": {
+            "options": {
+                "months": "månader",
+                "years": "år"
+            }
         }
     },
     "config": {
@@ -111,6 +117,7 @@
                 "data": {
                     "name": "Namn",
                     "last_name": "Efternamn (valfritt)",
+                    "person": "Person (valfritt)",
                     "type": "Händelsetyp",
                     "day": "Dag",
                     "month": "Månad",
@@ -118,7 +125,10 @@
                     "icon": "Åsidosätt ikon (valfritt)",
                     "vip": "VIP Annual"
                 },
-                "description": "Varje händelse får en egen post, som du senare kan hitta och redigera under Inställningar → Enheter och tjänster → Annuals genom att söka på namnet."
+                "description": "Varje händelse får en egen post, som du senare kan hitta och redigera under Inställningar → Enheter och tjänster → Annuals genom att söka på namnet.",
+                "data_description": {
+                    "person": "En person i Home Assistant vars bild står för den här händelsen – på kortet i instrumentpanelen och i påminnelsens avisering."
+                }
             },
             "one_time": {
                 "title": "Lägg till en engångshändelse",
@@ -130,10 +140,16 @@
                     "month": "Månad",
                     "year": "År",
                     "end_date": "Slutdatum (valfritt – gör den till en flerdagshändelse)",
+                    "time": "Tid (valfritt)",
+                    "end_time": "Sluttid (valfritt)",
                     "icon": "Åsidosätt ikon (valfritt)",
                     "vip": "VIP Annual"
                 },
-                "description": "Ett enda datum att räkna ned till. Det upprepas aldrig, så året är obligatoriskt, och posten raderas automatiskt vid midnatt efter att det har passerat.\n\nMed ett slutdatum blir det en flerdagshändelse – en resa, en konferens, en vistelse."
+                "description": "Ett enda datum att räkna ned till. Det upprepas aldrig, så året är obligatoriskt, och posten raderas automatiskt vid midnatt efter att det har passerat.\n\nMed ett slutdatum blir det en flerdagshändelse – en resa, en konferens, en vistelse.",
+                "data_description": {
+                    "time": "När den börjar den dagen. Kalenderposten får då en tid, och kortet i instrumentpanelen visar den.",
+                    "end_time": "När den slutar – på slutdatumet om det finns ett, annars samma dag. Kräver en starttid; lämnad tom är kalenderposten en timme lång."
+                }
             },
             "custom": {
                 "title": "Lägg till en anpassad händelse",
@@ -146,11 +162,14 @@
                     "year": "År",
                     "icon": "Åsidosätt ikon (valfritt)",
                     "vip": "VIP Annual",
+                    "interval": "Upprepas var",
+                    "interval_unit": "…månad eller år",
                     "nth": "Placering i månaden",
                     "weekday": "Veckodag"
                 },
                 "description": "Ditt eget årliga datum, för allt som de andra typerna inte beskriver.\n\nDet kan följa en **regel** i stället för en bestämd dag: mors dag är den andra söndagen i maj, fars dag i Australien den första söndagen i september. Fyll i de två fälten längst ned – **Månad** ovanför anger vilken månad regeln gäller, och **Dag** används då inte. Lämna dem tomma för ett fast datum.",
                 "data_description": {
+                    "interval": "Tillsammans med enheten bredvid – var 6:e månad, vartannat år. Räknas från datumet ovan, som då behöver sitt år. Lämna båda tomma för en gång om året.",
                     "nth": "Första, andra, tredje, fjärde eller den sista i månaden.",
                     "weekday": "Ange tillsammans med fältet ovanför – eller lämna båda tomma."
                 }
@@ -161,12 +180,16 @@
                 "data": {
                     "name": "Namn",
                     "last_name": "Efternamn (valfritt)",
+                    "person": "Person (valfritt)",
                     "type": "Händelsetyp",
                     "day": "Dag",
                     "month": "Månad",
                     "year": "År (lämna tomt om okänt)",
                     "icon": "Åsidosätt ikon (valfritt)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "person": "En person i Home Assistant vars bild står för den här händelsen – på kortet i instrumentpanelen och i påminnelsens avisering."
                 }
             },
             "reconfigure_one_time": {
@@ -180,8 +203,14 @@
                     "month": "Månad",
                     "year": "År",
                     "end_date": "Slutdatum (valfritt – gör den till en flerdagshändelse)",
+                    "time": "Tid (valfritt)",
+                    "end_time": "Sluttid (valfritt)",
                     "icon": "Åsidosätt ikon (valfritt)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "time": "När den börjar den dagen. Kalenderposten får då en tid, och kortet i instrumentpanelen visar den.",
+                    "end_time": "När den slutar – på slutdatumet om det finns ett, annars samma dag. Kräver en starttid; lämnad tom är kalenderposten en timme lång."
                 }
             },
             "reconfigure_custom": {
@@ -196,10 +225,13 @@
                     "year": "År",
                     "icon": "Åsidosätt ikon (valfritt)",
                     "vip": "VIP Annual",
+                    "interval": "Upprepas var",
+                    "interval_unit": "…månad eller år",
                     "nth": "Placering i månaden",
                     "weekday": "Veckodag"
                 },
                 "data_description": {
+                    "interval": "Tillsammans med enheten bredvid – var 6:e månad, vartannat år. Räknas från datumet ovan, som då behöver sitt år. Lämna båda tomma för en gång om året.",
                     "nth": "Första, andra, tredje, fjärde eller den sista i månaden.",
                     "weekday": "Ange tillsammans med fältet ovanför – eller lämna båda tomma."
                 }
@@ -211,7 +243,12 @@
             "end_date_before_start": "Slutdatumet måste vara efter startdatumet.",
             "invalid_date": "Den här kombinationen av dag/månad/år är inte ett giltigt datum.",
             "year_required": "Engångshändelser kräver ett år.",
-            "rule_needs_both": "En upprepningsregel kräver båda fälten – eller inget av dem."
+            "rule_needs_both": "En upprepningsregel kräver båda fälten – eller inget av dem.",
+            "interval_needs_both": "Ett upprepningsintervall kräver båda fälten, eller inget.",
+            "interval_needs_year": "Ett upprepningsintervall räknas från datumet ovan, så året behövs.",
+            "interval_no_rule": "Ett upprepningsintervall kan inte kombineras med en veckodagsregel.",
+            "end_time_needs_time": "En sluttid kräver en starttid.",
+            "end_time_before_start": "Sluttiden måste vara efter starttiden."
         },
         "abort": {
             "hub_not_configurable": "Annuals-huben har inga egna inställningar - den innehåller bara de delade kalendrarna.",
@@ -426,12 +463,16 @@
                 "data": {
                     "name": "Namn",
                     "last_name": "Efternamn (valfritt)",
+                    "person": "Person (valfritt)",
                     "type": "Händelsetyp",
                     "day": "Dag",
                     "month": "Månad",
                     "year": "År (lämna tomt om okänt)",
                     "icon": "Åsidosätt ikon (valfritt)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "person": "En person i Home Assistant vars bild står för den här händelsen – på kortet i instrumentpanelen och i påminnelsens avisering."
                 }
             },
             "edit_one_time": {
@@ -445,8 +486,14 @@
                     "month": "Månad",
                     "year": "År",
                     "end_date": "Slutdatum (valfritt – gör den till en flerdagshändelse)",
+                    "time": "Tid (valfritt)",
+                    "end_time": "Sluttid (valfritt)",
                     "icon": "Åsidosätt ikon (valfritt)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "time": "När den börjar den dagen. Kalenderposten får då en tid, och kortet i instrumentpanelen visar den.",
+                    "end_time": "När den slutar – på slutdatumet om det finns ett, annars samma dag. Kräver en starttid; lämnad tom är kalenderposten en timme lång."
                 }
             },
             "edit_custom": {
@@ -461,10 +508,13 @@
                     "year": "År",
                     "icon": "Åsidosätt ikon (valfritt)",
                     "vip": "VIP Annual",
+                    "interval": "Upprepas var",
+                    "interval_unit": "…månad eller år",
                     "nth": "Placering i månaden",
                     "weekday": "Veckodag"
                 },
                 "data_description": {
+                    "interval": "Tillsammans med enheten bredvid – var 6:e månad, vartannat år. Räknas från datumet ovan, som då behöver sitt år. Lämna båda tomma för en gång om året.",
                     "nth": "Första, andra, tredje, fjärde eller den sista i månaden.",
                     "weekday": "Ange tillsammans med fältet ovanför – eller lämna båda tomma."
                 }
@@ -484,7 +534,12 @@
             "no_valid_vcard_entries": "Inga kontakter med en användbar födelsedag hittades i den här filen. Se loggen för detaljer om överhoppade poster.",
             "no_valid_vcard_dates": "Inga årsdagar eller övriga datum (förutom födelsedagar) hittades i den här filen. Se loggen för detaljer om överhoppade poster.",
             "no_batch_selected": "Markera \"Ta bort alla importerade helgdagar\", eller välj en grupp.",
-            "rule_needs_both": "En upprepningsregel kräver båda fälten – eller inget av dem."
+            "rule_needs_both": "En upprepningsregel kräver båda fälten – eller inget av dem.",
+            "interval_needs_both": "Ett upprepningsintervall kräver båda fälten, eller inget.",
+            "interval_needs_year": "Ett upprepningsintervall räknas från datumet ovan, så året behövs.",
+            "interval_no_rule": "Ett upprepningsintervall kan inte kombineras med en veckodagsregel.",
+            "end_time_needs_time": "En sluttid kräver en starttid.",
+            "end_time_before_start": "Sluttiden måste vara efter starttiden."
         },
         "abort": {
             "translations_exported": "{count} översättning(ar) exporterade. [Ladda ner annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+klick för att ladda ner - ett vanligt klick fungerar inte här)\n\nEller kopiera CSV:n nedan:\n\n```\n{csv}\n```",

@@ -93,6 +93,12 @@
                 "5": "Lørdag",
                 "6": "Søndag"
             }
+        },
+        "interval_unit": {
+            "options": {
+                "months": "måneder",
+                "years": "år"
+            }
         }
     },
     "config": {
@@ -111,6 +117,7 @@
                 "data": {
                     "name": "Navn",
                     "last_name": "Efternavn (valgfrit)",
+                    "person": "Person (valgfri)",
                     "type": "Begivenhedstype",
                     "day": "Dag",
                     "month": "Måned",
@@ -118,7 +125,10 @@
                     "icon": "Tilsidesæt ikon (valgfrit)",
                     "vip": "VIP Annual"
                 },
-                "description": "Hver begivenhed får sin egen post, som du senere kan finde og redigere under Indstillinger → Enheder og tjenester → Annuals ved at søge på navnet."
+                "description": "Hver begivenhed får sin egen post, som du senere kan finde og redigere under Indstillinger → Enheder og tjenester → Annuals ved at søge på navnet.",
+                "data_description": {
+                    "person": "En person i Home Assistant, hvis billede står for denne begivenhed – på dashboardkortet og i påmindelsens notifikation."
+                }
             },
             "one_time": {
                 "title": "Tilføj en engangsbegivenhed",
@@ -130,10 +140,16 @@
                     "month": "Måned",
                     "year": "År",
                     "end_date": "Slutdato (valgfrit – gør den til en flerdagsbegivenhed)",
+                    "time": "Tidspunkt (valgfri)",
+                    "end_time": "Sluttidspunkt (valgfri)",
                     "icon": "Tilsidesæt ikon (valgfrit)",
                     "vip": "VIP Annual"
                 },
-                "description": "En enkelt dato at tælle ned til. Den gentages aldrig, så året er påkrævet, og posten slettes automatisk ved midnat efter, den er overstået.\n\nGiv den en slutdato, så bliver det en flerdagsbegivenhed – en rejse, en konference, et ophold."
+                "description": "En enkelt dato at tælle ned til. Den gentages aldrig, så året er påkrævet, og posten slettes automatisk ved midnat efter, den er overstået.\n\nGiv den en slutdato, så bliver det en flerdagsbegivenhed – en rejse, en konference, et ophold.",
+                "data_description": {
+                    "time": "Hvornår den begynder den dag. Kalenderposten får så et tidspunkt, og dashboardkortet viser det.",
+                    "end_time": "Hvornår den slutter – på slutdatoen, hvis der er en, ellers samme dag. Kræver et starttidspunkt; tom betyder, at kalenderposten varer en time."
+                }
             },
             "custom": {
                 "title": "Tilføj en tilpasset begivenhed",
@@ -146,11 +162,14 @@
                     "year": "År",
                     "icon": "Tilsidesæt ikon (valgfrit)",
                     "vip": "VIP Annual",
+                    "interval": "Gentages hver",
+                    "interval_unit": "…måneder eller år",
                     "nth": "Placering i måneden",
                     "weekday": "Ugedag"
                 },
                 "description": "Din egen årlige dato til alt det, de andre typer ikke dækker.\n\nDen kan følge en **regel** i stedet for en bestemt dag: mors dag er den anden søndag i maj, fars dag i Australien den første søndag i september. Udfyld de to felter nederst – **Måned** ovenfor angiver, hvilken måned reglen gælder for, og **Dag** bruges så ikke. Lad dem stå tomme for en fast dato.",
                 "data_description": {
+                    "interval": "Sammen med enheden ved siden af – hver 6. måned, hvert 2. år. Tælles fra datoen ovenfor, som så skal have sit år. Lad begge stå tomme for én gang om året.",
                     "nth": "Første, anden, tredje, fjerde eller den sidste i måneden.",
                     "weekday": "Sæt den sammen med feltet ovenfor – eller lad begge stå tomme."
                 }
@@ -161,12 +180,16 @@
                 "data": {
                     "name": "Navn",
                     "last_name": "Efternavn (valgfrit)",
+                    "person": "Person (valgfri)",
                     "type": "Begivenhedstype",
                     "day": "Dag",
                     "month": "Måned",
                     "year": "År (lad stå tomt hvis ukendt)",
                     "icon": "Tilsidesæt ikon (valgfrit)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "person": "En person i Home Assistant, hvis billede står for denne begivenhed – på dashboardkortet og i påmindelsens notifikation."
                 }
             },
             "reconfigure_one_time": {
@@ -180,8 +203,14 @@
                     "month": "Måned",
                     "year": "År",
                     "end_date": "Slutdato (valgfrit – gør den til en flerdagsbegivenhed)",
+                    "time": "Tidspunkt (valgfri)",
+                    "end_time": "Sluttidspunkt (valgfri)",
                     "icon": "Tilsidesæt ikon (valgfrit)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "time": "Hvornår den begynder den dag. Kalenderposten får så et tidspunkt, og dashboardkortet viser det.",
+                    "end_time": "Hvornår den slutter – på slutdatoen, hvis der er en, ellers samme dag. Kræver et starttidspunkt; tom betyder, at kalenderposten varer en time."
                 }
             },
             "reconfigure_custom": {
@@ -196,10 +225,13 @@
                     "year": "År",
                     "icon": "Tilsidesæt ikon (valgfrit)",
                     "vip": "VIP Annual",
+                    "interval": "Gentages hver",
+                    "interval_unit": "…måneder eller år",
                     "nth": "Placering i måneden",
                     "weekday": "Ugedag"
                 },
                 "data_description": {
+                    "interval": "Sammen med enheden ved siden af – hver 6. måned, hvert 2. år. Tælles fra datoen ovenfor, som så skal have sit år. Lad begge stå tomme for én gang om året.",
                     "nth": "Første, anden, tredje, fjerde eller den sidste i måneden.",
                     "weekday": "Sæt den sammen med feltet ovenfor – eller lad begge stå tomme."
                 }
@@ -211,7 +243,12 @@
             "end_date_before_start": "Slutdatoen skal være efter startdatoen.",
             "invalid_date": "Denne kombination af dag/måned/år er ikke en gyldig dato.",
             "year_required": "Engangsbegivenheder kræver et år.",
-            "rule_needs_both": "En gentagelsesregel kræver begge felter – eller ingen af dem."
+            "rule_needs_both": "En gentagelsesregel kræver begge felter – eller ingen af dem.",
+            "interval_needs_both": "Et gentagelsesinterval kræver begge felter, eller ingen.",
+            "interval_needs_year": "Et gentagelsesinterval tælles fra datoen ovenfor, så året er nødvendigt.",
+            "interval_no_rule": "Et gentagelsesinterval kan ikke kombineres med en ugedagsregel.",
+            "end_time_needs_time": "Et sluttidspunkt kræver et starttidspunkt.",
+            "end_time_before_start": "Sluttidspunktet skal ligge efter starttidspunktet."
         },
         "abort": {
             "hub_not_configurable": "Annuals-hubben har ingen egne indstillinger - den indeholder kun de delte kalendere.",
@@ -426,12 +463,16 @@
                 "data": {
                     "name": "Navn",
                     "last_name": "Efternavn (valgfrit)",
+                    "person": "Person (valgfri)",
                     "type": "Begivenhedstype",
                     "day": "Dag",
                     "month": "Måned",
                     "year": "År (lad stå tomt hvis ukendt)",
                     "icon": "Tilsidesæt ikon (valgfrit)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "person": "En person i Home Assistant, hvis billede står for denne begivenhed – på dashboardkortet og i påmindelsens notifikation."
                 }
             },
             "edit_one_time": {
@@ -445,8 +486,14 @@
                     "month": "Måned",
                     "year": "År",
                     "end_date": "Slutdato (valgfrit – gør den til en flerdagsbegivenhed)",
+                    "time": "Tidspunkt (valgfri)",
+                    "end_time": "Sluttidspunkt (valgfri)",
                     "icon": "Tilsidesæt ikon (valgfrit)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "time": "Hvornår den begynder den dag. Kalenderposten får så et tidspunkt, og dashboardkortet viser det.",
+                    "end_time": "Hvornår den slutter – på slutdatoen, hvis der er en, ellers samme dag. Kræver et starttidspunkt; tom betyder, at kalenderposten varer en time."
                 }
             },
             "edit_custom": {
@@ -461,10 +508,13 @@
                     "year": "År",
                     "icon": "Tilsidesæt ikon (valgfrit)",
                     "vip": "VIP Annual",
+                    "interval": "Gentages hver",
+                    "interval_unit": "…måneder eller år",
                     "nth": "Placering i måneden",
                     "weekday": "Ugedag"
                 },
                 "data_description": {
+                    "interval": "Sammen med enheden ved siden af – hver 6. måned, hvert 2. år. Tælles fra datoen ovenfor, som så skal have sit år. Lad begge stå tomme for én gang om året.",
                     "nth": "Første, anden, tredje, fjerde eller den sidste i måneden.",
                     "weekday": "Sæt den sammen med feltet ovenfor – eller lad begge stå tomme."
                 }
@@ -484,7 +534,12 @@
             "no_valid_vcard_entries": "Ingen kontakter med en brugbar fødselsdag fundet i denne fil. Se loggen for detaljer om sprungede poster.",
             "no_valid_vcard_dates": "Ingen mærkedage eller øvrige datoer (ud over fødselsdage) fundet i denne fil. Se loggen for detaljer om sprungede poster.",
             "no_batch_selected": "Markér \"Fjern alle importerede helligdage\", eller vælg en gruppe.",
-            "rule_needs_both": "En gentagelsesregel kræver begge felter – eller ingen af dem."
+            "rule_needs_both": "En gentagelsesregel kræver begge felter – eller ingen af dem.",
+            "interval_needs_both": "Et gentagelsesinterval kræver begge felter, eller ingen.",
+            "interval_needs_year": "Et gentagelsesinterval tælles fra datoen ovenfor, så året er nødvendigt.",
+            "interval_no_rule": "Et gentagelsesinterval kan ikke kombineres med en ugedagsregel.",
+            "end_time_needs_time": "Et sluttidspunkt kræver et starttidspunkt.",
+            "end_time_before_start": "Sluttidspunktet skal ligge efter starttidspunktet."
         },
         "abort": {
             "translations_exported": "{count} oversættelse(r) eksporteret. [Download annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+klik for at downloade - et almindeligt klik virker ikke her)\n\nEller kopiér CSV'en herunder:\n\n```\n{csv}\n```",

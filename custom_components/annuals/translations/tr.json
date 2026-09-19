@@ -93,6 +93,12 @@
                 "5": "Cumartesi",
                 "6": "Pazar"
             }
+        },
+        "interval_unit": {
+            "options": {
+                "months": "ay",
+                "years": "yıl"
+            }
         }
     },
     "config": {
@@ -111,6 +117,7 @@
                 "data": {
                     "name": "Ad",
                     "last_name": "Soyad (isteğe bağlı)",
+                    "person": "Kişi (isteğe bağlı)",
                     "type": "Etkinlik türü",
                     "day": "Gün",
                     "month": "Ay",
@@ -118,7 +125,10 @@
                     "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
                     "vip": "VIP Annual"
                 },
-                "description": "Her etkinlik kendi girişini alır; daha sonra Ayarlar → Cihazlar ve hizmetler → Annuals bölümünden adını arayarak bulup düzenleyebilirsiniz."
+                "description": "Her etkinlik kendi girişini alır; daha sonra Ayarlar → Cihazlar ve hizmetler → Annuals bölümünden adını arayarak bulup düzenleyebilirsiniz.",
+                "data_description": {
+                    "person": "Home Assistant'ta fotoğrafı bu etkinliği temsil eden bir kişi – panel kartında ve hatırlatıcının bildiriminde."
+                }
             },
             "one_time": {
                 "title": "Tek seferlik etkinlik ekle",
@@ -130,10 +140,16 @@
                     "month": "Ay",
                     "year": "Yıl",
                     "end_date": "Bitiş tarihi (isteğe bağlı – çok günlü etkinliğe dönüştürür)",
+                    "time": "Saat (isteğe bağlı)",
+                    "end_time": "Bitiş saati (isteğe bağlı)",
                     "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
                     "vip": "VIP Annual"
                 },
-                "description": "Geri sayım yapılacak tek bir tarih. Hiç tekrarlanmaz, bu yüzden yıl zorunludur ve giriş, bittikten sonraki gece yarısı otomatik olarak silinir.\n\nBitiş tarihi verirseniz çok günlü bir etkinliğe dönüşür: bir seyahat, bir konferans, bir konaklama."
+                "description": "Geri sayım yapılacak tek bir tarih. Hiç tekrarlanmaz, bu yüzden yıl zorunludur ve giriş, bittikten sonraki gece yarısı otomatik olarak silinir.\n\nBitiş tarihi verirseniz çok günlü bir etkinliğe dönüşür: bir seyahat, bir konferans, bir konaklama.",
+                "data_description": {
+                    "time": "O gün ne zaman başladığı. Takvim girişi o zaman bir saat taşır ve panel kartı bunu gösterir.",
+                    "end_time": "Ne zaman bittiği – varsa bitiş tarihinde, yoksa aynı gün. Başlangıç saati gerekir; boş bırakılırsa takvim girişi bir saat sürer."
+                }
             },
             "custom": {
                 "title": "Özel etkinlik ekle",
@@ -146,11 +162,14 @@
                     "year": "Yıl",
                     "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
                     "vip": "VIP Annual",
+                    "interval": "Tekrar aralığı",
+                    "interval_unit": "…ay veya yıl",
                     "nth": "Ay içindeki sıra",
                     "weekday": "Haftanın günü"
                 },
                 "description": "Diğer türlerin anlatmadığı her şey için kendi yıllık tarihiniz.\n\nBelirli bir gün yerine bir **kurala** göre de düşebilir: Anneler Günü mayısın ikinci pazarıdır, Avustralya'da Babalar Günü eylülün ilk pazarı. Aşağıdaki iki alanı doldurun; yukarıdaki **Ay**, kuralın hangi aya uygulandığını söyler ve **Gün** o zaman kullanılmaz. Sabit bir tarih için ikisini de boş bırakın.",
                 "data_description": {
+                    "interval": "Yanındaki birimle birlikte – her 6 ayda, her 2 yılda bir. Yukarıdaki tarihten itibaren sayılır; bu yüzden yılı gerekir. Yılda bir için ikisini de boş bırakın.",
                     "nth": "Ayın birinci, ikinci, üçüncü, dördüncü ya da sonuncusu.",
                     "weekday": "Yukarıdaki alanla birlikte ayarlayın ya da ikisini de boş bırakın."
                 }
@@ -161,12 +180,16 @@
                 "data": {
                     "name": "Ad",
                     "last_name": "Soyad (isteğe bağlı)",
+                    "person": "Kişi (isteğe bağlı)",
                     "type": "Etkinlik türü",
                     "day": "Gün",
                     "month": "Ay",
                     "year": "Yıl (bilinmiyorsa boş bırakın)",
                     "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "person": "Home Assistant'ta fotoğrafı bu etkinliği temsil eden bir kişi – panel kartında ve hatırlatıcının bildiriminde."
                 }
             },
             "reconfigure_one_time": {
@@ -180,8 +203,14 @@
                     "month": "Ay",
                     "year": "Yıl",
                     "end_date": "Bitiş tarihi (isteğe bağlı – çok günlü etkinliğe dönüştürür)",
+                    "time": "Saat (isteğe bağlı)",
+                    "end_time": "Bitiş saati (isteğe bağlı)",
                     "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "time": "O gün ne zaman başladığı. Takvim girişi o zaman bir saat taşır ve panel kartı bunu gösterir.",
+                    "end_time": "Ne zaman bittiği – varsa bitiş tarihinde, yoksa aynı gün. Başlangıç saati gerekir; boş bırakılırsa takvim girişi bir saat sürer."
                 }
             },
             "reconfigure_custom": {
@@ -196,10 +225,13 @@
                     "year": "Yıl",
                     "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
                     "vip": "VIP Annual",
+                    "interval": "Tekrar aralığı",
+                    "interval_unit": "…ay veya yıl",
                     "nth": "Ay içindeki sıra",
                     "weekday": "Haftanın günü"
                 },
                 "data_description": {
+                    "interval": "Yanındaki birimle birlikte – her 6 ayda, her 2 yılda bir. Yukarıdaki tarihten itibaren sayılır; bu yüzden yılı gerekir. Yılda bir için ikisini de boş bırakın.",
                     "nth": "Ayın birinci, ikinci, üçüncü, dördüncü ya da sonuncusu.",
                     "weekday": "Yukarıdaki alanla birlikte ayarlayın ya da ikisini de boş bırakın."
                 }
@@ -211,7 +243,12 @@
             "end_date_before_start": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır.",
             "invalid_date": "Bu gün/ay/yıl kombinasyonu geçerli bir tarih değil.",
             "year_required": "Tek seferlik etkinlikler için yıl gereklidir.",
-            "rule_needs_both": "Yinelenme kuralı her iki alanı da gerektirir – ya da hiçbirini."
+            "rule_needs_both": "Yinelenme kuralı her iki alanı da gerektirir – ya da hiçbirini.",
+            "interval_needs_both": "Tekrar aralığı için her iki alan da gerekir ya da hiçbiri.",
+            "interval_needs_year": "Tekrar aralığı yukarıdaki tarihten itibaren sayılır; bu yüzden yıl gerekir.",
+            "interval_no_rule": "Tekrar aralığı bir hafta günü kuralıyla birleştirilemez.",
+            "end_time_needs_time": "Bitiş saati için başlangıç saati gerekir.",
+            "end_time_before_start": "Bitiş saati başlangıç saatinden sonra olmalıdır."
         },
         "abort": {
             "hub_not_configurable": "Annuals merkezinin kendine ait ayarları yoktur - yalnızca paylaşılan takvimleri içerir.",
@@ -426,12 +463,16 @@
                 "data": {
                     "name": "Ad",
                     "last_name": "Soyad (isteğe bağlı)",
+                    "person": "Kişi (isteğe bağlı)",
                     "type": "Etkinlik türü",
                     "day": "Gün",
                     "month": "Ay",
                     "year": "Yıl (bilinmiyorsa boş bırakın)",
                     "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "person": "Home Assistant'ta fotoğrafı bu etkinliği temsil eden bir kişi – panel kartında ve hatırlatıcının bildiriminde."
                 }
             },
             "edit_one_time": {
@@ -445,8 +486,14 @@
                     "month": "Ay",
                     "year": "Yıl",
                     "end_date": "Bitiş tarihi (isteğe bağlı – çok günlü etkinliğe dönüştürür)",
+                    "time": "Saat (isteğe bağlı)",
+                    "end_time": "Bitiş saati (isteğe bağlı)",
                     "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "time": "O gün ne zaman başladığı. Takvim girişi o zaman bir saat taşır ve panel kartı bunu gösterir.",
+                    "end_time": "Ne zaman bittiği – varsa bitiş tarihinde, yoksa aynı gün. Başlangıç saati gerekir; boş bırakılırsa takvim girişi bir saat sürer."
                 }
             },
             "edit_custom": {
@@ -461,10 +508,13 @@
                     "year": "Yıl",
                     "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
                     "vip": "VIP Annual",
+                    "interval": "Tekrar aralığı",
+                    "interval_unit": "…ay veya yıl",
                     "nth": "Ay içindeki sıra",
                     "weekday": "Haftanın günü"
                 },
                 "data_description": {
+                    "interval": "Yanındaki birimle birlikte – her 6 ayda, her 2 yılda bir. Yukarıdaki tarihten itibaren sayılır; bu yüzden yılı gerekir. Yılda bir için ikisini de boş bırakın.",
                     "nth": "Ayın birinci, ikinci, üçüncü, dördüncü ya da sonuncusu.",
                     "weekday": "Yukarıdaki alanla birlikte ayarlayın ya da ikisini de boş bırakın."
                 }
@@ -484,7 +534,12 @@
             "no_valid_vcard_entries": "Bu dosyada kullanılabilir bir doğum günü olan kişi bulunamadı. Atlanan girişlerin ayrıntıları için günlüğe bakın.",
             "no_valid_vcard_dates": "Bu dosyada yıl dönümü veya doğum günü dışında başka bir tarih bulunamadı. Atlanan girişlerin ayrıntıları için günlüğe bakın.",
             "no_batch_selected": "\"Tüm içe aktarılan tatilleri kaldır\" seçeneğini işaretleyin veya bir grup seçin.",
-            "rule_needs_both": "Yinelenme kuralı her iki alanı da gerektirir – ya da hiçbirini."
+            "rule_needs_both": "Yinelenme kuralı her iki alanı da gerektirir – ya da hiçbirini.",
+            "interval_needs_both": "Tekrar aralığı için her iki alan da gerekir ya da hiçbiri.",
+            "interval_needs_year": "Tekrar aralığı yukarıdaki tarihten itibaren sayılır; bu yüzden yıl gerekir.",
+            "interval_no_rule": "Tekrar aralığı bir hafta günü kuralıyla birleştirilemez.",
+            "end_time_needs_time": "Bitiş saati için başlangıç saati gerekir.",
+            "end_time_before_start": "Bitiş saati başlangıç saatinden sonra olmalıdır."
         },
         "abort": {
             "translations_exported": "{count} çeviri dışa aktarıldı. [annuals_holiday_translations.csv dosyasını indir]({url}) (indirmek için Ctrl/Cmd+tıklayın - normal tıklama burada işe yaramaz)\n\nVeya aşağıdaki CSV'yi kopyalayın:\n\n```\n{csv}\n```",

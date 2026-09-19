@@ -31,9 +31,14 @@ from .const import (
     CONF_SUBDIVISION,
     CONF_ICON,
     CONF_END_DATE,
+    CONF_END_TIME,
+    CONF_INTERVAL,
+    CONF_INTERVAL_UNIT,
     CONF_LAST_NAME,
     CONF_MONTH,
     CONF_NTH,
+    CONF_PERSON,
+    CONF_TIME,
     CONF_NAME_TRANSLATIONS,
     CONF_VIP,
     CONF_WEEKDAY,
@@ -146,6 +151,11 @@ def export_csv_text(hass: HomeAssistant) -> tuple[str, int]:
             "end_date",
             "nth",
             "weekday",
+            "person",
+            "interval",
+            "interval_unit",
+            "time",
+            "end_time",
         ]
     )
     for data in rows:
@@ -166,6 +176,14 @@ def export_csv_text(hass: HomeAssistant) -> tuple[str, int]:
                 # wrong here.
                 _csv_number(data.get(CONF_NTH)),
                 _csv_number(data.get(CONF_WEEKDAY)),
+                # The person, the repeat interval and the time of day, each
+                # empty on every event without one - see CONF_PERSON,
+                # CONF_INTERVAL and CONF_TIME in const.py.
+                data.get(CONF_PERSON) or "",
+                _csv_number(data.get(CONF_INTERVAL)),
+                data.get(CONF_INTERVAL_UNIT) or "",
+                data.get(CONF_TIME) or "",
+                data.get(CONF_END_TIME) or "",
             ]
         )
     return buffer.getvalue(), len(rows)

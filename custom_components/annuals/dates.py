@@ -22,19 +22,26 @@ one place that tells the two apart.
 
 from __future__ import annotations
 
-from datetime import date, timedelta
+from datetime import date, time, timedelta
 from functools import lru_cache
 
 import holidays as holidays_lib
 
 from .const import (
     CONF_DAY,
+    CONF_END_TIME,
     CONF_HOLIDAY_BLOCK,
     CONF_HOLIDAY_DAY,
     CONF_HOLIDAY_SPAN,
+    CONF_INTERVAL,
+    CONF_INTERVAL_UNIT,
     CONF_MONTH,
     CONF_NTH,
+    CONF_TIME,
     CONF_WEEKDAY,
+    CONF_YEAR,
+    INTERVAL_MONTHS,
+    INTERVAL_YEARS,
     NTH_LAST,
     SPAN_DAY,
     SPAN_END,
@@ -152,6 +159,103 @@ def one_time_span(year: int, month: int, day: int, end_date: str | None) -> tupl
     start = one_time_date(year, month, day)
     end = parse_iso_date(end_date)
     return start, end if end is not None and end > start else start
+
+
+def interval_rule(data: dict) -> tuple[int, str] | None:
+    """The (count, unit) a custom event repeats by - every 6 months, every
+    2 years - or None where it repeats once a year like everything else.
+
+    One place decides what counts as "this event has an interval", the
+    way weekday_rule does for a rule: a count, a known unit and the year
+    the stored date starts in, all three, since an interval is counted
+    from that date and a date without a year has nothing to count from.
+    """
+    count = data.get(CONF_INTERVAL)
+    unit = data.get(CONF_INTERVAL_UNIT)
+    if not count or unit not in (INTERVAL_MONTHS, INTERVAL_YEARS) or data.get(CONF_YEAR) is None:
+        return None
+    return int(count), unit
+
+
+def add_interval(start: date, count: int, unit: str, steps: int) -> date:
+    """`start` moved `steps` intervals along - a whole number of months or
+    years, so the day of the month stays put. Where the month it lands in
+    has no such day (the 31st, or Feb 29), the last day of that month is
+    taken, the same way occurrence_in_year handles a leap day.
+    """
+    if unit == INTERVAL_YEARS:
+        return occurrence_in_year(start.month, start.day, start.year + count * steps)
+    total = start.month - 1 + count * steps
+    year, month = start.year + total // 12, total % 12 + 1
+    after = date(year + 1, 1, 1) if month == 12 else date(year, month + 1, 1)
+    last_day = (after - timedelta(days=1)).day
+    return date(year, month, min(start.day, last_day))
+
+
+def interval_occurrence(data: dict, today: date) -> tuple[date, int]:
+    """An interval event's next occurrence on or after `today`, and which
+    step that is - 0 on the stored date itself, 1 one interval later.
+
+    The step is what the occurrence number reports for these events
+    (see sensor.py): "the 3rd inspection since the first". Today before
+    the stored date is the stored date, step 0.
+    """
+    count, unit = interval_rule(data)
+    start = date(int(data[CONF_YEAR]), int(data[CONF_MONTH]), int(data[CONF_DAY]))
+    if today <= start:
+        return start, 0
+    # A near-enough estimate, then walked to the first step not behind us.
+    if unit == INTERVAL_YEARS:
+        steps = max(0, (today.year - start.year) // count)
+    else:
+        months = (today.year - start.year) * 12 + today.month - start.month
+        steps = max(0, months // count)
+    candidate = add_interval(start, count, unit, steps)
+    while candidate < today:
+        steps += 1
+        candidate = add_interval(start, count, unit, steps)
+    while steps > 0 and add_interval(start, count, unit, steps - 1) >= today:
+        steps -= 1
+        candidate = add_interval(start, count, unit, steps)
+    return candidate, steps
+
+
+def interval_occurrences_between(data: dict, first: date, last: date) -> list[tuple[date, int]]:
+    """Every occurrence of an interval event from `first` to `last`
+    inclusive, with its step - what the calendar entity lists for a range,
+    where a six-monthly event can fall twice in one year and a five-yearly
+    one not at all.
+    """
+    count, unit = interval_rule(data)
+    start = date(int(data[CONF_YEAR]), int(data[CONF_MONTH]), int(data[CONF_DAY]))
+    candidate, steps = interval_occurrence(data, first)
+    found: list[tuple[date, int]] = []
+    while candidate <= last:
+        found.append((candidate, steps))
+        steps += 1
+        candidate = add_interval(start, count, unit, steps)
+    return found
+
+
+def parse_time(value: str | None) -> time | None:
+    """A stored "HH:MM" (or the selector's "HH:MM:SS") as a time - None for
+    anything empty or unparseable, which leaves the event all-day the way
+    parse_iso_date leaves it single-day.
+    """
+    if not value:
+        return None
+    try:
+        return time.fromisoformat(str(value).strip())
+    except ValueError:
+        return None
+
+
+def time_text(value: str | None) -> str | None:
+    """The stored form of a time, "HH:MM" - seconds dropped, since the
+    selector hands them over and nobody sets a concert for 20:00:00.
+    """
+    parsed = parse_time(value)
+    return None if parsed is None else parsed.strftime("%H:%M")
 
 
 def occurrence_number(year: int | None, occurrence: date) -> int | None:

@@ -48,6 +48,13 @@
   // value that isn't a real type/category name to stay distinguishable.
   const NONE_SELECTED = "__none__";
 
+  // What calendar navigation can show one of (see calendar_nav in
+  // defaultConfig), in the order the bar lists them.
+  const NAV_MODES = ["day", "week", "month", "year"];
+  // ...and what the bar can carry as buttons: those three, and the date
+  // picker (see calendar_nav_buttons in defaultConfig).
+  const NAV_BUTTONS = [...NAV_MODES, "picker"];
+
   const STRINGS = {
     en: {
       defaultTitle: "Upcoming Events",
@@ -99,6 +106,38 @@
       // many events are still behind it.
       foldShowMore: "Show {count} more",
       foldShowLess: "Show fewer",
+      // Calendar navigation (see calendar_nav in defaultConfig): the three
+      // mode buttons' own letter and full name, the arrows' tooltips, the
+      // date picker's, and what an empty period says.
+      navModeShort: { day: "D", week: "W", month: "M", year: "Y" },
+      navModes: { day: "Day", week: "Week", month: "Month", year: "Year" },
+      navPrev: { day: "Previous day", week: "Previous week", month: "Previous month", year: "Previous year" },
+      navNext: { day: "Next day", week: "Next week", month: "Next month", year: "Next year" },
+      navPickDate: "Go to a date",
+      noEventsRange: "No events in this period",
+      // The period label's tooltip, and the search field's placeholder and
+      // empty line.
+      navToday: "Back to today",
+      searchPlaceholder: "Search",
+      searchNoMatch: "Nothing matches",
+      // The "+" beside the title (see show_add_button) and its dialog; the
+      // steps inside it speak with the integration's own translations.
+      addEvent: "Add event",
+      addSubmit: "Save",
+      addCancel: "Cancel",
+      addClose: "Close",
+      addCreated: (title) => `${title} added`,
+      addFailed: "The event could not be added",
+      // The pencil and the trash can at the end of a row (see
+      // show_edit_buttons) and their dialogs.
+      editEvent: "Edit event",
+      deleteEvent: "Delete event",
+      deleteConfirm: (name) => `Delete "${name}"?`,
+      deleteExplain: "This removes the event from Home Assistant.",
+      deleteButton: "Delete",
+      editSaved: "Changes saved",
+      editFailed: "The changes could not be saved",
+      deleteFailed: "The event could not be deleted",
       timelineMore: "More",
       types: {
         birthday: "Birthday",
@@ -168,7 +207,7 @@
         titleDesc: "Custom title text for the card (leave empty for the default)",
         titlePlaceholder: "e.g. Upcoming Events",
         count: "Number of events",
-        countDesc: "The total number of events shown on the card",
+        countDesc: "The total number of events shown on the card. With Calendar navigation on, it caps the list the card opens with; a period paged to shows all it holds.",
         todayOnly: "Today only",
         todayOnlyDesc: "Ignore every other filter below and show only events happening today",
         nextEventDayOnly: "Only next event day",
@@ -176,6 +215,8 @@
           "Show only the events on the single soonest day - today's, if any, otherwise the next day with events (possibly more than one)",
         daysAhead: "Days ahead (0 = unlimited)",
         daysAheadDesc: "Only show events happening within this many days (0 = no limit)",
+        hideFinishedToday: "Hide what is over",
+        hideFinishedTodayDesc: "Takes an event of today off the card once its end time has passed - an appointment from 2 to 3 is gone at 3, and one with a start but no end the moment it begins. The row leaves on its own, without waiting for anything else to happen. Events without a time stay until the day is over, and while you page through periods with the calendar navigation the whole period is shown either way. On, the list is what is still to come.",
         daysPast: "Days in the past (0 = today only)",
         daysPastDesc: "How many days in the past an event still counts as recent (0 = today only)",
         soonDays: "“Soon” threshold (days)",
@@ -213,6 +254,35 @@
           "Shows only the first few events and puts the rest behind a chevron. A card given a fixed height then ends at the fold instead of growing a scrollbar. List layout only - the timeline has its own Details expander.",
         collapseAfter: "Events shown",
         collapseAfterDesc: "How many are on screen before the rest has to be unfolded.",
+        calendarNav: "Calendar navigation",
+        calendarNavDesc:
+          "A bar under the title with arrows and the period on screen - one day, week or month at a time. Until the bar is used, the card lists what it always lists: what is to come, as Settings → Events and Time period have it, up to the number of events. The arrows and the date picker then show one period at a time - all of it, past events included - and a Day, Week or Month button opens the list afresh in that mode.",
+        calendarNavMode: "Opens with",
+        calendarNavModeDesc:
+          "Which period the bar starts in - today, this week or this month - and so what the arrows step by. The switches beside it add buttons to the bar: Day, Week and Month, each opening the list afresh in that mode, and the date picker. Month is on to start with, so there is a way back after paging. Stepping and switching on the card itself is a look, not a setting, and is not saved.",
+        countdownUnits: "Countdown",
+        countdownUnitsDesc:
+          "How a distance in days is written: in days throughout, or in weeks, months and years once it is two weeks or more away - “in 3 weeks”, “2 months ago”. Applies to the Countdown column, the {when} placeholder and the Timeline.",
+        countdownUnitsDays: "Days",
+        countdownUnitsAuto: "Weeks, months and years",
+        showSearch: "Search field",
+        showSearchDesc:
+          "A field under the title - and under the calendar navigation, if that is on - that filters the list as you type, by name, last name and type. What is typed is not saved.",
+        calendarNavPicker: "Date",
+        navLabel: "Period",
+        navLabelColorDesc: "Color of the period between the arrows.",
+        navLabelFontDesc: "Font of the period between the arrows.",
+        navButtons: "Navigation buttons",
+        navButtonColorDesc: "Text and icon color of the arrows, the mode buttons and the calendar button.",
+        navButtonBackground: "Background",
+        navButtonBackgroundDesc: "Background of those buttons.",
+        navActiveColor: "Selected color",
+        navActiveColorDesc: "Text color of the selected mode, and of the calendar button while its picker is open.",
+        navActiveBackground: "Selected background",
+        navActiveBackgroundDesc: "Background of the selected mode, and of the calendar button while its picker is open.",
+        navButtonHeight: "Height",
+        navButtonHeightDesc: "Height of every button on the bar, e.g. “26px”. Left empty it is 26px.",
+        navButtonFontDesc: "Font of the letters on the Day, Week, Month and Year buttons.",
         timelineLineHeading: "Timeline line",
         timelineLineWidth: "Width",
         timelineLineWidthDesc: "Thickness of the horizontal axis line, e.g. \"4px\".",
@@ -240,7 +310,7 @@
           "Append the short calendar date in parentheses at the end, e.g. \"...is in 3 days (6 Aug)\". Hidden on the event's own day, since the sentence already ends \"...is today\" right before it.",
         timelineShowTime: "Show time",
         timelineShowTimeDesc:
-          "Append an external calendar event's own time range in the same parentheses, e.g. \"...is in 3 days (03:00 PM–04:00 PM)\". Only ever shown for a timed (non all-day) external calendar event. The time format follows your Home Assistant language.",
+          "Append an external calendar event's own time range in the same parentheses, e.g. \"...is in 3 days (03:00 PM–04:00 PM)\". Only ever shown for a timed (non all-day) external calendar event. The time format follows your Home Assistant language. A one-time event given a time shows it here too.",
         timelineShowLocation: "Show location",
         timelineShowLocationDesc:
           "Append an external calendar event's own location in the same parentheses. Only ever shown for an external calendar event that has one set.",
@@ -276,6 +346,26 @@
         visibilityHeading: "Show / Hide",
         hideCardTitle: "Hide",
         hideCardTitleDesc: "Hide the card's own title, even when set above",
+        buttonsHeading: "Buttons",
+        textFormatHeading: "Text and format",
+        buttonsGroupDesc: "What the + beside the title and a row's pencil and trash can look like. Each of the three is set on its own below; a field left empty keeps the built-in look.",
+        buttonAdd: "Add",
+        buttonEdit: "Edit",
+        buttonDelete: "Delete",
+        buttonElementDesc: "The glyph on this button, how big it is, and its two colors.",
+        buttonIcon: "Icon",
+        buttonIconDesc: "The glyph on this button, e.g. “mdi:plus”. Left empty it is the built-in one.",
+        buttonSize: "Size",
+        buttonSizeDesc: "How wide and high this button is, e.g. “28px”. The glyph grows with it, and a row grows with a button taller than itself. Left empty it is 28px for the +, 26px for a row's two and smaller where the row itself is.",
+        buttonColorDesc: "The color of the glyph on this button while nothing points at it. Left empty it is the theme's secondary text color.",
+        buttonHoverColor: "Hover color",
+        buttonHoverColorDesc: "The color of the glyph while the pointer is over this button, or while the keyboard is on it. Left empty it is the theme's accent color - its error color for the trash can, which is how that one says what it does.",
+        addButton: "Add event",
+        addButtonDesc: "A + at the right of the card title that adds an event through the integration's own form, without leaving the dashboard - the same steps as Add entry under Settings → Integrations. Home Assistant lets only administrators add entries, so everyone else sees no button.",
+        editButtons: "Edit and delete events",
+        editButtonsDesc: "A pencil and a trash can at the end of every event row, in both layouts, for changing or removing that event through the integration's own form and a confirmation - without leaving the dashboard. They float over the end of the row while the pointer is over it and take no room of their own. For administrators only, like the + beside the title; other users see neither.",
+        editOnClick: "Show them on click",
+        editOnClickDesc: "Brings the pencil and the trash can up with a click on the row instead of the pointer resting over it - the way to reach them on a phone or tablet, where nothing hovers. A click on such a row then no longer runs the tap action (by default the event's details); the hold action still works. Another click on the row, or a click anywhere else, puts them away again.",
         noEventsText: "No events text",
         noEventsTextDesc:
           "What the card says when it has nothing to list (leave empty for the default).",
@@ -319,7 +409,7 @@
         columnTypeLocation: "Location",
         columnTypeDescription: "Description",
         columnTypeTimeDesc:
-          "Append the external calendar event's own time range, e.g. \"...03:00 PM–05:00 PM\". Only ever shown for a timed (non all-day) external calendar event.",
+          "Append the external calendar event's own time range, e.g. \"...03:00 PM–05:00 PM\". Only ever shown for a timed (non all-day) external calendar event. A one-time event given a time shows it here too.",
         columnTypeLocationDesc:
           "Append the external calendar event's own location. Only ever shown for an external calendar event that has one set.",
         columnTypeDescriptionDesc:
@@ -638,6 +728,38 @@
       timelineCollapse: "Weniger",
       foldShowMore: "{count} weitere anzeigen",
       foldShowLess: "Weniger anzeigen",
+      // Calendar navigation (see calendar_nav in defaultConfig): the three
+      // mode buttons' own letter and full name, the arrows' tooltips, the
+      // date picker's, and what an empty period says.
+      navModeShort: { day: "T", week: "W", month: "M", year: "J" },
+      navModes: { day: "Tag", week: "Woche", month: "Monat", year: "Jahr" },
+      navPrev: { day: "Vorheriger Tag", week: "Vorherige Woche", month: "Vorheriger Monat", year: "Vorheriges Jahr" },
+      navNext: { day: "Nächster Tag", week: "Nächste Woche", month: "Nächster Monat", year: "Nächstes Jahr" },
+      navPickDate: "Zu einem Datum springen",
+      noEventsRange: "Keine Ereignisse in diesem Zeitraum",
+      // The period label's tooltip, and the search field's placeholder and
+      // empty line.
+      navToday: "Zurück zu heute",
+      searchPlaceholder: "Suchen",
+      searchNoMatch: "Nichts gefunden",
+      // The "+" beside the title (see show_add_button) and its dialog; the
+      // steps inside it speak with the integration's own translations.
+      addEvent: "Ereignis hinzufügen",
+      addSubmit: "Speichern",
+      addCancel: "Abbrechen",
+      addClose: "Schließen",
+      addCreated: (title) => `${title} hinzugefügt`,
+      addFailed: "Das Ereignis konnte nicht hinzugefügt werden",
+      // The pencil and the trash can at the end of a row (see
+      // show_edit_buttons) and their dialogs.
+      editEvent: "Ereignis bearbeiten",
+      deleteEvent: "Ereignis löschen",
+      deleteConfirm: (name) => `„${name}“ löschen?`,
+      deleteExplain: "Das entfernt das Ereignis aus Home Assistant.",
+      deleteButton: "Löschen",
+      editSaved: "Änderungen gespeichert",
+      editFailed: "Die Änderungen konnten nicht gespeichert werden",
+      deleteFailed: "Das Ereignis konnte nicht gelöscht werden",
       timelineMore: "Mehr",
       types: {
         birthday: "Geburtstag",
@@ -731,7 +853,7 @@
         titleDesc: "Eigener Titeltext für die Karte (leer lassen für den Standardtitel)",
         titlePlaceholder: "z. B. Anstehende Ereignisse",
         count: "Anzahl der Ereignisse",
-        countDesc: "Legt die Gesamtanzahl der auf der Karte angezeigten Ereignisse fest",
+        countDesc: "Legt die Gesamtanzahl der auf der Karte angezeigten Ereignisse fest. Bei eingeschalteter Kalendernavigation begrenzt sie die Liste, mit der die Karte öffnet; ein angeblätterter Zeitraum zeigt alles, was er enthält.",
         todayOnly: "Nur heute",
         todayOnlyDesc: "Alle anderen Filter unten ignorieren und nur Ereignisse von heute anzeigen",
         nextEventDayOnly: "Nur nächster Ereignistag",
@@ -739,6 +861,8 @@
           "Nur die Ereignisse des einen nächstgelegenen Tages anzeigen - heute, falls vorhanden, sonst der nächste Tag mit Ereignissen (ggf. mehrere)",
         daysAhead: "Tage im Voraus (0 = unbegrenzt)",
         daysAheadDesc: "Nur Ereignisse innerhalb dieser Anzahl Tage anzeigen (0 = unbegrenzt)",
+        hideFinishedToday: "Vorbei ist vorbei",
+        hideFinishedTodayDesc: "Nimmt ein Ereignis von heute von der Karte, sobald seine Endzeit vorüber ist - ein Termin von 14 bis 15 Uhr ist um 15 Uhr weg, einer mit Beginn aber ohne Ende in dem Moment, in dem er beginnt. Die Zeile verschwindet von selbst, ohne auf irgendetwas anderes zu warten. Ereignisse ohne Uhrzeit bleiben bis zum Ende des Tages, und wer mit der Kalendernavigation durch Zeiträume blättert, sieht den Zeitraum ohnehin ganz. An zeigt die Liste, was noch bevorsteht.",
         daysPast: "Tage in der Vergangenheit (0 = nur heute)",
         daysPastDesc: "Wie viele Tage in der Vergangenheit ein Ereignis noch als aktuell zählt (0 = nur heute)",
         soonDays: "Schwelle für „Bald“ (Tage)",
@@ -776,6 +900,35 @@
           "Zeigt nur die ersten Ereignisse und legt den Rest hinter einen Pfeil. Eine Karte mit fester Höhe endet dann an der Faltung, statt einen Scrollbalken zu bekommen. Nur im Listenlayout - die Timeline hat ihr eigenes „Details“.",
         collapseAfter: "Sichtbare Ereignisse",
         collapseAfterDesc: "Wie viele zu sehen sind, bevor der Rest aufgeklappt werden muss.",
+        calendarNav: "Kalendernavigation",
+        calendarNavDesc:
+          "Eine Leiste unter dem Titel mit Pfeilen und dem angezeigten Zeitraum - jeweils ein Tag, eine Woche oder ein Monat. Bis die Leiste benutzt wird, zeigt die Karte ihre gewohnte Liste: Anstehendes, wie unter Einstellungen → Ereignisse und Zeitraum festgelegt, höchstens die Anzahl der Ereignisse. Pfeile und Datumsauswahl zeigen dann jeweils einen Zeitraum - vollständig, mit vergangenen Ereignissen - und eine Schaltfläche Tag, Woche oder Monat öffnet die Liste in diesem Modus neu.",
+        calendarNavMode: "Öffnet mit",
+        calendarNavModeDesc:
+          "In welchem Zeitraum die Leiste startet - heute, diese Woche oder diesen Monat - und womit die Pfeile blättern. Die Schalter daneben ergänzen die Leiste um Schaltflächen: Tag, Woche und Monat, die jeweils die Liste in diesem Modus neu öffnen, sowie die Datumsauswahl. Monat ist von Anfang an eingeschaltet, damit es nach dem Blättern einen Weg zurück gibt. Blättern und Umschalten auf der Karte selbst ist eine Ansicht, keine Einstellung, und wird nicht gespeichert.",
+        countdownUnits: "Countdown",
+        countdownUnitsDesc:
+          "Wie ein Abstand in Tagen geschrieben wird: durchgehend in Tagen, oder ab zwei Wochen in Wochen, Monaten und Jahren - „in 3 Wochen“, „vor 2 Monaten“. Gilt für die Spalte Countdown, den Platzhalter {when} und die Timeline.",
+        countdownUnitsDays: "Tage",
+        countdownUnitsAuto: "Wochen, Monate und Jahre",
+        showSearch: "Suchfeld",
+        showSearchDesc:
+          "Ein Feld unter dem Titel - und unter der Kalendernavigation, falls eingeschaltet -, das die Liste beim Tippen filtert, nach Name, Nachname und Typ. Die Eingabe wird nicht gespeichert.",
+        calendarNavPicker: "Datum",
+        navLabel: "Zeitraum",
+        navLabelColorDesc: "Farbe des Zeitraums zwischen den Pfeilen.",
+        navLabelFontDesc: "Schrift des Zeitraums zwischen den Pfeilen.",
+        navButtons: "Navigationsschaltflächen",
+        navButtonColorDesc: "Text- und Symbolfarbe der Pfeile, der Modus-Schaltflächen und der Kalender-Schaltfläche.",
+        navButtonBackground: "Hintergrund",
+        navButtonBackgroundDesc: "Hintergrund dieser Schaltflächen.",
+        navActiveColor: "Farbe ausgewählt",
+        navActiveColorDesc: "Textfarbe des ausgewählten Modus und der Kalender-Schaltfläche, solange ihre Auswahl geöffnet ist.",
+        navActiveBackground: "Hintergrund ausgewählt",
+        navActiveBackgroundDesc: "Hintergrund des ausgewählten Modus und der Kalender-Schaltfläche, solange ihre Auswahl geöffnet ist.",
+        navButtonHeight: "Höhe",
+        navButtonHeightDesc: "Höhe aller Schaltflächen der Leiste, z. B. „26px“. Leer bleibt es bei 26px.",
+        navButtonFontDesc: "Schrift der Buchstaben auf den Schaltflächen Tag, Woche, Monat und Jahr.",
         timelineLineHeading: "Timeline-Linie",
         timelineLineWidth: "Breite",
         timelineLineWidthDesc: "Dicke der horizontalen Achsenlinie, z. B. „4px“.",
@@ -803,7 +956,7 @@
           "Hängt am Ende das Kurzdatum in Klammern an, z. B. „... ist in 3 Tagen (6. Aug.)“. Wird am Tag selbst ausgeblendet, da der Satz direkt davor schon mit „... ist heute“ endet.",
         timelineShowTime: "Uhrzeit anzeigen",
         timelineShowTimeDesc:
-          "Hängt die Uhrzeit (Zeitspanne) eines externen Kalenderereignisses in denselben Klammern an, z. B. „... ist in 3 Tagen (14:00–15:00)“. Nur bei einem zeitgebundenen (nicht ganztägigen) externen Kalenderereignis sichtbar. Das Zeitformat richtet sich nach der Sprache von Home Assistant.",
+          "Hängt die Uhrzeit (Zeitspanne) eines externen Kalenderereignisses in denselben Klammern an, z. B. „... ist in 3 Tagen (14:00–15:00)“. Nur bei einem zeitgebundenen (nicht ganztägigen) externen Kalenderereignis sichtbar. Das Zeitformat richtet sich nach der Sprache von Home Assistant. Auch ein einmaliges Ereignis mit Uhrzeit zeigt sie hier.",
         timelineShowLocation: "Ort anzeigen",
         timelineShowLocationDesc:
           "Hängt den Ort eines externen Kalenderereignisses in denselben Klammern an. Nur sichtbar, wenn das externe Kalenderereignis einen Ort hinterlegt hat.",
@@ -839,6 +992,26 @@
         visibilityHeading: "Ein- und ausblenden",
         hideCardTitle: "Ausblenden",
         hideCardTitleDesc: "Eigenen Kartentitel ausblenden, auch wenn oben einer gesetzt ist",
+        buttonsHeading: "Schaltflächen",
+        textFormatHeading: "Text und Format",
+        buttonsGroupDesc: "Wie das + neben dem Titel und der Stift und der Papierkorb einer Zeile aussehen. Jede der drei wird unten für sich eingestellt; ein leeres Feld behält das eingebaute Aussehen.",
+        buttonAdd: "Hinzufügen",
+        buttonEdit: "Bearbeiten",
+        buttonDelete: "Löschen",
+        buttonElementDesc: "Das Zeichen auf dieser Schaltfläche, wie groß sie ist und ihre beiden Farben.",
+        buttonIcon: "Icon",
+        buttonIconDesc: "Das Zeichen auf dieser Schaltfläche, z. B. „mdi:plus“. Leer bleibt es das eingebaute.",
+        buttonSize: "Größe",
+        buttonSizeDesc: "Wie breit und hoch diese Schaltfläche ist, z. B. „28px“. Das Zeichen wächst mit, und eine Zeile wächst mit einer Schaltfläche, die höher ist als sie selbst. Leer sind es 28px für das + und 26px für die beiden einer Zeile, weniger dort, wo die Zeile selbst kleiner ist.",
+        buttonColorDesc: "Die Farbe des Zeichens auf dieser Schaltfläche, solange nichts darauf zeigt. Leer ist es die sekundäre Textfarbe des Themes.",
+        buttonHoverColor: "Farbe beim Überfahren",
+        buttonHoverColorDesc: "Die Farbe des Zeichens, solange der Zeiger über dieser Schaltfläche steht oder die Tastatur auf ihr ist. Leer ist es die Akzentfarbe des Themes - beim Papierkorb dessen Fehlerfarbe, womit dieser sagt, was er tut.",
+        addButton: "Ereignis hinzufügen",
+        addButtonDesc: "Ein + rechts neben dem Kartentitel, das ein Ereignis über das Formular der Integration anlegt, ohne das Dashboard zu verlassen - dieselben Schritte wie Eintrag hinzufügen unter Einstellungen → Integrationen. Home Assistant erlaubt das Anlegen nur Administratoren, alle anderen sehen keine Schaltfläche.",
+        editButtons: "Ereignis bearbeiten und löschen",
+        editButtonsDesc: "Ein Stift und ein Papierkorb am Ende jeder Ereigniszeile, in beiden Ansichten, um dieses Ereignis über das Formular der Integration zu ändern oder nach Rückfrage zu entfernen - ohne das Dashboard zu verlassen. Sie schweben über dem Zeilenende, solange der Zeiger über der Zeile steht, und brauchen keinen eigenen Platz. Nur für Administratoren, wie das + neben dem Titel; alle anderen sehen beides nicht.",
+        editOnClick: "Beim Klick einblenden",
+        editOnClickDesc: "Blendet Stift und Papierkorb mit einem Klick auf die Zeile ein statt beim Überfahren - so erreicht man sie auch auf Handy und Tablet, wo es kein Überfahren gibt. Ein Klick auf eine solche Zeile führt dann nicht mehr die Aktion beim Antippen aus (standardmäßig die Details des Ereignisses); die Aktion beim Gedrückthalten bleibt. Ein weiterer Klick auf die Zeile oder ein Klick irgendwo anders blendet sie wieder aus.",
         noEventsText: "Text ohne Ereignisse",
         noEventsTextDesc:
           "Was die Karte anzeigt, wenn nichts aufzulisten ist (leer lassen für den Standardtext).",
@@ -882,7 +1055,7 @@
         columnTypeLocation: "Ort",
         columnTypeDescription: "Beschreibung",
         columnTypeTimeDesc:
-          "Hängt die eigene Uhrzeit (Zeitspanne) des externen Kalenderereignisses an, z. B. „...03:00 PM–05:00 PM“. Nur bei einem zeitgebundenen (nicht ganztägigen) externen Kalenderereignis sichtbar.",
+          "Hängt die eigene Uhrzeit (Zeitspanne) des externen Kalenderereignisses an, z. B. „...03:00 PM–05:00 PM“. Nur bei einem zeitgebundenen (nicht ganztägigen) externen Kalenderereignis sichtbar. Auch ein einmaliges Ereignis mit Uhrzeit zeigt sie hier.",
         columnTypeLocationDesc:
           "Hängt den eigenen Ort des externen Kalenderereignisses an. Nur sichtbar, wenn beim externen Kalenderereignis ein Ort hinterlegt ist.",
         columnTypeDescriptionDesc:
@@ -1142,7 +1315,7 @@
         fontPlaceholder: "z. B. 1.2em oder 20px",
         fontBold: "Fett",
         fontItalic: "Kursiv",
-        fontUppercase: "Großbuchstaben",
+        fontUppercase: "Groß",
         fontUnderline: "Unterstrichen",
         fontLetterSpacing: "Zeichenabstand",
         fontLetterSpacingPlaceholder: "z. B. 0.05em oder 1px",
@@ -1194,6 +1367,38 @@
       timelineCollapse: "Réduire",
       foldShowMore: "Afficher {count} de plus",
       foldShowLess: "Afficher moins",
+      // Calendar navigation (see calendar_nav in defaultConfig): the three
+      // mode buttons' own letter and full name, the arrows' tooltips, the
+      // date picker's, and what an empty period says.
+      navModeShort: { day: "J", week: "S", month: "M", year: "A" },
+      navModes: { day: "Jour", week: "Semaine", month: "Mois", year: "Année" },
+      navPrev: { day: "Jour précédent", week: "Semaine précédente", month: "Mois précédent", year: "Année précédente" },
+      navNext: { day: "Jour suivant", week: "Semaine suivante", month: "Mois suivant", year: "Année suivante" },
+      navPickDate: "Aller à une date",
+      noEventsRange: "Aucun événement sur cette période",
+      // The period label's tooltip, and the search field's placeholder and
+      // empty line.
+      navToday: "Revenir à aujourd'hui",
+      searchPlaceholder: "Rechercher",
+      searchNoMatch: "Aucun résultat",
+      // The "+" beside the title (see show_add_button) and its dialog; the
+      // steps inside it speak with the integration's own translations.
+      addEvent: "Ajouter un événement",
+      addSubmit: "Enregistrer",
+      addCancel: "Annuler",
+      addClose: "Fermer",
+      addCreated: (title) => `${title} ajouté`,
+      addFailed: "L'événement n'a pas pu être ajouté",
+      // The pencil and the trash can at the end of a row (see
+      // show_edit_buttons) and their dialogs.
+      editEvent: "Modifier l'événement",
+      deleteEvent: "Supprimer l'événement",
+      deleteConfirm: (name) => `Supprimer « ${name} » ?`,
+      deleteExplain: "Cela retire l'événement de Home Assistant.",
+      deleteButton: "Supprimer",
+      editSaved: "Modifications enregistrées",
+      editFailed: "Les modifications n'ont pas pu être enregistrées",
+      deleteFailed: "L'événement n'a pas pu être supprimé",
       timelineMore: "Plus",
       types: {
         birthday: "Anniversaire",
@@ -1282,7 +1487,7 @@
         titleDesc: "Texte de titre personnalisé pour la carte (laisser vide pour le titre par défaut)",
         titlePlaceholder: "par ex. Événements à venir",
         count: "Nombre d'événements",
-        countDesc: "Le nombre total d'événements affichés sur la carte",
+        countDesc: "Le nombre total d'événements affichés sur la carte. Avec la navigation dans le calendrier activée, il limite la liste avec laquelle la carte s'ouvre ; une période atteinte en feuilletant montre tout ce qu'elle contient.",
         todayOnly: "Aujourd'hui uniquement",
         todayOnlyDesc: "Ignorer tous les autres filtres ci-dessous et n'afficher que les événements du jour",
         nextEventDayOnly: "Seulement le jour du prochain événement",
@@ -1290,6 +1495,8 @@
           "N'afficher que les événements du jour le plus proche - aujourd'hui, le cas échéant, sinon le prochain jour avec des événements (éventuellement plusieurs)",
         daysAhead: "Jours à l'avance (0 = illimité)",
         daysAheadDesc: "N'afficher que les événements dans ce nombre de jours (0 = pas de limite)",
+        hideFinishedToday: "Ce qui est passé disparaît",
+        hideFinishedTodayDesc: "Retire de la carte un événement du jour dès que son heure de fin est passée - un rendez-vous de 14h à 15h disparaît à 15h, et un événement avec un début sans fin dès qu'il commence. La ligne s'en va d'elle-même, sans attendre quoi que ce soit d'autre. Les événements sans heure restent jusqu'à la fin du jour, et si vous parcourez les périodes avec la navigation du calendrier, la période est montrée entièrement de toute façon. Activé, la liste est ce qui reste à venir.",
         daysPast: "Jours passés (0 = aujourd'hui seulement)",
         daysPastDesc: "Combien de jours passés un événement compte encore comme récent (0 = aujourd'hui seulement)",
         soonDays: "Seuil « bientôt » (jours)",
@@ -1327,6 +1534,35 @@
           "N’affiche que les premiers événements et place le reste derrière un chevron. Une carte à hauteur fixe s’arrête alors au pli au lieu de se doter d’une barre de défilement. Uniquement en mise en page Liste - la timeline a son propre « Détails ».",
         collapseAfter: "Événements affichés",
         collapseAfterDesc: "Combien sont à l’écran avant qu’il faille déplier le reste.",
+        calendarNav: "Navigation calendaire",
+        calendarNavDesc:
+          "Une barre sous le titre avec des flèches et la période affichée - un jour, une semaine ou un mois à la fois. Tant que la barre n'a pas été utilisée, la carte affiche sa liste habituelle : les événements à venir selon Paramètres → Événements et Période, dans la limite du nombre d'événements. Les flèches et le sélecteur de date montrent ensuite une période à la fois - en entier, événements passés compris - et un bouton Jour, Semaine ou Mois rouvre la liste dans ce mode.",
+        calendarNavMode: "S'ouvre sur",
+        calendarNavModeDesc:
+          "Dans quelle période la barre démarre - aujourd'hui, cette semaine ou ce mois - et donc de quoi avancent les flèches. Les interrupteurs à côté ajoutent des boutons à la barre : Jour, Semaine et Mois, qui rouvrent chacun la liste dans ce mode, et le sélecteur de date. Mois est activé dès le départ, pour avoir un retour après avoir feuilleté. Avancer ou changer de période sur la carte elle-même est un affichage, pas un réglage : ce n'est pas enregistré.",
+        countdownUnits: "Compte à rebours",
+        countdownUnitsDesc:
+          "Comment une distance en jours est écrite : toujours en jours, ou en semaines, mois et années à partir de deux semaines - « dans 3 semaines », « il y a 2 mois ». S'applique à la colonne Compte à rebours, au paramètre {when} et à la Timeline.",
+        countdownUnitsDays: "Jours",
+        countdownUnitsAuto: "Semaines, mois et années",
+        showSearch: "Champ de recherche",
+        showSearchDesc:
+          "Un champ sous le titre - et sous la navigation calendaire, si elle est activée - qui filtre la liste au fur et à mesure de la saisie, par nom, nom de famille et type. La saisie n'est pas enregistrée.",
+        calendarNavPicker: "Date",
+        navLabel: "Période",
+        navLabelColorDesc: "Couleur de la période entre les flèches.",
+        navLabelFontDesc: "Police de la période entre les flèches.",
+        navButtons: "Boutons de navigation",
+        navButtonColorDesc: "Couleur du texte et des icônes des flèches, des boutons de mode et du bouton calendrier.",
+        navButtonBackground: "Arrière-plan",
+        navButtonBackgroundDesc: "Arrière-plan de ces boutons.",
+        navActiveColor: "Couleur sélectionnée",
+        navActiveColorDesc: "Couleur du texte du mode sélectionné, et du bouton calendrier tant que son sélecteur est ouvert.",
+        navActiveBackground: "Arrière-plan sélectionné",
+        navActiveBackgroundDesc: "Arrière-plan du mode sélectionné, et du bouton calendrier tant que son sélecteur est ouvert.",
+        navButtonHeight: "Hauteur",
+        navButtonHeightDesc: "Hauteur de chaque bouton de la barre, p. ex. « 26px ». Vide, elle reste à 26px.",
+        navButtonFontDesc: "Police des lettres sur les boutons Jour, Semaine, Mois et Année.",
         timelineLineHeading: "Ligne de la timeline",
         timelineLineWidth: "Épaisseur",
         timelineLineWidthDesc: "Épaisseur de la ligne horizontale de l'axe, par ex. « 4px ».",
@@ -1354,7 +1590,7 @@
           "Ajoute la date courte entre parenthèses à la fin, par ex. « ... est dans 3 jours (6 août) ». Masquée le jour même, la phrase se terminant déjà juste avant par « ... est aujourd'hui ».",
         timelineShowTime: "Afficher l'heure",
         timelineShowTimeDesc:
-          "Ajoute la plage horaire propre à un événement de calendrier externe dans les mêmes parenthèses, par ex. « ... est dans 3 jours (14:00–15:00) ». Affiché uniquement pour un événement de calendrier externe à heure fixe (non journée entière). Le format de l'heure suit la langue de Home Assistant.",
+          "Ajoute la plage horaire propre à un événement de calendrier externe dans les mêmes parenthèses, par ex. « ... est dans 3 jours (14:00–15:00) ». Affiché uniquement pour un événement de calendrier externe à heure fixe (non journée entière). Le format de l'heure suit la langue de Home Assistant. Un événement ponctuel avec une heure l'affiche ici aussi.",
         timelineShowLocation: "Afficher le lieu",
         timelineShowLocationDesc:
           "Ajoute le lieu propre à un événement de calendrier externe dans les mêmes parenthèses. Affiché uniquement pour un événement de calendrier externe ayant un lieu défini.",
@@ -1390,6 +1626,26 @@
         visibilityHeading: "Afficher / Masquer",
         hideCardTitle: "Masquer",
         hideCardTitleDesc: "Masquer le titre propre de la carte, même s'il est défini ci-dessus",
+        buttonsHeading: "Boutons",
+        textFormatHeading: "Texte et format",
+        buttonsGroupDesc: "L'apparence du + à côté du titre et du crayon et de la corbeille d'une ligne. Chacun des trois se règle séparément ci-dessous ; un champ laissé vide garde l'apparence d'origine.",
+        buttonAdd: "Ajouter",
+        buttonEdit: "Modifier",
+        buttonDelete: "Supprimer",
+        buttonElementDesc: "Le symbole de ce bouton, sa taille et ses deux couleurs.",
+        buttonIcon: "Icône",
+        buttonIconDesc: "Le symbole de ce bouton, par exemple « mdi:plus ». Laissé vide, c'est celui d'origine.",
+        buttonSize: "Taille",
+        buttonSizeDesc: "La largeur et la hauteur de ce bouton, par exemple « 28px ». Le symbole grandit avec lui, et une ligne grandit avec un bouton plus haut qu'elle. Laissé vide : 28px pour le +, 26px pour les deux d'une ligne, moins là où la ligne elle-même est plus petite.",
+        buttonColorDesc: "La couleur du symbole de ce bouton tant que rien ne le désigne. Laissée vide, c'est la couleur de texte secondaire du thème.",
+        buttonHoverColor: "Couleur au survol",
+        buttonHoverColorDesc: "La couleur du symbole tant que le pointeur est sur ce bouton, ou que le clavier s'y trouve. Laissée vide, c'est la couleur d'accentuation du thème - sa couleur d'erreur pour la corbeille, qui dit ainsi ce qu'elle fait.",
+        addButton: "Ajouter un événement",
+        addButtonDesc: "Un + à droite du titre de la carte qui ajoute un événement via le formulaire de l'intégration, sans quitter le tableau de bord - les mêmes étapes qu'Ajouter une entrée sous Paramètres → Intégrations. Home Assistant ne laisse que les administrateurs ajouter des entrées ; les autres ne voient pas de bouton.",
+        editButtons: "Modifier et supprimer un événement",
+        editButtonsDesc: "Un crayon et une corbeille à la fin de chaque ligne d'événement, dans les deux dispositions, pour modifier cet événement via le formulaire de l'intégration ou le retirer après confirmation - sans quitter le tableau de bord. Ils flottent au-dessus de la fin de la ligne tant que le pointeur est dessus et ne prennent aucune place. Réservé aux administrateurs, comme le + à côté du titre ; les autres ne voient ni l'un ni l'autre.",
+        editOnClick: "Les afficher au clic",
+        editOnClickDesc: "Fait apparaître le crayon et la corbeille d'un clic sur la ligne plutôt qu'au survol - la façon de les atteindre sur téléphone et tablette, où rien ne survole. Un clic sur une telle ligne n'exécute alors plus l'action au toucher (par défaut les détails de l'événement) ; l'action à l'appui long reste. Un nouveau clic sur la ligne, ou un clic ailleurs, les fait disparaître.",
         noEventsText: "Texte sans événement",
         noEventsTextDesc:
           "Ce que la carte affiche lorsqu'elle n'a rien à lister (laisser vide pour le texte par défaut).",
@@ -1433,7 +1689,7 @@
         columnTypeLocation: "Lieu",
         columnTypeDescription: "Description",
         columnTypeTimeDesc:
-          "Ajoute la propre plage horaire de l'événement du calendrier externe, par ex. « ...15:00–17:00 ». Affiché uniquement pour un événement de calendrier externe avec horaire (non journée entière).",
+          "Ajoute la propre plage horaire de l'événement du calendrier externe, par ex. « ...15:00–17:00 ». Affiché uniquement pour un événement de calendrier externe avec horaire (non journée entière). Un événement ponctuel avec une heure l'affiche ici aussi.",
         columnTypeLocationDesc:
           "Ajoute le propre lieu de l'événement du calendrier externe. Affiché uniquement si l'événement du calendrier externe en a un défini.",
         columnTypeDescriptionDesc:
@@ -1745,6 +2001,38 @@
       timelineCollapse: "Minder",
       foldShowMore: "Nog {count} tonen",
       foldShowLess: "Minder tonen",
+      // Calendar navigation (see calendar_nav in defaultConfig): the three
+      // mode buttons' own letter and full name, the arrows' tooltips, the
+      // date picker's, and what an empty period says.
+      navModeShort: { day: "D", week: "W", month: "M", year: "J" },
+      navModes: { day: "Dag", week: "Week", month: "Maand", year: "Jaar" },
+      navPrev: { day: "Vorige dag", week: "Vorige week", month: "Vorige maand", year: "Vorig jaar" },
+      navNext: { day: "Volgende dag", week: "Volgende week", month: "Volgende maand", year: "Volgend jaar" },
+      navPickDate: "Naar een datum gaan",
+      noEventsRange: "Geen evenementen in deze periode",
+      // The period label's tooltip, and the search field's placeholder and
+      // empty line.
+      navToday: "Terug naar vandaag",
+      searchPlaceholder: "Zoeken",
+      searchNoMatch: "Niets gevonden",
+      // The "+" beside the title (see show_add_button) and its dialog; the
+      // steps inside it speak with the integration's own translations.
+      addEvent: "Evenement toevoegen",
+      addSubmit: "Opslaan",
+      addCancel: "Annuleren",
+      addClose: "Sluiten",
+      addCreated: (title) => `${title} toegevoegd`,
+      addFailed: "Het evenement kon niet worden toegevoegd",
+      // The pencil and the trash can at the end of a row (see
+      // show_edit_buttons) and their dialogs.
+      editEvent: "Evenement bewerken",
+      deleteEvent: "Evenement verwijderen",
+      deleteConfirm: (name) => `„${name}” verwijderen?`,
+      deleteExplain: "Dit verwijdert het evenement uit Home Assistant.",
+      deleteButton: "Verwijderen",
+      editSaved: "Wijzigingen opgeslagen",
+      editFailed: "De wijzigingen konden niet worden opgeslagen",
+      deleteFailed: "Het evenement kon niet worden verwijderd",
       timelineMore: "Meer",
       types: {
         birthday: "Verjaardag",
@@ -1833,7 +2121,7 @@
         titleDesc: "Aangepaste titeltekst voor de kaart (leeg laten voor de standaardtitel)",
         titlePlaceholder: "bijv. Aankomende evenementen",
         count: "Aantal evenementen",
-        countDesc: "Het totale aantal evenementen dat op de kaart wordt getoond",
+        countDesc: "Het totale aantal evenementen dat op de kaart wordt getoond. Met kalendernavigatie aan begrenst het de lijst waarmee de kaart opent; een periode waarnaar gebladerd is, toont alles wat erin valt.",
         todayOnly: "Alleen vandaag",
         todayOnlyDesc: "Negeer alle andere filters hieronder en toon alleen evenementen van vandaag",
         nextEventDayOnly: "Alleen eerstvolgende evenementdag",
@@ -1841,6 +2129,8 @@
           "Toon alleen de evenementen op de eerstvolgende dag - vandaag, indien van toepassing, anders de eerstvolgende dag met evenementen (mogelijk meerdere)",
         daysAhead: "Dagen vooruit (0 = onbeperkt)",
         daysAheadDesc: "Toon alleen evenementen binnen dit aantal dagen (0 = geen limiet)",
+        hideFinishedToday: "Voorbij is voorbij",
+        hideFinishedTodayDesc: "Haalt een evenement van vandaag van de kaart zodra de eindtijd voorbij is - een afspraak van 14 tot 15 uur is om 15 uur weg, en een met een begin maar zonder eind op het moment dat die begint. De rij verdwijnt vanzelf, zonder op iets anders te wachten. Evenementen zonder tijd blijven tot de dag om is, en wie met de kalendernavigatie door perioden bladert, ziet de periode sowieso helemaal. Aan toont de lijst wat nog komt.",
         daysPast: "Dagen in het verleden (0 = alleen vandaag)",
         daysPastDesc: "Hoeveel dagen in het verleden een evenement nog als recent telt (0 = alleen vandaag)",
         soonDays: "„Binnenkort”-drempel (dagen)",
@@ -1878,6 +2168,35 @@
           "Toont alleen de eerste evenementen en zet de rest achter een pijl. Een kaart met een vaste hoogte eindigt dan bij de vouw in plaats van een schuifbalk te krijgen. Alleen in de lijstlayout - de timeline heeft zijn eigen „Details”.",
         collapseAfter: "Zichtbare evenementen",
         collapseAfterDesc: "Hoeveel er op het scherm staan voordat de rest uitgeklapt moet worden.",
+        calendarNav: "Kalendernavigatie",
+        calendarNavDesc:
+          "Een balk onder de titel met pijlen en de getoonde periode - één dag, week of maand tegelijk. Tot de balk gebruikt wordt, toont de kaart haar gewone lijst: wat nog komt, zoals ingesteld onder Instellingen → Evenementen en Periode, tot het aantal evenementen. De pijlen en de datumkiezer tonen daarna één periode tegelijk - helemaal, met voorbije evenementen - en een knop Dag, Week of Maand opent de lijst opnieuw in die modus.",
+        calendarNavMode: "Opent met",
+        calendarNavModeDesc:
+          "In welke periode de balk begint - vandaag, deze week of deze maand - en dus waarmee de pijlen bladeren. De schakelaars ernaast voegen knoppen aan de balk toe: Dag, Week en Maand, die elk de lijst opnieuw in die modus openen, en de datumkiezer. Maand staat vanaf het begin aan, zodat er na het bladeren een weg terug is. Bladeren en wisselen op de kaart zelf is een weergave, geen instelling, en wordt niet opgeslagen.",
+        countdownUnits: "Aftellen",
+        countdownUnitsDesc:
+          "Hoe een afstand in dagen wordt geschreven: altijd in dagen, of vanaf twee weken in weken, maanden en jaren - „over 3 weken”, „2 maanden geleden”. Geldt voor de kolom Aftellen, de plaatshouder {when} en de Timeline.",
+        countdownUnitsDays: "Dagen",
+        countdownUnitsAuto: "Weken, maanden en jaren",
+        showSearch: "Zoekveld",
+        showSearchDesc:
+          "Een veld onder de titel - en onder de kalendernavigatie, als die aanstaat - dat de lijst filtert terwijl je typt, op naam, achternaam en type. Wat je typt wordt niet opgeslagen.",
+        calendarNavPicker: "Datum",
+        navLabel: "Periode",
+        navLabelColorDesc: "Kleur van de periode tussen de pijlen.",
+        navLabelFontDesc: "Lettertype van de periode tussen de pijlen.",
+        navButtons: "Navigatieknoppen",
+        navButtonColorDesc: "Tekst- en pictogramkleur van de pijlen, de modusknoppen en de kalenderknop.",
+        navButtonBackground: "Achtergrond",
+        navButtonBackgroundDesc: "Achtergrond van die knoppen.",
+        navActiveColor: "Kleur geselecteerd",
+        navActiveColorDesc: "Tekstkleur van de geselecteerde modus, en van de kalenderknop zolang de kiezer open is.",
+        navActiveBackground: "Achtergrond geselecteerd",
+        navActiveBackgroundDesc: "Achtergrond van de geselecteerde modus, en van de kalenderknop zolang de kiezer open is.",
+        navButtonHeight: "Hoogte",
+        navButtonHeightDesc: "Hoogte van elke knop op de balk, bijv. „26px”. Leeg blijft het 26px.",
+        navButtonFontDesc: "Lettertype van de letters op de knoppen Dag, Week, Maand en Jaar.",
         timelineLineHeading: "Timeline-lijn",
         timelineLineWidth: "Dikte",
         timelineLineWidthDesc: "Dikte van de horizontale aslijn, bijv. „4px”.",
@@ -1905,7 +2224,7 @@
           "Voegt aan het einde de korte datum tussen haakjes toe, bijv. „... is over 3 dagen (6 aug)”. Verborgen op de dag zelf, omdat de zin daar al eindigt met „... is vandaag”.",
         timelineShowTime: "Tijd tonen",
         timelineShowTimeDesc:
-          "Voegt de eigen tijdspanne van een extern kalenderevenement toe in dezelfde haakjes, bijv. „... is over 3 dagen (14:00–15:00)”. Alleen getoond voor een extern kalenderevenement met een vaste tijd (niet de hele dag). De tijdnotatie volgt de taal van Home Assistant.",
+          "Voegt de eigen tijdspanne van een extern kalenderevenement toe in dezelfde haakjes, bijv. „... is over 3 dagen (14:00–15:00)”. Alleen getoond voor een extern kalenderevenement met een vaste tijd (niet de hele dag). De tijdnotatie volgt de taal van Home Assistant. Ook een eenmalig evenement met een tijd toont die hier.",
         timelineShowLocation: "Locatie tonen",
         timelineShowLocationDesc:
           "Voegt de eigen locatie van een extern kalenderevenement toe in dezelfde haakjes. Alleen getoond voor een extern kalenderevenement met een ingestelde locatie.",
@@ -1941,6 +2260,26 @@
         visibilityHeading: "Tonen / Verbergen",
         hideCardTitle: "Verbergen",
         hideCardTitleDesc: "Verberg de eigen titel van de kaart, ook als deze hierboven is ingesteld",
+        buttonsHeading: "Knoppen",
+        textFormatHeading: "Tekst en opmaak",
+        buttonsGroupDesc: "Hoe de + naast de titel en het potlood en de prullenbak van een rij eruitzien. Elk van de drie stel je hieronder apart in; een leeg veld houdt het ingebouwde uiterlijk.",
+        buttonAdd: "Toevoegen",
+        buttonEdit: "Bewerken",
+        buttonDelete: "Verwijderen",
+        buttonElementDesc: "Het teken op deze knop, hoe groot hij is en zijn twee kleuren.",
+        buttonIcon: "Icoon",
+        buttonIconDesc: "Het teken op deze knop, bijvoorbeeld “mdi:plus”. Leeg blijft het het ingebouwde.",
+        buttonSize: "Grootte",
+        buttonSizeDesc: "Hoe breed en hoog deze knop is, bijvoorbeeld “28px”. Het teken groeit mee, en een rij groeit mee met een knop die hoger is dan de rij zelf. Leeg is het 28px voor de +, 26px voor de twee van een rij en minder waar de rij zelf kleiner is.",
+        buttonColorDesc: "De kleur van het teken op deze knop zolang er niets naar wijst. Leeg is het de secundaire tekstkleur van het thema.",
+        buttonHoverColor: "Kleur bij aanwijzen",
+        buttonHoverColorDesc: "De kleur van het teken zolang de aanwijzer op deze knop staat, of het toetsenbord erop staat. Leeg is het de accentkleur van het thema - voor de prullenbak de foutkleur, waarmee die zegt wat hij doet.",
+        addButton: "Evenement toevoegen",
+        addButtonDesc: "Een + rechts van de kaarttitel die een evenement toevoegt via het formulier van de integratie, zonder het dashboard te verlaten - dezelfde stappen als Item toevoegen onder Instellingen → Integraties. Home Assistant laat alleen beheerders items toevoegen; anderen zien geen knop.",
+        editButtons: "Evenement bewerken en verwijderen",
+        editButtonsDesc: "Een potlood en een prullenbak aan het eind van elke evenementrij, in beide weergaven, om dat evenement via het formulier van de integratie te wijzigen of na bevestiging te verwijderen - zonder het dashboard te verlaten. Ze zweven boven het einde van de rij zolang de aanwijzer erop staat en nemen zelf geen ruimte in. Alleen voor beheerders, net als de + naast de titel; anderen zien geen van beide.",
+        editOnClick: "Bij klikken tonen",
+        editOnClickDesc: "Toont het potlood en de prullenbak met een klik op de rij in plaats van bij aanwijzen - zo bereik je ze ook op telefoon en tablet, waar geen aanwijzer is. Een klik op zo'n rij voert dan niet langer de actie bij tikken uit (standaard de details van het evenement); de actie bij ingedrukt houden blijft werken. Nog een klik op de rij, of een klik ergens anders, verbergt ze weer.",
         noEventsText: "Tekst zonder evenementen",
         noEventsTextDesc:
           "Wat de kaart toont wanneer er niets te tonen is (leeg laten voor de standaardtekst).",
@@ -1984,7 +2323,7 @@
         columnTypeLocation: "Locatie",
         columnTypeDescription: "Beschrijving",
         columnTypeTimeDesc:
-          "Voegt het eigen tijdsbereik van de externe agenda-afspraak toe, bijv. „...15:00–17:00”. Wordt alleen getoond voor een afspraak met vaste tijd (niet de hele dag) in een externe agenda.",
+          "Voegt het eigen tijdsbereik van de externe agenda-afspraak toe, bijv. „...15:00–17:00”. Wordt alleen getoond voor een afspraak met vaste tijd (niet de hele dag) in een externe agenda. Ook een eenmalig evenement met een tijd toont die hier.",
         columnTypeLocationDesc:
           "Voegt de eigen locatie van de externe agenda-afspraak toe. Wordt alleen getoond als de externe agenda-afspraak er een heeft ingesteld.",
         columnTypeDescriptionDesc:
@@ -2302,6 +2641,38 @@
       timelineCollapse: "Mniej",
       foldShowMore: "Pokaż jeszcze {count}",
       foldShowLess: "Pokaż mniej",
+      // Calendar navigation (see calendar_nav in defaultConfig): the three
+      // mode buttons' own letter and full name, the arrows' tooltips, the
+      // date picker's, and what an empty period says.
+      navModeShort: { day: "D", week: "T", month: "M", year: "R" },
+      navModes: { day: "Dzień", week: "Tydzień", month: "Miesiąc", year: "Rok" },
+      navPrev: { day: "Poprzedni dzień", week: "Poprzedni tydzień", month: "Poprzedni miesiąc", year: "Poprzedni rok" },
+      navNext: { day: "Następny dzień", week: "Następny tydzień", month: "Następny miesiąc", year: "Następny rok" },
+      navPickDate: "Przejdź do daty",
+      noEventsRange: "Brak wydarzeń w tym okresie",
+      // The period label's tooltip, and the search field's placeholder and
+      // empty line.
+      navToday: "Wróć do dzisiaj",
+      searchPlaceholder: "Szukaj",
+      searchNoMatch: "Brak wyników",
+      // The "+" beside the title (see show_add_button) and its dialog; the
+      // steps inside it speak with the integration's own translations.
+      addEvent: "Dodaj wydarzenie",
+      addSubmit: "Zapisz",
+      addCancel: "Anuluj",
+      addClose: "Zamknij",
+      addCreated: (title) => `Dodano: ${title}`,
+      addFailed: "Nie udało się dodać wydarzenia",
+      // The pencil and the trash can at the end of a row (see
+      // show_edit_buttons) and their dialogs.
+      editEvent: "Edytuj wydarzenie",
+      deleteEvent: "Usuń wydarzenie",
+      deleteConfirm: (name) => `Usunąć „${name}”?`,
+      deleteExplain: "To usuwa wydarzenie z Home Assistant.",
+      deleteButton: "Usuń",
+      editSaved: "Zmiany zapisane",
+      editFailed: "Nie udało się zapisać zmian",
+      deleteFailed: "Nie udało się usunąć wydarzenia",
       timelineMore: "Więcej",
       types: {
         birthday: "Urodziny",
@@ -2390,7 +2761,7 @@
         titleDesc: "Własny tekst tytułu karty (pozostaw puste dla domyślnego tytułu)",
         titlePlaceholder: "np. Nadchodzące wydarzenia",
         count: "Liczba wydarzeń",
-        countDesc: "Łączna liczba wydarzeń pokazywanych na karcie",
+        countDesc: "Łączna liczba wydarzeń pokazywanych na karcie. Przy włączonej nawigacji kalendarza ogranicza listę, z którą karta się otwiera; okres, do którego przewinięto, pokazuje wszystko, co zawiera.",
         todayOnly: "Tylko dzisiaj",
         todayOnlyDesc: "Zignoruj wszystkie inne filtry poniżej i pokaż tylko dzisiejsze wydarzenia",
         nextEventDayOnly: "Tylko dzień najbliższego wydarzenia",
@@ -2398,6 +2769,8 @@
           "Pokaż tylko wydarzenia z najbliższego dnia - dzisiaj, jeśli są, w przeciwnym razie następny dzień z wydarzeniami (możliwe więcej niż jedno)",
         daysAhead: "Dni naprzód (0 = bez limitu)",
         daysAheadDesc: "Pokazuj tylko wydarzenia w ciągu tylu dni (0 = bez limitu)",
+        hideFinishedToday: "Co minęło, znika",
+        hideFinishedTodayDesc: "Zdejmuje wydarzenie z dzisiaj z karty, gdy minie jego godzina zakończenia - spotkanie od 14 do 15 znika o 15, a takie z początkiem bez końca w chwili, gdy się zaczyna. Wiersz znika sam, nie czekając na nic innego. Wydarzenia bez godziny zostają do końca dnia, a gdy przeglądasz okresy nawigacją kalendarza, okres i tak jest pokazany w całości. Włączone - lista pokazuje to, co dopiero przed nami.",
         daysPast: "Dni wstecz (0 = tylko dzisiaj)",
         daysPastDesc: "Ile dni wstecz wydarzenie nadal liczy się jako aktualne (0 = tylko dzisiaj)",
         soonDays: "Próg „wkrótce” (dni)",
@@ -2435,6 +2808,35 @@
           "Pokazuje tylko pierwsze wydarzenia, a resztę chowa za strzałką. Karta o stałej wysokości kończy się wtedy na zwinięciu, zamiast dostawać pasek przewijania. Tylko w układzie listy - oś czasu ma własne „Szczegóły”.",
         collapseAfter: "Widoczne wydarzenia",
         collapseAfterDesc: "Ile jest widocznych, zanim trzeba rozwinąć resztę.",
+        calendarNav: "Nawigacja kalendarza",
+        calendarNavDesc:
+          "Pasek pod tytułem ze strzałkami i wyświetlanym okresem - jeden dzień, tydzień lub miesiąc naraz. Dopóki pasek nie zostanie użyty, karta pokazuje swoją zwykłą listę: nadchodzące wydarzenia według Ustawienia → Wydarzenia i Okres, najwyżej tyle, ile wynosi liczba wydarzeń. Strzałki i wybór daty pokazują potem jeden okres naraz - w całości, z minionymi wydarzeniami - a przycisk Dzień, Tydzień lub Miesiąc otwiera listę na nowo w tym trybie.",
+        calendarNavMode: "Otwiera się z",
+        calendarNavModeDesc:
+          "W jakim okresie pasek zaczyna - dzisiaj, ten tydzień lub ten miesiąc - a więc o ile przechodzą strzałki. Przełączniki obok dodają do paska przyciski: Dzień, Tydzień i Miesiąc, z których każdy otwiera listę na nowo w tym trybie, oraz wybór daty. Miesiąc jest włączony od początku, aby po przewijaniu był powrót. Przechodzenie i przełączanie na samej karcie to widok, nie ustawienie, i nie jest zapisywane.",
+        countdownUnits: "Odliczanie",
+        countdownUnitsDesc:
+          "Jak zapisywana jest odległość w dniach: zawsze w dniach, albo od dwóch tygodni w tygodniach, miesiącach i latach - „za 3 tygodnie”, „2 miesiące temu”. Dotyczy kolumny Odliczanie, symbolu {when} i widoku Timeline.",
+        countdownUnitsDays: "Dni",
+        countdownUnitsAuto: "Tygodnie, miesiące i lata",
+        showSearch: "Pole wyszukiwania",
+        showSearchDesc:
+          "Pole pod tytułem - i pod nawigacją kalendarza, jeśli jest włączona - które filtruje listę podczas pisania: po imieniu, nazwisku i typie. Wpisany tekst nie jest zapisywany.",
+        calendarNavPicker: "Data",
+        navLabel: "Okres",
+        navLabelColorDesc: "Kolor okresu między strzałkami.",
+        navLabelFontDesc: "Czcionka okresu między strzałkami.",
+        navButtons: "Przyciski nawigacji",
+        navButtonColorDesc: "Kolor tekstu i ikon strzałek, przycisków trybu i przycisku kalendarza.",
+        navButtonBackground: "Tło",
+        navButtonBackgroundDesc: "Tło tych przycisków.",
+        navActiveColor: "Kolor wybranego",
+        navActiveColorDesc: "Kolor tekstu wybranego trybu oraz przycisku kalendarza, gdy wybór daty jest otwarty.",
+        navActiveBackground: "Tło wybranego",
+        navActiveBackgroundDesc: "Tło wybranego trybu oraz przycisku kalendarza, gdy wybór daty jest otwarty.",
+        navButtonHeight: "Wysokość",
+        navButtonHeightDesc: "Wysokość każdego przycisku na pasku, np. „26px”. Puste oznacza 26px.",
+        navButtonFontDesc: "Czcionka liter na przyciskach Dzień, Tydzień, Miesiąc i Rok.",
         timelineLineHeading: "Linia osi czasu",
         timelineLineWidth: "Grubość",
         timelineLineWidthDesc: "Grubość poziomej linii osi, np. „4px”.",
@@ -2462,7 +2864,7 @@
           "Dodaje na końcu krótką datę w nawiasie, np. „... jest za 3 dni (6 sie)”. Ukryte w dniu wydarzenia, ponieważ zdanie kończy się wtedy już słowami „... jest dzisiaj”.",
         timelineShowTime: "Pokaż godzinę",
         timelineShowTimeDesc:
-          "Dodaje w tym samym nawiasie zakres godzin własny zewnętrznego wydarzenia z kalendarza, np. „... jest za 3 dni (14:00–15:00)”. Pokazywane tylko dla zewnętrznego wydarzenia z kalendarza o określonej godzinie (nie całodniowego). Format godziny zależy od języka Home Assistant.",
+          "Dodaje w tym samym nawiasie zakres godzin własny zewnętrznego wydarzenia z kalendarza, np. „... jest za 3 dni (14:00–15:00)”. Pokazywane tylko dla zewnętrznego wydarzenia z kalendarza o określonej godzinie (nie całodniowego). Format godziny zależy od języka Home Assistant. Wydarzenie jednorazowe z godziną też ją tu pokazuje.",
         timelineShowLocation: "Pokaż lokalizację",
         timelineShowLocationDesc:
           "Dodaje w tym samym nawiasie lokalizację własną zewnętrznego wydarzenia z kalendarza. Pokazywane tylko dla zewnętrznego wydarzenia z kalendarza, które ma ustawioną lokalizację.",
@@ -2498,6 +2900,26 @@
         visibilityHeading: "Pokaż / Ukryj",
         hideCardTitle: "Ukryj",
         hideCardTitleDesc: "Ukryj własny tytuł karty, nawet jeśli ustawiono go powyżej",
+        buttonsHeading: "Przyciski",
+        textFormatHeading: "Tekst i format",
+        buttonsGroupDesc: "Jak wyglądają plus obok tytułu oraz ołówek i kosz w wierszu. Każdy z trzech ustawia się osobno poniżej; puste pole zachowuje wygląd wbudowany.",
+        buttonAdd: "Dodawanie",
+        buttonEdit: "Edycja",
+        buttonDelete: "Usuwanie",
+        buttonElementDesc: "Znak na tym przycisku, jego wielkość i dwa kolory.",
+        buttonIcon: "Ikona",
+        buttonIconDesc: "Znak na tym przycisku, na przykład „mdi:plus”. Pozostawione puste - znak wbudowany.",
+        buttonSize: "Wielkość",
+        buttonSizeDesc: "Szerokość i wysokość tego przycisku, na przykład „28px”. Znak rośnie razem z nim, a wiersz rośnie razem z przyciskiem wyższym od siebie. Puste pole to 28px dla plusa, 26px dla dwóch w wierszu i mniej tam, gdzie sam wiersz jest mniejszy.",
+        buttonColorDesc: "Kolor znaku na tym przycisku, dopóki nic go nie wskazuje. Puste pole to drugorzędny kolor tekstu motywu.",
+        buttonHoverColor: "Kolor po najechaniu",
+        buttonHoverColorDesc: "Kolor znaku, dopóki wskaźnik jest nad tym przyciskiem lub jest na nim klawiatura. Puste pole to kolor akcentu motywu - dla kosza jego kolor błędu, którym kosz mówi, co robi.",
+        addButton: "Dodaj wydarzenie",
+        addButtonDesc: "Plus po prawej stronie tytułu karty, który dodaje wydarzenie przez formularz integracji bez opuszczania pulpitu - te same kroki co Dodaj wpis w Ustawienia → Integracje. Home Assistant pozwala dodawać wpisy tylko administratorom; pozostali nie widzą przycisku.",
+        editButtons: "Edytuj i usuń wydarzenie",
+        editButtonsDesc: "Ołówek i kosz na końcu każdego wiersza wydarzenia, w obu układach, do zmiany tego wydarzenia przez formularz integracji lub usunięcia go po potwierdzeniu - bez opuszczania pulpitu. Unoszą się nad końcem wiersza, gdy wskaźnik jest nad nim, i nie zajmują własnego miejsca. Tylko dla administratorów, jak plus obok tytułu; inni nie widzą żadnego z nich.",
+        editOnClick: "Pokaż po kliknięciu",
+        editOnClickDesc: "Pokazuje ołówek i kosz po kliknięciu wiersza zamiast po najechaniu wskaźnikiem - tak można do nich dotrzeć także na telefonie i tablecie, gdzie nie ma najeżdżania. Kliknięcie takiego wiersza nie wykonuje już wtedy akcji dotknięcia (domyślnie szczegóły wydarzenia); akcja przytrzymania działa dalej. Kolejne kliknięcie wiersza lub kliknięcie gdziekolwiek indziej znów je chowa.",
         noEventsText: "Tekst przy braku wydarzeń",
         noEventsTextDesc:
           "Co karta pokazuje, gdy nie ma nic do wyświetlenia (pozostaw puste, aby użyć tekstu domyślnego).",
@@ -2541,7 +2963,7 @@
         columnTypeLocation: "Lokalizacja",
         columnTypeDescription: "Opis",
         columnTypeTimeDesc:
-          "Dodaje własny zakres czasu wydarzenia z kalendarza zewnętrznego, np. „...15:00–17:00”. Widoczne tylko dla wydarzenia z określoną godziną (nie całodniowego) w kalendarzu zewnętrznym.",
+          "Dodaje własny zakres czasu wydarzenia z kalendarza zewnętrznego, np. „...15:00–17:00”. Widoczne tylko dla wydarzenia z określoną godziną (nie całodniowego) w kalendarzu zewnętrznym. Wydarzenie jednorazowe z godziną też ją tu pokazuje.",
         columnTypeLocationDesc:
           "Dodaje własną lokalizację wydarzenia z kalendarza zewnętrznego. Widoczne tylko, gdy wydarzenie w kalendarzu zewnętrznym ma ustawioną lokalizację.",
         columnTypeDescriptionDesc:
@@ -2852,6 +3274,38 @@
       timelineCollapse: "Menos",
       foldShowMore: "Mostrar {count} más",
       foldShowLess: "Mostrar menos",
+      // Calendar navigation (see calendar_nav in defaultConfig): the three
+      // mode buttons' own letter and full name, the arrows' tooltips, the
+      // date picker's, and what an empty period says.
+      navModeShort: { day: "D", week: "S", month: "M", year: "A" },
+      navModes: { day: "Día", week: "Semana", month: "Mes", year: "Año" },
+      navPrev: { day: "Día anterior", week: "Semana anterior", month: "Mes anterior", year: "Año anterior" },
+      navNext: { day: "Día siguiente", week: "Semana siguiente", month: "Mes siguiente", year: "Año siguiente" },
+      navPickDate: "Ir a una fecha",
+      noEventsRange: "No hay eventos en este período",
+      // The period label's tooltip, and the search field's placeholder and
+      // empty line.
+      navToday: "Volver a hoy",
+      searchPlaceholder: "Buscar",
+      searchNoMatch: "Sin resultados",
+      // The "+" beside the title (see show_add_button) and its dialog; the
+      // steps inside it speak with the integration's own translations.
+      addEvent: "Añadir evento",
+      addSubmit: "Guardar",
+      addCancel: "Cancelar",
+      addClose: "Cerrar",
+      addCreated: (title) => `${title} añadido`,
+      addFailed: "No se pudo añadir el evento",
+      // The pencil and the trash can at the end of a row (see
+      // show_edit_buttons) and their dialogs.
+      editEvent: "Editar evento",
+      deleteEvent: "Eliminar evento",
+      deleteConfirm: (name) => `¿Eliminar «${name}»?`,
+      deleteExplain: "Esto quita el evento de Home Assistant.",
+      deleteButton: "Eliminar",
+      editSaved: "Cambios guardados",
+      editFailed: "No se pudieron guardar los cambios",
+      deleteFailed: "No se pudo eliminar el evento",
       timelineMore: "Más",
       types: {
         birthday: "Cumpleaños",
@@ -2940,7 +3394,7 @@
         titleDesc: "Texto de título personalizado para la tarjeta (dejar vacío para el título predeterminado)",
         titlePlaceholder: "p. ej. Próximos eventos",
         count: "Número de eventos",
-        countDesc: "El número total de eventos mostrados en la tarjeta",
+        countDesc: "El número total de eventos mostrados en la tarjeta. Con la navegación de calendario activada, limita la lista con la que se abre la tarjeta; un período al que se ha pasado muestra todo lo que contiene.",
         todayOnly: "Solo hoy",
         todayOnlyDesc: "Ignorar todos los demás filtros a continuación y mostrar solo los eventos de hoy",
         nextEventDayOnly: "Solo el día del próximo evento",
@@ -2948,6 +3402,8 @@
           "Mostrar solo los eventos del día más próximo - hoy, si los hay, o si no el siguiente día con eventos (posiblemente más de uno)",
         daysAhead: "Días de antelación (0 = ilimitado)",
         daysAheadDesc: "Mostrar solo eventos dentro de este número de días (0 = sin límite)",
+        hideFinishedToday: "Lo pasado desaparece",
+        hideFinishedTodayDesc: "Quita de la tarjeta un evento de hoy en cuanto pasa su hora de fin: una cita de 14 a 15 desaparece a las 15, y una con inicio pero sin fin en el momento en que empieza. La fila se va sola, sin esperar a nada más. Los eventos sin hora se quedan hasta que acaba el día, y quien recorre periodos con la navegación del calendario ve el periodo entero de todos modos. Activado, la lista es lo que aún está por venir.",
         daysPast: "Días pasados (0 = solo hoy)",
         daysPastDesc: "Cuántos días en el pasado un evento sigue contando como reciente (0 = solo hoy)",
         soonDays: "Umbral «pronto» (días)",
@@ -2985,6 +3441,35 @@
           "Muestra solo los primeros eventos y deja el resto tras una flecha. Una tarjeta con altura fija termina entonces en el pliegue en lugar de obtener una barra de desplazamiento. Solo en el diseño de lista - la línea de tiempo tiene su propio «Detalles».",
         collapseAfter: "Eventos visibles",
         collapseAfterDesc: "Cuántos se ven antes de tener que desplegar el resto.",
+        calendarNav: "Navegación de calendario",
+        calendarNavDesc:
+          "Una barra bajo el título con flechas y el período en pantalla: un día, una semana o un mes cada vez. Hasta que se use la barra, la tarjeta muestra su lista de siempre: los eventos por venir según Ajustes → Eventos y Período, hasta el número de eventos. Las flechas y el selector de fecha muestran después un período cada vez, entero, con los eventos pasados, y un botón Día, Semana o Mes vuelve a abrir la lista en ese modo.",
+        calendarNavMode: "Se abre con",
+        calendarNavModeDesc:
+          "En qué período empieza la barra (hoy, esta semana o este mes) y, por tanto, de cuánto avanzan las flechas. Los interruptores de al lado añaden botones a la barra: Día, Semana y Mes, que vuelven a abrir la lista en ese modo, y el selector de fecha. Mes está activado desde el principio, para que haya un camino de vuelta después de pasar páginas. Avanzar o cambiar de período en la propia tarjeta es una vista, no un ajuste, y no se guarda.",
+        countdownUnits: "Cuenta atrás",
+        countdownUnitsDesc:
+          "Cómo se escribe una distancia en días: siempre en días, o a partir de dos semanas en semanas, meses y años: «en 3 semanas», «hace 2 meses». Se aplica a la columna Cuenta atrás, al marcador {when} y a la Timeline.",
+        countdownUnitsDays: "Días",
+        countdownUnitsAuto: "Semanas, meses y años",
+        showSearch: "Campo de búsqueda",
+        showSearchDesc:
+          "Un campo bajo el título, y bajo la navegación de calendario si está activada, que filtra la lista mientras escribe: por nombre, apellido y tipo. Lo escrito no se guarda.",
+        calendarNavPicker: "Fecha",
+        navLabel: "Período",
+        navLabelColorDesc: "Color del período entre las flechas.",
+        navLabelFontDesc: "Fuente del período entre las flechas.",
+        navButtons: "Botones de navegación",
+        navButtonColorDesc: "Color del texto y los iconos de las flechas, los botones de modo y el botón de calendario.",
+        navButtonBackground: "Fondo",
+        navButtonBackgroundDesc: "Fondo de esos botones.",
+        navActiveColor: "Color seleccionado",
+        navActiveColorDesc: "Color del texto del modo seleccionado, y del botón de calendario mientras su selector está abierto.",
+        navActiveBackground: "Fondo seleccionado",
+        navActiveBackgroundDesc: "Fondo del modo seleccionado, y del botón de calendario mientras su selector está abierto.",
+        navButtonHeight: "Altura",
+        navButtonHeightDesc: "Altura de cada botón de la barra, p. ej. «26px». Vacío, se queda en 26px.",
+        navButtonFontDesc: "Fuente de las letras de los botones Día, Semana, Mes y Año.",
         timelineLineHeading: "Línea de la timeline",
         timelineLineWidth: "Grosor",
         timelineLineWidthDesc: "Grosor de la línea horizontal del eje, p. ej. «4px».",
@@ -3012,7 +3497,7 @@
           "Añade la fecha corta entre paréntesis al final, p. ej. «... es en 3 días (6 ago)». Se oculta el día del propio evento, ya que la frase ya termina justo antes con «... es hoy».",
         timelineShowTime: "Mostrar hora",
         timelineShowTimeDesc:
-          "Añade el rango horario propio de un evento de calendario externo en los mismos paréntesis, p. ej. «... es en 3 días (14:00–15:00)». Solo se muestra para un evento de calendario externo con hora (no de todo el día). El formato de la hora sigue el idioma de Home Assistant.",
+          "Añade el rango horario propio de un evento de calendario externo en los mismos paréntesis, p. ej. «... es en 3 días (14:00–15:00)». Solo se muestra para un evento de calendario externo con hora (no de todo el día). El formato de la hora sigue el idioma de Home Assistant. Un evento puntual con hora también la muestra aquí.",
         timelineShowLocation: "Mostrar ubicación",
         timelineShowLocationDesc:
           "Añade la ubicación propia de un evento de calendario externo en los mismos paréntesis. Solo se muestra para un evento de calendario externo que tenga una ubicación establecida.",
@@ -3048,6 +3533,26 @@
         visibilityHeading: "Mostrar / Ocultar",
         hideCardTitle: "Ocultar",
         hideCardTitleDesc: "Ocultar el título propio de la tarjeta, aunque esté configurado arriba",
+        buttonsHeading: "Botones",
+        textFormatHeading: "Texto y formato",
+        buttonsGroupDesc: "El aspecto del + junto al título y del lápiz y la papelera de una fila. Cada uno de los tres se ajusta por separado abajo; un campo vacío mantiene el aspecto de fábrica.",
+        buttonAdd: "Añadir",
+        buttonEdit: "Editar",
+        buttonDelete: "Eliminar",
+        buttonElementDesc: "El símbolo de este botón, su tamaño y sus dos colores.",
+        buttonIcon: "Icono",
+        buttonIconDesc: "El símbolo de este botón, por ejemplo «mdi:plus». Vacío es el de fábrica.",
+        buttonSize: "Tamaño",
+        buttonSizeDesc: "El ancho y el alto de este botón, por ejemplo «28px». El símbolo crece con él, y una fila crece con un botón más alto que ella. Vacío son 28px para el +, 26px para los dos de una fila y menos donde la fila es más pequeña.",
+        buttonColorDesc: "El color del símbolo de este botón mientras nada lo señala. Vacío es el color de texto secundario del tema.",
+        buttonHoverColor: "Color al pasar el puntero",
+        buttonHoverColorDesc: "El color del símbolo mientras el puntero está sobre este botón, o mientras el teclado está en él. Vacío es el color de acento del tema; para la papelera, su color de error, con el que dice lo que hace.",
+        addButton: "Añadir evento",
+        addButtonDesc: "Un + a la derecha del título de la tarjeta que añade un evento con el formulario de la integración, sin salir del panel: los mismos pasos que Añadir entrada en Ajustes → Integraciones. Home Assistant solo deja añadir entradas a los administradores; los demás no ven el botón.",
+        editButtons: "Editar y eliminar eventos",
+        editButtonsDesc: "Un lápiz y una papelera al final de cada fila de evento, en ambos diseños, para cambiar ese evento con el formulario de la integración o quitarlo tras confirmar, sin salir del panel. Flotan sobre el final de la fila mientras el puntero está encima y no ocupan espacio propio. Solo para administradores, como el + junto al título; los demás no ven ninguno.",
+        editOnClick: "Mostrarlos al hacer clic",
+        editOnClickDesc: "Muestra el lápiz y la papelera con un clic en la fila en lugar de al pasar el puntero: así se llega a ellos también en el teléfono y la tableta, donde no hay puntero que pasar. Un clic en una fila así ya no ejecuta la acción al tocar (por defecto, los detalles del evento); la acción al mantener pulsado sigue funcionando. Otro clic en la fila, o un clic en cualquier otro lugar, los vuelve a ocultar.",
         noEventsText: "Texto sin eventos",
         noEventsTextDesc:
           "Lo que muestra la tarjeta cuando no hay nada que listar (déjalo vacío para el texto predeterminado).",
@@ -3091,7 +3596,7 @@
         columnTypeLocation: "Ubicación",
         columnTypeDescription: "Descripción",
         columnTypeTimeDesc:
-          "Añade el propio intervalo horario del evento del calendario externo, p. ej. «...15:00–17:00». Solo se muestra para un evento con hora (no de todo el día) de un calendario externo.",
+          "Añade el propio intervalo horario del evento del calendario externo, p. ej. «...15:00–17:00». Solo se muestra para un evento con hora (no de todo el día) de un calendario externo. Un evento puntual con hora también la muestra aquí.",
         columnTypeLocationDesc:
           "Añade la propia ubicación del evento del calendario externo. Solo se muestra si el evento del calendario externo tiene una definida.",
         columnTypeDescriptionDesc:
@@ -3403,6 +3908,38 @@
       timelineCollapse: "Meno",
       foldShowMore: "Mostra altri {count}",
       foldShowLess: "Mostra meno",
+      // Calendar navigation (see calendar_nav in defaultConfig): the three
+      // mode buttons' own letter and full name, the arrows' tooltips, the
+      // date picker's, and what an empty period says.
+      navModeShort: { day: "G", week: "S", month: "M", year: "A" },
+      navModes: { day: "Giorno", week: "Settimana", month: "Mese", year: "Anno" },
+      navPrev: { day: "Giorno precedente", week: "Settimana precedente", month: "Mese precedente", year: "Anno precedente" },
+      navNext: { day: "Giorno successivo", week: "Settimana successiva", month: "Mese successivo", year: "Anno successivo" },
+      navPickDate: "Vai a una data",
+      noEventsRange: "Nessun evento in questo periodo",
+      // The period label's tooltip, and the search field's placeholder and
+      // empty line.
+      navToday: "Torna a oggi",
+      searchPlaceholder: "Cerca",
+      searchNoMatch: "Nessun risultato",
+      // The "+" beside the title (see show_add_button) and its dialog; the
+      // steps inside it speak with the integration's own translations.
+      addEvent: "Aggiungi evento",
+      addSubmit: "Salva",
+      addCancel: "Annulla",
+      addClose: "Chiudi",
+      addCreated: (title) => `${title} aggiunto`,
+      addFailed: "Impossibile aggiungere l'evento",
+      // The pencil and the trash can at the end of a row (see
+      // show_edit_buttons) and their dialogs.
+      editEvent: "Modifica evento",
+      deleteEvent: "Elimina evento",
+      deleteConfirm: (name) => `Eliminare «${name}»?`,
+      deleteExplain: "Questo rimuove l'evento da Home Assistant.",
+      deleteButton: "Elimina",
+      editSaved: "Modifiche salvate",
+      editFailed: "Impossibile salvare le modifiche",
+      deleteFailed: "Impossibile eliminare l'evento",
       timelineMore: "Altro",
       types: {
         birthday: "Compleanno",
@@ -3491,7 +4028,7 @@
         titleDesc: "Testo del titolo personalizzato per la scheda (lasciare vuoto per il titolo predefinito)",
         titlePlaceholder: "ad es. Eventi in arrivo",
         count: "Numero di eventi",
-        countDesc: "Il numero totale di eventi mostrati sulla scheda",
+        countDesc: "Il numero totale di eventi mostrati sulla scheda. Con la navigazione del calendario attiva, limita l'elenco con cui la scheda si apre; un periodo raggiunto sfogliando mostra tutto ciò che contiene.",
         todayOnly: "Solo oggi",
         todayOnlyDesc: "Ignora tutti gli altri filtri sottostanti e mostra solo gli eventi di oggi",
         nextEventDayOnly: "Solo il giorno del prossimo evento",
@@ -3499,6 +4036,8 @@
           "Mostra solo gli eventi del giorno più vicino - oggi, se presenti, altrimenti il giorno successivo con eventi (possibilmente più di uno)",
         daysAhead: "Giorni in anticipo (0 = illimitato)",
         daysAheadDesc: "Mostra solo eventi entro questo numero di giorni (0 = nessun limite)",
+        hideFinishedToday: "Ciò che è passato sparisce",
+        hideFinishedTodayDesc: "Toglie dalla scheda un evento di oggi appena la sua ora di fine è passata: un appuntamento dalle 14 alle 15 sparisce alle 15, e uno con un inizio ma senza fine nel momento in cui comincia. La riga se ne va da sola, senza aspettare altro. Gli eventi senza ora restano fino alla fine del giorno, e chi sfoglia i periodi con la navigazione del calendario vede comunque il periodo intero. Attivo, la lista è ciò che deve ancora venire.",
         daysPast: "Giorni passati (0 = solo oggi)",
         daysPastDesc: "Quanti giorni nel passato un evento conta ancora come recente (0 = solo oggi)",
         soonDays: "Soglia «a breve» (giorni)",
@@ -3536,6 +4075,35 @@
           "Mostra solo i primi eventi e mette il resto dietro una freccia. Una scheda con altezza fissa termina allora alla piega invece di ottenere una barra di scorrimento. Solo nel layout a elenco - la timeline ha il suo «Dettagli».",
         collapseAfter: "Eventi visibili",
         collapseAfterDesc: "Quanti sono a schermo prima che il resto vada aperto.",
+        calendarNav: "Navigazione calendario",
+        calendarNavDesc:
+          "Una barra sotto il titolo con frecce e il periodo visualizzato: un giorno, una settimana o un mese alla volta. Finché la barra non viene usata, la scheda mostra il suo elenco di sempre: gli eventi in arrivo secondo Impostazioni → Eventi e Periodo, fino al numero di eventi. Le frecce e il selettore di data mostrano poi un periodo alla volta, per intero, con gli eventi passati, e un pulsante Giorno, Settimana o Mese riapre l'elenco in quella modalità.",
+        calendarNavMode: "Si apre con",
+        calendarNavModeDesc:
+          "In quale periodo parte la barra (oggi, questa settimana o questo mese) e quindi di quanto scorrono le frecce. Gli interruttori accanto aggiungono pulsanti alla barra: Giorno, Settimana e Mese, ognuno dei quali riapre l'elenco in quella modalità, e il selettore di data. Mese è attivo fin dall'inizio, così dopo aver sfogliato c'è una via di ritorno. Scorrere o cambiare periodo sulla scheda stessa è una vista, non un'impostazione, e non viene salvato.",
+        countdownUnits: "Conto alla rovescia",
+        countdownUnitsDesc:
+          "Come viene scritta una distanza in giorni: sempre in giorni, oppure da due settimane in poi in settimane, mesi e anni: «tra 3 settimane», «2 mesi fa». Vale per la colonna Conto alla rovescia, il segnaposto {when} e la Timeline.",
+        countdownUnitsDays: "Giorni",
+        countdownUnitsAuto: "Settimane, mesi e anni",
+        showSearch: "Campo di ricerca",
+        showSearchDesc:
+          "Un campo sotto il titolo - e sotto la navigazione calendario, se attiva - che filtra l'elenco mentre scrivi, per nome, cognome e tipo. Ciò che scrivi non viene salvato.",
+        calendarNavPicker: "Data",
+        navLabel: "Periodo",
+        navLabelColorDesc: "Colore del periodo tra le frecce.",
+        navLabelFontDesc: "Carattere del periodo tra le frecce.",
+        navButtons: "Pulsanti di navigazione",
+        navButtonColorDesc: "Colore di testo e icone delle frecce, dei pulsanti di modalità e del pulsante calendario.",
+        navButtonBackground: "Sfondo",
+        navButtonBackgroundDesc: "Sfondo di questi pulsanti.",
+        navActiveColor: "Colore selezionato",
+        navActiveColorDesc: "Colore del testo della modalità selezionata, e del pulsante calendario finché il selettore è aperto.",
+        navActiveBackground: "Sfondo selezionato",
+        navActiveBackgroundDesc: "Sfondo della modalità selezionata, e del pulsante calendario finché il selettore è aperto.",
+        navButtonHeight: "Altezza",
+        navButtonHeightDesc: "Altezza di ogni pulsante della barra, ad es. «26px». Vuoto, resta 26px.",
+        navButtonFontDesc: "Carattere delle lettere sui pulsanti Giorno, Settimana, Mese e Anno.",
         timelineLineHeading: "Linea della timeline",
         timelineLineWidth: "Spessore",
         timelineLineWidthDesc: "Spessore della linea orizzontale dell'asse, ad es. «4px».",
@@ -3563,7 +4131,7 @@
           "Aggiunge la data breve tra parentesi alla fine, ad es. «...è tra 3 giorni (6 ago)». Nascosta nel giorno stesso, poiché la frase termina già subito prima con «...è oggi».",
         timelineShowTime: "Mostra ora",
         timelineShowTimeDesc:
-          "Aggiunge l'intervallo orario di un evento del calendario esterno nelle stesse parentesi, ad es. «...è tra 3 giorni (14:00–15:00)». Mostrato solo per un evento del calendario esterno con orario (non per l'intera giornata). Il formato dell'ora segue la lingua di Home Assistant.",
+          "Aggiunge l'intervallo orario di un evento del calendario esterno nelle stesse parentesi, ad es. «...è tra 3 giorni (14:00–15:00)». Mostrato solo per un evento del calendario esterno con orario (non per l'intera giornata). Il formato dell'ora segue la lingua di Home Assistant. Anche un evento occasionale con un orario lo mostra qui.",
         timelineShowLocation: "Mostra luogo",
         timelineShowLocationDesc:
           "Aggiunge il luogo di un evento del calendario esterno nelle stesse parentesi. Mostrato solo per un evento del calendario esterno che ne ha uno impostato.",
@@ -3599,6 +4167,26 @@
         visibilityHeading: "Mostra / Nascondi",
         hideCardTitle: "Nascondi",
         hideCardTitleDesc: "Nascondi il titolo proprio della scheda, anche se impostato sopra",
+        buttonsHeading: "Pulsanti",
+        textFormatHeading: "Testo e formato",
+        buttonsGroupDesc: "L'aspetto del + accanto al titolo e della matita e del cestino di una riga. Ognuno dei tre si imposta da solo qui sotto; un campo lasciato vuoto mantiene l'aspetto originale.",
+        buttonAdd: "Aggiungi",
+        buttonEdit: "Modifica",
+        buttonDelete: "Elimina",
+        buttonElementDesc: "Il segno su questo pulsante, quanto è grande e i suoi due colori.",
+        buttonIcon: "Icona",
+        buttonIconDesc: "Il segno su questo pulsante, per esempio «mdi:plus». Lasciato vuoto è quello originale.",
+        buttonSize: "Dimensione",
+        buttonSizeDesc: "Larghezza e altezza di questo pulsante, per esempio «28px». Il segno cresce con lui, e una riga cresce con un pulsante più alto di lei. Vuoto sono 28px per il +, 26px per i due di una riga e meno dove la riga stessa è più piccola.",
+        buttonColorDesc: "Il colore del segno su questo pulsante finché nulla lo indica. Vuoto è il colore del testo secondario del tema.",
+        buttonHoverColor: "Colore al passaggio",
+        buttonHoverColorDesc: "Il colore del segno finché il puntatore è su questo pulsante, o finché la tastiera è su di esso. Vuoto è il colore d'accento del tema - per il cestino il suo colore di errore, con cui dice che cosa fa.",
+        addButton: "Aggiungi evento",
+        addButtonDesc: "Un + a destra del titolo della scheda che aggiunge un evento con il modulo dell'integrazione, senza lasciare la dashboard: gli stessi passaggi di Aggiungi voce in Impostazioni → Integrazioni. Home Assistant lascia aggiungere voci solo agli amministratori; gli altri non vedono il pulsante.",
+        editButtons: "Modifica ed elimina eventi",
+        editButtonsDesc: "Una matita e un cestino alla fine di ogni riga di evento, in entrambi i layout, per cambiare quell'evento con il modulo dell'integrazione o rimuoverlo dopo conferma, senza lasciare la dashboard. Fluttuano sopra la fine della riga finché il puntatore è sopra e non occupano spazio proprio. Solo per gli amministratori, come il + accanto al titolo; gli altri non vedono nessuno dei due.",
+        editOnClick: "Mostrali al clic",
+        editOnClickDesc: "Mostra la matita e il cestino con un clic sulla riga invece che al passaggio del puntatore - il modo per raggiungerli anche su telefono e tablet, dove non c'è puntatore da passare. Un clic su una riga così non esegue più l'azione al tocco (per impostazione predefinita i dettagli dell'evento); l'azione alla pressione prolungata resta. Un altro clic sulla riga, o un clic altrove, li nasconde di nuovo.",
         noEventsText: "Testo senza eventi",
         noEventsTextDesc:
           "Cosa mostra la scheda quando non c'è nulla da elencare (lascia vuoto per il testo predefinito).",
@@ -3642,7 +4230,7 @@
         columnTypeLocation: "Luogo",
         columnTypeDescription: "Descrizione",
         columnTypeTimeDesc:
-          "Aggiunge la propria fascia oraria dell'evento del calendario esterno, ad es. «...15:00–17:00». Visibile solo per un evento con orario (non per l'intera giornata) di un calendario esterno.",
+          "Aggiunge la propria fascia oraria dell'evento del calendario esterno, ad es. «...15:00–17:00». Visibile solo per un evento con orario (non per l'intera giornata) di un calendario esterno. Anche un evento occasionale con un orario lo mostra qui.",
         columnTypeLocationDesc:
           "Aggiunge il proprio luogo dell'evento del calendario esterno. Visibile solo se l'evento del calendario esterno ne ha uno impostato.",
         columnTypeDescriptionDesc:
@@ -3954,6 +4542,38 @@
       timelineCollapse: "Menos",
       foldShowMore: "Mostrar mais {count}",
       foldShowLess: "Mostrar menos",
+      // Calendar navigation (see calendar_nav in defaultConfig): the three
+      // mode buttons' own letter and full name, the arrows' tooltips, the
+      // date picker's, and what an empty period says.
+      navModeShort: { day: "D", week: "S", month: "M", year: "A" },
+      navModes: { day: "Dia", week: "Semana", month: "Mês", year: "Ano" },
+      navPrev: { day: "Dia anterior", week: "Semana anterior", month: "Mês anterior", year: "Ano anterior" },
+      navNext: { day: "Próximo dia", week: "Próxima semana", month: "Próximo mês", year: "Próximo ano" },
+      navPickDate: "Ir para uma data",
+      noEventsRange: "Nenhum evento neste período",
+      // The period label's tooltip, and the search field's placeholder and
+      // empty line.
+      navToday: "Voltar para hoje",
+      searchPlaceholder: "Pesquisar",
+      searchNoMatch: "Nada encontrado",
+      // The "+" beside the title (see show_add_button) and its dialog; the
+      // steps inside it speak with the integration's own translations.
+      addEvent: "Adicionar evento",
+      addSubmit: "Salvar",
+      addCancel: "Cancelar",
+      addClose: "Fechar",
+      addCreated: (title) => `${title} adicionado`,
+      addFailed: "Não foi possível adicionar o evento",
+      // The pencil and the trash can at the end of a row (see
+      // show_edit_buttons) and their dialogs.
+      editEvent: "Editar evento",
+      deleteEvent: "Excluir evento",
+      deleteConfirm: (name) => `Excluir "${name}"?`,
+      deleteExplain: "Isso remove o evento do Home Assistant.",
+      deleteButton: "Excluir",
+      editSaved: "Alterações salvas",
+      editFailed: "Não foi possível salvar as alterações",
+      deleteFailed: "Não foi possível excluir o evento",
       timelineMore: "Mais",
       types: {
         birthday: "Aniversário",
@@ -4042,7 +4662,7 @@
         titleDesc: "Texto de título personalizado para o cartão (deixe vazio para o título padrão)",
         titlePlaceholder: "por ex. Próximos eventos",
         count: "Número de eventos",
-        countDesc: "O número total de eventos mostrados no cartão",
+        countDesc: "O número total de eventos mostrados no cartão. Com a navegação de calendário ativada, limita a lista com que o cartão abre; um período alcançado ao folhear mostra tudo o que contém.",
         todayOnly: "Somente hoje",
         todayOnlyDesc: "Ignorar todos os outros filtros abaixo e mostrar apenas os eventos de hoje",
         nextEventDayOnly: "Somente o dia do próximo evento",
@@ -4050,6 +4670,8 @@
           "Mostrar apenas os eventos do dia mais próximo - hoje, se houver, senão o próximo dia com eventos (possivelmente mais de um)",
         daysAhead: "Dias à frente (0 = ilimitado)",
         daysAheadDesc: "Mostrar apenas eventos dentro desse número de dias (0 = sem limite)",
+        hideFinishedToday: "O que passou some",
+        hideFinishedTodayDesc: "Tira do cartão um evento de hoje assim que o horário de término passa: um compromisso das 14 às 15 some às 15, e um com início mas sem fim no momento em que começa. A linha sai sozinha, sem esperar por mais nada. Eventos sem horário ficam até o dia acabar, e quem percorre períodos com a navegação do calendário vê o período inteiro de qualquer forma. Ligado, a lista é o que ainda está por vir.",
         daysPast: "Dias no passado (0 = apenas hoje)",
         daysPastDesc: "Quantos dias no passado um evento ainda conta como recente (0 = apenas hoje)",
         soonDays: "Limite \"em breve\" (dias)",
@@ -4087,6 +4709,35 @@
           "Mostra apenas os primeiros eventos e deixa o restante atrás de uma seta. Um cartão com altura fixa termina então na dobra em vez de ganhar uma barra de rolagem. Apenas no layout de lista - a timeline tem o seu próprio «Detalhes».",
         collapseAfter: "Eventos visíveis",
         collapseAfterDesc: "Quantos ficam na tela antes de o restante ter de ser expandido.",
+        calendarNav: "Navegação de calendário",
+        calendarNavDesc:
+          "Uma barra abaixo do título com setas e o período em tela: um dia, uma semana ou um mês por vez. Até a barra ser usada, o cartão mostra sua lista de sempre: o que ainda vem, conforme Configurações → Eventos e Período, até o número de eventos. As setas e o seletor de data passam então a mostrar um período por vez, por inteiro, com os eventos passados, e um botão Dia, Semana ou Mês reabre a lista nesse modo.",
+        calendarNavMode: "Abre com",
+        calendarNavModeDesc:
+          "Em qual período a barra começa (hoje, esta semana ou este mês) e, portanto, de quanto as setas avançam. As chaves ao lado acrescentam botões à barra: Dia, Semana e Mês, cada um reabrindo a lista nesse modo, e o seletor de data. Mês vem ativado desde o início, para haver um caminho de volta depois de folhear. Avançar ou trocar de período no próprio cartão é uma visualização, não uma configuração, e não é salvo.",
+        countdownUnits: "Contagem regressiva",
+        countdownUnitsDesc:
+          "Como uma distância em dias é escrita: sempre em dias, ou a partir de duas semanas em semanas, meses e anos: “em 3 semanas”, “2 meses atrás”. Vale para a coluna Contagem regressiva, o marcador {when} e a Timeline.",
+        countdownUnitsDays: "Dias",
+        countdownUnitsAuto: "Semanas, meses e anos",
+        showSearch: "Campo de pesquisa",
+        showSearchDesc:
+          "Um campo abaixo do título - e abaixo da navegação de calendário, se estiver ativada - que filtra a lista conforme você digita, por nome, sobrenome e tipo. O que é digitado não é salvo.",
+        calendarNavPicker: "Data",
+        navLabel: "Período",
+        navLabelColorDesc: "Cor do período entre as setas.",
+        navLabelFontDesc: "Fonte do período entre as setas.",
+        navButtons: "Botões de navegação",
+        navButtonColorDesc: "Cor do texto e dos ícones das setas, dos botões de modo e do botão de calendário.",
+        navButtonBackground: "Fundo",
+        navButtonBackgroundDesc: "Fundo desses botões.",
+        navActiveColor: "Cor selecionada",
+        navActiveColorDesc: "Cor do texto do modo selecionado, e do botão de calendário enquanto o seletor está aberto.",
+        navActiveBackground: "Fundo selecionado",
+        navActiveBackgroundDesc: "Fundo do modo selecionado, e do botão de calendário enquanto o seletor está aberto.",
+        navButtonHeight: "Altura",
+        navButtonHeightDesc: "Altura de cada botão da barra, por ex. “26px”. Vazio, fica em 26px.",
+        navButtonFontDesc: "Fonte das letras nos botões Dia, Semana, Mês e Ano.",
         timelineLineHeading: "Linha da timeline",
         timelineLineWidth: "Espessura",
         timelineLineWidthDesc: "Espessura da linha horizontal do eixo, ex.: \"4px\".",
@@ -4114,7 +4765,7 @@
           "Adiciona a data curta entre parênteses no final, ex.: \"...é em 3 dias (6 ago)\". Ocultada no próprio dia do evento, já que a frase já termina logo antes com \"...é hoje\".",
         timelineShowTime: "Mostrar horário",
         timelineShowTimeDesc:
-          "Adiciona o intervalo de horário próprio de um evento de calendário externo nos mesmos parênteses, ex.: \"...é em 3 dias (14:00–15:00)\". Exibido apenas para um evento de calendário externo com horário definido (não de dia inteiro). O formato de horário segue o idioma do Home Assistant.",
+          "Adiciona o intervalo de horário próprio de um evento de calendário externo nos mesmos parênteses, ex.: \"...é em 3 dias (14:00–15:00)\". Exibido apenas para um evento de calendário externo com horário definido (não de dia inteiro). O formato de horário segue o idioma do Home Assistant. Um evento único com horário também o mostra aqui.",
         timelineShowLocation: "Mostrar local",
         timelineShowLocationDesc:
           "Adiciona o local próprio de um evento de calendário externo nos mesmos parênteses. Exibido apenas para um evento de calendário externo que tenha um local definido.",
@@ -4150,6 +4801,26 @@
         visibilityHeading: "Mostrar / Ocultar",
         hideCardTitle: "Ocultar",
         hideCardTitleDesc: "Ocultar o título próprio do cartão, mesmo se definido acima",
+        buttonsHeading: "Botões",
+        textFormatHeading: "Texto e formato",
+        buttonsGroupDesc: "A aparência do + ao lado do título e do lápis e da lixeira de uma linha. Cada um dos três é ajustado separadamente abaixo; um campo vazio mantém a aparência original.",
+        buttonAdd: "Adicionar",
+        buttonEdit: "Editar",
+        buttonDelete: "Excluir",
+        buttonElementDesc: "O sinal neste botão, o tamanho dele e as duas cores.",
+        buttonIcon: "Ícone",
+        buttonIconDesc: "O sinal neste botão, por exemplo “mdi:plus”. Vazio, é o original.",
+        buttonSize: "Tamanho",
+        buttonSizeDesc: "A largura e a altura deste botão, por exemplo “28px”. O sinal cresce junto, e a linha cresce com um botão mais alto que ela. Vazio são 28px para o +, 26px para os dois de uma linha e menos onde a própria linha é menor.",
+        buttonColorDesc: "A cor do sinal neste botão enquanto nada aponta para ele. Vazio, é a cor de texto secundária do tema.",
+        buttonHoverColor: "Cor ao passar o ponteiro",
+        buttonHoverColorDesc: "A cor do sinal enquanto o ponteiro está sobre este botão, ou enquanto o teclado está nele. Vazio, é a cor de destaque do tema - para a lixeira, a cor de erro, com a qual ela diz o que faz.",
+        addButton: "Adicionar evento",
+        addButtonDesc: "Um + à direita do título do cartão que adiciona um evento pelo formulário da integração, sem sair do painel: os mesmos passos de Adicionar entrada em Configurações → Integrações. O Home Assistant só deixa administradores adicionarem entradas; os demais não veem o botão.",
+        editButtons: "Editar e excluir eventos",
+        editButtonsDesc: "Um lápis e uma lixeira no fim de cada linha de evento, nos dois layouts, para alterar esse evento pelo formulário da integração ou removê-lo após confirmação, sem sair do painel. Flutuam sobre o fim da linha enquanto o ponteiro está sobre ela e não ocupam espaço próprio. Só para administradores, como o + ao lado do título; os demais não veem nenhum dos dois.",
+        editOnClick: "Mostrar ao clicar",
+        editOnClickDesc: "Mostra o lápis e a lixeira com um clique na linha em vez de ao passar o ponteiro - assim se chega a eles também no celular e no tablet, onde não há ponteiro para passar. Um clique em uma linha assim deixa de executar a ação ao tocar (por padrão, os detalhes do evento); a ação ao pressionar e segurar continua valendo. Outro clique na linha, ou um clique em qualquer outro lugar, volta a escondê-los.",
         noEventsText: "Texto sem eventos",
         noEventsTextDesc:
           "O que o cartão mostra quando não há nada a listar (deixe vazio para o texto padrão).",
@@ -4193,7 +4864,7 @@
         columnTypeLocation: "Local",
         columnTypeDescription: "Descrição",
         columnTypeTimeDesc:
-          "Adiciona o próprio intervalo de horário do evento do calendário externo, por ex. \"...15:00–17:00\". Exibido apenas para um evento com horário definido (não de dia inteiro) de um calendário externo.",
+          "Adiciona o próprio intervalo de horário do evento do calendário externo, por ex. \"...15:00–17:00\". Exibido apenas para um evento com horário definido (não de dia inteiro) de um calendário externo. Um evento único com horário também o mostra aqui.",
         columnTypeLocationDesc:
           "Adiciona o próprio local do evento do calendário externo. Exibido apenas se o evento do calendário externo tiver um local definido.",
         columnTypeDescriptionDesc:
@@ -4509,6 +5180,38 @@
       timelineCollapse: "Свернуть",
       foldShowMore: "Показать ещё {count}",
       foldShowLess: "Показать меньше",
+      // Calendar navigation (see calendar_nav in defaultConfig): the three
+      // mode buttons' own letter and full name, the arrows' tooltips, the
+      // date picker's, and what an empty period says.
+      navModeShort: { day: "Д", week: "Н", month: "М", year: "Г" },
+      navModes: { day: "День", week: "Неделя", month: "Месяц", year: "Год" },
+      navPrev: { day: "Предыдущий день", week: "Предыдущая неделя", month: "Предыдущий месяц", year: "Предыдущий год" },
+      navNext: { day: "Следующий день", week: "Следующая неделя", month: "Следующий месяц", year: "Следующий год" },
+      navPickDate: "Перейти к дате",
+      noEventsRange: "Нет событий за этот период",
+      // The period label's tooltip, and the search field's placeholder and
+      // empty line.
+      navToday: "Вернуться к сегодня",
+      searchPlaceholder: "Поиск",
+      searchNoMatch: "Ничего не найдено",
+      // The "+" beside the title (see show_add_button) and its dialog; the
+      // steps inside it speak with the integration's own translations.
+      addEvent: "Добавить событие",
+      addSubmit: "Сохранить",
+      addCancel: "Отмена",
+      addClose: "Закрыть",
+      addCreated: (title) => `${title} добавлено`,
+      addFailed: "Не удалось добавить событие",
+      // The pencil and the trash can at the end of a row (see
+      // show_edit_buttons) and their dialogs.
+      editEvent: "Изменить событие",
+      deleteEvent: "Удалить событие",
+      deleteConfirm: (name) => `Удалить «${name}»?`,
+      deleteExplain: "Событие будет удалено из Home Assistant.",
+      deleteButton: "Удалить",
+      editSaved: "Изменения сохранены",
+      editFailed: "Не удалось сохранить изменения",
+      deleteFailed: "Не удалось удалить событие",
       timelineMore: "Ещё",
       types: {
         birthday: "День рождения",
@@ -4597,7 +5300,7 @@
         titleDesc: "Собственный текст заголовка карточки (оставьте пустым для заголовка по умолчанию)",
         titlePlaceholder: "напр. Ближайшие события",
         count: "Количество событий",
-        countDesc: "Общее количество событий, показываемых на карточке",
+        countDesc: "Общее количество событий, показываемых на карточке. При включённой навигации по календарю оно ограничивает список, с которым открывается карточка; период, к которому перелистали, показывает всё, что в нём есть.",
         todayOnly: "Только сегодня",
         todayOnlyDesc: "Игнорировать все остальные фильтры ниже и показывать только сегодняшние события",
         nextEventDayOnly: "Только день ближайшего события",
@@ -4605,6 +5308,8 @@
           "Показывать только события ближайшего дня - сегодняшнего, если есть, иначе следующего дня с событиями (возможно, несколькими)",
         daysAhead: "Дней вперёд (0 = без ограничений)",
         daysAheadDesc: "Показывать только события в пределах этого количества дней (0 = без ограничений)",
+        hideFinishedToday: "Прошедшее исчезает",
+        hideFinishedTodayDesc: "Убирает сегодняшнее событие с карточки, как только прошло время его окончания: встреча с 14 до 15 исчезает в 15, а событие с началом, но без окончания - в тот момент, когда начинается. Строка уходит сама, не дожидаясь ничего другого. События без времени остаются до конца дня, а при перелистывании периодов навигацией по календарю период всё равно показан целиком. Включено - список показывает то, что ещё впереди.",
         daysPast: "Дней в прошлом (0 = только сегодня)",
         daysPastDesc: "Сколько дней в прошлом событие ещё считается недавним (0 = только сегодня)",
         soonDays: "Порог «скоро» (дней)",
@@ -4642,6 +5347,35 @@
           "Показывает только первые события, а остальные прячет за стрелкой. Карточка с фиксированной высотой заканчивается на сгибе, а не обзаводится полосой прокрутки. Только в списочной раскладке - у шкалы времени есть своё «Подробнее».",
         collapseAfter: "Видимые события",
         collapseAfterDesc: "Сколько видно, прежде чем остальное нужно развернуть.",
+        calendarNav: "Навигация по календарю",
+        calendarNavDesc:
+          "Панель под заголовком со стрелками и показанным периодом - по одному дню, неделе или месяцу. Пока панелью не пользовались, карточка показывает свой обычный список: предстоящие события по настройкам в разделе Настройки → События и Период, не больше количества событий. Стрелки и выбор даты затем показывают по одному периоду - целиком, с прошедшими событиями, - а кнопка День, Неделя или Месяц заново открывает список в этом режиме.",
+        calendarNavMode: "Открывается с",
+        calendarNavModeDesc:
+          "С какого периода начинает панель - сегодня, эта неделя или этот месяц - и, значит, на сколько шагают стрелки. Переключатели рядом добавляют на панель кнопки: День, Неделя и Месяц, каждая из которых заново открывает список в этом режиме, и выбор даты. Месяц включён с самого начала, чтобы после перелистывания был путь назад. Переход и переключение на самой карточке - это вид, а не настройка, и не сохраняется.",
+        countdownUnits: "Обратный отсчёт",
+        countdownUnitsDesc:
+          "Как записывается расстояние в днях: всегда в днях или, начиная с двух недель, в неделях, месяцах и годах - «через 3 недели», «2 месяца назад». Действует для столбца Обратный отсчёт, подстановки {when} и Timeline.",
+        countdownUnitsDays: "Дни",
+        countdownUnitsAuto: "Недели, месяцы и годы",
+        showSearch: "Поле поиска",
+        showSearchDesc:
+          "Поле под заголовком - и под навигацией по календарю, если она включена, - которое фильтрует список при вводе: по имени, фамилии и типу. Введённое не сохраняется.",
+        calendarNavPicker: "Дата",
+        navLabel: "Период",
+        navLabelColorDesc: "Цвет периода между стрелками.",
+        navLabelFontDesc: "Шрифт периода между стрелками.",
+        navButtons: "Кнопки навигации",
+        navButtonColorDesc: "Цвет текста и значков стрелок, кнопок режима и кнопки календаря.",
+        navButtonBackground: "Фон",
+        navButtonBackgroundDesc: "Фон этих кнопок.",
+        navActiveColor: "Цвет выбранного",
+        navActiveColorDesc: "Цвет текста выбранного режима и кнопки календаря, пока открыт выбор даты.",
+        navActiveBackground: "Фон выбранного",
+        navActiveBackgroundDesc: "Фон выбранного режима и кнопки календаря, пока открыт выбор даты.",
+        navButtonHeight: "Высота",
+        navButtonHeightDesc: "Высота каждой кнопки на панели, например «26px». Пусто - 26px.",
+        navButtonFontDesc: "Шрифт букв на кнопках День, Неделя, Месяц и Год.",
         timelineLineHeading: "Линия таймлайна",
         timelineLineWidth: "Толщина",
         timelineLineWidthDesc: "Толщина горизонтальной линии оси, напр. «4px».",
@@ -4669,7 +5403,7 @@
           "Добавляет в конце краткую дату в скобках, напр. «...через 3 дня (6 авг.)». Скрывается в день самого события, так как перед этим предложение уже заканчивается словами «...сегодня».",
         timelineShowTime: "Показывать время",
         timelineShowTimeDesc:
-          "Добавляет в тех же скобках собственный временной диапазон события внешнего календаря, напр. «...через 3 дня (14:00–15:00)». Показывается только для событий внешнего календаря с указанным временем (не для событий на весь день). Формат времени зависит от языка Home Assistant.",
+          "Добавляет в тех же скобках собственный временной диапазон события внешнего календаря, напр. «...через 3 дня (14:00–15:00)». Показывается только для событий внешнего календаря с указанным временем (не для событий на весь день). Формат времени зависит от языка Home Assistant. Разовое событие со временем тоже показывает его здесь.",
         timelineShowLocation: "Показывать место",
         timelineShowLocationDesc:
           "Добавляет в тех же скобках собственное место события внешнего календаря. Показывается только для событий внешнего календаря, для которых оно указано.",
@@ -4705,6 +5439,26 @@
         visibilityHeading: "Показать / Скрыть",
         hideCardTitle: "Скрыть",
         hideCardTitleDesc: "Скрыть собственный заголовок карточки, даже если он задан выше",
+        buttonsHeading: "Кнопки",
+        textFormatHeading: "Текст и формат",
+        buttonsGroupDesc: "Как выглядят плюс рядом с заголовком, карандаш и корзина в строке. Каждую из трёх настраивают отдельно ниже; пустое поле оставляет встроенный вид.",
+        buttonAdd: "Добавление",
+        buttonEdit: "Изменение",
+        buttonDelete: "Удаление",
+        buttonElementDesc: "Знак на этой кнопке, её размер и два цвета.",
+        buttonIcon: "Значок",
+        buttonIconDesc: "Знак на этой кнопке, например «mdi:plus». Пустое поле - встроенный знак.",
+        buttonSize: "Размер",
+        buttonSizeDesc: "Ширина и высота этой кнопки, например «28px». Знак растёт вместе с ней, а строка растёт вместе с кнопкой выше себя. Пустое поле - 28px для плюса, 26px для двух в строке и меньше там, где сама строка меньше.",
+        buttonColorDesc: "Цвет знака на этой кнопке, пока на неё ничто не указывает. Пустое поле - второстепенный цвет текста темы.",
+        buttonHoverColor: "Цвет при наведении",
+        buttonHoverColorDesc: "Цвет знака, пока указатель находится над этой кнопкой или на ней клавиатура. Пустое поле - акцентный цвет темы, а для корзины её цвет ошибки, которым та говорит, что делает.",
+        addButton: "Добавить событие",
+        addButtonDesc: "Плюс справа от заголовка карточки, который добавляет событие через форму интеграции, не покидая панель - те же шаги, что и «Добавить запись» в Настройки → Интеграции. Home Assistant разрешает добавлять записи только администраторам; остальные кнопку не видят.",
+        editButtons: "Изменить и удалить событие",
+        editButtonsDesc: "Карандаш и корзина в конце каждой строки события, в обоих макетах, чтобы изменить это событие через форму интеграции или удалить его после подтверждения - не покидая панель. Они всплывают над концом строки, пока указатель находится над ней, и не занимают собственного места. Только для администраторов, как и плюс рядом с заголовком; остальные не видят ни того, ни другого.",
+        editOnClick: "Показывать по щелчку",
+        editOnClickDesc: "Показывает карандаш и корзину по щелчку на строке, а не при наведении указателя - так до них можно добраться и на телефоне или планшете, где наведения нет. Щелчок по такой строке больше не выполняет действие при нажатии (по умолчанию - сведения о событии); действие при удержании остаётся. Ещё один щелчок по строке или щелчок в любом другом месте снова их скрывает.",
         noEventsText: "Текст без событий",
         noEventsTextDesc:
           "Что показывает карточка, когда список пуст (оставьте пустым для текста по умолчанию).",
@@ -4748,7 +5502,7 @@
         columnTypeLocation: "Место",
         columnTypeDescription: "Описание",
         columnTypeTimeDesc:
-          "Добавляет собственный временной диапазон события внешнего календаря, например «...15:00–17:00». Отображается только для события с указанным временем (не на весь день) во внешнем календаре.",
+          "Добавляет собственный временной диапазон события внешнего календаря, например «...15:00–17:00». Отображается только для события с указанным временем (не на весь день) во внешнем календаре. Разовое событие со временем тоже показывает его здесь.",
         columnTypeLocationDesc:
           "Добавляет собственное место события внешнего календаря. Отображается, только если у события внешнего календаря оно указано.",
         columnTypeDescriptionDesc:
@@ -5064,6 +5818,38 @@
       timelineCollapse: "Mindre",
       foldShowMore: "Visa {count} till",
       foldShowLess: "Visa färre",
+      // Calendar navigation (see calendar_nav in defaultConfig): the three
+      // mode buttons' own letter and full name, the arrows' tooltips, the
+      // date picker's, and what an empty period says.
+      navModeShort: { day: "D", week: "V", month: "M", year: "Å" },
+      navModes: { day: "Dag", week: "Vecka", month: "Månad", year: "År" },
+      navPrev: { day: "Föregående dag", week: "Föregående vecka", month: "Föregående månad", year: "Föregående år" },
+      navNext: { day: "Nästa dag", week: "Nästa vecka", month: "Nästa månad", year: "Nästa år" },
+      navPickDate: "Gå till ett datum",
+      noEventsRange: "Inga händelser under denna period",
+      // The period label's tooltip, and the search field's placeholder and
+      // empty line.
+      navToday: "Tillbaka till i dag",
+      searchPlaceholder: "Sök",
+      searchNoMatch: "Inga träffar",
+      // The "+" beside the title (see show_add_button) and its dialog; the
+      // steps inside it speak with the integration's own translations.
+      addEvent: "Lägg till händelse",
+      addSubmit: "Spara",
+      addCancel: "Avbryt",
+      addClose: "Stäng",
+      addCreated: (title) => `${title} tillagd`,
+      addFailed: "Händelsen kunde inte läggas till",
+      // The pencil and the trash can at the end of a row (see
+      // show_edit_buttons) and their dialogs.
+      editEvent: "Redigera händelse",
+      deleteEvent: "Ta bort händelse",
+      deleteConfirm: (name) => `Ta bort "${name}"?`,
+      deleteExplain: "Det tar bort händelsen från Home Assistant.",
+      deleteButton: "Ta bort",
+      editSaved: "Ändringar sparade",
+      editFailed: "Ändringarna kunde inte sparas",
+      deleteFailed: "Händelsen kunde inte tas bort",
       timelineMore: "Mer",
       types: {
         birthday: "Födelsedag",
@@ -5152,7 +5938,7 @@
         titleDesc: "Egen titeltext för kortet (lämna tomt för standardtiteln)",
         titlePlaceholder: "t.ex. Kommande händelser",
         count: "Antal händelser",
-        countDesc: "Det totala antalet händelser som visas på kortet",
+        countDesc: "Det totala antalet händelser som visas på kortet. Med kalendernavigering på begränsar det listan som kortet öppnas med; en period man bläddrat till visar allt den innehåller.",
         todayOnly: "Endast idag",
         todayOnlyDesc: "Ignorera alla andra filter nedan och visa endast dagens händelser",
         nextEventDayOnly: "Endast nästa händelsedag",
@@ -5160,6 +5946,8 @@
           "Visa endast händelser för den närmaste dagen - idag, om sådana finns, annars nästa dag med händelser (eventuellt fler än en)",
         daysAhead: "Dagar framåt (0 = obegränsat)",
         daysAheadDesc: "Visa endast händelser inom detta antal dagar (0 = ingen gräns)",
+        hideFinishedToday: "Det som är över försvinner",
+        hideFinishedTodayDesc: "Tar bort en händelse från i dag från kortet så snart dess sluttid har passerat - ett möte från 14 till 15 är borta klockan 15, och ett med en start men utan slut i samma stund som det börjar. Raden försvinner av sig själv, utan att vänta på något annat. Händelser utan tid stannar tills dagen är slut, och den som bläddrar genom perioder med kalendernavigeringen ser ändå hela perioden. På visar listan det som fortfarande återstår.",
         daysPast: "Dagar bakåt (0 = endast idag)",
         daysPastDesc: "Hur många dagar bakåt en händelse fortfarande räknas som aktuell (0 = endast idag)",
         soonDays: "\"Snart\"-tröskel (dagar)",
@@ -5197,6 +5985,35 @@
           "Visar bara de första händelserna och lägger resten bakom en pil. Ett kort med fast höjd slutar då vid vikningen i stället för att få en rullningslist. Endast i listlayouten - tidslinjen har sin egen ”Detaljer”.",
         collapseAfter: "Synliga händelser",
         collapseAfterDesc: "Hur många som syns innan resten måste fällas ut.",
+        calendarNav: "Kalendernavigering",
+        calendarNavDesc:
+          "En rad under rubriken med pilar och den visade perioden - en dag, vecka eller månad i taget. Tills raden används visar kortet sin vanliga lista: det som kommer, enligt Inställningar → Händelser och Period, högst antalet händelser. Pilarna och datumväljaren visar sedan en period i taget - hela, med förflutna händelser - och en knapp Dag, Vecka eller Månad öppnar listan på nytt i det läget.",
+        calendarNavMode: "Öppnas med",
+        calendarNavModeDesc:
+          "Vilken period raden börjar i - i dag, den här veckan eller den här månaden - och alltså vad pilarna bläddrar med. Reglagen bredvid lägger till knappar på raden: Dag, Vecka och Månad, som var och en öppnar listan på nytt i det läget, och datumväljaren. Månad är på från början, så att det finns en väg tillbaka efter bläddring. Att bläddra eller byta på själva kortet är en vy, inte en inställning, och sparas inte.",
+        countdownUnits: "Nedräkning",
+        countdownUnitsDesc:
+          "Hur ett avstånd i dagar skrivs: alltid i dagar, eller från två veckor i veckor, månader och år - ”om 3 veckor”, ”för 2 månader sedan”. Gäller kolumnen Nedräkning, platshållaren {when} och Timeline.",
+        countdownUnitsDays: "Dagar",
+        countdownUnitsAuto: "Veckor, månader och år",
+        showSearch: "Sökfält",
+        showSearchDesc:
+          "Ett fält under rubriken - och under kalendernavigeringen, om den är på - som filtrerar listan medan du skriver, på namn, efternamn och typ. Det du skriver sparas inte.",
+        calendarNavPicker: "Datum",
+        navLabel: "Period",
+        navLabelColorDesc: "Färg på perioden mellan pilarna.",
+        navLabelFontDesc: "Typsnitt för perioden mellan pilarna.",
+        navButtons: "Navigeringsknappar",
+        navButtonColorDesc: "Text- och ikonfärg för pilarna, lägesknapparna och kalenderknappen.",
+        navButtonBackground: "Bakgrund",
+        navButtonBackgroundDesc: "Bakgrund för de knapparna.",
+        navActiveColor: "Vald färg",
+        navActiveColorDesc: "Textfärg för det valda läget, och för kalenderknappen medan väljaren är öppen.",
+        navActiveBackground: "Vald bakgrund",
+        navActiveBackgroundDesc: "Bakgrund för det valda läget, och för kalenderknappen medan väljaren är öppen.",
+        navButtonHeight: "Höjd",
+        navButtonHeightDesc: "Höjd på varje knapp i raden, t.ex. ”26px”. Tom betyder 26px.",
+        navButtonFontDesc: "Typsnitt för bokstäverna på knapparna Dag, Vecka, Månad och År.",
         timelineLineHeading: "Tidslinje",
         timelineLineWidth: "Tjocklek",
         timelineLineWidthDesc: "Tjocklek på den horisontella axellinjen, t.ex. \"4px\".",
@@ -5224,7 +6041,7 @@
           "Lägger till det korta datumet inom parentes i slutet, t.ex. \"...är om 3 dagar (6 aug)\". Döljs på själva dagen, eftersom meningen redan slutar med \"...är idag\" precis innan.",
         timelineShowTime: "Visa tid",
         timelineShowTimeDesc:
-          "Lägger till en extern kalenderhändelses eget tidsintervall inom samma parentes, t.ex. \"...är om 3 dagar (14:00–15:00)\". Visas endast för en tidsbestämd (icke heldags) extern kalenderhändelse. Tidsformatet följer Home Assistants språkinställning.",
+          "Lägger till en extern kalenderhändelses eget tidsintervall inom samma parentes, t.ex. \"...är om 3 dagar (14:00–15:00)\". Visas endast för en tidsbestämd (icke heldags) extern kalenderhändelse. Tidsformatet följer Home Assistants språkinställning. En engångshändelse med tid visar den här också.",
         timelineShowLocation: "Visa plats",
         timelineShowLocationDesc:
           "Lägger till en extern kalenderhändelses egen plats inom samma parentes. Visas endast för en extern kalenderhändelse som har en plats angiven.",
@@ -5260,6 +6077,26 @@
         visibilityHeading: "Visa / Dölj",
         hideCardTitle: "Dölj",
         hideCardTitleDesc: "Dölj kortets egen titel, även om den är inställd ovan",
+        buttonsHeading: "Knappar",
+        textFormatHeading: "Text och format",
+        buttonsGroupDesc: "Hur plustecknet bredvid rubriken och radens penna och papperskorg ser ut. Var och en av de tre ställs in för sig nedan; ett tomt fält behåller det inbyggda utseendet.",
+        buttonAdd: "Lägg till",
+        buttonEdit: "Redigera",
+        buttonDelete: "Ta bort",
+        buttonElementDesc: "Tecknet på den här knappen, hur stor den är och dess två färger.",
+        buttonIcon: "Ikon",
+        buttonIconDesc: "Tecknet på den här knappen, till exempel ”mdi:plus”. Tomt blir det det inbyggda.",
+        buttonSize: "Storlek",
+        buttonSizeDesc: "Hur bred och hög den här knappen är, till exempel ”28px”. Tecknet växer med den, och en rad växer med en knapp som är högre än raden själv. Tomt är det 28px för plustecknet, 26px för radens två och mindre där raden själv är mindre.",
+        buttonColorDesc: "Färgen på tecknet på den här knappen så länge inget pekar på den. Tomt är det temats sekundära textfärg.",
+        buttonHoverColor: "Färg när pekaren är över",
+        buttonHoverColorDesc: "Färgen på tecknet så länge pekaren är över den här knappen, eller tangentbordet står på den. Tomt är det temats accentfärg - för papperskorgen dess felfärg, som den säger vad den gör med.",
+        addButton: "Lägg till händelse",
+        addButtonDesc: "Ett + till höger om kortets rubrik som lägger till en händelse via integrationens eget formulär utan att lämna instrumentpanelen - samma steg som Lägg till post under Inställningar → Integrationer. Home Assistant låter bara administratörer lägga till poster; andra ser ingen knapp.",
+        editButtons: "Redigera och ta bort händelse",
+        editButtonsDesc: "En penna och en papperskorg i slutet av varje händelserad, i båda layouterna, för att ändra händelsen via integrationens eget formulär eller ta bort den efter bekräftelse - utan att lämna instrumentpanelen. De svävar över radens slut så länge pekaren är över raden och tar ingen egen plats. Bara för administratörer, som plustecknet bredvid rubriken; andra ser ingetdera.",
+        editOnClick: "Visa vid klick",
+        editOnClickDesc: "Visar pennan och papperskorgen med ett klick på raden i stället för när pekaren vilar över den - så når du dem även på telefon och surfplatta, där det inte finns någon pekare. Ett klick på en sådan rad kör då inte längre åtgärden vid tryck (som standard händelsens detaljer); åtgärden vid tryck och håll finns kvar. Ett klick till på raden, eller ett klick någon annanstans, döljer dem igen.",
         noEventsText: "Text utan händelser",
         noEventsTextDesc:
           "Vad kortet visar när det inte finns något att lista (lämna tomt för standardtexten).",
@@ -5303,7 +6140,7 @@
         columnTypeLocation: "Plats",
         columnTypeDescription: "Beskrivning",
         columnTypeTimeDesc:
-          "Lägg till den externa kalenderhändelsens egen tidsperiod, t.ex. \"...03:00 PM–05:00 PM\". Visas bara för en tidsbestämd (icke heldags-) extern kalenderhändelse.",
+          "Lägg till den externa kalenderhändelsens egen tidsperiod, t.ex. \"...03:00 PM–05:00 PM\". Visas bara för en tidsbestämd (icke heldags-) extern kalenderhändelse. En engångshändelse med tid visar den här också.",
         columnTypeLocationDesc:
           "Lägg till den externa kalenderhändelsens egen plats. Visas bara för en extern kalenderhändelse som har en plats angiven.",
         columnTypeDescriptionDesc:
@@ -5620,6 +6457,38 @@
       timelineCollapse: "收起",
       foldShowMore: "再显示 {count} 条",
       foldShowLess: "收起",
+      // Calendar navigation (see calendar_nav in defaultConfig): the three
+      // mode buttons' own letter and full name, the arrows' tooltips, the
+      // date picker's, and what an empty period says.
+      navModeShort: { day: "日", week: "周", month: "月", year: "年" },
+      navModes: { day: "日", week: "周", month: "月", year: "年" },
+      navPrev: { day: "前一天", week: "上一周", month: "上个月", year: "上一年" },
+      navNext: { day: "后一天", week: "下一周", month: "下个月", year: "下一年" },
+      navPickDate: "跳转到日期",
+      noEventsRange: "此时间段内没有事件",
+      // The period label's tooltip, and the search field's placeholder and
+      // empty line.
+      navToday: "回到今天",
+      searchPlaceholder: "搜索",
+      searchNoMatch: "没有匹配项",
+      // The "+" beside the title (see show_add_button) and its dialog; the
+      // steps inside it speak with the integration's own translations.
+      addEvent: "添加事件",
+      addSubmit: "保存",
+      addCancel: "取消",
+      addClose: "关闭",
+      addCreated: (title) => `已添加 ${title}`,
+      addFailed: "无法添加事件",
+      // The pencil and the trash can at the end of a row (see
+      // show_edit_buttons) and their dialogs.
+      editEvent: "编辑事件",
+      deleteEvent: "删除事件",
+      deleteConfirm: (name) => `删除“${name}”？`,
+      deleteExplain: "这会从 Home Assistant 中移除该事件。",
+      deleteButton: "删除",
+      editSaved: "更改已保存",
+      editFailed: "无法保存更改",
+      deleteFailed: "无法删除事件",
       timelineMore: "更多",
       types: {
         birthday: "生日",
@@ -5710,7 +6579,7 @@
         titleDesc: "卡片的自定义标题文本（留空使用默认标题）",
         titlePlaceholder: "例如：即将到来的事件",
         count: "事件数量",
-        countDesc: "卡片上显示的事件总数",
+        countDesc: "卡片上显示的事件总数。开启日历导航时，它限制卡片打开时的列表；翻到的时间段显示其全部内容。",
         todayOnly: "仅今天",
         todayOnlyDesc: "忽略以下所有其他筛选条件，仅显示今天发生的事件",
         nextEventDayOnly: "仅下一个事件日",
@@ -5718,6 +6587,8 @@
           "仅显示最近一天的事件——如果有的话是今天，否则是下一个有事件的日子（可能不止一个）",
         daysAhead: "提前天数（0 = 不限）",
         daysAheadDesc: "仅显示在此天数内发生的事件（0 = 不限）",
+        hideFinishedToday: "已结束的隐藏",
+        hideFinishedTodayDesc: "今天的事件一旦过了结束时间就从卡片上移除：14 点至 15 点的约会在 15 点消失，只有开始时间而没有结束时间的事件则在开始的那一刻消失。该行会自行消失，无需等待其他任何事情。没有时间的事件会保留到当天结束；用日历导航翻阅时间段时，该时间段仍会完整显示。开启后，列表显示的是尚未到来的事件。",
         daysPast: "过去天数（0 = 仅今天）",
         daysPastDesc: "事件在过去多少天内仍算作最近（0 = 仅今天）",
         soonDays: "“即将到来”阈值（天）",
@@ -5755,6 +6626,35 @@
           "只显示最前面的几个事件，其余的收在箭头后面。固定高度的卡片会在折叠处结束，而不是出现滚动条。仅适用于列表布局——时间线有自己的「详情」。",
         collapseAfter: "显示的事件数",
         collapseAfterDesc: "在需要展开其余部分之前，屏幕上显示多少个。",
+        calendarNav: "日历导航",
+        calendarNavDesc:
+          "在标题下方显示一栏：箭头和所显示的时间段，每次一天、一周或一个月。在使用这一栏之前，卡片显示平常的列表：按“设置 → 事件”和“时间段”中的设置显示即将到来的事件，最多为事件数量。之后箭头和日期选择器每次显示一个时间段的全部事件，包括已过去的；而日、周或月按钮会以该模式重新打开列表。",
+        calendarNavMode: "打开时显示",
+        calendarNavModeDesc:
+          "这一栏从哪个时间段开始：今天、本周或本月，箭头也按此翻页。旁边的开关为这一栏添加按钮：日、周、月（各自以该模式重新打开列表）以及日期选择器。月默认开启，以便翻页后能回到起点。在卡片上翻页或切换只是查看方式，不是设置，不会保存。",
+        countdownUnits: "倒计时",
+        countdownUnitsDesc:
+          "天数距离的写法：始终以天为单位，或从两周起改用周、月和年——“3 周后”“2 个月前”。适用于倒计时列、{when} 占位符和时间轴。",
+        countdownUnitsDays: "天",
+        countdownUnitsAuto: "周、月和年",
+        showSearch: "搜索框",
+        showSearchDesc:
+          "标题下方（开启日历导航时在其下方）的一个输入框，输入时按姓名、姓氏和类型筛选列表。输入内容不会保存。",
+        calendarNavPicker: "日期",
+        navLabel: "时间段",
+        navLabelColorDesc: "箭头之间时间段的颜色。",
+        navLabelFontDesc: "箭头之间时间段的字体。",
+        navButtons: "导航按钮",
+        navButtonColorDesc: "箭头、模式按钮和日历按钮的文字及图标颜色。",
+        navButtonBackground: "背景",
+        navButtonBackgroundDesc: "这些按钮的背景。",
+        navActiveColor: "选中颜色",
+        navActiveColorDesc: "选中模式的文字颜色，以及日期选择器打开时日历按钮的文字颜色。",
+        navActiveBackground: "选中背景",
+        navActiveBackgroundDesc: "选中模式的背景，以及日期选择器打开时日历按钮的背景。",
+        navButtonHeight: "高度",
+        navButtonHeightDesc: "这一栏中每个按钮的高度，例如“26px”。留空为 26px。",
+        navButtonFontDesc: "日、周、月、年按钮上字符的字体。",
         timelineLineHeading: "时间轴线",
         timelineLineWidth: "粗细",
         timelineLineWidthDesc: "水平轴线的粗细，例如「4px」。",
@@ -5778,7 +6678,7 @@
         timelineShowDateDesc: "在末尾以括号附加简短日期，例如「...还有 3 天（8月6日）」。当天会自动隐藏，因为句子前面已经以「...就在今天」结尾。",
         timelineShowTime: "显示时间",
         timelineShowTimeDesc:
-          "在同一括号内附加外部日历事件自身的时间范围，例如「...还有 3 天（14:00-15:00）」。仅在外部日历事件为定时（非全天）事件时显示。时间格式遵循 Home Assistant 的语言设置。",
+          "在同一括号内附加外部日历事件自身的时间范围，例如「...还有 3 天（14:00-15:00）」。仅在外部日历事件为定时（非全天）事件时显示。时间格式遵循 Home Assistant 的语言设置。带有时间的一次性事件也会在此显示。",
         timelineShowLocation: "显示地点",
         timelineShowLocationDesc: "在同一括号内附加外部日历事件自身的地点。仅在该外部日历事件设置了地点时显示。",
         timelineShowDescription: "显示描述",
@@ -5809,6 +6709,26 @@
         visibilityHeading: "显示 / 隐藏",
         hideCardTitle: "隐藏",
         hideCardTitleDesc: "隐藏卡片自身的标题，即使上方已设置",
+        buttonsHeading: "按钮",
+        textFormatHeading: "文字与格式",
+        buttonsGroupDesc: "标题旁的加号以及行内铅笔和垃圾桶的外观。下面分别设置这三个按钮；留空则保持内置外观。",
+        buttonAdd: "添加",
+        buttonEdit: "编辑",
+        buttonDelete: "删除",
+        buttonElementDesc: "此按钮上的图形、大小和两种颜色。",
+        buttonIcon: "图标",
+        buttonIconDesc: "此按钮上的图形，例如“mdi:plus”。留空则使用内置图形。",
+        buttonSize: "大小",
+        buttonSizeDesc: "此按钮的宽度和高度，例如“28px”。图形随之放大，行也会随高于自身的按钮一起变高。留空时加号为 28px，行内两个按钮为 26px，行本身较小的地方还会更小。",
+        buttonColorDesc: "没有指向此按钮时，按钮图形的颜色。留空则使用主题的次要文字颜色。",
+        buttonHoverColor: "悬停颜色",
+        buttonHoverColorDesc: "指针悬停在此按钮上或键盘焦点在其上时，图形的颜色。留空则使用主题的强调色；垃圾桶使用主题的错误颜色，以此表明它的作用。",
+        addButton: "添加事件",
+        addButtonDesc: "卡片标题右侧的 + 号，通过集成自己的表单添加事件，无需离开仪表盘，步骤与“设置 → 集成”中的“添加条目”相同。Home Assistant 只允许管理员添加条目，其他人看不到该按钮。",
+        editButtons: "编辑和删除事件",
+        editButtonsDesc: "每个事件行末尾的铅笔和垃圾桶，两种布局都有，用于通过集成自己的表单修改该事件，或在确认后将其删除，无需离开仪表盘。指针悬停在行上时，它们浮现在行尾之上，不占用额外空间。与标题旁的 + 一样仅限管理员，其他人两者都看不到。",
+        editOnClick: "点击时显示",
+        editOnClickDesc: "点击该行时显示铅笔和垃圾桶，而不是在指针悬停时显示 - 这样在没有悬停的手机和平板上也能使用。此时点击这样的行不再执行点击操作（默认是事件详情）；长按操作仍然有效。再次点击该行或点击其他任何位置，它们就会重新隐藏。",
         noEventsText: "无事件时的文字",
         noEventsTextDesc:
           "卡片没有内容可显示时的文字（留空则使用默认文字）。",
@@ -5852,7 +6772,7 @@
         columnTypeLocation: "地点",
         columnTypeDescription: "描述",
         columnTypeTimeDesc:
-          "附加外部日历事件自身的时间范围，例如「...03:00 PM-05:00 PM」。仅在外部日历事件为定时（非全天）事件时显示。",
+          "附加外部日历事件自身的时间范围，例如「...03:00 PM-05:00 PM」。仅在外部日历事件为定时（非全天）事件时显示。带有时间的一次性事件也会在此显示。",
         columnTypeLocationDesc:
           "附加外部日历事件自身的地点。仅在该外部日历事件设置了地点时显示。",
         columnTypeDescriptionDesc:
@@ -6169,6 +7089,38 @@
       timelineCollapse: "Méně",
       foldShowMore: "Zobrazit dalších {count}",
       foldShowLess: "Zobrazit méně",
+      // Calendar navigation (see calendar_nav in defaultConfig): the three
+      // mode buttons' own letter and full name, the arrows' tooltips, the
+      // date picker's, and what an empty period says.
+      navModeShort: { day: "D", week: "T", month: "M", year: "R" },
+      navModes: { day: "Den", week: "Týden", month: "Měsíc", year: "Rok" },
+      navPrev: { day: "Předchozí den", week: "Předchozí týden", month: "Předchozí měsíc", year: "Předchozí rok" },
+      navNext: { day: "Další den", week: "Další týden", month: "Další měsíc", year: "Další rok" },
+      navPickDate: "Přejít na datum",
+      noEventsRange: "V tomto období žádné události",
+      // The period label's tooltip, and the search field's placeholder and
+      // empty line.
+      navToday: "Zpět na dnešek",
+      searchPlaceholder: "Hledat",
+      searchNoMatch: "Nic nenalezeno",
+      // The "+" beside the title (see show_add_button) and its dialog; the
+      // steps inside it speak with the integration's own translations.
+      addEvent: "Přidat událost",
+      addSubmit: "Uložit",
+      addCancel: "Zrušit",
+      addClose: "Zavřít",
+      addCreated: (title) => `${title} přidáno`,
+      addFailed: "Událost se nepodařilo přidat",
+      // The pencil and the trash can at the end of a row (see
+      // show_edit_buttons) and their dialogs.
+      editEvent: "Upravit událost",
+      deleteEvent: "Smazat událost",
+      deleteConfirm: (name) => `Smazat „${name}“?`,
+      deleteExplain: "Tím se událost odstraní z Home Assistanta.",
+      deleteButton: "Smazat",
+      editSaved: "Změny uloženy",
+      editFailed: "Změny se nepodařilo uložit",
+      deleteFailed: "Událost se nepodařilo smazat",
       timelineMore: "Více",
       types: {
         birthday: "Narozeniny",
@@ -6257,7 +7209,7 @@
         titleDesc: "Vlastní text názvu karty (ponechte prázdné pro výchozí název)",
         titlePlaceholder: "např. Nadcházející události",
         count: "Počet událostí",
-        countDesc: "Celkový počet událostí zobrazených na kartě",
+        countDesc: "Celkový počet událostí zobrazených na kartě. Při zapnuté navigaci v kalendáři omezuje seznam, se kterým se karta otevře; období, ke kterému se nalistovalo, zobrazí vše, co obsahuje.",
         todayOnly: "Pouze dnes",
         todayOnlyDesc: "Ignorovat všechny ostatní filtry níže a zobrazit pouze dnešní události",
         nextEventDayOnly: "Pouze den nejbližší události",
@@ -6265,6 +7217,8 @@
           "Zobrazit pouze události z jediného nejbližšího dne - dnešního, pokud existuje, jinak dalšího dne s událostmi (případně více než jednou)",
         daysAhead: "Dní dopředu (0 = neomezeno)",
         daysAheadDesc: "Zobrazit pouze události v tomto počtu dní (0 = bez omezení)",
+        hideFinishedToday: "Co je za námi, zmizí",
+        hideFinishedTodayDesc: "Sundá dnešní událost z karty, jakmile uplyne čas jejího konce - schůzka od 14 do 15 je v 15 pryč a ta, která má začátek bez konce, ve chvíli, kdy začíná. Řádek zmizí sám, aniž by čekal na cokoli jiného. Události bez času zůstávají do konce dne, a kdo listuje obdobími přes kalendářní navigaci, vidí období stejně celé. Zapnuto - seznam ukazuje to, co teprve přijde.",
         daysPast: "Dní zpět (0 = pouze dnes)",
         daysPastDesc: "Kolik dní zpět se událost stále počítá jako nedávná (0 = pouze dnes)",
         soonDays: "Práh „brzy“ (dny)",
@@ -6302,6 +7256,35 @@
           "Zobrazí jen první události a zbytek schová za šipku. Karta s pevnou výškou pak končí u sbalení, místo aby dostala posuvník. Jen v rozvržení seznamu - časová osa má vlastní „Podrobnosti“.",
         collapseAfter: "Viditelné události",
         collapseAfterDesc: "Kolik jich je na obrazovce, než je nutné zbytek rozbalit.",
+        calendarNav: "Navigace v kalendáři",
+        calendarNavDesc:
+          "Lišta pod názvem se šipkami a zobrazeným obdobím - vždy jeden den, týden nebo měsíc. Dokud lišta není použita, karta zobrazuje svůj obvyklý seznam: nadcházející události podle Nastavení → Události a Období, nejvýše počet událostí. Šipky a výběr data pak zobrazují vždy jedno období - celé, včetně minulých událostí - a tlačítko Den, Týden nebo Měsíc znovu otevře seznam v tomto režimu.",
+        calendarNavMode: "Otevře se s",
+        calendarNavModeDesc:
+          "Ve kterém období lišta začíná - dnešek, tento týden nebo tento měsíc - a tedy o kolik listují šipky. Přepínače vedle přidávají na lištu tlačítka: Den, Týden a Měsíc, z nichž každé znovu otevře seznam v tomto režimu, a výběr data. Měsíc je zapnutý od začátku, aby po listování byla cesta zpět. Listování a přepínání na samotné kartě je jen zobrazení, ne nastavení, a neukládá se.",
+        countdownUnits: "Odpočet",
+        countdownUnitsDesc:
+          "Jak se zapisuje vzdálenost ve dnech: vždy ve dnech, nebo od dvou týdnů v týdnech, měsících a letech - „za 3 týdny“, „před 2 měsíci“. Platí pro sloupec Odpočet, zástupný symbol {when} a Timeline.",
+        countdownUnitsDays: "Dny",
+        countdownUnitsAuto: "Týdny, měsíce a roky",
+        showSearch: "Vyhledávací pole",
+        showSearchDesc:
+          "Pole pod názvem - a pod navigací v kalendáři, je-li zapnutá -, které při psaní filtruje seznam podle jména, příjmení a typu. Zadaný text se neukládá.",
+        calendarNavPicker: "Datum",
+        navLabel: "Období",
+        navLabelColorDesc: "Barva období mezi šipkami.",
+        navLabelFontDesc: "Písmo období mezi šipkami.",
+        navButtons: "Navigační tlačítka",
+        navButtonColorDesc: "Barva textu a ikon šipek, tlačítek režimu a tlačítka kalendáře.",
+        navButtonBackground: "Pozadí",
+        navButtonBackgroundDesc: "Pozadí těchto tlačítek.",
+        navActiveColor: "Barva vybraného",
+        navActiveColorDesc: "Barva textu vybraného režimu a tlačítka kalendáře, dokud je výběr data otevřený.",
+        navActiveBackground: "Pozadí vybraného",
+        navActiveBackgroundDesc: "Pozadí vybraného režimu a tlačítka kalendáře, dokud je výběr data otevřený.",
+        navButtonHeight: "Výška",
+        navButtonHeightDesc: "Výška každého tlačítka na liště, např. „26px“. Prázdné znamená 26px.",
+        navButtonFontDesc: "Písmo písmen na tlačítkách Den, Týden, Měsíc a Rok.",
         timelineLineHeading: "Čára osy",
         timelineLineWidth: "Tloušťka",
         timelineLineWidthDesc: "Tloušťka vodorovné čáry osy, např. „4px“.",
@@ -6329,7 +7312,7 @@
           "Na konci přidá v závorce krátké datum, např. „...je za 3 dny (6. srp)“. V den samotné události je skryto, protože věta už těsně předtím končí slovy „...je dnes“.",
         timelineShowTime: "Zobrazit čas",
         timelineShowTimeDesc:
-          "Ve stejné závorce přidá vlastní časové rozmezí externí kalendářní události, např. „...je za 3 dny (14:00–15:00)“. Zobrazuje se pouze u časově vymezené (nikoli celodenní) externí kalendářní události. Formát času se řídí jazykem nastaveným v Home Assistant.",
+          "Ve stejné závorce přidá vlastní časové rozmezí externí kalendářní události, např. „...je za 3 dny (14:00–15:00)“. Zobrazuje se pouze u časově vymezené (nikoli celodenní) externí kalendářní události. Formát času se řídí jazykem nastaveným v Home Assistant. I jednorázová událost s časem ho zde zobrazí.",
         timelineShowLocation: "Zobrazit místo",
         timelineShowLocationDesc:
           "Ve stejné závorce přidá vlastní místo externí kalendářní události. Zobrazuje se pouze u externí kalendářní události, která má místo nastaveno.",
@@ -6365,6 +7348,26 @@
         visibilityHeading: "Zobrazit / Skrýt",
         hideCardTitle: "Skrýt",
         hideCardTitleDesc: "Skrýt vlastní název karty, i když je nastaven výše",
+        buttonsHeading: "Tlačítka",
+        textFormatHeading: "Text a formát",
+        buttonsGroupDesc: "Jak vypadá plus vedle názvu a tužka a koš v řádku. Každé ze tří se nastavuje níže zvlášť; prázdné pole ponechá vestavěný vzhled.",
+        buttonAdd: "Přidání",
+        buttonEdit: "Úpravy",
+        buttonDelete: "Mazání",
+        buttonElementDesc: "Znak na tomto tlačítku, jeho velikost a dvě barvy.",
+        buttonIcon: "Ikona",
+        buttonIconDesc: "Znak na tomto tlačítku, například „mdi:plus“. Prázdné pole znamená vestavěný znak.",
+        buttonSize: "Velikost",
+        buttonSizeDesc: "Šířka a výška tohoto tlačítka, například „28px“. Znak roste s ním a řádek roste s tlačítkem vyšším, než je sám. Prázdné pole znamená 28px pro plus, 26px pro dvě v řádku a méně tam, kde je řádek sám menší.",
+        buttonColorDesc: "Barva znaku na tomto tlačítku, dokud na ně nic neukazuje. Prázdné pole znamená druhotnou barvu textu motivu.",
+        buttonHoverColor: "Barva při najetí",
+        buttonHoverColorDesc: "Barva znaku, dokud je ukazatel nad tímto tlačítkem nebo je na něm klávesnice. Prázdné pole znamená barvu zvýraznění motivu - u koše jeho barvu chyby, kterou koš říká, co dělá.",
+        addButton: "Přidat událost",
+        addButtonDesc: "Plus vpravo od názvu karty, které přidá událost přes formulář integrace bez opuštění dashboardu - stejné kroky jako Přidat položku v Nastavení → Integrace. Home Assistant dovoluje přidávat položky jen správcům; ostatní tlačítko nevidí.",
+        editButtons: "Upravit a smazat událost",
+        editButtonsDesc: "Tužka a koš na konci každého řádku události, v obou rozloženích, pro změnu této události přes formulář integrace nebo její odstranění po potvrzení - bez opuštění dashboardu. Vznášejí se nad koncem řádku, dokud je nad ním ukazatel, a nezabírají žádné vlastní místo. Jen pro správce, stejně jako plus vedle názvu; ostatní nevidí ani jedno.",
+        editOnClick: "Zobrazit po kliknutí",
+        editOnClickDesc: "Zobrazí tužku a koš po kliknutí na řádek místo při najetí ukazatelem - tak se k nim dostanete i na telefonu a tabletu, kde se najet nedá. Kliknutí na takový řádek pak už nespustí akci při klepnutí (ve výchozím stavu podrobnosti události); akce při podržení zůstává. Další kliknutí na řádek nebo kliknutí kamkoli jinam je zase skryje.",
         noEventsText: "Text bez událostí",
         noEventsTextDesc:
           "Co karta zobrazí, když není co vypsat (ponechte prázdné pro výchozí text).",
@@ -6408,7 +7411,7 @@
         columnTypeLocation: "Místo",
         columnTypeDescription: "Popis",
         columnTypeTimeDesc:
-          "Přidá vlastní časové rozmezí externí kalendářní události, např. „...03:00 PM–05:00 PM“. Zobrazuje se pouze u časově vymezené (nikoli celodenní) externí kalendářní události.",
+          "Přidá vlastní časové rozmezí externí kalendářní události, např. „...03:00 PM–05:00 PM“. Zobrazuje se pouze u časově vymezené (nikoli celodenní) externí kalendářní události. I jednorázová událost s časem ho zde zobrazí.",
         columnTypeLocationDesc:
           "Přidá vlastní místo externí kalendářní události. Zobrazuje se pouze u externí kalendářní události, která má místo nastavené.",
         columnTypeDescriptionDesc:
@@ -6723,6 +7726,38 @@
       timelineCollapse: "Mindre",
       foldShowMore: "Vis {count} til",
       foldShowLess: "Vis færre",
+      // Calendar navigation (see calendar_nav in defaultConfig): the three
+      // mode buttons' own letter and full name, the arrows' tooltips, the
+      // date picker's, and what an empty period says.
+      navModeShort: { day: "D", week: "U", month: "M", year: "Å" },
+      navModes: { day: "Dag", week: "Uke", month: "Måned", year: "År" },
+      navPrev: { day: "Forrige dag", week: "Forrige uke", month: "Forrige måned", year: "Forrige år" },
+      navNext: { day: "Neste dag", week: "Neste uke", month: "Neste måned", year: "Neste år" },
+      navPickDate: "Gå til en dato",
+      noEventsRange: "Ingen hendelser i denne perioden",
+      // The period label's tooltip, and the search field's placeholder and
+      // empty line.
+      navToday: "Tilbake til i dag",
+      searchPlaceholder: "Søk",
+      searchNoMatch: "Ingen treff",
+      // The "+" beside the title (see show_add_button) and its dialog; the
+      // steps inside it speak with the integration's own translations.
+      addEvent: "Legg til hendelse",
+      addSubmit: "Lagre",
+      addCancel: "Avbryt",
+      addClose: "Lukk",
+      addCreated: (title) => `${title} lagt til`,
+      addFailed: "Hendelsen kunne ikke legges til",
+      // The pencil and the trash can at the end of a row (see
+      // show_edit_buttons) and their dialogs.
+      editEvent: "Rediger hendelse",
+      deleteEvent: "Slett hendelse",
+      deleteConfirm: (name) => `Slette «${name}»?`,
+      deleteExplain: "Dette fjerner hendelsen fra Home Assistant.",
+      deleteButton: "Slett",
+      editSaved: "Endringer lagret",
+      editFailed: "Endringene kunne ikke lagres",
+      deleteFailed: "Hendelsen kunne ikke slettes",
       timelineMore: "Mer",
       types: {
         birthday: "Bursdag",
@@ -6811,7 +7846,7 @@
         titleDesc: "Egen titteltekst for kortet (la stå tomt for standardtittelen)",
         titlePlaceholder: "f.eks. Kommende hendelser",
         count: "Antall hendelser",
-        countDesc: "Det totale antallet hendelser som vises på kortet",
+        countDesc: "Det totale antallet hendelser som vises på kortet. Med kalendernavigasjon på begrenser det listen kortet åpnes med; en periode man har bladd til, viser alt den inneholder.",
         todayOnly: "Bare i dag",
         todayOnlyDesc: "Ignorer alle andre filtre nedenfor og vis kun dagens hendelser",
         nextEventDayOnly: "Bare neste hendelsesdag",
@@ -6819,6 +7854,8 @@
           "Vis bare hendelser for den nærmeste dagen - i dag, hvis noen, ellers neste dag med hendelser (eventuelt flere enn én)",
         daysAhead: "Dager fremover (0 = ubegrenset)",
         daysAheadDesc: "Vis bare hendelser innen dette antallet dager (0 = ingen grense)",
+        hideFinishedToday: "Det som er over forsvinner",
+        hideFinishedTodayDesc: "Tar en hendelse fra i dag av kortet så snart sluttidspunktet er passert - en avtale fra 14 til 15 er borte klokken 15, og en med start uten slutt i det øyeblikket den begynner. Raden forsvinner av seg selv, uten å vente på noe annet. Hendelser uten klokkeslett blir til dagen er omme, og den som blar gjennom perioder med kalendernavigasjonen, ser uansett hele perioden. På viser listen det som fortsatt kommer.",
         daysPast: "Dager tilbake (0 = bare i dag)",
         daysPastDesc: "Hvor mange dager tilbake en hendelse fortsatt telles som nylig (0 = bare i dag)",
         soonDays: "«Snart»-terskel (dager)",
@@ -6856,6 +7893,35 @@
           "Viser bare de første hendelsene og legger resten bak en pil. Et kort med fast høyde slutter da ved bretten i stedet for å få et rullefelt. Bare i listeoppsettet - tidslinjen har sin egen «Detaljer».",
         collapseAfter: "Synlige hendelser",
         collapseAfterDesc: "Hvor mange som vises før resten må foldes ut.",
+        calendarNav: "Kalendernavigering",
+        calendarNavDesc:
+          "En rad under tittelen med piler og den viste perioden - én dag, uke eller måned om gangen. Til raden brukes, viser kortet sin vanlige liste: det som kommer, etter Innstillinger → Hendelser og Periode, høyst antall hendelser. Pilene og datovelgeren viser deretter én periode om gangen - hele, med forbigåtte hendelser - og en knapp Dag, Uke eller Måned åpner listen på nytt i den modusen.",
+        calendarNavMode: "Åpner med",
+        calendarNavModeDesc:
+          "Hvilken periode raden starter i - i dag, denne uken eller denne måneden - og dermed hva pilene blar med. Bryterne ved siden av legger til knapper på raden: Dag, Uke og Måned, som hver åpner listen på nytt i den modusen, og datovelgeren. Måned er på fra starten, så det finnes en vei tilbake etter blaing. Å bla eller bytte på selve kortet er en visning, ikke en innstilling, og lagres ikke.",
+        countdownUnits: "Nedtelling",
+        countdownUnitsDesc:
+          "Hvordan en avstand i dager skrives: alltid i dager, eller fra to uker i uker, måneder og år - «om 3 uker», «for 2 måneder siden». Gjelder kolonnen Nedtelling, plassholderen {when} og Timeline.",
+        countdownUnitsDays: "Dager",
+        countdownUnitsAuto: "Uker, måneder og år",
+        showSearch: "Søkefelt",
+        showSearchDesc:
+          "Et felt under tittelen - og under kalendernavigeringen, om den er på - som filtrerer listen mens du skriver, på navn, etternavn og type. Det du skriver lagres ikke.",
+        calendarNavPicker: "Dato",
+        navLabel: "Periode",
+        navLabelColorDesc: "Farge på perioden mellom pilene.",
+        navLabelFontDesc: "Skrift for perioden mellom pilene.",
+        navButtons: "Navigasjonsknapper",
+        navButtonColorDesc: "Tekst- og ikonfarge for pilene, modusknappene og kalenderknappen.",
+        navButtonBackground: "Bakgrunn",
+        navButtonBackgroundDesc: "Bakgrunn for disse knappene.",
+        navActiveColor: "Valgt farge",
+        navActiveColorDesc: "Tekstfarge for den valgte modusen, og for kalenderknappen mens velgeren er åpen.",
+        navActiveBackground: "Valgt bakgrunn",
+        navActiveBackgroundDesc: "Bakgrunn for den valgte modusen, og for kalenderknappen mens velgeren er åpen.",
+        navButtonHeight: "Høyde",
+        navButtonHeightDesc: "Høyde på hver knapp i raden, f.eks. «26px». Tom betyr 26px.",
+        navButtonFontDesc: "Skrift for bokstavene på knappene Dag, Uke, Måned og År.",
         timelineLineHeading: "Tidslinje",
         timelineLineWidth: "Tykkelse",
         timelineLineWidthDesc: "Tykkelse på den horisontale akselinjen, f.eks. «4px».",
@@ -6883,7 +7949,7 @@
           "Legger til den korte datoen i parentes til slutt, f.eks. «...er om 3 dager (6. aug)». Skjules på selve dagen, siden setningen allerede slutter med «...er i dag» rett før.",
         timelineShowTime: "Vis klokkeslett",
         timelineShowTimeDesc:
-          "Legger til en ekstern kalenderhendelses eget tidsrom i samme parentes, f.eks. «...er om 3 dager (14:00–15:00)». Vises bare for en tidsbestemt (ikke heldags) ekstern kalenderhendelse. Tidsformatet følger språkinnstillingen i Home Assistant.",
+          "Legger til en ekstern kalenderhendelses eget tidsrom i samme parentes, f.eks. «...er om 3 dager (14:00–15:00)». Vises bare for en tidsbestemt (ikke heldags) ekstern kalenderhendelse. Tidsformatet følger språkinnstillingen i Home Assistant. En engangshendelse med klokkeslett viser det her også.",
         timelineShowLocation: "Vis sted",
         timelineShowLocationDesc:
           "Legger til en ekstern kalenderhendelses eget sted i samme parentes. Vises bare for en ekstern kalenderhendelse som har et sted angitt.",
@@ -6919,6 +7985,26 @@
         visibilityHeading: "Vis / Skjul",
         hideCardTitle: "Skjul",
         hideCardTitleDesc: "Skjul kortets egen tittel, selv om den er angitt ovenfor",
+        buttonsHeading: "Knapper",
+        textFormatHeading: "Tekst og format",
+        buttonsGroupDesc: "Hvordan plusstegnet ved siden av tittelen og radens blyant og søppelkurv ser ut. Hver av de tre stilles inn for seg nedenfor; et tomt felt beholder det innebygde utseendet.",
+        buttonAdd: "Legg til",
+        buttonEdit: "Rediger",
+        buttonDelete: "Slett",
+        buttonElementDesc: "Tegnet på denne knappen, hvor stor den er og dens to farger.",
+        buttonIcon: "Ikon",
+        buttonIconDesc: "Tegnet på denne knappen, for eksempel «mdi:plus». Tomt blir det det innebygde.",
+        buttonSize: "Størrelse",
+        buttonSizeDesc: "Hvor bred og høy denne knappen er, for eksempel «28px». Tegnet vokser med den, og en rad vokser med en knapp som er høyere enn raden selv. Tomt er det 28px for plusstegnet, 26px for radens to og mindre der raden selv er mindre.",
+        buttonColorDesc: "Fargen på tegnet på denne knappen så lenge ingenting peker på den. Tomt er det temaets sekundære tekstfarge.",
+        buttonHoverColor: "Farge når pekeren er over",
+        buttonHoverColorDesc: "Fargen på tegnet så lenge pekeren er over denne knappen, eller tastaturet står på den. Tomt er det temaets aksentfarge - for søppelkurven feilfargen, som den sier hva den gjør med.",
+        addButton: "Legg til hendelse",
+        addButtonDesc: "Et + til høyre for korttittelen som legger til en hendelse via integrasjonens eget skjema uten å forlate dashbordet - samme steg som Legg til oppføring under Innstillinger → Integrasjoner. Home Assistant lar bare administratorer legge til oppføringer; andre ser ingen knapp.",
+        editButtons: "Rediger og slett hendelse",
+        editButtonsDesc: "En blyant og en søppelkurv på slutten av hver hendelsesrad, i begge oppsettene, for å endre hendelsen via integrasjonens eget skjema eller fjerne den etter bekreftelse - uten å forlate dashbordet. De svever over slutten av raden så lenge pekeren er over den, og tar ingen egen plass. Bare for administratorer, som plusstegnet ved siden av tittelen; andre ser ingen av dem.",
+        editOnClick: "Vis ved klikk",
+        editOnClickDesc: "Viser blyanten og søppelkurven med et klikk på raden i stedet for når pekeren hviler over den - slik når du dem også på telefon og nettbrett, der det ikke finnes noen peker. Et klikk på en slik rad kjører da ikke lenger handlingen ved trykk (som standard hendelsens detaljer); handlingen ved trykk og hold virker fortsatt. Et nytt klikk på raden, eller et klikk et annet sted, skjuler dem igjen.",
         noEventsText: "Tekst uten hendelser",
         noEventsTextDesc:
           "Hva kortet viser når det ikke er noe å liste opp (la stå tomt for standardteksten).",
@@ -6962,7 +8048,7 @@
         columnTypeLocation: "Sted",
         columnTypeDescription: "Beskrivelse",
         columnTypeTimeDesc:
-          "Legger til den eksterne kalenderhendelsens eget tidsrom, f.eks. «...03:00 PM–05:00 PM». Vises bare for en tidsbestemt (ikke heldags) ekstern kalenderhendelse.",
+          "Legger til den eksterne kalenderhendelsens eget tidsrom, f.eks. «...03:00 PM–05:00 PM». Vises bare for en tidsbestemt (ikke heldags) ekstern kalenderhendelse. En engangshendelse med klokkeslett viser det her også.",
         columnTypeLocationDesc:
           "Legger til den eksterne kalenderhendelsens eget sted. Vises bare for en ekstern kalenderhendelse som har et sted angitt.",
         columnTypeDescriptionDesc:
@@ -7277,6 +8363,38 @@
       timelineCollapse: "Mindre",
       foldShowMore: "Vis {count} mere",
       foldShowLess: "Vis færre",
+      // Calendar navigation (see calendar_nav in defaultConfig): the three
+      // mode buttons' own letter and full name, the arrows' tooltips, the
+      // date picker's, and what an empty period says.
+      navModeShort: { day: "D", week: "U", month: "M", year: "Å" },
+      navModes: { day: "Dag", week: "Uge", month: "Måned", year: "År" },
+      navPrev: { day: "Forrige dag", week: "Forrige uge", month: "Forrige måned", year: "Forrige år" },
+      navNext: { day: "Næste dag", week: "Næste uge", month: "Næste måned", year: "Næste år" },
+      navPickDate: "Gå til en dato",
+      noEventsRange: "Ingen begivenheder i denne periode",
+      // The period label's tooltip, and the search field's placeholder and
+      // empty line.
+      navToday: "Tilbage til i dag",
+      searchPlaceholder: "Søg",
+      searchNoMatch: "Ingen resultater",
+      // The "+" beside the title (see show_add_button) and its dialog; the
+      // steps inside it speak with the integration's own translations.
+      addEvent: "Tilføj begivenhed",
+      addSubmit: "Gem",
+      addCancel: "Annuller",
+      addClose: "Luk",
+      addCreated: (title) => `${title} tilføjet`,
+      addFailed: "Begivenheden kunne ikke tilføjes",
+      // The pencil and the trash can at the end of a row (see
+      // show_edit_buttons) and their dialogs.
+      editEvent: "Rediger begivenhed",
+      deleteEvent: "Slet begivenhed",
+      deleteConfirm: (name) => `Slet "${name}"?`,
+      deleteExplain: "Dette fjerner begivenheden fra Home Assistant.",
+      deleteButton: "Slet",
+      editSaved: "Ændringer gemt",
+      editFailed: "Ændringerne kunne ikke gemmes",
+      deleteFailed: "Begivenheden kunne ikke slettes",
       timelineMore: "Mere",
       types: {
         birthday: "Fødselsdag",
@@ -7365,7 +8483,7 @@
         titleDesc: "Egen titeltekst til kortet (lad stå tomt for standardtitlen)",
         titlePlaceholder: "f.eks. Kommende begivenheder",
         count: "Antal begivenheder",
-        countDesc: "Det samlede antal begivenheder, der vises på kortet",
+        countDesc: "Det samlede antal begivenheder, der vises på kortet. Med kalendernavigation slået til begrænser det den liste, kortet åbner med; en periode, man har bladret til, viser alt, hvad den indeholder.",
         todayOnly: "Kun i dag",
         todayOnlyDesc: "Ignorer alle andre filtre nedenfor og vis kun dagens begivenheder",
         nextEventDayOnly: "Kun næste begivenhedsdag",
@@ -7373,6 +8491,8 @@
           "Vis kun begivenheder for den nærmeste dag - i dag, hvis nogen, ellers næste dag med begivenheder (eventuelt flere end én)",
         daysAhead: "Dage frem (0 = ubegrænset)",
         daysAheadDesc: "Vis kun begivenheder inden for dette antal dage (0 = ingen grænse)",
+        hideFinishedToday: "Det, der er forbi, forsvinder",
+        hideFinishedTodayDesc: "Tager en begivenhed fra i dag af kortet, så snart sluttidspunktet er passeret - en aftale fra 14 til 15 er væk klokken 15, og en med en start uden slutning i det øjeblik, den begynder. Rækken forsvinder af sig selv, uden at vente på noget andet. Begivenheder uden klokkeslæt bliver, til dagen er omme, og den, der bladrer gennem perioder med kalendernavigationen, ser alligevel hele perioden. Til viser listen det, der stadig er tilbage.",
         daysPast: "Dage tilbage (0 = kun i dag)",
         daysPastDesc: "Hvor mange dage tilbage en begivenhed stadig tæller som nylig (0 = kun i dag)",
         soonDays: "\"Snart\"-tærskel (dage)",
@@ -7410,6 +8530,35 @@
           "Viser kun de første begivenheder og lægger resten bag en pil. Et kort med fast højde slutter så ved foldningen i stedet for at få en rullebjælke. Kun i listelayoutet - tidslinjen har sin egen »Detaljer«.",
         collapseAfter: "Synlige begivenheder",
         collapseAfterDesc: "Hvor mange der er på skærmen, før resten skal foldes ud.",
+        calendarNav: "Kalendernavigation",
+        calendarNavDesc:
+          "En linje under titlen med pile og den viste periode - én dag, uge eller måned ad gangen. Indtil linjen bruges, viser kortet sin sædvanlige liste: det, der kommer, efter Indstillinger → Begivenheder og Periode, højst antallet af begivenheder. Pilene og datovælgeren viser derefter én periode ad gangen - hele, med forgangne begivenheder - og en knap Dag, Uge eller Måned åbner listen på ny i den tilstand.",
+        calendarNavMode: "Åbner med",
+        calendarNavModeDesc:
+          "Hvilken periode linjen starter i - i dag, denne uge eller denne måned - og dermed hvad pilene bladrer med. Kontakterne ved siden af føjer knapper til linjen: Dag, Uge og Måned, som hver åbner listen på ny i den tilstand, og datovælgeren. Måned er slået til fra starten, så der er en vej tilbage efter bladring. At bladre eller skifte på selve kortet er en visning, ikke en indstilling, og gemmes ikke.",
+        countdownUnits: "Nedtælling",
+        countdownUnitsDesc:
+          "Hvordan en afstand i dage skrives: altid i dage, eller fra to uger i uger, måneder og år - „om 3 uger“, „for 2 måneder siden“. Gælder kolonnen Nedtælling, pladsholderen {when} og Timeline.",
+        countdownUnitsDays: "Dage",
+        countdownUnitsAuto: "Uger, måneder og år",
+        showSearch: "Søgefelt",
+        showSearchDesc:
+          "Et felt under titlen - og under kalendernavigationen, hvis den er slået til - som filtrerer listen, mens du skriver, på navn, efternavn og type. Det, du skriver, gemmes ikke.",
+        calendarNavPicker: "Dato",
+        navLabel: "Periode",
+        navLabelColorDesc: "Farve på perioden mellem pilene.",
+        navLabelFontDesc: "Skrifttype for perioden mellem pilene.",
+        navButtons: "Navigationsknapper",
+        navButtonColorDesc: "Tekst- og ikonfarve for pilene, tilstandsknapperne og kalenderknappen.",
+        navButtonBackground: "Baggrund",
+        navButtonBackgroundDesc: "Baggrund for disse knapper.",
+        navActiveColor: "Valgt farve",
+        navActiveColorDesc: "Tekstfarve for den valgte tilstand, og for kalenderknappen mens vælgeren er åben.",
+        navActiveBackground: "Valgt baggrund",
+        navActiveBackgroundDesc: "Baggrund for den valgte tilstand, og for kalenderknappen mens vælgeren er åben.",
+        navButtonHeight: "Højde",
+        navButtonHeightDesc: "Højde på hver knap i linjen, f.eks. „26px“. Tom betyder 26px.",
+        navButtonFontDesc: "Skrifttype for bogstaverne på knapperne Dag, Uge, Måned og År.",
         timelineLineHeading: "Tidslinje",
         timelineLineWidth: "Tykkelse",
         timelineLineWidthDesc: "Tykkelse på den vandrette akselinje, f.eks. „4px”.",
@@ -7437,7 +8586,7 @@
           "Tilføjer den korte dato i parentes til sidst, f.eks. „...er om 3 dage (6. aug)”. Skjules på selve dagen, da sætningen allerede lige inden slutter med „...er i dag”.",
         timelineShowTime: "Vis klokkeslæt",
         timelineShowTimeDesc:
-          "Tilføjer en ekstern kalenderbegivenheds eget tidsinterval i samme parentes, f.eks. „...er om 3 dage (14:00–15:00)”. Vises kun for en tidsbestemt (ikke heldags) ekstern kalenderbegivenhed. Tidsformatet følger sprogindstillingen i Home Assistant.",
+          "Tilføjer en ekstern kalenderbegivenheds eget tidsinterval i samme parentes, f.eks. „...er om 3 dage (14:00–15:00)”. Vises kun for en tidsbestemt (ikke heldags) ekstern kalenderbegivenhed. Tidsformatet følger sprogindstillingen i Home Assistant. En engangsbegivenhed med tidspunkt viser det her også.",
         timelineShowLocation: "Vis sted",
         timelineShowLocationDesc:
           "Tilføjer en ekstern kalenderbegivenheds eget sted i samme parentes. Vises kun for en ekstern kalenderbegivenhed, der har et sted angivet.",
@@ -7473,6 +8622,26 @@
         visibilityHeading: "Vis / Skjul",
         hideCardTitle: "Skjul",
         hideCardTitleDesc: "Skjul kortets egen titel, selv når den er angivet ovenfor",
+        buttonsHeading: "Knapper",
+        textFormatHeading: "Tekst og format",
+        buttonsGroupDesc: "Hvordan plusset ved siden af titlen og rækkens blyant og papirkurv ser ud. Hver af de tre indstilles for sig nedenfor; et tomt felt beholder det indbyggede udseende.",
+        buttonAdd: "Tilføj",
+        buttonEdit: "Rediger",
+        buttonDelete: "Slet",
+        buttonElementDesc: "Tegnet på denne knap, hvor stor den er, og dens to farver.",
+        buttonIcon: "Ikon",
+        buttonIconDesc: "Tegnet på denne knap, for eksempel “mdi:plus”. Tomt bliver det det indbyggede.",
+        buttonSize: "Størrelse",
+        buttonSizeDesc: "Hvor bred og høj denne knap er, for eksempel “28px”. Tegnet vokser med den, og en række vokser med en knap, der er højere end rækken selv. Tomt er det 28px for plusset, 26px for rækkens to og mindre der, hvor rækken selv er mindre.",
+        buttonColorDesc: "Farven på tegnet på denne knap, så længe intet peger på den. Tomt er det temaets sekundære tekstfarve.",
+        buttonHoverColor: "Farve når markøren er over",
+        buttonHoverColorDesc: "Farven på tegnet, så længe markøren er over denne knap, eller tastaturet står på den. Tomt er det temaets accentfarve - for papirkurven fejlfarven, som den siger med, hvad den gør.",
+        addButton: "Tilføj begivenhed",
+        addButtonDesc: "Et + til højre for korttitlen, der tilføjer en begivenhed via integrationens eget skema uden at forlade dashboardet - samme trin som Tilføj post under Indstillinger → Integrationer. Home Assistant lader kun administratorer tilføje poster; andre ser ingen knap.",
+        editButtons: "Rediger og slet begivenhed",
+        editButtonsDesc: "En blyant og en papirkurv for enden af hver begivenhedsrække, i begge layouts, til at ændre begivenheden via integrationens eget skema eller fjerne den efter bekræftelse - uden at forlade dashboardet. De svæver over rækkens ende, så længe markøren er over den, og optager ingen egen plads. Kun for administratorer, som plusset ved siden af titlen; andre ser ingen af dem.",
+        editOnClick: "Vis ved klik",
+        editOnClickDesc: "Viser blyanten og papirkurven med et klik på rækken i stedet for når markøren hviler over den - sådan når du dem også på telefon og tablet, hvor der ikke er nogen markør. Et klik på sådan en række udfører så ikke længere handlingen ved tryk (som standard begivenhedens detaljer); handlingen ved tryk og hold virker stadig. Endnu et klik på rækken, eller et klik et andet sted, skjuler dem igen.",
         noEventsText: "Tekst uden begivenheder",
         noEventsTextDesc:
           "Hvad kortet viser, når der ikke er noget at vise (lad stå tomt for standardteksten).",
@@ -7516,7 +8685,7 @@
         columnTypeLocation: "Sted",
         columnTypeDescription: "Beskrivelse",
         columnTypeTimeDesc:
-          "Tilføjer den eksterne kalenderbegivenheds eget tidsinterval, f.eks. „...03:00 PM–05:00 PM”. Vises kun for en tidsbestemt (ikke heldags) ekstern kalenderbegivenhed.",
+          "Tilføjer den eksterne kalenderbegivenheds eget tidsinterval, f.eks. „...03:00 PM–05:00 PM”. Vises kun for en tidsbestemt (ikke heldags) ekstern kalenderbegivenhed. En engangsbegivenhed med tidspunkt viser det her også.",
         columnTypeLocationDesc:
           "Tilføjer den eksterne kalenderbegivenheds eget sted. Vises kun for en ekstern kalenderbegivenhed, der har et sted angivet.",
         columnTypeDescriptionDesc:
@@ -7837,6 +9006,38 @@
       timelineCollapse: "Daha az",
       foldShowMore: "{count} tane daha göster",
       foldShowLess: "Daha az göster",
+      // Calendar navigation (see calendar_nav in defaultConfig): the three
+      // mode buttons' own letter and full name, the arrows' tooltips, the
+      // date picker's, and what an empty period says.
+      navModeShort: { day: "G", week: "H", month: "A", year: "Y" },
+      navModes: { day: "Gün", week: "Hafta", month: "Ay", year: "Yıl" },
+      navPrev: { day: "Önceki gün", week: "Önceki hafta", month: "Önceki ay", year: "Önceki yıl" },
+      navNext: { day: "Sonraki gün", week: "Sonraki hafta", month: "Sonraki ay", year: "Sonraki yıl" },
+      navPickDate: "Bir tarihe git",
+      noEventsRange: "Bu dönemde etkinlik yok",
+      // The period label's tooltip, and the search field's placeholder and
+      // empty line.
+      navToday: "Bugüne dön",
+      searchPlaceholder: "Ara",
+      searchNoMatch: "Eşleşme yok",
+      // The "+" beside the title (see show_add_button) and its dialog; the
+      // steps inside it speak with the integration's own translations.
+      addEvent: "Etkinlik ekle",
+      addSubmit: "Kaydet",
+      addCancel: "İptal",
+      addClose: "Kapat",
+      addCreated: (title) => `${title} eklendi`,
+      addFailed: "Etkinlik eklenemedi",
+      // The pencil and the trash can at the end of a row (see
+      // show_edit_buttons) and their dialogs.
+      editEvent: "Etkinliği düzenle",
+      deleteEvent: "Etkinliği sil",
+      deleteConfirm: (name) => `"${name}" silinsin mi?`,
+      deleteExplain: "Bu, etkinliği Home Assistant'tan kaldırır.",
+      deleteButton: "Sil",
+      editSaved: "Değişiklikler kaydedildi",
+      editFailed: "Değişiklikler kaydedilemedi",
+      deleteFailed: "Etkinlik silinemedi",
       timelineMore: "Daha fazla",
       types: {
         birthday: "Doğum günü",
@@ -7925,7 +9126,7 @@
         titleDesc: "Kart için özel başlık metni (varsayılan başlık için boş bırakın)",
         titlePlaceholder: "örn. Yaklaşan Etkinlikler",
         count: "Etkinlik sayısı",
-        countDesc: "Kartta gösterilen toplam etkinlik sayısı",
+        countDesc: "Kartta gösterilen toplam etkinlik sayısı. Takvim gezinmesi açıkken kartın açıldığı listeyi sınırlar; gezinerek ulaşılan dönem içerdiği her şeyi gösterir.",
         todayOnly: "Yalnızca bugün",
         todayOnlyDesc: "Aşağıdaki tüm diğer filtreleri yok say ve yalnızca bugün gerçekleşen etkinlikleri göster",
         nextEventDayOnly: "Yalnızca sonraki etkinlik günü",
@@ -7933,6 +9134,8 @@
           "Yalnızca en yakın gündeki etkinlikleri göster - varsa bugünkü, yoksa etkinlik olan sonraki gün (birden fazla olabilir)",
         daysAhead: "İleri gün sayısı (0 = sınırsız)",
         daysAheadDesc: "Yalnızca bu gün sayısı içinde gerçekleşen etkinlikleri göster (0 = sınır yok)",
+        hideFinishedToday: "Biten gizlensin",
+        hideFinishedTodayDesc: "Bugüne ait bir etkinliği, bitiş saati geçer geçmez karttan kaldırır: 14 ile 15 arasındaki bir randevu saat 15'te gider, başlangıcı olup bitişi olmayan bir etkinlik ise başladığı anda. Satır, başka bir şeyi beklemeden kendiliğinden kaybolur. Saati olmayan etkinlikler gün bitene kadar kalır; takvim gezintisiyle dönemler arasında geziniyorsanız dönem yine de bütünüyle gösterilir. Açıkken liste, henüz gelecek olanı gösterir.",
         daysPast: "Geçmiş gün sayısı (0 = yalnızca bugün)",
         daysPastDesc: "Bir etkinliğin kaç gün geriye kadar hâlâ yakın sayılacağı (0 = yalnızca bugün)",
         soonDays: "\"Yakında\" eşiği (gün)",
@@ -7970,6 +9173,35 @@
           "Yalnızca ilk etkinlikleri gösterir, gerisini bir okun arkasına koyar. Sabit yükseklikli bir kart o zaman kaydırma çubuğu almak yerine katlama yerinde biter. Yalnızca liste düzeninde - zaman çizelgesinin kendi «Ayrıntılar» düğmesi var.",
         collapseAfter: "Görünen etkinlikler",
         collapseAfterDesc: "Gerisinin açılması gerekmeden önce ekranda kaç tane olduğu.",
+        calendarNav: "Takvim gezinmesi",
+        calendarNavDesc:
+          "Başlığın altında oklar ve gösterilen dönemden oluşan bir çubuk - her seferinde bir gün, hafta veya ay. Çubuk kullanılana kadar kart her zamanki listesini gösterir: Ayarlar → Etkinlikler ve Dönem'e göre gelecek etkinlikler, en fazla etkinlik sayısı kadar. Oklar ve tarih seçici sonra her seferinde bir dönemi tamamen, geçmiş etkinlikleriyle gösterir; Gün, Hafta veya Ay düğmesi ise listeyi o kipte yeniden açar.",
+        calendarNavMode: "Şununla açılır",
+        calendarNavModeDesc:
+          "Çubuğun hangi dönemle başladığı (bugün, bu hafta veya bu ay) ve dolayısıyla okların ne kadar ilerlediği. Yanındaki anahtarlar çubuğa düğme ekler: her biri listeyi o kipte yeniden açan Gün, Hafta ve Ay ile tarih seçici. Ay baştan açıktır; böylece sayfalar arasında gezdikten sonra dönüş yolu olur. Kartın kendisinde ileri geri gitmek veya geçiş yapmak bir görünümdür, ayar değildir ve kaydedilmez.",
+        countdownUnits: "Geri sayım",
+        countdownUnitsDesc:
+          "Gün cinsinden bir mesafenin nasıl yazılacağı: hep gün olarak, ya da iki haftadan itibaren hafta, ay ve yıl olarak - \"3 hafta sonra\", \"2 ay önce\". Geri sayım sütunu, {when} yer tutucusu ve Timeline için geçerlidir.",
+        countdownUnitsDays: "Gün",
+        countdownUnitsAuto: "Hafta, ay ve yıl",
+        showSearch: "Arama alanı",
+        showSearchDesc:
+          "Başlığın altında - takvim gezinmesi açıksa onun altında - yazdıkça listeyi ada, soyada ve türe göre süzen bir alan. Yazılanlar kaydedilmez.",
+        calendarNavPicker: "Tarih",
+        navLabel: "Dönem",
+        navLabelColorDesc: "Oklar arasındaki dönemin rengi.",
+        navLabelFontDesc: "Oklar arasındaki dönemin yazı tipi.",
+        navButtons: "Gezinme düğmeleri",
+        navButtonColorDesc: "Okların, mod düğmelerinin ve takvim düğmesinin metin ve simge rengi.",
+        navButtonBackground: "Arka plan",
+        navButtonBackgroundDesc: "Bu düğmelerin arka planı.",
+        navActiveColor: "Seçili renk",
+        navActiveColorDesc: "Seçili modun ve seçici açıkken takvim düğmesinin metin rengi.",
+        navActiveBackground: "Seçili arka plan",
+        navActiveBackgroundDesc: "Seçili modun ve seçici açıkken takvim düğmesinin arka planı.",
+        navButtonHeight: "Yükseklik",
+        navButtonHeightDesc: "Çubuktaki her düğmenin yüksekliği, örn. \"26px\". Boş bırakılırsa 26px.",
+        navButtonFontDesc: "Gün, Hafta, Ay ve Yıl düğmelerindeki harflerin yazı tipi.",
         timelineLineHeading: "Zaman çizelgesi çizgisi",
         timelineLineWidth: "Kalınlık",
         timelineLineWidthDesc: "Yatay eksen çizgisinin kalınlığı, örn. \"4px\".",
@@ -7997,7 +9229,7 @@
           "Sonuna parantez içinde kısa tarihi ekler, örn. \"...3 gün sonra (6 Ağu)\". Etkinliğin kendi gününde gizlenir, çünkü cümle bundan hemen önce zaten \"...bugün\" ile bitiyor.",
         timelineShowTime: "Saati göster",
         timelineShowTimeDesc:
-          "Harici bir takvim etkinliğinin kendi saat aralığını aynı parantez içine ekler, örn. \"...3 gün sonra (14:00–15:00)\". Yalnızca saatli (tüm gün olmayan) harici bir takvim etkinliği için gösterilir. Saat biçimi, Home Assistant dil ayarını izler.",
+          "Harici bir takvim etkinliğinin kendi saat aralığını aynı parantez içine ekler, örn. \"...3 gün sonra (14:00–15:00)\". Yalnızca saatli (tüm gün olmayan) harici bir takvim etkinliği için gösterilir. Saat biçimi, Home Assistant dil ayarını izler. Saati olan tek seferlik bir etkinlik de burada gösterir.",
         timelineShowLocation: "Konumu göster",
         timelineShowLocationDesc:
           "Harici bir takvim etkinliğinin kendi konumunu aynı parantez içine ekler. Yalnızca konumu ayarlanmış harici bir takvim etkinliği için gösterilir.",
@@ -8033,6 +9265,26 @@
         visibilityHeading: "Göster / Gizle",
         hideCardTitle: "Gizle",
         hideCardTitleDesc: "Yukarıda ayarlanmış olsa bile kartın kendi başlığını gizle",
+        buttonsHeading: "Düğmeler",
+        textFormatHeading: "Metin ve biçim",
+        buttonsGroupDesc: "Başlığın yanındaki artının ve satırdaki kalem ile çöp kutusunun görünümü. Üçü de aşağıda ayrı ayrı ayarlanır; boş bırakılan alan yerleşik görünümü korur.",
+        buttonAdd: "Ekleme",
+        buttonEdit: "Düzenleme",
+        buttonDelete: "Silme",
+        buttonElementDesc: "Bu düğmedeki işaret, boyutu ve iki rengi.",
+        buttonIcon: "Simge",
+        buttonIconDesc: "Bu düğmedeki işaret, örneğin “mdi:plus”. Boş bırakılırsa yerleşik olanı kullanılır.",
+        buttonSize: "Boyut",
+        buttonSizeDesc: "Bu düğmenin genişliği ve yüksekliği, örneğin “28px”. İşaret onunla birlikte büyür ve satır, kendisinden yüksek bir düğmeyle birlikte büyür. Boşken artı için 28px, satırdaki ikisi için 26px, satırın kendisinin küçük olduğu yerlerde daha azdır.",
+        buttonColorDesc: "Hiçbir şey bu düğmeyi göstermezken üzerindeki işaretin rengi. Boş bırakılırsa temanın ikincil metin rengidir.",
+        buttonHoverColor: "Üzerine gelince rengi",
+        buttonHoverColorDesc: "İmleç bu düğmenin üzerindeyken veya klavye onun üzerindeyken işaretin rengi. Boş bırakılırsa temanın vurgu rengidir; çöp kutusunda ise ne yaptığını anlattığı hata rengidir.",
+        addButton: "Etkinlik ekle",
+        addButtonDesc: "Kart başlığının sağında, entegrasyonun kendi formuyla panodan ayrılmadan etkinlik ekleyen bir + - Ayarlar → Entegrasyonlar altındaki Girdi ekle ile aynı adımlar. Home Assistant girdi eklemeye yalnızca yöneticilere izin verir; diğerleri düğmeyi görmez.",
+        editButtons: "Etkinliği düzenle ve sil",
+        editButtonsDesc: "Her etkinlik satırının sonunda bir kalem ve bir çöp kutusu, iki düzende de: bu etkinliği entegrasyonun kendi formuyla değiştirmek veya onaydan sonra kaldırmak için, panodan ayrılmadan. İmleç satırın üzerindeyken satırın sonunun üzerinde belirir ve kendilerine yer ayırmazlar. Başlığın yanındaki + gibi yalnızca yöneticiler için; diğerleri ikisini de görmez.",
+        editOnClick: "Tıklayınca göster",
+        editOnClickDesc: "Kalemi ve çöp kutusunu, imleç satırın üzerinde dururken değil satıra tıklanınca gösterir - üzerine gelmenin olmadığı telefon ve tablette de onlara böyle ulaşılır. Böyle bir satıra tıklamak artık dokunma eylemini (varsayılan olarak etkinliğin ayrıntıları) çalıştırmaz; basılı tutma eylemi çalışmaya devam eder. Satıra bir kez daha tıklamak veya başka bir yere tıklamak onları yeniden gizler.",
         noEventsText: "Etkinlik yokken gösterilecek metin",
         noEventsTextDesc:
           "Kartın listeleyecek bir şeyi olmadığında gösterdiği metin (varsayılan metin için boş bırakın).",
@@ -8076,7 +9328,7 @@
         columnTypeLocation: "Konum",
         columnTypeDescription: "Açıklama",
         columnTypeTimeDesc:
-          "Harici takvim etkinliğinin kendi saat aralığını ekler, örn. \"...03:00 PM–05:00 PM\". Yalnızca saatli (tüm gün olmayan) harici bir takvim etkinliği için gösterilir.",
+          "Harici takvim etkinliğinin kendi saat aralığını ekler, örn. \"...03:00 PM–05:00 PM\". Yalnızca saatli (tüm gün olmayan) harici bir takvim etkinliği için gösterilir. Saati olan tek seferlik bir etkinlik de burada gösterir.",
         columnTypeLocationDesc:
           "Harici takvim etkinliğinin kendi konumunu ekler. Yalnızca konumu ayarlanmış harici bir takvim etkinliği için gösterilir.",
         columnTypeDescriptionDesc:
@@ -8388,6 +9640,38 @@
       timelineCollapse: "Menej",
       foldShowMore: "Zobraziť ďalších {count}",
       foldShowLess: "Zobraziť menej",
+      // Calendar navigation (see calendar_nav in defaultConfig): the three
+      // mode buttons' own letter and full name, the arrows' tooltips, the
+      // date picker's, and what an empty period says.
+      navModeShort: { day: "D", week: "T", month: "M", year: "R" },
+      navModes: { day: "Deň", week: "Týždeň", month: "Mesiac", year: "Rok" },
+      navPrev: { day: "Predchádzajúci deň", week: "Predchádzajúci týždeň", month: "Predchádzajúci mesiac", year: "Predchádzajúci rok" },
+      navNext: { day: "Ďalší deň", week: "Ďalší týždeň", month: "Ďalší mesiac", year: "Ďalší rok" },
+      navPickDate: "Prejsť na dátum",
+      noEventsRange: "V tomto období žiadne udalosti",
+      // The period label's tooltip, and the search field's placeholder and
+      // empty line.
+      navToday: "Späť na dnešok",
+      searchPlaceholder: "Hľadať",
+      searchNoMatch: "Nič sa nenašlo",
+      // The "+" beside the title (see show_add_button) and its dialog; the
+      // steps inside it speak with the integration's own translations.
+      addEvent: "Pridať udalosť",
+      addSubmit: "Uložiť",
+      addCancel: "Zrušiť",
+      addClose: "Zavrieť",
+      addCreated: (title) => `${title} pridané`,
+      addFailed: "Udalosť sa nepodarilo pridať",
+      // The pencil and the trash can at the end of a row (see
+      // show_edit_buttons) and their dialogs.
+      editEvent: "Upraviť udalosť",
+      deleteEvent: "Odstrániť udalosť",
+      deleteConfirm: (name) => `Odstrániť „${name}“?`,
+      deleteExplain: "Tým sa udalosť odstráni z Home Assistanta.",
+      deleteButton: "Odstrániť",
+      editSaved: "Zmeny uložené",
+      editFailed: "Zmeny sa nepodarilo uložiť",
+      deleteFailed: "Udalosť sa nepodarilo odstrániť",
       timelineMore: "Viac",
       types: {
         birthday: "Narodeniny",
@@ -8479,7 +9763,7 @@
         titleDesc: "Vlastný text názvu karty (prázdne = predvolený)",
         titlePlaceholder: "napr. Nadchádzajúce udalosti",
         count: "Počet udalostí",
-        countDesc: "Celkový počet udalostí zobrazených na karte",
+        countDesc: "Celkový počet udalostí zobrazených na karte. Pri zapnutej navigácii v kalendári obmedzuje zoznam, s ktorým sa karta otvorí; obdobie, ku ktorému sa nalistovalo, zobrazí všetko, čo obsahuje.",
         todayOnly: "Iba dnes",
         todayOnlyDesc: "Ignorovať všetky ostatné filtre nižšie a zobraziť iba udalosti, ktoré sú dnes",
         nextEventDayOnly: "Iba najbližší deň s udalosťou",
@@ -8487,6 +9771,8 @@
           "Zobraziť iba udalosti jediného najbližšieho dňa – dnešné, ak nejaké sú, inak najbližší deň s udalosťami (môže ich byť viac)",
         daysAhead: "Dní dopredu (0 = bez obmedzenia)",
         daysAheadDesc: "Zobraziť iba udalosti v rámci tohto počtu dní (0 = bez obmedzenia)",
+        hideFinishedToday: "Čo je za nami, zmizne",
+        hideFinishedTodayDesc: "Zloží dnešnú udalosť z karty, len čo uplynie čas jej konca - stretnutie od 14 do 15 je o 15 preč a to, ktoré má začiatok bez konca, vo chvíli, keď sa začína. Riadok zmizne sám, bez čakania na čokoľvek iné. Udalosti bez času zostávajú do konca dňa a kto listuje obdobiami cez kalendárnu navigáciu, vidí obdobie aj tak celé. Zapnuté - zoznam ukazuje to, čo ešte len príde.",
         daysPast: "Dní do minulosti (0 = iba dnes)",
         daysPastDesc: "Koľko dní dozadu sa udalosť ešte počíta ako nedávna (0 = iba dnes)",
         soonDays: "Prah pre „čoskoro“ (dni)",
@@ -8524,6 +9810,35 @@
           "Zobrazí len prvé udalosti a zvyšok skryje za šípku. Karta s pevnou výškou potom končí pri zbalení namiesto toho, aby dostala posuvník. Len v rozložení zoznamu - časová os má vlastné „Podrobnosti“.",
         collapseAfter: "Viditeľné udalosti",
         collapseAfterDesc: "Koľko ich je na obrazovke, kým treba zvyšok rozbaliť.",
+        calendarNav: "Navigácia v kalendári",
+        calendarNavDesc:
+          "Lišta pod názvom so šípkami a zobrazeným obdobím - vždy jeden deň, týždeň alebo mesiac. Kým sa lišta nepoužije, karta zobrazuje svoj obvyklý zoznam: nadchádzajúce udalosti podľa Nastavenia → Udalosti a Časové obdobie, najviac počet udalostí. Šípky a výber dátumu potom zobrazujú vždy jedno obdobie - celé, vrátane minulých udalostí - a tlačidlo Deň, Týždeň alebo Mesiac znovu otvorí zoznam v tomto režime.",
+        calendarNavMode: "Otvorí sa s",
+        calendarNavModeDesc:
+          "V ktorom období lišta začína - dnešok, tento týždeň alebo tento mesiac - a teda o koľko listujú šípky. Prepínače vedľa pridávajú na lištu tlačidlá: Deň, Týždeň a Mesiac, z ktorých každé znovu otvorí zoznam v tomto režime, a výber dátumu. Mesiac je zapnutý od začiatku, aby po listovaní bola cesta späť. Listovanie a prepínanie na samotnej karte je len zobrazenie, nie nastavenie, a neukladá sa.",
+        countdownUnits: "Odpočet",
+        countdownUnitsDesc:
+          "Ako sa zapisuje vzdialenosť v dňoch: vždy v dňoch, alebo od dvoch týždňov v týždňoch, mesiacoch a rokoch - „o 3 týždne“, „pred 2 mesiacmi“. Platí pre stĺpec Odpočet, zástupný symbol {when} a Časová os.",
+        countdownUnitsDays: "Dni",
+        countdownUnitsAuto: "Týždne, mesiace a roky",
+        showSearch: "Vyhľadávacie pole",
+        showSearchDesc:
+          "Pole pod názvom - a pod navigáciou v kalendári, ak je zapnutá -, ktoré pri písaní filtruje zoznam podľa mena, priezviska a typu. Zadaný text sa neukladá.",
+        calendarNavPicker: "Dátum",
+        navLabel: "Obdobie",
+        navLabelColorDesc: "Farba obdobia medzi šípkami.",
+        navLabelFontDesc: "Písmo obdobia medzi šípkami.",
+        navButtons: "Navigačné tlačidlá",
+        navButtonColorDesc: "Farba textu a ikon šípok, tlačidiel režimu a tlačidla kalendára.",
+        navButtonBackground: "Pozadie",
+        navButtonBackgroundDesc: "Pozadie týchto tlačidiel.",
+        navActiveColor: "Farba vybraného",
+        navActiveColorDesc: "Farba textu vybraného režimu a tlačidla kalendára, kým je výber dátumu otvorený.",
+        navActiveBackground: "Pozadie vybraného",
+        navActiveBackgroundDesc: "Pozadie vybraného režimu a tlačidla kalendára, kým je výber dátumu otvorený.",
+        navButtonHeight: "Výška",
+        navButtonHeightDesc: "Výška každého tlačidla na lište, napr. „26px“. Prázdne znamená 26px.",
+        navButtonFontDesc: "Písmo písmen na tlačidlách Deň, Týždeň, Mesiac a Rok.",
         timelineLineHeading: "Čiara časovej osi",
         timelineLineWidth: "Hrúbka",
         timelineLineWidthDesc: "Hrúbka vodorovnej čiary osi, napr. „4px“.",
@@ -8551,7 +9866,7 @@
           "Na koniec pripojiť v zátvorke krátky dátum, napr. „...o 3 dni (6. aug)“. V deň samotnej udalosti sa skryje, keďže veta tesne predtým už končí slovom „dnes“.",
         timelineShowTime: "Zobraziť čas",
         timelineShowTimeDesc:
-          "Do tej istej zátvorky pripojiť časový rozsah udalosti z externého kalendára, napr. „...o 3 dni (15:00 – 16:00)“. Zobrazuje sa iba pri časovo ohraničenej (nie celodennej) udalosti z externého kalendára. Formát času sa riadi jazykom Home Assistanta.",
+          "Do tej istej zátvorky pripojiť časový rozsah udalosti z externého kalendára, napr. „...o 3 dni (15:00 – 16:00)“. Zobrazuje sa iba pri časovo ohraničenej (nie celodennej) udalosti z externého kalendára. Formát času sa riadi jazykom Home Assistanta. Aj jednorazová udalosť s časom ho tu zobrazí.",
         timelineShowLocation: "Zobraziť miesto",
         timelineShowLocationDesc:
           "Do tej istej zátvorky pripojiť miesto udalosti z externého kalendára. Zobrazuje sa iba pri udalosti z externého kalendára, ktorá ho má nastavené.",
@@ -8587,6 +9902,26 @@
         visibilityHeading: "Zobraziť / Skryť",
         hideCardTitle: "Skryť",
         hideCardTitleDesc: "Skryť vlastný názov karty, aj keď je nastavený vyššie",
+        buttonsHeading: "Tlačidlá",
+        textFormatHeading: "Text a formát",
+        buttonsGroupDesc: "Ako vyzerá plus vedľa názvu a ceruzka a kôš v riadku. Každé z troch sa nastavuje nižšie zvlášť; prázdne pole ponechá vstavaný vzhľad.",
+        buttonAdd: "Pridanie",
+        buttonEdit: "Úpravy",
+        buttonDelete: "Odstránenie",
+        buttonElementDesc: "Znak na tomto tlačidle, jeho veľkosť a dve farby.",
+        buttonIcon: "Ikona",
+        buttonIconDesc: "Znak na tomto tlačidle, napríklad „mdi:plus“. Prázdne pole znamená vstavaný znak.",
+        buttonSize: "Veľkosť",
+        buttonSizeDesc: "Šírka a výška tohto tlačidla, napríklad „28px“. Znak rastie s ním a riadok rastie s tlačidlom vyšším, než je sám. Prázdne pole znamená 28px pre plus, 26px pre dve v riadku a menej tam, kde je riadok sám menší.",
+        buttonColorDesc: "Farba znaku na tomto tlačidle, kým naň nič neukazuje. Prázdne pole znamená druhotnú farbu textu motívu.",
+        buttonHoverColor: "Farba pri prejdení",
+        buttonHoverColorDesc: "Farba znaku, kým je ukazovateľ nad týmto tlačidlom alebo je na ňom klávesnica. Prázdne pole znamená farbu zvýraznenia motívu - pri koši jeho farbu chyby, ktorou kôš hovorí, čo robí.",
+        addButton: "Pridať udalosť",
+        addButtonDesc: "Plus vpravo od názvu karty, ktoré pridá udalosť cez formulár integrácie bez opustenia dashboardu - rovnaké kroky ako Pridať položku v Nastavenia → Integrácie. Home Assistant dovoľuje pridávať položky len správcom; ostatní tlačidlo nevidia.",
+        editButtons: "Upraviť a odstrániť udalosť",
+        editButtonsDesc: "Ceruzka a kôš na konci každého riadka udalosti, v oboch rozloženiach, na zmenu tejto udalosti cez formulár integrácie alebo jej odstránenie po potvrdení - bez opustenia dashboardu. Vznášajú sa nad koncom riadka, kým je nad ním ukazovateľ, a nezaberajú žiadne vlastné miesto. Len pre správcov, rovnako ako plus vedľa názvu; ostatní nevidia ani jedno.",
+        editOnClick: "Zobraziť po kliknutí",
+        editOnClickDesc: "Zobrazí ceruzku a kôš po kliknutí na riadok namiesto pri prejdení ukazovateľom - tak sa k nim dostanete aj na telefóne a tablete, kde sa prejsť nedá. Kliknutie na taký riadok potom už nespustí akciu pri kliknutí (predvolene podrobnosti udalosti); akcia pri podržaní zostáva. Ďalšie kliknutie na riadok alebo kliknutie kamkoľvek inam ich opäť skryje.",
         noEventsText: "Text bez udalostí",
         noEventsTextDesc:
           "Čo karta napíše, keď nemá čo vypísať (prázdne = predvolený text).",
@@ -8630,7 +9965,7 @@
         columnTypeLocation: "Miesto",
         columnTypeDescription: "Popis",
         columnTypeTimeDesc:
-          "Pripojiť časový rozsah udalosti z externého kalendára, napr. „...15:00 – 17:00“. Zobrazuje sa iba pri časovo ohraničenej (nie celodennej) udalosti z externého kalendára.",
+          "Pripojiť časový rozsah udalosti z externého kalendára, napr. „...15:00 – 17:00“. Zobrazuje sa iba pri časovo ohraničenej (nie celodennej) udalosti z externého kalendára. Aj jednorazová udalosť s časom ho tu zobrazí.",
         columnTypeLocationDesc:
           "Pripojiť miesto udalosti z externého kalendára. Zobrazuje sa iba pri udalosti z externého kalendára, ktorá ho má nastavené.",
         columnTypeDescriptionDesc:
@@ -9047,15 +10382,49 @@
 
   const DATE_FORMAT_KEYS = Object.keys(DATE_FORMATS);
 
+  // The tap-to-reveal full date ("Mon, 3 Aug 2026") and a timed calendar
+  // entry's time of day, named once so the list and the timeline can never
+  // spell them differently.
+  const FULL_DATE_OPTIONS = DATE_FORMATS.full;
+  const TIME_OPTIONS = { hour: "2-digit", minute: "2-digit" };
+
+  // One Intl.DateTimeFormat per locale and option set, kept. Building one
+  // is the expensive half - measured, about 100µs against under 1µs for a
+  // format() on an existing one - and a render built two to five of them
+  // per row, so a list of a hundred rows spent tens of milliseconds on
+  // formatters alone. A handful of option sets across a locale or two is
+  // all this ever holds.
+  // The same, for Intl.RelativeTimeFormat (see _relativeText).
+  const RELATIVE_FORMATTERS = new Map();
+  function relativeFormatter(locale) {
+    let formatter = RELATIVE_FORMATTERS.get(locale);
+    if (!formatter) {
+      formatter = new Intl.RelativeTimeFormat(locale, { numeric: "always" });
+      RELATIVE_FORMATTERS.set(locale, formatter);
+    }
+    return formatter;
+  }
+
+  const DATE_FORMATTERS = new Map();
+  function dateFormatter(locale, options) {
+    const key = `${locale}|${JSON.stringify(options)}`;
+    let formatter = DATE_FORMATTERS.get(key);
+    if (!formatter) {
+      formatter = new Intl.DateTimeFormat(locale, options);
+      DATE_FORMATTERS.set(key, formatter);
+    }
+    return formatter;
+  }
+
   // Formats one event date in one of DATE_FORMATS. Unknown/missing keys fall
   // back to "short", which is what every card saved before this option
   // existed renders as.
   function formatEventDate(date, format, locale) {
     const options = DATE_FORMATS[format] || DATE_FORMATS.short;
     if (format === "auto_year" && date.getFullYear() === new Date().getFullYear()) {
-      return new Intl.DateTimeFormat(locale, DATE_FORMATS.short).format(date);
+      return dateFormatter(locale, DATE_FORMATS.short).format(date);
     }
-    return new Intl.DateTimeFormat(locale, options).format(date);
+    return dateFormatter(locale, options).format(date);
   }
 
   // The three stacked lines of the agenda-style Date column (weekday /
@@ -9076,9 +10445,9 @@
   // per locale rules and which leaves the actual text intact.
   function formatDateBlock(date, locale) {
     return {
-      weekday: new Intl.DateTimeFormat(locale, { weekday: "short" }).format(date),
-      day: new Intl.DateTimeFormat(locale, { day: "numeric" }).format(date),
-      month: new Intl.DateTimeFormat(locale, { month: "short" }).format(date),
+      weekday: dateFormatter(locale, { weekday: "short" }).format(date),
+      day: dateFormatter(locale, { day: "numeric" }).format(date),
+      month: dateFormatter(locale, { month: "short" }).format(date),
     };
   }
 
@@ -9103,8 +10472,22 @@
   // answers via weekInfo (firstDay is 1..7 with 7 = Sunday). Monday if
   // neither is available - weekInfo is still missing in some browsers, and
   // it's the majority answer worldwide.
+  // Kept per setting and locale: the answer never changes for the same
+  // pair, and it was asked once per row (and again per separator), each
+  // time parsing the locale tag anew.
+  const WEEK_START_CACHE = new Map();
   function weekStartIndex(hassLocale, locale) {
     const configured = hassLocale && hassLocale.first_weekday;
+    const cacheKey = `${configured || ""}|${locale}`;
+    let index = WEEK_START_CACHE.get(cacheKey);
+    if (index === undefined) {
+      index = computeWeekStartIndex(configured, locale);
+      WEEK_START_CACHE.set(cacheKey, index);
+    }
+    return index;
+  }
+
+  function computeWeekStartIndex(configured, locale) {
     if (configured && Object.prototype.hasOwnProperty.call(WEEKDAY_INDEX, configured)) {
       return WEEKDAY_INDEX[configured];
     }
@@ -9154,7 +10537,7 @@
   // month come from Intl; the calendar week needs a word Intl has no format
   // for, so it comes from the language table (see separatorWeekLabel).
   function separatorLabelText(scale, date, strings, locale, weekStart) {
-    const fmt = (options) => new Intl.DateTimeFormat(locale, options).format(date);
+    const fmt = (options) => dateFormatter(locale, options).format(date);
     if (scale === "week") {
       return (strings.separatorWeekLabel || "Week {week}").replace(
         "{week}",
@@ -9333,6 +10716,48 @@
       .replace(/>/g, "&gt;");
   }
 
+  // Which font-size settings each column type reads. Only the fields that
+  // carry words: an icon and an accent bar have no size to compare, and a
+  // Date block keeps its three sizes inside one cell rather than beside
+  // the others, so it says nothing about whether the row is a sentence.
+  const COLUMN_FONT_SIZE_KEYS = {
+    name: ["name"],
+    last_name: ["last_name"],
+    full_name: ["full_name"],
+    full_name_type: ["full_name_type_name", "full_name_type_type"],
+    info: ["info_name", "info_type"],
+    type: ["type"],
+    when: ["when"],
+    date: ["date"],
+    text: ["text"],
+    badge: ["badge"],
+  };
+
+  // Whether a Compact row is one size throughout.
+  //
+  // Compact aligns its fields on the baseline, which is how differently
+  // sized words sit together in a real sentence: "Oct 5 is" keeps the
+  // footing of the big name beside it instead of floating in the middle
+  // of it. Where every field is the same size there is no such sentence -
+  // just a row of things that should share a middle, and the baseline
+  // then leaves whatever is taller than the words (a 24px icon beside
+  // 14px text, a badge on its pill) standing a few pixels high, with the
+  // gap below it. Those rows are centred instead.
+  //
+  // Read off the configuration rather than the rendered row: the sizes
+  // are the same for every row of a card, so this is one answer per
+  // render rather than one per row.
+  function compactIsOneSize(config) {
+    const columns = Array.isArray(config.columns) ? config.columns : DEFAULT_COLUMNS;
+    const sizes = new Set();
+    for (const col of columns) {
+      for (const key of (col && COLUMN_FONT_SIZE_KEYS[col.type]) || []) {
+        sizes.add((config.font_sizes || {})[key] || "");
+      }
+    }
+    return sizes.size <= 1;
+  }
+
   function rowColumnTemplate(config) {
     const columns = Array.isArray(config.columns) ? config.columns : DEFAULT_COLUMNS;
     return columns
@@ -9493,6 +10918,30 @@
     return {
       title: "",
       show_title: true,
+      // A "+" at the right of the title that adds an event through the
+      // integration's own config flow, in a dialog over the dashboard (see
+      // _openFlowDialog). Off by default; shown to administrators only,
+      // since Home Assistant lets nobody else start a config flow.
+      show_add_button: false,
+      // A pencil and a trash can at the end of every event row (see
+      // _rowActions): the entry's own options flow in the same dialog, and
+      // a confirmed delete. Off by default; administrators only, as above.
+      show_edit_buttons: false,
+      // What those three look like (Layout -> Design -> Buttons): the glyph
+      // on each, and how big its button is. An empty size is the built-in
+      // one - 28px for the "+", 26px for a row's two, smaller where the row
+      // itself is (see .add and .row-action in CARD_STYLE).
+      add_button_icon: "mdi:plus",
+      add_button_size: "",
+      edit_button_icon: "mdi:pencil",
+      edit_button_size: "",
+      delete_button_icon: "mdi:delete-outline",
+      delete_button_size: "",
+      // Whether those two come up with a click on the row rather than with
+      // the pointer resting over it (see _toggleRowActions) - the way to
+      // reach them where nothing hovers. A row that carries them then
+      // answers a click with them instead of with tap_action.
+      edit_buttons_on_click: false,
       // What the card says when nothing is left to list. Empty means
       // the built-in translated phrase, the same way `title` empty means
       // the built-in one - so a card that never touches this keeps
@@ -9573,8 +11022,47 @@
       // row tall. Off by default - it is only right for a card showing one
       // event, and every other card wants the normal edges.
       minimal_card: false,
+      // A bar under the title - Day, Week and Month, a date picker, arrows -
+      // that turns the list into one period at a time once it is used (see
+      // _navRange, _navPeriod); until then the card is the list it always
+      // was. Off by default: every card that exists is a list of what is
+      // coming, and must stay one. List layout only; the timeline is one
+      // axis of what is coming and has no period to step through. The mode
+      // is where the bar starts; stepping and switching on the card itself
+      // is a look, not a setting (see _navMode/_navAnchor), and is never
+      // written back.
+      // A search field under the title (and the calendar navigation) that
+      // filters the list as one types - by name, last name and type. Off
+      // by default; what is typed is a look, not a setting.
+      show_search: false,
+      // How a distance in days reads: "auto" turns two weeks and more into
+      // weeks, months and years - "in 3 weeks", "2 months ago" - with the
+      // browser's own wording for the card's language; "days" is "in 47
+      // days" throughout, which is what every card said before this
+      // existed, and follows the default here rather than being pinned.
+      countdown_units: "auto",
+      calendar_nav: false,
+      calendar_nav_mode: "month",
+      // Which buttons the bar carries besides its arrows: any of "day",
+      // "week", "month" (switching the period) and "picker" (the date
+      // picker). Month alone to start with - after paging through past
+      // months it is the way back to now - so a card that only wants to
+      // page through months is not handed two modes it never uses.
+      calendar_nav_buttons: ["month"],
+      // Height of every button on the bar, "26px" when empty (the size the
+      // Statistics Graph Chart Card's own period bar uses). Under Layout ->
+      // Design with the bar's colors and fonts.
+      nav_button_height: "",
       days_ahead: 0,
       days_past: 0,
+      // An appointment that is over is no longer something that is coming:
+      // a timed event of today leaves the list once its end time has passed
+      // (its start, where it has no end), and the card sets a timer for the
+      // moment that happens (see _scheduleFinishedRefresh). Off, today's
+      // events stay until midnight, the way they always did. All-day events
+      // and anything on another day are untouched, and while a period is
+      // being paged through this stands aside like every other day filter.
+      hide_finished_today: true,
       soon_days: 7,
       today_only: false,
       next_event_day_only: false,
@@ -9863,6 +11351,27 @@
         today: "",
         soon: "",
         accent: "",
+        // Calendar navigation (see calendar_nav): the period between the
+        // arrows, the buttons' text and ground, and the selected mode's.
+        // Empty means the theme's own - text, secondary background,
+        // primary color (see .nav-* in CARD_STYLE).
+        nav_label: "",
+        nav_button: "",
+        nav_button_background: "",
+        nav_active: "",
+        nav_active_background: "",
+        // The "+" beside the title and a row's pencil and trash can (see
+        // show_add_button, show_edit_buttons): the color each has while
+        // nothing points at it, and the one it takes while the pointer is
+        // over it or the keyboard is on it. Empty means what they have
+        // always had - the theme's secondary text color, and its accent
+        // color on the way in, the error color for the trash can.
+        add_button: "",
+        add_button_hover: "",
+        edit_button: "",
+        edit_button_hover: "",
+        delete_button: "",
+        delete_button_hover: "",
         // Past rows' own icon color. Empty means they keep taking the
         // Default one, which is what they did before Past was a status.
         past: "",
@@ -9998,6 +11507,10 @@
       },
       font_sizes: {
         no_events: "",
+        // Calendar navigation: the period between the arrows, and the
+        // letters on the Day/Week/Month buttons.
+        nav_label: "",
+        nav_button: "",
         name: "",
         last_name: "",
         full_name: "",
@@ -10263,6 +11776,22 @@
           letter_spacing: "",
           ...((config.font_style || {}).timeline_button || {}),
         },
+        nav_label: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).nav_label || {}),
+        },
+        nav_button: {
+          bold: false,
+          italic: false,
+          uppercase: false,
+          underline: false,
+          letter_spacing: "",
+          ...((config.font_style || {}).nav_button || {}),
+        },
       },
       background: {
         enabled: false,
@@ -10371,10 +11900,57 @@
         daysUntilEnd: state.attributes.days_until_end,
         durationDays: state.attributes.duration_days,
         inProgress: state.attributes.in_progress === true,
+        // The linked person's picture (see CONF_PERSON in const.py) - the
+        // sensor's own entity_picture - drawn in place of the icon.
+        picture: state.attributes.entity_picture || null,
+        // A custom event repeating every N months or years from its stored
+        // date (see CONF_INTERVAL) - what intervalRule reads, with the year
+        // that date starts in. Absent on everything else.
+        interval: state.attributes.interval || null,
+        intervalUnit: state.attributes.interval_unit || null,
+        year: state.attributes.year == null ? null : state.attributes.year,
+        // A one-time event's time of day (see CONF_TIME), in the shape an
+        // embedded calendar's timed entry already has (see
+        // buildExternalEvent), so every place that shows a time shows this.
+        ...timedFields(state.attributes),
       });
     }
     events.sort((a, b) => a.days - b.days || a.entityId.localeCompare(b.entityId));
     return events;
+  }
+
+  // "YYYY-MM-DD" plus "HH:MM" (or the selector's "HH:MM:SS") as a local
+  // Date - null for anything missing or unparseable.
+  function parseClock(iso, clock) {
+    if (typeof iso !== "string" || typeof clock !== "string" || !clock) return null;
+    const stamp = new Date(`${iso}T${clock.length === 5 ? clock + ":00" : clock}`);
+    return Number.isNaN(stamp.getTime()) ? null : stamp;
+  }
+
+  // Whether a timed event of today is over: its end has passed, or its
+  // start where it has none - a moment in a calendar is over once it has
+  // been. Everything else (another day, an all-day event, an event with no
+  // time at all) is never "over" in this sense, and a multi-day row answers
+  // for its own end, which is on its last day.
+  function finishedToday(e, now) {
+    if (!e || e.days !== 0 || e.allDay === true) return false;
+    const end = e.endTime || e.startTime;
+    return !!end && end.getTime() <= now.getTime();
+  }
+
+  // The time-of-day fields of an Annuals event, in buildExternalEvent's
+  // shape: all-day - which is every event without a time - or a start on
+  // its day and an end on its last day (see CONF_TIME/CONF_END_TIME).
+  function timedFields(attributes) {
+    const start = parseClock(attributes.next_date, attributes.time);
+    if (!start) return { allDay: true, startTime: null, endTime: null, timeSortKey: -1 };
+    const end = parseClock(attributes.end_date || attributes.next_date, attributes.end_time);
+    return {
+      allDay: false,
+      startTime: start,
+      endTime: end,
+      timeSortKey: start.getHours() * 60 + start.getMinutes(),
+    };
   }
 
   // Local calendar day as "YYYY-MM-DD" - the anchor every day count below
@@ -10410,7 +11986,11 @@
   // all. On a card that lists only first days, an ongoing trip therefore
   // disappears once it has begun; "First and last day" keeps it through its
   // end row, and "Every day" through the day it is on.
-  function expandMultiDay(events, mode, todayIso, strings) {
+  //
+  // `keepPast` keeps the day rows already behind us: calendar navigation
+  // (see _navRows) shows a period, past or not, and a trip's third day
+  // belongs in the week it fell in.
+  function expandMultiDay(events, mode, todayIso, strings, keepPast) {
     const out = [];
     for (const e of events) {
       // A one-time event with an end date, or an embedded calendar entry
@@ -10457,6 +12037,9 @@
           nextDate: e.endDate,
           multiDayPart: "end",
           startTime: null,
+          // Sorted within its day by the time it shows, the end - not the
+          // start it no longer carries.
+          timeSortKey: e.endTime ? e.endTime.getHours() * 60 + e.endTime.getMinutes() : -1,
           name: shortLabel(strings.multiDayEnd),
           fullName: label(strings.multiDayEnd),
         });
@@ -10465,7 +12048,7 @@
         const total = isoDayDiff(startIso, e.endDate);
         for (let offset = 0; offset <= total; offset++) {
           const days = isoDayDiff(todayIso, startIso) + offset;
-          if (days < 0) continue;
+          if (days < 0 && !keepPast) continue;
           const dayIso = localIsoDay(new Date(Date.parse(`${startIso}T12:00:00`) + offset * 86400000));
           rows.push({
             ...e,
@@ -10477,6 +12060,14 @@
             // the days in between carry neither time.
             startTime: offset === 0 ? e.startTime : null,
             endTime: offset === total ? e.endTime : null,
+            // The same: the first day keeps the start's place in its day,
+            // the last day takes the end's, the days between are all-day.
+            timeSortKey:
+              offset === 0
+                ? (e.timeSortKey ?? -1)
+                : offset === total && e.endTime
+                  ? e.endTime.getHours() * 60 + e.endTime.getMinutes()
+                  : -1,
             name: shortLabel(
               (strings.multiDayDay || "day {day}").replace("{day}", String(offset + 1))
             ),
@@ -10640,7 +12231,11 @@
   // AnnualsCard's periodic _fetchExternalEvents poll (see
   // _startExternalEventsPolling), which is time-based and doesn't depend on
   // any entity's state changing at all.
-  function externalCalendarsSignature(config, hass) {
+  //
+  // `range` is the period calendar navigation is showing, if it is on (see
+  // _navRange): the fetch window is that period rather than the day window,
+  // so stepping to another week is what re-fetches.
+  function externalCalendarsSignature(config, hass, range) {
     const calendars = Array.isArray(config.external_calendars) ? config.external_calendars : [];
     const entityTicks = calendars
       .map((id) => {
@@ -10653,9 +12248,7 @@
       "|" +
       new Date().toDateString() +
       "|" +
-      (config.days_past || 0) +
-      "|" +
-      (config.days_ahead || 0) +
+      (range ? `${range.startIso}..${range.endIso}` : `${config.days_past || 0}|${config.days_ahead || 0}`) +
       "|" +
       entityTicks
     );
@@ -10776,6 +12369,72 @@
     return first;
   }
 
+  // An interval event (see CONF_INTERVAL in const.py): every N months or
+  // years from its stored date, which is what `interval`, `intervalUnit`
+  // and `year` on the event carry. Null for every other event, which is
+  // what every caller tests for. The same arithmetic as dates.py's
+  // interval_rule/add_interval/interval_occurrence, so the card and the
+  // sensor can never disagree about a date.
+  function intervalRule(e) {
+    if (!e.interval || !e.intervalUnit || e.year == null || !e.month || !e.day) return null;
+    return { start: new Date(e.year, e.month - 1, e.day), count: Number(e.interval), unit: e.intervalUnit };
+  }
+
+  // `start` moved `steps` intervals along, the day of the month kept and
+  // clamped to the month it lands in, as add_interval does.
+  function addInterval(start, count, unit, steps) {
+    if (unit === "years") {
+      return occurrenceDate(start.getMonth() + 1, start.getDate(), start.getFullYear() + count * steps);
+    }
+    const total = start.getMonth() + count * steps;
+    const year = start.getFullYear() + Math.floor(total / 12);
+    const month = ((total % 12) + 12) % 12;
+    const lastDay = new Date(year, month + 1, 0).getDate();
+    return new Date(year, month, Math.min(start.getDate(), lastDay));
+  }
+
+  // The next occurrence on or after `day0` (local midnight) and which step
+  // it is - 0 on the stored date itself.
+  function intervalStep(e, day0) {
+    const { start, count, unit } = intervalRule(e);
+    if (day0 <= start) return { date: start, steps: 0 };
+    let steps =
+      unit === "years"
+        ? Math.floor((day0.getFullYear() - start.getFullYear()) / count)
+        : Math.floor(((day0.getFullYear() - start.getFullYear()) * 12 + day0.getMonth() - start.getMonth()) / count);
+    steps = Math.max(0, steps);
+    let candidate = addInterval(start, count, unit, steps);
+    while (candidate < day0) {
+      steps += 1;
+      candidate = addInterval(start, count, unit, steps);
+    }
+    while (steps > 0 && addInterval(start, count, unit, steps - 1) >= day0) {
+      steps -= 1;
+      candidate = addInterval(start, count, unit, steps);
+    }
+    return { date: candidate, steps };
+  }
+
+  // Every occurrence from `first` to `last` inclusive, with its step - a
+  // six-monthly event twice in a year, a five-yearly one mostly not at all.
+  function intervalOccurrencesBetween(e, first, last) {
+    const { start, count, unit } = intervalRule(e);
+    let { date, steps } = intervalStep(e, first);
+    const found = [];
+    while (date <= last) {
+      found.push({ date, steps });
+      steps += 1;
+      date = addInterval(start, count, unit, steps);
+    }
+    return found;
+  }
+
+  // "YYYY-MM-DD" as local midnight.
+  function isoToDate(iso) {
+    const [y, m, d] = String(iso).split("-").map(Number);
+    return new Date(y, m - 1, d);
+  }
+
   // Independent of the sensor's own "days until next occurrence" state
   // (which is never negative - it jumps forward the day after an event), so
   // that a "days in the past" window can be computed client-side from the
@@ -10783,6 +12442,16 @@
   function daysSincePrevOccurrence(e, now) {
     const today0 = new Date(now);
     today0.setHours(0, 0, 0, 0);
+    // An interval event's previous occurrence is one step back from its
+    // next - and there is none before the stored date, so an event that
+    // has not started yet is never "recent".
+    if (intervalRule(e)) {
+      const { steps } = intervalStep(e, today0);
+      if (steps === 0) return Number.POSITIVE_INFINITY;
+      const rule = intervalRule(e);
+      const previous = addInterval(rule.start, rule.count, rule.unit, steps - 1);
+      return Math.round((today0 - previous) / 86400000);
+    }
     const thisYear = eventOccurrenceDate(e, today0.getFullYear());
     thisYear.setHours(0, 0, 0, 0);
     if (thisYear <= today0) {
@@ -10968,6 +12637,92 @@
     return fragment;
   }
 
+  // The "Add an event" dialog (see _openFlowDialog) is a native modal
+  // dialog in the app's own root, where Home Assistant's dialogs live, with
+  // its own shadow root inside - the browser's top layer puts it above the
+  // dashboard, its header, its sidebar and any dialog already open, and
+  // the pickers Home Assistant's own fields open afterwards above it. This
+  // is its stylesheet, kept apart from the card's.
+  const ADD_DIALOG_STYLE = `
+    :host {
+      position: fixed;
+      inset: 0;
+      display: block;
+      font-family: var(--paper-font-body1_-_font-family, var(--mdc-typography-font-family, Roboto, sans-serif));
+      color: var(--primary-text-color, #212121);
+    }
+    /* On top of the browser's own dim behind a modal dialog. */
+    .backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.42); }
+    .dialog {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: min(520px, calc(100vw - 32px));
+      max-height: calc(100vh - 32px);
+      display: flex;
+      flex-direction: column;
+      background: var(--ha-card-background, var(--card-background-color, #fff));
+      border-radius: var(--ha-card-border-radius, 12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+    }
+    .head { display: flex; align-items: center; gap: 8px; padding: 16px 12px 8px 24px; }
+    .heading { flex: 1 1 auto; margin: 0; font-size: 20px; font-weight: 500; line-height: 1.3; }
+    .close {
+      flex: 0 0 auto;
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--secondary-text-color);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      --mdc-icon-size: 22px;
+    }
+    .close:hover, .close:focus-visible { background: rgba(127, 127, 127, 0.15); }
+    .body { flex: 1 1 auto; overflow: auto; padding: 0 24px 8px; }
+    .description { margin: 0 0 16px; font-size: 14px; line-height: 1.5; color: var(--secondary-text-color); }
+    .description p { margin: 0 0 8px; }
+    .menu { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+    .menu-item {
+      text-align: left;
+      padding: 12px 16px;
+      border: 1px solid var(--divider-color, rgba(127, 127, 127, 0.3));
+      border-radius: 10px;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .menu-item:hover, .menu-item:focus-visible { background: rgba(127, 127, 127, 0.12); border-color: var(--primary-color); }
+    .error { color: var(--error-color, #db4437); margin: 0 0 16px; font-size: 14px; }
+    .loading { padding: 24px 0; text-align: center; color: var(--secondary-text-color); }
+    .foot { display: flex; justify-content: flex-end; gap: 8px; padding: 8px 16px 16px; }
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 0 16px;
+      height: 36px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--primary-color);
+    }
+    .btn.primary { background: var(--primary-color); color: var(--text-primary-color, #fff); }
+    .btn.danger { background: var(--error-color, #db4437); color: #fff; }
+    .btn:hover:not(:disabled), .btn:focus-visible { filter: brightness(1.1); }
+    .btn:disabled { opacity: 0.5; cursor: default; }
+    ha-form { display: block; }
+  `;
+
   const CARD_STYLE = `
     /* A sections view hands the card a height and expects it to be that
        tall. Without these the card drew its natural height inside that
@@ -11030,12 +12785,18 @@
       z-index: 0;
       pointer-events: none;
     }
+    /* The title's row: the text, and at its right end the "+" that adds an
+       event (see show_add_button). A row rather than the text alone so the
+       button has a place even while the text is hidden. */
     .title {
       position: relative;
       z-index: 1;
       /* Never squeezed: the list is what gives way when the card is
          short. */
       flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       font-size: var(--annuals-card-title-size, 1.2em);
       font-weight: var(--annuals-card-title-weight, 500);
       font-style: var(--annuals-card-title-style, normal);
@@ -11044,6 +12805,313 @@
       letter-spacing: var(--annuals-card-title-spacing, normal);
       color: var(--annuals-card-title-color, inherit);
       margin-bottom: 12px;
+    }
+    .title-text { flex: 1 1 auto; min-width: 0; }
+    .title-text[hidden] { display: none; }
+    /* Round, unfilled, the icon in the theme's secondary text color: a
+       quiet control beside the title, not a second title. Its own font
+       settings so the title's letter-spacing and transform do not reach
+       the icon's box. */
+    .add {
+      flex: 0 0 auto;
+      margin-inline-start: auto;
+      /* Size and color follow Layout -> Design -> Buttons; the numbers here
+         are what an unset field means. The glyph keeps its share of the
+         button, so one field is all a bigger "+" takes. */
+      width: var(--annuals-card-add-button-size, 28px);
+      height: var(--annuals-card-add-button-size, 28px);
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--annuals-card-add-button-color, var(--secondary-text-color));
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: normal;
+      --mdc-icon-size: calc(var(--annuals-card-add-button-size, 28px) * 0.71);
+    }
+    .add:hover, .add:focus-visible {
+      background: rgba(127, 127, 127, 0.15);
+      color: var(--annuals-card-add-button-hover-color, var(--primary-color));
+    }
+    .add[hidden] { display: none; }
+    /* The pencil and the trash can of a row (see _rowActions): they float
+       over the row's end on a see-through plate rather than taking a
+       column of their own, so a row is laid out the same with them as
+       without. Out of sight, and out of reach - a hidden button must not
+       take a click that was meant for the row - until the row is pointed
+       at, or, with edit_buttons_on_click (.on-click), until it has been
+       clicked (.is-open); the keyboard arriving on a button brings them
+       up either way. The trash can turns to the error color when pointed
+       at itself. */
+    .row.has-row-actions, .timeline-list-item.has-row-actions { position: relative; }
+    .row-actions {
+      position: absolute;
+      inset-inline-end: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: inline-flex;
+      /* On the plate's middle: the two can be given sizes of their own (see
+         Layout -> Design -> Buttons), and a smaller one would otherwise
+         hang from the taller one's top edge. */
+      align-items: center;
+      gap: 2px;
+      padding: 2px 4px;
+      border-radius: 999px;
+      /* A neutral floor under the themed fill below: a theme of see-through
+         cards sets a card background with next to no color in it, and the
+         plate has to stay a plate there. */
+      background: rgba(127, 127, 127, 0.12);
+      -webkit-backdrop-filter: blur(2px);
+      backdrop-filter: blur(2px);
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary-text-color, #000) 12%, transparent);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 120ms ease;
+    }
+    /* The plate's fill, a layer of its own rather than a mixed color: a
+       theme's card background may be a gradient or an image, which no
+       color-mix() takes, and may be set on --ha-card-background alone.
+       Measured against 72% / 3px and 40% / 1.5px: at 55% / 2px the
+       countdown under the plate still shows through and the two icons stay
+       plain. Under the buttons, inside the plate (its transform makes it
+       the stacking context). */
+    .row-actions::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      background: var(--ha-card-background, var(--card-background-color, #fff));
+      opacity: 0.55;
+    }
+    /* .is-focused is the keyboard on one of the buttons (see _rowActions) -
+       not :focus-within, which a focus handed back after a click in the
+       dialog would match too, leaving the plate up over the row's end with
+       the pointer nowhere near. */
+    .row:hover .row-actions:not(.on-click),
+    .timeline-list-item:hover .row-actions:not(.on-click),
+    .row-actions.is-focused,
+    .row-actions.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    /* An item that answers a click with its buttons is a thing to click
+       (a list row says so through .has-action). */
+    .timeline-list-item.reveals-on-click { cursor: pointer; }
+    /* Each of the two takes its size and color from Layout -> Design ->
+       Buttons, falling back to the one its surroundings ask for: a row's
+       26px, 22px where the row itself is smaller, 18px on a line of the
+       timeline's list (see --annuals-row-action-default below). */
+    .row-action[data-act="edit"] {
+      --annuals-row-action-size: var(--annuals-card-edit-button-size, var(--annuals-row-action-default, 26px));
+      --annuals-row-action-color: var(--annuals-card-edit-button-color, var(--secondary-text-color));
+      --annuals-row-action-hover-color: var(--annuals-card-edit-button-hover-color, var(--primary-color));
+    }
+    .row-action[data-act="delete"] {
+      --annuals-row-action-size: var(--annuals-card-delete-button-size, var(--annuals-row-action-default, 26px));
+      --annuals-row-action-color: var(--annuals-card-delete-button-color, var(--secondary-text-color));
+      /* The trash can is the one that says what it does with its color. */
+      --annuals-row-action-hover-color: var(--annuals-card-delete-button-hover-color, var(--error-color, #db4437));
+    }
+    .row-action {
+      width: var(--annuals-row-action-size, 26px);
+      height: var(--annuals-row-action-size, 26px);
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--annuals-row-action-color, var(--secondary-text-color));
+      opacity: 0.7;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      --mdc-icon-size: 16px;
+    }
+    .row-action:hover, .row-action:focus-visible {
+      background: rgba(127, 127, 127, 0.15);
+      color: var(--annuals-row-action-hover-color, var(--primary-color));
+      opacity: 1;
+    }
+    /* The glyph keeps its share of the button, over any rule of a row's
+       own that sizes every ha-icon in it. */
+    .row-actions .row-action ha-icon {
+      --mdc-icon-size: calc(var(--annuals-row-action-size, 26px) * 0.62);
+    }
+    /* Never taller than its row: a plate hanging out of the last row would
+       give the list something to scroll to, in sight or not. Smaller where
+       the row itself is - a compact row, a minimal card - with a floor
+       under a row that would still be shorter; and in the timeline's list,
+       whose items are one line of text, as high as that line and wider
+       instead. */
+    /* An explicit min-height takes the place of the automatic one - the
+       one that keeps a row from being squeezed under its content in a list
+       that scrolls inside a card of fixed height. So the row gives none of
+       its height away either (flex-shrink; and for the grid's rows see
+       grid-auto-rows on .list.is-columns). Buttons made bigger than the row
+       raise the floor with them (see Layout -> Design -> Buttons), or their
+       plate would hang out of the last row and give the list something to
+       scroll to. */
+    .row.has-row-actions {
+      min-height: max(
+        30px,
+        calc(var(--annuals-card-edit-button-size, 0px) + 4px),
+        calc(var(--annuals-card-delete-button-size, 0px) + 4px)
+      );
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+    .list.columns-compact .row.has-row-actions,
+    ha-card[data-minimal] .row.has-row-actions {
+      min-height: max(
+        24px,
+        calc(var(--annuals-card-edit-button-size, 0px) + 4px),
+        calc(var(--annuals-card-delete-button-size, 0px) + 4px)
+      );
+    }
+    .list.columns-compact .row, ha-card[data-minimal] .row { --annuals-row-action-default: 22px; }
+    /* On list rows only (.row): the timeline draws inside the same .list,
+       and a card switched over from a compact list keeps that class - its
+       items must not get the taller plate back through it. */
+    .list.columns-compact .row .row-actions,
+    ha-card[data-minimal] .row .row-actions { padding: 1px 3px; }
+    /* One line of text carries a flatter pill: as high as the line, a little
+       wider than it is high, and it grows the line with it when it is made
+       bigger than one. */
+    .timeline-list-item { --annuals-row-action-default: 18px; }
+    .timeline-list-item.has-row-actions {
+      min-height: max(
+        calc(var(--annuals-card-edit-button-size, 0px) + 2px),
+        calc(var(--annuals-card-delete-button-size, 0px) + 2px)
+      );
+    }
+    .timeline-list-item .row-actions { padding: 0 2px; }
+    .timeline-list-item .row-action {
+      width: calc(var(--annuals-row-action-size, 18px) + 6px);
+      border-radius: 999px;
+    }
+    .timeline-list-item .row-actions .row-action ha-icon {
+      --mdc-icon-size: calc(var(--annuals-row-action-size, 18px) * 0.78);
+    }
+    /* Calendar navigation (see calendar_nav): arrows and the period on the
+       left, the mode buttons and the date picker on the right, wrapping to
+       two lines on a narrow card. The sizes are the Statistics Graph Chart
+       Card's own period bar, measured: 26px buttons with 6px corners on the
+       theme's secondary background in the secondary text color, an 11px
+       letter on the modes, a 12px period, 4px between them; the selected
+       mode takes the primary color. Every color, both fonts and the height
+       are variables of the card's own naming (see README, Theming). */
+    .nav {
+      position: relative;
+      z-index: 1;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px 8px;
+      margin-bottom: 10px;
+    }
+    .nav[hidden] { display: none; }
+    .nav-left, .nav-right { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+    /* Pushed to the right edge on its own line as much as beside the
+       arrows - space-between would leave it hanging under them once the
+       bar wraps. */
+    .nav-right { margin-left: auto; }
+    .nav-right[hidden] { display: none; }
+    .nav-label {
+      padding: 0 4px;
+      white-space: nowrap;
+      cursor: pointer;
+      font-size: var(--annuals-card-nav-label-size, 12px);
+      font-weight: var(--annuals-card-nav-label-weight, 500);
+      font-style: var(--annuals-card-nav-label-style, normal);
+      text-transform: var(--annuals-card-nav-label-transform, none);
+      text-decoration: var(--annuals-card-nav-label-decoration, none);
+      letter-spacing: var(--annuals-card-nav-label-spacing, normal);
+      color: var(--annuals-card-nav-label-color, var(--primary-text-color));
+    }
+    /* The search field (see show_search): the bar's own height and
+       ground, full width, its text in the theme's own color. */
+    .search {
+      position: relative;
+      z-index: 1;
+      flex: 0 0 auto;
+      margin-bottom: 10px;
+    }
+    .search[hidden] { display: none; }
+    .search-input {
+      box-sizing: border-box;
+      width: 100%;
+      height: var(--annuals-card-nav-button-height, 26px);
+      padding: 0 8px;
+      margin: 0;
+      border: none;
+      border-radius: 6px;
+      background: var(--annuals-card-search-background-color, var(--secondary-background-color));
+      color: var(--annuals-card-search-color, var(--primary-text-color));
+      font: inherit;
+      font-size: var(--annuals-card-search-size, 12px);
+      outline: none;
+    }
+    .search-input::placeholder { color: var(--secondary-text-color); opacity: 1; }
+    .search-input:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+    .nav-btn, .nav-mode {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      height: var(--annuals-card-nav-button-height, 26px);
+      min-width: var(--annuals-card-nav-button-height, 26px);
+      padding: 0 8px;
+      margin: 0;
+      border: none;
+      border-radius: 6px;
+      background: var(--annuals-card-nav-button-background-color, var(--secondary-background-color));
+      color: var(--annuals-card-nav-button-color, var(--secondary-text-color));
+      font: inherit;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .nav-btn { padding: 0; }
+    .nav-btn ha-icon { --mdc-icon-size: 18px; width: 18px; height: 18px; }
+    .nav-pick ha-icon { --mdc-icon-size: 16px; width: 16px; height: 16px; }
+    .nav-mode {
+      font-size: var(--annuals-card-nav-button-size, 11px);
+      font-weight: var(--annuals-card-nav-button-weight, 500);
+      font-style: var(--annuals-card-nav-button-style, normal);
+      text-transform: var(--annuals-card-nav-button-transform, none);
+      text-decoration: var(--annuals-card-nav-button-decoration, none);
+      letter-spacing: var(--annuals-card-nav-button-spacing, normal);
+    }
+    .nav-mode[hidden], .nav-pick[hidden] { display: none; }
+    /* The selected mode, and the calendar button while its picker has the
+       focus - the statistics card lights its own up the same way. */
+    .nav-mode.active, .nav-pick:focus-within {
+      background: var(--annuals-card-nav-active-background-color, var(--primary-color));
+      color: var(--annuals-card-nav-active-color, var(--text-primary-color, #fff));
+    }
+    .nav-btn:focus-visible, .nav-mode:focus-visible {
+      outline: 2px solid var(--primary-color);
+      outline-offset: 2px;
+    }
+    /* The browser's own date input, laid over the calendar button so the
+       tap lands on it (a phone opens the picker from that alone) while the
+       button underneath is what is seen. Not display:none - showPicker()
+       refuses an element that is not rendered. */
+    .nav-pick .nav-date {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      border: none;
+      opacity: 0;
+      cursor: pointer;
     }
     .list {
       position: relative;
@@ -11123,6 +13191,10 @@
         display: grid;
         grid-template-columns: var(--annuals-row-grid-template);
         column-gap: 12px;
+        /* Never under a row's content, whatever min-height the row carries
+           (see .row.has-row-actions): what "auto" does for a row without
+           one, said outright. */
+        grid-auto-rows: minmax(min-content, auto);
       }
       /* The occurrence badge's slot and the countdown carry a fixed width and
          a minimum width below. Those belong to the flex fallback, where every
@@ -11212,6 +13284,15 @@
     .icon {
       flex-shrink: 0;
       color: var(--annuals-row-icon-color, var(--annuals-row-resolved-icon-color, var(--primary-text-color)));
+    }
+    /* A person's picture standing in for the icon: the icon's own 24px,
+       round, filled rather than squashed. */
+    .icon.avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
     }
     /* Optional per-category (Default/Today/Soon) icon animation - see the
        Layout -> Icons editor tab. Applied via an anim-* class computed from
@@ -11318,19 +13399,14 @@
     .row.match-row-text .badge,
     .row.match-row-text .when,
     .row.match-row-text .text-col,
-    .row.match-row-text .date-col,
     .row.match-row-text .calendar-col {
       color: var(--annuals-row-resolved-text-color, var(--primary-text-color));
     }
-    /* "Match the row's text to its icon color" reaches the Date block too.
-       The three lines set their own color, so a plain "color" on .date-col
-       above no longer cascades into them - these hand it down through the
-       two variables their defaults read instead, which leaves a color the
-       user set on a line still winning over the match. */
-    .row.match-row-text .date-block {
-      --annuals-row-date-block-muted-color: var(--annuals-row-resolved-text-color, var(--primary-text-color));
-      --annuals-row-date-block-strong-color: var(--annuals-row-resolved-text-color, var(--primary-text-color));
-    }
+    /* The Date and Date block columns are not in that list. They say which
+       day the rows below them are on (see the day block in _render), and a
+       day whose events are of two types could not be painted in one of
+       their colours without lying about the other - so the date keeps the
+       colour Design gives it, whatever the row's own text does. */
     .info { flex: 1; min-width: 0; }
     /* Standalone identity columns (as opposed to the combined .info wrapper)
        need the same flex:1;min-width:0 treatment - without it, nothing in
@@ -11660,6 +13736,30 @@
       left: auto;
       box-shadow: none;
     }
+    /* A day's rows as one block, which is what a row led by a Date block
+       reads as: the rows below the first say nothing about the date, sit
+       closer to it, and the bar bridges the 4px the list puts between two
+       rows so that one day has one bar rather than one per row. What the
+       day says once is centred on the whole day by measurement - see
+       _centerDayBlocks, and groupsDays in _render for when any of this
+       applies at all. */
+    .row.day-follow { padding-top: 0; padding-bottom: 0; }
+    .row.day-lead + .row.day-follow, .row.day-follow + .row.day-follow { margin-top: -4px; }
+    .row.day-follow .accent-bar { margin-top: -4px; border-radius: 0; }
+    .row.day-lead:has(+ .row.day-follow) .accent-bar {
+      /* Down through the row's own bottom padding as well, which the rows
+         below it do not have (see .row.day-follow). */
+      margin-bottom: -6px;
+      border-end-start-radius: 0;
+      border-end-end-radius: 0;
+    }
+    .row.day-follow:has(+ .row.day-follow) .accent-bar {
+      border-end-start-radius: 0;
+      border-end-end-radius: 0;
+    }
+    /* The cells a day says once. Kept in the grid so every column stays on
+       its own x, with nothing in them. */
+    .day-repeat { min-height: 0; }
     .accent-bar {
       width: var(--annuals-row-accent-bar-width, 3px);
       align-self: stretch;
@@ -11911,7 +14011,28 @@
        like they're floating relative to the bigger ones (each box's middle
        lines up, not the text itself), whereas baseline is how differently
        sized words actually sit together in a real sentence. */
-    .list.columns-compact .row { gap: 0; justify-content: center; align-items: baseline; flex-wrap: wrap; }
+    /* A row that is one size throughout is not a sentence held together by
+       a baseline but a line of things that share a middle - see
+       compactIsOneSize. Centred, the icon and the badge stop standing a few
+       pixels above the words they belong to. */
+    .list.columns-compact.one-size .row { align-items: center; }
+    .list.columns-compact.one-size .icon-wrap { align-self: center; margin-bottom: 0; }
+    .list.columns-compact .row {
+      gap: 0;
+      justify-content: center;
+      align-items: baseline;
+      flex-wrap: wrap;
+      /* The table row leans left - 4px before the icon, 12px after the last
+         field - which is right for a row read from its left edge. This one
+         is centred, and the same lopsided padding puts its sentence 4px off
+         the middle of the card, twice that between the two side edges. The
+         same 16px, shared evenly. */
+      padding-inline: 8px;
+      /* And what wraps inside a field stays centred with it: this row is one
+         sentence, so a name broken over two lines reads as two centred lines
+         rather than a block hanging off the left edge. */
+      text-align: center;
+    }
     /* The icon has no text of its own to align by, so flexbox falls back to
        treating its bottom margin edge as its "baseline" - for a box as tall
        as the icon, that lines its bottom up with roughly the middle of the
@@ -11934,7 +14055,13 @@
     .list.columns-compact .last-name,
     .list.columns-compact .full-name,
     .list.columns-compact .type {
-      flex: none;
+      /* Neither grows nor is given a width of its own - what a field is
+         wide is what it says. It may shrink, though: a field wider than
+         the card (a long holiday name at 24px) used to keep its full
+         width on its own wrapped line and hang out over both edges
+         instead of breaking into two lines. Shrinking only ever applies
+         to a line that does not fit; a line that fits is untouched. */
+      flex: 0 1 auto;
     }
     .list.columns-compact .name { font-weight: var(--annuals-row-name-weight, normal); }
     .list.columns-compact .last-name { font-weight: var(--annuals-row-last-name-weight, normal); }
@@ -11999,6 +14126,15 @@
          centers the icon's *box*, and an mdi glyph is rarely centered within
          its own 24x24 viewBox, so the visible symbol still needs nudging to
          line its center up with the text's. */
+      display: block;
+    }
+    /* A person's picture in the icon's place (see _timelineGlyph): the
+       icon's own 20px, round. */
+    .timeline-header-icons .timeline-avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      object-fit: cover;
       display: block;
     }
     /* Bare glyphs, no round background - same treatment as the Details
@@ -12273,6 +14409,14 @@
       /* translateY set inline by _alignTimelineIconToText, same reason as
          the header icon above. */
       display: block;
+    }
+    .timeline-list-item .timeline-avatar {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      flex: 0 0 auto;
     }
     /* Positioning context for the VIP/Important badge overlays below - the
        wrap, not the icon itself, so a badge's absolute position isn't
@@ -12620,6 +14764,17 @@
     constructor() {
       super();
       this.attachShadow({ mode: "open" });
+      // What kind of pointer pressed the card last - a finger or a mouse -
+      // for the row buttons (see _rowActions), read before anything else
+      // handles the press.
+      this._lastPointerType = "";
+      this.shadowRoot.addEventListener(
+        "pointerdown",
+        (ev) => {
+          this._lastPointerType = ev.pointerType || "mouse";
+        },
+        true
+      );
       // Populated asynchronously by _fetchExternalEvents (see set hass
       // below) - empty until the first fetch resolves, same as any
       // network-backed data has to start somewhere. Never read directly by
@@ -12630,6 +14785,23 @@
       // config: unfolding is a look, not a setting, and writing it to the
       // dashboard would unfold the card for everyone else too.
       this._expanded = false;
+      // Where calendar navigation stands: which of day/week/month is
+      // showing, and the day it is anchored on - null until the person
+      // steps, meaning "the mode the config opens with" and "today", so a
+      // card left alone follows the calendar across midnight. Not in the
+      // config for the same reason _expanded is not: stepping to next week
+      // on one phone must not step every other screen with it.
+      this._navMode = null;
+      this._navAnchor = null;
+      // Whether anyone has used the bar yet. Until then the card lists
+      // what it always lists - what is coming, under the day window and
+      // the count - with the bar standing over it on today's period: a
+      // card opening on the 28th wants next month's first days as much as
+      // ever, not this month's remaining three. The arrows and the date
+      // picker turn the list into the period on screen, all of it (see
+      // _navPeriod); a mode button starts over, as the card loaded, in
+      // that mode (see _navSetMode).
+      this._navTouched = false;
       // entity_id -> configured "Calendar color" name (see
       // _fetchCalendarColors) - undefined until that resolves, same
       // "starts empty, fills in asynchronously" shape as _externalEvents.
@@ -12645,6 +14817,7 @@
     setConfig(config) {
       this._config = defaultConfig(config);
       this._built = false;
+      this._lastVisible = undefined;
       this._eventsSignature = undefined;
       // Config-only edits (e.g. picking a calendar in the editor) don't
       // necessarily change `hass` itself, so set hass() below won't
@@ -12673,7 +14846,7 @@
       // Cheap even when nothing changed - only actually fetches when the
       // configured calendars, the day window, or the calendar day itself
       // changed since the last check (see externalCalendarsSignature).
-      const extSignature = externalCalendarsSignature(this._config, hass);
+      const extSignature = externalCalendarsSignature(this._config, hass, this._navPeriod());
       if (extSignature !== this._externalSignature) {
         this._externalSignature = extSignature;
         this._fetchExternalEvents();
@@ -12686,7 +14859,11 @@
       }
       const signature = eventsSignature(hass);
       const langChanged = !prevHass || prevHass.language !== hass.language;
-      if (this._built && !langChanged && signature === this._eventsSignature) return;
+      // The "+" beside the title shows for administrators only (see
+      // show_add_button), and who is looking is known once the user has
+      // loaded - a change there is a change on the card.
+      const adminChanged = !prevHass || this._isAdmin(prevHass) !== this._isAdmin(hass);
+      if (this._built && !langChanged && !adminChanged && signature === this._eventsSignature) return;
       this._eventsSignature = signature;
       this._render();
     }
@@ -12746,13 +14923,21 @@
         return;
       }
       const now = new Date();
-      const start = new Date(now);
+      const range = this._navPeriod();
+      const start = new Date(range ? range.start : now);
       start.setHours(0, 0, 0, 0);
-      start.setDate(start.getDate() - (config.days_past || 0));
-      const aheadDays = config.days_ahead && config.days_ahead > 0 ? config.days_ahead : 365;
-      const end = new Date(now);
+      const end = new Date(range ? range.end : now);
       end.setHours(0, 0, 0, 0);
-      end.setDate(end.getDate() + aheadDays + 1);
+      if (range) {
+        // The period on screen, and nothing else - the day window does
+        // not apply while navigating (see _filteredEvents). End is
+        // exclusive, hence the day after the period's last.
+        end.setDate(end.getDate() + 1);
+      } else {
+        start.setDate(start.getDate() - (config.days_past || 0));
+        const aheadDays = config.days_ahead && config.days_ahead > 0 ? config.days_ahead : 365;
+        end.setDate(end.getDate() + aheadDays + 1);
+      }
       const results = await Promise.all(
         calendars.map(async (entityId) => {
           const state = this._hass.states[entityId];
@@ -12858,7 +15043,10 @@
 
     getCardSize() {
       if (!this._hass || !this._config) return 3;
-      const events = this._visibleEvents();
+      // What the last render drew, when there was one: the layout asks
+      // this repeatedly, and each answer used to filter, match and sort
+      // every event again to count them.
+      const events = this._lastVisible || this._visibleEvents();
       // What is drawn, not what is held: a folded list is as tall as its
       // fold.
       const rows =
@@ -12940,6 +15128,927 @@
       return since > 0 && since <= pastWindow;
     }
 
+    // ---- Calendar navigation (see calendar_nav in defaultConfig) ----
+
+    _navToday() {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return today;
+    }
+
+    _navModeCurrent() {
+      const config = this._config;
+      const configured = NAV_MODES.includes(config.calendar_nav_mode) ? config.calendar_nav_mode : "month";
+      return this._navMode || configured;
+    }
+
+    // The period on screen - null whenever the bar is not there at all,
+    // which is what every caller tests for. A day is itself; a week runs
+    // from the viewer's own first day of the week (the same rule the week
+    // separators break on, see weekStartIndex); a month is the calendar
+    // month. Both ends are local midnight, and the ISO forms are what the
+    // rows are matched against.
+    _navRange() {
+      const config = this._config;
+      if (config.calendar_nav !== true || config.layout_style === "timeline") return null;
+      const mode = this._navModeCurrent();
+      const anchor = this._navAnchor || this._navToday();
+      let start;
+      let end;
+      if (mode === "day") {
+        start = new Date(anchor);
+        end = new Date(anchor);
+      } else if (mode === "month") {
+        start = new Date(anchor.getFullYear(), anchor.getMonth(), 1);
+        end = new Date(anchor.getFullYear(), anchor.getMonth() + 1, 0);
+      } else if (mode === "year") {
+        start = new Date(anchor.getFullYear(), 0, 1);
+        end = new Date(anchor.getFullYear(), 11, 31);
+      } else {
+        start = weekStartDate(anchor, weekStartIndex(this._hass && this._hass.locale, this._locale()));
+        end = new Date(start.getFullYear(), start.getMonth(), start.getDate() + 6);
+      }
+      return { mode, start, end, startIso: localIsoDay(start), endIso: localIsoDay(end) };
+    }
+
+    // The period the list shows: the range once the bar has been used,
+    // null until then - a card that just loaded is the list it always was
+    // (see _navTouched), and only the bar's own label reads _navRange
+    // directly. What every consumer of the list tests for.
+    _navPeriod() {
+      return this._navTouched ? this._navRange() : null;
+    }
+
+    // Stepping and switching. The anchor is kept across a mode switch, so
+    // Month after stepping to a week in March opens March, and Week after
+    // that opens the week of the 1st. A month step lands on the 1st: the
+    // 31st plus a month is not a day every month has.
+    _navStep(direction) {
+      const range = this._navRange();
+      if (!range) return;
+      const anchor = this._navAnchor || this._navToday();
+      let next;
+      if (range.mode === "day") {
+        next = new Date(anchor.getFullYear(), anchor.getMonth(), anchor.getDate() + direction);
+      } else if (range.mode === "week") {
+        next = new Date(anchor.getFullYear(), anchor.getMonth(), anchor.getDate() + 7 * direction);
+      } else if (range.mode === "year") {
+        // The 1st of January, the way a month step lands on the 1st: a
+        // year is stepped as a year, not as 365 days.
+        next = new Date(anchor.getFullYear() + direction, 0, 1);
+      } else {
+        next = new Date(anchor.getFullYear(), anchor.getMonth() + direction, 1);
+      }
+      this._navGoTo(next);
+    }
+
+    _navGoTo(date) {
+      if (!(date instanceof Date) || Number.isNaN(date.getTime())) return;
+      this._navAnchor = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      this._navTouched = true;
+      this._navChanged();
+    }
+
+    // A mode button starts over in that mode - the list the card loaded
+    // with, the bar on today's day, week or month - so after paging
+    // through past months, "M" is the way back to now. The button of the
+    // mode already showing does the same rather than nothing.
+    _navSetMode(mode) {
+      if (!NAV_MODES.includes(mode)) return;
+      this._navMode = mode;
+      this._navAnchor = null;
+      this._navTouched = false;
+      this._navChanged();
+    }
+
+    // A new period means a new window for the embedded calendars, fetched
+    // here rather than waiting for a state change that may never come; the
+    // signature is written first so the next hass update does not fetch it
+    // a second time.
+    _navChanged() {
+      if (this._hass) {
+        this._externalSignature = externalCalendarsSignature(this._config, this._hass, this._navPeriod());
+        this._fetchExternalEvents();
+      }
+      this._render();
+    }
+
+    // What the bar says about the period: "Mon, 14 Sep" for a day, "14 – 20
+    // Sep" for a week (formatRange, which knows which parts the two ends
+    // share), "September 2026" for a month. The year is spelled out only
+    // when it is not the current one - on a bar someone is stepping through
+    // it is noise until they leave the year, where it is the point.
+    _navLabel(range) {
+      const locale = this._locale();
+      const thisYear = new Date().getFullYear();
+      const sameYear = range.start.getFullYear() === thisYear && range.end.getFullYear() === thisYear;
+      const year = sameYear ? {} : { year: "numeric" };
+      if (range.mode === "month") {
+        return dateFormatter(locale, { month: "long", year: "numeric" }).format(range.start);
+      }
+      // Just the number: a year needs no month or weekday to say which
+      // one it is, and it is written out even when it is this one - a bar
+      // showing "2026" with nothing else on it would say nothing at all.
+      if (range.mode === "year") {
+        return dateFormatter(locale, { year: "numeric" }).format(range.start);
+      }
+      if (range.mode === "day") {
+        return dateFormatter(locale, { weekday: "short", day: "numeric", month: "short", ...year }).format(range.start);
+      }
+      const fmt = dateFormatter(locale, { day: "numeric", month: "short", ...year });
+      try {
+        return fmt.formatRange(range.start, range.end);
+      } catch (err) {
+        // A browser without formatRange still gets both ends.
+        return `${fmt.format(range.start)} – ${fmt.format(range.end)}`;
+      }
+    }
+
+    // The bar itself: built once with the card, shown while the period is
+    // on, and re-labelled per render. The four mode buttons carry the
+    // language's own letter (D/W/M/Y, T/W/M/J, ...) with the full word as their
+    // tooltip. The date picker is the browser's own: an input over the
+    // calendar button, which a phone opens on the tap alone and a desktop
+    // through showPicker().
+    _syncNav(strings) {
+      const nav = this.shadowRoot.querySelector(".nav");
+      const range = this._navRange();
+      nav.hidden = !range;
+      if (!range) return;
+      if (!nav.dataset.wired) {
+        nav.dataset.wired = "1";
+        nav.querySelector('[data-nav="prev"]').addEventListener("click", () => this._navStep(-1));
+        nav.querySelector('[data-nav="next"]').addEventListener("click", () => this._navStep(1));
+        nav.querySelectorAll(".nav-mode").forEach((btn) => {
+          btn.addEventListener("click", () => this._navSetMode(btn.dataset.mode));
+        });
+        const input = nav.querySelector(".nav-date");
+        input.addEventListener("click", () => {
+          // Opening the picker is using the bar: the list becomes the
+          // period on screen straight away, as it does on iOS anyway,
+          // which fills an empty or untouched date input with today and
+          // reports that as a change the moment the picker opens. Choosing
+          // today then shows today's period, and choosing it again is no
+          // change that needs reporting.
+          if (!this._navTouched) this._navGoTo(this._navAnchor || this._navToday());
+          // Desktop browsers focus a date input on click and open its
+          // picker only from the icon inside it - which is under the
+          // calendar glyph here, not where the tap landed. Phones open it
+          // on the tap itself and either ignore this or refuse it, which
+          // is what the catch is for.
+          try {
+            if (typeof input.showPicker === "function") input.showPicker();
+          } catch (err) {
+            // Not rendered, no user gesture, or already open - the input
+            // itself still works.
+          }
+        });
+        input.addEventListener("change", () => {
+          const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(input.value || "");
+          if (match) this._navGoTo(new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
+        });
+        // The period itself is the way back to today - the same fresh
+        // start the mode buttons give, in the mode already showing.
+        nav.querySelector(".nav-label").addEventListener("click", () => this._navSetMode(this._navModeCurrent()));
+        // A swipe across the list or the bar steps the period, the way a
+        // phone's calendar does: a clear horizontal movement, not the
+        // vertical one that scrolls the list.
+        let touch = null;
+        const onStart = (ev) => {
+          const point = ev.touches && ev.touches[0];
+          touch = point ? { x: point.clientX, y: point.clientY } : null;
+        };
+        const onEnd = (ev) => {
+          const point = ev.changedTouches && ev.changedTouches[0];
+          if (!touch || !point || !this._navRange()) return;
+          const dx = point.clientX - touch.x;
+          const dy = point.clientY - touch.y;
+          touch = null;
+          if (Math.abs(dx) >= 50 && Math.abs(dx) > 2 * Math.abs(dy)) this._navStep(dx < 0 ? 1 : -1);
+        };
+        for (const surface of [nav, this.shadowRoot.querySelector(".list")]) {
+          surface.addEventListener("touchstart", onStart, { passive: true });
+          surface.addEventListener("touchend", onEnd, { passive: true });
+        }
+      }
+      nav.querySelector(".nav-label").title = strings.navToday || "";
+      // Which buttons the bar carries (see calendar_nav_buttons); the
+      // right-hand group goes entirely when there are none.
+      const buttons = Array.isArray(this._config.calendar_nav_buttons) ? this._config.calendar_nav_buttons : [];
+      nav.querySelector(".nav-right").hidden = !buttons.some((key) => NAV_BUTTONS.includes(key));
+      nav.querySelector(".nav-pick").hidden = !buttons.includes("picker");
+      nav.querySelector(".nav-label").textContent = this._navLabel(range);
+      for (const [key, table] of [["prev", strings.navPrev], ["next", strings.navNext]]) {
+        const btn = nav.querySelector(`[data-nav="${key}"]`);
+        const label = (table || {})[range.mode] || "";
+        btn.title = label;
+        btn.setAttribute("aria-label", label);
+      }
+      nav.querySelectorAll(".nav-mode").forEach((btn) => {
+        const mode = btn.dataset.mode;
+        btn.hidden = !buttons.includes(mode);
+        btn.textContent = (strings.navModeShort || {})[mode] || mode.charAt(0).toUpperCase();
+        const label = (strings.navModes || {})[mode] || mode;
+        btn.title = label;
+        btn.setAttribute("aria-label", label);
+        btn.classList.toggle("active", mode === range.mode);
+        btn.setAttribute("aria-pressed", mode === range.mode ? "true" : "false");
+      });
+      const pick = nav.querySelector(".nav-pick");
+      pick.title = strings.navPickDate || "";
+      const input = nav.querySelector(".nav-date");
+      input.setAttribute("aria-label", strings.navPickDate || "");
+      input.value = localIsoDay(this._navAnchor || this._navToday());
+    }
+
+    // Who may add: Home Assistant lets administrators start a config flow
+    // and nobody else - the flow API refuses everyone else - so the "+" is
+    // theirs alone (see show_add_button).
+    _isAdmin(hass) {
+      return !!(hass && hass.user && hass.user.is_admin);
+    }
+
+    // The card's one dialog over the dashboard, opened by the "+" beside
+    // the title (kind "add", see show_add_button) and by a row's pencil and
+    // trash can (kinds "edit" and "delete", see show_edit_buttons).
+    //
+    // Adding runs the integration's own "Add an event" steps - the kind of
+    // event, then that kind's form - over Home Assistant's config-flow
+    // API; editing runs the entry's own options flow, the "Configure" of
+    // Settings → Integrations, holiday menus included; deleting asks once
+    // and removes the entry. Every label, option, check and error is the
+    // integration's, read through its translations, and every field is
+    // drawn by Home Assistant's own form element from the flow's own
+    // schema - so the form here is the form there, field for field, and a
+    // field added to a flow is added here without a line changing. The
+    // dialog is its own element (see ADD_DIALOG_STYLE), taken down with
+    // the card or the flow, whichever ends first.
+    async _openFlowDialog(spec) {
+      if (this._flowDialog) return;
+      const hass = this._hass;
+      if (!hass || !this._isAdmin(hass)) return;
+      const kind = (spec && spec.kind) || "add";
+      const event = (spec && spec.event) || null;
+      // The profile's language, not the card's: the steps inside speak the
+      // profile's, and the buttons around them should not speak another.
+      const strings = t(hass);
+      // A native dialog, shown modal: the browser's top layer puts it above
+      // whatever is open - the card editor's own dialog included, whose
+      // preview card has this "+" too - keeps focus inside, and turns
+      // Escape into a cancel event, after any picker a field has open has
+      // taken its turn. A dialog element cannot hold a shadow root, so the
+      // styled part is a div inside it.
+      const dialog = document.createElement("dialog");
+      dialog.className = "annuals-add-dialog";
+      dialog.style.cssText =
+        "position:fixed;inset:0;width:100vw;height:100vh;max-width:none;max-height:none;margin:0;padding:0;border:0;background:transparent;overflow:visible;";
+      const host = document.createElement("div");
+      dialog.appendChild(host);
+      const shadow = host.attachShadow({ mode: "open" });
+      shadow.innerHTML = `
+        <style>${ADD_DIALOG_STYLE}</style>
+        <div class="backdrop"></div>
+        <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="add-heading" tabindex="-1">
+          <div class="head">
+            <h2 class="heading" id="add-heading"></h2>
+            <button type="button" class="close"><ha-icon icon="mdi:close"></ha-icon></button>
+          </div>
+          <div class="body"></div>
+          <div class="foot"></div>
+        </div>`;
+      const state = {
+        kind,
+        event,
+        dialog,
+        host,
+        shadow,
+        strings,
+        heading: kind === "edit" ? strings.editEvent : kind === "delete" ? strings.deleteEvent : strings.addEvent,
+        // Where the flow lives and what its words are called: an event is
+        // added through the integration's config flow and changed through
+        // the options flow of its own entry, each with a translation
+        // category of its own; the dropdowns' options are shared.
+        api: kind === "edit" ? "config/config_entries/options/flow" : "config/config_entries/flow",
+        textRoot: kind === "edit" ? "component.annuals.options" : "component.annuals.config",
+        categories: kind === "edit" ? ["options", "selector"] : ["config", "selector"],
+        failed: kind === "edit" ? strings.editFailed : kind === "delete" ? strings.deleteFailed : strings.addFailed,
+        localize: hass.localize,
+        formReady: false,
+        flowId: null,
+        entryId: null,
+        finished: false,
+        busy: false,
+        step: null,
+        formStepId: null,
+        data: {},
+        opener: (spec && spec.opener) || this.shadowRoot.querySelector(".add"),
+        // Which row the pencil or the trash can belonged to (see
+        // _closeFlowDialog): the button itself is gone once the row has
+        // been rebuilt under the dialog.
+        rowKey:
+          (spec && spec.opener && spec.opener.closest && (spec.opener.closest(".row-actions") || { dataset: {} }).dataset.rowKey) ||
+          "",
+      };
+      this._flowDialog = state;
+      const close = shadow.querySelector(".close");
+      close.setAttribute("aria-label", strings.addClose);
+      close.title = strings.addClose;
+      close.addEventListener("click", () => this._closeFlowDialog());
+      shadow.querySelector(".backdrop").addEventListener("click", () => this._closeFlowDialog());
+      // Escape: the browser asks a modal dialog to cancel once nothing
+      // above it - a picker, a dropdown - has taken the key. A dialog
+      // closed any other way is taken down the same.
+      // The dialog's own events only: a field inside sends "close" and
+      // "cancel" events of its own up through the tree - a picker shutting
+      // its list, for one - and those must not take the dialog with them.
+      dialog.addEventListener("cancel", (ev) => {
+        if (ev.target !== dialog) return;
+        ev.preventDefault();
+        this._closeFlowDialog();
+      });
+      dialog.addEventListener("close", (ev) => {
+        if (ev.target === dialog) this._closeFlowDialog();
+      });
+      // Into the app element's own root, next to Home Assistant's dialogs:
+      // some of its fields - the entity picker among them - take hass from
+      // the app's context rather than from a property, and a dialog hung
+      // on the body is outside that context and draws them empty.
+      const app = document.querySelector("home-assistant");
+      ((app && app.shadowRoot) || document.body).appendChild(dialog);
+      if (typeof dialog.showModal === "function") {
+        try {
+          dialog.showModal();
+        } catch (err) {
+          dialog.setAttribute("open", "");
+        }
+      } else {
+        dialog.setAttribute("open", "");
+      }
+      // Escape by hand as well: a dialog already open underneath - the
+      // card editor's, whose preview card has this "+" too - listens for
+      // the key on the document and answers it before the browser asks
+      // this dialog to cancel. The key is read here first, on its way up
+      // from the field that has focus, and left alone while a picker in
+      // that path has its list open for the key to close.
+      state.onKey = (ev) => {
+        if (ev.key !== "Escape" || ev.defaultPrevented) return;
+        if (ev.composedPath().some((el) => el && el !== dialog && (el.opened === true || el.open === true))) return;
+        ev.stopPropagation();
+        this._closeFlowDialog();
+      };
+      host.addEventListener("keydown", state.onKey);
+      this._renderFlowStep(null);
+      close.focus();
+      let step = null;
+      try {
+        if (kind === "delete") {
+          state.entryId = await this._entryIdFor(event);
+          if (this._flowDialog !== state) return;
+          this._renderDeleteConfirm();
+          return;
+        }
+        // The flow's words are in the integration's translations for the
+        // flow's own category, its dropdowns' options in the "selector"
+        // ones - loaded in turn, each returning a localize that knows both.
+        const loadTranslations = async () => {
+          let localize = hass.localize;
+          if (typeof hass.loadBackendTranslation !== "function") return localize;
+          for (const category of state.categories) {
+            try {
+              localize = (await hass.loadBackendTranslation(category, "annuals")) || localize;
+            } catch (err) {
+              // Keep what is loaded; a missing category only leaves keys raw.
+            }
+          }
+          return localize;
+        };
+        // An options flow is the entry's own: its handler is the entry's
+        // id, which the row's sensor knows through the entity registry.
+        const start = async () => {
+          const body = { show_advanced_options: !!(hass.userData && hass.userData.showAdvanced) };
+          if (kind === "edit") {
+            state.entryId = await this._entryIdFor(event);
+            body.handler = state.entryId;
+          } else {
+            body.handler = "annuals";
+          }
+          return this._flowRequest("POST", state.api, body);
+        };
+        const [localize, formReady, first] = await Promise.all([loadTranslations(), this._ensureHaForm(), start()]);
+        step = first;
+        if (this._flowDialog !== state) {
+          // Closed while the flow was being opened: the flow must not be
+          // left standing on the server.
+          if (step && step.flow_id) this._flowRequest("DELETE", `${state.api}/${step.flow_id}`).catch(() => {});
+          return;
+        }
+        state.localize = typeof localize === "function" ? localize : hass.localize;
+        state.formReady = formReady;
+        this._applyFlowStep(step);
+      } catch (err) {
+        if (this._flowDialog !== state) return;
+        this._renderFlowFailure(this._flowErrorText(err, state.failed));
+      }
+    }
+
+    // The config entry behind a row's sensor - what its options flow and
+    // its delete are addressed to - read from the entity registry on every
+    // click rather than remembered: a sensor's id is made from the event's
+    // type and name, so an event deleted and added again gets the old id
+    // for a new entry, and a remembered id would address the dead one.
+    async _entryIdFor(e) {
+      if (!e || !e.entityId) throw new Error("no entity");
+      const registry = await this._hass.callWS({ type: "config/entity_registry/get", entity_id: e.entityId });
+      const entryId = registry && registry.config_entry_id;
+      if (!entryId) throw new Error("no config entry");
+      return entryId;
+    }
+
+    // "Delete X?" with the sensor's own name - the row's may carry a day
+    // number or a part - and one red button, Cancel focused.
+    _renderDeleteConfirm() {
+      const state = this._flowDialog;
+      if (!state) return;
+      const { shadow, strings, event } = state;
+      shadow.querySelector(".heading").textContent = strings.deleteEvent;
+      const body = shadow.querySelector(".body");
+      const foot = shadow.querySelector(".foot");
+      body.textContent = "";
+      foot.textContent = "";
+      const sensor = this._hass.states[event.entityId];
+      const name = (sensor && sensor.attributes && sensor.attributes.friendly_name) || event.fullName || event.name || "";
+      const description = document.createElement("div");
+      description.className = "description";
+      const question = document.createElement("p");
+      const strong = document.createElement("strong");
+      strong.textContent = strings.deleteConfirm(name);
+      question.appendChild(strong);
+      const explain = document.createElement("p");
+      explain.textContent = strings.deleteExplain;
+      description.append(question, explain);
+      body.appendChild(description);
+      foot.appendChild(this._flowButton(strings.addCancel, "text", () => this._closeFlowDialog()));
+      foot.appendChild(this._flowButton(strings.deleteButton, "danger", () => this._deleteEntry()));
+      foot.querySelector("button").focus();
+    }
+
+    async _deleteEntry() {
+      const state = this._flowDialog;
+      if (!state || state.busy || !state.entryId) return;
+      state.busy = true;
+      state.shadow.querySelectorAll(".body button, .foot button").forEach((button) => (button.disabled = true));
+      try {
+        await this._flowRequest("DELETE", `config/config_entries/entry/${state.entryId}`);
+        if (this._flowDialog !== state) return;
+        // Gone - and with the entry its sensor, whose absence the next hass
+        // takes the row away with.
+        state.finished = true;
+        this._closeFlowDialog();
+      } catch (err) {
+        if (this._flowDialog !== state) return;
+        state.busy = false;
+        this._renderFlowFailure(this._flowErrorText(err, state.failed));
+      }
+    }
+
+    _closeFlowDialog() {
+      const state = this._flowDialog;
+      if (!state) return;
+      this._flowDialog = null;
+      if (state.onKey) state.host.removeEventListener("keydown", state.onKey);
+      try {
+        if (state.dialog.open) state.dialog.close();
+      } catch (err) {
+        // Already closed, or no dialog support: removing it is enough.
+      }
+      state.dialog.remove();
+      // A flow left half way is deleted, so the server is not holding a
+      // form nobody will finish; a finished one is already gone.
+      if (state.flowId && !state.finished) {
+        this._flowRequest("DELETE", `${state.api}/${state.flowId}`).catch(() => {});
+      }
+      // Back to the button that opened the dialog - or, the row having
+      // been rebuilt while the dialog was open (a saved entry reloads its
+      // sensor) or removed (a deleted one), to the same button on the
+      // rebuilt row, else to the "+", else to the first row button there
+      // is, so that the keyboard does not fall back to the top of the page.
+      const opener = state.opener;
+      if (opener && opener.isConnected) {
+        opener.focus();
+        return;
+      }
+      // The row by its own key first - one sensor can be several rows (a
+      // trip listed day by day) - then any row of the sensor.
+      const entityId = state.event && state.event.entityId;
+      const sameButton = (attr, value) =>
+        (value &&
+          typeof CSS !== "undefined" &&
+          this.shadowRoot.querySelector(
+            `.row-actions[${attr}="${CSS.escape(value)}"] .row-action[data-act="${state.kind}"]`
+          )) ||
+        null;
+      const again =
+        sameButton("data-row-key", state.rowKey) ||
+        sameButton("data-entity", entityId) ||
+        this.shadowRoot.querySelector(".add:not([hidden])") ||
+        this.shadowRoot.querySelector(".row-action");
+      if (again) again.focus();
+    }
+
+    _flowRequest(method, path, body) {
+      return this._hass.callApi(method, path, body);
+    }
+
+    // Home Assistant's form element is loaded by its editors, not by every
+    // dashboard; asking the entities card for its editor brings it in,
+    // which is the same import the config dialogs make.
+    async _ensureHaForm() {
+      if (customElements.get("ha-form")) return true;
+      try {
+        const helpers = typeof window.loadCardHelpers === "function" ? await window.loadCardHelpers() : null;
+        if (helpers && typeof helpers.createCardElement === "function") {
+          const probe = await helpers.createCardElement({ type: "entities", entities: [] });
+          if (probe && probe.constructor && typeof probe.constructor.getConfigElement === "function") {
+            await probe.constructor.getConfigElement();
+          }
+        }
+      } catch (err) {
+        // Nothing to do here: the wait below decides.
+      }
+      if (customElements.get("ha-form")) return true;
+      try {
+        await Promise.race([
+          customElements.whenDefined("ha-form"),
+          new Promise((_, reject) => setTimeout(reject, 5000)),
+        ]);
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+
+    // A step's text in the user's language: the integration's own
+    // translations, with the step's placeholders filled in - by localize
+    // where it can, by hand where an older one leaves them standing.
+    _flowText(state, key, placeholders) {
+      let text = "";
+      try {
+        text = state.localize(key, placeholders || undefined) || "";
+      } catch (err) {
+        text = "";
+      }
+      if (typeof text !== "string") text = "";
+      if (placeholders && text.includes("{")) {
+        for (const [name, value] of Object.entries(placeholders)) {
+          text = text.split(`{${name}}`).join(String(value));
+        }
+      }
+      return text;
+    }
+
+    // What went wrong, after the dialog's own word for it: the REST API
+    // answers with a body, the websocket with a message.
+    _flowErrorText(err, base) {
+      const message =
+        (err && err.body && typeof err.body.message === "string" && err.body.message) ||
+        (err && typeof err.message === "string" && err.message) ||
+        "";
+      return message ? `${base}: ${message}` : base;
+    }
+
+    // What the form starts out holding, the way Home Assistant's own dialog
+    // fills it: a suggested value, else a default, else - for a required
+    // field only - the emptiest value of its kind.
+    _initialFlowData(schema) {
+      const data = {};
+      for (const field of schema) {
+        const suggested = field.description ? field.description.suggested_value : undefined;
+        if (suggested !== undefined && suggested !== null) {
+          data[field.name] = suggested;
+          continue;
+        }
+        if ("default" in field) {
+          data[field.name] = field.default;
+          continue;
+        }
+        if (!field.required) continue;
+        const selector = field.selector || {};
+        if (field.type === "boolean" || "boolean" in selector) data[field.name] = false;
+        else if (field.type === "string" || "text" in selector) data[field.name] = "";
+        else if (field.type === "integer" || field.type === "float" || "number" in selector) {
+          const number = selector.number || {};
+          data[field.name] = number.min != null ? number.min : 0;
+        } else if ("select" in selector) {
+          const options = (selector.select && selector.select.options) || [];
+          if (options.length) data[field.name] = typeof options[0] === "string" ? options[0] : options[0].value;
+        } else if ("entity" in selector || "device" in selector || "area" in selector) {
+          const kind = selector.entity || selector.device || selector.area || {};
+          data[field.name] = kind.multiple ? [] : "";
+        }
+      }
+      return data;
+    }
+
+    _applyFlowStep(step) {
+      const state = this._flowDialog;
+      if (!state || !step) return;
+      state.step = step;
+      if (step.flow_id) state.flowId = step.flow_id;
+      if (step.type === "form" && state.formStepId !== step.step_id) {
+        // A new form starts out as the flow suggests; the same form shown
+        // again, with errors, keeps what was typed.
+        state.data = this._initialFlowData(step.data_schema || []);
+        state.formStepId = step.step_id;
+      }
+      if (step.type === "create_entry" || step.type === "abort") state.finished = true;
+      this._renderFlowStep(step);
+    }
+
+    async _submitFlow(payload) {
+      const state = this._flowDialog;
+      if (!state || !state.flowId || state.busy) return;
+      state.busy = true;
+      // The step's own buttons and fields wait for the answer; the ✕ in
+      // the head does not - closing is allowed at any moment, and the
+      // answer to a dialog already closed is dropped below.
+      state.shadow.querySelectorAll(".body button, .foot button").forEach((button) => (button.disabled = true));
+      const form = state.shadow.querySelector("ha-form");
+      if (form) form.disabled = true;
+      try {
+        const step = await this._flowRequest("POST", `${state.api}/${state.flowId}`, payload);
+        if (this._flowDialog !== state) return;
+        state.busy = false;
+        this._applyFlowStep(step);
+      } catch (err) {
+        if (this._flowDialog !== state) return;
+        state.busy = false;
+        this._renderFlowFailure(this._flowErrorText(err, state.failed));
+      }
+    }
+
+    // The flow's descriptions are markdown; the little of it they use -
+    // bold and paragraphs - drawn here without pulling in a renderer.
+    _appendFlowDescription(body, text) {
+      if (!text) return;
+      const escape = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      const div = document.createElement("div");
+      div.className = "description";
+      div.innerHTML = text
+        .split(/\n{2,}/)
+        .map((para) => `<p>${escape(para).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br>")}</p>`)
+        .join("");
+      body.appendChild(div);
+    }
+
+    _renderFlowFailure(text) {
+      const state = this._flowDialog;
+      if (!state) return;
+      const { shadow, strings } = state;
+      shadow.querySelector(".heading").textContent = state.heading;
+      const body = shadow.querySelector(".body");
+      const foot = shadow.querySelector(".foot");
+      body.textContent = "";
+      foot.textContent = "";
+      const p = document.createElement("p");
+      p.className = "error";
+      p.textContent = text;
+      body.appendChild(p);
+      foot.appendChild(this._flowButton(strings.addClose, "primary", () => this._closeFlowDialog()));
+      foot.querySelector("button").focus();
+    }
+
+    _flowButton(label, kind, onClick) {
+      const button = document.createElement("button");
+      button.type = "button";
+      // A menu option is its own kind of button (see .menu-item), not a
+      // .btn with extras - the .btn rules would win over its own.
+      button.className = kind === "menu-item" ? kind : `btn ${kind}`;
+      button.textContent = label;
+      button.addEventListener("click", onClick);
+      return button;
+    }
+
+    _renderFlowStep(step) {
+      const state = this._flowDialog;
+      if (!state) return;
+      const { shadow, strings } = state;
+      const heading = shadow.querySelector(".heading");
+      const body = shadow.querySelector(".body");
+      const foot = shadow.querySelector(".foot");
+      body.textContent = "";
+      foot.textContent = "";
+      const text = (key, placeholders) => this._flowText(state, key, placeholders);
+      if (!step) {
+        heading.textContent = state.heading;
+        const loading = document.createElement("div");
+        loading.className = "loading";
+        const spinnerTag = ["ha-spinner", "ha-circular-progress"].find((tag) => customElements.get(tag));
+        if (spinnerTag) {
+          const spinner = document.createElement(spinnerTag);
+          if (spinnerTag === "ha-circular-progress") spinner.setAttribute("indeterminate", "");
+          loading.appendChild(spinner);
+        } else {
+          loading.textContent = "…";
+        }
+        body.appendChild(loading);
+        foot.appendChild(this._flowButton(strings.addCancel, "text", () => this._closeFlowDialog()));
+        return;
+      }
+      const stepKey = `${state.textRoot}.step.${step.step_id}`;
+      const placeholders = step.description_placeholders || undefined;
+      if (step.type === "menu") {
+        heading.textContent = text(`${stepKey}.title`, placeholders) || state.heading;
+        this._appendFlowDescription(body, text(`${stepKey}.description`, placeholders));
+        const menu = document.createElement("div");
+        menu.className = "menu";
+        for (const option of step.menu_options || []) {
+          const label = text(`${stepKey}.menu_options.${option}`, placeholders) || option;
+          menu.appendChild(this._flowButton(label, "menu-item", () => this._submitFlow({ next_step_id: option })));
+        }
+        body.appendChild(menu);
+        foot.appendChild(this._flowButton(strings.addCancel, "text", () => this._closeFlowDialog()));
+        const first = menu.querySelector("button");
+        if (first) first.focus();
+        return;
+      }
+      if (step.type === "form") {
+        heading.textContent = text(`${stepKey}.title`, placeholders) || state.heading;
+        this._appendFlowDescription(body, text(`${stepKey}.description`, placeholders));
+        if (!state.formReady || !customElements.get("ha-form")) {
+          this._renderFlowFailure(state.failed);
+          return;
+        }
+        const form = document.createElement("ha-form");
+        form.hass = this._hass;
+        form.schema = step.data_schema || [];
+        form.data = state.data;
+        form.error = step.errors || {};
+        form.computeLabel = (field) => text(`${stepKey}.data.${field.name}`, placeholders) || field.name;
+        form.computeHelper = (field) => text(`${stepKey}.data_description.${field.name}`, placeholders) || "";
+        form.computeError = (error) => text(`${state.textRoot}.error.${error}`, placeholders) || error;
+        form.localizeValue = (key) => text(`component.annuals.selector.${key}`) || "";
+        form.addEventListener("value-changed", (ev) => {
+          ev.stopPropagation();
+          state.data = ev.detail.value;
+        });
+        body.appendChild(form);
+        foot.appendChild(this._flowButton(strings.addCancel, "text", () => this._closeFlowDialog()));
+        foot.appendChild(
+          this._flowButton(text(`${stepKey}.submit`, placeholders) || strings.addSubmit, "primary", () =>
+            this._submitFlow(state.data)
+          )
+        );
+        // Into the first field once the form has drawn it, as Home
+        // Assistant's own dialog does; failing that, the dialog itself,
+        // so that Escape still reaches it.
+        (form.updateComplete || Promise.resolve()).then(() => {
+          if (this._flowDialog !== state) return;
+          try {
+            form.focus();
+          } catch (err) {
+            // A form that cannot take focus: the dialog will.
+          }
+          if (!shadow.activeElement) shadow.querySelector(".dialog").focus();
+        });
+        return;
+      }
+      if (step.type === "create_entry") {
+        // An options flow's create_entry is the change saved, an event
+        // flow's the event made.
+        heading.textContent = state.heading;
+        this._appendFlowDescription(body, state.kind === "edit" ? strings.editSaved : strings.addCreated(step.title || ""));
+        foot.appendChild(this._flowButton(strings.addClose, "primary", () => this._closeFlowDialog()));
+        foot.querySelector("button").focus();
+        return;
+      }
+      if (step.type === "abort") {
+        this._renderFlowFailure(text(`${state.textRoot}.abort.${step.reason}`, placeholders) || step.reason || state.failed);
+        return;
+      }
+      // A progress or external step: nothing these flows have.
+      this._renderFlowFailure(state.failed);
+    }
+
+    // The search field (see show_search): shown while it is on and the
+    // layout has a list to filter, wired once, and what it holds is kept
+    // on the card rather than in the config. Its input is part of the
+    // card's skeleton, so a render leaves it - and the cursor in it - alone.
+    _syncSearch(strings) {
+      const box = this.shadowRoot.querySelector(".search");
+      const on = this._config.show_search === true && this._config.layout_style !== "timeline";
+      box.hidden = !on;
+      const input = box.querySelector(".search-input");
+      input.placeholder = strings.searchPlaceholder || "";
+      input.setAttribute("aria-label", strings.searchPlaceholder || "");
+      if (!box.dataset.wired) {
+        box.dataset.wired = "1";
+        input.addEventListener("input", () => {
+          this._searchText = input.value;
+          this._render();
+        });
+        input.addEventListener("keydown", (ev) => {
+          if (ev.key !== "Escape" || !input.value) return;
+          input.value = "";
+          this._searchText = "";
+          this._render();
+        });
+      }
+      if (!on && this._searchText) {
+        this._searchText = "";
+        input.value = "";
+      }
+      // A rebuilt skeleton (setConfig) comes with an empty field while the
+      // text that filters the list is still held here - put it back, so
+      // the field always shows what the list is filtered by.
+      if (on && input.value !== (this._searchText || "")) input.value = this._searchText || "";
+    }
+
+    // Whether a row answers to what was typed: its names, its type as the
+    // row would write it, a holiday's category, a calendar entry's
+    // location - the words on the row, not the entity behind it.
+    _matchesSearch(e, query, strings) {
+      const words = [
+        e.name,
+        e.fullName,
+        e.lastName,
+        e.isExternal ? e.typeLabel : (strings.types || {})[e.type],
+        e.type === "holiday" && e.category ? (strings.categories || {})[e.category] : "",
+        e.location,
+      ];
+      return words.some((word) => typeof word === "string" && word.toLowerCase().includes(query));
+    }
+
+    // Every row the period holds, in place of expandMultiDay's rows of what
+    // is coming. A one-time event, an embedded calendar's entry and every
+    // day of a trip already know their date; a yearly event is put on its
+    // day in each year the period touches - a week can straddle New Year -
+    // with the sensor's own next_date trusted in its year, which is what
+    // keeps a moveable holiday exact there. In any other year a holiday
+    // sits on the same month and day, which is right for Christmas and a
+    // few weeks out for Easter; the sensor carries no other year's date.
+    //
+    // Each row gets the same signed offsets the rest of the card reads:
+    // days from today, daysSince once behind us, and how many occurrences
+    // the year is away from the next one, so the badge counts back and
+    // forward alike. The next occurrence's own row is the only one its
+    // to-dos belong to.
+    _navRows(all, range, strings) {
+      const config = this._config;
+      const todayIso = localIsoDay(new Date());
+      const years = [...new Set([range.start.getFullYear(), range.end.getFullYear()])];
+      const inRange = (iso) => iso >= range.startIso && iso <= range.endIso;
+      const rows = [];
+      const place = (row, iso, extra) => {
+        const days = isoDayDiff(todayIso, iso);
+        const out = { ...row, ...extra, days, nextDate: iso };
+        if (days <= 0) out.daysSince = -days;
+        else delete out.daysSince;
+        rows.push(out);
+      };
+      for (const e of all) {
+        if (e.isExternal || e.type === "one_time") {
+          for (const row of expandMultiDay([e], config.multi_day_display || "start", todayIso, strings, true)) {
+            const iso = row.nextDate || row.startDate;
+            if (typeof iso === "string" && inRange(iso)) place(row, iso, {});
+          }
+          continue;
+        }
+        // An interval event is put on each of its steps inside the period,
+        // however many that is; the badge shifts by the steps from the next
+        // occurrence, and only that one's row carries its to-dos.
+        if (intervalRule(e)) {
+          const nextStep =
+            typeof e.nextDate === "string" ? intervalStep(e, isoToDate(e.nextDate)).steps : null;
+          for (const { date, steps } of intervalOccurrencesBetween(e, range.start, range.end)) {
+            const iso = localIsoDay(date);
+            const extra = {};
+            if (iso !== e.nextDate) extra.noTodos = true;
+            if (e.occurrence != null && nextStep != null) extra.occurrenceShift = steps - nextStep;
+            place(e, iso, extra);
+          }
+          continue;
+        }
+        const next = typeof e.nextDate === "string" ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(e.nextDate) : null;
+        const nextYear = next ? Number(next[1]) : NaN;
+        // A holiday sensor reports no month/day of its own - its next date
+        // is all it has, and that is where its day comes from.
+        const month = e.month || (next ? Number(next[2]) : null);
+        const day = e.day || (next ? Number(next[3]) : null);
+        for (const year of years) {
+          let iso;
+          if (year === nextYear) iso = e.nextDate;
+          else if (month && day) iso = localIsoDay(eventOccurrenceDate({ ...e, month, day }, year));
+          else continue;
+          if (!inRange(iso)) continue;
+          const extra = {};
+          if (year !== nextYear) extra.noTodos = true;
+          if (e.occurrence != null && Number.isFinite(nextYear)) extra.occurrenceShift = year - nextYear;
+          place(e, iso, extra);
+        }
+      }
+      return rows;
+    }
+
     _filteredEvents() {
       const config = this._config;
       const now = new Date();
@@ -12958,12 +16067,21 @@
       // to whichever of its days happens to be listed, and matching against
       // fourteen copies of one holiday trip would only make the scoring
       // fight itself.
-      const expanded = expandMultiDay(
-        all,
-        config.multi_day_display || "start",
-        localIsoDay(now),
-        t(this._hass, this._config)
-      );
+      // Once the bar has been used, the rows are the period's (see
+      // _navRows, _navPeriod) and every filter below that reads the day
+      // window - today only, next event day, days ahead, and the count in
+      // _visibleEvents - stands aside; what an event is (its type,
+      // category, region, badges) still filters. Until then this is the
+      // list the card always had, bar or no bar.
+      const range = this._navPeriod();
+      const expanded = range
+        ? this._navRows(all, range, t(this._hass, this._config))
+        : expandMultiDay(
+            all,
+            config.multi_day_display || "start",
+            localIsoDay(now),
+            t(this._hass, this._config)
+          );
       let filtered = expanded.filter((e) => {
         // `types`/`categories`/VIP/Important all describe Annuals-specific
         // concepts (event type, holiday category, the manual VIP flag and
@@ -12976,12 +16094,14 @@
         // next_date, which only an Annuals sensor has), so applying it
         // there would empty the calendar out rather than filter it - the
         // same reason VIP only and Important only leave it alone.
-        if (e.isExternal) return !config.today_only || e.days === 0;
+        if (e.isExternal) return range ? true : !config.today_only || e.days === 0;
         // Narrows whatever the VIP/Important pair further down leaves,
         // rather than joining their OR - "VIP only" plus this one means the
         // VIP events that still have something to do, not everything that
         // is either.
         if (config.show_todo_only) {
+          // A row of another year has no to-dos of its own (see _navRows).
+          if (e.noTodos) return false;
           const todos = this._todoByEntity.get(e.entityId);
           if (!todos || !todos.length) return false;
         }
@@ -13022,7 +16142,7 @@
         // e.days is always the sensor's "days until next occurrence" (never
         // negative - it jumps forward the day after an event), so this is
         // simply "only the events landing exactly today".
-        if (config.today_only && e.days !== 0) return false;
+        if (!range && config.today_only && e.days !== 0) return false;
         // When both filters are on, they combine as OR (VIP or Important),
         // not AND - otherwise enabling both would only show events that are
         // both at once, which reads as "either" to anyone flipping two
@@ -13105,10 +16225,37 @@
       // settings, leaving nothing on screen at all. Falls back to the
       // soonest day there is when every remaining event is in the past, so
       // such a card shows that day rather than emptying itself.
-      if (config.next_event_day_only && filtered.length) {
+      if (!range && config.next_event_day_only && filtered.length) {
         const upcoming = filtered.map((e) => e.days).filter((days) => days >= 0);
         const minDays = Math.min(...(upcoming.length ? upcoming : filtered.map((e) => e.days)));
         filtered = filtered.filter((e) => e.days === minDays);
+      }
+      // Today's appointments that are over (see hide_finished_today and
+      // finishedToday). Not while a period is being paged through: there
+      // the whole period is on show, past days and all, and hiding this
+      // afternoon's meeting while yesterday's is listed would be the odd
+      // one out. The soonest end still ahead is remembered here, for the
+      // timer that makes the row leave on its own (see _render).
+      this._nextFinishAt = null;
+      if (!range && config.hide_finished_today !== false) {
+        const nowMs = now.getTime();
+        filtered = filtered.filter((e) => {
+          const end = e.days === 0 && e.allDay !== true ? e.endTime || e.startTime : null;
+          if (!end) return true;
+          if (end.getTime() <= nowMs) return false;
+          if (!this._nextFinishAt || end.getTime() < this._nextFinishAt) {
+            this._nextFinishAt = end.getTime();
+          }
+          return true;
+        });
+      }
+      // Navigating, every row of the period is shown, its offsets already
+      // on it: today and what is behind it lead, what is ahead follows.
+      if (range) {
+        return {
+          hero: filtered.filter((e) => e.days <= 0),
+          upcoming: filtered.filter((e) => e.days > 0),
+        };
       }
       const hero = filtered
         .filter((e) => this._isRecent(e, now))
@@ -13135,6 +16282,76 @@
       return { hero, upcoming };
     }
 
+    // The date (and the countdown) a day says once sits on that day's first
+    // row, so on its own it would stand at the top of a day of three events.
+    // Moved down by half of what the rows below it add, it stands in the
+    // middle of the day instead - a transform, so nothing else moves, and
+    // over the cells the following rows left empty, so nothing is covered.
+    //
+    // Measured twice: once here, which is right for a card the browser has
+    // already laid out, and once on the next frame for one that was still
+    // being laid out (or was hidden) at this point. A group of one row is
+    // left alone, and clearing first is what lets a group that has lost its
+    // second row go back to where it belongs.
+    _centerDayBlocks(listEl) {
+      const rows = [...listEl.querySelectorAll(":scope > .row")];
+      const cellsOf = (row) => [...row.querySelectorAll(".date-col, .when")];
+      const groups = [];
+      for (const row of rows) {
+        if (row.classList.contains("day-follow") && groups.length) {
+          groups[groups.length - 1].push(row);
+        } else {
+          groups.push([row]);
+        }
+      }
+      const place = () => {
+        for (const group of groups) {
+          const lead = group[0];
+          const cells = cellsOf(lead);
+          for (const cell of cells) cell.style.transform = "";
+          if (group.length < 2 || !cells.length) continue;
+          const leadRect = lead.getBoundingClientRect();
+          const lastRect = group[group.length - 1].getBoundingClientRect();
+          // Nothing to measure yet (a card that is not on screen): left for
+          // the frame below, which runs once the browser draws it.
+          if (!leadRect.height || !lastRect.height) continue;
+          const shift = Math.round((lastRect.bottom - leadRect.bottom) / 2);
+          if (shift <= 0) continue;
+          for (const cell of cells) cell.style.transform = `translateY(${shift}px)`;
+        }
+      };
+      place();
+      if (this._dayBlockFrame) window.cancelAnimationFrame(this._dayBlockFrame);
+      this._dayBlockFrame = window.requestAnimationFrame(() => {
+        this._dayBlockFrame = 0;
+        if (listEl.isConnected) place();
+      });
+    }
+
+    // The row goes when its event is over, not when something else happens
+    // to redraw the card: one timer, set to the soonest end still ahead of
+    // us (see _filteredEvents), replaced on every render and dropped with
+    // the card. A second past the end, so the comparison there is safely on
+    // the other side of it.
+    _scheduleFinishedRefresh() {
+      if (this._finishedTimer) {
+        window.clearTimeout(this._finishedTimer);
+        this._finishedTimer = null;
+      }
+      const at = this._nextFinishAt;
+      if (!at || this._config.hide_finished_today === false) return;
+      const delay = at - Date.now() + 1000;
+      // Today's ends are hours away at most, well inside what a timeout can
+      // hold (about 24 days), so no re-arming chain is needed.
+      this._finishedTimer = window.setTimeout(
+        () => {
+          this._finishedTimer = null;
+          if (this._hass) this._render();
+        },
+        Math.max(delay, 1000)
+      );
+    }
+
     // A single chronological timeline (past events oldest-first, then today,
     // then upcoming soonest-first), capped to config.count as a total across
     // the whole card - not just the "upcoming" portion, so a highlighted
@@ -13159,7 +16376,9 @@
         // dropped five events off the tail instead of limiting the list to
         // five - a card written by hand with count: -5 showed 125 rows. Only
         // a positive number is a limit; anything else falls back.
-        .slice(0, this._config.count > 0 ? Math.trunc(this._config.count) : 10);
+        // A period someone has paged to shows all it holds - a month is
+        // not ten events long (see _navPeriod).
+        .slice(0, this._navPeriod() ? Infinity : this._config.count > 0 ? Math.trunc(this._config.count) : 10);
     }
 
     // "when" text for the timeline layout - e.daysSince (attached in
@@ -13168,9 +16387,7 @@
     // same way _row() has to handle it, since a recent-past event's own
     // e.days already points at its *next* year's occurrence by this point.
     _timelineWhenText(e, strings) {
-      if (e.daysSince !== undefined && e.daysSince > 0) {
-        return e.daysSince === 1 ? strings.dayAgo : strings.daysAgo(e.daysSince);
-      }
+      if (e.daysSince !== undefined && e.daysSince > 0) return this._relativeText(-e.daysSince, strings);
       return this._countdownText(e, strings);
     }
 
@@ -13288,11 +16505,43 @@
     _countdownText(e, strings) {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      const offset = Math.round((this._occurrenceDate(e) - today) / 86400000);
+      return this._relativeText(Math.round((this._occurrenceDate(e) - today) / 86400000), strings);
+    }
+
+    // A distance in days as words, either way from today. Two weeks and
+    // more can read in weeks, months and years instead (see
+    // countdown_units in defaultConfig) - the browser's own wording for the
+    // card's language, so nothing here has to know how Polish counts weeks.
+    // Everything closer stays in the card's own day strings, which have the
+    // "tomorrow" and "yesterday" the browser's numeric form does not.
+    _relativeText(offset, strings) {
       if (offset === 0) return strings.today;
       if (offset === 1) return strings.inDay;
-      if (offset > 0) return strings.inDays(offset);
-      return offset === -1 ? strings.dayAgo : strings.daysAgo(-offset);
+      if (offset === -1) return strings.dayAgo;
+      const distance = Math.abs(offset);
+      if (
+        this._config.countdown_units !== "days" &&
+        distance >= 14 &&
+        typeof Intl.RelativeTimeFormat === "function"
+      ) {
+        let unit;
+        let value;
+        const months = Math.round(distance / 30.4375);
+        if (distance < 60) {
+          unit = "week";
+          value = Math.round(distance / 7);
+        } else if (months < 24) {
+          // Judged on the rounded figure, so 716 days is "2 years" rather
+          // than "24 months" a fortnight before it turns two.
+          unit = "month";
+          value = months;
+        } else {
+          unit = "year";
+          value = Math.round(distance / 365.25);
+        }
+        return relativeFormatter(this._locale()).format(offset < 0 ? -value : value, unit);
+      }
+      return offset > 0 ? strings.inDays(offset) : strings.daysAgo(distance);
     }
 
     // Short calendar date ("6 Aug") for config.timeline_show_date - same
@@ -13314,25 +16563,17 @@
     // swap in, including on the event's own day, where the sentence's
     // "...is today" is exactly what you'd tap to find out *which* day.
     _timelineFullDateText(e) {
-      const target = this._occurrenceDate(e);
-      return new Intl.DateTimeFormat(this._locale(), {
-        weekday: "short",
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      }).format(target);
+      return dateFormatter(this._locale(), FULL_DATE_OPTIONS).format(this._occurrenceDate(e));
     }
 
     // Time range ("14:00–15:00", or a single time with no dash when there's
     // no end/it equals the start) for config.timeline_show_time - same
     // formatting _row()'s own values.time uses, only ever non-null for a
-    // timed (non-all-day) external calendar event (see buildExternalEvent).
+    // timed event - an external calendar's timed entry (see
+    // buildExternalEvent) or a one-time event given a time (see timedFields).
     _timelineTimeText(e) {
-      if (!e.isExternal || e.allDay || (!e.startTime && !e.endTime)) return null;
-      const timeFmt = new Intl.DateTimeFormat(this._locale(), {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
+      if (e.allDay !== false || (!e.startTime && !e.endTime)) return null;
+      const timeFmt = dateFormatter(this._locale(), TIME_OPTIONS);
       // One of the two can be missing on a row of a multi-day entry: the
       // day it starts does not end it, and the day it ends did not start
       // it (see expandMultiDay).
@@ -13357,6 +16598,25 @@
     // no way to reach it: setting the Timeline's Badge color moved the dots
     // and nothing else. One field per layout now, which is what the editor
     // has always presented.
+    // The event's glyph in the timeline's header and its Details list: the
+    // linked person's picture where there is one (see `picture` in
+    // getEvents), round, at the icon's own size; otherwise its icon in the
+    // color the timeline gives it. The axis keeps its dots either way - a
+    // photo the size of a dot would be a smudge.
+    _timelineGlyph(e, config) {
+      if (e.picture) {
+        const img = document.createElement("img");
+        img.className = "timeline-avatar";
+        img.src = e.picture;
+        img.alt = "";
+        return img;
+      }
+      const icon = document.createElement("ha-icon");
+      icon.setAttribute("icon", e.icon);
+      icon.style.color = timelineIconColor(config, e, this._calendarColors);
+      return icon;
+    }
+
     _timelineBadges(e, config) {
       const vipColorVar = "--annuals-timeline-vip-badge-color";
       const importantColorVar = "--annuals-timeline-important-badge-color";
@@ -13557,9 +16817,10 @@
       // would read as a run of disconnected parens instead of one
       // parenthetical remark. Date is null on the event's own day (see
       // _timelineDateText), since the sentence already ends "...is today"
-      // right before it; time/location/description are simply never shown
-      // for anything but a timed external calendar event (see
-      // buildExternalEvent) regardless of their own toggle.
+      // right before it; location/description are simply never shown for
+      // anything but an external calendar event (see buildExternalEvent)
+      // regardless of their own toggle, and the time only for a timed one -
+      // a calendar's timed entry or a one-time event given a time.
       const timelineDateText = config.timeline_show_date ? this._timelineDateText(e) : null;
       const timelineTimeText = config.timeline_show_time ? this._timelineTimeText(e) : null;
       const timelineLocationText = config.timeline_show_location && e.isExternal ? e.location : null;
@@ -13699,9 +16960,7 @@
         const headerIcons = document.createElement("div");
         headerIcons.className = "timeline-header-icons";
 
-        const mainIcon = document.createElement("ha-icon");
-        mainIcon.setAttribute("icon", ev.icon);
-        mainIcon.style.color = timelineIconColor(config, ev, this._calendarColors);
+        const mainIcon = this._timelineGlyph(ev, config);
         // Animated via a wrapping span, not the icon itself - the icon
         // already carries its own inline transform (translateY, set below by
         // _alignTimelineIconToText), and a CSS animation targeting the same
@@ -13751,7 +17010,7 @@
         sentence.appendChild(this._timelineSentenceFragment(ev, strings, config));
         row.appendChild(sentence);
         header.appendChild(row);
-        this._alignTimelineIconToText(mainIcon, sentence);
+        if (mainIcon.tagName === "HA-ICON") this._alignTimelineIconToText(mainIcon, sentence);
       });
       wrap.appendChild(header);
 
@@ -14133,9 +17392,7 @@
 
         const iconWrap = document.createElement("div");
         iconWrap.className = "timeline-list-icon-wrap";
-        const icon = document.createElement("ha-icon");
-        icon.setAttribute("icon", e.icon);
-        icon.style.color = timelineIconColor(config, e, this._calendarColors);
+        const icon = this._timelineGlyph(e, config);
         // Same wrap-for-animation reasoning as the header icon above.
         const listAnimClass = this._timelineAnimClass(e, config);
         if (listAnimClass) {
@@ -14178,8 +17435,20 @@
         const text = document.createElement("span");
         text.appendChild(this._timelineSentenceFragment(e, strings, config));
         item.append(iconWrap, text);
+        const actions = this._rowActions(e, strings);
+        if (actions) {
+          item.appendChild(actions);
+          item.classList.add("has-row-actions");
+          this._wireRowActionsPlacement(item, actions);
+          // An item of this list has no tap action of its own, so with
+          // edit_buttons_on_click a click on it has this one meaning.
+          if (config.edit_buttons_on_click === true) {
+            item.classList.add("reveals-on-click");
+            item.addEventListener("click", () => this._toggleRowActions(actions));
+          }
+        }
         listEl.appendChild(item);
-        this._alignTimelineIconToText(icon, text);
+        if (icon.tagName === "HA-ICON") this._alignTimelineIconToText(icon, text);
       });
       wrap.appendChild(listEl);
 
@@ -14222,13 +17491,40 @@
     // once this card is removed from a dashboard - otherwise both would
     // linger forever, since nothing else ever removes them.
     disconnectedCallback() {
+      // The add dialog is not inside this card, so it has to be taken down
+      // with the card that opened it - but only once the card is really
+      // gone: a dashboard re-laying its columns moves every card out and
+      // straight back in, and a form half filled must survive that.
+      queueMicrotask(() => {
+        if (!this.isConnected) this._closeFlowDialog();
+      });
       if (this._timelineOutsideClickHandler) {
         document.removeEventListener("click", this._timelineOutsideClickHandler);
         this._timelineOutsideClickHandler = null;
       }
+      if (this._rowActionsOutsideClickHandler) {
+        document.removeEventListener("click", this._rowActionsOutsideClickHandler, true);
+        this._rowActionsOutsideClickHandler = null;
+      }
+      if (this._rowActionsEscapeHandler) {
+        document.removeEventListener("keydown", this._rowActionsEscapeHandler);
+        this._rowActionsEscapeHandler = null;
+      }
+      // The rows outlive a move of the card (a dashboard re-laying its
+      // columns), the listeners do not: close whatever was open, class and
+      // all, so that nothing stays up with nothing left to put it away.
+      this._setRowActionsOpen("");
       if (this._externalPollTimer) {
         window.clearInterval(this._externalPollTimer);
         this._externalPollTimer = undefined;
+      }
+      if (this._finishedTimer) {
+        window.clearTimeout(this._finishedTimer);
+        this._finishedTimer = null;
+      }
+      if (this._dayBlockFrame) {
+        window.cancelAnimationFrame(this._dayBlockFrame);
+        this._dayBlockFrame = 0;
       }
     }
 
@@ -14309,7 +17605,7 @@
 
       let when;
       if (isRecent && e.daysSince > 0) {
-        when = e.daysSince === 1 ? strings.dayAgo : strings.daysAgo(e.daysSince);
+        when = this._relativeText(-e.daysSince, strings);
       } else {
         when = this._countdownText(e, strings);
       }
@@ -14322,12 +17618,7 @@
       // Same occurrence as dateText, but always a real date (never the
       // "Today" word) and in a fuller form - see ctx.fullDateText below.
       const occurrenceDate = this._occurrenceDate(e);
-      const fullDateText = new Intl.DateTimeFormat(this._locale(), {
-        weekday: "short",
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      }).format(occurrenceDate);
+      const fullDateText = dateFormatter(this._locale(), FULL_DATE_OPTIONS).format(occurrenceDate);
       // Which month, week and day this row falls in, for the three separator
       // options - read back in _render, which is the only place that can see
       // two rows at once and therefore the only place that can tell where any
@@ -14351,7 +17642,13 @@
       // advanced to next year's count, so the occurrence that just happened
       // is occurrence_number - 1.
       const showBadge = config.show_badge !== false && e.occurrence != null;
-      const badgeValue = isRecent && e.daysSince > 0 ? e.occurrence - 1 : e.occurrence;
+      // A row calendar navigation put in another year says how many
+      // occurrences away that year is (see _navRows); otherwise a past row
+      // is the one before. An event without a number has none to shift -
+      // it used to come out as -1 in a {occurrence} placeholder once past.
+      const occurrenceShift =
+        e.occurrenceShift !== undefined ? e.occurrenceShift : isRecent && e.daysSince > 0 ? -1 : 0;
+      const badgeValue = e.occurrence == null ? null : e.occurrence + occurrenceShift;
       const badgeClass = config.colors.badge_background === false ? "badge no-background" : "badge";
 
       const nameText = countrySuffix && config.show_name_country ? `${e.name} · ${countrySuffix}` : e.name;
@@ -14360,7 +17657,7 @@
 
       // This event's still-open to-do items (see matchTodoItems), empty
       // whenever no to-do list is configured at all.
-      const todos = this._todoBadgeItems(e.entityId);
+      const todos = e.noTodos ? [] : this._todoBadgeItems(e.entityId);
 
       // Time/location/description only ever come from an external calendar
       // event (see buildExternalEvent) - empty string for every Annuals
@@ -14368,11 +17665,8 @@
       // external event has no time of day to show either. A single time
       // (no dash) when there's no end time, or the end equals the start.
       let timeText = "";
-      if (e.isExternal && !e.allDay && (e.startTime || e.endTime)) {
-        const timeFmt = new Intl.DateTimeFormat(this._locale(), {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
+      if (e.allDay === false && (e.startTime || e.endTime)) {
+        const timeFmt = dateFormatter(this._locale(), TIME_OPTIONS);
         // See _timelineTimeText: a row of a multi-day entry carries only
         // the half of the range that happens on its own day.
         const startStr = e.startTime ? timeFmt.format(e.startTime) : "";
@@ -14516,8 +17810,256 @@
           identityShown = true;
       }
 
-      this._wireRowActions(div, config, this._actionEntityId(e));
+      const actions = this._rowActions(e, strings);
+      if (actions) {
+        div.appendChild(actions);
+        div.classList.add("has-row-actions");
+        this._wireRowActionsPlacement(div, actions);
+      }
+      this._wireRowActions(div, config, this._actionEntityId(e), actions);
       return div;
+    }
+
+    // Pencil and trash can at the end of a row (see show_edit_buttons): the
+    // row's own event, changed through the options flow of its entry or
+    // removed after a confirmation - for administrators, on an event of
+    // this integration, and never on a row that stands for several
+    // entries at once (a holiday merged across countries).
+    _rowActionsOn() {
+      return this._config.show_edit_buttons === true && this._isAdmin(this._hass);
+    }
+
+    _rowActions(e, strings) {
+      if (!this._rowActionsOn() || !e || e.isExternal || !e.entityId) return null;
+      if (Array.isArray(e.mergedFrom) && e.mergedFrom.length > 1) return null;
+      const wrap = document.createElement("span");
+      wrap.className = "row-actions";
+      // Which row this is, for the focus to find again after a rebuild
+      // (see _closeFlowDialog), and the event's own name on each button
+      // for a screen reader, since every row's pencil is "Edit event".
+      wrap.dataset.entity = e.entityId;
+      // With edit_buttons_on_click the pointer resting over the row is not
+      // what brings them up - a click on the row is, and which row was
+      // clicked outlives a re-render (see _setRowActionsOpen).
+      const onClick = this._config.edit_buttons_on_click === true;
+      // The row, not the entity: a trip listed day by day, or an event
+      // repeating inside the period on screen, is several rows of one
+      // sensor, and a click opens the one it landed on.
+      wrap.dataset.rowKey = [e.entityId, e.multiDayPart || "", e.multiDayIndex || "", e.days].join("|");
+      wrap.classList.toggle("on-click", onClick);
+      wrap.classList.toggle("is-open", onClick && this._rowActionsOpenFor === wrap.dataset.rowKey);
+      // The key holds the days left, which the pencil itself can change
+      // (and midnight does): once this render's rows are all there, an
+      // open key none of them carries moves to the same row's new one.
+      if (onClick && this._rowActionsOpenFor && !this._rowActionsReconcile) {
+        this._rowActionsReconcile = true;
+        queueMicrotask(() => {
+          this._rowActionsReconcile = false;
+          this._reconcileRowActionsOpen();
+        });
+      }
+      const sensor = this._hass && this._hass.states[e.entityId];
+      const name = (sensor && sensor.attributes && sensor.attributes.friendly_name) || e.fullName || e.name || "";
+      const config = this._config;
+      const buttons = [
+        ["edit", config.edit_button_icon || "mdi:pencil", strings.editEvent],
+        ["delete", config.delete_button_icon || "mdi:delete-outline", strings.deleteEvent],
+      ];
+      for (const [act, icon, label] of buttons) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "row-action";
+        button.dataset.act = act;
+        button.title = label;
+        button.setAttribute("aria-label", name ? `${label}: ${name}` : label);
+        button.innerHTML = `<ha-icon icon="${attrText(icon)}"></ha-icon>`;
+        // Neither the row's tap and hold (see _wireRowActions) nor the
+        // timeline's own handlers may fire with the button. pointerup is
+        // left to bubble: the row only clears its hold timer on it, and a
+        // press that slides onto the button must still clear it.
+        for (const type of ["pointerdown", "contextmenu"]) {
+          button.addEventListener(type, (ev) => ev.stopPropagation());
+        }
+        button.addEventListener("click", (ev) => {
+          ev.stopPropagation();
+          ev.preventDefault();
+          // A finger on a laptop with a touch screen (see .row-actions):
+          // its tap puts the row under :hover, and the buttons come into
+          // sight in the very sequence the click is sent in. A tap that
+          // lands where a button was still hidden only reveals them - the
+          // next one opens. The same on a phone in the hover mode, where
+          // the tap that puts the row under :hover is the first there is.
+          if (this._lastPointerType === "touch" && parseFloat(getComputedStyle(wrap).opacity) < 0.999) return;
+          this._openFlowDialog({ kind: act, event: e, opener: button });
+        });
+        wrap.appendChild(button);
+      }
+      // In sight for the keyboard (.is-focused) - and only for it: the
+      // focus _closeFlowDialog hands back after a click in the dialog is
+      // not the keyboard asking to see the buttons.
+      // A focus moving from one of the two buttons to the other stays what
+      // it was: the mouse going for the trash can while the keyboard is on
+      // the pencil must not take the plate away under its own press.
+      wrap.addEventListener("focusin", (ev) => {
+        const within = ev.relatedTarget instanceof Node && wrap.contains(ev.relatedTarget);
+        let byKeyboard = true;
+        try {
+          byKeyboard = ev.target instanceof Element && ev.target.matches(":focus-visible");
+        } catch (err) {
+          // No :focus-visible here: every focus counts.
+        }
+        if (within && wrap.classList.contains("is-focused")) byKeyboard = true;
+        wrap.classList.toggle("is-focused", byKeyboard);
+        if (byKeyboard) this._placeRowActions(wrap);
+      });
+      // Nor while a press is under way on the plate: where a mouse click
+      // gives a button no focus (Safari), the pencil's focus is simply lost
+      // at mousedown on the trash can. Settled once the press is over, after
+      // its click has been sent.
+      let pressing = false;
+      wrap.addEventListener(
+        "pointerdown",
+        () => {
+          pressing = true;
+          window.addEventListener(
+            "pointerup",
+            () =>
+              setTimeout(() => {
+                pressing = false;
+                if (!wrap.contains(this.shadowRoot.activeElement)) wrap.classList.remove("is-focused");
+              }, 0),
+            { once: true, capture: true }
+          );
+        },
+        true
+      );
+      wrap.addEventListener("focusout", (ev) => {
+        if (pressing) return;
+        if (ev.relatedTarget instanceof Node && wrap.contains(ev.relatedTarget)) return;
+        wrap.classList.remove("is-focused");
+      });
+      return wrap;
+    }
+
+    // Where the plate stands: at the row's end - unless something there
+    // answers a click of its own, the countdown with when_click_shows_date
+    // (in the timeline's sentences: timeline_when_click_shows_date) or an
+    // icon whose to-do badge completes on a tap, which the plate would
+    // take every click from. Then it stands clear of that, on its
+    // inline-start side. Measured when the plate is about to come up, a
+    // row's cells having no fixed places.
+    _placeRowActions(wrap) {
+      const host = wrap && wrap.parentElement;
+      if (!host) return;
+      wrap.style.insetInlineEnd = "";
+      // Line by line (getClientRects): a countdown wrapped inside one of
+      // the timeline's sentences is two short pieces, not the block around
+      // both of them.
+      const targets = [...host.querySelectorAll(".when-toggle, .timeline-when-toggle, .icon-wrap-actionable")]
+        .flatMap((el) => [...el.getClientRects()])
+        .filter((r) => r.width > 0 && r.height > 0);
+      if (!targets.length) return;
+      const GAP = 4;
+      const rtl = getComputedStyle(host).direction === "rtl";
+      const row = host.getBoundingClientRect();
+      const plate = wrap.getBoundingClientRect();
+      if (!plate.width) return;
+      const start = rtl ? plate.left - row.left : row.right - plate.right;
+      const farthest = Math.max(start, row.width - plate.width - GAP);
+      let end = start;
+      let clear = false;
+      for (let i = 0; i <= targets.length; i++) {
+        const left = rtl ? row.left + end : row.right - end - plate.width;
+        const right = left + plate.width;
+        const hit = targets.find(
+          (r) => r.left < right && r.right > left && r.top < plate.bottom && r.bottom > plate.top
+        );
+        if (!hit) {
+          clear = true;
+          break;
+        }
+        end = rtl ? hit.right - row.left + GAP : row.right - hit.left + GAP;
+        if (end > farthest) break;
+      }
+      // No clear place in a row this narrow: the row's end it stays, where
+      // it is looked for, rather than wandering over the row's start.
+      if (clear && end !== start) wrap.style.insetInlineEnd = `${Math.round(end)}px`;
+    }
+
+    // edit_buttons_on_click: a click on a row brings its pencil and trash
+    // can up, another click on it - or a click anywhere else - puts them
+    // away, and one row's are up at a time. Which row that is lives on the
+    // instance, not in the DOM: _render() rebuilds every row, and a save
+    // in the dialog must not find its row closed again.
+    // The plate finds its place (see _placeRowActions) whenever it is about
+    // to come up: the pointer arriving over the row, the click that opens
+    // it (see _setRowActionsOpen), the keyboard (see _rowActions) - and
+    // once the row is in the page, for one rebuilt while it was open.
+    _wireRowActionsPlacement(host, wrap) {
+      host.addEventListener("pointerenter", () => this._placeRowActions(wrap));
+      // And again after a click inside the row: a countdown swapping to its
+      // date grows toward the plate that stood beside it. After the click's
+      // own handlers have run - a timeout, not a microtask, which would run
+      // between this listener and theirs.
+      host.addEventListener("click", () => setTimeout(() => this._placeRowActions(wrap), 0), true);
+      if (wrap.classList.contains("is-open")) queueMicrotask(() => this._placeRowActions(wrap));
+    }
+
+    // See _rowActions: same sensor, same part of a several-day event, other
+    // days left - or, no such row any more, nothing open.
+    _reconcileRowActionsOpen() {
+      const open = this._rowActionsOpenFor;
+      if (!open) return;
+      const wraps = [...this.shadowRoot.querySelectorAll(".row-actions.on-click")];
+      if (wraps.some((el) => el.dataset.rowKey === open)) return;
+      const sameRow = open.slice(0, open.lastIndexOf("|") + 1);
+      const again = wraps.find((el) => (el.dataset.rowKey || "").startsWith(sameRow));
+      this._setRowActionsOpen(again ? again.dataset.rowKey : "");
+    }
+
+    _toggleRowActions(wrap) {
+      const rowKey = (wrap && wrap.dataset.rowKey) || "";
+      this._setRowActionsOpen(this._rowActionsOpenFor === rowKey ? "" : rowKey);
+    }
+
+    _setRowActionsOpen(rowKey) {
+      this._rowActionsOpenFor = rowKey || "";
+      this.shadowRoot.querySelectorAll(".row-actions").forEach((el) => {
+        const open = !!rowKey && el.classList.contains("on-click") && el.dataset.rowKey === rowKey;
+        el.classList.toggle("is-open", open);
+        if (open) this._placeRowActions(el);
+      });
+      if (rowKey && !this._rowActionsEscapeHandler) {
+        // Escape puts them away too - unless the card's own dialog is
+        // open, whose key it is then.
+        this._rowActionsEscapeHandler = (ev) => {
+          if (ev.key !== "Escape" || !this._rowActionsOpenFor || this._flowDialog) return;
+          this._setRowActionsOpen("");
+        };
+        document.addEventListener("keydown", this._rowActionsEscapeHandler);
+      }
+      if (rowKey && !this._rowActionsOutsideClickHandler) {
+        // Added once per card instance, like the timeline's own (see
+        // _timelineOutsideClickHandler), and read before the rows' own
+        // handlers: the open row's click is left to toggle it, a click on
+        // its buttons is theirs, and anything else - another row
+        // included, which then opens its own - closes it.
+        this._rowActionsOutsideClickHandler = (ev) => {
+          const open = this._rowActionsOpenFor;
+          // Not while the pencil's or the trash can's dialog is open: its
+          // fields and buttons are no "anywhere else", and the row is to
+          // be found open when the dialog has closed.
+          if (!open || this._flowDialog) return;
+          const own = ev.composedPath().some((el) => {
+            if (!(el instanceof Element) || !el.classList.contains("has-row-actions")) return false;
+            if (el.getRootNode() !== this.shadowRoot) return false;
+            const wrap = el.querySelector(".row-actions");
+            return !!wrap && wrap.dataset.rowKey === open;
+          });
+          if (!own) this._setRowActionsOpen("");
+        };
+        document.addEventListener("click", this._rowActionsOutsideClickHandler, true);
+      }
     }
 
     // An external calendar event's own "entityId" (see buildExternalEvent)
@@ -14609,11 +18151,16 @@
     // ui_action selector in Settings -> General). Defaults preserve this
     // card's original, unconfigurable behavior: tap opens more-info, hold
     // does nothing.
-    _wireRowActions(div, config, entityId) {
+    _wireRowActions(div, config, entityId, actions) {
       const HOLD_MS = 500;
       const tapAction = config.tap_action || { action: "more-info" };
       const holdAction = config.hold_action || { action: "none" };
+      // With edit_buttons_on_click a click on a row that carries the
+      // pencil and the trash can brings those up instead of running
+      // tap_action (see _toggleRowActions); hold_action is left alone.
+      const revealsOnClick = !!actions && config.edit_buttons_on_click === true;
       const hasAction =
+        revealsOnClick ||
         (tapAction.action && tapAction.action !== "none") ||
         (holdAction.action && holdAction.action !== "none");
       if (hasAction) div.classList.add("has-action");
@@ -14644,6 +18191,10 @@
       });
       div.addEventListener("click", () => {
         if (holdFired) return;
+        if (revealsOnClick) {
+          this._toggleRowActions(actions);
+          return;
+        }
         this._handleRowAction(tapAction, entityId);
       });
     }
@@ -14738,8 +18289,15 @@
           // badge_targets) - the same three can be on the Accent bar
           // instead, or on both.
           const onIcon = (badge) => badgeTargets(config, badge).icon === true;
+          // The linked person's picture in place of the icon, where the
+          // event has one (see `picture` in getEvents) - the same size,
+          // the same classes, so the badges, the status color's animation
+          // and "Show icon" treat it as the icon it stands in for.
+          const glyph = e.picture
+            ? `<img class="icon avatar ${iconClass}${iconAnimClass}" src="${attrText(e.picture)}" alt="">`
+            : `<ha-icon icon="${attrText(e.icon)}" class="icon ${iconClass}${iconAnimClass}"></ha-icon>`;
           wrap.innerHTML = `
-            <ha-icon icon="${attrText(e.icon)}" class="icon ${iconClass}${iconAnimClass}"></ha-icon>
+            ${glyph}
             ${onIcon("vip") && e.vip && config.show_vip_badge !== false ? `<ha-icon class="vip-badge" icon="${attrText(config.vip_badge_icon || "mdi:star")}"></ha-icon>` : ""}
             ${onIcon("important") && e.important && config.show_important_badge !== false ? `<ha-icon class="important-badge" icon="${attrText(config.important_badge_icon || "mdi:exclamation-thick")}"></ha-icon>` : ""}
           `;
@@ -14984,7 +18542,22 @@
         this.shadowRoot.innerHTML = `
           <style>${CARD_STYLE}</style>
           <ha-card>
-            <div class="title"></div>
+            <div class="title"><span class="title-text"></span><button type="button" class="add" hidden><ha-icon icon="mdi:plus"></ha-icon></button></div>
+            <div class="nav" hidden>
+              <div class="nav-left">
+                <button type="button" class="nav-btn" data-nav="prev"><ha-icon icon="mdi:chevron-left"></ha-icon></button>
+                <span class="nav-label"></span>
+                <button type="button" class="nav-btn" data-nav="next"><ha-icon icon="mdi:chevron-right"></ha-icon></button>
+              </div>
+              <div class="nav-right">
+                <button type="button" class="nav-mode" data-mode="day"></button>
+                <button type="button" class="nav-mode" data-mode="week"></button>
+                <button type="button" class="nav-mode" data-mode="month"></button>
+                <button type="button" class="nav-mode" data-mode="year"></button>
+                <span class="nav-btn nav-pick"><ha-icon icon="mdi:calendar"></ha-icon><input type="date" class="nav-date"></span>
+              </div>
+            </div>
+            <div class="search" hidden><input type="search" class="search-input" autocomplete="off"></div>
             <div class="list"></div>
             <button type="button" class="fold" hidden></button>
           </ha-card>
@@ -15063,6 +18636,54 @@
           const property = `--annuals-${scale}-${suffix}`;
           card.style.removeProperty(property);
           if (value) card.style.setProperty(property, value);
+        }
+      }
+      // Calendar navigation: five colors, two fonts and a height, each
+      // cleared first so an emptied field goes back to the CSS default.
+      for (const [key, property] of [
+        ["nav_label", "--annuals-card-nav-label-color"],
+        ["nav_button", "--annuals-card-nav-button-color"],
+        ["nav_button_background", "--annuals-card-nav-button-background-color"],
+        ["nav_active", "--annuals-card-nav-active-color"],
+        ["nav_active_background", "--annuals-card-nav-active-background-color"],
+      ]) {
+        card.style.removeProperty(property);
+        if (config.colors[key]) card.style.setProperty(property, config.colors[key]);
+      }
+      for (const [value, property] of [
+        [config.font_sizes.nav_label, "--annuals-card-nav-label-size"],
+        [config.font_sizes.nav_button, "--annuals-card-nav-button-size"],
+        [config.nav_button_height, "--annuals-card-nav-button-height"],
+      ]) {
+        card.style.removeProperty(property);
+        if (value) card.style.setProperty(property, value);
+      }
+      // The "+", the pencil and the trash can (Layout -> Design -> Buttons):
+      // a color and a size each, cleared first so an emptied field goes back
+      // to the built-in one.
+      for (const [key, property] of [
+        ["add_button", "--annuals-card-add-button-color"],
+        ["add_button_hover", "--annuals-card-add-button-hover-color"],
+        ["edit_button", "--annuals-card-edit-button-color"],
+        ["edit_button_hover", "--annuals-card-edit-button-hover-color"],
+        ["delete_button", "--annuals-card-delete-button-color"],
+        ["delete_button_hover", "--annuals-card-delete-button-hover-color"],
+      ]) {
+        card.style.removeProperty(property);
+        if (config.colors[key]) card.style.setProperty(property, config.colors[key]);
+      }
+      for (const [value, property] of [
+        [config.add_button_size, "--annuals-card-add-button-size"],
+        [config.edit_button_size, "--annuals-card-edit-button-size"],
+        [config.delete_button_size, "--annuals-card-delete-button-size"],
+      ]) {
+        card.style.removeProperty(property);
+        // Only a real length: these feed a width, a height and a calc() for
+        // the glyph, and "28" without its unit would make all three invalid
+        // at computed-value time - measured once as a 26px button drawn
+        // 300px wide, rather than as the typo it is.
+        if (value && (typeof CSS === "undefined" || !CSS.supports || CSS.supports("width", value))) {
+          card.style.setProperty(property, value);
         }
       }
       if (config.colors.past) card.style.setProperty("--annuals-status-past-color", config.colors.past);
@@ -15177,6 +18798,8 @@
       };
       setFontStyle("card-title", config.font_style.font_size_title);
       setFontStyle("card-no-events", config.font_style.no_events);
+      setFontStyle("card-nav-label", config.font_style.nav_label);
+      setFontStyle("card-nav-button", config.font_style.nav_button);
       setFontStyle("row-name", config.font_style.name);
       setFontStyle("row-type", config.font_style.type);
       setFontStyle("row-info-name", config.font_style.info_name);
@@ -15236,12 +18859,34 @@
       // half here and half there.
       card.toggleAttribute("data-minimal", config.minimal_card === true);
 
+      // The title's row stays for the "+" while the text alone is hidden,
+      // and goes with both. The "+" is for administrators, the only users
+      // Home Assistant lets start a config flow (see _openFlowDialog).
       const titleEl = this.shadowRoot.querySelector(".title");
-      titleEl.style.display = config.show_title === false ? "none" : "";
-      titleEl.textContent = config.title || strings.defaultTitle;
+      const titleText = titleEl.querySelector(".title-text");
+      const addButton = titleEl.querySelector(".add");
+      const showTitle = config.show_title !== false;
+      const showAdd = config.show_add_button === true && this._isAdmin(this._hass);
+      titleText.hidden = !showTitle;
+      titleText.textContent = config.title || strings.defaultTitle;
+      addButton.hidden = !showAdd;
+      addButton.querySelector("ha-icon").setAttribute("icon", config.add_button_icon || "mdi:plus");
+      addButton.title = strings.addEvent;
+      addButton.setAttribute("aria-label", strings.addEvent);
+      if (!addButton.dataset.wired) {
+        addButton.dataset.wired = "1";
+        addButton.addEventListener("click", () => this._openFlowDialog({ kind: "add" }));
+      }
+      titleEl.style.display = showTitle || showAdd ? "" : "none";
+      this._syncNav(strings);
+      this._syncSearch(strings);
 
       const listEl = this.shadowRoot.querySelector(".list");
       listEl.classList.toggle("columns-compact", config.columns_compact === true);
+      listEl.classList.toggle(
+        "one-size",
+        config.columns_compact === true && compactIsOneSize(config)
+      );
       // Cleared here rather than only set in the list branch below - the
       // timeline and the "no events" placeholder are single children that
       // must not be laid out against the previous render's column tracks.
@@ -15264,14 +18909,24 @@
       // independently per-row in _row() (highlight_past/today/soon).
       // _todoByEntity is filled in by _filteredEvents() below, which needs
       // the match to apply the "Open to-dos only" filter - see there.
-      const combined = this._visibleEvents();
+      // What the search field holds narrows the list further, by the
+      // names and type a row reads under (see _matchesSearch).
+      const query = (this._searchText || "").trim().toLowerCase();
+      const combined = query
+        ? this._visibleEvents().filter((e) => this._matchesSearch(e, query, strings))
+        : this._visibleEvents();
+      this._lastVisible = combined;
       if (!combined.length) {
         const empty = document.createElement("div");
         empty.className = "empty";
         // Settings -> General. Trimmed so a field holding only spaces
-        // counts as empty rather than blanking the placeholder out.
+        // counts as empty rather than blanking the placeholder out. An
+        // empty period is not "no upcoming events" - last week may simply
+        // have had none - so it gets its own line, and so does a search
+        // that found nothing.
         const custom = (config.no_events_text || "").trim();
-        empty.textContent = custom || strings.noEvents;
+        empty.textContent =
+          custom || (query ? strings.searchNoMatch : this._navPeriod() ? strings.noEventsRange : strings.noEvents);
         listEl.appendChild(empty);
       } else if (config.layout_style === "timeline") {
         listEl.appendChild(this._buildTimeline(combined, strings));
@@ -15322,8 +18977,44 @@
           ["week_separators", "weekKey", "week-start"],
           ["day_separators", "dayKey", "day-start"],
         ];
+        // Rows of one day as one block: the date is written once, at the
+        // day's first row, and the bar runs on through the rows below it.
+        // The day itself is what _row already wrote for the separators; a
+        // row with no date of its own starts no day.
+        //
+        // Only where a Date block leads the row - the agenda's way of
+        // reading, where the block stands over the day it belongs to and
+        // the rows under it have no reason to repeat it. A list that
+        // writes a Date or a Countdown answers per row, so there every
+        // row keeps its own date, its own countdown and its own bar.
+        //
+        // Nor in Compact, which is not a table at all: its row runs as one
+        // sentence (see .list.columns-compact), and a sentence with its
+        // date taken out is not the same sentence.
+        const groupsDays =
+          config.columns_compact !== true &&
+          (Array.isArray(config.columns) ? config.columns : DEFAULT_COLUMNS).some(
+            (col) => col && col.type === "date_block"
+          );
+        let groupDayKey = null;
         shown.forEach((e) => {
           const rowEl = this._row(e, strings);
+          if (groupsDays) {
+            const dayKey = rowEl.dataset.dayKey || "";
+            if (dayKey && dayKey === groupDayKey) {
+              rowEl.classList.add("day-follow");
+              // Emptied rather than hidden: a date block left standing
+              // would hold three lines' worth of height under a row that
+              // has one line of text.
+              rowEl.querySelectorAll(".date-col, .when").forEach((cell) => {
+                cell.textContent = "";
+                cell.classList.add("day-repeat");
+              });
+            } else {
+              rowEl.classList.add("day-lead");
+            }
+            groupDayKey = dayKey;
+          }
           for (const [option, key, className] of scales) {
             if (config[option] === true && previous[key] !== null && rowEl.dataset[key] !== previous[key]) {
               rowEl.classList.add(className);
@@ -15350,6 +19041,12 @@
           for (const [, key] of scales) previous[key] = rowEl.dataset[key];
           listEl.appendChild(rowEl);
         });
+        // Measured, not laid out: the date belongs to the whole day, so it
+        // stands in the middle of it - which no rule can express while it
+        // lives in the day's first row (see _centerDayBlocks). Nothing to
+        // centre in a list whose rows were not gathered into days.
+        if (groupsDays) this._centerDayBlocks(listEl);
+        this._scheduleFinishedRefresh();
 
         if (this._listFolds(combined)) {
           const hidden = combined.length - this._foldAt;
@@ -15411,6 +19108,50 @@
     // the card's own text rather than a row column's, so it sits next to
     // it here and is never hidden by what the columns happen to be.
     { id: "no_events", color: "no_events", font: "no_events", labelKey: "noEventsLabel", colorDesc: "noEventsColorDesc", fontDesc: "noEventsFontDesc" },
+    // Calendar navigation's bar (see calendar_nav): the period between the
+    // arrows, and the buttons - one text color, then the ground, the
+    // selected mode's two colors, the height, and the letters' font. Shown
+    // while the bar is on, like every block that follows its own switch.
+    {
+      group: "nav",
+      labelKey: "calendarNav",
+      descKey: "designGroupDesc",
+      members: [
+        { id: "nav_label", color: "nav_label", font: "nav_label", labelKey: "navLabel", colorDesc: "navLabelColorDesc", fontDesc: "navLabelFontDesc" },
+        {
+          id: "nav_button",
+          color: "nav_button",
+          font: "nav_button",
+          labelKey: "navButtons",
+          colorDesc: "navButtonColorDesc",
+          fontDesc: "navButtonFontDesc",
+          extra: [
+            { color: "nav_button_background", labelKey: "navButtonBackground", colorDesc: "navButtonBackgroundDesc" },
+            { color: "nav_active", labelKey: "navActiveColor", colorDesc: "navActiveColorDesc" },
+            { color: "nav_active_background", labelKey: "navActiveBackground", colorDesc: "navActiveBackgroundDesc" },
+          ],
+          field: { key: "nav_button_height", placeholder: "e.g. 26px", labelKey: "navButtonHeight", descKey: "navButtonHeightDesc" },
+        },
+      ],
+    },
+    // The "+" beside the title and a row's pencil and trash can (see
+    // show_add_button, show_edit_buttons): a glyph, a size and a color each,
+    // where every other element has a font. Right after the bar, the other
+    // block that is about the card's own controls rather than a column.
+    {
+      group: "buttons",
+      labelKey: "buttonsHeading",
+      // Its own heading tooltip. The four groups above carry a descKey too,
+      // but theirs names one of their colors - their heading has always
+      // said designGroupDesc instead, and still does.
+      groupDescKey: "buttonsGroupDesc",
+      descKey: "buttonsGroupDesc",
+      members: [
+        { id: "add_button", custom: "button", color: "add_button", hoverColor: "add_button_hover", iconKey: "add_button_icon", sizeKey: "add_button_size", iconDefault: "mdi:plus", sizeDefault: "28px", labelKey: "buttonAdd" },
+        { id: "edit_button", custom: "button", color: "edit_button", hoverColor: "edit_button_hover", iconKey: "edit_button_icon", sizeKey: "edit_button_size", iconDefault: "mdi:pencil", sizeDefault: "26px", labelKey: "buttonEdit" },
+        { id: "delete_button", custom: "button", color: "delete_button", hoverColor: "delete_button_hover", iconKey: "delete_button_icon", sizeKey: "delete_button_size", iconDefault: "mdi:delete-outline", sizeDefault: "26px", labelKey: "buttonDelete" },
+      ],
+    },
     { id: "name", color: "name", font: "name", labelKey: "colorName", colorDesc: "colorNameDesc", fontDesc: "fontNameDesc" },
     { id: "last_name", color: "last_name", font: "last_name", labelKey: "colorLastName", colorDesc: "colorLastNameDesc", fontDesc: "fontLastNameDesc" },
     { id: "full_name", color: "full_name", font: "full_name", labelKey: "colorFullName", colorDesc: "colorFullNameDesc", fontDesc: "fontFullNameDesc" },
@@ -15507,12 +19248,16 @@
   );
 
   const EDITOR_STYLE = `
+    /* No overflow: hidden here - it would cut off a tooltip reaching past
+       the panel's edge, which a long one on a panel's first or last row
+       does (see _placeTooltip). The header rounds its own corners instead,
+       inside the 2px border: all four while the panel is closed, the top
+       two while its body shows below. */
     .super-panel {
       border: 2px solid rgba(128, 128, 128, 0.4);
       border-radius: 12px;
       margin-bottom: 16px;
       background-color: var(--card-background-color, #1c1c1c);
-      overflow: hidden;
     }
     .super-header {
       display: grid;
@@ -15521,8 +19266,10 @@
       gap: 0 10px;
       padding: 14px 16px;
       background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
       cursor: pointer;
     }
+    .super-panel.open .super-header { border-radius: 10px 10px 0 0; }
     .super-icon {
       width: 36px;
       height: 36px;
@@ -15554,7 +19301,12 @@
       justify-self: end;
     }
     .super-panel.open .super-chevron { transform: rotate(180deg); }
-    .super-body { display: none; padding: 0 16px 16px; }
+    /* Content wider than the panel - a tab strip whose longest word does
+       not fit on a phone - is cut at the panel's edge, as it was while the
+       panel itself clipped, instead of making the editor scroll sideways.
+       Sideways only, and it does not reach the tooltips, which are fixed
+       (see _placeTooltip). */
+    .super-body { display: none; padding: 0 16px 16px; overflow-x: clip; }
     .super-panel.open .super-body { display: block; }
     .tabs {
       display: grid;
@@ -15614,6 +19366,18 @@
       align-items: center;
       gap: 8px;
     }
+    /* Faded piece by piece rather than as a whole: an opacity below 1 on
+       the heading would hold its tooltip in the heading's own layer - drawn
+       at 85% and under whatever comes later - so the text, the switch and
+       the underline each take the 85% instead, and the "i" its 0.6 of it.
+       It looks exactly as before. */
+    .section-heading.separator-heading {
+      opacity: 1;
+      border-bottom-color: color-mix(in srgb, var(--divider-color, #e0e0e0) 85%, transparent);
+    }
+    .separator-heading > .separator-heading-text,
+    .separator-heading > .toggle { opacity: 0.85; }
+    .separator-heading .tooltip-anchor ha-icon { opacity: 0.51; }
     .separator-heading .toggle {
       margin-left: auto;
       /* The heading's uppercase letter-spacing would otherwise apply to the
@@ -15735,16 +19499,21 @@
       text-transform: uppercase;
       opacity: 0.55;
     }
+    /* The 85% goes on the switch and its label, not on the row: see
+       .separator-heading above for why a faded row would trap its
+       tooltip. The "i" takes 0.6 of it, as it did inside the faded row. */
     .column-suffix-toggle {
       display: flex;
       align-items: center;
       gap: 8px;
       font-size: 0.8em;
       white-space: nowrap;
-      opacity: 0.85;
     }
+    .column-suffix-toggle > .toggle,
+    .column-suffix-toggle > .suffix-label { opacity: 0.85; }
     .column-suffix-toggle .tooltip-anchor ha-icon {
       --mdc-icon-size: 14px;
+      opacity: 0.51;
     }
     .column-add-row {
       display: flex;
@@ -15791,17 +19560,6 @@
     .editor-link:hover {
       text-decoration: underline;
     }
-    /* The right-hand column sits close to the dialog's right edge, so a
-       tooltip opening the usual way (left-aligned, expanding rightward)
-       overflows past it and gets clipped - open it right-aligned instead,
-       expanding leftward, same fix as .toggle-group below. Applies to any
-       current or future field in this column, not just today's fields.
-       :not(:only-child) excludes a .field-row-split that only ever holds a
-       single column (e.g. the "More" button action selector) - that lone
-       column spans the row's full width starting at the LEFT edge, so
-       right-aligning it would flip the overflow to the opposite (left)
-       side instead of fixing it. */
-    .field-row-split .field-col:last-child:not(:only-child) .tooltip-anchor::after { left: auto; right: 0; }
     /* A flex item's children never collapse their margins with anything
        outside it (flex establishes a new block-formatting context), so the
        last row's own margin-bottom would sit *in addition to*
@@ -15928,6 +19686,19 @@
        to it on the same line, instead of stretching the full row width like
        a regular field-input-row select. */
     .anim-select { flex: none; width: auto; min-width: 110px; }
+    /* The "Opens with" row of Calendar navigation: the dropdown gives up
+       its full width so the four button switches fit beside it, and they
+       stay on its line rather than dropping under it the way the font
+       row's four do. They still wrap if the column is narrower than that. */
+    .field-input-row.nav-mode-input select { flex: 0 1 104px; min-width: 88px; }
+    .field-input-row.nav-mode-input > .field-toggles {
+      flex: 1 1 auto;
+      flex-basis: auto;
+      margin-top: 0;
+      gap: 6px 8px;
+      justify-content: flex-start;
+    }
+    .nav-mode-input .toggle-label { font-size: 0.8em; }
     /* Toggle-groups normally always wrap to their own full-width line (see
        .field-input-row > .toggle-group below) - the animation row is the one
        place a toggle-group is meant to sit right on the same line as the
@@ -16021,11 +19792,15 @@
       --mdc-icon-size: 16px;
       opacity: 0.6;
     }
-    .tooltip-anchor::after {
-      content: attr(data-tooltip);
-      position: absolute;
-      bottom: calc(100% + 6px);
+    /* The text itself is a .tip element the editor makes on the first
+       hover from the anchor's data-tooltip, and places there and then from
+       measured coordinates (see _placeTooltip) - fixed, so that no
+       scrolling area it sits in can cut it off. An element rather than a
+       ::after, whose box could be neither measured nor moved. */
+    .tip {
+      position: fixed;
       left: 0;
+      top: 0;
       z-index: 20;
       width: max-content;
       max-width: 220px;
@@ -16040,15 +19815,11 @@
       text-transform: none;
       letter-spacing: normal;
       white-space: normal;
+      text-align: left;
       visibility: hidden;
       pointer-events: none;
     }
-    .tooltip-anchor:hover::after { visibility: visible; }
-    /* The toggle-group's info icon sits at the row's far right edge, so its
-       tooltip must open to the left (right-aligned to the icon) instead of
-       the usual left-aligned opening - otherwise it overflows past the
-       dialog's edge and gets clipped/hidden. */
-    .toggle-group .tooltip-anchor::after { left: auto; right: 0; }
+    .tooltip-anchor:hover .tip { visibility: visible; }
     .field-input-row {
       display: flex;
       align-items: center;
@@ -16380,8 +20151,34 @@
       this._render();
     }
 
+    // Home Assistant hands a new hass to the editor on every state change
+    // anywhere - a light, an unrelated sensor - and every one of them used
+    // to re-sync every field of every tab, some fifty color swatches among
+    // them, each resolved through a probe element and getComputedStyle. Only
+    // the language, this card's own entities and the configured calendars
+    // and to-do lists can change what a field shows, so those are what a
+    // re-sync now waits for. The selectors get the new hass either way -
+    // they are Home Assistant's own elements and expect the current one.
     set hass(hass) {
+      const prev = this._hass;
       this._hass = hass;
+      for (const group of [this._selectFields, this._actionSelectors]) {
+        for (const selector of Object.values(group || {})) selector.hass = hass;
+      }
+      const config = this._config || {};
+      const signature = [
+        hass.language,
+        // The color swatches resolve the theme's own colors, so a switch of
+        // theme or of dark mode is a change that shows.
+        hass.themes && hass.themes.theme,
+        hass.themes && hass.themes.darkMode,
+        hass.selectedTheme ? JSON.stringify(hass.selectedTheme) : "",
+        eventsSignature(hass),
+        externalCalendarsSignature(config, hass),
+        todoListsSignature(config, hass),
+      ].join("#");
+      if (prev && signature === this._hassSignature) return;
+      this._hassSignature = signature;
       this._render();
     }
 
@@ -16674,6 +20471,14 @@
       body.innerHTML =
         this._fieldRowHtml("title", "text", strings.editor.titlePlaceholder) +
         this._visibilityRowHtml("hide_title") +
+        // The "+" beside the title, the pencil and trash can of the rows
+        // under it, and - indented, as the sub-option it is - how those two
+        // are brought up. What they look like is Layout -> Design -> Buttons.
+        `<div class="section-heading" data-heading="buttons"></div>` +
+        this._toggleRowHtml("show_add_button") +
+        this._toggleRowHtml("show_edit_buttons") +
+        this._toggleRowHtml("edit_buttons_on_click", true) +
+        `<div class="section-heading" data-heading="text_format"></div>` +
         // Under the title pair, since it is the card's other piece of
         // fixed wording - and the one it falls back to when the list it
         // was given turns out to be empty.
@@ -16683,8 +20488,17 @@
         this._actionSelectorSplitHtml(["date_format", "language"]) +
         // Directly under the Date format dropdown it belongs to, in the
         // same left-hand column.
-        this._visibilityTwoColHtml(["date_show_today"], []);
+        this._visibilityTwoColHtml(["date_show_today"], []) +
+        // How far-off days are written - with the date format, being the
+        // other half of how a row says when.
+        this._actionSelectorSplitHtml(["countdown_units"]);
       this._wireFieldRow(body, "title", strings.editor.title, strings.editor.titleDesc, (v) => v);
+      const buttonsHeading = body.querySelector('[data-heading="buttons"]');
+      if (buttonsHeading) buttonsHeading.textContent = strings.editor.buttonsHeading;
+      // What follows takes a heading of its own, or the Buttons one would
+      // read as covering the whole rest of the tab.
+      const restHeading = body.querySelector('[data-heading="text_format"]');
+      if (restHeading) restHeading.textContent = strings.editor.textFormatHeading;
 
       // Inverted on purpose - this toggle lives right under the title field
       // now (moved from Layout -> Display -> Show/Hide) and reads as "Hide"
@@ -16698,6 +20512,22 @@
         strings.editor.hideCardTitleDesc,
         { apply: (config, checked) => ({ ...config, show_title: !checked }) }
       );
+      this._wireToggleRow(body, "show_add_button", strings.editor.addButton, strings.editor.addButtonDesc, (config, checked) => ({
+        ...config,
+        show_add_button: checked,
+      }));
+      this._wireToggleRow(body, "show_edit_buttons", strings.editor.editButtons, strings.editor.editButtonsDesc, (config, checked) => {
+        const next = { ...config, show_edit_buttons: checked };
+        // Off takes its "on click" with it, the way calendar navigation
+        // drops its mode: a setting nothing reads has no business in the
+        // dashboard.
+        if (!checked) delete next.edit_buttons_on_click;
+        return next;
+      });
+      this._wireToggleRow(body, "edit_buttons_on_click", strings.editor.editOnClick, strings.editor.editOnClickDesc, (config, checked) => ({
+        ...config,
+        edit_buttons_on_click: checked,
+      }));
 
       this._wireFieldRow(
         body,
@@ -16742,6 +20572,18 @@
         "date_show_today",
         strings.editor.dateShowToday,
         strings.editor.dateShowTodayDesc
+      );
+
+      this._upgradeSelectField(
+        body,
+        "countdown_units",
+        strings.editor.countdownUnits,
+        strings.editor.countdownUnitsDesc,
+        [
+          { value: "auto", label: strings.editor.countdownUnitsAuto },
+          { value: "days", label: strings.editor.countdownUnitsDays },
+        ],
+        "auto"
       );
 
       // "" first, and labelled rather than left blank, so the default reads
@@ -16805,6 +20647,21 @@
     // the fold is on, gone while it is off - its own switch, nothing the
     // reader cannot see.
     _syncListInputs() {
+      const searchToggle = this.shadowRoot.querySelector('input[data-toggle="show_search"]');
+      if (searchToggle) searchToggle.checked = this._config.show_search === true;
+      const navOn = this._config.calendar_nav === true;
+      const navToggle = this.shadowRoot.querySelector('input[data-toggle="calendar_nav"]');
+      if (navToggle) navToggle.checked = navOn;
+      const modeSelect = this.shadowRoot.querySelector("select[data-nav-mode]");
+      if (modeSelect) {
+        if (!this._hasFocus(modeSelect)) modeSelect.value = this._config.calendar_nav_mode || "month";
+        const modeRow = modeSelect.closest(".field-row");
+        if (modeRow) modeRow.hidden = !navOn;
+        const buttons = Array.isArray(this._config.calendar_nav_buttons) ? this._config.calendar_nav_buttons : [];
+        modeRow.querySelectorAll("input[data-nav-button]").forEach((toggle) => {
+          toggle.checked = buttons.includes(toggle.dataset.navButton);
+        });
+      }
       const on = this._config.collapse_list === true;
       const toggle = this.shadowRoot.querySelector('input[data-toggle="collapse_list"]');
       if (toggle) toggle.checked = on;
@@ -16818,11 +20675,24 @@
       this._syncFieldRow("title", this._config.title || "");
       const hideToggle = this.shadowRoot.querySelector('input[data-visibility="hide_title"]');
       if (hideToggle) hideToggle.checked = this._config.show_title === false;
+      const addToggle = this.shadowRoot.querySelector('input[data-toggle="show_add_button"]');
+      if (addToggle) addToggle.checked = this._config.show_add_button === true;
+      const editToggle = this.shadowRoot.querySelector('input[data-toggle="show_edit_buttons"]');
+      if (editToggle) editToggle.checked = this._config.show_edit_buttons === true;
+      // The row of "on click" follows its own switch: there while the
+      // pencil and the trash can are, gone while they are off.
+      const onClickToggle = this.shadowRoot.querySelector('input[data-toggle="edit_buttons_on_click"]');
+      if (onClickToggle) {
+        onClickToggle.checked = this._config.edit_buttons_on_click === true;
+        onClickToggle.closest(".toggle-row").hidden = this._config.show_edit_buttons !== true;
+      }
       this._syncFieldRow("no_events_text", this._config.no_events_text || "");
       this._syncActionSelector("tap_action", this._config.tap_action || { action: "more-info" });
       this._syncActionSelector("hold_action", this._config.hold_action || { action: "none" });
       const languageSelect = (this._selectFields || {}).language;
       if (languageSelect) languageSelect.value = this._config.language || LANGUAGE_AUTO;
+      const unitsSelect = (this._selectFields || {}).countdown_units;
+      if (unitsSelect) unitsSelect.value = this._config.countdown_units || "auto";
       const dateFormatSelect = (this._selectFields || {}).date_format;
       if (dateFormatSelect) {
         // Rebuilt rather than just re-selected: the option *labels* are the
@@ -17364,10 +21234,18 @@
       body.className = "period-body";
       body.innerHTML =
         this._visibilityTwoColHtml(["today_only"], ["next_event_day_only"]) +
+        this._toggleRowHtml("hide_finished_today") +
         '<hr class="toggle-divider">' +
         this._fieldRowHtml("days_ahead", "number", "", 'min="0" max="365"') +
         this._fieldRowHtml("days_past", "number", "", 'min="0" max="30"') +
         this._fieldRowHtml("soon_days", "number", "", 'min="0" max="60"');
+      this._wireToggleRow(
+        body,
+        "hide_finished_today",
+        strings.editor.hideFinishedToday,
+        strings.editor.hideFinishedTodayDesc,
+        (config, checked) => ({ ...config, hide_finished_today: checked })
+      );
       this._wireFieldRow(body, "days_ahead", strings.editor.daysAhead, strings.editor.daysAheadDesc, (v) =>
         Math.max(0, Number(v) || 0)
       );
@@ -17391,6 +21269,8 @@
     }
 
     _syncPeriodInputs() {
+      const finishedToggle = this.shadowRoot.querySelector('input[data-toggle="hide_finished_today"]');
+      if (finishedToggle) finishedToggle.checked = this._config.hide_finished_today !== false;
       // defaultConfig() always fills these in, so no fallback is needed here
       // - and none should be added, since a "|| 7"-style fallback would
       // mask a deliberately-entered 0 (falsy) and snap the field back to
@@ -17761,6 +21641,14 @@
         soon: "var(--warning-color)",
         card_title: "var(--primary-text-color)",
         no_events: "var(--secondary-text-color)",
+        add_button: "var(--secondary-text-color)",
+        edit_button: "var(--secondary-text-color)",
+        delete_button: "var(--secondary-text-color)",
+        // What each takes on the way in, as .add:hover and .row-action:hover
+        // render it.
+        add_button_hover: "var(--primary-color)",
+        edit_button_hover: "var(--primary-color)",
+        delete_button_hover: "var(--error-color)",
         name: "var(--primary-text-color)",
         last_name: "var(--primary-text-color)",
         full_name: "var(--primary-text-color)",
@@ -17793,6 +21681,12 @@
         timeline_tooltip: "var(--primary-text-color)",
         timeline_list: "var(--primary-text-color)",
         timeline_button: "var(--secondary-text-color)",
+        // Calendar navigation, as .nav-* in CARD_STYLE renders it.
+        nav_label: "var(--primary-text-color)",
+        nav_button: "var(--secondary-text-color)",
+        nav_button_background: "var(--secondary-background-color)",
+        nav_active: "var(--text-primary-color)",
+        nav_active_background: "var(--primary-color)",
       };
       for (const key of EVENT_TYPE_KEYS) {
         fallbacks[`type_${key}`] = TIMELINE_TYPE_COLORS[key];
@@ -17826,6 +21720,17 @@
         "timeline_tooltip",
         "timeline_list",
         "timeline_button",
+        "nav_label",
+        "nav_button",
+        "nav_button_background",
+        "nav_active",
+        "nav_active_background",
+        "add_button",
+        "add_button_hover",
+        "edit_button",
+        "edit_button_hover",
+        "delete_button",
+        "delete_button_hover",
         ...EVENT_TYPE_KEYS.map((key) => `type_${key}`),
       ]) {
         this._syncColorSwatch(key, this._config.colors[key] || "", fallbacks[key]);
@@ -18035,7 +21940,10 @@
         `<div class="design-element${sub ? " design-element-sub" : ""}" data-design-element="${el.id}">` +
         this._groupLabelRowHtml(`el_${el.id}`, !sub) +
         this._colorRowHtml(el.color, colorPh, { sub: true, ...(el.colorOptions || {}) }) +
-        (el.extra ? this._colorRowHtml(el.extra.color, colorPh, { sub: true }) : "") +
+        // One more color, or several (the bar's ground and selected
+        // colors), and for the bar a plain text field for its height.
+        [].concat(el.extra || []).map((extra) => this._colorRowHtml(extra.color, colorPh, { sub: true })).join("") +
+        (el.field ? this._fieldRowHtml(el.field.key, "text", el.field.placeholder, "", true) : "") +
         this._fontRowHtml(el.font, fontPh, spacingPh, { sub: true, ...(el.fontOptions || {}) }) +
         `</div>`;
       // The Accent bar has no text, so a width takes the font row's place.
@@ -18055,6 +21963,16 @@
         this._groupLabelRowHtml(`el_${el.id}`, true) +
         this._lineStyleRowsHtml(el.widthKey, el.colorKey, "e.g. 4px", true) +
         `</div>`;
+      // Same block shape as the rest, with an icon and a size where a text
+      // element has a font.
+      const buttonHtml = (el) =>
+        `<div class="design-element design-element-sub" data-design-element="${el.id}">` +
+        this._groupLabelRowHtml(`el_${el.id}`, false) +
+        this._colorRowHtml(el.color, colorPh, { sub: true }) +
+        this._colorRowHtml(el.hoverColor, colorPh, { sub: true }) +
+        this._fieldRowHtml(el.iconKey, "text", el.iconDefault, "", true) +
+        this._fieldRowHtml(el.sizeKey, "text", `e.g. ${el.sizeDefault}`, "", true) +
+        `</div>`;
       const accentBarHtml = () =>
         `<div class="design-element" data-design-element="accent_bar">` +
         this._groupLabelRowHtml("el_accent_bar", true) +
@@ -18068,7 +21986,7 @@
           entry.group
             ? `<div class="design-group" data-design-group="${entry.group}">` +
               this._groupLabelRowHtml(`${entry.group}_group`, true) +
-              entry.members.map((member) => elementHtml(member, true)).join("") +
+              entry.members.map((member) => (member.custom === "button" ? buttonHtml(member) : elementHtml(member, true))).join("") +
               `</div>`
             : entry.custom === "line"
               ? lineHtml(entry)
@@ -18102,6 +22020,17 @@
       // folding away the element someone was just working on above it.
       this._wireFoldableBlocks(rows, (el) => el.classList.contains("type-block"));
 
+      // The three button blocks: their own label, color, icon and size.
+      for (const el of DESIGN_ELEMENTS_FLAT) {
+        if (el.custom !== "button") continue;
+        this._wireGroupLabelRow(body, `el_${el.id}`, strings.editor[el.labelKey], strings.editor.buttonElementDesc);
+        this._wireColorRow(body, el.color, strings.editor.designColor, strings.editor.buttonColorDesc);
+        this._wireColorRow(body, el.hoverColor, strings.editor.buttonHoverColor, strings.editor.buttonHoverColorDesc);
+        this._wireFieldRow(body, el.iconKey, strings.editor.buttonIcon, strings.editor.buttonIconDesc, (v) => v);
+        this._upgradeIconField(body, el.iconKey);
+        this._wireFieldRow(body, el.sizeKey, strings.editor.buttonSize, strings.editor.buttonSizeDesc, (v) => v);
+      }
+
       this._paintPresetSwatches(body, strings);
 
       const wireElement = (el) => {
@@ -18114,12 +22043,16 @@
           strings.editor.designElementDesc
         );
         this._wireColorRow(body, el.color, strings.editor.designColor, strings.editor[el.colorDesc] || "");
-        if (el.extra) {
-          this._wireColorRow(
+        for (const extra of [].concat(el.extra || [])) {
+          this._wireColorRow(body, extra.color, strings.editor[extra.labelKey], strings.editor[extra.colorDesc] || "");
+        }
+        if (el.field) {
+          this._wireFieldRow(
             body,
-            el.extra.color,
-            strings.editor[el.extra.labelKey],
-            strings.editor[el.extra.colorDesc] || ""
+            el.field.key,
+            strings.editor[el.field.labelKey],
+            strings.editor[el.field.descKey] || "",
+            (v) => v
           );
         }
         this._wireFontRow(body, el.font, strings.editor.designFont, strings.editor[el.fontDesc] || "", strings);
@@ -18189,9 +22122,11 @@
             body,
             `${entry.group}_group`,
             strings.editor[entry.labelKey],
-            strings.editor.designGroupDesc
+            strings.editor[entry.groupDescKey] || strings.editor.designGroupDesc
           );
-          entry.members.forEach(wireElement);
+          // The three buttons have an icon and a size where every other
+          // element has a font, so they are wired above, on their own.
+          entry.members.filter((member) => member.custom !== "button").forEach(wireElement);
         } else {
           wireElement(entry);
         }
@@ -18539,9 +22474,9 @@
     // Highlight tab's toggles. The setter is passed in because these reach
     // different places in the config - a top-level key for one row, a key
     // under `colors` for the next.
-    _toggleRowHtml(key) {
+    _toggleRowHtml(key, sub) {
       return `
-        <div class="toggle-row" data-toggle-row="${key}">
+        <div class="toggle-row${sub ? " sub-field-row" : ""}" data-toggle-row="${key}">
           <label class="toggle">
             <input type="checkbox" data-toggle="${key}">
             <span class="track"></span>
@@ -19108,6 +23043,13 @@
     // be able to refresh them without dragging the other's sync along.
     _syncAccentBarFields() {
       this._syncFieldRow("accent_bar_width", this._config.accent_bar_width || "");
+      // The bar's height sits in the same tab and is synced with it.
+      this._syncFieldRow("nav_button_height", this._config.nav_button_height || "");
+      for (const el of DESIGN_ELEMENTS_FLAT) {
+        if (el.custom !== "button") continue;
+        this._syncIconField(el.iconKey, this._config[el.iconKey] || "");
+        this._syncFieldRow(el.sizeKey, this._config[el.sizeKey] || "");
+      }
       // Previews the Accent category's color, which is what an unset bar
       // renders in for every row that isn't today or soon.
       this._syncColorSwatch(
@@ -19351,6 +23293,7 @@
     // countdown for date" - which belong to the list of columns above - stay
     // together instead of being pushed apart by four styling sections.
     _appendLineSections(section, strings) {
+
       // The Accent bar's own Width and Color used to sit here, above the
       // separators. They are the bar's appearance, so they live in the
       // Design tab with every other element's - see DESIGN_ELEMENTS. The
@@ -19599,7 +23542,7 @@
       if (entry.kind === "time") {
         return (
           strings.editor.columnTypeTimeDesc ||
-          "Append the external calendar event's own time range, e.g. \"...03:00 PM–05:00 PM\". Only ever shown for a timed (non all-day) external calendar event."
+          "Append the event's own time range, e.g. \"...03:00 PM–05:00 PM\". Only ever shown for a timed (non all-day) external calendar event, or a one-time event given a time."
         );
       }
       if (entry.kind === "location") {
@@ -19901,6 +23844,102 @@
     _buildListBody(strings) {
       const body = document.createElement("div");
       body.className = "list-config-body";
+
+      // Calendar navigation first: it changes what the whole list is - one
+      // period at a time instead of what is coming - before anything below
+      // says how a row of it looks. The mode it opens with is a sub-row of
+      // the switch, hidden while the switch is off, like the fold's count.
+      const navWrap = document.createElement("div");
+      navWrap.innerHTML =
+        this._toggleRowHtml("calendar_nav") +
+        `
+        <div class="field-row sub-field-row" data-nav-mode-row>
+          <div class="field-label">
+            <span class="label-text"></span>
+            <span class="tooltip-anchor" data-tooltip="">
+              <ha-icon icon="mdi:information-outline"></ha-icon>
+            </span>
+          </div>
+          <div class="field-input-row nav-mode-input">
+            <select data-nav-mode>
+              ${NAV_MODES.map((mode) => `<option value="${mode}"></option>`).join("")}
+            </select>
+            <div class="field-toggles">
+              ${NAV_BUTTONS.map(
+                (key) => `
+                <div class="toggle-group">
+                  <label class="toggle">
+                    <input type="checkbox" data-nav-button="${key}">
+                    <span class="track"></span>
+                  </label>
+                  <span class="toggle-label"></span>
+                </div>`
+              ).join("")}
+            </div>
+          </div>
+        </div>
+      `;
+      body.appendChild(navWrap);
+      this._wireToggleRow(
+        navWrap,
+        "calendar_nav",
+        strings.editor.calendarNav,
+        strings.editor.calendarNavDesc,
+        (config, checked) => {
+          const next = { ...config, calendar_nav: checked };
+          // Off takes its mode with it, the same way the fold drops its
+          // count: a mode nothing reads has no business in the dashboard.
+          if (!checked) {
+            delete next.calendar_nav_mode;
+            delete next.calendar_nav_buttons;
+          }
+          return next;
+        }
+      );
+      const modeRow = navWrap.querySelector("[data-nav-mode-row]");
+      modeRow.querySelector(".label-text").textContent = strings.editor.calendarNavMode;
+      modeRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.calendarNavModeDesc;
+      const modeSelect = modeRow.querySelector("select[data-nav-mode]");
+      for (const mode of NAV_MODES) {
+        modeSelect.querySelector(`option[value="${mode}"]`).textContent = (strings.navModes || {})[mode] || mode;
+      }
+      modeSelect.addEventListener("change", () => {
+        this._config = defaultConfig({ ...this._config, calendar_nav_mode: modeSelect.value });
+        this._emit();
+      });
+      // The five buttons the bar can carry, each its own switch beside the
+      // dropdown. Written in the bar's own order whatever order they were
+      // switched on in; Month alone is the default, which pruneDefaults
+      // drops, and an empty list is written out as one.
+      for (const key of NAV_BUTTONS) {
+        const toggle = modeRow.querySelector(`input[data-nav-button="${key}"]`);
+        toggle.closest(".toggle-group").querySelector(".toggle-label").textContent =
+          key === "picker" ? strings.editor.calendarNavPicker : (strings.navModes || {})[key] || key;
+        toggle.addEventListener("change", () => {
+          const on = new Set(
+            Array.isArray(this._config.calendar_nav_buttons) ? this._config.calendar_nav_buttons : []
+          );
+          if (toggle.checked) on.add(key);
+          else on.delete(key);
+          this._config = defaultConfig({
+            ...this._config,
+            calendar_nav_buttons: NAV_BUTTONS.filter((k) => on.has(k)),
+          });
+          this._emit();
+        });
+      }
+
+      // The search field, next to the bar it sits under on the card.
+      const searchWrap = document.createElement("div");
+      searchWrap.innerHTML = this._toggleRowHtml("show_search");
+      body.appendChild(searchWrap);
+      this._wireToggleRow(
+        searchWrap,
+        "show_search",
+        strings.editor.showSearch,
+        strings.editor.showSearchDesc,
+        (config, checked) => ({ ...config, show_search: checked })
+      );
 
       // How much of the list stands before it folds, above what a row is
       // made of: it decides how much of this tab's work is on screen at
@@ -20387,6 +24426,8 @@
         { key: "timeline_tooltip", value: config.font_sizes.timeline_tooltip, style: config.font_style.timeline_tooltip },
         { key: "timeline_list", value: config.font_sizes.timeline_list, style: config.font_style.timeline_list },
         { key: "timeline_button", value: config.font_sizes.timeline_button, style: config.font_style.timeline_button },
+        { key: "nav_label", value: config.font_sizes.nav_label, style: config.font_style.nav_label },
+        { key: "nav_button", value: config.font_sizes.nav_button, style: config.font_style.nav_button },
       ];
       for (const { key, value, style } of rows) {
         const input = this.shadowRoot.querySelector(`input[data-font="${key}"]`);
@@ -20708,6 +24749,13 @@
       if (key === "font_size_title" && !sameConfigValue(config.font_size_title, defaults.font_size_title)) {
         return true;
       }
+      // The buttons block holds three more colors and a height of its own.
+      if (key === "nav_button") {
+        for (const extra of ["nav_button_background", "nav_active", "nav_active_background"]) {
+          if (!sameConfigValue((config.colors || {})[extra], (defaults.colors || {})[extra])) return true;
+        }
+        if (!sameConfigValue(config.nav_button_height, defaults.nav_button_height)) return true;
+      }
       return !sameConfigValue((config.font_style || {})[key], (defaults.font_style || {})[key]);
     }
 
@@ -20738,7 +24786,7 @@
       // Anything actually configured keeps its group on screen, the same
       // escape hatch every other source-driven block has.
       if (Object.keys(defaults).some((k) => this._config[k] !== defaults[k])) return true;
-      if (groupKey === "external") return this._hasExternalCalendars();
+      if (groupKey === "external") return this._hasExternalCalendars() || this._hasTimedEvents();
       const active = this._activeTypes();
       return !active || active.has("holiday");
     }
@@ -20769,6 +24817,14 @@
       const cals = this._config.external_calendars;
       return Array.isArray(cals) && cals.length > 0;
     }
+    // Whether any of Annuals' own events carries a time of day (see
+    // CONF_TIME) - the other source of a time the Type cell can show.
+    _hasTimedEvents() {
+      const states = (this._hass && this._hass.states) || {};
+      return Object.keys(states).some(
+        (id) => id.startsWith(ENTITY_PREFIX) && typeof states[id].attributes.time === "string"
+      );
+    }
 
     _fieldsInUse() {
       const config = this._config;
@@ -20777,6 +24833,12 @@
       if (config.show_title !== false) {
         used.add("card_title");
         used.add("font_size_title");
+      }
+      // Calendar navigation's two blocks follow its switch (list only, but
+      // the timeline hides every list field anyway).
+      if (config.calendar_nav === true) {
+        used.add("nav_label");
+        used.add("nav_button");
       }
       const columns = Array.isArray(config.columns) ? config.columns : DEFAULT_COLUMNS;
       const types = new Set();
@@ -20810,7 +24872,8 @@
       // Annuals' own events has no line here to color.
       const hasTypeCell = types.has("type") || types.has("info") || types.has("full_name_type");
       const hasExternal =
-        Array.isArray(config.external_calendars) && config.external_calendars.length > 0;
+        (Array.isArray(config.external_calendars) && config.external_calendars.length > 0) ||
+        this._hasTimedEvents();
       if (hasTypeCell && hasExternal) {
         if (config.show_type_time) used.add("calendar_time");
         if (config.show_type_location) used.add("calendar_location");
@@ -20846,6 +24909,10 @@
       const orderForTimeline = this._config.layout_style === "timeline";
       push("card_title");
       push("no_events");
+      // The bar is drawn right under the title, so its block sits there too.
+      push("group:nav");
+      // And the card's own controls right after it.
+      push("group:buttons");
       for (const col of this._currentColumns()) {
         if (!col || typeof col !== "object") continue;
         for (const key of COLUMN_DESIGN_BLOCKS[col.type] || []) {
@@ -20922,6 +24989,10 @@
         if (block) block.style.display = hidden ? "none" : "";
       };
 
+      // Calendar navigation hides nothing under Settings: the day window
+      // and the count shape the list the card opens with, and a period
+      // paged to simply ignores them (see _navPeriod).
+
       // Design: one decision per element block, since each block holds that
       // element's name, color, font and letter spacing together. Everything
       // but the card title (which both layouts share) belongs to the list
@@ -20957,6 +25028,15 @@
           // Shared by both layouts, but only worth configuring while the
           // title is actually switched on (Settings -> General).
           setElementHidden(el.id, listTitleHidden());
+        } else if (el.custom === "button") {
+          // Each follows its own switch under Settings -> General, in both
+          // layouts - these are the card's own controls, not a row column.
+          setElementHidden(
+            el.id,
+            el.id === "add_button"
+              ? this._config.show_add_button !== true
+              : this._config.show_edit_buttons !== true
+          );
         } else if (el.id.startsWith("timeline_")) {
           setElementHidden(el.id, !isTimeline);
         } else {
@@ -20970,12 +25050,19 @@
       // with nothing under it. Every group here describes a list-layout
       // column, so all of them follow the layout.
       const groupKeys = {
+        nav: ["nav_label", "nav_button"],
         info: ["info_name", "info_type"],
         full_name_type: ["full_name_type_name", "full_name_type_type"],
         date_block: ["date_block_weekday", "date_block_day", "date_block_month"],
         calendar: ["calendar_time", "calendar_location", "calendar_description"],
       };
       this.shadowRoot.querySelectorAll(".design-body [data-design-group]").forEach((group) => {
+        // The buttons follow their own two switches rather than the columns.
+        if (group.dataset.designGroup === "buttons") {
+          const on = this._config.show_add_button === true || this._config.show_edit_buttons === true;
+          group.style.display = on ? "" : "none";
+          return;
+        }
         const keys = groupKeys[group.dataset.designGroup] || [];
         group.style.display = keys.some((key) => !listFieldHidden(key)) ? "" : "none";
       });
@@ -21239,7 +25326,9 @@
           this._hasExternalCalendars() ||
           columns.some((c) => c && calendarColumnTypes.includes(c.type));
         for (const opt of addSelect.options) {
-          const hide = !calendarColumnsUsed && calendarColumnTypes.includes(opt.value);
+          const hide =
+            calendarColumnTypes.includes(opt.value) &&
+            !(calendarColumnsUsed || (opt.value === "time" && this._hasTimedEvents()));
           opt.hidden = hide;
           opt.style.display = hide ? "none" : "";
         }
@@ -21294,10 +25383,14 @@
         this._config.timeline_show_time === true ||
         this._config.timeline_show_location === true ||
         this._config.timeline_show_description === true;
+      // Show time has a second source: a one-time event given a time (see
+      // _hasTimedEvents), which the row columns' Time toggle already
+      // follows. Location and description stay a calendar entry's own.
+      const timeFieldUsed = calendarFieldsUsed || this._hasTimedEvents();
       for (const key of ["timeline_show_time", "timeline_show_location", "timeline_show_description"]) {
         setRowHidden(
           this.shadowRoot.querySelector(`.timeline-config-body input[data-visibility="${key}"]`),
-          !calendarFieldsUsed
+          key === "timeline_show_time" ? !timeFieldUsed : !calendarFieldsUsed
         );
       }
       // Holiday settings need holidays among the selected types.
@@ -21444,11 +25537,174 @@
       }
     }
 
+    // Every "i" carries its text in a real element, floating over the rows
+    // on hover. The element is made on the first hover, from the anchor's
+    // data-tooltip, so an "i" built or reworded at any time is covered
+    // without a sync pass, and placed on every hover from what is measured
+    // then: above the icon, left-aligned to it; right-aligned when that
+    // would run past the editor's column; below the icon when there is no
+    // room above; and, a tooltip too tall for either side, as close to the
+    // icon as the room allows. Overlapping the rows behind it is not a
+    // fault - it is what a floating tooltip does. Being cut off is.
+    //
+    // Fixed, not absolute inside the row: the form column is a scrolling
+    // area, and on a narrow window a short one inside the scrolling dialog
+    // body, so that a strip of it can be left on screen too low to hold a
+    // tooltip above or below the icon. A fixed box is clipped by none of
+    // them - only by the element it is fixed to (the edit dialog, which a
+    // transform makes that element) and what encloses that; see _clipRect.
+    // Horizontally it stays in the editor's own column all the same - the
+    // column, not the dialog, which is twice as wide with the card preview
+    // beside the form.
+    _placeTooltip(anchor) {
+      let tip = anchor.querySelector(".tip");
+      if (!tip) {
+        tip = document.createElement("span");
+        tip.className = "tip";
+        anchor.appendChild(tip);
+      }
+      tip.textContent = anchor.dataset.tooltip || "";
+      // Put at 0,0 first: where that lands on screen is the corner of the
+      // box a fixed element is placed in - the window, or a transformed
+      // ancestor - and the offsets below are measured from it.
+      tip.style.left = "0px";
+      tip.style.top = "0px";
+      const origin = tip.getBoundingClientRect();
+      const width = origin.width;
+      const height = origin.height;
+      const icon = anchor.getBoundingClientRect();
+      const pane = this.getBoundingClientRect();
+      const box = this._clipRect(anchor);
+      const minX = Math.max(pane.left, box.left) + 4;
+      const maxX = Math.min(pane.right, box.right) - 4 - width;
+      let x = icon.left;
+      if (x > maxX) x = icon.right - width;
+      x = Math.max(minX, Math.min(x, maxX));
+      const minY = box.top + 4;
+      const maxY = box.bottom - 4 - height;
+      let y = icon.top - 6 - height;
+      if (y < minY) {
+        y = icon.bottom + 6;
+        if (y > maxY) y = Math.max(minY, Math.min(icon.top - 6 - height, maxY));
+      }
+      tip.style.left = `${x - origin.left}px`;
+      tip.style.top = `${y - origin.top}px`;
+      // Not shown while the icon itself is scrolled out of sight: a fixed
+      // box would otherwise go on floating where its row used to be.
+      const seen = this._clipRect(anchor, false);
+      const iconSeen = icon.bottom > seen.top && icon.top < seen.bottom && icon.right > seen.left && icon.left < seen.right;
+      tip.style.visibility = iconSeen ? "" : "hidden";
+      this._followTooltip(anchor, icon);
+    }
+
+    // A fixed box does not move with the row it belongs to, so while the
+    // pointer rests on the icon - or, on a touch screen, until the next tap
+    // elsewhere, which is how long a tap keeps it hovered - it is placed
+    // again on every frame the icon has moved in: scrolling the form takes
+    // the tooltip along, and out of sight with the icon. One follower at a
+    // time; hovering the next icon hands over to it. It ends once the icon
+    // is no longer hovered - but only after it has been: iOS reports the
+    // touch before the finger lifts and applies :hover only afterwards, so
+    // a second is allowed for that to happen, and a longer press is picked
+    // up again by the mouseover WebKit sends after it (see _render).
+    _followTooltip(anchor, rect) {
+      if (this._tipFollowing === anchor) return;
+      this._tipFollowing = anchor;
+      let last = rect;
+      let hovered = false;
+      const started = performance.now();
+      const step = () => {
+        if (this._tipFollowing !== anchor) return;
+        const onIcon = anchor.isConnected && anchor.matches(":hover");
+        if (onIcon) hovered = true;
+        if (!anchor.isConnected || (!onIcon && (hovered || performance.now() - started > 1000))) {
+          this._tipFollowing = null;
+          return;
+        }
+        if (!onIcon) {
+          requestAnimationFrame(step);
+          return;
+        }
+        const now = anchor.getBoundingClientRect();
+        if (now.top !== last.top || now.left !== last.left) {
+          last = now;
+          this._placeTooltip(anchor);
+        }
+        requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+
+    // The area a fixed tooltip can be seen in: the window, narrowed by the
+    // ancestor it is fixed to and every ancestor of that one which clips
+    // its content. The scrolling areas below that ancestor - the form
+    // column, the dialog body - do not clip a fixed box, which is the point
+    // of it (see _placeTooltip). An ancestor becomes the box a fixed
+    // element is placed in when it has a transform, a filter or paint
+    // containment - the edit dialog has one - and without any such
+    // ancestor the window alone is the bound, whether or not anything
+    // scrolls. The walk follows the rendered tree, through the slot an
+    // element is shown in before its parent: the dialog slots the form
+    // column into its own shadow DOM.
+    //
+    // With fixed set to false, the area the icon itself can be seen in
+    // instead: every clipping ancestor counts, the scrolling ones included.
+    _clipRect(from, fixed = true) {
+      const nextUp = (node) =>
+        node.assignedSlot || node.parentElement || (node.getRootNode() && node.getRootNode().host) || null;
+      const holdsFixed = (style) =>
+        style.transform !== "none" ||
+        style.perspective !== "none" ||
+        style.filter !== "none" ||
+        (style.backdropFilter && style.backdropFilter !== "none") ||
+        (style.translate && style.translate !== "none") ||
+        (style.scale && style.scale !== "none") ||
+        (style.rotate && style.rotate !== "none") ||
+        /transform|perspective|filter/.test(style.willChange || "") ||
+        /paint|layout|strict|content/.test(style.contain || "") ||
+        (style.containerType && style.containerType !== "normal");
+      // The layout viewport, the space getBoundingClientRect and a fixed
+      // box are measured in - not innerWidth/innerHeight, which on iOS
+      // shrink to the visible part of a pinch-zoomed page.
+      const root = document.documentElement;
+      const box = { top: 0, bottom: root.clientHeight, left: 0, right: root.clientWidth };
+      let fixedTo = !fixed;
+      for (let node = nextUp(from || this); node && node !== document.documentElement; node = nextUp(node)) {
+        const style = getComputedStyle(node);
+        if (!fixedTo && holdsFixed(style)) fixedTo = true;
+        if (!fixedTo) continue;
+        if (style.overflowX === "visible" && style.overflowY === "visible") continue;
+        const r = node.getBoundingClientRect();
+        box.top = Math.max(box.top, r.top);
+        box.bottom = Math.min(box.bottom, r.bottom);
+        box.left = Math.max(box.left, r.left);
+        box.right = Math.min(box.right, r.right);
+      }
+      return box;
+    }
+
     _render() {
       if (!this._hass || !this._config) return;
       const strings = t(this._hass);
 
-      if (!this.shadowRoot) this.attachShadow({ mode: "open" });
+      if (!this.shadowRoot) {
+        this.attachShadow({ mode: "open" });
+        // On the shadow root, once, for every "i" there is or will be -
+        // the panels below are rebuilt with innerHTML and would lose a
+        // listener of their own (see _placeTooltip).
+        this.shadowRoot.addEventListener("pointerover", (ev) => {
+          const anchor = ev.target instanceof Element ? ev.target.closest(".tooltip-anchor") : null;
+          if (anchor) this._placeTooltip(anchor);
+        });
+        // The mouse events a touch browser sends after a tap: a place and a
+        // follower for an icon whose own pointerover came too early to
+        // start one that lasts (see _followTooltip). A mouse sends both
+        // events, and the second finds the icon already followed.
+        this.shadowRoot.addEventListener("mouseover", (ev) => {
+          const anchor = ev.target instanceof Element ? ev.target.closest(".tooltip-anchor") : null;
+          if (anchor && this._tipFollowing !== anchor) this._placeTooltip(anchor);
+        });
+      }
 
       if (!this.shadowRoot.querySelector(".super-panel")) {
         this._activeGroup = "general";

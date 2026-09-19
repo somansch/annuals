@@ -1,7 +1,0 @@
-external_calendars:
-  - calendar.personal
-  - calendar.kids
-show_type_calendar_name: false
-show_type_time: true
-show_type_location: true
-show_type_description: true

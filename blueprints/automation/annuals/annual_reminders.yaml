@@ -766,9 +766,15 @@ action:
                             data:
                               title: "{{ rendered_title }}"
                               message: "{{ rendered_message }}"
-                              data:
-                                actions: >-
-                                  {{ [{"action": "annuals_reminder_done|" ~ todo_list ~ "|" ~ summary, "title": "Done"}] if todo_list != '' else [] }}
+                              # The Done button, and the person's picture
+                              # where the event has one (the sensor's
+                              # entity_picture, see the Person field) -
+                              # only then, since an image key without an
+                              # image is an empty attachment.
+                              data: >-
+                                {% set extra = {"actions": ([{"action": "annuals_reminder_done|" ~ todo_list ~ "|" ~ summary, "title": "Done"}] if todo_list != '' else [])} %}
+                                {% set picture = state_attr(ent, 'entity_picture') %}
+                                {{ dict(extra, image=picture) if picture else extra }}
                             continue_on_error: true
                 - if:
                     - condition: template

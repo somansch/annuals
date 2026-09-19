@@ -93,6 +93,12 @@
                 "5": "Sobota",
                 "6": "Neděle"
             }
+        },
+        "interval_unit": {
+            "options": {
+                "months": "měsíců",
+                "years": "let"
+            }
         }
     },
     "config": {
@@ -111,6 +117,7 @@
                 "data": {
                     "name": "Jméno",
                     "last_name": "Příjmení (volitelné)",
+                    "person": "Osoba (volitelné)",
                     "type": "Typ události",
                     "day": "Den",
                     "month": "Měsíc",
@@ -118,7 +125,10 @@
                     "icon": "Vlastní ikona (volitelné)",
                     "vip": "VIP Annual"
                 },
-                "description": "Každá událost má vlastní záznam, který později najdeš a upravíš v Nastavení → Zařízení a služby → Annuals vyhledáním podle jména."
+                "description": "Každá událost má vlastní záznam, který později najdeš a upravíš v Nastavení → Zařízení a služby → Annuals vyhledáním podle jména.",
+                "data_description": {
+                    "person": "Osoba v Home Assistantu, jejíž fotka zastupuje tuto událost – na kartě dashboardu a v oznámení připomínky."
+                }
             },
             "one_time": {
                 "title": "Přidat jednorázovou událost",
@@ -130,10 +140,16 @@
                     "month": "Měsíc",
                     "year": "Rok",
                     "end_date": "Datum konce (volitelné – udělá z ní vícedenní událost)",
+                    "time": "Čas (volitelné)",
+                    "end_time": "Čas konce (volitelné)",
                     "icon": "Vlastní ikona (volitelné)",
                     "vip": "VIP Annual"
                 },
-                "description": "Jediné datum, ke kterému se odpočítává. Nikdy se neopakuje, proto je rok povinný, a záznam se automaticky smaže o půlnoci po jeho skončení.\n\nS datem konce z něj bude vícedenní událost – cesta, konference, pobyt."
+                "description": "Jediné datum, ke kterému se odpočítává. Nikdy se neopakuje, proto je rok povinný, a záznam se automaticky smaže o půlnoci po jeho skončení.\n\nS datem konce z něj bude vícedenní událost – cesta, konference, pobyt.",
+                "data_description": {
+                    "time": "V kolik ten den začíná. Záznam v kalendáři pak má čas a karta dashboardu ho zobrazí.",
+                    "end_time": "V kolik končí – v den konce, pokud je zadán, jinak tentýž den. Vyžaduje čas začátku; prázdný znamená hodinový záznam v kalendáři."
+                }
             },
             "custom": {
                 "title": "Přidat vlastní událost",
@@ -146,11 +162,14 @@
                     "year": "Rok",
                     "icon": "Vlastní ikona (volitelné)",
                     "vip": "VIP Annual",
+                    "interval": "Opakuje se každých",
+                    "interval_unit": "…měsíců nebo let",
                     "nth": "Pořadí v měsíci",
                     "weekday": "Den v týdnu"
                 },
                 "description": "Tvoje vlastní roční datum pro vše, co ostatní typy nepopisují.\n\nMísto na konkrétní den může připadnout na **pravidlo**: Den matek je druhá neděle v květnu, Den otců v Austrálii první neděle v září. Vyplň dvě pole dole – **Měsíc** výše určuje, pro který měsíc pravidlo platí, a **Den** se pak nepoužije. Nech je prázdná pro pevné datum.",
                 "data_description": {
+                    "interval": "Spolu s jednotkou vedle – každých 6 měsíců, každé 2 roky. Počítáno od data výše, které pak potřebuje rok. Obě pole nechte prázdná pro jednou za rok.",
                     "nth": "První, druhý, třetí, čtvrtý nebo poslední v měsíci.",
                     "weekday": "Nastav spolu s polem výše – nebo nech obě prázdná."
                 }
@@ -161,12 +180,16 @@
                 "data": {
                     "name": "Jméno",
                     "last_name": "Příjmení (volitelné)",
+                    "person": "Osoba (volitelné)",
                     "type": "Typ události",
                     "day": "Den",
                     "month": "Měsíc",
                     "year": "Rok (ponechte prázdné, pokud není znám)",
                     "icon": "Vlastní ikona (volitelné)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "person": "Osoba v Home Assistantu, jejíž fotka zastupuje tuto událost – na kartě dashboardu a v oznámení připomínky."
                 }
             },
             "reconfigure_one_time": {
@@ -180,8 +203,14 @@
                     "month": "Měsíc",
                     "year": "Rok",
                     "end_date": "Datum konce (volitelné – udělá z ní vícedenní událost)",
+                    "time": "Čas (volitelné)",
+                    "end_time": "Čas konce (volitelné)",
                     "icon": "Vlastní ikona (volitelné)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "time": "V kolik ten den začíná. Záznam v kalendáři pak má čas a karta dashboardu ho zobrazí.",
+                    "end_time": "V kolik končí – v den konce, pokud je zadán, jinak tentýž den. Vyžaduje čas začátku; prázdný znamená hodinový záznam v kalendáři."
                 }
             },
             "reconfigure_custom": {
@@ -196,10 +225,13 @@
                     "year": "Rok",
                     "icon": "Vlastní ikona (volitelné)",
                     "vip": "VIP Annual",
+                    "interval": "Opakuje se každých",
+                    "interval_unit": "…měsíců nebo let",
                     "nth": "Pořadí v měsíci",
                     "weekday": "Den v týdnu"
                 },
                 "data_description": {
+                    "interval": "Spolu s jednotkou vedle – každých 6 měsíců, každé 2 roky. Počítáno od data výše, které pak potřebuje rok. Obě pole nechte prázdná pro jednou za rok.",
                     "nth": "První, druhý, třetí, čtvrtý nebo poslední v měsíci.",
                     "weekday": "Nastav spolu s polem výše – nebo nech obě prázdná."
                 }
@@ -211,7 +243,12 @@
             "end_date_before_start": "Datum konce musí být po datu začátku.",
             "invalid_date": "Tato kombinace den/měsíc/rok není platné datum.",
             "year_required": "Jednorázové události vyžadují rok.",
-            "rule_needs_both": "Opakovací pravidlo potřebuje obě pole – nebo žádné."
+            "rule_needs_both": "Opakovací pravidlo potřebuje obě pole – nebo žádné.",
+            "interval_needs_both": "Interval opakování potřebuje obě pole, nebo žádné.",
+            "interval_needs_year": "Interval opakování se počítá od data výše, takže je potřeba rok.",
+            "interval_no_rule": "Interval opakování nelze kombinovat s pravidlem dne v týdnu.",
+            "end_time_needs_time": "Čas konce potřebuje čas začátku.",
+            "end_time_before_start": "Čas konce musí být po čase začátku."
         },
         "abort": {
             "hub_not_configurable": "Hub Annuals nemá vlastní nastavení – obsahuje pouze sdílené kalendáře.",
@@ -426,12 +463,16 @@
                 "data": {
                     "name": "Jméno",
                     "last_name": "Příjmení (volitelné)",
+                    "person": "Osoba (volitelné)",
                     "type": "Typ události",
                     "day": "Den",
                     "month": "Měsíc",
                     "year": "Rok (ponechte prázdné, pokud není znám)",
                     "icon": "Vlastní ikona (volitelné)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "person": "Osoba v Home Assistantu, jejíž fotka zastupuje tuto událost – na kartě dashboardu a v oznámení připomínky."
                 }
             },
             "edit_one_time": {
@@ -445,8 +486,14 @@
                     "month": "Měsíc",
                     "year": "Rok",
                     "end_date": "Datum konce (volitelné – udělá z ní vícedenní událost)",
+                    "time": "Čas (volitelné)",
+                    "end_time": "Čas konce (volitelné)",
                     "icon": "Vlastní ikona (volitelné)",
                     "vip": "VIP Annual"
+                },
+                "data_description": {
+                    "time": "V kolik ten den začíná. Záznam v kalendáři pak má čas a karta dashboardu ho zobrazí.",
+                    "end_time": "V kolik končí – v den konce, pokud je zadán, jinak tentýž den. Vyžaduje čas začátku; prázdný znamená hodinový záznam v kalendáři."
                 }
             },
             "edit_custom": {
@@ -461,10 +508,13 @@
                     "year": "Rok",
                     "icon": "Vlastní ikona (volitelné)",
                     "vip": "VIP Annual",
+                    "interval": "Opakuje se každých",
+                    "interval_unit": "…měsíců nebo let",
                     "nth": "Pořadí v měsíci",
                     "weekday": "Den v týdnu"
                 },
                 "data_description": {
+                    "interval": "Spolu s jednotkou vedle – každých 6 měsíců, každé 2 roky. Počítáno od data výše, které pak potřebuje rok. Obě pole nechte prázdná pro jednou za rok.",
                     "nth": "První, druhý, třetí, čtvrtý nebo poslední v měsíci.",
                     "weekday": "Nastav spolu s polem výše – nebo nech obě prázdná."
                 }
@@ -484,7 +534,12 @@
             "no_valid_vcard_entries": "V tomto souboru nebyly nalezeny žádné kontakty s použitelným datem narození. Podrobnosti o přeskočených záznamech najdete v protokolu.",
             "no_valid_vcard_dates": "V tomto souboru nebyla nalezena žádná výročí ani jiná data (kromě narozenin). Podrobnosti o přeskočených záznamech najdete v protokolu.",
             "no_batch_selected": "Zaškrtněte „Odstranit všechny importované svátky“, nebo vyberte dávku.",
-            "rule_needs_both": "Opakovací pravidlo potřebuje obě pole – nebo žádné."
+            "rule_needs_both": "Opakovací pravidlo potřebuje obě pole – nebo žádné.",
+            "interval_needs_both": "Interval opakování potřebuje obě pole, nebo žádné.",
+            "interval_needs_year": "Interval opakování se počítá od data výše, takže je potřeba rok.",
+            "interval_no_rule": "Interval opakování nelze kombinovat s pravidlem dne v týdnu.",
+            "end_time_needs_time": "Čas konce potřebuje čas začátku.",
+            "end_time_before_start": "Čas konce musí být po čase začátku."
         },
         "abort": {
             "translations_exported": "Exportováno {count} překladů. [Stáhnout annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+klik pro stažení - obyčejné kliknutí zde nefunguje)\n\nNebo zkopírujte níže uvedené CSV:\n\n```\n{csv}\n```",

@@ -3,10 +3,12 @@
 [![GitHub release](https://img.shields.io/github/v/release/somansch/annuals)](https://github.com/somansch/annuals/releases/latest)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/default)
 [![License](https://img.shields.io/github/license/somansch/annuals)](https://github.com/somansch/annuals/blob/main/LICENSE)
+[![Downloads](https://img.shields.io/github/downloads/somansch/annuals/total)](https://github.com/somansch/annuals/releases)
+[![Downloads@latest](https://img.shields.io/github/downloads/somansch/annuals/latest/total)](https://github.com/somansch/annuals/releases/latest)
 
 **Available languages:** English, Deutsch, Français, Nederlands, Polski, Español, Italiano, Português (Brasil), Русский, Svenska, 简体中文, Čeština, Norsk bokmål, Dansk, Türkçe, Slovenčina
 
-<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-summary.png" alt="List view, Timeline, Compact, to-dos and an Agenda-style list, side by side" width="45%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-summary.png" alt="Six readings of the same events side by side: the list with its search field, the Timeline, a Compact one-line card, the Minimal row, the to-dos it tracks, and an Agenda whose calendar navigation bar stands over one date block per day" width="45%">
 
 ## Overview
 
@@ -48,6 +50,7 @@ That's the whole setup - everything below covers the individual features and opt
 - [First-time setup](#first-time-setup)
 - [Adding an event](#adding-an-event)
   - [Dates that are a rule, not a day](#dates-that-are-a-rule-not-a-day) - the second Sunday in May
+  - [Dates that repeat every few months or years](#dates-that-repeat-every-few-months-or-years) - the dentist, the car inspection
 - [Annuals Settings](#annuals-settings) (milestones, to-do lists, import, export, remove, delete all)
 
 **Getting events in and out**
@@ -75,21 +78,28 @@ That's the whole setup - everything below covers the individual features and opt
 
 - [Countdown for one-time events](#countdown-for-one-time-events) - with Home Assistant's own badges and cards
   - [Events that span several days](#events-that-span-several-days)
+  - [A time of day](#a-time-of-day) - the concert at 20:00
 - [Native Calendar card](#native-calendar-card)
 - [Custom dashboard card](#custom-dashboard-card)
   - [The visual editor](#the-visual-editor) - and why it only shows part of itself
   - [Card size](#card-size) - resizing, the fold, and a one-row card
   - [Date format](#date-format)
+  - [Countdown in weeks and months](#countdown-in-weeks-and-months)
   - [Holidays from several places](#holidays-from-several-places)
   - [To-dos](#to-dos)
   - [External calendars](#external-calendars)
   - [Row columns](#row-columns) - List view
   - [Day, week and month separators](#day-week-and-month-separators) - List view
+  - [One block per day](#one-block-per-day) - how the list reads
+  - [What is over](#what-is-over) - Time period
   - [Row click/tap behavior](#row-clicktap-behavior) - List view
+  - [Calendar navigation](#calendar-navigation) - List view: one day, week or month at a time
+  - [Search field](#search-field) - List view
+  - [Adding, editing and deleting from the card](#adding-editing-and-deleting-from-the-card) - both layouts
   - [Timeline layout](#timeline-layout)
   - [Row colors](#row-colors) - Design and Highlight
   - [Icon animations](#icon-animations) - Design and Highlight
-  - [Example configurations](#example-configurations)
+  - [Example](#example) - one card, five looks
   - [Theming with CSS variables](#theming-with-css-variables)
 
 **Installing**
@@ -121,11 +131,14 @@ Each kind then gets a form carrying only its own fields, instead of one form car
 |---|---|
 | **Name** | Whose event this is (e.g. "Anna"). Becomes the entry's title and the entity name (together with Last name, if set). |
 | **Last name** | Optional, not offered for holidays. Lets you keep first and last name separate - e.g. use just the first name for a compact card, or the full name elsewhere. Exposed as the `last_name` and `full_name` (first + last, or just first if no last name is set) sensor attributes, and as `{last_name}`/`{full_name}` placeholders and dedicated column types in the [custom dashboard card](#custom-dashboard-card). |
+| **Person** | Optional, the seven yearly types only. A person in Home Assistant whose picture stands for this event: the sensor carries it as its `entity_picture`, the [dashboard card](#custom-dashboard-card) draws it in place of the icon, and the [reminder blueprint](#blueprint-upcoming-event-reminders) attaches it to the push notification. A new photo on the person is a new photo here. |
 | **Event type** | The types this kind covers - each gets a matching icon and its own aggregate calendar. One-time and Custom each cover a single type, so their dropdown says which it is rather than offering a choice. Changing an event from one kind to another isn't possible for the same reason; delete it and add it again. |
 | **Day** / **Month** | The recurring date. Deliberately separate fields instead of a date picker - a picker would make you click back month by month to reach a birth year like 1970. A **Custom** event can be given a rule instead of a day - *the first Sunday in September* - see [Dates that are a rule, not a day](#dates-that-are-a-rule-not-a-day) below. |
 | **Year** | Type it directly (one keystroke instead of a picker). Optional on a yearly or custom event - leave it empty when unknown and the `occurrence_number` attribute is hidden, since it can't be computed without a starting year. Required on a **one-time event**, which is one exact date and has no unknown year to leave empty. |
 | **End date** | **One-time events only**, optional - see [Events that span several days](#events-that-span-several-days). |
+| **Time** / **End time** | **One-time events only**, optional - see [A time of day](#a-time-of-day). |
 | **Repeats on the** / **…weekday of the month** | **Custom events only**, optional, both together - see [Dates that are a rule, not a day](#dates-that-are-a-rule-not-a-day). |
+| **Repeats every** / **…months or years** | **Custom events only**, optional, both together - see [Dates that repeat every few months or years](#dates-that-repeat-every-few-months-or-years). |
 | **Icon override** | Optional. Home Assistant's native icon picker. Leave empty to use the type's default icon. |
 | **VIP annual** | Optional, off by default. Marks this one event as VIP - independent of type or occurrence number, e.g. a close family member's birthday you always want to stand out. Purely a display flag: the [custom dashboard card](#custom-dashboard-card) below can filter to VIP-only and show a distinct badge. |
 
@@ -176,6 +189,20 @@ A few notes on the edges:
 - **Holidays that *are* in the holidays database are unaffected.** Thanksgiving, Memorial Day and the rest already resolve per year on their own - import them as usual and nothing here applies to them.
 
 The sensor reports where the rule landed in `next_date`, as it does for every event, and carries the rule itself as the `weekday` (Monday = 0) and `nth` (`-1` for last) attributes. An event without a rule has neither and is unchanged in every respect.
+
+### Dates that repeat every few months or years
+
+Not everything worth a countdown comes round once a year. The dentist wants you every six months, the car inspection is every two years, a passport every ten - and a birthday-shaped event, which repeats on its day every year, cannot say that. So a **Custom** event can be given an interval instead: **Repeats every** with a number, and **…months or years** beside it. Together with the day, month and year above them, that is the whole rule - *from 10 March 2026, every 6 months* - and the event lands on 10 September 2026, 10 March 2027 and so on, the day of the month kept and pulled back to the last day of a month that has no 31st.
+
+What follows from it:
+
+- **The year is needed.** An interval is counted from the stored date, and a date without a year has nothing to count from - the form says so rather than guessing.
+- **The occurrence number counts steps**, not years: the stored date is 0, one interval later is 1. The badge on the card and `occurrence_number` on the sensor both read that way, and the [milestones](#annual-settings-automatic-milestones) for Custom apply to it as to any other number.
+- **Not with a rule.** *Every 6 months* and *the first Sunday of the month* are two different shapes of recurrence; the form refuses both at once.
+- **The calendar lists every step in range** - a six-monthly event twice in a year, a five-yearly one mostly not at all - and the [dashboard card](#custom-dashboard-card)'s [calendar navigation](#calendar-navigation) does the same when paging through months.
+- **The CSV carries it** as two columns, `interval` and `interval_unit` - see [Importing events from a CSV file](#importing-events-from-a-csv-file).
+
+The sensor reports `interval` and `interval_unit` as attributes, absent on every event without one. Leaving both fields empty keeps the event on its day once a year, exactly as before.
 
 ## Annuals Settings
 
@@ -235,17 +262,22 @@ The file needs a header row with these columns:
 | `last_name` | No | Kept separate from `name` - see [Adding an event](#adding-an-event) above. |
 | `end_date` | No | `one_time` rows only - an ISO `YYYY-MM-DD` date after the row's own date, which makes it a multi-day event (see [Events that span several days](#events-that-span-several-days)). |
 | `nth`, `weekday` | No | `custom` rows only, and only both together - the recurrence rule described under [Dates that are a rule, not a day](#dates-that-are-a-rule-not-a-day). `nth` is `1` to `4`, or `-1` for the last one in the month; `weekday` is `0` for Monday to `6` for Sunday. The row's own `month` is the month the rule applies to, and its `day` is then not read. |
+| `person` | No | The seven yearly types only - a `person.*` entity id whose picture stands for the event, see [Adding an event](#adding-an-event). |
+| `interval`, `interval_unit` | No | `custom` rows only, and only both together, and only with a `year` - the repeat interval described under [Dates that repeat every few months or years](#dates-that-repeat-every-few-months-or-years). `interval` is a whole number, `interval_unit` is `months` or `years`. |
+| `time`, `end_time` | No | `one_time` rows only - `HH:MM`, see [A time of day](#a-time-of-day). `end_time` needs a `time`, and on a single-day row has to be after it. |
 
 Keep every column even when a value is empty - a row with a missing trailing comma shifts the following values left.
 
 ```csv
-name,type,day,month,year,icon,vip,last_name,end_date,nth,weekday
-Anna,birthday,12,4,1988,,,Miller,,,
-Max,pet_birthday,3,9,2020,mdi:dog,,,,,
-Acme Corp,work_anniversary,1,7,2015,,,,,,
-Test Custom,custom,1,1,,mdi:test-tube,1,,,,
-Family Vacation,one_time,15,7,2026,mdi:airplane,,,2026-07-29,,
-Mothers Day,custom,1,5,,mdi:flower,,,,2,6
+name,type,day,month,year,icon,vip,last_name,end_date,nth,weekday,person,interval,interval_unit,time,end_time
+Anna,birthday,12,4,1988,,,Miller,,,,person.anna,,,,
+Max,pet_birthday,3,9,2020,mdi:dog,,,,,,,,,,
+Acme Corp,work_anniversary,1,7,2015,,,,,,,,,,,
+Test Custom,custom,1,1,,mdi:test-tube,1,,,,,,,,,
+Family Vacation,one_time,15,7,2026,mdi:airplane,,,2026-07-29,,,,,,,
+Mothers Day,custom,1,5,,mdi:flower,,,,2,6,,,,,
+Dentist,custom,10,3,2026,mdi:tooth,,,,,,,6,months,,
+Concert,one_time,20,9,2026,mdi:music,,,,,,,,,20:00,22:30
 ```
 
 Re-importing the same CSV later - e.g. a centrally maintained file synced on a schedule - does not create duplicate events. Each row is matched against existing entries by type + day/month + name (not year or last_name, so correcting a wrong birth year or filling in a previously-missing last name still matches the same person); a match updates that event's data in place instead of adding a second one. This only applies to CSV-imported events - manually added events are never touched or matched by a later import.
@@ -442,6 +474,9 @@ Attributes on each event's sensor:
 | `reminder_message` | A ready-made, translated countdown phrase for `state`, e.g. "in 7 days", "Tomorrow", or "Today" - same language as `type_label`. |
 | `day`, `month`, `year` | The event's date as entered (`year` is `null` when unknown - always set for `one_time` events, see [Adding an event](#adding-an-event) above). Not applicable to `holiday` events - see `next_date` instead, since a public holiday's date shifts by year. On a `custom` event with a recurrence rule, `day` is the date it would fall back to rather than the one it is on - `next_date` is where it actually lands. |
 | `weekday`, `nth` | `custom` events with a recurrence rule only (see [Dates that are a rule, not a day](#dates-that-are-a-rule-not-a-day)) - `weekday` is `0` for Monday to `6` for Sunday, `nth` is `1` to `4` or `-1` for the last one in the month. Both absent on every event without a rule, so their mere presence means "this date is a rule". |
+| `interval`, `interval_unit` | `custom` events with a repeat interval only (see [Dates that repeat every few months or years](#dates-that-repeat-every-few-months-or-years)) - the number and `months` or `years`. `occurrence_number` then counts steps from the stored date. |
+| `person`, `entity_picture` | Events given a **Person** only - the `person.*` entity id, and that person's picture as the sensor's own picture. |
+| `time`, `end_time` | `one_time` events given a time only - `HH:MM`, see [A time of day](#a-time-of-day). |
 | `todo` | `true` if a still-open item on one of the to-do lists picked under [Annual Settings](#annual-settings-automatic-milestones) is currently matched to this event, `false` otherwise (and always `false` while no list is picked). |
 | `vip` | `true` if the **VIP annual** flag is set on this event, `false` otherwise. |
 | `important` | `true` if the upcoming occurrence number matches one of that type's milestones in [Annual Settings](#annual-settings-automatic-milestones), `false` otherwise (always `false` when no year was entered, since there's no occurrence number to check - always `false` for `one_time` events for the same reason). |
@@ -474,7 +509,7 @@ A ready-to-use automation [blueprint](blueprints/automation/annuals/annual_remin
 - **Filter holidays** by **category** (Public, School, Bank, …) and by which **part of a multi-day break** may remind - start, end, or the individual days. Anything the filter doesn't apply to passes it, so *Public + School* with *Start of the break* reminds about every public holiday, and about school holidays only on the day they begin rather than on all forty-five of them. Both are plain narrowing filters and stay out of the VIP/Important AND-OR logic.
 - **Multiple lead times** in one go, e.g. `7,1,0` for a week before, the day before, and the day itself - each is a one-time ping, not a repeating nag.
 - **Notify anywhere**, each its own collapsible section - mix and match freely:
-  - **Mobile App Notify**: push to one or more devices via the Companion App, each with a tappable "Done" button.
+  - **Mobile App Notify**: push to one or more devices via the Companion App, each with a tappable "Done" button - and with the person's picture, where the event has one (see **Person** under [Adding an event](#adding-an-event)).
   - **Notifications**: show up in Home Assistant's own notification bell, and/or keep a dashboard status helper (`input_text`) updated for a Markdown/Entity card.
   - **Text-to-Speech Announcement**: speak the reminder on one or more media players via any TTS engine - several due reminders the same day are announced one after another, never overlapping.
   - **Custom Actions**: anything else with the normal action editor - email/SMTP, WhatsApp/Telegram/Signal/ntfy, whatever.
@@ -657,7 +692,17 @@ What changes once it has one:
 - The **[dashboard card](#custom-dashboard-card)** can list it as its first day, its last day, both, or one row per day - Events → *Multi-day events*. The same setting governs a multi-day entry from an [embedded calendar](#external-calendars), so the card is shown whenever either source can produce one. Each row says which part it is - `Vacation (start)`, `(end)`, `(day 3)`, in the language the card is read in - so it can't be mistaken for an ordinary single-day row. Every row counts from the day it is about, so each one is subject to the card's own past-event settings: on day five of a fortnight the per-day list starts at day five, and the *first day* row is gone unless the card shows past events. A card set to *Only the first day* therefore stops listing a trip once it has begun - *First and last day* keeps it through its end row, *Every day* through the day it is on.
 - The **[reminder blueprint](#blueprint-upcoming-event-reminders)** can count down to the start, to the end, or both, each using the same "days before" thresholds - Multi-day events → *Remind about*. With to-do tracking on, departure and return become two separate items rather than one that either can tick off.
 
-The **end_date** column also rides along in the [event CSV](#exporting-events-to-csv), as an ISO `YYYY-MM-DD` date in the last column. A CSV written before this existed imports unchanged.
+The **end_date** column also rides along in the [event CSV](#exporting-events-to-csv), as an ISO `YYYY-MM-DD` date. A CSV written before this existed imports unchanged.
+
+### A time of day
+
+A one-time event can be given a **Time** - the concert at 20:00, the flight at 06:15 - and optionally an **End time**. The countdown does not change: the sensor still counts days, and `in 5 days` is still `in 5 days`. What changes is where the event has a time to show:
+
+- The **calendar entity** lists it as a timed entry rather than an all-day one, from the time to the end time - or an hour long, where no end was given, which is what every calendar app assumes for an appointment. On a [multi-day event](#events-that-span-several-days) the time is on its first day and the end time on its last; without an end time it runs to the end of that last day.
+- The **[dashboard card](#custom-dashboard-card)** shows it the way it shows an [embedded calendar](#external-calendars)'s time: *20:00–22:30* in the Type cell once **Time** is on under [Row columns](#row-columns), and in the `{time}` placeholder. Timed events sort by their time within a day, after the all-day ones.
+- The sensor carries `time` and `end_time` as attributes, and the [CSV](#importing-events-from-a-csv-file) as two columns of the same name.
+
+An end time needs a start time, and on a single-day event has to be after it; on a multi-day one it sits on the last day, so any time of that day is fine.
 
 - **Badge/chip** (top of a view or a Heading card) - **Settings** (pencil icon) → **Add badge** → pick the event's sensor. Shows its icon, name, and "X days" as a small pill.
 - **Tile card** - add a card, pick the sensor; the suggested Tile card shows the same thing as a small stand-alone card.
@@ -709,9 +754,9 @@ To override that per card, set **Language** (Settings → General) to one of tho
 
 **No events text** (Settings → General) is what the card writes in place of the list when it has nothing to show. Left empty it stays the built-in phrase, translated into whichever language the card is read in - the same way an empty **Card title** keeps the default one. Its own appearance sits in Layout → **Design**, in a block directly under Card title: a color, a size and the four style toggles, like every other element. Both layouts fall back to the same line, so the block is always listed rather than following the row columns.
 
-One integration, five ways to read the same events - the List view, the Timeline, a Compact one-line card, the to-dos it tracks, and an Agenda-style list:
+One integration, six ways to read the same events - the List view, the Timeline, a Compact one-line card, the Minimal row, the to-dos it tracks, and an Agenda-style list:
 
-<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-summary.png" alt="List view, Timeline, Compact, to-dos and an Agenda-style list, side by side" width="90%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-summary.png" alt="Six readings of the same events side by side: the list with its search field, the Timeline, a Compact one-line card, the Minimal row, the to-dos it tracks, and an Agenda whose calendar navigation bar stands over one date block per day" width="90%">
 
 ### The visual editor
 
@@ -732,13 +777,13 @@ The sections below follow that same path, so reading on walks the editor rather 
 
 | Where in the editor | Covered in |
 | --- | --- |
-| Settings → **General** | [Date format](#date-format) - and Card title, Language and the ["no events" line](#custom-dashboard-card) above |
+| Settings → **General** | Card title, a **Buttons** section for the [+ and the row's pencil and trash can](#adding-editing-and-deleting-from-the-card), then **Text and format**: the ["no events" line](#custom-dashboard-card), [Date format](#date-format), Language and Countdown |
 | Settings → **Events** | [Holidays from several places](#holidays-from-several-places), [To-dos](#to-dos), [External calendars](#external-calendars) |
-| Settings → **Time period** | Days ahead, days past and the "soon" threshold - three plain number fields |
+| Settings → **Time period** | [**Hide what is over**](#what-is-over), days ahead, days past and the "soon" threshold - one switch and three plain number fields; with [Calendar navigation](#calendar-navigation) on they shape the list the card opens with, and a period paged to ignores all but the threshold |
 | Layout → **General** | The layout switch, and the VIP / Important / open-to-do filters |
-| Layout → **List view** | [Row columns](#row-columns), [Day, week and month separators](#day-week-and-month-separators), [Row click/tap behavior](#row-clicktap-behavior), and the fold and *Minimal* under [Card size](#card-size) |
+| Layout → **List view** | [Calendar navigation](#calendar-navigation), [Row columns](#row-columns), [Day, week and month separators](#day-week-and-month-separators), [Row click/tap behavior](#row-clicktap-behavior), and the fold and *Minimal* under [Card size](#card-size) |
 | Layout → **Timeline** | [Timeline layout](#timeline-layout) |
-| Layout → **Design** and **Highlight** | [Row colors](#row-colors), [Icon animations](#icon-animations) - and, through them, every element's own color and font |
+| Layout → **Design** and **Highlight** | [Row colors](#row-colors), [Icon animations](#icon-animations) - and, through them, every element's own color and font, plus a **Buttons** block for the [three buttons' size, icon and color](#adding-editing-and-deleting-from-the-card) |
 | Layout → **Card Background** | A color, an image, its sizing and its opacity, all behind one switch |
 
 
@@ -774,6 +819,10 @@ Day/month order, separators and month spelling come from the browser's own local
 The same setting drives the `{date}` placeholder in [Custom text columns](#row-columns) and the [Timeline layout](#timeline-layout)'s **Show date**, so one card reads consistently. The full date revealed by tapping a countdown is deliberately left out of it: its job is to spell the day out unambiguously, whatever the columns are set to.
 
 **Say "Today"** (right below) controls whether the Date column writes "Today" instead of the date on an event's own day. On by default; turn it off for a card meant to read as a plain date list.
+
+### Countdown in weeks and months
+
+**Countdown** (Settings → General) decides how a distance in days is written. **Weeks, months and years**, the default, keeps the days for anything closer than two weeks - *today*, *tomorrow*, *in 9 days* - and from there on rounds to the unit that reads naturally: *in 2 weeks* at 14 days, *in 8 weeks* at 55, *in 2 months* at 60, *in 2 years* at 730. **Days** is *in 47 days* and *120 days ago* throughout, which is what every card said before this setting existed. The wording is the browser's own for the card's language, so *za 3 tygodnie* counts weeks the way Polish does without the card having to know how. It applies wherever the card counts: the Countdown column, the `{when}` placeholder and the [Timeline](#timeline-layout)'s sentence.
 
 ### Holidays from several places
 
@@ -878,6 +927,24 @@ Turning on **Compact** mode removes the spacing between columns, centers the row
 
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/birthday_small_animated.gif" alt="Compact today-only birthday card" width="40%">
 
+An event given a **Person** (see [Adding an event](#adding-an-event)) shows that person's picture in the **Icon** column in place of the icon - the same size, round, with the same badges in its corners and the same status animation. The [Timeline](#timeline-layout) shows it in its header lines and in the list under the axis the same way; the axis itself keeps its dots.
+
+### One block per day
+
+Where the row is led by a **Date block** ([Row columns](#row-columns), and the layout the *Agenda* preset starts from), a day is one block. The date is written on the first row of the day and left off the rows below it, those rows move up against it, and the [accent bar](#row-columns) runs through the whole day instead of breaking at every row - so several events of one day read as one block rather than as a date repeated three times. What a day says once is its date - the **Date** and **Date block** columns - and its countdown, which is the same sentence for every event of that day anyway. The rows themselves are untouched: each keeps its own name, icon, badges and actions.
+
+The date stands in the middle of its day, however many events the day holds: the card measures the block and centers it against all of them. Nothing to switch on, and nothing to switch off.
+
+A row that carries a **Date** or a **Countdown** instead answers for itself, so there is nothing to gather: every row keeps its own date, its own countdown and its own bar, exactly as it did before. Nor does **Compact** gather anything, whatever columns it is given - its row is one running sentence, and a sentence with its date taken out is not the same sentence. The list layout only either way - the [Timeline](#timeline-layout) draws its own day groups on the axis.
+
+### What is over
+
+**Hide what is over** (Settings → Time period) takes an event of today off the card once its end time has passed. An appointment from 2 to 3 is gone at 3, and one with a start but no end the moment it begins. The row leaves on its own: the card sets a timer for that minute rather than waiting for something else to redraw it, so a dashboard left open keeps up.
+
+Only events with a time of day are affected - an [external calendar's](#external-calendars) appointments, and an Annuals event that was given a **Time**. An all-day event stays until the day is over, as it always did, and so does everything on another day. While a period is on screen through [Calendar navigation](#calendar-navigation) the whole period is shown either way, past days and all.
+
+On from the start. Off, today's events stay until midnight.
+
 ### Day, week and month separators
 
 **Day separators**, **Week separators** and **Month separators** (Layout → List view) draw a line wherever two consecutive rows fall on different days, in different weeks, or in different months, breaking a long list into blocks. Nothing is re-sorted or grouped: they only mark the boundaries the list order already has. Where a week starts is Home Assistant's own **First day of the week**, the setting on each viewer's profile page (click your name at the bottom of the sidebar), next to Language and Time format. Left on its default, *Language*, the week starts wherever the language the card is being read in starts it - Monday across most of Europe, Sunday in the US - so the lines fall where the reader's own calendar breaks either way. A row that begins two boundaries at once gets only the coarser line.
@@ -888,7 +955,37 @@ A line can also say which boundary it marks. **Show weekday**, **Show calendar w
 
 ### Row click/tap behavior
 
-Clicking or tapping a row opens its more-info dialog by default, and **Layout → List view** has a **Tap action** and a **Hold action** field to change that: More info, Navigate, URL, Perform action, Toggle, Assist, or Nothing. They sit with the row columns because they configure the list layout's own rows - the [Timeline layout](#timeline-layout) has no row to tap, its axis dots and header sentence having their own fixed behavior.
+Clicking or tapping a row opens its more-info dialog by default, and **Layout → List view** has a **Tap action** and a **Hold action** field to change that: More info, Navigate, URL, Perform action, Toggle, Assist, or Nothing. They sit with the row columns because they configure the list layout's own rows - the [Timeline layout](#timeline-layout) has no row to tap, its axis dots and header sentence having their own fixed behavior. One exception: with [**Show them on click**](#adding-editing-and-deleting-from-the-card) on, a click on a row that carries the pencil and the trash can brings those up instead of running the tap action; the hold action is untouched, and rows without the two buttons keep both.
+
+### Calendar navigation
+
+**Calendar navigation** (Layout → List view) puts a bar under the card title and turns the list into one period at a time: two arrows and the period on screen - *Mon, 15 Sep*, *14 – 20 Sep*, *September 2026* - and an **M** button to start with. **Opens with**, the sub-row of the switch, says which period the bar starts in, and so what the arrows step by - a month unless you say otherwise - and the five switches beside it add buttons to the right-hand end of the bar: **D**, **W**, **M** and **Y** for day, week, month and year, each with its full name as a tooltip, and a calendar button that opens the browser's own date picker. **M** is on from the start, the way back to this month after paging; the other three are off until you want them. The letters follow the card's language - *T/W/M/J* in German, *J/S/M/A* in French, *Д/Н/М/Г* in Russian. The arrows step by whatever is selected: a day, seven days, a calendar month, a calendar year. A month step lands on the 1st and a year step on the 1st of January, for the same reason: the 31st plus a month is not a day every month has. A week starts on the day the [week separators](#day-week-and-month-separators) break on, Home Assistant's own **First day of the week**. Stepping and switching on the card itself is a look, not a setting: it is never written to the dashboard, so paging to next month on one phone leaves every other screen where it was, and a card nobody has touched follows the calendar across midnight.
+
+When the card loads, the list is the list it always was: what is coming, under everything in Settings - **Number of events**, **Days ahead**, **Days in the past** and the rest - with the bar standing over it on today's period. So on the 28th the card still shows next month's first days, as it did before the bar existed, rather than this month's last three. The arrows and the date picker turn the list into the period on screen - all of it, past events included, which is what paging back to last month is asking for - and a **D**, **W** or **M** button starts over in that mode, with the opening list back: after paging through past months, **M** is the way back to now. While a period is on screen, the list holds every event of it, in date order, and the rest of the card reads as it always does: past rows in the past tint with *3 days ago*, today's in today's, the "soon" threshold still coloring the rows ahead, the badge counting that year's occurrence - 29 on last year's birthday, 31 on next year's. An embedded [external calendar](#external-calendars) is fetched for the period on screen rather than for the day window, and a [multi-day event](#events-that-span-several-days) shows the days of it that fall in the period, under whichever **Multi-day events** setting the card has. An empty period says so - *No events in this period* - rather than *No upcoming events*, unless **No events text** is set.
+
+Nothing in Settings steps aside: **Number of events**, **Days ahead**, **Days in the past**, **Today only** and **Only next event day** shape the list the card opens with, and a period paged to ignores them, showing all it holds. Everything that describes *what* an event is still filters - event types, holiday categories and regions, VIP, Important, open to-dos - and **Fold the rest away** still folds a long month. List layout only: the [Timeline](#timeline-layout) is an axis of what is coming and has no period to page through.
+
+The bar is sized like the period selector of the Statistics Graph Chart Card - 26px buttons, an 11px letter on the modes, a 12px period - and Layout → **Design** has a **Calendar navigation** group for it while the bar is on: **Period** with the text's color and font, and **Navigation buttons** with the buttons' text color, their background, the selected mode's own two colors, the buttons' height and the font of the mode letters. Every one of them is also a CSS variable, listed under [Theming with CSS variables](#theming-with-css-variables).
+
+On a phone or a tablet, a **swipe** across the list or the bar steps the period too - left for the next, right for the previous - and a tap on the period itself is the way back to today, in the mode already showing. An event with a [repeat interval](#dates-that-repeat-every-few-months-or-years) is put on each of its steps inside the period, however many that is.
+
+One limit worth knowing. A yearly event is placed on its day in whichever year is on screen, and a custom event's rule - *the first Sunday in September* - is worked out for that year. A holiday only carries the date of its *next* occurrence: in that year it is exact, and in any other year it is put on the same month and day, which is right for Christmas and up to a few weeks out for Easter and everything that moves with it.
+
+### Search field
+
+**Search field** (Layout → List view) puts a field under the title - and under the [calendar navigation](#calendar-navigation), if that is on - that filters the list as you type: by name, last name and type, a holiday's category and an embedded calendar entry's location. Two letters are usually enough. A search that finds nothing says so, and Escape clears it. What is typed is a look, not a setting: it is never written to the dashboard. List layout only - the [Timeline](#timeline-layout) has no rows to filter. The field takes the bar's height and ground, and its own colors are `--annuals-card-search-color`, `--annuals-card-search-background-color` and `--annuals-card-search-size`, listed under [Theming with CSS variables](#theming-with-css-variables).
+
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-nav-search.gif" alt="The bar in use: stepping through a month, switching to week and to year, picking a date from the browser's own calendar, then a search narrowing the list to one event - which shows its pencil and trash can as the pointer reaches it" width="55%">
+
+### Adding, editing and deleting from the card
+
+**Add event** (Settings → General) puts a **+** at the right of the card title - in the list layout and the timeline alike, and in the title's row even while the title itself is hidden. It opens the same steps as **Add entry** under Settings → Integrations → Annuals, in a dialog over the dashboard: first the kind of event (a yearly date for someone, a one-time event, a custom event), then that kind's form. The form is the integration's own, drawn by Home Assistant's form element from the same definition the settings dialog uses, so every field, dropdown, check and error message is the one you know from there, in your Home Assistant language - and a field the integration gains later is in this dialog with it. Saving creates the entry, and the new event is in the card the moment its sensor exists. Cancel, the ✕ or Escape close the dialog and discard a half-filled form.
+
+**Edit and delete events** (Settings → General) adds a pencil and a trash can at the end of every event row - in the list, and in the timeline's expanded list under the axis. They float over the end of the row, on a see-through plate that takes no column of its own, and come up while the pointer is over the row or when the keyboard reaches them. Where the row's end answers a click of its own - the countdown with **Tap countdown for date**, an icon whose to-do pin completes on a tap - the plate stands beside that rather than on it. **Show them on click**, the switch right under it, brings them up with a click on the row instead - the way to reach them on a phone or tablet, where nothing hovers. A row that carries them then answers a click with the two buttons rather than with its tap action (the hold action is untouched), and another click on it, a click anywhere else, or Escape puts them away. The pencil opens the event's own **Configure** form, the one from Settings → Integrations → Annuals, in the same dialog: the yearly, one-time or custom form with the event's values filled in, or a holiday's settings and names. The trash can asks once, then removes the entry, and the row is gone the moment Home Assistant has dropped its sensor. Rows of an embedded calendar have neither, and neither does a holiday row that stands for several countries' entries at once. Independent of the **+**, and off by default.
+
+**Buttons** in Layout → **Design**, right under Calendar navigation, styles the three: **Add**, **Edit** and **Delete**, each with its own **Color**, **Hover color**, **Icon** and **Size**. The icon is any Material Design icon (the picker offers them all), the size a plain length like *28px* that the glyph grows with - and a row grows with a button taller than itself, so nothing is cut off. Left empty each field keeps the built-in look: a + at 28px, a pencil and a trash can at 26px, smaller in a compact or minimal card and on a line of the timeline's list. **Color** is the glyph while nothing points at the button, **Hover color** the glyph while the pointer is over it or the keyboard is on it - left empty, the theme's secondary text color and its accent color, and for the trash can the theme's error color, which is how that one says what it does. The block is there while its switch is.
+
+Home Assistant lets only administrators add, change or delete integration entries, and the card follows that rule: every other user sees none of these controls. The dialog speaks your Home Assistant profile's language, the one the integration's forms use, even on a card whose **Language** is pinned to another. In a card set to *Minimal* with its title hidden, the button's row takes the space the single event row was meant to have - give such a card a second grid row, or leave the button off there.
 
 ### Timeline layout
 
@@ -901,7 +998,7 @@ Tapping **Details** expands the same axis into the full chronological list, olde
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-timeline-example-2.png" alt="Timeline layout, expanded Details list" width="45%">
 
 - **Header** (Layout → Timeline): by default, the header shows one sentence per event tied for the very next (or most recent) day, with no cap and nothing pulled in from later days. **Max events per day** caps how many header lines a single day of tied events contributes - anything beyond the cap for that day still gets its own dot on the axis, just without a header line. **Always show N upcoming** always shows at least that many header lines in total, pulling in further days beyond the very next one if needed (each still subject to the cap above). Both are optional; leave either empty for the original, uncapped single-day behavior.
-- **Options** (Layout → Timeline): **Show full name** shows each event's full name (first + last) instead of just the first name, everywhere the layout uses a name - the header, a dot's tooltip, and the expandable list. **Show holiday suffix** appends the imported country (+ subdivision) after a holiday's name, e.g. "Pioneer Day (US-UT)". **Show date** appends the short calendar date in parentheses at the very end, e.g. "...is in 3 days (6 Aug)" - left off on the event's own day, since the sentence there already ends "...is today". **Show location** / **Show time** / **Show description** each append an [embedded external calendar event's](#external-calendars) own location/time range/description into that same trailing parenthetical - see there for details. **Tap countdown for date** (off by default) makes just the countdown at the end of the sentence tappable, swapping "...is in 2 days" for "...is Mon, 3 Aug 2026" and back - in the header, a dot's tooltip, and the expanded list alike, each with its own state. Unlike **Show date**, this one works on the event's own day too, since "which day is 'today'?" is exactly what you'd tap to find out.
+- **Options** (Layout → Timeline): **Show full name** shows each event's full name (first + last) instead of just the first name, everywhere the layout uses a name - the header, a dot's tooltip, and the expandable list. **Show holiday suffix** appends the imported country (+ subdivision) after a holiday's name, e.g. "Pioneer Day (US-UT)". **Show date** appends the short calendar date in parentheses at the very end, e.g. "...is in 3 days (6 Aug)" - left off on the event's own day, since the sentence there already ends "...is today". **Show location** / **Show time** / **Show description** each append an [embedded external calendar event's](#external-calendars) own location/time range/description into that same trailing parenthetical - see there for details; **Show time** also shows a [one-time event's own time](#a-time-of-day). **Tap countdown for date** (off by default) makes just the countdown at the end of the sentence tappable, swapping "...is in 2 days" for "...is Mon, 3 Aug 2026" and back - in the header, a dot's tooltip, and the expanded list alike, each with its own state. Unlike **Show date**, this one works on the event's own day too, since "which day is 'today'?" is exactly what you'd tap to find out.
 - **"More" button** (Layout → Timeline): the footer button next to "Details" runs its own configurable action - typically a Navigate action pointing at a dashboard using the full List layout - and is hidden entirely while left on "Nothing".
 - **Design** tab (Layout → Design) lists this layout's own elements, and only while Timeline is the active layout style. **Header**, **Tooltip**, **List (Details)** and **Details / More button** each get a color and a font. **Timeline line** and **Divider line** each get a width, a style (solid, dashed or dotted) and a color – the second for the vertical line marking the boundary between past and future events, which is only drawn once past events are visible. Below them, [Design rows by event type](#row-colors) drives each type's dot and icon color on the axis, in the header and in the list, replacing the built-in default palette.
 
@@ -947,96 +1044,13 @@ All three apply in the List and Timeline layouts alike. Every step starts at *No
 
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/holiday_small_animated.gif" alt="Pulsing icon animation on an upcoming holiday" width="40%">
 
-### Example configurations
+### Example
 
-A plain, unstyled card - just the defaults, letting the row highlighting (today/soon) and your Home Assistant theme do the work. Two existing Home Assistant calendars ("Personal" and "Kids") are embedded alongside Annuals' own events, with their own time/location/description shown instead of the calendar's name:
+Everything the card draws can be set in its editor, element by element: the colors of a row's name, type, badge, date and icon, their font sizes and their bold/italic/underlined/uppercase styles, the tints for past, today and soon, the card's own background, which columns a row is made of and in which order, and the same again for the Timeline, the Agenda and the minimal line. No YAML, no card-mod, no CSS - and what a card does not set follows your Home Assistant theme, so an untouched card fits in by itself.
 
-<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-example-1.png" alt="Annuals card, default styling" width="50%">
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-presets-custom.gif" alt="Five readings restyled entirely in the editor - a list, an agenda, a minimal row, a Timeline and a Compact line, each with its own colors, fonts, badges and highlights - with the event icons animating" width="90%">
 
-<details>
-<summary>YAML</summary>
-
-```yaml
-type: custom:annuals-card
-external_calendars:
-  - calendar.personal
-  - calendar.kids
-show_type_calendar_name: false
-show_type_time: true
-show_type_location: true
-show_type_description: true
-```
-
-</details>
-
-A fully styled card - custom colors per row element, bold/uppercase/underlined fonts, highlight tints for past/today/soon, custom VIP/Important badge icons and colors, and a translucent background image:
-
-<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-example-2.png" alt="Annuals card, fully styled" width="50%">
-
-<details>
-<summary>YAML</summary>
-
-```yaml
-type: custom:annuals-card
-title: 🎉
-count: 12
-days_ahead: 10
-days_past: 2
-soon_days: 3
-types:
-  - birthday
-  - name_day
-  - wedding_anniversary
-  - memorial
-  - pet_birthday
-  - work_anniversary
-  - custom
-highlight_soon: true
-show_type: false
-vip_badge_icon: mdi:account-star
-important_badge_icon: mdi:account-alert
-colors:
-  today: "#e91e63"
-  soon: "#ffeb3b"
-  accent: "#607d8b"
-  name: "#607d8b"
-  badge: "#2196f3"
-  when: "#9e9e9e"
-  match_today: true
-  highlight_past: "#9c27b0"
-  highlight_today: "#4caf50"
-  highlight_soon: "#ffeb3b"
-  vip_badge: var(--primary-color)
-  important_badge: "#795548"
-font_sizes:
-  name: 24px
-  badge: 24px
-  when: 20px
-font_style:
-  name:
-    bold: true
-    uppercase: true
-    letter_spacing: 2px
-  type:
-    italic: true
-  badge:
-    italic: true
-    underline: true
-  when:
-    bold: true
-    italic: true
-    letter_spacing: 1px
-background:
-  enabled: true
-  color: "#03a9f4"
-  image: /local/your-image.jpg
-  size: contain
-  opacity: 13
-```
-
-</details>
-
-Both are set through the visual editor above - shown here as YAML just to make what each card actually changes easy to scan and copy. Every option not listed sits at its default, which is why the first card is six lines: the card only stores what you change. Anything left at its default inherits from your Home Assistant theme, per the CSS variables below.
+Five readings, the same events, nothing in common but the data. For dressing a whole dashboard at once rather than card by card, every one of those settings is also a CSS variable - see below.
 
 ### Theming with CSS variables
 
@@ -1153,6 +1167,16 @@ The **Since** column reads: **3.0.0** - this exact name has worked since 3.0.0; 
 | `--annuals-card-no-events-color` | The ["no events" line](#custom-dashboard-card) | `--secondary-text-color` | 3.1.0 |
 | `--annuals-card-no-events-size` / `-weight` / `-style` / `-transform` / `-decoration` / `-spacing` | That line's font | inherit / normal | 3.1.0 |
 | `--annuals-card-background-color` / `-image` / `-size` / `-repeat` / `-opacity` | Card background | transparent / none | 3.0.0 · renamed |
+| `--annuals-card-nav-label-color` | The period on the [calendar navigation](#calendar-navigation) bar | `--primary-text-color` | 3.3.0 |
+| `--annuals-card-nav-label-size` / `-weight` / `-style` / `-transform` / `-decoration` / `-spacing` | That period's font | `12px` / `500` | 3.3.0 |
+| `--annuals-card-nav-button-color` / `-background-color` | The bar's arrows, mode buttons and calendar button | `--secondary-text-color` / `--secondary-background-color` | 3.3.0 |
+| `--annuals-card-nav-button-height` | Height, and least width, of every button on the bar | `26px` | 3.3.0 |
+| `--annuals-card-nav-button-size` / `-weight` / `-style` / `-transform` / `-decoration` / `-spacing` | The letter on the Day, Week and Month buttons | `11px` / `500` | 3.3.0 |
+| `--annuals-card-nav-active-color` / `-background-color` | The selected mode, and the calendar button while its picker has the focus | `--text-primary-color` / `--primary-color` | 3.3.0 |
+| `--annuals-card-add-button-color` / `--annuals-card-edit-button-color` / `--annuals-card-delete-button-color` | The **+** beside the title and a row's pencil and trash can ([Adding, editing and deleting from the card](#adding-editing-and-deleting-from-the-card)) | `--secondary-text-color` | 3.3.0 |
+| `--annuals-card-add-button-hover-color` / `--annuals-card-edit-button-hover-color` / `--annuals-card-delete-button-hover-color` | The same three while the pointer is over them or the keyboard is on them | `--primary-color`, `--error-color` for the trash can | 3.3.0 |
+| `--annuals-card-add-button-size` / `--annuals-card-edit-button-size` / `--annuals-card-delete-button-size` | How wide and high those three are; the glyph follows | `28px` for the **+**, `26px` for a row's two (`22px` compact or minimal, `18px` in the timeline's list) | 3.3.0 |
+| `--annuals-card-search-color` / `-background-color` / `-size` | The [search field](#search-field) | `--primary-text-color` / `--secondary-background-color` / `12px` | 3.3.0 |
 
 </details>
 

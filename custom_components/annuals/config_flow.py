@@ -27,6 +27,7 @@ from .const import (
     CONF_COUNTRY,
     CONF_DAY,
     CONF_END_DATE,
+    CONF_END_TIME,
     CONF_EVENT_NAME,
     CONF_EVENT_TYPE,
     CONF_HOLIDAY_BLOCK,
@@ -39,16 +40,21 @@ from .const import (
     CONF_ICON,
     CONF_IMPORTANT_THRESHOLDS,
     CONF_IMPORT_SOURCE,
+    CONF_INTERVAL,
+    CONF_INTERVAL_UNIT,
     CONF_LANGUAGE,
     CONF_LAST_NAME,
     CONF_MONTH,
     CONF_NAME_TRANSLATIONS,
     CONF_NTH,
+    CONF_PERSON,
     CONF_SUBDIVISION,
+    CONF_TIME,
     CONF_TODO_LISTS,
     CONF_VIP,
     CONF_WEEKDAY,
     CONF_YEAR,
+    INTERVAL_UNIT_OPTIONS,
     DEFAULT_IMPORTANT_THRESHOLDS,
     DOMAIN,
     EVENT_TYPES,
@@ -87,6 +93,7 @@ from .dates import (
     next_holiday_occurrence,
     parse_iso_date,
     subdivision_name,
+    time_text,
 )
 from .helpers import (
     async_break_note,
@@ -248,6 +255,66 @@ def _rule_fields(defaults: dict) -> dict:
     }
 
 
+def _person_field(defaults: dict, group: str) -> dict:
+    """The person whose picture stands for the event (see CONF_PERSON) -
+    the seven yearly types only, each of which is one person's own date.
+    No default=, for the same reason as the last name: an emptied optional
+    field is left out of the submitted payload, and a schema default would
+    silently put the old person back.
+    """
+    if group != GROUP_RECURRING:
+        return {}
+    return {
+        vol.Optional(
+            CONF_PERSON,
+            description={"suggested_value": defaults.get(CONF_PERSON)},
+        ): selector({"entity": {"domain": "person"}})
+    }
+
+
+def _interval_fields(defaults: dict) -> dict:
+    """Every N months or years (see CONF_INTERVAL in const.py) - on the
+    custom event's own form, next to the rule it cannot be combined with.
+    Both optional: left empty, the event repeats once a year as before.
+    """
+    return {
+        vol.Optional(
+            CONF_INTERVAL,
+            description={"suggested_value": defaults.get(CONF_INTERVAL)},
+        ): selector({"number": {"min": 1, "max": 120, "mode": "box"}}),
+        vol.Optional(
+            CONF_INTERVAL_UNIT,
+            description={"suggested_value": defaults.get(CONF_INTERVAL_UNIT)},
+        ): selector(
+            {
+                "select": {
+                    "options": INTERVAL_UNIT_OPTIONS,
+                    "translation_key": "interval_unit",
+                    "mode": "dropdown",
+                }
+            }
+        ),
+    }
+
+
+def _time_fields(defaults: dict, group: str) -> dict:
+    """A time of day and an end time (see CONF_TIME) - one-time events only,
+    the one shape that is a particular day rather than a yearly date.
+    """
+    if group != GROUP_ONE_TIME:
+        return {}
+    return {
+        vol.Optional(
+            CONF_TIME,
+            description={"suggested_value": defaults.get(CONF_TIME)},
+        ): selector({"time": {}}),
+        vol.Optional(
+            CONF_END_TIME,
+            description={"suggested_value": defaults.get(CONF_END_TIME)},
+        ): selector({"time": {}}),
+    }
+
+
 def _as_option(value: int | str | None) -> str | None:
     """A stored number as the string its select selector deals in."""
     return None if _blank(value) else str(value)
@@ -368,6 +435,7 @@ def _event_schema(defaults: dict | None, *, group: str) -> vol.Schema:
                 CONF_LAST_NAME,
                 description={"suggested_value": defaults.get(CONF_LAST_NAME)},
             ): str,
+            **_person_field(defaults, group),
             vol.Required(
                 CONF_EVENT_TYPE, default=defaults.get(CONF_EVENT_TYPE, types[0])
             ): _event_type_selector(types),
@@ -395,6 +463,8 @@ def _event_schema(defaults: dict | None, *, group: str) -> vol.Schema:
             # asterisk says so, where the label used to have to.
             **_year_field(defaults, group),
             **_end_date_field(defaults, group),
+            **_time_fields(defaults, group),
+            **(_interval_fields(defaults) if group == GROUP_CUSTOM else {}),
             **(_rule_fields(defaults) if group == GROUP_CUSTOM else {}),
             # Native icon picker (searchable MDI grid) instead of a plain
             # text field - still stores/returns a plain "mdi:..." string.
@@ -480,6 +550,46 @@ def _validate_and_normalise(user_input: dict) -> tuple[dict | None, dict[str, st
     if user_input[CONF_EVENT_TYPE] != TYPE_CUSTOM:
         nth = weekday = None
 
+    # A repeat interval (see CONF_INTERVAL in const.py): both halves or
+    # neither, a year to count from, and never alongside a rule - the two
+    # describe different shapes of recurrence. Dropped rather than refused
+    # on a type that is not custom, like the rule above.
+    interval = user_input.get(CONF_INTERVAL)
+    interval_unit = user_input.get(CONF_INTERVAL_UNIT)
+    if _blank(interval) != _blank(interval_unit):
+        errors[CONF_INTERVAL_UNIT if _blank(interval_unit) else CONF_INTERVAL] = "interval_needs_both"
+        return None, errors
+    if user_input[CONF_EVENT_TYPE] != TYPE_CUSTOM:
+        interval = interval_unit = None
+    if not _blank(interval):
+        if year is None:
+            errors[CONF_INTERVAL] = "interval_needs_year"
+            return None, errors
+        if not _blank(nth):
+            errors[CONF_INTERVAL] = "interval_no_rule"
+            return None, errors
+        interval = int(interval)
+
+    # A time of day (see CONF_TIME): one-time events only, dropped elsewhere
+    # like the rule. An end time needs a start to be after, and on a
+    # single-day event it has to be after it - on a multi-day one it sits
+    # on the last day, so any time of that day is fine.
+    time_value = time_text(user_input.get(CONF_TIME))
+    end_time_value = time_text(user_input.get(CONF_END_TIME))
+    if user_input[CONF_EVENT_TYPE] != TYPE_ONE_TIME:
+        time_value = end_time_value = None
+    elif end_time_value is not None:
+        if time_value is None:
+            errors[CONF_END_TIME] = "end_time_needs_time"
+            return None, errors
+        if end_date is None and end_time_value <= time_value:
+            errors[CONF_END_TIME] = "end_time_before_start"
+            return None, errors
+
+    person = (user_input.get(CONF_PERSON) or "").strip() or None
+    if EVENT_TYPE_GROUP.get(user_input[CONF_EVENT_TYPE]) != GROUP_RECURRING:
+        person = None
+
     data = {
         CONF_EVENT_NAME: name,
         CONF_LAST_NAME: user_input.get(CONF_LAST_NAME, "").strip(),
@@ -497,6 +607,13 @@ def _validate_and_normalise(user_input: dict) -> tuple[dict | None, dict[str, st
         # the day/month the event still carries is what it goes back to.
         CONF_NTH: _nth_stored(nth),
         CONF_WEEKDAY: None if _blank(weekday) else int(weekday),
+        # The same again for the three that came later: always written, so
+        # clearing one really clears it.
+        CONF_PERSON: person,
+        CONF_INTERVAL: interval if not _blank(interval) else None,
+        CONF_INTERVAL_UNIT: interval_unit if not _blank(interval) else None,
+        CONF_TIME: time_value,
+        CONF_END_TIME: end_time_value,
     }
     return data, errors
 
@@ -606,6 +723,51 @@ def _parse_csv_rows(text: str) -> tuple[list[dict], list[str]]:
                 )
                 continue
 
+        # The repeat interval, the time of day and the person - the same
+        # rules as the form (see _validate_and_normalise), each naming its
+        # own line. Every one an optional column, absent from any CSV
+        # written before it existed.
+        interval = row.get("interval", "")
+        interval_unit = row.get("interval_unit", "").lower()
+        if bool(interval) != bool(interval_unit):
+            errors.append(f"line {line_no}: interval and interval_unit go together")
+            continue
+        if interval:
+            if event_type != TYPE_CUSTOM:
+                errors.append(f"line {line_no}: interval is for custom events only")
+                continue
+            if not interval.isdigit() or int(interval) < 1 or interval_unit not in INTERVAL_UNIT_OPTIONS:
+                errors.append(f"line {line_no}: interval must be a whole number, interval_unit months or years")
+                continue
+            if year is None:
+                errors.append(f"line {line_no}: an interval needs a year to count from")
+                continue
+            if nth:
+                errors.append(f"line {line_no}: interval and nth/weekday cannot be combined")
+                continue
+        time_value = time_text(row.get("time", ""))
+        end_time_value = time_text(row.get("end_time", ""))
+        if row.get("time", "") and time_value is None or row.get("end_time", "") and end_time_value is None:
+            errors.append(f"line {line_no}: time and end_time must be HH:MM")
+            continue
+        if time_value is not None or end_time_value is not None:
+            if event_type != TYPE_ONE_TIME:
+                errors.append(f"line {line_no}: time and end_time are for one-time events only")
+                continue
+            if end_time_value is not None and time_value is None:
+                errors.append(f"line {line_no}: end_time needs a time")
+                continue
+            if end_time_value is not None and not end_date and end_time_value <= time_value:
+                errors.append(f"line {line_no}: end_time must be after time")
+                continue
+        person = row.get("person", "") or None
+        if person and not person.startswith("person."):
+            errors.append(f"line {line_no}: person must be a person.* entity id")
+            continue
+        if person and EVENT_TYPE_GROUP.get(event_type) != GROUP_RECURRING:
+            errors.append(f"line {line_no}: person is for the yearly types only")
+            continue
+
         rows.append(
             {
                 CONF_EVENT_NAME: name,
@@ -619,6 +781,11 @@ def _parse_csv_rows(text: str) -> tuple[list[dict], list[str]]:
                 CONF_END_DATE: end_date or None,
                 CONF_NTH: int(nth) if nth else None,
                 CONF_WEEKDAY: int(weekday) if nth else None,
+                CONF_PERSON: person,
+                CONF_INTERVAL: int(interval) if interval else None,
+                CONF_INTERVAL_UNIT: interval_unit if interval else None,
+                CONF_TIME: time_value,
+                CONF_END_TIME: end_time_value,
             }
         )
     return rows, errors
