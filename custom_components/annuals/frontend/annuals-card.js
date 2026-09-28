@@ -25795,10 +25795,89 @@
     }
   }
 
-  customElements.define("annuals-card", AnnualsCard);
-  customElements.define("annuals-card-editor", AnnualsCardEditor);
+  // Defining the two elements - and defining them again if Home Assistant
+  // swaps the registry out from under them.
+  //
+  // Two reasons for going through a function rather than calling define twice.
+  //
+  // First, this file can be evaluated twice in one page: Home Assistant imports
+  // it as an extra module URL and the dashboards also list it as a resource,
+  // and the two are one module only as long as they resolve to the same
+  // address - a resource URL is resolved against the address the browser's
+  // token was issued for, the import against the one the page came from. An
+  // unguarded second define throws, taking the registration below with it.
+  //
+  // Second, and the reason for the watcher: the app bundle's very first
+  // statement replaces window.customElements with the scoped registry polyfill,
+  // and that polyfill answers only for what was defined into it. Anything
+  // registered before it arrived is invisible afterwards - customElements.get()
+  // returns undefined, whenDefined() never fires, and the card shows
+  // "Configuration error" with nothing in the console and nothing in the log.
+  // Whether this file runs before or after that statement is an unordered race
+  // between two imports in the page (home-assistant/frontend#53890).
+  //
+  // Hence: define now, remember which registry took it, and watch for that
+  // object being replaced. Watching the registry itself rather than waiting for
+  // "home-assistant" to be defined is the point - the swap and that definition
+  // are one synchronous task, so by the first tick of any timer the tag is
+  // always there, and a check built on it would stop before doing anything.
+  const TAGS = [
+    ["annuals-card", AnnualsCard],
+    ["annuals-card-editor", AnnualsCardEditor],
+  ];
+  const WATCHING = "__annualsCardRegistryWatch";
+  const WARNED = "__annualsCardDefineWarned";
+
+  const defineAll = () => {
+    const registry = window.customElements;
+    for (const [tag, cls] of TAGS) {
+      if (registry.get(tag)) continue;
+      try {
+        registry.define(tag, cls);
+      } catch (err) {
+        // Usually another copy of this file between the check and here, and
+        // then there is nothing to do. But this is also where the failure this
+        // whole block exists to prevent would show up, so it gets said once
+        // rather than thrown away on every tick.
+        if (!window[WARNED]) {
+          window[WARNED] = true;
+          console.warn(`annuals-card: could not define ${tag}`, err);
+        }
+      }
+    }
+    return registry;
+  };
+
+  let registry = defineAll();
+
+  // One watcher per page, for the same reason the elements are guarded above:
+  // this file can be evaluated twice. The flag is handed back when the watcher
+  // is done, so a copy arriving later still gets to watch.
+  if (!window[WATCHING]) {
+    window[WATCHING] = true;
+    // Half a minute of a page's life, then the page is what it is going to be.
+    // Deliberately not "until Home Assistant's app is up": another card that
+    // brings its own copy of the same polyfill would swap the registry later,
+    // and stopping at the first quiet tick would miss it. A tick costs one
+    // comparison while nothing changes, and the swap is checked before the
+    // deadline is, so even a single throttled tick in a background tab still
+    // repairs before it stops.
+    const deadline = performance.now() + 30000;
+    const watch = setInterval(() => {
+      if (window.customElements !== registry) registry = defineAll();
+      if (performance.now() > deadline) {
+        clearInterval(watch);
+        window[WATCHING] = false;
+      }
+    }, 100);
+  }
 
   window.customCards = window.customCards || [];
+  // Same reason, and here it would show: the card picker lists what is in this
+  // array, so a second entry is a second "Annuals Card" to choose between.
+  // This leaves the module, so the push below stays the last thing in it -
+  // anything put after it would quietly not run on a second evaluation.
+  if (window.customCards.some((card) => card.type === "annuals-card")) return;
   window.customCards.push({
     type: "annuals-card",
     name: "Annuals Card",

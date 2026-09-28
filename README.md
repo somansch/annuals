@@ -1263,7 +1263,7 @@ unzip annuals.zip
 rm annuals.zip
 ```
 
-A manual install needs no separate Lovelace resource step for the [custom dashboard card](#custom-dashboard-card): it sits in the same tree, and the integration serves it itself on every startup.
+A manual install needs no separate Lovelace resource step for the [custom dashboard card](#custom-dashboard-card): it sits in the same tree, and the integration serves it itself on every startup - including the entry under **Settings → Dashboards → Resources**, which it writes and keeps current on its own.
 
 ## Help and Contribution
 

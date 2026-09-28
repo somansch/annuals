@@ -30,6 +30,17 @@
  */
 (() => {
   const TAG = "annuals-card";
+
+  // One loader per page is enough. Home Assistant is handed this file twice -
+  // as an extra module URL and as a dashboard resource - and while that is one
+  // URL it is one module, a dashboard reached under a different address than
+  // the one the browser's token was issued for resolves the two differently.
+  // Two loaders would mean two sets of retries, two sets of listeners and two
+  // fetches of a card measured in megabytes.
+  const RUNNING = `__${TAG}-loader`;
+  if (window[RUNNING]) return;
+  window[RUNNING] = true;
+
   const HERE = new URL(import.meta.url);
 
   // Seconds to wait before each attempt. The last value repeats, so the
@@ -44,8 +55,14 @@
   let tries = 0;
   let busy = false;
   let timer = null;
+  // Set once the module has been fetched and run. What happens to the element
+  // afterwards is the card's business: it watches for Home Assistant swapping
+  // the element registry and defines itself again into the new one. Asking
+  // customElements here instead would send this loader after the whole file
+  // again every time that happened.
+  let loaded = false;
 
-  const done = () => !!customElements.get(TAG);
+  const done = () => loaded || !!customElements.get(TAG);
 
   function urlForThisTry() {
     const url = new URL("./annuals-card.js", HERE);
@@ -62,6 +79,7 @@
     const url = urlForThisTry();
     try {
       await import(url);
+      loaded = true;
     } catch (err) {
       if (!done()) {
         console.warn(

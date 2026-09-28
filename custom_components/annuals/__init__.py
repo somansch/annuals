@@ -5,7 +5,7 @@ import functools
 import logging
 from pathlib import Path
 
-from homeassistant.components import frontend, persistent_notification
+from homeassistant.components import frontend
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
@@ -13,8 +13,13 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.event import async_track_time_change
 from homeassistant.helpers.storage import Store
+from homeassistant.setup import async_when_setup
 from homeassistant.util import dt as dt_util
 from homeassistant.helpers.typing import ConfigType
+
+from .lovelace_resource import LOVELACE_DOMAIN
+from .lovelace_resource import async_register as async_register_resource
+from .lovelace_resource import async_unregister as async_unregister_resource
 
 from .const import (
     CONF_DAY,
@@ -75,8 +80,10 @@ HUB_PLATFORMS: list[Platform] = [Platform.CALENDAR]
 _HUB_FLOW_STARTED = "hub_flow_started"
 
 # The bundled Lovelace card (custom_components/annuals/frontend/annuals-card.js)
-# is served from this URL and auto-loaded on every dashboard via
-# frontend.add_extra_js_url - no manual "Add resource" step required.
+# is served from this URL and auto-loaded on every dashboard - via
+# frontend.add_extra_js_url and, under the same URL, an entry the integration
+# keeps in the dashboards' own resource list. No manual "Add resource" step
+# either way; see lovelace_resource.py for why both.
 FRONTEND_JS_URL = "/annuals-frontend/annuals-card.js"
 
 # What is actually handed to add_extra_js_url. Home Assistant imports it
@@ -86,9 +93,14 @@ FRONTEND_JS_URL = "/annuals-frontend/annuals-card.js"
 # many attempts as it takes - see annuals-card-loader.js.
 FRONTEND_LOADER_URL = "/annuals-frontend/annuals-card-loader.js"
 
-# Remembers the frontend JS's own mtime (see FRONTEND_JS_URL's cache-busting
-# "?v=" below) across restarts, purely so a persistent notification can be
-# shown exactly when it actually changed - not on every restart regardless.
+# The two files we serve, by name: an entry in the dashboards' resource list
+# pointing at one of them is ours to keep current - see lovelace_resource.py.
+FRONTEND_URL_PATHS = (FRONTEND_JS_URL, FRONTEND_LOADER_URL)
+
+# Used to remember the card's own mtime across restarts, to tell an update from
+# a plain restart for the "refresh your tab" notification that used to follow
+# one. Both are gone; the two are kept only to find that store and take it off
+# disk, and can go with a later release once installations have started once.
 FRONTEND_VERSION_STORE_KEY = f"{DOMAIN}_frontend_version"
 FRONTEND_VERSION_STORE_VERSION = 1
 
@@ -380,29 +392,39 @@ async def _async_register_frontend(hass: HomeAssistant) -> None:
     # Without the loader on disk the card is handed over directly: a card
     # that cannot retry still beats no card at all.
     url = FRONTEND_LOADER_URL if loader_path.is_file() else FRONTEND_JS_URL
-    frontend.add_extra_js_url(hass, f"{url}?v={version}")
+    url = f"{url}?v={version}"
+    frontend.add_extra_js_url(hass, url)
 
-    # The cache-busting "?v=" above only takes effect on a browser tab's next
-    # *full* page load - restarting HA (e.g. after a HACS update) doesn't by
-    # itself make an already-open tab re-fetch the new file, since it's an ES
-    # module the browser already has cached under the old URL for that page's
-    # lifetime. There's no way to force that from here without an unprompted
-    # reload of someone's browser, which could interrupt whatever else they're
-    # doing - so instead, just reliably tell them a refresh is actually needed
-    # this time, rather than leaving them to guess (or reflexively refresh)
-    # after every restart regardless of whether this card even changed.
-    store = Store(hass, FRONTEND_VERSION_STORE_VERSION, FRONTEND_VERSION_STORE_KEY)
-    previous = await store.async_load()
-    if previous is not None and previous.get("version") != version:
-        persistent_notification.async_create(
-            hass,
-            "The bundled Annuals dashboard card was updated. Refresh any open "
-            "browser tab (F5) to load the new version - already-open tabs keep "
-            "running the previous one until then.",
-            title="Annuals card updated",
-            notification_id=f"{DOMAIN}_frontend_updated",
-        )
-    await store.async_save({"version": version})
+    # The same URL in the dashboards' own resource list, which the frontend
+    # reads for itself after it connects rather than finding it written into the
+    # page. That covers the page served while Home Assistant was still starting,
+    # before any of this had run - the one case the loader cannot help with,
+    # since it is the loader that never reached that page. The list belongs to
+    # "lovelace", which may be set up before or after this integration, so this
+    # waits for it rather than assuming; on an installation with no dashboards
+    # it never runs at all. See lovelace_resource.py.
+    async def _list_as_resource(hass: HomeAssistant, _component: str) -> None:
+        await async_register_resource(hass, url, FRONTEND_URL_PATHS)
+
+    async_when_setup(hass, LOVELACE_DOMAIN, _list_as_resource)
+
+    # A tab that is already open keeps running the card it loaded, whatever the
+    # "?v=" above now says: it is an ES module the browser holds for that
+    # document's lifetime. That used to be worth a notification asking for an
+    # F5, and is not any more. An update restarts Home Assistant, and the
+    # frontend reloads the page itself when it reconnects - the new card
+    # arrives without anybody being told to fetch it. What the notification
+    # reliably did was turn up after every update, including all the ones where
+    # nobody had a tab open to refresh.
+    #
+    # The card's version was remembered only to tell "changed" from "merely
+    # restarted" for that notification. It goes with it, and the store it lived
+    # in is taken off disk rather than left behind in .storage. Removing a store
+    # that is not there does nothing, so this costs an installation that never
+    # had one exactly nothing.
+    await Store(
+        hass, FRONTEND_VERSION_STORE_VERSION, FRONTEND_VERSION_STORE_KEY
+    ).async_remove()
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
@@ -599,3 +621,18 @@ async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> 
     return await hass.config_entries.async_unload_platforms(
         config_entry, _platforms_for(config_entry)
     )
+
+
+async def async_remove_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> None:
+    """Take the card's resource entry out with the last entry of all.
+
+    Home Assistant takes the entry off its list before calling this, so an empty
+    list means nothing of this integration is left configured. The entry in the
+    dashboards' resource list points at a file this integration serves, so it is
+    ours to take back out rather than leave standing in somebody's list. It comes
+    back by itself on the next start if an event is added again.
+    """
+    if hass.config_entries.async_entries(DOMAIN):
+        return
+
+    await async_unregister_resource(hass, FRONTEND_URL_PATHS)

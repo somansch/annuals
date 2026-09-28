@@ -1,6 +1,7 @@
 {
   "domain": "annuals",
   "name": "Annuals",
+  "after_dependencies": ["lovelace"],
   "codeowners": ["@somansch"],
   "config_flow": true,
   "dependencies": ["file_upload", "frontend", "http"],
@@ -8,5 +9,5 @@
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/somansch/annuals/issues",
   "requirements": ["holidays>=0.50", "icalendar>=5.0", "vobject>=0.9.6"],
-  "version": "3.3.0"
+  "version": "3.3.1"
 }
