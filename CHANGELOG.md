@@ -2,6 +2,11 @@
 
 All notable changes to this integration are documented here.
 
+## v3.3.2
+
+### Fixed
+- **The ICS import works again.** Since v3.2.0 it stopped with *Unknown error occurred* right after the file was uploaded, before a single entry was shown: the step that asks what the imported entries are still asked for the list of types in the way it did before v3.2.0, which gave each kind of event its own form. It now offers the yearly types and *Custom*. The same fault stopped a vCard import whose dates carry labels of their own on its review page, and is fixed there too. ([#12](https://github.com/somansch/annuals/issues/12))
+
 ## v3.3.1
 
 ### Changed

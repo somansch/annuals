@@ -197,6 +197,13 @@ def _event_type_selector(options: list[str]):
     )
 
 
+# What an imported entry can be: every yearly type, plus custom - which is
+# what a vCard date with a label of its own is proposed as (see
+# _default_type_for_label). An import carries a day and a month, and only
+# sometimes a year, so a one-time event - which needs a year - is not offered.
+_IMPORT_EVENT_TYPES = [*EVENT_TYPE_GROUPS[GROUP_RECURRING], TYPE_CUSTOM]
+
+
 def _month_selector():
     return selector(
         {
@@ -1196,7 +1203,7 @@ def _import_options_schema(
         # apply there.
         schema_dict[
             vol.Required(CONF_EVENT_TYPE, default=defaults.get(CONF_EVENT_TYPE, TYPE_BIRTHDAY))
-        ] = _event_type_selector()
+        ] = _event_type_selector(_IMPORT_EVENT_TYPES)
     return vol.Schema(schema_dict)
 
 
@@ -2493,7 +2500,7 @@ class AnnualsOptionsFlow(OptionsFlow):
             if self._import_row_type_mode:
                 schema_dict[
                     vol.Optional(keys["type"], default=row["event_type"])
-                ] = _event_type_selector()
+                ] = _event_type_selector(_IMPORT_EVENT_TYPES)
 
         total_pages = (len(self._import_rows) + _IMPORT_REVIEW_PAGE_SIZE - 1) // _IMPORT_REVIEW_PAGE_SIZE
         return self.async_show_form(
