@@ -41,11 +41,12 @@ from .const import (
     DATA_TODO_UNSUB,
     DATA_TYPE_LABELS,
     DOMAIN,
-    TYPE_HOLIDAY,
+    LIBRARY_TYPES,
     TYPE_ONE_TIME,
 )
 from .dates import _holiday_calendar, holiday_key_from_name, one_time_span
 from .helpers import (
+    event_title,
     CATEGORY_PUBLIC,
     async_event_type_labels,
     async_reminder_strings,
@@ -215,7 +216,7 @@ async def _async_migrate_holiday_keys(hass: HomeAssistant) -> None:
 
     by_id: dict[str, list] = {}
     for entry in hass.config_entries.async_entries(DOMAIN):
-        if entry.data.get(CONF_EVENT_TYPE) != TYPE_HOLIDAY:
+        if entry.data.get(CONF_EVENT_TYPE) not in LIBRARY_TYPES:
             continue
         by_id.setdefault(_import_unique_id(entry.data), []).append(entry)
 
@@ -447,7 +448,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         new_title = hub_title(hass)
         if config_entry.title != new_title:
             hass.config_entries.async_update_entry(config_entry, title=new_title)
-    elif config_entry.data.get(CONF_EVENT_TYPE) == TYPE_HOLIDAY:
+    elif config_entry.data.get(CONF_EVENT_TYPE) in LIBRARY_TYPES:
         await _async_migrate_holiday_name(hass, config_entry)
 
     await hass.config_entries.async_forward_entry_setups(
@@ -495,7 +496,7 @@ async def _async_migrate_holiday_name(hass: HomeAssistant, config_entry: ConfigE
         return
     new_data = {**data, CONF_EVENT_NAME: correct_name}
     labels = await async_event_type_labels(hass)
-    new_title = f"{labels[TYPE_HOLIDAY]}: {full_name(new_data)}"
+    new_title = event_title(labels, new_data)
     hass.config_entries.async_update_entry(config_entry, data=new_data, title=new_title)
 
 
@@ -530,7 +531,7 @@ async def _async_migrate_holiday_regions(hass: HomeAssistant) -> None:
     holidays_entries = [
         entry
         for entry in hass.config_entries.async_entries(DOMAIN)
-        if not entry.data.get(CONF_HUB) and entry.data.get(CONF_EVENT_TYPE) == TYPE_HOLIDAY
+        if not entry.data.get(CONF_HUB) and entry.data.get(CONF_EVENT_TYPE) in LIBRARY_TYPES
     ]
     if not holidays_entries:
         return

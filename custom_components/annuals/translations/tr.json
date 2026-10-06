@@ -24,7 +24,8 @@
                 "work_anniversary": "İş yıl dönümü",
                 "custom": "Özel",
                 "one_time": "Tek seferlik etkinlik",
-                "holiday": "Tatil"
+                "holiday": "Tatil",
+                "market": "Borsa"
             }
         },
         "month": {
@@ -50,6 +51,7 @@
                 "government": "Kamu kurumları",
                 "school": "Okul tatili",
                 "optional": "İsteğe bağlı",
+                "optional_women": "İsteğe bağlı (kadınlar)",
                 "unofficial": "Gayri resmi",
                 "half_day": "Yarım gün",
                 "armed_forces": "Silahlı kuvvetler",
@@ -98,6 +100,21 @@
             "options": {
                 "months": "ay",
                 "years": "yıl"
+            }
+        },
+        "market_category": {
+            "options": {
+                "public": "Kapalı",
+                "half_day": "Kısaltılmış işlem",
+                "restricted_settlement": "Takas yok"
+            }
+        },
+        "market_status": {
+            "options": {
+                "closed": "{market} kapalı",
+                "closes_at": "{market} {time} itibarıyla kapalı",
+                "closes_early": "{market} erken kapanıyor",
+                "no_settlement": "{market} takas yok"
             }
         }
     },
@@ -344,7 +361,8 @@
                 "title": "Tatilin adı",
                 "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nBugün gösterilenle önceden dolduruldu. Tatil veritabanına dönmek için boş bırakın.",
                 "data": {
-                    "name": "Ad"
+                    "name": "Ad",
+                    "reason": "Neden"
                 }
             },
             "holiday_translations": {
@@ -357,7 +375,7 @@
             },
             "import_translations": {
                 "title": "Çevirileri içe aktar",
-                "description": "Bir çeviri CSV'si yükleyin. Sütunlar: `country,subdivision,category,holiday_key,observed,language,name`. Satırlar tatillerle ülke, alt bölge, kategori, tatil anahtarı ve observed bayrağı üzerinden eşleştirilir – giriş kimliğiyle değil; bu yüzden bir ülke yeniden içe aktarılmadan önce dışa aktarılmış bir dosya hâlâ geçerlidir. Tatili bulunmayan satırlar atlanır ve sayılır.",
+                "description": "Bir çeviri CSV'si yükleyin. Sütunlar: `country,subdivision,category,holiday_key,observed,language,name,status`. Satırlar tatillerle ülke, alt bölge, kategori, tatil anahtarı ve observed bayrağı üzerinden eşleştirilir – giriş kimliğiyle değil; bu yüzden bir ülke yeniden içe aktarılmadan önce dışa aktarılmış bir dosya hâlâ geçerlidir. Tatili bulunmayan satırlar atlanır ve sayılır. Bir borsa gününde `name` nedeni, `status` ise kendi adıdır; tatiller için `status` alanını boş bırakın.",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -380,7 +398,8 @@
                     "import_csv": "CSV",
                     "import_ics": "ICS takvimi",
                     "import_vcard_menu": "vCard",
-                    "import_holidays": "Tatiller"
+                    "import_holidays": "Tatiller",
+                    "import_markets": "Borsalar"
                 }
             },
             "remove_events": {
@@ -389,14 +408,37 @@
                 "menu_options": {
                     "remove_ics_imports": "ICS ile içe aktarılan",
                     "remove_vcard_imports": "vCard ile içe aktarılan",
-                    "remove_holidays": "Tatiller"
+                    "remove_holidays": "Tatiller",
+                    "remove_markets": "Borsalar"
                 }
             },
             "import_holidays": {
                 "title": "Tatilleri içe aktar",
-                "description": "Tatillerini etkinlik olarak içe aktarmak için bir ülke seçin. Bunu daha sonra aynı ülke (ve alt bölge) için tekrar çalıştırmak, kopya oluşturmak yerine mevcut girişleri günceller - bir ülke yeni bir tatil eklerse tekrarlamak güvenlidir.",
+                "description": "Tatillerini etkinlik olarak içe aktarmak için bir ülke seçin. Bunu daha sonra aynı ülke (ve alt bölge) için tekrar çalıştırmak, kopya oluşturmak yerine mevcut girişleri günceller - içe aktarmadan önce tüm tatilleri görür ve istediklerinizi seçersiniz.",
                 "data": {
                     "country": "Ülke"
+                }
+            },
+            "import_markets": {
+                "title": "Borsa tatillerini içe aktar",
+                "description": "Kapalı olduğu günleri içe aktarmak için bir borsa seçin - verilerinde varsa kısaltılmış işlem günleri de dahil. İçe aktarmadan önce tüm günleri görür ve istediklerinizi seçersiniz.",
+                "data": {
+                    "market": "Borsa"
+                }
+            },
+            "import_markets_options": {
+                "title": "Borsa günlerini içe aktar - {country}",
+                "description": "Hangi tür günlerin içe aktarılacağı ve adlarının hangi dilde olacağı.",
+                "data": {
+                    "categories": "Günler",
+                    "language": "Adların dili"
+                }
+            },
+            "import_markets_select": {
+                "title": "Borsa günlerini içe aktar - {country}: seç",
+                "description": "{count} gün bulundu, her biri bir sonraki tarihiyle. Yalnızca işaretlenenler içe aktarılır.\n\nAnnuals'ta zaten olan bir günün işaretini kaldırmak onu olduğu gibi bırakır - günleri kaldırmak için **Etkinlikleri kaldır → Borsalar** bölümünü kullanın.",
+                "data": {
+                    "holidays": "Günler"
                 }
             },
             "import_holidays_options": {
@@ -419,12 +461,27 @@
                     "include_observed": "Bu ülkenin tatilleri hafta sonuna denk geldiğinde bazen yakın bir iş gününe kaydırılır (örn. önceki Cuma veya sonraki Pazartesi) - bu kaydırılmış tarihi de ayrı bir etkinlik olarak içe aktarın."
                 }
             },
+            "import_holidays_select": {
+                "title": "Tatilleri içe aktar - {country}: seç",
+                "description": "{count} tatil bulundu, her biri bir sonraki tarihiyle. Yalnızca işaretlenenler içe aktarılır.\n\nAnnuals'ta zaten olan bir tatilin işaretini kaldırmak onu olduğu gibi bırakır - tatilleri kaldırmak için **Etkinlikleri kaldır → Tatiller** bölümünü kullanın.",
+                "data": {
+                    "holidays": "Tatiller"
+                }
+            },
             "remove_holidays": {
                 "title": "İçe aktarılan tatilleri kaldır",
                 "description": "Şu anda {total} tatil içe aktarılmış durumda. Hepsini kaldırmak için aşağıdaki kutuyu işaretleyin veya işaretlemeyip bunun yerine bir grup seçin. Manuel olarak eklenen etkinlikler asla etkilenmez.",
                 "data": {
                     "remove_all": "Tüm içe aktarılan tatilleri kaldır",
                     "batch": "Kaldırılacak grup"
+                }
+            },
+            "remove_markets": {
+                "title": "İçe aktarılan borsa günlerini kaldır",
+                "description": "{total} borsa günü içe aktarıldı. Hepsini kaldırmak için aşağıdaki kutuyu işaretleyin ya da boş bırakıp bir veya daha fazla borsa seçin. Başka hiçbir şey etkilenmez.",
+                "data": {
+                    "remove_all": "İçe aktarılan tüm borsa günlerini kaldır",
+                    "batch": "Kaldırılacak borsalar"
                 }
             },
             "annual_settings": {
@@ -539,7 +596,13 @@
             "interval_needs_year": "Tekrar aralığı yukarıdaki tarihten itibaren sayılır; bu yüzden yıl gerekir.",
             "interval_no_rule": "Tekrar aralığı bir hafta günü kuralıyla birleştirilemez.",
             "end_time_needs_time": "Bitiş saati için başlangıç saati gerekir.",
-            "end_time_before_start": "Bitiş saati başlangıç saatinden sonra olmalıdır."
+            "end_time_before_start": "Bitiş saati başlangıç saatinden sonra olmalıdır.",
+            "no_holiday_selected": "En az bir tatil işaretleyin.",
+            "category_needs_region": "{category} kategorisinde {year} yılında {where} için tatil yok - yalnızca şu bölgelerde var: {regions}. \"Alt bölge\" altından birini seçin veya {category} kategorisini çıkarın.",
+            "category_empty": "{category} kategorisinde {year} yılında {where} için tatil yok. Diğerlerini içe aktarmak için bu kategoriyi çıkarın.",
+            "no_market_day_selected": "En az bir gün işaretleyin.",
+            "market_category_empty": "{category} kategorisinde {year} yılında {where} için gün yok. Diğerlerini içe aktarmak için bu kategoriyi çıkarın.",
+            "no_market_batch_selected": "\"İçe aktarılan tüm borsa günlerini kaldır\" seçeneğini işaretleyin veya kaldırılacak bir borsa seçin."
         },
         "abort": {
             "translations_exported": "{count} çeviri dışa aktarıldı. [annuals_holiday_translations.csv dosyasını indir]({url}) (indirmek için Ctrl/Cmd+tıklayın - normal tıklama burada işe yaramaz)\n\nVeya aşağıdaki CSV'yi kopyalayın:\n\n```\n{csv}\n```",
@@ -557,7 +620,10 @@
             "no_ics_imports": "ICS ile içe aktarılarak oluşturulan hiçbir etkinlik bulunamadı.",
             "ics_imports_removed": "{count} ICS ile içe aktarılan etkinlik kaldırıldı.",
             "no_vcard_imports": "vCard ile içe aktarılarak oluşturulan hiçbir etkinlik bulunamadı.",
-            "vcard_imports_removed": "{count} vCard ile içe aktarılan etkinlik kaldırıldı."
+            "vcard_imports_removed": "{count} vCard ile içe aktarılan etkinlik kaldırıldı.",
+            "market_import_started": "İçe aktarma başladı: {country} için {count} gün kuyruğa alındı ({new} yeni, {updated} güncellendi).",
+            "no_markets_imported": "Henüz hiç borsa günü içe aktarılmadı.",
+            "markets_removed": "{count} borsa günü kaldırıldı."
         }
     },
     "entity": {
@@ -601,6 +667,10 @@
             "holiday": {
                 "name": "{name}",
                 "unit_of_measurement": "gün"
+            },
+            "market": {
+                "name": "{name}",
+                "unit_of_measurement": "gün"
             }
         },
         "calendar": {
@@ -633,6 +703,9 @@
             },
             "holiday": {
                 "name": "Tatiller"
+            },
+            "market": {
+                "name": "Borsalar"
             }
         }
     }

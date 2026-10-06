@@ -11,6 +11,16 @@
   // const.py, which documents the exhaustive list as of when it was last
   // checked) - "de_facto" -> "De facto", "half_day" -> "Half day", so it
   // always reads as a plausible label instead of a raw snake_case string.
+  // The type text of a stock exchange's day: "Market closed", "Early close"
+  // - one phrase per category (see marketDays in STRINGS), the generic type
+  // name with its category only for a category this card has no phrase for.
+  function _marketDayLabel(strings, category) {
+    const phrase = (strings.marketDays || {})[category];
+    if (phrase) return phrase;
+    const type = (strings.types || {}).market || "Stock exchange";
+    return category ? `${type} (${_humanizeCategory(category)})` : type;
+  }
+
   function _humanizeCategory(value) {
     const words = String(value).split("_");
     return words[0].charAt(0).toUpperCase() + words[0].slice(1) + (words.length > 1 ? " " + words.slice(1).join(" ") : "");
@@ -39,6 +49,7 @@
     "custom",
     "one_time",
     "holiday",
+    "market",
   ];
 
   // Stored in `types`/`categories` when the user has explicitly unchecked
@@ -125,6 +136,8 @@
       addEvent: "Add event",
       addSubmit: "Save",
       addCancel: "Cancel",
+      // The button of a flow step that leads on to another (last_step false).
+      addNext: "Next",
       addClose: "Close",
       addCreated: (title) => `${title} added`,
       addFailed: "The event could not be added",
@@ -150,6 +163,7 @@
         custom: "Custom",
         one_time: "One-time event",
         holiday: "Holiday",
+        market: "Stock exchange",
         // Fallback only - an embedded external calendar's own event.typeLabel
         // (its source calendar's name, see buildExternalEvent) is always
         // shown instead wherever a type label appears; this only surfaces
@@ -161,6 +175,13 @@
       // a filter over a whole category of events (English adjectives like
       // the ones in `categories` below don't inflect for plural, so no
       // `categoriesPlural` counterpart is needed for this language).
+      // What a stock exchange's day is, by its category - the type text of a
+      // market row in place of "Stock exchange (Public)" (see _marketDayLabel).
+      marketDays: {
+        public: "Market closed",
+        half_day: "Early close",
+        restricted_settlement: "No settlement",
+      },
       typesPlural: {
         birthday: "Birthdays",
         anniversary: "Anniversaries",
@@ -172,6 +193,7 @@
         custom: "Custom",
         one_time: "One-time events",
         holiday: "Holidays",
+        market: "Stock exchanges",
         calendar: "Calendar events",
       },
       categories: {
@@ -180,6 +202,7 @@
         government: "Government",
         school: "School",
         optional: "Optional",
+        optional_women: "Optional (women)",
         unofficial: "Unofficial",
         half_day: "Half day",
         armed_forces: "Armed forces",
@@ -747,6 +770,8 @@
       addEvent: "Ereignis hinzufügen",
       addSubmit: "Speichern",
       addCancel: "Abbrechen",
+      // The button of a flow step that leads on to another (last_step false).
+      addNext: "Weiter",
       addClose: "Schließen",
       addCreated: (title) => `${title} hinzugefügt`,
       addFailed: "Das Ereignis konnte nicht hinzugefügt werden",
@@ -772,6 +797,7 @@
         custom: "Frei wählbar",
         one_time: "Einmaliges Ereignis",
         holiday: "Feiertag",
+        market: "Börse",
         calendar: "Kalenderereignis",
       },
       // Plural forms for the editor's "Ereignistypen"/"Feiertagskategorien"
@@ -779,6 +805,13 @@
       // rather than a label for one single event - "Geburtstage" reads
       // correctly there, whereas the singular `types`/`categories` above is
       // still correct for a single row's own type/category text.
+      // What a stock exchange's day is, by its category - the type text of a
+      // market row in place of "Stock exchange (Public)" (see _marketDayLabel).
+      marketDays: {
+        public: "Börse geschlossen",
+        half_day: "Verkürzter Handel",
+        restricted_settlement: "Ohne Abwicklung",
+      },
       typesPlural: {
         birthday: "Geburtstage",
         anniversary: "Jahrestage",
@@ -790,6 +823,7 @@
         custom: "Frei wählbar",
         one_time: "Einmalige Ereignisse",
         holiday: "Feiertage",
+        market: "Börsen",
         calendar: "Kalenderereignisse",
       },
       categories: {
@@ -798,6 +832,7 @@
         government: "Behörden",
         school: "Schulferien",
         optional: "Optional",
+        optional_women: "Optional (Frauen)",
         unofficial: "Inoffiziell",
         half_day: "Halber Tag",
         armed_forces: "Streitkräfte",
@@ -826,6 +861,7 @@
         government: "Behörden",
         school: "Schulferien",
         optional: "Optionale",
+        optional_women: "Optionale (Frauen)",
         unofficial: "Inoffizielle",
         half_day: "Halbe Tage",
         armed_forces: "Streitkräfte",
@@ -1386,6 +1422,8 @@
       addEvent: "Ajouter un événement",
       addSubmit: "Enregistrer",
       addCancel: "Annuler",
+      // The button of a flow step that leads on to another (last_step false).
+      addNext: "Suivant",
       addClose: "Fermer",
       addCreated: (title) => `${title} ajouté`,
       addFailed: "L'événement n'a pas pu être ajouté",
@@ -1411,7 +1449,15 @@
         custom: "Personnalisé",
         one_time: "Événement ponctuel",
         holiday: "Jour férié",
+        market: "Bourse",
         calendar: "Événement de calendrier",
+      },
+      // What a stock exchange's day is, by its category - the type text of a
+      // market row in place of "Stock exchange (Public)" (see _marketDayLabel).
+      marketDays: {
+        public: "Bourse fermée",
+        half_day: "Séance écourtée",
+        restricted_settlement: "Sans règlement",
       },
       typesPlural: {
         birthday: "Anniversaires",
@@ -1424,6 +1470,7 @@
         custom: "Personnalisé",
         one_time: "Événements ponctuels",
         holiday: "Jours fériés",
+        market: "Bourses",
         calendar: "Événements de calendrier",
       },
       categories: {
@@ -1432,6 +1479,7 @@
         government: "Administratif",
         school: "Vacances scolaires",
         optional: "Optionnel",
+        optional_women: "Optionnel (femmes)",
         unofficial: "Officieux",
         half_day: "Demi-journée",
         armed_forces: "Forces armées",
@@ -1460,6 +1508,7 @@
         government: "Administratifs",
         school: "Vacances scolaires",
         optional: "Optionnels",
+        optional_women: "Optionnels (femmes)",
         unofficial: "Officieux",
         half_day: "Demi-journées",
         armed_forces: "Forces armées",
@@ -2020,6 +2069,8 @@
       addEvent: "Evenement toevoegen",
       addSubmit: "Opslaan",
       addCancel: "Annuleren",
+      // The button of a flow step that leads on to another (last_step false).
+      addNext: "Volgende",
       addClose: "Sluiten",
       addCreated: (title) => `${title} toegevoegd`,
       addFailed: "Het evenement kon niet worden toegevoegd",
@@ -2045,7 +2096,15 @@
         custom: "Aangepast",
         one_time: "Eenmalig evenement",
         holiday: "Feestdag",
+        market: "Beurs",
         calendar: "Kalenderevenement",
+      },
+      // What a stock exchange's day is, by its category - the type text of a
+      // market row in place of "Stock exchange (Public)" (see _marketDayLabel).
+      marketDays: {
+        public: "Beurs gesloten",
+        half_day: "Verkorte handel",
+        restricted_settlement: "Geen afwikkeling",
       },
       typesPlural: {
         birthday: "Verjaardagen",
@@ -2058,6 +2117,7 @@
         custom: "Aangepast",
         one_time: "Eenmalige evenementen",
         holiday: "Feestdagen",
+        market: "Beurzen",
         calendar: "Kalenderevenementen",
       },
       categories: {
@@ -2066,6 +2126,7 @@
         government: "Overheid",
         school: "Schoolvakantie",
         optional: "Optioneel",
+        optional_women: "Optioneel (vrouwen)",
         unofficial: "Onofficieel",
         half_day: "Halve dag",
         armed_forces: "Krijgsmacht",
@@ -2094,6 +2155,7 @@
         government: "Overheid",
         school: "Schoolvakanties",
         optional: "Optionele",
+        optional_women: "Optionele (vrouwen)",
         unofficial: "Onofficiële",
         half_day: "Halve dagen",
         armed_forces: "Krijgsmacht",
@@ -2660,6 +2722,8 @@
       addEvent: "Dodaj wydarzenie",
       addSubmit: "Zapisz",
       addCancel: "Anuluj",
+      // The button of a flow step that leads on to another (last_step false).
+      addNext: "Dalej",
       addClose: "Zamknij",
       addCreated: (title) => `Dodano: ${title}`,
       addFailed: "Nie udało się dodać wydarzenia",
@@ -2685,7 +2749,15 @@
         custom: "Inne",
         one_time: "Wydarzenie jednorazowe",
         holiday: "Święto",
+        market: "Giełda",
         calendar: "Wydarzenie z kalendarza",
+      },
+      // What a stock exchange's day is, by its category - the type text of a
+      // market row in place of "Stock exchange (Public)" (see _marketDayLabel).
+      marketDays: {
+        public: "Giełda zamknięta",
+        half_day: "Skrócona sesja",
+        restricted_settlement: "Bez rozliczenia",
       },
       typesPlural: {
         birthday: "Urodziny",
@@ -2698,6 +2770,7 @@
         custom: "Inne",
         one_time: "Wydarzenia jednorazowe",
         holiday: "Święta",
+        market: "Giełdy",
         calendar: "Wydarzenia z kalendarza",
       },
       categories: {
@@ -2706,6 +2779,7 @@
         government: "Urzędowe",
         school: "Szkolne",
         optional: "Opcjonalne",
+        optional_women: "Opcjonalne (dla kobiet)",
         unofficial: "Nieoficjalne",
         half_day: "Pół dnia",
         armed_forces: "Wojskowe",
@@ -2734,6 +2808,7 @@
         government: "Dni urzędowe",
         school: "Ferie szkolne",
         optional: "Święta opcjonalne",
+        optional_women: "Święta opcjonalne (dla kobiet)",
         unofficial: "Święta nieoficjalne",
         half_day: "Dni skrócone",
         armed_forces: "Święta wojskowe",
@@ -3293,6 +3368,8 @@
       addEvent: "Añadir evento",
       addSubmit: "Guardar",
       addCancel: "Cancelar",
+      // The button of a flow step that leads on to another (last_step false).
+      addNext: "Siguiente",
       addClose: "Cerrar",
       addCreated: (title) => `${title} añadido`,
       addFailed: "No se pudo añadir el evento",
@@ -3318,7 +3395,15 @@
         custom: "Personalizado",
         one_time: "Evento puntual",
         holiday: "Festivo",
+        market: "Bolsa",
         calendar: "Evento de calendario",
+      },
+      // What a stock exchange's day is, by its category - the type text of a
+      // market row in place of "Stock exchange (Public)" (see _marketDayLabel).
+      marketDays: {
+        public: "Bolsa cerrada",
+        half_day: "Sesión reducida",
+        restricted_settlement: "Sin liquidación",
       },
       typesPlural: {
         birthday: "Cumpleaños",
@@ -3331,6 +3416,7 @@
         custom: "Personalizado",
         one_time: "Eventos puntuales",
         holiday: "Festivos",
+        market: "Bolsas",
         calendar: "Eventos de calendario",
       },
       categories: {
@@ -3339,6 +3425,7 @@
         government: "Administrativo",
         school: "Vacaciones escolares",
         optional: "Opcional",
+        optional_women: "Opcional (mujeres)",
         unofficial: "Extraoficial",
         half_day: "Media jornada",
         armed_forces: "Fuerzas armadas",
@@ -3367,6 +3454,7 @@
         government: "Administrativos",
         school: "Vacaciones escolares",
         optional: "Opcionales",
+        optional_women: "Opcionales (mujeres)",
         unofficial: "Extraoficiales",
         half_day: "Medias jornadas",
         armed_forces: "Fuerzas armadas",
@@ -3927,6 +4015,8 @@
       addEvent: "Aggiungi evento",
       addSubmit: "Salva",
       addCancel: "Annulla",
+      // The button of a flow step that leads on to another (last_step false).
+      addNext: "Avanti",
       addClose: "Chiudi",
       addCreated: (title) => `${title} aggiunto`,
       addFailed: "Impossibile aggiungere l'evento",
@@ -3952,7 +4042,15 @@
         custom: "Personalizzato",
         one_time: "Evento occasionale",
         holiday: "Festività",
+        market: "Borsa",
         calendar: "Evento del calendario",
+      },
+      // What a stock exchange's day is, by its category - the type text of a
+      // market row in place of "Stock exchange (Public)" (see _marketDayLabel).
+      marketDays: {
+        public: "Borsa chiusa",
+        half_day: "Seduta ridotta",
+        restricted_settlement: "Senza regolamento",
       },
       typesPlural: {
         birthday: "Compleanni",
@@ -3965,6 +4063,7 @@
         custom: "Personalizzato",
         one_time: "Eventi occasionali",
         holiday: "Festività",
+        market: "Borse",
         calendar: "Eventi del calendario",
       },
       categories: {
@@ -3973,6 +4072,7 @@
         government: "Amministrativo",
         school: "Vacanze scolastiche",
         optional: "Facoltativo",
+        optional_women: "Facoltativo (donne)",
         unofficial: "Non ufficiale",
         half_day: "Mezza giornata",
         armed_forces: "Forze armate",
@@ -4001,6 +4101,7 @@
         government: "Amministrative",
         school: "Vacanze scolastiche",
         optional: "Facoltative",
+        optional_women: "Facoltative (donne)",
         unofficial: "Non ufficiali",
         half_day: "Mezze giornate",
         armed_forces: "Forze armate",
@@ -4561,6 +4662,8 @@
       addEvent: "Adicionar evento",
       addSubmit: "Salvar",
       addCancel: "Cancelar",
+      // The button of a flow step that leads on to another (last_step false).
+      addNext: "Avançar",
       addClose: "Fechar",
       addCreated: (title) => `${title} adicionado`,
       addFailed: "Não foi possível adicionar o evento",
@@ -4586,7 +4689,15 @@
         custom: "Personalizado",
         one_time: "Evento único",
         holiday: "Feriado",
+        market: "Bolsa de valores",
         calendar: "Evento do calendário",
+      },
+      // What a stock exchange's day is, by its category - the type text of a
+      // market row in place of "Stock exchange (Public)" (see _marketDayLabel).
+      marketDays: {
+        public: "Bolsa fechada",
+        half_day: "Pregão reduzido",
+        restricted_settlement: "Sem liquidação",
       },
       typesPlural: {
         birthday: "Aniversários",
@@ -4599,6 +4710,7 @@
         custom: "Personalizado",
         one_time: "Eventos únicos",
         holiday: "Feriados",
+        market: "Bolsas de valores",
         calendar: "Eventos do calendário",
       },
       categories: {
@@ -4607,6 +4719,7 @@
         government: "Governamental",
         school: "Férias escolares",
         optional: "Opcional",
+        optional_women: "Opcional (mulheres)",
         unofficial: "Não oficial",
         half_day: "Meio período",
         armed_forces: "Forças armadas",
@@ -4635,6 +4748,7 @@
         government: "Governamentais",
         school: "Férias escolares",
         optional: "Opcionais",
+        optional_women: "Opcionais (mulheres)",
         unofficial: "Não oficiais",
         half_day: "Meios períodos",
         armed_forces: "Forças armadas",
@@ -5199,6 +5313,8 @@
       addEvent: "Добавить событие",
       addSubmit: "Сохранить",
       addCancel: "Отмена",
+      // The button of a flow step that leads on to another (last_step false).
+      addNext: "Далее",
       addClose: "Закрыть",
       addCreated: (title) => `${title} добавлено`,
       addFailed: "Не удалось добавить событие",
@@ -5224,7 +5340,15 @@
         custom: "Другое",
         one_time: "Разовое событие",
         holiday: "Праздник",
+        market: "Биржа",
         calendar: "Событие календаря",
+      },
+      // What a stock exchange's day is, by its category - the type text of a
+      // market row in place of "Stock exchange (Public)" (see _marketDayLabel).
+      marketDays: {
+        public: "Биржа закрыта",
+        half_day: "Сокращённые торги",
+        restricted_settlement: "Без расчётов",
       },
       typesPlural: {
         birthday: "Дни рождения",
@@ -5237,6 +5361,7 @@
         custom: "Другое",
         one_time: "Разовые события",
         holiday: "Праздники",
+        market: "Биржи",
         calendar: "События календаря",
       },
       categories: {
@@ -5245,6 +5370,7 @@
         government: "Административный",
         school: "Школьные каникулы",
         optional: "Необязательный",
+        optional_women: "Необязательный (для женщин)",
         unofficial: "Неофициальный",
         half_day: "Сокращённый день",
         armed_forces: "Вооружённые силы",
@@ -5273,6 +5399,7 @@
         government: "Административные",
         school: "Школьные каникулы",
         optional: "Необязательные",
+        optional_women: "Необязательные (для женщин)",
         unofficial: "Неофициальные",
         half_day: "Сокращённые дни",
         armed_forces: "Вооружённые силы",
@@ -5837,6 +5964,8 @@
       addEvent: "Lägg till händelse",
       addSubmit: "Spara",
       addCancel: "Avbryt",
+      // The button of a flow step that leads on to another (last_step false).
+      addNext: "Nästa",
       addClose: "Stäng",
       addCreated: (title) => `${title} tillagd`,
       addFailed: "Händelsen kunde inte läggas till",
@@ -5862,7 +5991,15 @@
         custom: "Anpassad",
         one_time: "Engångshändelse",
         holiday: "Helgdag",
+        market: "Börs",
         calendar: "Kalenderhändelse",
+      },
+      // What a stock exchange's day is, by its category - the type text of a
+      // market row in place of "Stock exchange (Public)" (see _marketDayLabel).
+      marketDays: {
+        public: "Börsen stängd",
+        half_day: "Förkortad handel",
+        restricted_settlement: "Ingen avveckling",
       },
       typesPlural: {
         birthday: "Födelsedagar",
@@ -5875,6 +6012,7 @@
         custom: "Anpassad",
         one_time: "Engångshändelser",
         holiday: "Helgdagar",
+        market: "Börser",
         calendar: "Kalenderhändelser",
       },
       categories: {
@@ -5883,6 +6021,7 @@
         government: "Myndighet",
         school: "Skollov",
         optional: "Valfri",
+        optional_women: "Valfri (kvinnor)",
         unofficial: "Inofficiell",
         half_day: "Halvdag",
         armed_forces: "Försvarsmakten",
@@ -5911,6 +6050,7 @@
         government: "Myndighet",
         school: "Skollov",
         optional: "Valfria",
+        optional_women: "Valfria (kvinnor)",
         unofficial: "Inofficiella",
         half_day: "Halvdagar",
         armed_forces: "Försvarsmakten",
@@ -6476,6 +6616,8 @@
       addEvent: "添加事件",
       addSubmit: "保存",
       addCancel: "取消",
+      // The button of a flow step that leads on to another (last_step false).
+      addNext: "下一步",
       addClose: "关闭",
       addCreated: (title) => `已添加 ${title}`,
       addFailed: "无法添加事件",
@@ -6501,10 +6643,18 @@
         custom: "自定义",
         one_time: "一次性事件",
         holiday: "假日",
+        market: "证券交易所",
         calendar: "日历事件",
       },
       // Chinese nouns don't inflect for plural, so typesPlural/categoriesPlural
       // simply reuse the same singular labels as types/categories below.
+      // What a stock exchange's day is, by its category - the type text of a
+      // market row in place of "Stock exchange (Public)" (see _marketDayLabel).
+      marketDays: {
+        public: "交易所休市",
+        half_day: "提前收市",
+        restricted_settlement: "不结算",
+      },
       typesPlural: {
         birthday: "生日",
         anniversary: "纪念日",
@@ -6516,6 +6666,7 @@
         custom: "自定义",
         one_time: "一次性事件",
         holiday: "假日",
+        market: "证券交易所",
         calendar: "日历事件",
       },
       categories: {
@@ -6524,6 +6675,7 @@
         government: "政府",
         school: "学校假期",
         optional: "可选",
+        optional_women: "可选（女性）",
         unofficial: "非官方",
         half_day: "半天",
         armed_forces: "军队",
@@ -6552,6 +6704,7 @@
         government: "政府",
         school: "学校假期",
         optional: "可选",
+        optional_women: "可选（女性）",
         unofficial: "非官方",
         half_day: "半天",
         armed_forces: "军队",
@@ -7108,6 +7261,8 @@
       addEvent: "Přidat událost",
       addSubmit: "Uložit",
       addCancel: "Zrušit",
+      // The button of a flow step that leads on to another (last_step false).
+      addNext: "Další",
       addClose: "Zavřít",
       addCreated: (title) => `${title} přidáno`,
       addFailed: "Událost se nepodařilo přidat",
@@ -7133,7 +7288,15 @@
         custom: "Vlastní",
         one_time: "Jednorázová událost",
         holiday: "Státní svátek",
+        market: "Burza",
         calendar: "Kalendářní událost",
+      },
+      // What a stock exchange's day is, by its category - the type text of a
+      // market row in place of "Stock exchange (Public)" (see _marketDayLabel).
+      marketDays: {
+        public: "Burza zavřená",
+        half_day: "Zkrácené obchodování",
+        restricted_settlement: "Bez vypořádání",
       },
       typesPlural: {
         birthday: "Narozeniny",
@@ -7146,6 +7309,7 @@
         custom: "Vlastní",
         one_time: "Jednorázové události",
         holiday: "Státní svátky",
+        market: "Burzy",
         calendar: "Kalendářní události",
       },
       categories: {
@@ -7154,6 +7318,7 @@
         government: "Úřední",
         school: "Školní prázdniny",
         optional: "Volitelný",
+        optional_women: "Volitelný (pro ženy)",
         unofficial: "Neoficiální",
         half_day: "Půlden",
         armed_forces: "Ozbrojené síly",
@@ -7182,6 +7347,7 @@
         government: "Úřední",
         school: "Školní prázdniny",
         optional: "Volitelné",
+        optional_women: "Volitelné (pro ženy)",
         unofficial: "Neoficiální",
         half_day: "Půldny",
         armed_forces: "Ozbrojené síly",
@@ -7745,6 +7911,8 @@
       addEvent: "Legg til hendelse",
       addSubmit: "Lagre",
       addCancel: "Avbryt",
+      // The button of a flow step that leads on to another (last_step false).
+      addNext: "Neste",
       addClose: "Lukk",
       addCreated: (title) => `${title} lagt til`,
       addFailed: "Hendelsen kunne ikke legges til",
@@ -7770,7 +7938,15 @@
         custom: "Egendefinert",
         one_time: "Engangshendelse",
         holiday: "Helligdag",
+        market: "Børs",
         calendar: "Kalenderhendelse",
+      },
+      // What a stock exchange's day is, by its category - the type text of a
+      // market row in place of "Stock exchange (Public)" (see _marketDayLabel).
+      marketDays: {
+        public: "Børsen stengt",
+        half_day: "Kortere handel",
+        restricted_settlement: "Uten oppgjør",
       },
       typesPlural: {
         birthday: "Bursdager",
@@ -7783,6 +7959,7 @@
         custom: "Egendefinert",
         one_time: "Engangshendelser",
         holiday: "Helligdager",
+        market: "Børser",
         calendar: "Kalenderhendelser",
       },
       categories: {
@@ -7791,6 +7968,7 @@
         government: "Myndighet",
         school: "Skoleferie",
         optional: "Valgfri",
+        optional_women: "Valgfri (kvinner)",
         unofficial: "Uoffisiell",
         half_day: "Halv dag",
         armed_forces: "Forsvaret",
@@ -7819,6 +7997,7 @@
         government: "Myndighet",
         school: "Skoleferie",
         optional: "Valgfrie",
+        optional_women: "Valgfrie (kvinner)",
         unofficial: "Uoffisielle",
         half_day: "Halve dager",
         armed_forces: "Forsvaret",
@@ -8382,6 +8561,8 @@
       addEvent: "Tilføj begivenhed",
       addSubmit: "Gem",
       addCancel: "Annuller",
+      // The button of a flow step that leads on to another (last_step false).
+      addNext: "Næste",
       addClose: "Luk",
       addCreated: (title) => `${title} tilføjet`,
       addFailed: "Begivenheden kunne ikke tilføjes",
@@ -8407,7 +8588,15 @@
         custom: "Tilpasset",
         one_time: "Engangsbegivenhed",
         holiday: "Helligdag",
+        market: "Børs",
         calendar: "Kalenderbegivenhed",
+      },
+      // What a stock exchange's day is, by its category - the type text of a
+      // market row in place of "Stock exchange (Public)" (see _marketDayLabel).
+      marketDays: {
+        public: "Børsen lukket",
+        half_day: "Kortere handel",
+        restricted_settlement: "Uden afvikling",
       },
       typesPlural: {
         birthday: "Fødselsdage",
@@ -8420,6 +8609,7 @@
         custom: "Tilpasset",
         one_time: "Engangsbegivenheder",
         holiday: "Helligdage",
+        market: "Børser",
         calendar: "Kalenderbegivenheder",
       },
       categories: {
@@ -8428,6 +8618,7 @@
         government: "Myndighed",
         school: "Skoleferie",
         optional: "Valgfri",
+        optional_women: "Valgfri (kvinder)",
         unofficial: "Uofficiel",
         half_day: "Halv dag",
         armed_forces: "Forsvaret",
@@ -8456,6 +8647,7 @@
         government: "Myndighed",
         school: "Skoleferie",
         optional: "Valgfrie",
+        optional_women: "Valgfrie (kvinder)",
         unofficial: "Uofficielle",
         half_day: "Halve dage",
         armed_forces: "Forsvaret",
@@ -9025,6 +9217,8 @@
       addEvent: "Etkinlik ekle",
       addSubmit: "Kaydet",
       addCancel: "İptal",
+      // The button of a flow step that leads on to another (last_step false).
+      addNext: "İleri",
       addClose: "Kapat",
       addCreated: (title) => `${title} eklendi`,
       addFailed: "Etkinlik eklenemedi",
@@ -9050,7 +9244,15 @@
         custom: "Özel",
         one_time: "Tek seferlik etkinlik",
         holiday: "Resmi tatil",
+        market: "Borsa",
         calendar: "Takvim etkinliği",
+      },
+      // What a stock exchange's day is, by its category - the type text of a
+      // market row in place of "Stock exchange (Public)" (see _marketDayLabel).
+      marketDays: {
+        public: "Borsa kapalı",
+        half_day: "Kısaltılmış işlem",
+        restricted_settlement: "Takas yok",
       },
       typesPlural: {
         birthday: "Doğum günleri",
@@ -9063,6 +9265,7 @@
         custom: "Özel",
         one_time: "Tek seferlik etkinlikler",
         holiday: "Resmi tatiller",
+        market: "Borsalar",
         calendar: "Takvim etkinlikleri",
       },
       categories: {
@@ -9071,6 +9274,7 @@
         government: "Devlet dairesi",
         school: "Okul tatili",
         optional: "İsteğe bağlı",
+        optional_women: "İsteğe bağlı (kadınlar)",
         unofficial: "Gayriresmi",
         half_day: "Yarım gün",
         armed_forces: "Silahlı kuvvetler",
@@ -9099,6 +9303,7 @@
         government: "Devlet tatilleri",
         school: "Okul tatilleri",
         optional: "İsteğe bağlı tatiller",
+        optional_women: "İsteğe bağlı tatiller (kadınlar)",
         unofficial: "Gayriresmi tatiller",
         half_day: "Yarım günler",
         armed_forces: "Silahlı kuvvetler tatilleri",
@@ -9659,6 +9864,8 @@
       addEvent: "Pridať udalosť",
       addSubmit: "Uložiť",
       addCancel: "Zrušiť",
+      // The button of a flow step that leads on to another (last_step false).
+      addNext: "Ďalej",
       addClose: "Zavrieť",
       addCreated: (title) => `${title} pridané`,
       addFailed: "Udalosť sa nepodarilo pridať",
@@ -9684,7 +9891,15 @@
         custom: "Vlastná udalosť",
         one_time: "Jednorazová udalosť",
         holiday: "Sviatok",
+        market: "Burza",
         calendar: "Udalosť z kalendára",
+      },
+      // What a stock exchange's day is, by its category - the type text of a
+      // market row in place of "Stock exchange (Public)" (see _marketDayLabel).
+      marketDays: {
+        public: "Burza zatvorená",
+        half_day: "Skrátené obchodovanie",
+        restricted_settlement: "Bez vyrovnania",
       },
       typesPlural: {
         birthday: "Narodeniny",
@@ -9697,6 +9912,7 @@
         custom: "Vlastné udalosti",
         one_time: "Jednorazové udalosti",
         holiday: "Sviatky",
+        market: "Burzy",
         calendar: "Udalosti z kalendára",
       },
       categories: {
@@ -9705,6 +9921,7 @@
         government: "Vládny sviatok",
         school: "Školské prázdniny",
         optional: "Nepovinný sviatok",
+        optional_women: "Nepovinný sviatok (pre ženy)",
         unofficial: "Neoficiálny sviatok",
         half_day: "Pol dňa voľna",
         armed_forces: "Ozbrojené sily",
@@ -9736,6 +9953,7 @@
         government: "Vládne",
         school: "Školské prázdniny",
         optional: "Nepovinné",
+        optional_women: "Nepovinné (pre ženy)",
         unofficial: "Neoficiálne",
         half_day: "Poldne voľna",
         armed_forces: "Ozbrojené sily",
@@ -11868,6 +12086,11 @@
         vip: state.attributes.vip === true,
         important: state.attributes.important === true,
         category: state.attributes.category,
+        // A stock exchange day only: the holiday it falls on ("Thanksgiving
+        // Day") - its name says what the day is for the market instead (see
+        // CONF_MARKET_STATUS in const.py), so this is what stands where a
+        // type would.
+        reason: state.attributes.reason || null,
         // Only present on holiday-type events (see sensor.py) - whether this
         // entity tracks the holiday's practically-observed (weekend-shifted)
         // date rather than its literal one. undefined for every other type,
@@ -11890,6 +12113,9 @@
         // here, since which one applies depends on the language this
         // particular card is being read in (see _localizedEvent).
         nameTranslations: state.attributes.name_translations || null,
+        // A stock exchange day's name in other languages - its reason's
+        // are nameTranslations (see CONF_STATUS_TRANSLATIONS in const.py).
+        statusTranslations: state.attributes.status_translations || null,
         country: state.attributes.country,
         subdivision: state.attributes.subdivision,
         // Only present on a one-time event spanning several days - a
@@ -14474,6 +14700,7 @@
     custom: "var(--grey-color, #9e9e9e)",
     one_time: "var(--amber-color, #ffb300)",
     holiday: "var(--teal-color, #009688)",
+    market: "var(--indigo-color, #3f51b5)",
     // Not one of const.py's ALL_EVENT_TYPES - every embedded external
     // calendar's events share this one entry regardless of which calendar
     // they came from (see buildExternalEvent), same as every other type
@@ -15894,8 +16121,14 @@
         body.appendChild(form);
         foot.appendChild(this._flowButton(strings.addCancel, "text", () => this._closeFlowDialog()));
         foot.appendChild(
-          this._flowButton(text(`${stepKey}.submit`, placeholders) || strings.addSubmit, "primary", () =>
-            this._submitFlow(state.data)
+          this._flowButton(
+            text(`${stepKey}.submit`, placeholders) ||
+              // Home Assistant's own dialog says Next where the integration
+              // marks a step as leading on to another, and Submit only on
+              // the last.
+              (step.last_step === false ? strings.addNext : strings.addSubmit),
+            "primary",
+            () => this._submitFlow(state.data)
           )
         );
         // Into the first field once the form has drawn it, as Home
@@ -15973,6 +16206,7 @@
         e.lastName,
         e.isExternal ? e.typeLabel : (strings.types || {})[e.type],
         e.type === "holiday" && e.category ? (strings.categories || {})[e.category] : "",
+        e.type === "market" ? e.reason || _marketDayLabel(strings, e.category) : "",
         e.location,
       ];
       return words.some((word) => typeof word === "string" && word.toLowerCase().includes(query));
@@ -16426,7 +16660,8 @@
       // in any other language. A code
     // that is the same everywhere beats a name that is right only sometimes.
     _regionSuffix(e) {
-      if (e.type !== "holiday" || !e.country) return "";
+      // A stock exchange's day carries its market code there ("XNYS").
+      if ((e.type !== "holiday" && e.type !== "market") || !e.country) return "";
       // Merged with other countries' copies of the same holiday - list all of
       // them rather than only the one this row happens to have come from.
       if (e.mergedFrom && e.mergedFrom.length > 1) {
@@ -16452,6 +16687,18 @@
     }
 
     _localizedEvent(e) {
+      // A stock exchange day has two wordings: its name, which is the
+      // market's status, and its reason, the holiday it falls on.
+      if (e.type === "market") {
+        const status = translatedName(e.statusTranslations, this._locale());
+        const reason = translatedName(e.nameTranslations, this._locale());
+        if (!status && !reason) return e;
+        return {
+          ...e,
+          ...(status ? { name: status, fullName: status } : {}),
+          ...(reason ? { reason } : {}),
+        };
+      }
       const translated = translatedName(e.nameTranslations, this._locale());
       if (!translated) return e;
       return { ...e, name: translated, fullName: translated };
@@ -16804,7 +17051,7 @@
       const regionPart = (event) =>
         `${event.country}${event.subdivision ? `-${this._regionSubdivision(event)}` : ""}`;
       const holidaySuffix =
-        config.show_holiday_suffix && e.type === "holiday" && e.country
+        config.show_holiday_suffix && (e.type === "holiday" || e.type === "market") && e.country
           ? ` (${[...new Set((e.mergedFrom || [e]).map(regionPart))].join(" · ")})`
           : "";
       const baseName = config.timeline_show_full_name && e.fullName ? e.fullName : e.name;
@@ -16840,6 +17087,8 @@
       let typeLabel = strings.types[e.type] || e.type;
       if (e.type === "holiday" && e.category) {
         typeLabel = `${typeLabel} (${(strings.categories || {})[e.category] || _humanizeCategory(e.category)})`;
+      } else if (e.type === "market") {
+        typeLabel = e.reason || _marketDayLabel(strings, e.category);
       }
       // German nouns stay capitalized wherever they sit in the sentence;
       // only English (and any other language not opting in) lowercases the
@@ -17595,6 +17844,8 @@
       // const.py) is appended so it's visible as text too.
       if (e.type === "holiday" && e.category) {
         typeLabel = `${typeLabel} (${(strings.categories || {})[e.category] || _humanizeCategory(e.category)})`;
+      } else if (e.type === "market") {
+        typeLabel = e.reason || _marketDayLabel(strings, e.category);
       }
       // Country (+ subdivision), useful once more than one country/region is
       // imported at once - opt-in per show_name_country/show_type_country

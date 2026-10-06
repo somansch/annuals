@@ -24,7 +24,8 @@
                 "work_anniversary": "Aniversário de trabalho",
                 "custom": "Personalizado",
                 "one_time": "Evento único",
-                "holiday": "Feriado"
+                "holiday": "Feriado",
+                "market": "Bolsa de valores"
             }
         },
         "month": {
@@ -50,6 +51,7 @@
                 "government": "Administração pública",
                 "school": "Férias escolares",
                 "optional": "Opcional",
+                "optional_women": "Opcional (mulheres)",
                 "unofficial": "Não oficial",
                 "half_day": "Meio período",
                 "armed_forces": "Forças armadas",
@@ -98,6 +100,21 @@
             "options": {
                 "months": "meses",
                 "years": "anos"
+            }
+        },
+        "market_category": {
+            "options": {
+                "public": "Fechada",
+                "half_day": "Pregão reduzido",
+                "restricted_settlement": "Sem liquidação"
+            }
+        },
+        "market_status": {
+            "options": {
+                "closed": "{market} fechada",
+                "closes_at": "{market} fechada a partir das {time}",
+                "closes_early": "{market} fecha mais cedo",
+                "no_settlement": "{market} sem liquidação"
             }
         }
     },
@@ -344,7 +361,8 @@
                 "title": "Nome do feriado",
                 "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nPreenchido com o que é exibido atualmente. Deixe vazio para voltar ao banco de feriados.",
                 "data": {
-                    "name": "Nome"
+                    "name": "Nome",
+                    "reason": "Motivo"
                 }
             },
             "holiday_translations": {
@@ -357,7 +375,7 @@
             },
             "import_translations": {
                 "title": "Importar traduções",
-                "description": "Envie um CSV de traduções. Colunas: `country,subdivision,category,holiday_key,observed,language,name`. As linhas são associadas aos feriados por país, subdivisão, categoria, chave do feriado e sinalizador observed – não pelo id da entrada, então um arquivo exportado antes de reimportar um país continua valendo. Linhas cujo feriado não existe são ignoradas e contadas.",
+                "description": "Envie um CSV de traduções. Colunas: `country,subdivision,category,holiday_key,observed,language,name,status`. As linhas são associadas aos feriados por país, subdivisão, categoria, chave do feriado e sinalizador observed – não pelo id da entrada, então um arquivo exportado antes de reimportar um país continua valendo. Linhas cujo feriado não existe são ignoradas e contadas. Num dia da bolsa, `name` é o motivo e `status` o próprio nome; deixe `status` vazio para feriados.",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -380,7 +398,8 @@
                     "import_csv": "CSV",
                     "import_ics": "Calendário ICS",
                     "import_vcard_menu": "vCard",
-                    "import_holidays": "Feriados"
+                    "import_holidays": "Feriados",
+                    "import_markets": "Bolsas de valores"
                 }
             },
             "remove_events": {
@@ -389,14 +408,37 @@
                 "menu_options": {
                     "remove_ics_imports": "Importados de ICS",
                     "remove_vcard_imports": "Importados de vCard",
-                    "remove_holidays": "Feriados"
+                    "remove_holidays": "Feriados",
+                    "remove_markets": "Bolsas de valores"
                 }
             },
             "import_holidays": {
                 "title": "Importar feriados",
-                "description": "Escolha um país para importar seus feriados como eventos. Executar isso novamente depois para o mesmo país (e subdivisão) atualiza as entradas existentes em vez de duplicá-las - seguro de repetir se um país adicionar um novo feriado.",
+                "description": "Escolha um país para importar seus feriados como eventos. Executar isso novamente depois para o mesmo país (e subdivisão) atualiza as entradas existentes em vez de duplicá-las - antes de importar, você vê todos os feriados e escolhe os que quiser.",
                 "data": {
                     "country": "País"
+                }
+            },
+            "import_markets": {
+                "title": "Importar feriados da bolsa",
+                "description": "Escolha uma bolsa para importar os dias em que ela fecha - e, onde os dados os incluem, os dias de pregão reduzido. Antes de importar, você vê todos os dias e escolhe os que quiser.",
+                "data": {
+                    "market": "Bolsa"
+                }
+            },
+            "import_markets_options": {
+                "title": "Importar dias da bolsa - {country}",
+                "description": "Quais tipos de dias importar e em que idioma ficam os nomes.",
+                "data": {
+                    "categories": "Dias",
+                    "language": "Idioma dos nomes"
+                }
+            },
+            "import_markets_select": {
+                "title": "Importar dias da bolsa - {country}: escolher",
+                "description": "{count} dia(s) encontrado(s), cada um com sua próxima data. Só os marcados são importados.\n\nDesmarcar um dia que já está no Annuals o mantém como está - para remover dias, use **Remover eventos → Bolsas de valores**.",
+                "data": {
+                    "holidays": "Dias"
                 }
             },
             "import_holidays_options": {
@@ -419,12 +461,27 @@
                     "include_observed": "Os feriados desse país às vezes são deslocados para um dia útil próximo quando caem em um fim de semana (ex.: observado na sexta-feira anterior ou na segunda-feira seguinte) - importe também essa data deslocada como um evento separado."
                 }
             },
+            "import_holidays_select": {
+                "title": "Importar feriados - {country}: escolher",
+                "description": "{count} feriado(s) encontrado(s), cada um com sua próxima data. Só os marcados são importados.\n\nDesmarcar um feriado que já está no Annuals o mantém como está - para remover feriados, use **Remover eventos → Feriados**.",
+                "data": {
+                    "holidays": "Feriados"
+                }
+            },
             "remove_holidays": {
                 "title": "Remover feriados importados",
                 "description": "{total} feriado(s) atualmente importado(s). Marque a caixa abaixo para removê-los todos, ou deixe-a desmarcada e escolha um lote em vez disso. Eventos adicionados manualmente nunca são afetados.",
                 "data": {
                     "remove_all": "Remover todos os feriados importados",
                     "batch": "Lote a remover"
+                }
+            },
+            "remove_markets": {
+                "title": "Remover dias da bolsa importados",
+                "description": "{total} dia(s) da bolsa importado(s). Marque a caixa abaixo para remover todos, ou deixe-a desmarcada e escolha uma ou mais bolsas. Nada mais é afetado.",
+                "data": {
+                    "remove_all": "Remover todos os dias da bolsa importados",
+                    "batch": "Bolsas a remover"
                 }
             },
             "annual_settings": {
@@ -539,7 +596,13 @@
             "interval_needs_year": "Um intervalo de repetição é contado a partir da data acima, então o ano é necessário.",
             "interval_no_rule": "Um intervalo de repetição não pode ser combinado com uma regra de dia da semana.",
             "end_time_needs_time": "Uma hora de término precisa de uma hora de início.",
-            "end_time_before_start": "A hora de término deve ser depois da hora de início."
+            "end_time_before_start": "A hora de término deve ser depois da hora de início.",
+            "no_holiday_selected": "Marque pelo menos um feriado.",
+            "category_needs_region": "{category} não tem feriados para {where} em {year} - só estas regiões têm: {regions}. Escolha uma em \"Subdivisão\" ou deixe {category} de fora.",
+            "category_empty": "{category} não tem feriados para {where} em {year}. Deixe-a de fora para importar as outras.",
+            "no_market_day_selected": "Marque pelo menos um dia.",
+            "market_category_empty": "{category} não tem dias para {where} em {year}. Deixe-a de fora para importar as outras.",
+            "no_market_batch_selected": "Marque \"Remover todos os dias da bolsa importados\" ou escolha uma bolsa para remover."
         },
         "abort": {
             "translations_exported": "{count} tradução(ões) exportado(s). [Baixar annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+clique para baixar - um clique simples não funciona aqui)\n\nOu copie o CSV abaixo:\n\n```\n{csv}\n```",
@@ -557,7 +620,10 @@
             "no_ics_imports": "Nenhum evento criado por uma importação ICS foi encontrado.",
             "ics_imports_removed": "{count} evento(s) importado(s) de ICS removido(s).",
             "no_vcard_imports": "Nenhum evento criado por uma importação vCard foi encontrado.",
-            "vcard_imports_removed": "{count} evento(s) importado(s) de vCard removido(s)."
+            "vcard_imports_removed": "{count} evento(s) importado(s) de vCard removido(s).",
+            "market_import_started": "Importação iniciada: {count} dia(s) na fila para {country} ({new} novos, {updated} atualizados).",
+            "no_markets_imported": "Nenhum dia da bolsa foi importado ainda.",
+            "markets_removed": "{count} dia(s) da bolsa removido(s)."
         }
     },
     "entity": {
@@ -601,6 +667,10 @@
             "holiday": {
                 "name": "{name}",
                 "unit_of_measurement": "dias"
+            },
+            "market": {
+                "name": "{name}",
+                "unit_of_measurement": "dias"
             }
         },
         "calendar": {
@@ -633,6 +703,9 @@
             },
             "holiday": {
                 "name": "Feriados"
+            },
+            "market": {
+                "name": "Bolsas de valores"
             }
         }
     }

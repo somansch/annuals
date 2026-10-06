@@ -24,7 +24,8 @@
                 "work_anniversary": "Anniversario lavorativo",
                 "custom": "Personalizzato",
                 "one_time": "Evento occasionale",
-                "holiday": "Festività"
+                "holiday": "Festività",
+                "market": "Borsa"
             }
         },
         "month": {
@@ -50,6 +51,7 @@
                 "government": "Amministrazione pubblica",
                 "school": "Vacanze scolastiche",
                 "optional": "Facoltativa",
+                "optional_women": "Facoltativa (donne)",
                 "unofficial": "Non ufficiale",
                 "half_day": "Mezza giornata",
                 "armed_forces": "Forze armate",
@@ -98,6 +100,21 @@
             "options": {
                 "months": "mesi",
                 "years": "anni"
+            }
+        },
+        "market_category": {
+            "options": {
+                "public": "Chiusa",
+                "half_day": "Seduta ridotta",
+                "restricted_settlement": "Senza regolamento"
+            }
+        },
+        "market_status": {
+            "options": {
+                "closed": "{market} chiusa",
+                "closes_at": "{market} chiusa dalle {time}",
+                "closes_early": "{market} chiude prima",
+                "no_settlement": "{market} senza regolamento"
             }
         }
     },
@@ -344,7 +361,8 @@
                 "title": "Nome della festività",
                 "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nPrecompilato con ciò che viene mostrato attualmente. Lascia vuoto per tornare al database delle festività.",
                 "data": {
-                    "name": "Nome"
+                    "name": "Nome",
+                    "reason": "Motivo"
                 }
             },
             "holiday_translations": {
@@ -357,7 +375,7 @@
             },
             "import_translations": {
                 "title": "Importa traduzioni",
-                "description": "Carica un CSV di traduzioni. Colonne: `country,subdivision,category,holiday_key,observed,language,name`. Le righe vengono abbinate alle festività per paese, suddivisione, categoria, chiave della festività e flag observed – non per id della voce, quindi un file esportato prima di reimportare un paese resta valido. Le righe la cui festività non è presente vengono saltate e conteggiate.",
+                "description": "Carica un CSV di traduzioni. Colonne: `country,subdivision,category,holiday_key,observed,language,name,status`. Le righe vengono abbinate alle festività per paese, suddivisione, categoria, chiave della festività e flag observed – non per id della voce, quindi un file esportato prima di reimportare un paese resta valido. Le righe la cui festività non è presente vengono saltate e conteggiate. Per un giorno di borsa, `name` è il motivo e `status` il suo nome; lascia `status` vuoto per le festività.",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -380,7 +398,8 @@
                     "import_csv": "CSV",
                     "import_ics": "Calendario ICS",
                     "import_vcard_menu": "vCard",
-                    "import_holidays": "Festività"
+                    "import_holidays": "Festività",
+                    "import_markets": "Borse"
                 }
             },
             "remove_events": {
@@ -389,14 +408,37 @@
                 "menu_options": {
                     "remove_ics_imports": "Importati da ICS",
                     "remove_vcard_imports": "Importati da vCard",
-                    "remove_holidays": "Festività"
+                    "remove_holidays": "Festività",
+                    "remove_markets": "Borse"
                 }
             },
             "import_holidays": {
                 "title": "Importa festività",
-                "description": "Scegli un paese per importare le sue festività come eventi. Ripetere l'operazione in seguito per lo stesso paese (e la stessa suddivisione) aggiorna le voci esistenti invece di duplicarle - puoi ripeterla senza problemi se un paese aggiunge una nuova festività.",
+                "description": "Scegli un paese per importare le sue festività come eventi. Ripetere l'operazione in seguito per lo stesso paese (e la stessa suddivisione) aggiorna le voci esistenti invece di duplicarle - prima dell'importazione vedi tutte le festività e scegli quelle che vuoi.",
                 "data": {
                     "country": "Paese"
+                }
+            },
+            "import_markets": {
+                "title": "Importa festività di borsa",
+                "description": "Scegli una borsa per importare i giorni in cui è chiusa e, dove i suoi dati li contengono, i giorni con seduta ridotta. Prima dell'importazione vedi tutti i giorni e scegli quelli che vuoi.",
+                "data": {
+                    "market": "Borsa"
+                }
+            },
+            "import_markets_options": {
+                "title": "Importa giorni di borsa - {country}",
+                "description": "Quali tipi di giorni importare e in quale lingua sono i loro nomi.",
+                "data": {
+                    "categories": "Giorni",
+                    "language": "Lingua dei nomi"
+                }
+            },
+            "import_markets_select": {
+                "title": "Importa giorni di borsa - {country}: scegli",
+                "description": "Trovati {count} giorni, ognuno con la sua prossima data. Vengono importati solo quelli selezionati.\n\nDeselezionare un giorno già presente in Annuals lo lascia com'è - per rimuovere giorni usa **Rimuovi eventi → Borse**.",
+                "data": {
+                    "holidays": "Giorni"
                 }
             },
             "import_holidays_options": {
@@ -419,12 +461,27 @@
                     "include_observed": "Le festività di questo paese vengono a volte spostate a un giorno feriale vicino quando cadono di weekend (es. osservata il venerdì precedente o il lunedì successivo) - importa anche questa data spostata come evento separato."
                 }
             },
+            "import_holidays_select": {
+                "title": "Importa festività - {country}: scegli",
+                "description": "Trovate {count} festività, ognuna con la sua prossima data. Vengono importate solo quelle selezionate.\n\nDeselezionare una festività già presente in Annuals la lascia com'è - per rimuovere festività usa **Rimuovi eventi → Festività**.",
+                "data": {
+                    "holidays": "Festività"
+                }
+            },
             "remove_holidays": {
                 "title": "Rimuovi festività importate",
                 "description": "{total} festività attualmente importate. Seleziona la casella qui sotto per rimuoverle tutte, oppure lasciala deselezionata e scegli invece un lotto. Gli eventi aggiunti manualmente non vengono mai interessati.",
                 "data": {
                     "remove_all": "Rimuovi tutte le festività importate",
                     "batch": "Lotto da rimuovere"
+                }
+            },
+            "remove_markets": {
+                "title": "Rimuovi i giorni di borsa importati",
+                "description": "{total} giorni di borsa importati. Seleziona la casella qui sotto per rimuoverli tutti, oppure lasciala vuota e scegli una o più borse. Nient'altro viene toccato.",
+                "data": {
+                    "remove_all": "Rimuovi tutti i giorni di borsa importati",
+                    "batch": "Borse da rimuovere"
                 }
             },
             "annual_settings": {
@@ -539,7 +596,13 @@
             "interval_needs_year": "Un intervallo di ripetizione si conta dalla data sopra, quindi serve l'anno.",
             "interval_no_rule": "Un intervallo di ripetizione non può essere combinato con una regola del giorno della settimana.",
             "end_time_needs_time": "Un'ora di fine richiede un'ora di inizio.",
-            "end_time_before_start": "L'ora di fine deve essere successiva all'ora di inizio."
+            "end_time_before_start": "L'ora di fine deve essere successiva all'ora di inizio.",
+            "no_holiday_selected": "Seleziona almeno una festività.",
+            "category_needs_region": "{category} non ha festività per {where} nel {year} - ne hanno solo queste regioni: {regions}. Scegline una in «Suddivisione» oppure togli {category}.",
+            "category_empty": "{category} non ha festività per {where} nel {year}. Toglila per importare le altre.",
+            "no_market_day_selected": "Seleziona almeno un giorno.",
+            "market_category_empty": "{category} non ha giorni per {where} nel {year}. Toglila per importare le altre.",
+            "no_market_batch_selected": "Seleziona «Rimuovi tutti i giorni di borsa importati» oppure scegli una borsa da rimuovere."
         },
         "abort": {
             "translations_exported": "{count} traduzione/i esportato/i. [Scarica annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+clic per scaricare - un clic semplice qui non funziona)\n\nOppure copia il CSV qui sotto:\n\n```\n{csv}\n```",
@@ -557,7 +620,10 @@
             "no_ics_imports": "Non è stato trovato alcun evento creato da un'importazione ICS.",
             "ics_imports_removed": "{count} evento/i importato/i da ICS rimosso/i.",
             "no_vcard_imports": "Non è stato trovato alcun evento creato da un'importazione vCard.",
-            "vcard_imports_removed": "{count} evento/i importato/i da vCard rimosso/i."
+            "vcard_imports_removed": "{count} evento/i importato/i da vCard rimosso/i.",
+            "market_import_started": "Importazione avviata: {count} giorni in coda per {country} ({new} nuovi, {updated} aggiornati).",
+            "no_markets_imported": "Non è ancora stato importato alcun giorno di borsa.",
+            "markets_removed": "{count} giorni di borsa rimossi."
         }
     },
     "entity": {
@@ -601,6 +667,10 @@
             "holiday": {
                 "name": "{name}",
                 "unit_of_measurement": "giorni"
+            },
+            "market": {
+                "name": "{name}",
+                "unit_of_measurement": "giorni"
             }
         },
         "calendar": {
@@ -633,6 +703,9 @@
             },
             "holiday": {
                 "name": "Festività"
+            },
+            "market": {
+                "name": "Borse"
             }
         }
     }

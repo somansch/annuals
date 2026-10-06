@@ -24,7 +24,8 @@
                 "work_anniversary": "Pracovné výročie",
                 "custom": "Vlastná udalosť",
                 "one_time": "Jednorazová udalosť",
-                "holiday": "Sviatok"
+                "holiday": "Sviatok",
+                "market": "Burza"
             }
         },
         "month": {
@@ -50,6 +51,7 @@
                 "government": "Vládny sviatok",
                 "school": "Školské prázdniny",
                 "optional": "Nepovinný sviatok",
+                "optional_women": "Nepovinný sviatok (pre ženy)",
                 "unofficial": "Neoficiálny sviatok",
                 "half_day": "Pol dňa voľna",
                 "armed_forces": "Ozbrojené sily",
@@ -98,6 +100,21 @@
             "options": {
                 "months": "mesiacov",
                 "years": "rokov"
+            }
+        },
+        "market_category": {
+            "options": {
+                "public": "Zatvorená",
+                "half_day": "Skrátené obchodovanie",
+                "restricted_settlement": "Bez vyrovnania"
+            }
+        },
+        "market_status": {
+            "options": {
+                "closed": "{market} zatvorená",
+                "closes_at": "{market} zatvorená od {time}",
+                "closes_early": "{market} zatvára skôr",
+                "no_settlement": "{market} bez vyrovnania"
             }
         }
     },
@@ -406,7 +423,8 @@
                 "title": "Názov sviatku",
                 "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nPredvyplnené tým, čo sa zobrazuje dnes. Nechajte prázdne, ak sa má použiť databáza sviatkov.",
                 "data": {
-                    "name": "Názov"
+                    "name": "Názov",
+                    "reason": "Dôvod"
                 }
             },
             "holiday_translations": {
@@ -419,7 +437,7 @@
             },
             "import_translations": {
                 "title": "Importovať preklady",
-                "description": "Nahrajte CSV s prekladmi. Stĺpce: `country,subdivision,category,holiday_key,observed,language,name`. Riadky sa priraďujú k sviatkom podľa krajiny, územnej jednotky, kategórie, kľúča sviatku a príznaku „observed“ – nie podľa ID záznamu, takže súbor exportovaný pred opätovným importom krajiny stále platí. Riadky, ktorých sviatok sa nenašiel, sa preskočia a spočítajú.",
+                "description": "Nahrajte CSV s prekladmi. Stĺpce: `country,subdivision,category,holiday_key,observed,language,name,status`. Riadky sa priraďujú k sviatkom podľa krajiny, územnej jednotky, kategórie, kľúča sviatku a príznaku „observed“ – nie podľa ID záznamu, takže súbor exportovaný pred opätovným importom krajiny stále platí. Riadky, ktorých sviatok sa nenašiel, sa preskočia a spočítajú. Pri burzovom dni je `name` dôvod a `status` jeho vlastný názov; pri sviatkoch nechajte `status` prázdne.",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -442,7 +460,8 @@
                     "import_csv": "CSV",
                     "import_ics": "Kalendár ICS",
                     "import_vcard_menu": "vCard",
-                    "import_holidays": "Sviatky"
+                    "import_holidays": "Sviatky",
+                    "import_markets": "Burzy"
                 }
             },
             "remove_events": {
@@ -451,14 +470,37 @@
                 "menu_options": {
                     "remove_ics_imports": "Importované z ICS",
                     "remove_vcard_imports": "Importované z vCard",
-                    "remove_holidays": "Sviatky"
+                    "remove_holidays": "Sviatky",
+                    "remove_markets": "Burzy"
                 }
             },
             "import_holidays": {
                 "title": "Importovať sviatky",
-                "description": "Vyberte krajinu, ktorej sviatky sa majú importovať ako udalosti. Opätovné spustenie pre tú istú krajinu (a územnú jednotku) aktualizuje existujúce záznamy namiesto vytvárania duplikátov – dá sa teda bezpečne zopakovať, keď krajina pridá nový sviatok.",
+                "description": "Vyberte krajinu, ktorej sviatky sa majú importovať ako udalosti. Opätovné spustenie pre tú istú krajinu (a územnú jednotku) aktualizuje existujúce záznamy namiesto vytvárania duplikátov – pred importom uvidíte všetky sviatky a vyberiete tie, ktoré chcete.",
                 "data": {
                     "country": "Krajina"
+                }
+            },
+            "import_markets": {
+                "title": "Importovať burzové sviatky",
+                "description": "Vyberte burzu a importujte dni, keď je zatvorená – a tam, kde ich údaje obsahujú, aj dni so skráteným obchodovaním. Pred importom uvidíte všetky dni a vyberiete tie, ktoré chcete.",
+                "data": {
+                    "market": "Burza"
+                }
+            },
+            "import_markets_options": {
+                "title": "Importovať burzové dni – {country}",
+                "description": "Ktoré druhy dní importovať a v akom jazyku majú byť ich názvy.",
+                "data": {
+                    "categories": "Dni",
+                    "language": "Jazyk názvov"
+                }
+            },
+            "import_markets_select": {
+                "title": "Importovať burzové dni – {country}: výber",
+                "description": "Nájdené dni: {count}, každý s najbližším dátumom. Importujú sa len začiarknuté.\n\nZrušenie začiarknutia pri dni, ktorý už v Annuals je, ho ponechá bez zmeny – dni odstránite cez **Odstrániť udalosti → Burzy**.",
+                "data": {
+                    "holidays": "Dni"
                 }
             },
             "import_holidays_options": {
@@ -481,12 +523,27 @@
                     "include_observed": "Sviatky tejto krajiny sa niekedy presúvajú na blízky pracovný deň, keď pripadnú na víkend (napr. na predchádzajúci piatok alebo nasledujúci pondelok) – importovať aj tento posunutý dátum ako samostatnú udalosť."
                 }
             },
+            "import_holidays_select": {
+                "title": "Importovať sviatky – {country}: výber",
+                "description": "Nájdené sviatky: {count}, každý s najbližším dátumom. Importujú sa len začiarknuté.\n\nZrušenie začiarknutia pri sviatku, ktorý už v Annuals je, ho ponechá bez zmeny – sviatky odstránite cez **Odstrániť udalosti → Sviatky**.",
+                "data": {
+                    "holidays": "Sviatky"
+                }
+            },
             "remove_holidays": {
                 "title": "Odstrániť importované sviatky",
                 "description": "Momentálne je importovaných {total} sviatkových udalostí. Začiarknutím poľa nižšie odstránite všetky, alebo ho nechajte nezačiarknuté a vyberte jednu dávku. Ručne pridané udalosti zostanú vždy nedotknuté.",
                 "data": {
                     "remove_all": "Odstrániť všetky importované sviatky",
                     "batch": "Dávka na odstránenie"
+                }
+            },
+            "remove_markets": {
+                "title": "Odstrániť importované burzové dni",
+                "description": "Importované burzové dni: {total}. Začiarknutím poľa nižšie odstránite všetky, alebo ho nechajte nezačiarknuté a vyberte jednu či viac búrz. Nič iné sa nezmení.",
+                "data": {
+                    "remove_all": "Odstrániť všetky importované burzové dni",
+                    "batch": "Burzy na odstránenie"
                 }
             },
             "annual_settings": {
@@ -539,7 +596,13 @@
             "interval_needs_year": "Interval opakovania sa počíta od dátumu vyššie, takže je potrebný rok.",
             "interval_no_rule": "Interval opakovania nemožno kombinovať s pravidlom dňa v týždni.",
             "end_time_needs_time": "Čas konca potrebuje čas začiatku.",
-            "end_time_before_start": "Čas konca musí byť po čase začiatku."
+            "end_time_before_start": "Čas konca musí byť po čase začiatku.",
+            "no_holiday_selected": "Začiarknite aspoň jeden sviatok.",
+            "category_needs_region": "{category} nemá pre {where} v roku {year} žiadne sviatky – majú ich len tieto územné jednotky: {regions}. Vyberte jednu z nich v poli „Územná jednotka“ alebo {category} vynechajte.",
+            "category_empty": "{category} nemá pre {where} v roku {year} žiadne sviatky. Vynechajte ju a importujte ostatné.",
+            "no_market_day_selected": "Začiarknite aspoň jeden deň.",
+            "market_category_empty": "{category} nemá pre {where} v roku {year} žiadne dni. Vynechajte ju a importujte ostatné.",
+            "no_market_batch_selected": "Začiarknite „Odstrániť všetky importované burzové dni“ alebo vyberte burzu na odstránenie."
         },
         "abort": {
             "translations_exported": "Exportovaných prekladov: {count}. [Stiahnuť annuals_holiday_translations.csv]({url}) (stiahnete kliknutím s Ctrl/Cmd – samotné kliknutie tu nefunguje)\n\nAlebo skopírujte CSV nižšie:\n\n```\n{csv}\n```",
@@ -557,7 +620,10 @@
             "no_ics_imports": "Nenašli sa žiadne udalosti vytvorené importom ICS.",
             "ics_imports_removed": "Odstránených udalostí importovaných z ICS: {count}.",
             "no_vcard_imports": "Nenašli sa žiadne udalosti vytvorené importom vCard.",
-            "vcard_imports_removed": "Odstránených udalostí importovaných z vCard: {count}."
+            "vcard_imports_removed": "Odstránených udalostí importovaných z vCard: {count}.",
+            "market_import_started": "Import spustený: {count} dní zaradených pre {country} ({new} nových, {updated} aktualizovaných).",
+            "no_markets_imported": "Zatiaľ neboli importované žiadne burzové dni.",
+            "markets_removed": "Odstránené burzové dni: {count}."
         }
     },
     "entity": {
@@ -601,6 +667,10 @@
             "holiday": {
                 "name": "{name}",
                 "unit_of_measurement": "dní"
+            },
+            "market": {
+                "name": "{name}",
+                "unit_of_measurement": "dní"
             }
         },
         "calendar": {
@@ -633,6 +703,9 @@
             },
             "holiday": {
                 "name": "Sviatky"
+            },
+            "market": {
+                "name": "Burzy"
             }
         }
     }

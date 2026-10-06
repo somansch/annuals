@@ -24,7 +24,8 @@
                 "work_anniversary": "Jubileusz pracy",
                 "custom": "Inne",
                 "one_time": "Wydarzenie jednorazowe",
-                "holiday": "Święto"
+                "holiday": "Święto",
+                "market": "Giełda"
             }
         },
         "month": {
@@ -50,6 +51,7 @@
                 "government": "Urzędowe",
                 "school": "Ferie szkolne",
                 "optional": "Opcjonalne",
+                "optional_women": "Opcjonalne (dla kobiet)",
                 "unofficial": "Nieoficjalne",
                 "half_day": "Pół dnia",
                 "armed_forces": "Siły zbrojne",
@@ -98,6 +100,21 @@
             "options": {
                 "months": "miesięcy",
                 "years": "lat"
+            }
+        },
+        "market_category": {
+            "options": {
+                "public": "Zamknięta",
+                "half_day": "Skrócona sesja",
+                "restricted_settlement": "Bez rozliczenia"
+            }
+        },
+        "market_status": {
+            "options": {
+                "closed": "{market} zamknięta",
+                "closes_at": "{market} zamknięta od {time}",
+                "closes_early": "{market} zamyka się wcześniej",
+                "no_settlement": "{market} bez rozliczenia"
             }
         }
     },
@@ -344,7 +361,8 @@
                 "title": "Nazwa święta",
                 "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nWstępnie wypełnione tym, co jest teraz wyświetlane. Pozostaw puste, aby wrócić do bazy świąt.",
                 "data": {
-                    "name": "Nazwa"
+                    "name": "Nazwa",
+                    "reason": "Powód"
                 }
             },
             "holiday_translations": {
@@ -357,7 +375,7 @@
             },
             "import_translations": {
                 "title": "Import tłumaczeń",
-                "description": "Prześlij plik CSV z tłumaczeniami. Kolumny: `country,subdivision,category,holiday_key,observed,language,name`. Wiersze są dopasowywane do świąt po kraju, regionie, kategorii, kluczu święta i fladze observed – a nie po identyfikatorze wpisu, więc plik wyeksportowany przed ponownym importem kraju nadal działa. Wiersze, których święta nie ma, są pomijane i zliczane.",
+                "description": "Prześlij plik CSV z tłumaczeniami. Kolumny: `country,subdivision,category,holiday_key,observed,language,name,status`. Wiersze są dopasowywane do świąt po kraju, regionie, kategorii, kluczu święta i fladze observed – a nie po identyfikatorze wpisu, więc plik wyeksportowany przed ponownym importem kraju nadal działa. Wiersze, których święta nie ma, są pomijane i zliczane. Dla dnia giełdowego `name` to powód, a `status` jego własna nazwa; dla świąt pozostaw `status` puste.",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -380,7 +398,8 @@
                     "import_csv": "CSV",
                     "import_ics": "Kalendarz ICS",
                     "import_vcard_menu": "vCard",
-                    "import_holidays": "Święta"
+                    "import_holidays": "Święta",
+                    "import_markets": "Giełdy"
                 }
             },
             "remove_events": {
@@ -389,14 +408,37 @@
                 "menu_options": {
                     "remove_ics_imports": "Zaimportowane z ICS",
                     "remove_vcard_imports": "Zaimportowane z vCard",
-                    "remove_holidays": "Święta"
+                    "remove_holidays": "Święta",
+                    "remove_markets": "Giełdy"
                 }
             },
             "import_holidays": {
                 "title": "Importuj święta",
-                "description": "Wybierz kraj, aby zaimportować jego święta jako wydarzenia. Ponowne uruchomienie tego później dla tego samego kraju (i regionu) aktualizuje istniejące wpisy zamiast je duplikować - można bezpiecznie powtórzyć, jeśli kraj doda nowe święto.",
+                "description": "Wybierz kraj, aby zaimportować jego święta jako wydarzenia. Ponowne uruchomienie tego później dla tego samego kraju (i regionu) aktualizuje istniejące wpisy zamiast je duplikować - przed importem zobaczysz wszystkie święta i wybierzesz te, które chcesz.",
                 "data": {
                     "country": "Kraj"
+                }
+            },
+            "import_markets": {
+                "title": "Importuj dni wolne giełdy",
+                "description": "Wybierz giełdę, aby zaimportować dni, w które jest zamknięta - a tam, gdzie dane je zawierają, także dni ze skróconą sesją. Przed importem zobaczysz wszystkie dni i wybierzesz te, które chcesz.",
+                "data": {
+                    "market": "Giełda"
+                }
+            },
+            "import_markets_options": {
+                "title": "Importuj dni giełdowe - {country}",
+                "description": "Jakie rodzaje dni zaimportować i w jakim języku mają być ich nazwy.",
+                "data": {
+                    "categories": "Dni",
+                    "language": "Język nazw"
+                }
+            },
+            "import_markets_select": {
+                "title": "Importuj dni giełdowe - {country}: wybór",
+                "description": "Znaleziono dni: {count}, każdy z najbliższą datą. Importowane są tylko zaznaczone.\n\nOdznaczenie dnia, który już jest w Annuals, pozostawia go bez zmian - dni usuniesz w **Usuń wydarzenia → Giełdy**.",
+                "data": {
+                    "holidays": "Dni"
                 }
             },
             "import_holidays_options": {
@@ -419,12 +461,27 @@
                     "include_observed": "Święta tego kraju są czasem przenoszone na najbliższy dzień roboczy, gdy wypadają w weekend (np. na poprzedzający piątek lub następny poniedziałek) - zaimportuj też tę przeniesioną datę jako osobne wydarzenie."
                 }
             },
+            "import_holidays_select": {
+                "title": "Importuj święta - {country}: wybór",
+                "description": "Znaleziono świąt: {count}, każde z najbliższą datą. Importowane są tylko zaznaczone.\n\nOdznaczenie święta, które już jest w Annuals, pozostawia je bez zmian - święta usuniesz w **Usuń wydarzenia → Święta**.",
+                "data": {
+                    "holidays": "Święta"
+                }
+            },
             "remove_holidays": {
                 "title": "Usuń zaimportowane święta",
                 "description": "Obecnie zaimportowano {total} święto(a). Zaznacz pole poniżej, aby usunąć wszystkie, lub pozostaw je odznaczone i wybierz zamiast tego jedną partię. Ręcznie dodane wydarzenia nigdy nie są tym objęte.",
                 "data": {
                     "remove_all": "Usuń wszystkie zaimportowane święta",
                     "batch": "Partia do usunięcia"
+                }
+            },
+            "remove_markets": {
+                "title": "Usuń zaimportowane dni giełdowe",
+                "description": "Zaimportowane dni giełdowe: {total}. Zaznacz pole poniżej, aby usunąć wszystkie, albo zostaw je puste i wybierz jedną lub kilka giełd. Nic innego się nie zmienia.",
+                "data": {
+                    "remove_all": "Usuń wszystkie zaimportowane dni giełdowe",
+                    "batch": "Giełdy do usunięcia"
                 }
             },
             "annual_settings": {
@@ -539,7 +596,13 @@
             "interval_needs_year": "Odstęp powtarzania jest liczony od daty powyżej, więc rok jest wymagany.",
             "interval_no_rule": "Odstępu powtarzania nie można łączyć z regułą dnia tygodnia.",
             "end_time_needs_time": "Godzina zakończenia wymaga godziny rozpoczęcia.",
-            "end_time_before_start": "Godzina zakończenia musi być późniejsza niż godzina rozpoczęcia."
+            "end_time_before_start": "Godzina zakończenia musi być późniejsza niż godzina rozpoczęcia.",
+            "no_holiday_selected": "Zaznacz co najmniej jedno święto.",
+            "category_needs_region": "{category} nie ma świąt dla {where} w roku {year} - mają je tylko te regiony: {regions}. Wybierz jeden z nich w polu „Region” albo pomiń {category}.",
+            "category_empty": "{category} nie ma świąt dla {where} w roku {year}. Pomiń tę kategorię, aby zaimportować pozostałe.",
+            "no_market_day_selected": "Zaznacz co najmniej jeden dzień.",
+            "market_category_empty": "{category} nie ma dni dla {where} w roku {year}. Pomiń tę kategorię, aby zaimportować pozostałe.",
+            "no_market_batch_selected": "Zaznacz „Usuń wszystkie zaimportowane dni giełdowe” lub wybierz giełdę do usunięcia."
         },
         "abort": {
             "translations_exported": "Wyeksportowano {count} tłumaczeń. [Pobierz annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+klik, aby pobrać - zwykłe kliknięcie tu nie zadziała)\n\nLub skopiuj poniższy CSV:\n\n```\n{csv}\n```",
@@ -557,7 +620,10 @@
             "no_ics_imports": "Nie znaleziono żadnych wydarzeń utworzonych przez import ICS.",
             "ics_imports_removed": "{count} wydarzenie(a) zaimportowane z ICS usunięto.",
             "no_vcard_imports": "Nie znaleziono żadnych wydarzeń utworzonych przez import vCard.",
-            "vcard_imports_removed": "{count} wydarzenie(a) zaimportowane z vCard usunięto."
+            "vcard_imports_removed": "{count} wydarzenie(a) zaimportowane z vCard usunięto.",
+            "market_import_started": "Import rozpoczęty: {count} dni w kolejce dla {country} ({new} nowych, {updated} zaktualizowanych).",
+            "no_markets_imported": "Nie zaimportowano jeszcze żadnych dni giełdowych.",
+            "markets_removed": "Usunięto dni giełdowe: {count}."
         }
     },
     "entity": {
@@ -601,6 +667,10 @@
             "holiday": {
                 "name": "{name}",
                 "unit_of_measurement": "dni"
+            },
+            "market": {
+                "name": "{name}",
+                "unit_of_measurement": "dni"
             }
         },
         "calendar": {
@@ -633,6 +703,9 @@
             },
             "holiday": {
                 "name": "Święta"
+            },
+            "market": {
+                "name": "Giełdy"
             }
         }
     }

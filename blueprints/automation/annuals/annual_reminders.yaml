@@ -95,6 +95,8 @@ blueprint:
                   value: one_time
                 - label: Holiday
                   value: holiday
+                - label: Stock exchange
+                  value: market
     filters:
       name: Filters
       icon: mdi:filter-variant
@@ -188,8 +190,11 @@ blueprint:
         holiday_categories:
           name: Holiday categories
           description: >-
-            Only remind about holidays from these categories. Leave empty for
-            no category filter. Events that aren't holidays are never affected
+            Only remind about holidays and stock exchange days from these
+            categories. Leave empty for no category filter. For a stock
+            exchange, Public is a day it is closed, Half day one it closes
+            early, and No settlement one it trades without settling. Events
+            that are neither holidays nor stock exchange days are never affected
             by this - and neither are categories a country doesn't provide,
             since it simply has no events in them. Which categories exist at
             all depends on the country: most only have Public, some add Bank
@@ -215,12 +220,16 @@ blueprint:
                   value: school
                 - label: Optional
                   value: optional
+                - label: Optional (women)
+                  value: optional_women
                 - label: Unofficial
                   value: unofficial
                 - label: De facto
                   value: de_facto
                 - label: Half day
                   value: half_day
+                - label: No settlement
+                  value: restricted_settlement
                 - label: Armed forces
                   value: armed_forces
                 - label: Workday

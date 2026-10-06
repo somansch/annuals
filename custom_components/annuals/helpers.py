@@ -18,6 +18,9 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import translation
 
 from .const import (
+    CONF_MARKET_STATUS,
+    CONF_STATUS_TRANSLATIONS,
+    TYPE_MARKET,
     ALL_EVENT_TYPES,
     CONF_DAY,
     CONF_EVENT_NAME,
@@ -48,9 +51,9 @@ from .const import (
     SPAN_DAY,
     SPAN_END,
     SPAN_START,
-    TYPE_HOLIDAY,
+    LIBRARY_TYPES,
 )
-from .dates import holiday_occurrence_in_year, holiday_span_kwargs
+from .dates import market_reason, holiday_occurrence_in_year, holiday_span_kwargs
 
 
 def ui_language(library_code: str | None) -> str | None:
@@ -118,7 +121,7 @@ def export_rows(hass: HomeAssistant) -> list[dict]:
     return [
         entry.data
         for entry in hass.config_entries.async_entries(DOMAIN)
-        if not entry.data.get(CONF_HUB) and entry.data.get(CONF_EVENT_TYPE) != TYPE_HOLIDAY
+        if not entry.data.get(CONF_HUB) and entry.data.get(CONF_EVENT_TYPE) not in LIBRARY_TYPES
     ]
 
 
@@ -197,6 +200,10 @@ TRANSLATIONS_CSV_COLUMNS = [
     "observed",
     "language",
     "name",
+    # A stock exchange day's own name (see CONF_STATUS_TRANSLATIONS) - `name`
+    # is its reason there. Empty for holidays, and absent from files written
+    # before it existed, which import as they always did.
+    "status",
 ]
 
 
@@ -220,9 +227,15 @@ def translations_csv_text(hass: HomeAssistant) -> tuple[str, int]:
     seen: set[tuple] = set()
     for entry in hass.config_entries.async_entries(DOMAIN):
         data = entry.data
-        if data.get(CONF_HUB) or data.get(CONF_EVENT_TYPE) != TYPE_HOLIDAY:
+        if data.get(CONF_HUB) or data.get(CONF_EVENT_TYPE) not in LIBRARY_TYPES:
             continue
-        for language, name in sorted((data.get(CONF_NAME_TRANSLATIONS) or {}).items()):
+        names = data.get(CONF_NAME_TRANSLATIONS) or {}
+        statuses = (
+            data.get(CONF_STATUS_TRANSLATIONS) or {}
+            if data.get(CONF_EVENT_TYPE) == TYPE_MARKET
+            else {}
+        )
+        for language in sorted({*names, *statuses}):
             if (identity := (*holiday_identity(data), language)) in seen:
                 continue
             seen.add(identity)
@@ -234,7 +247,8 @@ def translations_csv_text(hass: HomeAssistant) -> tuple[str, int]:
                     data.get(CONF_HOLIDAY_KEY, ""),
                     "1" if data.get(CONF_HOLIDAY_OBSERVED) else "",
                     language,
-                    name,
+                    names.get(language, ""),
+                    statuses.get(language, ""),
                 ]
             )
     buffer = io.StringIO()
@@ -309,7 +323,7 @@ def mergeable(data: dict) -> bool:
     holiday swallow the whole break - the same reason _build_holiday_rows
     keeps them out of its own merge.
     """
-    return data.get(CONF_EVENT_TYPE) == TYPE_HOLIDAY and not data.get(CONF_HOLIDAY_SPAN)
+    return data.get(CONF_EVENT_TYPE) in LIBRARY_TYPES and not data.get(CONF_HOLIDAY_SPAN)
 
 
 def holiday_identity(data: dict) -> tuple[str, str, str, str, bool]:
@@ -349,6 +363,82 @@ async def async_event_type_labels(hass: HomeAssistant) -> dict[str, str]:
         )
         for event_type in ALL_EVENT_TYPES
     }
+
+
+async def async_category_labels(
+    hass: HomeAssistant, selector_key: str = "holiday_category"
+) -> dict[str, str]:
+    """Each holiday category's label in the server's language - the same
+    words the import form's category picker shows ("Optional", "Wahlweise").
+    `market_category` gives a stock exchange's instead ("Closed", "Early
+    close"), which name the same codes differently.
+
+    Keyed by the category code; a code with no translation is missing, and
+    the caller falls back to the code itself.
+    """
+    translations = await translation.async_get_translations(
+        hass, hass.config.language, "selector", {DOMAIN}
+    )
+    prefix = f"component.{DOMAIN}.selector.{selector_key}.options."
+    return {
+        key[len(prefix):]: label for key, label in translations.items() if key.startswith(prefix)
+    }
+
+
+async def async_market_status_labels(
+    hass: HomeAssistant, language: str | None = None
+) -> dict[str, str]:
+    """The wording of a stock exchange's day as an entry name, in the
+    server's language - "{market} closed", "{market} geschlossen ab {time}".
+    Read once when a market is imported and stored on its entries (see
+    CONF_MARKET_STATUS). English where a template is missing."""
+    language = language or hass.config.language
+    translations = await translation.async_get_translations(hass, language, "selector", {DOMAIN})
+    defaults = {
+        "closed": "{market} closed",
+        "closes_at": "{market} closes at {time}",
+        "closes_early": "{market} closes early",
+        "no_settlement": "{market}: no settlement",
+    }
+    labels = {
+        kind: translations.get(f"component.{DOMAIN}.selector.market_status.options.{kind}", fallback)
+        for kind, fallback in defaults.items()
+    }
+    # Which clock the time is written on - the 12-hour one in English, as
+    # "1:00 PM", the 24-hour one everywhere else.
+    labels["clock"] = "12" if (language or "en").split("-")[0] == "en" else "24"
+    return labels
+
+
+def market_status_text(
+    labels: dict[str, str],
+    market: str,
+    status: tuple[str, int | None, int | None, str | None],
+) -> str:
+    """One market day's entry name - see CONF_MARKET_STATUS."""
+    kind, hour, minute, zone = status
+    time = ""
+    if hour is not None:
+        if labels.get("clock") == "12":
+            time = f"{(hour % 12) or 12}:{minute or 0:02d} {'PM' if hour >= 12 else 'AM'}"
+        else:
+            time = f"{hour:02d}:{minute or 0:02d}"
+        if zone:
+            time = f"{time} {zone}"
+    template = labels.get(kind) or "{market}"
+    return template.replace("{market}", market).replace("{time}", time).strip()
+
+
+def event_title(labels: dict[str, str], data: dict) -> str:
+    """Type-prefixed entry title - "Birthday: Anna Miller". A stock
+    exchange's day leads with what it is and names the holiday after it,
+    "Stock exchange: New York Stock Exchange closed - Thanksgiving Day", since
+    one market has many days that are all "closed".
+    """
+    label = labels.get(data[CONF_EVENT_TYPE], data[CONF_EVENT_TYPE])
+    if data[CONF_EVENT_TYPE] == TYPE_MARKET and data.get(CONF_MARKET_STATUS):
+        return f"{label}: {data[CONF_MARKET_STATUS]} - {market_reason(full_name(data))}"
+    return f"{label}: {full_name(data)}"
 
 
 async def async_span_labels(hass: HomeAssistant) -> dict[str, str]:

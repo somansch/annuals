@@ -24,7 +24,8 @@
                 "work_anniversary": "Arbeidsjubileum",
                 "custom": "Egendefinert",
                 "one_time": "Engangshendelse",
-                "holiday": "Helligdag"
+                "holiday": "Helligdag",
+                "market": "Børs"
             }
         },
         "month": {
@@ -50,6 +51,7 @@
                 "government": "Myndigheter",
                 "school": "Skolefri",
                 "optional": "Valgfri",
+                "optional_women": "Valgfri (kvinner)",
                 "unofficial": "Uoffisiell",
                 "half_day": "Halv dag",
                 "armed_forces": "Forsvaret",
@@ -98,6 +100,21 @@
             "options": {
                 "months": "måneder",
                 "years": "år"
+            }
+        },
+        "market_category": {
+            "options": {
+                "public": "Stengt",
+                "half_day": "Kortere handel",
+                "restricted_settlement": "Uten oppgjør"
+            }
+        },
+        "market_status": {
+            "options": {
+                "closed": "{market} stengt",
+                "closes_at": "{market} stengt fra {time}",
+                "closes_early": "{market} stenger tidligere",
+                "no_settlement": "{market} uten oppgjør"
             }
         }
     },
@@ -344,7 +361,8 @@
                 "title": "Navn på helligdagen",
                 "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nForhåndsutfylt med det som vises i dag. La stå tomt for å gå tilbake til helligdagsdatabasen.",
                 "data": {
-                    "name": "Navn"
+                    "name": "Navn",
+                    "reason": "Anledning"
                 }
             },
             "holiday_translations": {
@@ -357,7 +375,7 @@
             },
             "import_translations": {
                 "title": "Importer oversettelser",
-                "description": "Last opp en CSV med oversettelser. Kolonner: `country,subdivision,category,holiday_key,observed,language,name`. Rader kobles til helligdager på land, underinndeling, kategori, helligdagsnøkkel og observed-flagg – ikke på oppførings-id, så en fil eksportert før et land importeres på nytt gjelder fortsatt. Rader hvis helligdag ikke finnes, hoppes over og telles.",
+                "description": "Last opp en CSV med oversettelser. Kolonner: `country,subdivision,category,holiday_key,observed,language,name,status`. Rader kobles til helligdager på land, underinndeling, kategori, helligdagsnøkkel og observed-flagg – ikke på oppførings-id, så en fil eksportert før et land importeres på nytt gjelder fortsatt. Rader hvis helligdag ikke finnes, hoppes over og telles. For en børsdag er `name` anledningen og `status` dens eget navn; la `status` stå tomt for helligdager.",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -380,7 +398,8 @@
                     "import_csv": "CSV",
                     "import_ics": "ICS-kalender",
                     "import_vcard_menu": "vCard",
-                    "import_holidays": "Helligdager"
+                    "import_holidays": "Helligdager",
+                    "import_markets": "Børser"
                 }
             },
             "remove_events": {
@@ -389,14 +408,37 @@
                 "menu_options": {
                     "remove_ics_imports": "ICS-importerte",
                     "remove_vcard_imports": "vCard-importerte",
-                    "remove_holidays": "Helligdager"
+                    "remove_holidays": "Helligdager",
+                    "remove_markets": "Børser"
                 }
             },
             "import_holidays": {
                 "title": "Importer helligdager",
-                "description": "Velg et land for å importere helligdagene som hendelser. Å kjøre dette på nytt senere for samme land (og delregion) oppdaterer eksisterende oppføringer i stedet for å lage duplikater - trygt å gjenta hvis et land legger til en ny helligdag.",
+                "description": "Velg et land for å importere helligdagene som hendelser. Å kjøre dette på nytt senere for samme land (og delregion) oppdaterer eksisterende oppføringer i stedet for å lage duplikater - før noe importeres, ser du alle helligdagene og velger dem du vil ha.",
                 "data": {
                     "country": "Land"
+                }
+            },
+            "import_markets": {
+                "title": "Importer børsfridager",
+                "description": "Velg en børs for å importere dagene den er stengt - og, der dataene har dem, dagene med kortere handel. Før noe importeres, ser du alle dagene og velger dem du vil ha.",
+                "data": {
+                    "market": "Børs"
+                }
+            },
+            "import_markets_options": {
+                "title": "Importer børsdager - {country}",
+                "description": "Hvilke typer dager som importeres, og på hvilket språk navnene står.",
+                "data": {
+                    "categories": "Dager",
+                    "language": "Språk for navnene"
+                }
+            },
+            "import_markets_select": {
+                "title": "Importer børsdager - {country}: velg",
+                "description": "{count} dag(er) funnet, hver med neste dato. Bare de avkryssede importeres.\n\nFjerner du krysset for en dag som allerede er i Annuals, blir den stående som den er - dager fjernes under **Fjern hendelser → Børser**.",
+                "data": {
+                    "holidays": "Dager"
                 }
             },
             "import_holidays_options": {
@@ -419,12 +461,27 @@
                     "include_observed": "Helligdager i dette landet blir noen ganger flyttet til en nærliggende ukedag når de faller i helgen (f.eks. observert fredagen før eller mandagen etter) - importer også denne flyttede datoen som en egen hendelse."
                 }
             },
+            "import_holidays_select": {
+                "title": "Importer helligdager - {country}: velg",
+                "description": "{count} helligdag(er) funnet, hver med neste dato. Bare de avkryssede importeres.\n\nFjerner du krysset for en helligdag som allerede er i Annuals, blir den stående som den er - helligdager fjernes under **Fjern hendelser → Helligdager**.",
+                "data": {
+                    "holidays": "Helligdager"
+                }
+            },
             "remove_holidays": {
                 "title": "Fjern importerte helligdager",
                 "description": "{total} helligdag(er) er for øyeblikket importert. Kryss av boksen under for å fjerne alle, eller la den stå ukrysset og velg en gruppe i stedet. Manuelt lagt til hendelser blir aldri påvirket.",
                 "data": {
                     "remove_all": "Fjern alle importerte helligdager",
                     "batch": "Gruppe som skal fjernes"
+                }
+            },
+            "remove_markets": {
+                "title": "Fjern importerte børsdager",
+                "description": "{total} børsdag(er) importert. Kryss av i feltet nedenfor for å fjerne alle, eller la det stå og velg én eller flere børser. Ingenting annet berøres.",
+                "data": {
+                    "remove_all": "Fjern alle importerte børsdager",
+                    "batch": "Børser som skal fjernes"
                 }
             },
             "annual_settings": {
@@ -539,7 +596,13 @@
             "interval_needs_year": "Et gjentakelsesintervall telles fra datoen over, så året trengs.",
             "interval_no_rule": "Et gjentakelsesintervall kan ikke kombineres med en ukedagsregel.",
             "end_time_needs_time": "En sluttid trenger en starttid.",
-            "end_time_before_start": "Sluttiden må være etter starttiden."
+            "end_time_before_start": "Sluttiden må være etter starttiden.",
+            "no_holiday_selected": "Kryss av for minst én helligdag.",
+            "category_needs_region": "{category} har ingen helligdager for {where} i {year} - bare disse regionene har noen: {regions}. Velg en av dem under «Delregion», eller utelat {category}.",
+            "category_empty": "{category} har ingen helligdager for {where} i {year}. Utelat den for å importere de andre.",
+            "no_market_day_selected": "Kryss av for minst én dag.",
+            "market_category_empty": "{category} har ingen dager for {where} i {year}. Utelat den for å importere de andre.",
+            "no_market_batch_selected": "Kryss av for «Fjern alle importerte børsdager», eller velg en børs å fjerne."
         },
         "abort": {
             "translations_exported": "{count} oversettelse(r) eksportert. [Last ned annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+klikk for å laste ned - et vanlig klikk fungerer ikke her)\n\nEller kopier CSV-en under:\n\n```\n{csv}\n```",
@@ -557,7 +620,10 @@
             "no_ics_imports": "Fant ingen hendelser opprettet av en ICS-import.",
             "ics_imports_removed": "{count} ICS-importerte hendelse(r) fjernet.",
             "no_vcard_imports": "Fant ingen hendelser opprettet av en vCard-import.",
-            "vcard_imports_removed": "{count} vCard-importerte hendelse(r) fjernet."
+            "vcard_imports_removed": "{count} vCard-importerte hendelse(r) fjernet.",
+            "market_import_started": "Import startet: {count} dag(er) satt i kø for {country} ({new} nye, {updated} oppdatert).",
+            "no_markets_imported": "Ingen børsdager er importert ennå.",
+            "markets_removed": "{count} børsdag(er) fjernet."
         }
     },
     "entity": {
@@ -601,6 +667,10 @@
             "holiday": {
                 "name": "{name}",
                 "unit_of_measurement": "dager"
+            },
+            "market": {
+                "name": "{name}",
+                "unit_of_measurement": "dager"
             }
         },
         "calendar": {
@@ -633,6 +703,9 @@
             },
             "holiday": {
                 "name": "Helligdager"
+            },
+            "market": {
+                "name": "Børser"
             }
         }
     }

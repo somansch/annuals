@@ -24,7 +24,8 @@
                 "work_anniversary": "Arbetsjubileum",
                 "custom": "Anpassad",
                 "one_time": "Engångshändelse",
-                "holiday": "Helgdag"
+                "holiday": "Helgdag",
+                "market": "Börs"
             }
         },
         "month": {
@@ -50,6 +51,7 @@
                 "government": "Myndighet",
                 "school": "Skollov",
                 "optional": "Valfri",
+                "optional_women": "Valfri (kvinnor)",
                 "unofficial": "Inofficiell",
                 "half_day": "Halvdag",
                 "armed_forces": "Försvarsmakten",
@@ -98,6 +100,21 @@
             "options": {
                 "months": "månader",
                 "years": "år"
+            }
+        },
+        "market_category": {
+            "options": {
+                "public": "Stängd",
+                "half_day": "Förkortad handel",
+                "restricted_settlement": "Ingen avveckling"
+            }
+        },
+        "market_status": {
+            "options": {
+                "closed": "{market} stängd",
+                "closes_at": "{market} stängd från {time}",
+                "closes_early": "{market} stänger tidigare",
+                "no_settlement": "{market} utan avveckling"
             }
         }
     },
@@ -344,7 +361,8 @@
                 "title": "Helgdagens namn",
                 "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nFörifyllt med det som visas i dag. Lämna tomt för att återgå till helgdagsdatabasen.",
                 "data": {
-                    "name": "Namn"
+                    "name": "Namn",
+                    "reason": "Anledning"
                 }
             },
             "holiday_translations": {
@@ -357,7 +375,7 @@
             },
             "import_translations": {
                 "title": "Importera översättningar",
-                "description": "Ladda upp en CSV med översättningar. Kolumner: `country,subdivision,category,holiday_key,observed,language,name`. Rader matchas mot helgdagar på land, underindelning, kategori, helgdagsnyckel och observed-flagga – inte på post-id, så en fil som exporterats innan ett land importeras om gäller fortfarande. Rader vars helgdag saknas hoppas över och räknas.",
+                "description": "Ladda upp en CSV med översättningar. Kolumner: `country,subdivision,category,holiday_key,observed,language,name,status`. Rader matchas mot helgdagar på land, underindelning, kategori, helgdagsnyckel och observed-flagga – inte på post-id, så en fil som exporterats innan ett land importeras om gäller fortfarande. Rader vars helgdag saknas hoppas över och räknas. För en börsdag är `name` anledningen och `status` dess eget namn; lämna `status` tomt för helgdagar.",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -380,7 +398,8 @@
                     "import_csv": "CSV",
                     "import_ics": "ICS-kalender",
                     "import_vcard_menu": "vCard",
-                    "import_holidays": "Helgdagar"
+                    "import_holidays": "Helgdagar",
+                    "import_markets": "Börser"
                 }
             },
             "remove_events": {
@@ -389,14 +408,37 @@
                 "menu_options": {
                     "remove_ics_imports": "ICS-importerade",
                     "remove_vcard_imports": "vCard-importerade",
-                    "remove_holidays": "Helgdagar"
+                    "remove_holidays": "Helgdagar",
+                    "remove_markets": "Börser"
                 }
             },
             "import_holidays": {
                 "title": "Importera helgdagar",
-                "description": "Välj ett land för att importera dess helgdagar som händelser. Att köra detta igen senare för samma land (och delregion) uppdaterar befintliga poster i stället för att duplicera dem - säkert att upprepa om ett land lägger till en ny helgdag.",
+                "description": "Välj ett land för att importera dess helgdagar som händelser. Att köra detta igen senare för samma land (och delregion) uppdaterar befintliga poster i stället för att duplicera dem - innan något importeras ser du alla helgdagar och väljer de du vill ha.",
                 "data": {
                     "country": "Land"
+                }
+            },
+            "import_markets": {
+                "title": "Importera börshelgdagar",
+                "description": "Välj en börs för att importera de dagar den är stängd - och, där dess data har dem, dagarna med förkortad handel. Innan något importeras ser du alla dagar och väljer de du vill ha.",
+                "data": {
+                    "market": "Börs"
+                }
+            },
+            "import_markets_options": {
+                "title": "Importera börsdagar - {country}",
+                "description": "Vilka slags dagar som importeras och på vilket språk deras namn står.",
+                "data": {
+                    "categories": "Dagar",
+                    "language": "Språk för namnen"
+                }
+            },
+            "import_markets_select": {
+                "title": "Importera börsdagar - {country}: välj",
+                "description": "{count} dag(ar) hittades, var och en med sitt nästa datum. Bara de markerade importeras.\n\nAvmarkerar du en dag som redan finns i Annuals lämnas den som den är - dagar tar du bort under **Ta bort händelser → Börser**.",
+                "data": {
+                    "holidays": "Dagar"
                 }
             },
             "import_holidays_options": {
@@ -419,12 +461,27 @@
                     "include_observed": "Detta lands helgdagar flyttas ibland till en närliggande vardag när de infaller på en helg (t.ex. observerad fredagen innan eller måndagen efter) - importera även detta flyttade datum som en separat händelse."
                 }
             },
+            "import_holidays_select": {
+                "title": "Importera helgdagar - {country}: välj",
+                "description": "{count} helgdag(ar) hittades, var och en med sitt nästa datum. Bara de markerade importeras.\n\nAvmarkerar du en helgdag som redan finns i Annuals lämnas den som den är - helgdagar tar du bort under **Ta bort händelser → Helgdagar**.",
+                "data": {
+                    "holidays": "Helgdagar"
+                }
+            },
             "remove_holidays": {
                 "title": "Ta bort importerade helgdagar",
                 "description": "{total} helgdag(ar) för närvarande importerade. Markera kryssrutan nedan för att ta bort alla, eller lämna den omarkerad och välj en grupp i stället. Manuellt tillagda händelser påverkas aldrig.",
                 "data": {
                     "remove_all": "Ta bort alla importerade helgdagar",
                     "batch": "Grupp att ta bort"
+                }
+            },
+            "remove_markets": {
+                "title": "Ta bort importerade börsdagar",
+                "description": "{total} börsdag(ar) importerade. Markera rutan nedan för att ta bort alla, eller lämna den tom och välj en eller flera börser. Inget annat påverkas.",
+                "data": {
+                    "remove_all": "Ta bort alla importerade börsdagar",
+                    "batch": "Börser att ta bort"
                 }
             },
             "annual_settings": {
@@ -539,7 +596,13 @@
             "interval_needs_year": "Ett upprepningsintervall räknas från datumet ovan, så året behövs.",
             "interval_no_rule": "Ett upprepningsintervall kan inte kombineras med en veckodagsregel.",
             "end_time_needs_time": "En sluttid kräver en starttid.",
-            "end_time_before_start": "Sluttiden måste vara efter starttiden."
+            "end_time_before_start": "Sluttiden måste vara efter starttiden.",
+            "no_holiday_selected": "Markera minst en helgdag.",
+            "category_needs_region": "{category} har inga helgdagar för {where} {year} - bara dessa regioner har några: {regions}. Välj en av dem under \"Delregion\", eller utelämna {category}.",
+            "category_empty": "{category} har inga helgdagar för {where} {year}. Utelämna den för att importera de andra.",
+            "no_market_day_selected": "Markera minst en dag.",
+            "market_category_empty": "{category} har inga dagar för {where} {year}. Utelämna den för att importera de andra.",
+            "no_market_batch_selected": "Markera \"Ta bort alla importerade börsdagar\", eller välj en börs att ta bort."
         },
         "abort": {
             "translations_exported": "{count} översättning(ar) exporterade. [Ladda ner annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+klick för att ladda ner - ett vanligt klick fungerar inte här)\n\nEller kopiera CSV:n nedan:\n\n```\n{csv}\n```",
@@ -557,7 +620,10 @@
             "no_ics_imports": "Inga händelser skapade av en ICS-import hittades.",
             "ics_imports_removed": "{count} ICS-importerad(e) händelse(r) borttagna.",
             "no_vcard_imports": "Inga händelser skapade av en vCard-import hittades.",
-            "vcard_imports_removed": "{count} vCard-importerad(e) händelse(r) borttagna."
+            "vcard_imports_removed": "{count} vCard-importerad(e) händelse(r) borttagna.",
+            "market_import_started": "Import startad: {count} dag(ar) i kö för {country} ({new} nya, {updated} uppdaterade).",
+            "no_markets_imported": "Inga börsdagar har importerats än.",
+            "markets_removed": "{count} börsdag(ar) borttagna."
         }
     },
     "entity": {
@@ -601,6 +667,10 @@
             "holiday": {
                 "name": "{name}",
                 "unit_of_measurement": "dagar"
+            },
+            "market": {
+                "name": "{name}",
+                "unit_of_measurement": "dagar"
             }
         },
         "calendar": {
@@ -633,6 +703,9 @@
             },
             "holiday": {
                 "name": "Helgdagar"
+            },
+            "market": {
+                "name": "Börser"
             }
         }
     }

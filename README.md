@@ -18,7 +18,8 @@ Typical reasons to use it:
 - **Never miss a birthday or anniversary again** - get a notification the morning of, or a heads-up a week before a milestone, using your existing notification setup (mobile app, Alexa, TTS, whatever you already have) or the bundled [reminder blueprint](#blueprint-upcoming-event-reminders), which sets that up for you with no YAML.
 - **Know at a glance which occurrence it is** - "Anna turns 30" instead of just "Anna's birthday", computed automatically from the year you entered once.
 - **Track more than birthdays** - holidays, name days, wedding anniversaries, memorials, pet birthdays, work anniversaries, or anything custom, each with its own icon and aggregate calendar.
-- **Import a whole country's public holidays** in a few clicks, categorized (public, bank, school breaks, religious, ...).
+- **Import a whole country's public holidays** in a few clicks, categorized (public, bank, school breaks, religious, ...) - and pick exactly the ones you want.
+- **Know when the stock exchange is closed** - import the days New York, London, Frankfurt, Tokyo or another of 25 markets is closed or closes early, as [stock exchange days](#stock-exchange-days) with their own calendar: *New York Stock Exchange closes at 1:00 PM*, for the day after Thanksgiving.
 - **Highlight the ones that matter most** - flag close family as **VIP** so they always stand out, and let round-number milestones (18th, 30th, 50th, ...) mark themselves as **Important** automatically, both on the bundled dashboard card and in your own automations.
 - **Bring in a whole contact list at once** via CSV, ICS calendar, or vCard import, instead of adding entries one by one.
 - **Count down to a single dated thing that won't recur** - a booked vacation, an appointment, a delivery date - with a **one-time event**, which cleans itself up automatically the day after it passes.
@@ -61,6 +62,7 @@ That's the whole setup - everything below covers the individual features and opt
 - [Importing public holidays](#importing-public-holidays)
   - [School holidays and other multi-day breaks](#school-holidays-and-other-multi-day-breaks)
   - [Holiday names in your language](#holiday-names-in-your-language)
+  - [Stock exchange days](#stock-exchange-days)
 - [Exporting events to CSV](#exporting-events-to-csv)
 
 **How events behave**
@@ -232,6 +234,7 @@ Pick a source to import from - useful for bringing in a whole contact list, cale
 - **[ICS calendar](#importing-events-from-an-ics-calendar)** - an exported "Birthdays" calendar.
 - **[vCard](#importing-events-from-a-vcard-vcf-file)** - an exported contact card, either birthdays or every other date on the contact (anniversaries, ...).
 - **[Holidays](#importing-public-holidays)** - a whole country's (and optionally state/province's) public holidays.
+- **[Stock exchanges](#stock-exchange-days)** - the days a stock exchange is closed, and the days it closes early.
 
 ### Export events to CSV
 
@@ -336,7 +339,7 @@ Re-running either branch later for the same contacts/dates updates exactly-match
 
 Find the **"Annuals Settings" hub entry** under **Settings → Devices & Services → Annuals**, click **Configure**, and pick **"Import events" → "Holidays"**. Annuals uses the [`holidays`](https://pypi.org/project/holidays/) Python library - already a dependency of this integration, not a separate download - which covers **250+ countries and territories and 150+ languages** for holiday names, so most countries' holidays are available out of the box. The picker offers the 249 of them that Home Assistant's own country selector recognises - the United Kingdom appears as `GB` (its ISO code) rather than the library's `UK` alias, and Kosovo is unavailable because it has no official two-letter code at all.
 
-The wizard is two steps:
+The wizard is three steps:
 
 1. **Country** - pick from the full list the `holidays` library supports.
 2. **What to import for that country** - five choices:
@@ -345,6 +348,9 @@ The wizard is two steps:
    - **States/provinces**: leave empty for national holidays only; picking some adds those regions' own holidays on top.
    - **Categories** such as `public`, `bank`, `school` or `catholic`. Which ones are offered depends entirely on what that country's holiday data provides - see the table below.
    - **Language** for the holiday names, also country-dependent.
+
+   Some categories only exist for some regions - India's *Optional (women)* is Himachal Pradesh's alone, Germany's school holidays are per state. Picked without one of those regions, the step says so and names the regions that have any, instead of going on to import nothing.
+3. **Which holidays** - every holiday those choices produce, each with its next date (`Thanksgiving Day - 26.11.2026`), in the order they come up, and a checkbox for each. Only the ticked ones are imported. When several categories are picked, each holiday's category follows in brackets. Unticking a holiday that is already in Annuals leaves it as it is; removing is what **Remove events → Holidays** is for.
 
 A holiday the whole country observes is stored **once**, without a region, no matter how many of that country's regions you import; only holidays a region has to itself are kept per region. So importing California and Utah gives you one Thanksgiving, plus Cesar Chavez Day for California and Pioneer Day for Utah.
 
@@ -355,6 +361,7 @@ A holiday the whole country observes is stored **once**, without a region, no ma
 | Government | Government/administrative offices closed |
 | School | School holidays/breaks (multi-day, e.g. summer break - see [School holidays](#school-holidays-and-other-multi-day-breaks)) |
 | Optional | Optional/discretionary holidays |
+| Optional (women) | Optional holidays for women employees only (India: Himachal Pradesh - Raksha Bandhan, Karwa Chouth, Bhai Duj) |
 | Unofficial | Observed but not legally mandated |
 | De facto | Practically observed nationwide, without formal legal status (e.g. Switzerland, Sweden) |
 | Half day | Half-day holiday |
@@ -365,7 +372,7 @@ A holiday the whole country observes is stored **once**, without a region, no ma
 
 Which categories are offered for a given country depends entirely on what that country's `holidays` library data provides - most only ever expose Public (and maybe Bank/School); the ethnic and minority-specific ones above are rare, country-specific exceptions.
 
-Re-running the wizard later for the same country (and subdivision) updates the existing imported events instead of creating duplicates - safe to repeat if a country adds or removes a holiday. The result says which is which, e.g. `16 holiday event(s) queued for US (7 new, 9 updated)`. A holiday is matched by its name in the library’s own default language, ignoring capitalisation - that library occasionally rewrites a name’s capitals and nothing else (five of the ten Dutch public holidays changed that way between two releases), which used to make a re-import add a second copy of each. Where such a pair already exists, the first start after updating to v3.2.0 keeps the capitalised spelling, moves any holiday names you typed onto it, and removes the other, naming both in the log.
+Re-running the wizard later for the same country (and subdivision) updates the ticked events that are already there instead of creating duplicates. A holiday the country has added since shows up in the list unticked - tick it to add it. The result says which is which, e.g. `16 holiday event(s) queued for US (7 new, 9 updated)`. A holiday is matched by its name in the library’s own default language, ignoring capitalisation - that library occasionally rewrites a name’s capitals and nothing else (five of the ten Dutch public holidays changed that way between two releases), which used to make a re-import add a second copy of each. Where such a pair already exists, the first start after updating to v3.2.0 keeps the capitalised spelling, moves any holiday names you typed onto it, and removes the other, naming both in the log.
 
 Picking **several categories at once has always produced one entry per holiday** where they cover the same date - the library files a statutory holiday under *public* and *government* alike, often under a different name in each. Since v3.2.0 that also holds when the categories are imported one after the other, and across the categories already imported: **public wins**. A public holiday replaces whatever else stands on its date, an import of another category is skipped where something already covers it, and between two non-public categories the one imported first stays. Multi-day school breaks are left out of this, and so is a holiday's *(observed)* entry, which is deliberately separate from its literal one.
 
@@ -403,9 +410,29 @@ The screenshot above is one card showing all of this at once - Bavaria's and Bad
 
 Each imported holiday keeps the name it was imported under. Where the `holidays` library has no translation for your language - or where you simply want different wording - **Configure** that holiday and pick **Holiday names**: choose a language, type the name, done. The imported name is editable too, so `Assumption Day` can become `Assumption of Mary`.
 
-These names round-trip through their own CSV, separate from the event export: **Configure → Holiday translations**. Only holidays you actually gave a name to appear in it.
+A stock exchange day has two fields there, one per wording: its **Name**, the market's status (`European Central Bank closed`), pre-filled with how Annuals words it in the language you picked, and its **Reason**, the holiday it falls on (`New Year's Day`). The card shows each in the viewer's language where you wrote one.
+
+These names round-trip through their own CSV, separate from the event export: **Configure → Holiday translations**. Only holidays you actually gave a name to appear in it. Its columns are `country,subdivision,category,holiday_key,observed,language,name,status` - for a stock exchange day `name` is its reason and `status` its own name, for a holiday `status` stays empty. A file from before `status` existed imports as it always did.
 
 Giving several countries' versions of one holiday the same name also lets the card collapse them into a single row - see [Holidays from several places](#holidays-from-several-places).
+
+### Stock exchange days
+
+A stock exchange does not close on a country's public holidays, it keeps its own calendar. The New York Stock Exchange trades on Columbus Day and Veterans Day but closes on Good Friday, and it closes early - at 1 p.m. - on the day after Thanksgiving and on Christmas Eve. Annuals imports those days as an event type of their own, **Stock exchange**: they are not holidays, so they get their own calendar (`calendar.annuals_market`), their own entry in the card's type filter and their own wording.
+
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-stock-exchange.png" alt="Stock exchange days on the card: New York closed on Thanksgiving Day and closing at 1:00 PM on the day after and on Christmas Eve, Sydney closing early and London at 12:30 PM on Christmas Eve, and the European Central Bank closed over Christmas and on New Year's Day" width="40%">
+
+Pick **"Import events" → "Stock exchanges"** and choose one of the 25 markets the `holidays` library has a calendar for - New York, Nasdaq, Chicago, Toronto, London, Frankfurt, Zurich, Tokyo, Hong Kong, Sydney and more, listed by name with their market code (`New York Stock Exchange (XNYS)`). Where the market has a choice, the next step asks which kinds of days to import and the language of their names. Only the kinds the market has days of this year are offered - Sydney still lists no-settlement days, but has had none since 2017, so it offers *Closed* and *Early close* only:
+
+| Kind | Meaning |
+|---|---|
+| Closed | The market does not trade. |
+| Early close | The market trades, but closes early - its data says when, e.g. `Christmas Eve (markets close at 1:00pm)`. |
+| No settlement | The market trades, but nothing is settled that day (Buenos Aires). |
+
+A market with only one kind of day and one language - the European Central Bank's TARGET calendar - skips that step. The last step is the same list as for holidays: every day with its next date and a checkbox for each.
+
+Each day is named for what it is to the market - `New York Stock Exchange closed`, `New York Stock Exchange closes at 1:00 PM`, `Australian Securities Exchange closes early` where its data gives no time - in the language Home Assistant runs in when the market is imported. The holiday it falls on is its **reason**, and that is what the card shows where a type stands: *Thanksgiving Day*, *Christmas Eve*. So a row says what happens even when the card shows nothing but the name, and the market's day never reads like the holiday next to it. The market's code stands where a holiday has its country (`XNYS`). The sensors are `sensor.annuals_market_<code>_<reason>` - `name` is the status, `reason` the holiday, `category` is `public`, `half_day` or `restricted_settlement`, and `country` holds the market code - and the calendar lists a day as `New York Stock Exchange closed (Thanksgiving Day)`. **Remove events → Stock exchanges** removes them again, one market at a time or all at once.
 
 ## Exporting events to CSV
 
@@ -464,7 +491,7 @@ Attributes on each event's sensor:
 | Attribute | Description |
 |---|---|
 | `state` | Days until the next occurrence. |
-| `type` | One of `birthday`, `anniversary`, `name_day`, `wedding_anniversary`, `memorial`, `pet_birthday`, `work_anniversary`, `custom`, `one_time`, `holiday`. |
+| `type` | One of `birthday`, `anniversary`, `name_day`, `wedding_anniversary`, `memorial`, `pet_birthday`, `work_anniversary`, `custom`, `one_time`, `holiday`, `market` (see [Stock exchange days](#stock-exchange-days)). |
 | `type_label` | The type above, translated into Home Assistant's configured server language (e.g. "Birthday"/"Geburtstag") - handy for building sentences without hardcoding your own per-type labels. |
 | `name` | The plain name as entered (e.g. "Anna"), without the type prefix baked into the entity's display name - handy for building sentences on a dashboard. |
 | `last_name` | The **Last name** field as entered, or an empty string if not set. Always an empty string for `holiday` events. |
@@ -480,7 +507,7 @@ Attributes on each event's sensor:
 | `todo` | `true` if a still-open item on one of the to-do lists picked under [Annual Settings](#annual-settings-automatic-milestones) is currently matched to this event, `false` otherwise (and always `false` while no list is picked). |
 | `vip` | `true` if the **VIP annual** flag is set on this event, `false` otherwise. |
 | `important` | `true` if the upcoming occurrence number matches one of that type's milestones in [Annual Settings](#annual-settings-automatic-milestones), `false` otherwise (always `false` when no year was entered, since there's no occurrence number to check - always `false` for `one_time` events for the same reason). |
-| `category`, `country`, `subdivision`, `holiday_key` | `holiday` events only - the imported holiday's category (see [Importing public holidays](#importing-public-holidays)), country code, subdivision code (empty if none was chosen), and its stable identity key (e.g. "New Year's Day") used to match its actual/observed counterpart. `null`/absent on every other type. |
+| `category`, `country`, `subdivision`, `holiday_key` | `holiday` and `market` events only - the imported holiday's category (see [Importing public holidays](#importing-public-holidays)), country code (a market code such as `XNYS` for a `market` event), subdivision code (empty if none was chosen), and its stable identity key (e.g. "New Year's Day") used to match its actual/observed counterpart. `null`/absent on every other type. |
 | `observed` | `holiday` events only - `true` if this entity tracks the holiday's practically-observed (weekend-shifted) date rather than its literal one, see [Importing public holidays](#importing-public-holidays). `false`/absent on every other type. |
 | `end_date`, `days_until_end`, `duration_days`, `in_progress`, `reminder_message_end` | Multi-day one-time events only (see [Events that span several days](#events-that-span-several-days)) - the last day as an ISO date, the countdown to it, how many days the event covers, whether it's running right now, and the translated countdown phrase for the end. All absent on single-day events and on every other type. |
 | `break_part` | `holiday` events only - which part of a multi-day break this entity is: `start`, `end`, or `day` (see [School holidays](#school-holidays-and-other-multi-day-breaks)). `null` on single-day holidays and on every other type, which is what lets a filter for it leave them alone. |

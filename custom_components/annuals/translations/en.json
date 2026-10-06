@@ -24,7 +24,8 @@
                 "work_anniversary": "Work anniversary",
                 "custom": "Custom",
                 "one_time": "One-time event",
-                "holiday": "Holiday"
+                "holiday": "Holiday",
+                "market": "Stock exchange"
             }
         },
         "month": {
@@ -50,6 +51,7 @@
                 "government": "Government",
                 "school": "School",
                 "optional": "Optional",
+                "optional_women": "Optional (women)",
                 "unofficial": "Unofficial",
                 "half_day": "Half day",
                 "armed_forces": "Armed forces",
@@ -98,6 +100,21 @@
             "options": {
                 "months": "months",
                 "years": "years"
+            }
+        },
+        "market_category": {
+            "options": {
+                "public": "Closed",
+                "half_day": "Early close",
+                "restricted_settlement": "No settlement"
+            }
+        },
+        "market_status": {
+            "options": {
+                "closed": "{market} closed",
+                "closes_at": "{market} closes at {time}",
+                "closes_early": "{market} closes early",
+                "no_settlement": "{market}: no settlement"
             }
         }
     },
@@ -344,7 +361,8 @@
                 "title": "Holiday name",
                 "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nPre-filled with what is shown today. Leave empty to fall back to the holidays database.",
                 "data": {
-                    "name": "Name"
+                    "name": "Name",
+                    "reason": "Reason"
                 }
             },
             "holiday_translations": {
@@ -357,7 +375,7 @@
             },
             "import_translations": {
                 "title": "Import translations",
-                "description": "Upload a translations CSV. Columns: `country,subdivision,category,holiday_key,observed,language,name`. Rows are matched onto holidays by country, subdivision, category, holiday key and observed flag - not by entry id, so a file exported before re-importing a country still applies. Rows whose holiday isn't present are skipped and counted.",
+                "description": "Upload a translations CSV. Columns: `country,subdivision,category,holiday_key,observed,language,name,status`. Rows are matched onto holidays by country, subdivision, category, holiday key and observed flag - not by entry id, so a file exported before re-importing a country still applies. Rows whose holiday isn't present are skipped and counted. For a stock exchange day, `name` is its reason and `status` its own name; leave `status` empty for holidays.",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -380,7 +398,8 @@
                     "import_csv": "CSV",
                     "import_ics": "ICS calendar",
                     "import_vcard_menu": "vCard",
-                    "import_holidays": "Holidays"
+                    "import_holidays": "Holidays",
+                    "import_markets": "Stock exchanges"
                 }
             },
             "remove_events": {
@@ -389,14 +408,37 @@
                 "menu_options": {
                     "remove_ics_imports": "ICS-imported",
                     "remove_vcard_imports": "vCard-imported",
-                    "remove_holidays": "Holidays"
+                    "remove_holidays": "Holidays",
+                    "remove_markets": "Stock exchanges"
                 }
             },
             "import_holidays": {
                 "title": "Import holidays",
-                "description": "Pick a country to import its holidays as events. Re-running this later for the same country (and subdivision) updates the existing entries instead of creating duplicates - safe to repeat if a country adds a new holiday.",
+                "description": "Pick a country to import its holidays as events. Re-running this later for the same country (and subdivision) updates the existing entries instead of creating duplicates - before anything is imported, you see every holiday and pick the ones you want.",
                 "data": {
                     "country": "Country"
+                }
+            },
+            "import_markets": {
+                "title": "Import stock exchange holidays",
+                "description": "Pick a stock exchange to import the days it is closed - and, where its data has them, the days it closes early. Before anything is imported, you see every day and pick the ones you want.",
+                "data": {
+                    "market": "Stock exchange"
+                }
+            },
+            "import_markets_options": {
+                "title": "Import stock exchange days - {country}",
+                "description": "Which kinds of days to import, and the language of their names.",
+                "data": {
+                    "categories": "Days",
+                    "language": "Language for the names"
+                }
+            },
+            "import_markets_select": {
+                "title": "Import stock exchange days - {country}: choose",
+                "description": "{count} day(s) found, each with its next date. Only the ticked ones are imported.\n\nUnticking a day that is already in Annuals leaves it as it is - to remove days, use **Remove events → Stock exchanges**.",
+                "data": {
+                    "holidays": "Days"
                 }
             },
             "import_holidays_options": {
@@ -419,12 +461,27 @@
                     "include_observed": "This country's holidays are sometimes shifted to a nearby weekday when they fall on a weekend (e.g. observed the Friday before or Monday after) - import that shifted date too, as a separate event."
                 }
             },
+            "import_holidays_select": {
+                "title": "Import holidays - {country}: choose",
+                "description": "{count} holiday(s) found, each with its next date. Only the ticked ones are imported.\n\nUnticking a holiday that is already in Annuals leaves it as it is - to remove holidays, use **Remove events → Holidays**.",
+                "data": {
+                    "holidays": "Holidays"
+                }
+            },
             "remove_holidays": {
                 "title": "Remove imported holidays",
                 "description": "{total} holiday event(s) currently imported. Check the box below to remove all of them, or leave it unchecked and pick one batch instead. Manually added events are never affected.",
                 "data": {
                     "remove_all": "Remove all imported holidays",
                     "batch": "Batch to remove"
+                }
+            },
+            "remove_markets": {
+                "title": "Remove imported stock exchange days",
+                "description": "{total} stock exchange day(s) currently imported. Check the box below to remove all of them, or leave it unchecked and pick one or more stock exchanges instead. Nothing else is affected.",
+                "data": {
+                    "remove_all": "Remove all imported stock exchange days",
+                    "batch": "Stock exchanges to remove"
                 }
             },
             "annual_settings": {
@@ -539,7 +596,13 @@
             "interval_needs_year": "A repeat interval is counted from the date above, so the year is needed.",
             "interval_no_rule": "A repeat interval cannot be combined with a weekday rule.",
             "end_time_needs_time": "An end time needs a start time.",
-            "end_time_before_start": "The end time must be after the start time."
+            "end_time_before_start": "The end time must be after the start time.",
+            "no_holiday_selected": "Tick at least one holiday.",
+            "category_needs_region": "{category} has no holidays for {where} in {year} - only these regions have some: {regions}. Pick one under \"Subdivision\", or leave {category} out.",
+            "category_empty": "{category} has no holidays for {where} in {year}. Leave it out to import the others.",
+            "no_market_day_selected": "Tick at least one day.",
+            "market_category_empty": "{category} has no days for {where} in {year}. Leave it out to import the others.",
+            "no_market_batch_selected": "Check \"Remove all imported stock exchange days\", or pick a stock exchange to remove."
         },
         "abort": {
             "translations_exported": "{count} translation(s) exported. [Download annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+click to download - a plain click won't work here)\n\nOr copy the CSV below:\n\n```\n{csv}\n```",
@@ -557,7 +620,10 @@
             "no_ics_imports": "No events created by an ICS import were found.",
             "ics_imports_removed": "{count} ICS-imported event(s) removed.",
             "no_vcard_imports": "No events created by a vCard import were found.",
-            "vcard_imports_removed": "{count} vCard-imported event(s) removed."
+            "vcard_imports_removed": "{count} vCard-imported event(s) removed.",
+            "market_import_started": "Import started: {count} day(s) queued for {country} ({new} new, {updated} updated).",
+            "no_markets_imported": "No stock exchange days have been imported yet.",
+            "markets_removed": "{count} stock exchange day(s) removed."
         }
     },
     "entity": {
@@ -601,6 +667,10 @@
             "holiday": {
                 "name": "{name}",
                 "unit_of_measurement": "days"
+            },
+            "market": {
+                "name": "{name}",
+                "unit_of_measurement": "days"
             }
         },
         "calendar": {
@@ -633,6 +703,9 @@
             },
             "holiday": {
                 "name": "Holidays"
+            },
+            "market": {
+                "name": "Stock exchanges"
             }
         }
     }

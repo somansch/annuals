@@ -24,6 +24,7 @@ from __future__ import annotations
 
 from datetime import date, time, timedelta
 from functools import lru_cache
+import re
 
 import holidays as holidays_lib
 
@@ -308,6 +309,126 @@ def holiday_key_from_name(name: str) -> str:
     return name
 
 
+# The small words a market's name keeps lower-case (see market_names).
+_NAME_PARTICLES = {"de", "del", "di", "do", "y", "e", "of", "and", "the"}
+
+
+@lru_cache(maxsize=1)
+def market_names() -> dict[str, str]:
+    """Every stock exchange and market calendar the `holidays` library has,
+    by its canonical code - "XNYS" -> "New York Stock Exchange".
+
+    The library keeps these apart from countries (`financial_holidays`, not
+    `country_holidays`), and a holiday entry stores either kind of code in
+    the same CONF_COUNTRY field: market codes are four characters, country
+    codes two or three, so the two can never be mistaken for each other. The
+    name is spelled out of the library's own class name ("NewYorkStockExchange"),
+    or of its CamelCase alias where that one is the better-cased spelling
+    ("ICEFuturesEurope" rather than "IceFuturesEurope"). Only canonical codes,
+    not aliases such as "NYSE" - one code per market keeps one market one
+    identity (see config_flow._import_unique_id).
+    """
+    try:
+        from holidays.registry import FINANCIAL  # noqa: PLC0415 - optional, newer library
+    except ImportError:
+        return {code: code for code in holidays_lib.list_supported_financial()}
+    names: dict[str, str] = {}
+    for class_name, code, *aliases in FINANCIAL.values():
+        spelled = [name for name in (class_name, *aliases) if any(c.islower() for c in name)]
+        raw = spelled[-1] if spelled else class_name
+        words = re.sub(r"(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])", " ", raw).split()
+        # A class name capitalises every word; a market's name does not -
+        # "Bolsa Mexicana de Valores", "National Stock Exchange of India".
+        names[code] = " ".join(
+            word.lower() if index and word.lower() in _NAME_PARTICLES else word
+            for index, word in enumerate(words)
+        )
+    return names
+
+
+# A note the library appends to a market's day - "(markets close at 1:00pm)",
+# "(observed)", "（半日交易日）" - in either kind of bracket.
+_TRAILING_NOTE = re.compile(r"\s*[(（][^()（）]*[)）]\s*$")
+
+# The time a market's half day ends, in the English names the library gives
+# them: "(markets close at 1:00pm)", "(markets close at 12:00 p.m. SAST)",
+# "(markets close at 13:30 NZDT)", "(markets pause at 12:00pm CT)". Sydney's
+# say only "(markets close early)", which this leaves alone.
+_CLOSE_TIME = re.compile(
+    r"\b(?:close|pause)s?\s+at\s+(\d{1,2})(?::(\d{2}))?\s*(?:([aApP])\.?\s?[mM]\.?)?\s*([A-Z]{2,5})?\s*\)"
+)
+
+
+def market_reason(name: str) -> str:
+    """What a stock exchange's day is for, without the note the library
+    appends to it - "Christmas Eve" out of "Christmas Eve (markets close at
+    1:00pm)", "Independence Day" out of "Independence Day (observed)". The
+    note is what the entry's name says instead (see market_status).
+    """
+    return _TRAILING_NOTE.sub("", name) or name
+
+
+def market_status(
+    code: str, category: str, holiday_key: str, year: int
+) -> tuple[str, int | None, int | None, str | None]:
+    """How a stock exchange's day differs from a trading day: "closed",
+    "closes_at" with the hour, minute and time zone it closes at, "closes_early"
+    where its data gives no time, or "no_settlement".
+
+    The time is read from the day's English name - the only wording every
+    market with half days has, and the one the pattern above knows. Hour and
+    minute are on the 24-hour clock; the zone is the market's own where the
+    name states one ("CET", "SAST"), None where it does not.
+    """
+    if category == "restricted_settlement":
+        return "no_settlement", None, None, None
+    if category != "half_day":
+        return "closed", None, None, None
+    cls = library_calendar(code).__class__
+    english = "en_US" if "en_US" in cls.supported_languages else None
+    default_cal = _holiday_calendar(code, None, category, year, None)
+    english_cal = _holiday_calendar(code, None, category, year, english) if english else default_cal
+    for day, name in default_cal.items():
+        if holiday_key_from_name(name) != holiday_key:
+            continue
+        match = _CLOSE_TIME.search(english_cal.get(day, name))
+        if match is None:
+            break
+        hour, minute = int(match.group(1)), int(match.group(2) or 0)
+        meridiem = (match.group(3) or "").lower()
+        if meridiem == "p" and hour < 12:
+            hour += 12
+        elif meridiem == "a" and hour == 12:
+            hour = 0
+        return "closes_at", hour, minute, match.group(4)
+    return "closes_early", None, None, None
+
+
+def is_market(code: str | None) -> bool:
+    """Whether a holiday entry's CONF_COUNTRY is a market code (see market_names)."""
+    return bool(code and code in market_names())
+
+
+def holiday_source_label(code: str) -> str:
+    """How a country or market reads in the import's titles and results -
+    the code alone for a country ("US", as the country picker shows it), the
+    name with its code for a market ("New York Stock Exchange (XNYS)"),
+    since nobody knows those by their code.
+    """
+    if is_market(code):
+        return f"{market_names()[code]} ({code})"
+    return code
+
+
+def library_calendar(code: str, **kwargs):
+    """The `holidays` library's calendar for a country or a market code -
+    the one place that tells the two apart, so everything else can treat a
+    market as one more country."""
+    if is_market(code):
+        return holidays_lib.financial_holidays(code, **kwargs)
+    return holidays_lib.country_holidays(code, **kwargs)
+
+
 @lru_cache(maxsize=512)
 def _holiday_calendar(
     country: str, subdivision: str | None, category: str, year: int, language: str | None
@@ -326,7 +447,7 @@ def _holiday_calendar(
     each reader to defend itself.
     """
     return dict(
-        holidays_lib.country_holidays(
+        library_calendar(
             country,
             subdiv=subdivision or None,
             years=year,
@@ -344,7 +465,7 @@ def _country_weekend(country: str) -> frozenset[int]:
     extension below work anywhere rather than only in Europe.
     """
     try:
-        return frozenset(holidays_lib.country_holidays(country).weekend)
+        return frozenset(library_calendar(country).weekend)
     except Exception:  # noqa: BLE001 - an unknown country must not break a
         # sensor; Sat/Sun is the overwhelmingly common case to fall back to.
         return frozenset({5, 6})
@@ -357,7 +478,7 @@ def _public_holiday_dates(country: str, subdivision: str | None, year: int) -> f
     the day after Ascension Day is free from Ascension Day onwards).
     """
     try:
-        categories = holidays_lib.country_holidays(country).__class__.supported_categories
+        categories = library_calendar(country).__class__.supported_categories
     except Exception:  # noqa: BLE001 - see _country_weekend.
         return frozenset()
     category = "public" if "public" in categories else (categories[0] if categories else None)
@@ -620,7 +741,7 @@ def _public_holiday_names(
     holiday_break_names attributes a block to.
     """
     try:
-        categories = holidays_lib.country_holidays(country).__class__.supported_categories
+        categories = library_calendar(country).__class__.supported_categories
     except Exception:  # noqa: BLE001 - see _country_weekend.
         return []
     category = "public" if "public" in categories else (categories[0] if categories else None)
@@ -891,7 +1012,7 @@ def subdivision_name(country: str, subdivision: str | None) -> str | None:
     if not subdivision:
         return None
     try:
-        aliases = holidays_lib.country_holidays(country).get_subdivision_aliases()
+        aliases = library_calendar(country).get_subdivision_aliases()
     except Exception:  # noqa: BLE001 - an unknown country must not break the
         # sensor; the short code alone is a perfectly usable fallback.
         return None

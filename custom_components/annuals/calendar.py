@@ -25,11 +25,14 @@ from .const import (
     CONF_YEAR,
     DOMAIN,
     TYPE_CUSTOM,
-    TYPE_HOLIDAY,
+    CONF_MARKET_STATUS,
+    LIBRARY_TYPES,
+    TYPE_MARKET,
     TYPE_ICONS,
     TYPE_ONE_TIME,
 )
 from .dates import (
+    market_reason,
     event_occurrence_in_year,
     holiday_occurrence_in_year,
     holiday_span_kwargs,
@@ -104,7 +107,12 @@ class AnnualsTypeCalendar(CalendarEntity):
         # Year's Day - Holiday" would just repeat what the calendar itself
         # (its plural type name) already says, and they have no occurrence
         # number (see dates.py). Every other type still gets "name - type".
-        if self._event_type in (TYPE_CUSTOM, TYPE_ONE_TIME, TYPE_HOLIDAY):
+        # A stock exchange's day says what it is and what for - "New York
+        # Stock Exchange closed (Thanksgiving Day)" - since a market's days
+        # would otherwise all read alike (see CONF_MARKET_STATUS).
+        if self._event_type == TYPE_MARKET and entry.data.get(CONF_MARKET_STATUS):
+            return f"{entry.data[CONF_MARKET_STATUS]} ({market_reason(name)})"
+        if self._event_type in (TYPE_CUSTOM, TYPE_ONE_TIME, *LIBRARY_TYPES):
             return name
         # An interval event numbers its steps from the stored date (see
         # interval_occurrence); everything else counts years.
@@ -164,7 +172,7 @@ class AnnualsTypeCalendar(CalendarEntity):
     @staticmethod
     def _next_occurrence_for_entry(entry: ConfigEntry, today: date) -> date | None:
         data = entry.data
-        if data[CONF_EVENT_TYPE] == TYPE_HOLIDAY:
+        if data[CONF_EVENT_TYPE] in LIBRARY_TYPES:
             return next_holiday_occurrence(
                 data[CONF_COUNTRY],
                 data.get(CONF_SUBDIVISION),
@@ -198,7 +206,7 @@ class AnnualsTypeCalendar(CalendarEntity):
     @staticmethod
     def _occurrence_in_year_for_entry(entry: ConfigEntry, year: int) -> date | None:
         data = entry.data
-        if data[CONF_EVENT_TYPE] == TYPE_HOLIDAY:
+        if data[CONF_EVENT_TYPE] in LIBRARY_TYPES:
             return holiday_occurrence_in_year(
                 data[CONF_COUNTRY],
                 data.get(CONF_SUBDIVISION),
@@ -240,12 +248,12 @@ class AnnualsTypeCalendar(CalendarEntity):
         # async_update instead (see there) - the `holidays` library can do
         # blocking file I/O the first time a language's translations load,
         # which must never happen synchronously here, on the event loop.
-        if self._event_type == TYPE_HOLIDAY:
+        if self._event_type in LIBRARY_TYPES:
             return self._cached_event
         return self._compute_event()
 
     async def async_update(self) -> None:
-        if self._event_type == TYPE_HOLIDAY:
+        if self._event_type in LIBRARY_TYPES:
             self._cached_event = await self.hass.async_add_executor_job(self._compute_event)
 
     async def async_get_events(

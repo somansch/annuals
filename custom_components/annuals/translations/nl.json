@@ -24,7 +24,8 @@
                 "work_anniversary": "Werkjubileum",
                 "custom": "Aangepast",
                 "one_time": "Eenmalig evenement",
-                "holiday": "Feestdag"
+                "holiday": "Feestdag",
+                "market": "Beurs"
             }
         },
         "month": {
@@ -50,6 +51,7 @@
                 "government": "Overheid",
                 "school": "Schoolvakantie",
                 "optional": "Optioneel",
+                "optional_women": "Optioneel (vrouwen)",
                 "unofficial": "Niet-officieel",
                 "half_day": "Halve dag",
                 "armed_forces": "Krijgsmacht",
@@ -98,6 +100,21 @@
             "options": {
                 "months": "maanden",
                 "years": "jaren"
+            }
+        },
+        "market_category": {
+            "options": {
+                "public": "Gesloten",
+                "half_day": "Verkorte handel",
+                "restricted_settlement": "Geen afwikkeling"
+            }
+        },
+        "market_status": {
+            "options": {
+                "closed": "{market} gesloten",
+                "closes_at": "{market} gesloten vanaf {time}",
+                "closes_early": "{market} sluit eerder",
+                "no_settlement": "{market} zonder afwikkeling"
             }
         }
     },
@@ -344,7 +361,8 @@
                 "title": "Naam van de feestdag",
                 "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nVooringevuld met wat nu wordt getoond. Laat leeg om terug te vallen op de feestdagendatabase.",
                 "data": {
-                    "name": "Naam"
+                    "name": "Naam",
+                    "reason": "Reden"
                 }
             },
             "holiday_translations": {
@@ -357,7 +375,7 @@
             },
             "import_translations": {
                 "title": "Vertalingen importeren",
-                "description": "Upload een CSV met vertalingen. Kolommen: `country,subdivision,category,holiday_key,observed,language,name`. Rijen worden aan feestdagen gekoppeld op land, onderverdeling, categorie, feestdagsleutel en observed-vlag – niet op item-id, dus een bestand dat is geëxporteerd voordat een land opnieuw werd geïmporteerd, blijft geldig. Rijen waarvan de feestdag ontbreekt, worden overgeslagen en geteld.",
+                "description": "Upload een CSV met vertalingen. Kolommen: `country,subdivision,category,holiday_key,observed,language,name,status`. Rijen worden aan feestdagen gekoppeld op land, onderverdeling, categorie, feestdagsleutel en observed-vlag – niet op item-id, dus een bestand dat is geëxporteerd voordat een land opnieuw werd geïmporteerd, blijft geldig. Rijen waarvan de feestdag ontbreekt, worden overgeslagen en geteld. Bij een beursdag is `name` de reden en `status` de eigen naam; laat `status` leeg voor feestdagen.",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -380,7 +398,8 @@
                     "import_csv": "CSV",
                     "import_ics": "ICS-kalender",
                     "import_vcard_menu": "vCard",
-                    "import_holidays": "Feestdagen"
+                    "import_holidays": "Feestdagen",
+                    "import_markets": "Beurzen"
                 }
             },
             "remove_events": {
@@ -389,14 +408,37 @@
                 "menu_options": {
                     "remove_ics_imports": "Uit ICS geïmporteerd",
                     "remove_vcard_imports": "Uit vCard geïmporteerd",
-                    "remove_holidays": "Feestdagen"
+                    "remove_holidays": "Feestdagen",
+                    "remove_markets": "Beurzen"
                 }
             },
             "import_holidays": {
                 "title": "Feestdagen importeren",
-                "description": "Kies een land om de feestdagen ervan als evenementen te importeren. Dit later opnieuw uitvoeren voor hetzelfde land (en dezelfde subdivisie) werkt bestaande items bij in plaats van ze te dupliceren - veilig om te herhalen als een land een nieuwe feestdag toevoegt.",
+                "description": "Kies een land om de feestdagen ervan als evenementen te importeren. Dit later opnieuw uitvoeren voor hetzelfde land (en dezelfde subdivisie) werkt bestaande items bij in plaats van ze te dupliceren - voordat er iets wordt geïmporteerd, zie je alle feestdagen en kies je de gewenste.",
                 "data": {
                     "country": "Land"
+                }
+            },
+            "import_markets": {
+                "title": "Beursfeestdagen importeren",
+                "description": "Kies een beurs om de dagen te importeren waarop die gesloten is - en, waar de gegevens ze bevatten, de dagen met verkorte handel. Voordat er iets wordt geïmporteerd, zie je alle dagen en kies je de gewenste.",
+                "data": {
+                    "market": "Beurs"
+                }
+            },
+            "import_markets_options": {
+                "title": "Beursdagen importeren - {country}",
+                "description": "Welke soorten dagen worden geïmporteerd en in welke taal hun namen staan.",
+                "data": {
+                    "categories": "Dagen",
+                    "language": "Taal van de namen"
+                }
+            },
+            "import_markets_select": {
+                "title": "Beursdagen importeren - {country}: kiezen",
+                "description": "{count} dag(en) gevonden, elk met de eerstvolgende datum. Alleen de aangevinkte worden geïmporteerd.\n\nEen dag die al in Annuals staat, blijft ongewijzigd als je hem uitvinkt - dagen verwijder je via **Evenementen verwijderen → Beurzen**.",
+                "data": {
+                    "holidays": "Dagen"
                 }
             },
             "import_holidays_options": {
@@ -419,12 +461,27 @@
                     "include_observed": "Feestdagen van dit land worden soms verschoven naar een nabije werkdag als ze in het weekend vallen (bijv. waargenomen op de vrijdag ervoor of de maandag erna) - importeer deze verschoven datum ook als apart evenement."
                 }
             },
+            "import_holidays_select": {
+                "title": "Feestdagen importeren - {country}: kiezen",
+                "description": "{count} feestdag(en) gevonden, elk met de eerstvolgende datum. Alleen de aangevinkte worden geïmporteerd.\n\nEen feestdag die al in Annuals staat, blijft ongewijzigd als je hem uitvinkt - feestdagen verwijder je via **Evenementen verwijderen → Feestdagen**.",
+                "data": {
+                    "holidays": "Feestdagen"
+                }
+            },
             "remove_holidays": {
                 "title": "Geïmporteerde feestdagen verwijderen",
                 "description": "{total} feestdag(en) momenteel geïmporteerd. Vink het vakje hieronder aan om ze allemaal te verwijderen, of laat het uitgevinkt en kies in plaats daarvan een batch. Handmatig toegevoegde evenementen worden nooit beïnvloed.",
                 "data": {
                     "remove_all": "Alle geïmporteerde feestdagen verwijderen",
                     "batch": "Batch om te verwijderen"
+                }
+            },
+            "remove_markets": {
+                "title": "Geïmporteerde beursdagen verwijderen",
+                "description": "{total} beursdag(en) geïmporteerd. Vink het vakje hieronder aan om ze allemaal te verwijderen, of laat het leeg en kies een of meer beurzen. Verder verandert er niets.",
+                "data": {
+                    "remove_all": "Alle geïmporteerde beursdagen verwijderen",
+                    "batch": "Te verwijderen beurzen"
                 }
             },
             "annual_settings": {
@@ -539,7 +596,13 @@
             "interval_needs_year": "Een herhaalinterval wordt geteld vanaf de datum hierboven, dus het jaar is nodig.",
             "interval_no_rule": "Een herhaalinterval kan niet met een weekdagregel worden gecombineerd.",
             "end_time_needs_time": "Een eindtijd heeft een begintijd nodig.",
-            "end_time_before_start": "De eindtijd moet na de begintijd liggen."
+            "end_time_before_start": "De eindtijd moet na de begintijd liggen.",
+            "no_holiday_selected": "Vink minstens één feestdag aan.",
+            "category_needs_region": "{category} heeft geen feestdagen voor {where} in {year} - alleen deze regio's hebben er: {regions}. Kies er een onder \"Subdivisie\", of laat {category} weg.",
+            "category_empty": "{category} heeft geen feestdagen voor {where} in {year}. Laat de categorie weg om de andere te importeren.",
+            "no_market_day_selected": "Vink minstens één dag aan.",
+            "market_category_empty": "{category} heeft geen dagen voor {where} in {year}. Laat de categorie weg om de andere te importeren.",
+            "no_market_batch_selected": "Vink \"Alle geïmporteerde beursdagen verwijderen\" aan, of kies een beurs om te verwijderen."
         },
         "abort": {
             "translations_exported": "{count} vertaling(en) geëxporteerd. [annuals_holiday_translations.csv downloaden]({url}) (Ctrl/Cmd+klik om te downloaden - een gewone klik werkt hier niet)\n\nOf kopieer de CSV hieronder:\n\n```\n{csv}\n```",
@@ -557,7 +620,10 @@
             "no_ics_imports": "Er zijn geen door een ICS-import aangemaakte evenementen gevonden.",
             "ics_imports_removed": "{count} uit ICS geïmporteerd(e) evenement(en) verwijderd.",
             "no_vcard_imports": "Er zijn geen door een vCard-import aangemaakte evenementen gevonden.",
-            "vcard_imports_removed": "{count} uit vCard geïmporteerd(e) evenement(en) verwijderd."
+            "vcard_imports_removed": "{count} uit vCard geïmporteerd(e) evenement(en) verwijderd.",
+            "market_import_started": "Import gestart: {count} dag(en) in de wachtrij voor {country} ({new} nieuw, {updated} bijgewerkt).",
+            "no_markets_imported": "Er zijn nog geen beursdagen geïmporteerd.",
+            "markets_removed": "{count} beursdag(en) verwijderd."
         }
     },
     "entity": {
@@ -601,6 +667,10 @@
             "holiday": {
                 "name": "{name}",
                 "unit_of_measurement": "dagen"
+            },
+            "market": {
+                "name": "{name}",
+                "unit_of_measurement": "dagen"
             }
         },
         "calendar": {
@@ -633,6 +703,9 @@
             },
             "holiday": {
                 "name": "Feestdagen"
+            },
+            "market": {
+                "name": "Beurzen"
             }
         }
     }

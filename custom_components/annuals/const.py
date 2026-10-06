@@ -128,6 +128,19 @@ TYPE_WORK_ANNIVERSARY = "work_anniversary"
 TYPE_CUSTOM = "custom"
 TYPE_ONE_TIME = "one_time"
 TYPE_HOLIDAY = "holiday"
+# The days a stock exchange is closed, or closes early - imported from the
+# `holidays` library's market calendars (see dates.market_names). Stored
+# exactly like a holiday, with the market's code where a holiday has its
+# country, but its own type: a market's closed days are not holidays, and
+# they get their own calendar, card filter and wording.
+TYPE_MARKET = "market"
+
+# The types whose events come from the `holidays` library rather than from
+# a day and month of their own - imported, never typed in, and resolved per
+# year (see dates.py). Everything about how such an entry works - its date,
+# its name, its category, its identity - is the same for both; only what it
+# is called differs.
+LIBRARY_TYPES = (TYPE_HOLIDAY, TYPE_MARKET)
 
 # The manually-addable types - offered in the "Add event"/"Edit event" type
 # selector, CSV import, and the per-type "Annual Settings" milestone fields.
@@ -198,7 +211,7 @@ MILESTONE_EVENT_TYPES = [t for t in EVENT_TYPES if t != TYPE_ONE_TIME]
 # Every type that gets its own aggregate per-type calendar (calendar.py) -
 # EVENT_TYPES plus holiday, which still deserves a calendar.annuals_holiday
 # even though it's not manually addable the same way.
-ALL_EVENT_TYPES = EVENT_TYPES + [TYPE_HOLIDAY]
+ALL_EVENT_TYPES = EVENT_TYPES + [TYPE_HOLIDAY, TYPE_MARKET]
 
 # Default MDI icon per type - overridable per event via the optional "icon" field.
 # For TYPE_HOLIDAY this is only the fallback when a holiday's category has no
@@ -214,6 +227,7 @@ TYPE_ICONS = {
     TYPE_CUSTOM: "mdi:calendar-heart",
     TYPE_ONE_TIME: "mdi:timer-sand",
     TYPE_HOLIDAY: "mdi:flag-variant",
+    TYPE_MARKET: "mdi:chart-line",
 }
 
 # Holiday config-entry keys (TYPE_HOLIDAY events only) - identify a holiday by
@@ -235,6 +249,10 @@ CONF_HOLIDAY_KEY = "holiday_key"
 # actually filled in - anything absent falls back to the library, so an entry
 # nobody has touched carries nothing.
 CONF_NAME_TRANSLATIONS = "name_translations"
+# TYPE_MARKET only - the same for a market day's name, which is its status
+# ("European Central Bank closed", see CONF_MARKET_STATUS). On a market day
+# CONF_NAME_TRANSLATIONS translates its reason, the holiday it falls on.
+CONF_STATUS_TRANSLATIONS = "status_translations"
 
 # The languages a holiday name can be translated into - the same 16 this
 # integration and its dashboard card are themselves translated into (one
@@ -303,6 +321,15 @@ CONF_HOLIDAY_DAY = "holiday_day"
 # helpers.async_span_labels.
 CONF_HOLIDAY_SUFFIX = "holiday_suffix"
 
+# TYPE_MARKET only - what the day is for the market, as the entry's name:
+# "New York Stock Exchange closed", "New York Stock Exchange closes at 1:00
+# PM". Rendered once, in the server's language, when the day is imported
+# (see helpers.market_status_text), and fixed from then on like a break's
+# suffix above. The holiday the day is for - "Thanksgiving Day" - stays in
+# CONF_EVENT_NAME and is resolved per year like any holiday's name; it is
+# what the card shows where a type stands (the sensor's `reason`).
+CONF_MARKET_STATUS = "market_status"
+
 # Icon per `holidays` library category - every category value the library
 # defines across its entire country set, confirmed exhaustively (not
 # guessed) by scanning `holidays.countries`' supported_categories at
@@ -322,6 +349,7 @@ CATEGORY_ICONS = {
     "government": "mdi:bank-outline",
     "school": "mdi:school",
     "optional": "mdi:calendar-question",
+    "optional_women": "mdi:human-female",
     "unofficial": "mdi:calendar-remove",
     "de_facto": "mdi:calendar-check-outline",
     "half_day": "mdi:clock-time-four",
@@ -343,6 +371,14 @@ CATEGORY_ICONS = {
     "serbian": "mdi:account-group",
     "turkish": "mdi:account-group",
     "vlach": "mdi:account-group",
+}
+
+# The same for a stock exchange's days (TYPE_MARKET): a closed market is not
+# a public holiday, so it does not take the flag.
+MARKET_CATEGORY_ICONS = {
+    "public": "mdi:chart-line",
+    "half_day": "mdi:clock-time-four",
+    "restricted_settlement": "mdi:cash-remove",
 }
 
 # Recomputed hourly regardless, but a poll landing e.g. 23:50 would otherwise
@@ -416,4 +452,5 @@ DEFAULT_IMPORTANT_THRESHOLDS = {
     TYPE_CUSTOM: "",
     TYPE_ONE_TIME: "",
     TYPE_HOLIDAY: "",
+    TYPE_MARKET: "",
 }

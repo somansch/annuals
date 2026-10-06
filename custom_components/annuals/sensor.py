@@ -46,11 +46,16 @@ from .const import (
     DEFAULT_IMPORTANT_THRESHOLDS,
     DOMAIN,
     SCAN_INTERVAL_HOURS,
-    TYPE_HOLIDAY,
+    CONF_MARKET_STATUS,
+    CONF_STATUS_TRANSLATIONS,
+    LIBRARY_TYPES,
+    MARKET_CATEGORY_ICONS,
+    TYPE_MARKET,
     TYPE_ICONS,
     TYPE_ONE_TIME,
 )
 from .dates import (
+    market_reason,
     days_until,
     holiday_break_display_name,
     holiday_display_name,
@@ -95,7 +100,7 @@ class AnnualEventSensor(SensorEntity):
         data = config_entry.data
         event_type: str = data[CONF_EVENT_TYPE]
         name: str = data[CONF_EVENT_NAME]
-        if event_type == TYPE_HOLIDAY:
+        if event_type in LIBRARY_TYPES:
             # A holiday's static, never-changing identity label - always
             # holiday_key_from_name(name) (so any accidental "(observed)"/
             # "(estimated)" suffix baked into an older import self-heals),
@@ -126,29 +131,42 @@ class AnnualEventSensor(SensorEntity):
         # "full_name" attributes (see _update_state) are new.
         self._last_name: str = data.get(CONF_LAST_NAME) or ""
 
+        # A stock exchange's day is named for what it is to the market (see
+        # CONF_MARKET_STATUS) - "New York Stock Exchange closed" - and the
+        # holiday it falls on becomes its reason. The entity's own name carries
+        # both, since a market's days are otherwise all "closed".
+        self._reason: str | None = None
+        display = name
+        object_name = name
+        if event_type == TYPE_MARKET:
+            self._reason = market_reason(name)
+            display = f"{data.get(CONF_MARKET_STATUS) or data[CONF_COUNTRY]} ({self._reason})"
+            object_name = f"{data[CONF_COUNTRY]} {self._reason}"
+
         self._attr_unique_id = f"{DOMAIN}-{config_entry.entry_id}"
         # translation_key per type gives the entity a type-prefixed, translated
         # name ("Geburtstag {name}") and a translated unit ("Tage"/"days"),
         # both in the server's language.
         self._attr_translation_key = event_type
-        self._attr_translation_placeholders = {"name": name}
+        self._attr_translation_placeholders = {"name": display}
         # Explicit, language-independent entity_id (the translated name would
         # otherwise drive it and change with the server language, and two
         # events sharing a name would collide without the type prefix).
         # Setting entity_id directly - unlike a "suggested_object_id"
         # attribute, this is actually honoured by the entity platform when
         # the entity is first registered.
-        self.entity_id = f"sensor.annuals_{event_type}_{slugify(name)}"
+        self.entity_id = f"sensor.annuals_{event_type}_{slugify(object_name)}"
+        category_icons = MARKET_CATEGORY_ICONS if event_type == TYPE_MARKET else CATEGORY_ICONS
         self._attr_icon = data.get(CONF_ICON) or (
-            CATEGORY_ICONS.get(data.get(CONF_CATEGORY), TYPE_ICONS.get(event_type, "mdi:calendar-star"))
-            if event_type == TYPE_HOLIDAY
+            category_icons.get(data.get(CONF_CATEGORY), TYPE_ICONS.get(event_type, "mdi:calendar-star"))
+            if event_type in LIBRARY_TYPES
             else TYPE_ICONS.get(event_type, "mdi:calendar-star")
         )
         # Holiday state is computed in async_added_to_hass/async_update instead
         # (see there) - the `holidays` library does blocking file I/O the
         # first time a given language's translations are loaded, which must
         # never happen synchronously here in __init__, on the event loop.
-        if event_type != TYPE_HOLIDAY:
+        if event_type not in LIBRARY_TYPES:
             self._update_state()
 
     def _update_state(self) -> None:
@@ -164,7 +182,7 @@ class AnnualEventSensor(SensorEntity):
         # always used this (see calendar.py); now the sensor agrees with it.
         today = dt_util.now().date()
 
-        if event_type == TYPE_HOLIDAY:
+        if event_type in LIBRARY_TYPES:
             self._update_holiday_state(data, today)
             return
 
@@ -354,9 +372,16 @@ class AnnualEventSensor(SensorEntity):
         days = days_until(occurrence, today) if occurrence is not None else None
         self._attr_native_value = days
         self._attr_extra_state_attributes: dict[str, Any] = {
-            "type": TYPE_HOLIDAY,
-            "type_label": self._type_label(TYPE_HOLIDAY),
-            "name": name,
+            "type": data[CONF_EVENT_TYPE],
+            "type_label": self._type_label(data[CONF_EVENT_TYPE]),
+            # A stock exchange's day: its name is what it is for the market,
+            # its reason the holiday it falls on (see CONF_MARKET_STATUS).
+            "name": (
+                self._market_status(data, name)
+                if data[CONF_EVENT_TYPE] == TYPE_MARKET
+                else name
+            ),
+            "reason": market_reason(name) if data[CONF_EVENT_TYPE] == TYPE_MARKET else None,
             "next_date": occurrence.isoformat() if occurrence is not None else None,
             "occurrence_number": None,
             "country": country,
@@ -378,9 +403,23 @@ class AnnualEventSensor(SensorEntity):
             "important": False,
             "observed": observed,
             "name_translations": translations,
+            # A market day's own name in other languages - its reason's are
+            # name_translations (see CONF_STATUS_TRANSLATIONS).
+            "status_translations": (
+                data.get(CONF_STATUS_TRANSLATIONS) or {}
+                if data[CONF_EVENT_TYPE] == TYPE_MARKET
+                else None
+            ),
             "reminder_message": self._reminder_message(days),
             "todo": self._has_open_todo(),
         }
+
+    def _market_status(self, data: dict, name: str) -> str:
+        """A market day's name: the user's own wording for the server's
+        language if they wrote one (see CONF_STATUS_TRANSLATIONS), otherwise
+        the status rendered at import."""
+        own = (data.get(CONF_STATUS_TRANSLATIONS) or {}).get(self._hass_ref.config.language or "")
+        return own or data.get(CONF_MARKET_STATUS) or name
 
     def _person_picture(self, person: str | None) -> str | None:
         """The linked person's picture (see CONF_PERSON), or None without
@@ -451,7 +490,7 @@ class AnnualEventSensor(SensorEntity):
         return parse_thresholds(DEFAULT_IMPORTANT_THRESHOLDS.get(event_type, ""))
 
     async def async_update(self) -> None:
-        if self._config_entry.data[CONF_EVENT_TYPE] == TYPE_HOLIDAY:
+        if self._config_entry.data[CONF_EVENT_TYPE] in LIBRARY_TYPES:
             # Off the event loop - see the comment in __init__ on why.
             await self._hass_ref.async_add_executor_job(self._update_state)
         else:
@@ -468,7 +507,7 @@ class AnnualEventSensor(SensorEntity):
             self.async_on_remove(
                 async_track_state_change_event(self._hass_ref, [person], self._person_changed)
             )
-        if self._config_entry.data[CONF_EVENT_TYPE] == TYPE_HOLIDAY:
+        if self._config_entry.data[CONF_EVENT_TYPE] in LIBRARY_TYPES:
             await self._hass_ref.async_add_executor_job(self._update_state)
 
     async def async_will_remove_from_hass(self) -> None:

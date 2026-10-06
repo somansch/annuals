@@ -36,6 +36,8 @@ from .const import (
     CONF_HOLIDAY_OBSERVED,
     CONF_HOLIDAY_SPAN,
     CONF_HOLIDAY_SUFFIX,
+    CONF_MARKET_STATUS,
+    CONF_STATUS_TRANSLATIONS,
     CONF_HUB,
     CONF_ICON,
     CONF_IMPORTANT_THRESHOLDS,
@@ -76,13 +78,21 @@ from .const import (
     SPAN_START,
     TYPE_BIRTHDAY,
     TYPE_CUSTOM,
+    LIBRARY_TYPES,
     TYPE_HOLIDAY,
+    TYPE_MARKET,
     TYPE_ONE_TIME,
     TYPE_WEDDING_ANNIVERSARY,
     WEEKDAY_OPTIONS,
 )
 from .dates import (
     _holiday_calendar,
+    holiday_source_label,
+    is_market,
+    market_reason,
+    market_status,
+    library_calendar,
+    market_names,
     holiday_break_blocks,
     holiday_break_names,
     holiday_display_name,
@@ -97,12 +107,16 @@ from .dates import (
 )
 from .helpers import (
     async_break_note,
+    async_category_labels,
     holiday_date,
     merge_group,
     mergeable,
     outranks,
     async_event_type_labels,
+    async_market_status_labels,
     async_span_labels,
+    event_title,
+    market_status_text,
     export_csv_text,
     full_name,
     holiday_identity,
@@ -149,6 +163,20 @@ FORM_INCLUDE_OBSERVED = "include_observed"
 FORM_BREAK_START = "break_start"
 FORM_BREAK_END = "break_end"
 FORM_BREAK_DAYS = "break_days"
+
+# Form-only field name for the holiday-import selection step: which of the
+# holidays the options step produced actually get imported. Its values are
+# indexes into the queued rows, not stored anywhere.
+FORM_HOLIDAYS = "holidays"
+
+# Form-only field name for a market day's reason in the holiday-name step
+# (see CONF_STATUS_TRANSLATIONS) - stored as CONF_NAME_TRANSLATIONS.
+FORM_REASON = "reason"
+
+# Form-only field name for the market picker of the stock-exchange import.
+# What it picks is stored as CONF_COUNTRY, like a country (see
+# dates.market_names).
+CONF_MARKET = "market"
 
 # Every country code the `holidays` library supports that HA's built-in
 # country selector will actually accept, which is narrower than "everything
@@ -1293,11 +1321,11 @@ def _import_unique_id(data: dict) -> str:
     upgrades those entries in place, rather than leaving a stale duplicate
     behind next to the newly computed start.
     """
-    if data[CONF_EVENT_TYPE] == TYPE_HOLIDAY:
+    if data[CONF_EVENT_TYPE] in LIBRARY_TYPES:
         subdivision_key = (data.get(CONF_SUBDIVISION) or "").casefold()
         holiday_key = (data.get(CONF_HOLIDAY_KEY) or "").casefold()
         base = (
-            f"holiday:{data[CONF_COUNTRY]}:{subdivision_key}:"
+            f"{data[CONF_EVENT_TYPE]}:{data[CONF_COUNTRY]}:{subdivision_key}:"
             f"{data[CONF_CATEGORY]}:{holiday_key}"
         )
         if block := int(data.get(CONF_HOLIDAY_BLOCK) or 0):
@@ -1329,7 +1357,11 @@ def _validate_and_normalise_holiday(user_input: dict) -> tuple[dict | None, dict
 
     data = {
         CONF_EVENT_NAME: name,
-        CONF_EVENT_TYPE: TYPE_HOLIDAY,
+        CONF_EVENT_TYPE: (
+            user_input[CONF_EVENT_TYPE]
+            if user_input.get(CONF_EVENT_TYPE) in LIBRARY_TYPES
+            else TYPE_HOLIDAY
+        ),
         CONF_COUNTRY: country,
         CONF_SUBDIVISION: user_input.get(CONF_SUBDIVISION) or None,
         CONF_CATEGORY: category,
@@ -1347,6 +1379,8 @@ def _validate_and_normalise_holiday(user_input: dict) -> tuple[dict | None, dict
         data[CONF_HOLIDAY_SUFFIX] = user_input.get(CONF_HOLIDAY_SUFFIX) or ""
         if span == SPAN_DAY:
             data[CONF_HOLIDAY_DAY] = int(user_input.get(CONF_HOLIDAY_DAY) or 0)
+    if status := user_input.get(CONF_MARKET_STATUS):
+        data[CONF_MARKET_STATUS] = status
     return data, errors
 
 
@@ -1355,7 +1389,7 @@ def _country_class(country_code: str):
     .subdivisions/.supported_categories/.supported_languages describe what's
     selectable for it in the "Import public holidays" step below.
     """
-    return holidays_lib.country_holidays(country_code).__class__
+    return library_calendar(country_code).__class__
 
 
 def _default_category(cls) -> str:
@@ -1537,6 +1571,52 @@ def _holiday_options_schema(country_code: str) -> vol.Schema:
     return vol.Schema(fields)
 
 
+def _empty_category(
+    country: str, subdivisions: list[str], categories: list[str], year: int
+) -> tuple[str, list[str]] | None:
+    """The first picked category with no holiday at all for the picked
+    regions in this year, and the regions that do have some - or None when
+    every category has something.
+
+    Some categories only exist below the country: India's *Optional (women)*
+    is Himachal Pradesh's alone, Germany's school holidays are per state.
+    Picked without a region, such a category used to import nothing and say
+    "0 queued", with no hint why. The regions come back labelled the way the
+    region picker labels them ("Himachal Pradesh (HP)"), and empty when no
+    region has any either - Ukraine's public holidays, suspended under
+    martial law, are one. Blocking - it builds calendars - so it runs in an
+    executor. The import itself only ever looks at this year (see
+    _build_holiday_rows), so this does too.
+    """
+    cls = _country_class(country)
+    for category in categories:
+        if any(
+            _holiday_calendar(country, subdivision, category, year, None)
+            for subdivision in subdivisions or [None]
+        ):
+            continue
+        aliases = cls().get_subdivision_aliases() if cls.subdivisions else {}
+        regions = [
+            f"{aliases[code][0]} ({code})" if aliases.get(code) else code
+            for code in cls.subdivisions
+            if code not in subdivisions and _holiday_calendar(country, code, category, year, None)
+        ]
+        return category, regions
+    return None
+
+
+def _market_categories(market: str, year: int) -> list[str]:
+    """The kinds of day a stock exchange has in this year, in the library's
+    order - what its import offers. A kind the market still lists but has no
+    day in, such as Sydney's no-settlement days, is left out, rather than
+    offered only to be refused. Blocking - it builds calendars."""
+    return [
+        category
+        for category in _country_class(market).supported_categories
+        if _holiday_calendar(market, None, category, year, None)
+    ]
+
+
 def _resolve_category_clashes(entries: list, rows: list[dict]) -> tuple[list[dict], list]:
     """Drop the rows a stored holiday already covers, and name the ones it loses.
 
@@ -1612,6 +1692,7 @@ def _build_holiday_rows(
     include_break_end: bool = False,
     include_break_days: bool = False,
     span_labels: dict[str, str] | None = None,
+    market_labels: dict[str, str] | None = None,
 ) -> list[dict]:
     """One row per distinct holiday across the given category(ies), for the
     current year.
@@ -1745,7 +1826,7 @@ def _build_holiday_rows(
 
     def _common(category: str, key: str) -> dict:
         return {
-            CONF_EVENT_TYPE: TYPE_HOLIDAY,
+            CONF_EVENT_TYPE: TYPE_MARKET if is_market(country) else TYPE_HOLIDAY,
             CONF_COUNTRY: country,
             CONF_SUBDIVISION: None if key.casefold() in nationwide_keys else subdivision,
             CONF_CATEGORY: category,
@@ -1801,8 +1882,15 @@ def _build_holiday_rows(
                 for offset in range((last - first).days + 1):
                     rows.append(_break_row(SPAN_DAY, offset))
 
+    market_name = market_names().get(country) if is_market(country) else None
     for category, key, display_name in chosen.values():
         common = _common(category, key)
+        if market_name:
+            # What the day is for the market, as the entry's own name (see
+            # CONF_MARKET_STATUS); the holiday it is for stays the event name.
+            common[CONF_MARKET_STATUS] = market_status_text(
+                market_labels or {}, market_name, market_status(country, category, key, year)
+            )
         if include_actual:
             rows.append({**common, CONF_EVENT_NAME: display_name, CONF_HOLIDAY_OBSERVED: False})
         # Skip a same-forever, pointless "(observed)" duplicate for a
@@ -1819,6 +1907,47 @@ def _build_holiday_rows(
                 {**common, CONF_EVENT_NAME: f"{display_name} (observed)", CONF_HOLIDAY_OBSERVED: True}
             )
     return rows
+
+
+def _holiday_preview_options(
+    rows: list[dict], today: date, category_labels: dict[str, str] | None
+) -> list[dict[str, str]]:
+    """The holiday-import selection's checkboxes: one per queued row, in the
+    order the holidays come up from today, each labelled with its name and
+    next date - "Raksha Bandhan - 28.08.2026".
+
+    The category follows in brackets when the import spans several, since
+    the same list then mixes them. Values are the rows' indexes. Blocking -
+    every date is worked out from the holiday data - so it runs in an
+    executor.
+    """
+    options = []
+    for index, row in enumerate(rows):
+        try:
+            occurrence = next_holiday_occurrence(
+                row[CONF_COUNTRY],
+                row.get(CONF_SUBDIVISION),
+                row[CONF_CATEGORY],
+                row[CONF_HOLIDAY_KEY],
+                today,
+                bool(row.get(CONF_HOLIDAY_OBSERVED)),
+                **holiday_span_kwargs(row),
+            )
+        except (KeyError, NotImplementedError, ValueError):
+            occurrence = None
+        label = row[CONF_EVENT_NAME]
+        # A market day's own note ("markets close at 1:00pm") is what its
+        # category in brackets says already.
+        if row[CONF_EVENT_TYPE] == TYPE_MARKET:
+            label = market_reason(label)
+        if occurrence is not None:
+            label = f"{label} - {occurrence.strftime('%d.%m.%Y')}"
+        if category_labels is not None:
+            category = row[CONF_CATEGORY]
+            label = f"{label} ({category_labels.get(category, category)})"
+        options.append((occurrence or date.max, label.casefold(), {"value": str(index), "label": label}))
+    options.sort(key=lambda option: option[:2])
+    return [option for _occurrence, _name, option in options]
 
 
 # Which step each shape's form lives on, in each of the two flows. Written
@@ -1850,11 +1979,10 @@ async def _entry_title(hass: HomeAssistant, data: dict) -> str:
     """Type-prefixed entry title, e.g. "Geburtstag: Anna Miller" (or just
     "Geburtstag: Anna" with no last name set) - the prefix makes the
     alphabetically-sorted entry list on the integration page group by type,
-    and the search box match on any part of the name, first or last.
+    and the search box match on any part of the name, first or last. See
+    helpers.event_title for a stock exchange's day.
     """
-    labels = await async_event_type_labels(hass)
-    label = labels[data[CONF_EVENT_TYPE]]
-    return f"{label}: {full_name(data)}"
+    return event_title(await async_event_type_labels(hass), data)
 
 
 class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -1928,7 +2056,7 @@ class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
         added events never get a unique_id, so this only affects entries
         that came from an import.
         """
-        if import_data.get(CONF_EVENT_TYPE) == TYPE_HOLIDAY:
+        if import_data.get(CONF_EVENT_TYPE) in LIBRARY_TYPES:
             data, errors = _validate_and_normalise_holiday(import_data)
         else:
             data, errors = _validate_and_normalise(import_data)
@@ -1944,9 +2072,18 @@ class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
             data[CONF_IMPORT_SOURCE] = import_data[CONF_IMPORT_SOURCE]
 
         await self.async_set_unique_id(_import_unique_id(data))
+        title = await _entry_title(self.hass, data)
+        # An update leaves an entry's title alone, which is right where the
+        # title is the name and the name has not changed. A stock exchange
+        # day's title also says what the day is for the market (see
+        # helpers.event_title), and a re-import is how a day imported before
+        # that wording existed gets it.
+        if data[CONF_EVENT_TYPE] == TYPE_MARKET:
+            for entry in self._async_current_entries(include_ignore=False):
+                if entry.unique_id == self.unique_id and entry.title != title:
+                    self.hass.config_entries.async_update_entry(entry, title=title)
         self._abort_if_unique_id_configured(updates=data, reload_on_update=True)
 
-        title = await _entry_title(self.hass, data)
         return self.async_create_entry(title=title, data=data)
 
     async def async_step_hub(self, user_input=None):
@@ -2017,7 +2154,7 @@ class AnnualsOptionsFlow(OptionsFlow):
         # either, so it gets its own reduced pair of screens rather than the
         # generic event form, which would offer six fields that either can't
         # apply or can't be changed.
-        if self.config_entry.data.get(CONF_EVENT_TYPE) == TYPE_HOLIDAY:
+        if self.config_entry.data.get(CONF_EVENT_TYPE) in LIBRARY_TYPES:
             return await self.async_step_holiday_menu()
 
         # Same as reconfigure above: the event's own shape decides which
@@ -2610,6 +2747,120 @@ class AnnualsOptionsFlow(OptionsFlow):
             last_step=False,
         )
 
+    async def async_step_import_markets(self, user_input=None):
+        """Step 1 of importing a stock exchange's days: pick the market.
+
+        A wizard of its own rather than the holiday import's. A market has no
+        regions, no observed dates and no school breaks - its calendar lists
+        the days it is actually closed - and what it creates are not holidays
+        but TYPE_MARKET entries, under their own wording. Underneath, the rows
+        are built, picked and stored by the same code as a country's (see
+        _async_finish_holiday_import), with the market's code where a
+        country's would be (see dates.market_names).
+
+        Listed by name with the code after it, since a market is known by
+        its name. The names are the library's own and proper names, so they
+        are the same in every language, like the countries' codes.
+        """
+        if user_input is not None:
+            self._holiday_country = user_input[CONF_MARKET]
+            # Unlike the countries, which the library imports with itself, a
+            # market's module is only imported on first use - done here, in
+            # an executor, rather than by the next form in the event loop.
+            await self.hass.async_add_executor_job(library_calendar, self._holiday_country)
+            cls = _country_class(self._holiday_country)
+            # Only the kinds of day the market actually has this year - the
+            # year the import reads (see _build_holiday_rows). Sydney still
+            # lists no-settlement days as a kind, but has had none since 2017.
+            self._market_categories = await self.hass.async_add_executor_job(
+                _market_categories, self._holiday_country, date.today().year
+            )
+            # Nothing to choose, nothing to ask: the European Central Bank has
+            # one kind of day and names them in one language.
+            if len(self._market_categories) < 2 and len(cls.supported_languages) < 2:
+                return await self._async_finish_market_import(
+                    self._market_categories, _default_language(cls)
+                )
+            return await self.async_step_import_markets_options()
+
+        names = await self.hass.async_add_executor_job(market_names)
+        options = sorted(
+            ({"value": code, "label": f"{name} ({code})"} for code, name in names.items()),
+            key=lambda option: option["label"].casefold(),
+        )
+        return self.async_show_form(
+            step_id="import_markets",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(CONF_MARKET): selector(
+                        {"select": {"options": options, "mode": "dropdown"}}
+                    )
+                }
+            ),
+            last_step=False,
+        )
+
+    async def async_step_import_markets_options(self, user_input=None):
+        """Step 2, where a market has a choice: which kinds of its days - the
+        days it is closed, the days it closes early, the days it does not
+        settle - and the language of their names."""
+        market = self._holiday_country
+        cls = _country_class(market)
+        offered = getattr(self, "_market_categories", None) or list(cls.supported_categories)
+        default_category = "public" if "public" in offered else offered[0]
+        errors: dict[str, str] = {}
+        placeholders: dict[str, str] = {}
+        if user_input is not None:
+            categories = user_input.get(FORM_CATEGORIES) or [default_category]
+            language = user_input.get(CONF_LANGUAGE) or _default_language(cls)
+            empty = await self.hass.async_add_executor_job(
+                _empty_category, market, [], categories, date.today().year
+            )
+            if empty is None:
+                return await self._async_finish_market_import(categories, language)
+            # Sydney's no-settlement days ended in 2017 - the kind is still
+            # in the data, the days are not.
+            labels = await async_category_labels(self.hass, "market_category")
+            errors["base"] = "market_category_empty"
+            placeholders = {
+                "category": labels.get(empty[0], empty[0]),
+                "where": holiday_source_label(market),
+                "year": str(date.today().year),
+            }
+
+        fields: dict = {}
+        if len(offered) > 1:
+            fields[vol.Required(FORM_CATEGORIES, default=[default_category])] = selector(
+                {
+                    "select": {
+                        "options": offered,
+                        "multiple": True,
+                        "translation_key": "market_category",
+                    }
+                }
+            )
+        if len(cls.supported_languages) > 1:
+            fields[vol.Optional(CONF_LANGUAGE, default=_default_language(cls))] = selector(
+                {"select": {"options": list(cls.supported_languages), "mode": "dropdown"}}
+            )
+        schema = vol.Schema(fields)
+        if user_input is not None:
+            schema = self.add_suggested_values_to_schema(schema, user_input)
+        return self.async_show_form(
+            step_id="import_markets_options",
+            data_schema=schema,
+            errors=errors,
+            description_placeholders={"country": holiday_source_label(market), **placeholders},
+            last_step=False,
+        )
+
+    async def _async_finish_market_import(self, categories: list[str], language: str | None):
+        """A market's days, built like a country's: no region, the date the
+        market is actually closed (its calendar has no other), no breaks."""
+        return await self._async_finish_holiday_import(
+            self._holiday_country, [], categories, language, True, False, True, False, False
+        )
+
     async def async_step_import_holidays_options(self, user_input=None):
         """Step 2: actual/observed-date toggles, plus subdivision/categories/
         language when the country has more than one meaningful choice there.
@@ -2625,6 +2876,25 @@ class AnnualsOptionsFlow(OptionsFlow):
             language = user_input.get(CONF_LANGUAGE) or _default_language(cls)
             include_actual = user_input.get(FORM_INCLUDE_ACTUAL, True)
             include_observed = user_input.get(FORM_INCLUDE_OBSERVED, False)
+            empty = await self.hass.async_add_executor_job(
+                _empty_category, country, subdivisions, categories, date.today().year
+            )
+            if empty is not None:
+                category, regions = empty
+                labels = await async_category_labels(self.hass)
+                where = holiday_source_label(country)
+                if subdivisions:
+                    where = f"{where} ({', '.join(subdivisions)})"
+                return await self._async_show_holiday_options(
+                    user_input,
+                    {"base": "category_needs_region" if regions else "category_empty"},
+                    {
+                        "category": labels.get(category, category),
+                        "where": where,
+                        "regions": ", ".join(regions),
+                        "year": str(date.today().year),
+                    },
+                )
             return await self._async_finish_holiday_import(
                 country,
                 subdivisions,
@@ -2637,6 +2907,16 @@ class AnnualsOptionsFlow(OptionsFlow):
                 user_input.get(FORM_BREAK_DAYS, False),
             )
 
+        return await self._async_show_holiday_options()
+
+    async def _async_show_holiday_options(
+        self,
+        user_input: dict | None = None,
+        errors: dict[str, str] | None = None,
+        placeholders: dict[str, str] | None = None,
+    ):
+        """The options form, empty or - after an error - with what was picked."""
+        country = self._holiday_country
         # The sentence about multi-day breaks is a placeholder rather than
         # part of the description, because it only applies to the handful of
         # countries whose data actually has breaks - for everyone else the
@@ -2645,11 +2925,19 @@ class AnnualsOptionsFlow(OptionsFlow):
         breaks_note = ""
         if _country_has_breaks(country):
             breaks_note = f"\n\n{await async_break_note(self.hass)}"
+        schema = _holiday_options_schema(country)
+        if user_input is not None:
+            schema = self.add_suggested_values_to_schema(schema, user_input)
         return self.async_show_form(
             step_id="import_holidays_options",
-            data_schema=_holiday_options_schema(country),
-            description_placeholders={"country": country, "breaks": breaks_note},
-            last_step=True,
+            data_schema=schema,
+            errors=errors or {},
+            description_placeholders={
+                "country": holiday_source_label(country),
+                "breaks": breaks_note,
+                **(placeholders or {}),
+            },
+            last_step=False,
         )
 
     async def _async_finish_holiday_import(
@@ -2672,6 +2960,7 @@ class AnnualsOptionsFlow(OptionsFlow):
         # Fetched here, in the event loop, and passed down: the row building
         # itself runs in an executor, where translations aren't reachable.
         span_labels = await async_span_labels(self.hass)
+        market_labels = await async_market_status_labels(self.hass) if is_market(country) else None
         for subdivision in subdivisions or [None]:
             built = await self.hass.async_add_executor_job(
                 _build_holiday_rows,
@@ -2685,6 +2974,7 @@ class AnnualsOptionsFlow(OptionsFlow):
                 include_break_end,
                 include_break_days,
                 span_labels,
+                market_labels,
             )
             # Several regions of one country produce the same nationwide rows
             # (see _build_holiday_rows) - queueing each of them once keeps the
@@ -2696,6 +2986,94 @@ class AnnualsOptionsFlow(OptionsFlow):
                     continue
                 seen.add(identity)
                 rows.append(row)
+        # Rows another category already covers on disk are dropped here, so
+        # the selection lists only what an import would really add or update.
+        # What a row would supersede is worked out again for the rows
+        # actually picked (see _async_apply_holiday_import) - an entry is only
+        # replaced on account of a holiday that is really being imported.
+        rows, _superseded = await self.hass.async_add_executor_job(
+            _resolve_category_clashes,
+            list(self.hass.config_entries.async_entries(DOMAIN)),
+            rows,
+        )
+        self._holiday_rows = rows
+        self._holiday_multi_category = len(categories) > 1
+        if not rows:
+            return await self._async_apply_holiday_import([])
+        if is_market(country):
+            return await self.async_step_import_markets_select()
+        return await self.async_step_import_holidays_select()
+
+    async def async_step_import_holidays_select(self, user_input=None):
+        """Step 3: the holidays this import would add, each with its next
+        date, and a checkbox for each - only the ticked ones are imported.
+
+        Ticked from the start: everything, when none of these holidays is in
+        Annuals yet; otherwise only the ones that already are. A re-import
+        then updates what is there and leaves out what was deleted since,
+        instead of quietly bringing it back. Unticking a holiday that is
+        already in Annuals leaves that entry as it is - removing is what
+        "Remove imported holidays" is for.
+        """
+        return await self._async_show_selection("import_holidays_select", user_input)
+
+    async def async_step_import_markets_select(self, user_input=None):
+        """The same last step for a stock exchange's days, in its own words."""
+        return await self._async_show_selection("import_markets_select", user_input)
+
+    async def _async_show_selection(self, step_id: str, user_input: dict | None):
+        market = is_market(self._holiday_country)
+        rows = self._holiday_rows
+        known = {entry.unique_id for entry in self.hass.config_entries.async_entries(DOMAIN)}
+        existing = [str(index) for index, row in enumerate(rows) if _import_unique_id(row) in known]
+
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            picked = {int(value) for value in user_input.get(FORM_HOLIDAYS) or []}
+            if picked:
+                return await self._async_apply_holiday_import(
+                    [row for index, row in enumerate(rows) if index in picked]
+                )
+            errors["base"] = "no_market_day_selected" if market else "no_holiday_selected"
+
+        category_labels = (
+            await async_category_labels(
+                self.hass, "market_category" if market else "holiday_category"
+            )
+            if self._holiday_multi_category
+            else None
+        )
+        options = await self.hass.async_add_executor_job(
+            _holiday_preview_options, rows, date.today(), category_labels
+        )
+        default = (
+            list(user_input.get(FORM_HOLIDAYS) or [])
+            if user_input is not None
+            else existing or [option["value"] for option in options]
+        )
+        return self.async_show_form(
+            step_id=step_id,
+            data_schema=vol.Schema(
+                {
+                    # "list" spelled out: a select with more than a handful
+                    # of options otherwise turns into a dropdown, and the
+                    # point of this step is to see every holiday at once.
+                    vol.Optional(FORM_HOLIDAYS, default=default): selector(
+                        {"select": {"options": options, "multiple": True, "mode": "list"}}
+                    )
+                }
+            ),
+            errors=errors,
+            description_placeholders={
+                "country": holiday_source_label(self._holiday_country),
+                "count": str(len(rows)),
+            },
+            last_step=True,
+        )
+
+    async def _async_apply_holiday_import(self, rows: list[dict]):
+        """Import the picked holiday rows and report how it went."""
+        country = holiday_source_label(self._holiday_country)
         # How many of these will land on an entry that already exists, so the
         # result can say so. Counted before anything is queued - afterwards
         # every row matches something and the distinction is gone. It matters
@@ -2731,7 +3109,11 @@ class AnnualsOptionsFlow(OptionsFlow):
                 DOMAIN, context={"source": SOURCE_IMPORT}, data=row
             )
         return self.async_abort(
-            reason="holiday_import_started",
+            reason=(
+                "market_import_started"
+                if is_market(self._holiday_country)
+                else "holiday_import_started"
+            ),
             description_placeholders={
                 "count": str(len(rows)),
                 "new": str(len(rows) - updated),
@@ -2746,13 +3128,23 @@ class AnnualsOptionsFlow(OptionsFlow):
         doesn't also remove an unrelated "United States" import, but you're
         not stuck deleting a dozen entries by hand either.
         """
+        return await self._async_remove_imported(TYPE_HOLIDAY, "remove_holidays", user_input)
+
+    async def async_step_remove_markets(self, user_input=None):
+        """The same for a stock exchange's days, one batch per market."""
+        return await self._async_remove_imported(TYPE_MARKET, "remove_markets", user_input)
+
+    async def _async_remove_imported(self, event_type: str, step_id: str, user_input):
+        market = event_type == TYPE_MARKET
         holiday_entries = [
             entry
             for entry in self.hass.config_entries.async_entries(DOMAIN)
-            if entry.data.get(CONF_EVENT_TYPE) == TYPE_HOLIDAY
+            if entry.data.get(CONF_EVENT_TYPE) == event_type
         ]
         if not holiday_entries:
-            return self.async_abort(reason="no_holidays_imported")
+            return self.async_abort(
+                reason="no_markets_imported" if market else "no_holidays_imported"
+            )
 
         groups: dict[tuple[str, str | None], list[ConfigEntry]] = {}
         for entry in holiday_entries:
@@ -2781,7 +3173,9 @@ class AnnualsOptionsFlow(OptionsFlow):
             for (country, subdivision), entries in ordered:
                 region = subdivision_name(country, subdivision) or subdivision
                 labels.append(
-                    f"{country}" + (f" ({region})" if region else "") + f" - {len(entries)}"
+                    holiday_source_label(country)
+                    + (f" ({region})" if region else "")
+                    + f" - {len(entries)}"
                 )
             return labels
 
@@ -2807,19 +3201,19 @@ class AnnualsOptionsFlow(OptionsFlow):
                     to_remove.extend(groups.get((country, subdivision or None), []))
 
             if not to_remove:
-                errors["base"] = "no_batch_selected"
+                errors["base"] = "no_market_batch_selected" if market else "no_batch_selected"
             else:
                 # Awaited sequentially for the same reason imports are - see
                 # the comments on async_step_import_csv/_async_finish_holiday_import.
                 for entry in to_remove:
                     await self.hass.config_entries.async_remove(entry.entry_id)
                 return self.async_abort(
-                    reason="holidays_removed",
+                    reason="markets_removed" if market else "holidays_removed",
                     description_placeholders={"count": str(len(to_remove))},
                 )
 
         return self.async_show_form(
-            step_id="remove_holidays",
+            step_id=step_id,
             data_schema=vol.Schema(
                 {
                     vol.Optional("remove_all", default=False): selector({"boolean": {}}),
@@ -2871,9 +3265,14 @@ class AnnualsOptionsFlow(OptionsFlow):
                 occurrence,
                 data[CONF_HOLIDAY_KEY],
             )
+        name = name or data.get(CONF_EVENT_NAME, "")
+        # A market day reads as what it is and what for (see CONF_MARKET_STATUS).
+        if data.get(CONF_EVENT_TYPE) == TYPE_MARKET and data.get(CONF_MARKET_STATUS):
+            status = (data.get(CONF_STATUS_TRANSLATIONS) or {}).get(self.hass.config.language or "")
+            name = f"{status or data[CONF_MARKET_STATUS]} ({market_reason(name)})"
         return {
-            "name": name or data.get(CONF_EVENT_NAME, ""),
-            "type": labels.get(TYPE_HOLIDAY, TYPE_HOLIDAY),
+            "name": name,
+            "type": labels.get(data[CONF_EVENT_TYPE], data[CONF_EVENT_TYPE]),
             "date": occurrence.strftime("%d.%m.%Y") if occurrence else "-",
             "region": region,
             "category": data[CONF_CATEGORY],
@@ -2940,6 +3339,8 @@ class AnnualsOptionsFlow(OptionsFlow):
             step_id="holiday_names",
             data_schema=schema,
             description_placeholders=self._holiday_facts(),
+            # The name itself is asked on the next form.
+            last_step=False,
         )
 
     async def async_step_holiday_name_edit(self, user_input=None):
@@ -2956,17 +3357,28 @@ class AnnualsOptionsFlow(OptionsFlow):
             getattr(self, "_name_language", None) or ui_language(entry.data.get(CONF_LANGUAGE)) or "en"
         )
         data = entry.data
+        market = data.get(CONF_EVENT_TYPE) == TYPE_MARKET
+        # A market day has two things to word: its name, which is the
+        # market's status, and its reason, the holiday it falls on - which is
+        # what CONF_NAME_TRANSLATIONS holds for it (see CONF_STATUS_TRANSLATIONS).
+        reason_key = FORM_REASON if market else CONF_EVENT_NAME
         translations = dict(data.get(CONF_NAME_TRANSLATIONS) or {})
+        status_translations = dict(data.get(CONF_STATUS_TRANSLATIONS) or {})
 
         if user_input is not None:
-            value = (user_input.get(CONF_EVENT_NAME) or "").strip()
-            if value:
-                translations[language] = value
-            else:
-                translations.pop(language, None)
-            self.hass.config_entries.async_update_entry(
-                entry, data={**data, CONF_NAME_TRANSLATIONS: translations}
-            )
+            def _store(target: dict, value: str | None) -> None:
+                value = (value or "").strip()
+                if value:
+                    target[language] = value
+                else:
+                    target.pop(language, None)
+
+            _store(translations, user_input.get(reason_key))
+            new_data = {**data, CONF_NAME_TRANSLATIONS: translations}
+            if market:
+                _store(status_translations, user_input.get(CONF_EVENT_NAME))
+                new_data[CONF_STATUS_TRANSLATIONS] = status_translations
+            self.hass.config_entries.async_update_entry(entry, data=new_data)
             self.hass.config_entries.async_schedule_reload(entry.entry_id)
             return self.async_create_entry(title="", data={})
 
@@ -2999,13 +3411,28 @@ class AnnualsOptionsFlow(OptionsFlow):
                     data[CONF_HOLIDAY_KEY],
                 )
 
-        schema = vol.Schema(
-            {
-                vol.Optional(
-                    CONF_EVENT_NAME, description={"suggested_value": current or ""}
-                ): str
-            }
-        )
+        if market:
+            current = market_reason(current) if current else current
+        fields: dict = {}
+        if market:
+            # Pre-filled the same way: the user's own wording, otherwise the
+            # status as Annuals words it in that language.
+            status = status_translations.get(language)
+            if not status:
+                labels = await async_market_status_labels(self.hass, language)
+                parts = await self.hass.async_add_executor_job(
+                    market_status,
+                    data[CONF_COUNTRY],
+                    data[CONF_CATEGORY],
+                    data[CONF_HOLIDAY_KEY],
+                    (occurrence or date.today()).year,
+                )
+                status = market_status_text(
+                    labels, market_names().get(data[CONF_COUNTRY], data[CONF_COUNTRY]), parts
+                )
+            fields[vol.Optional(CONF_EVENT_NAME, description={"suggested_value": status})] = str
+        fields[vol.Optional(reason_key, description={"suggested_value": current or ""})] = str
+        schema = vol.Schema(fields)
         return self.async_show_form(
             step_id="holiday_name_edit",
             data_schema=schema,
@@ -3055,18 +3482,22 @@ class AnnualsOptionsFlow(OptionsFlow):
             else:
                 by_identity: dict[tuple, ConfigEntry] = {}
                 for entry in self.hass.config_entries.async_entries(DOMAIN):
-                    if entry.data.get(CONF_EVENT_TYPE) == TYPE_HOLIDAY:
+                    if entry.data.get(CONF_EVENT_TYPE) in LIBRARY_TYPES:
                         by_identity[holiday_identity(entry.data)] = entry
 
                 # Collected per entry first, so an entry with several
                 # languages in the file is written once instead of once per
                 # row - each write reloads that entry.
                 updates: dict[str, dict[str, str]] = {}
+                # A stock exchange day's own name, from the `status` column
+                # (see helpers.TRANSLATIONS_CSV_COLUMNS).
+                status_updates: dict[str, dict[str, str]] = {}
                 unmatched = 0
                 for row in rows:
                     language = ui_language((row.get("language") or "").strip())
                     name = (row.get("name") or "").strip()
-                    if not language or not name:
+                    status = (row.get("status") or "").strip()
+                    if not language or not (name or status):
                         unmatched += 1
                         continue
                     identity = holiday_identity(
@@ -3080,25 +3511,39 @@ class AnnualsOptionsFlow(OptionsFlow):
                         }
                     )
                     entry = by_identity.get(identity)
-                    if entry is None:
+                    if entry is None or (
+                        status and not name and entry.data.get(CONF_EVENT_TYPE) != TYPE_MARKET
+                    ):
                         unmatched += 1
                         continue
-                    updates.setdefault(entry.entry_id, {})[language] = name
+                    if name:
+                        updates.setdefault(entry.entry_id, {})[language] = name
+                    if status and entry.data.get(CONF_EVENT_TYPE) == TYPE_MARKET:
+                        status_updates.setdefault(entry.entry_id, {})[language] = status
 
-                if not updates:
+                if not updates and not status_updates:
                     errors["base"] = "no_valid_rows"
                 else:
-                    for entry_id, translations in updates.items():
+                    for entry_id in {*updates, *status_updates}:
                         entry = self.hass.config_entries.async_get_entry(entry_id)
-                        merged = {**(entry.data.get(CONF_NAME_TRANSLATIONS) or {}), **translations}
-                        self.hass.config_entries.async_update_entry(
-                            entry, data={**entry.data, CONF_NAME_TRANSLATIONS: merged}
-                        )
+                        new_data = {
+                            **entry.data,
+                            CONF_NAME_TRANSLATIONS: {
+                                **(entry.data.get(CONF_NAME_TRANSLATIONS) or {}),
+                                **updates.get(entry_id, {}),
+                            },
+                        }
+                        if entry_id in status_updates:
+                            new_data[CONF_STATUS_TRANSLATIONS] = {
+                                **(entry.data.get(CONF_STATUS_TRANSLATIONS) or {}),
+                                **status_updates[entry_id],
+                            }
+                        self.hass.config_entries.async_update_entry(entry, data=new_data)
                         self.hass.config_entries.async_schedule_reload(entry_id)
                     return self.async_abort(
                         reason="translations_imported",
                         description_placeholders={
-                            "updated": str(len(updates)),
+                            "updated": str(len({*updates, *status_updates})),
                             "skipped": str(unmatched),
                         },
                     )
@@ -3150,14 +3595,25 @@ class AnnualsOptionsFlow(OptionsFlow):
         """
         return self.async_show_menu(
             step_id="import_events",
-            menu_options=["import_csv", "import_ics", "import_vcard_menu", "import_holidays"],
+            menu_options=[
+                "import_csv",
+                "import_ics",
+                "import_vcard_menu",
+                "import_holidays",
+                "import_markets",
+            ],
         )
 
     async def async_step_remove_events(self, user_input=None):
         """Single hub menu entry for every "remove imported X" action."""
         return self.async_show_menu(
             step_id="remove_events",
-            menu_options=["remove_ics_imports", "remove_vcard_imports", "remove_holidays"],
+            menu_options=[
+                "remove_ics_imports",
+                "remove_vcard_imports",
+                "remove_holidays",
+                "remove_markets",
+            ],
         )
 
     async def async_step_annual_settings(self, user_input=None):

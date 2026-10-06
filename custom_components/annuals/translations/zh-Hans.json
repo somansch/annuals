@@ -24,7 +24,8 @@
                 "work_anniversary": "工作纪念日",
                 "custom": "自定义",
                 "one_time": "单次事件",
-                "holiday": "节假日"
+                "holiday": "节假日",
+                "market": "证券交易所"
             }
         },
         "month": {
@@ -50,6 +51,7 @@
                 "government": "政府机构假日",
                 "school": "学校假期",
                 "optional": "可选假日",
+                "optional_women": "可选假日（女性）",
                 "unofficial": "非正式假日",
                 "half_day": "半天假",
                 "armed_forces": "军队假日",
@@ -98,6 +100,21 @@
             "options": {
                 "months": "个月",
                 "years": "年"
+            }
+        },
+        "market_category": {
+            "options": {
+                "public": "休市",
+                "half_day": "提前收市",
+                "restricted_settlement": "不结算"
+            }
+        },
+        "market_status": {
+            "options": {
+                "closed": "{market}休市",
+                "closes_at": "{market} {time}起休市",
+                "closes_early": "{market}提前收市",
+                "no_settlement": "{market}不结算"
             }
         }
     },
@@ -344,7 +361,8 @@
                 "title": "节日名称",
                 "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\n已预填当前显示的名称。留空则恢复使用节日数据库。",
                 "data": {
-                    "name": "名称"
+                    "name": "名称",
+                    "reason": "原因"
                 }
             },
             "holiday_translations": {
@@ -357,7 +375,7 @@
             },
             "import_translations": {
                 "title": "导入翻译",
-                "description": "上传翻译 CSV。列：`country,subdivision,category,holiday_key,observed,language,name`。各行按国家、行政区、类别、节假日键和 observed 标记与节假日匹配，而不是按条目 ID，因此在重新导入某个国家之前导出的文件仍然适用。找不到对应节假日的行会被跳过并计数。",
+                "description": "上传翻译 CSV。列：`country,subdivision,category,holiday_key,observed,language,name,status`。各行按国家、行政区、类别、节假日键和 observed 标记与节假日匹配，而不是按条目 ID，因此在重新导入某个国家之前导出的文件仍然适用。找不到对应节假日的行会被跳过并计数。 对于交易所日期，`name` 是原因，`status` 是其自身名称；节假日请将 `status` 留空。",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -380,7 +398,8 @@
                     "import_csv": "CSV",
                     "import_ics": "ICS 日历",
                     "import_vcard_menu": "vCard",
-                    "import_holidays": "节假日"
+                    "import_holidays": "节假日",
+                    "import_markets": "证券交易所"
                 }
             },
             "remove_events": {
@@ -389,14 +408,37 @@
                 "menu_options": {
                     "remove_ics_imports": "ICS 导入",
                     "remove_vcard_imports": "vCard 导入",
-                    "remove_holidays": "节假日"
+                    "remove_holidays": "节假日",
+                    "remove_markets": "证券交易所"
                 }
             },
             "import_holidays": {
                 "title": "导入节假日",
-                "description": "选择一个国家/地区，将其节假日导入为事件。之后为同一国家/地区（和细分地区）重新运行此操作会更新现有条目，而不是重复创建 —— 如果该国家/地区新增节假日，可以放心重复导入。",
+                "description": "选择一个国家/地区，将其节假日导入为事件。之后为同一国家/地区（和细分地区）重新运行此操作会更新现有条目，而不是重复创建 —— 导入前你会看到所有节假日，并可选择需要的节假日。",
                 "data": {
                     "country": "国家/地区"
+                }
+            },
+            "import_markets": {
+                "title": "导入交易所休市日",
+                "description": "选择一个证券交易所，导入其休市日——如果数据中包含，还会导入提前收市的日期。导入前你会看到所有日期，并可选择需要的日期。",
+                "data": {
+                    "market": "证券交易所"
+                }
+            },
+            "import_markets_options": {
+                "title": "导入交易所日期 - {country}",
+                "description": "要导入哪些类型的日期，以及名称使用的语言。",
+                "data": {
+                    "categories": "日期",
+                    "language": "名称语言"
+                }
+            },
+            "import_markets_select": {
+                "title": "导入交易所日期 - {country}：选择",
+                "description": "找到 {count} 个日期，每个都附有下一次的日期。只导入已勾选的日期。\n\n取消勾选一个已在 Annuals 中的日期不会改变它——要删除日期，请使用 **删除事件 → 证券交易所**。",
+                "data": {
+                    "holidays": "日期"
                 }
             },
             "import_holidays_options": {
@@ -419,12 +461,27 @@
                     "include_observed": "该国家/地区的节假日在落在周末时有时会顺延到附近的工作日（例如提前到之前的周五或顺延到之后的周一）—— 也将该顺延日期作为独立事件导入。"
                 }
             },
+            "import_holidays_select": {
+                "title": "导入节假日 - {country}：选择",
+                "description": "找到 {count} 个节假日，每个都附有下一次的日期。只导入已勾选的节假日。\n\n取消勾选一个已在 Annuals 中的节假日不会改变它——要删除节假日，请使用 **删除事件 → 节假日**。",
+                "data": {
+                    "holidays": "节假日"
+                }
+            },
             "remove_holidays": {
                 "title": "删除已导入的节假日",
                 "description": "当前已导入 {total} 个节假日事件。勾选下方复选框可删除全部，或不勾选并改为选择一个批次。手动添加的事件不会受到影响。",
                 "data": {
                     "remove_all": "删除所有已导入的节假日",
                     "batch": "要删除的批次"
+                }
+            },
+            "remove_markets": {
+                "title": "删除已导入的交易所日期",
+                "description": "当前已导入 {total} 个交易所日期。勾选下方的复选框可全部删除，或不勾选并选择一个或多个交易所。其他内容不受影响。",
+                "data": {
+                    "remove_all": "删除所有已导入的交易所日期",
+                    "batch": "要删除的交易所"
                 }
             },
             "annual_settings": {
@@ -539,7 +596,13 @@
             "interval_needs_year": "重复间隔从上面的日期起计算，因此需要年份。",
             "interval_no_rule": "重复间隔不能与星期规则同时使用。",
             "end_time_needs_time": "结束时间需要开始时间。",
-            "end_time_before_start": "结束时间必须晚于开始时间。"
+            "end_time_before_start": "结束时间必须晚于开始时间。",
+            "no_holiday_selected": "请至少勾选一个节假日。",
+            "category_needs_region": "{category} 在 {year} 年没有 {where} 的节假日——只有这些地区有：{regions}。请在“细分地区”中选择其中一个，或去掉 {category}。",
+            "category_empty": "{category} 在 {year} 年没有 {where} 的节假日。去掉它即可导入其他类别。",
+            "no_market_day_selected": "请至少勾选一个日期。",
+            "market_category_empty": "{category} 在 {year} 年没有 {where} 的日期。去掉它即可导入其他类别。",
+            "no_market_batch_selected": "请勾选“删除所有已导入的交易所日期”，或选择要删除的交易所。"
         },
         "abort": {
             "translations_exported": "已导出 {count} 条翻译。[下载 annuals_holiday_translations.csv]({url})（按住 Ctrl/Cmd 点击以下载 - 普通点击在此处无效）\n\n或复制下方的 CSV：\n\n```\n{csv}\n```",
@@ -557,7 +620,10 @@
             "no_ics_imports": "未找到通过 ICS 导入创建的事件。",
             "ics_imports_removed": "已删除 {count} 个通过 ICS 导入的事件。",
             "no_vcard_imports": "未找到通过 vCard 导入创建的事件。",
-            "vcard_imports_removed": "已删除 {count} 个通过 vCard 导入的事件。"
+            "vcard_imports_removed": "已删除 {count} 个通过 vCard 导入的事件。",
+            "market_import_started": "导入已开始：已为 {country} 排队 {count} 个日期（{new} 个新增，{updated} 个更新）。",
+            "no_markets_imported": "尚未导入任何交易所日期。",
+            "markets_removed": "已删除 {count} 个交易所日期。"
         }
     },
     "entity": {
@@ -601,6 +667,10 @@
             "holiday": {
                 "name": "{name}",
                 "unit_of_measurement": "天"
+            },
+            "market": {
+                "name": "{name}",
+                "unit_of_measurement": "天"
             }
         },
         "calendar": {
@@ -633,6 +703,9 @@
             },
             "holiday": {
                 "name": "节假日"
+            },
+            "market": {
+                "name": "证券交易所"
             }
         }
     }

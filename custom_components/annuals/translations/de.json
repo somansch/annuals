@@ -24,7 +24,8 @@
                 "work_anniversary": "Firmenjubiläum",
                 "custom": "Frei wählbar",
                 "one_time": "Einmaliges Ereignis",
-                "holiday": "Feiertag"
+                "holiday": "Feiertag",
+                "market": "Börse"
             }
         },
         "month": {
@@ -50,6 +51,7 @@
                 "government": "Behörden",
                 "school": "Schulferien",
                 "optional": "Optional",
+                "optional_women": "Optional (Frauen)",
                 "unofficial": "Inoffiziell",
                 "half_day": "Halber Tag",
                 "armed_forces": "Streitkräfte",
@@ -98,6 +100,21 @@
             "options": {
                 "months": "Monate",
                 "years": "Jahre"
+            }
+        },
+        "market_category": {
+            "options": {
+                "public": "Geschlossen",
+                "half_day": "Verkürzter Handel",
+                "restricted_settlement": "Ohne Abwicklung"
+            }
+        },
+        "market_status": {
+            "options": {
+                "closed": "{market} geschlossen",
+                "closes_at": "{market} geschlossen ab {time}",
+                "closes_early": "{market} schließt früher",
+                "no_settlement": "{market} ohne Abwicklung"
             }
         }
     },
@@ -344,7 +361,8 @@
                 "title": "Name des Feiertags",
                 "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nVorbelegt mit dem, was heute angezeigt wird. Leer lassen, um wieder die Feiertagsdatenbank zu verwenden.",
                 "data": {
-                    "name": "Name"
+                    "name": "Name",
+                    "reason": "Anlass"
                 }
             },
             "holiday_translations": {
@@ -357,7 +375,7 @@
             },
             "import_translations": {
                 "title": "Übersetzungen importieren",
-                "description": "Lade eine Übersetzungs-CSV hoch. Spalten: `country,subdivision,category,holiday_key,observed,language,name`. Zeilen werden über Land, Region, Kategorie, Feiertagsschlüssel und Observed-Kennzeichen zugeordnet - nicht über die Eintrags-ID, eine vor einem Neuimport exportierte Datei passt also weiterhin. Zeilen ohne passenden Feiertag werden übersprungen und gezählt.",
+                "description": "Lade eine Übersetzungs-CSV hoch. Spalten: `country,subdivision,category,holiday_key,observed,language,name,status`. Zeilen werden über Land, Region, Kategorie, Feiertagsschlüssel und Observed-Kennzeichen zugeordnet - nicht über die Eintrags-ID, eine vor einem Neuimport exportierte Datei passt also weiterhin. Zeilen ohne passenden Feiertag werden übersprungen und gezählt. Bei einem Börsentag ist `name` der Anlass und `status` sein eigener Name; bei Feiertagen bleibt `status` leer.",
                 "data": {
                     "csv_file": "CSV"
                 }
@@ -380,7 +398,8 @@
                     "import_csv": "CSV",
                     "import_ics": "ICS-Kalender",
                     "import_vcard_menu": "vCard",
-                    "import_holidays": "Feiertage"
+                    "import_holidays": "Feiertage",
+                    "import_markets": "Börsen"
                 }
             },
             "remove_events": {
@@ -389,14 +408,37 @@
                 "menu_options": {
                     "remove_ics_imports": "ICS-importiert",
                     "remove_vcard_imports": "vCard-importiert",
-                    "remove_holidays": "Feiertage"
+                    "remove_holidays": "Feiertage",
+                    "remove_markets": "Börsen"
                 }
             },
             "import_holidays": {
                 "title": "Feiertage importieren",
-                "description": "Wähle ein Land, um dessen Feiertage als Ereignisse zu importieren. Ein erneuter Import für dasselbe Land (und dieselbe Subdivision) aktualisiert bestehende Einträge, statt sie zu duplizieren - unbedenklich, falls ein Land einen neuen Feiertag einführt.",
+                "description": "Wähle ein Land, um dessen Feiertage als Ereignisse zu importieren. Ein erneuter Import für dasselbe Land (und dieselbe Subdivision) aktualisiert bestehende Einträge, statt sie zu duplizieren - vor dem Import siehst du alle Feiertage und wählst die gewünschten aus.",
                 "data": {
                     "country": "Land"
+                }
+            },
+            "import_markets": {
+                "title": "Börsenfeiertage importieren",
+                "description": "Wähle eine Börse, um die Tage zu importieren, an denen sie geschlossen ist - und, wo ihre Daten sie enthalten, die Tage mit verkürztem Handel. Vor dem Import siehst du alle Tage und wählst die gewünschten aus.",
+                "data": {
+                    "market": "Börse"
+                }
+            },
+            "import_markets_options": {
+                "title": "Börsentage importieren - {country}",
+                "description": "Welche Arten von Tagen importiert werden und in welcher Sprache ihre Namen stehen.",
+                "data": {
+                    "categories": "Tage",
+                    "language": "Sprache der Namen"
+                }
+            },
+            "import_markets_select": {
+                "title": "Börsentage importieren - {country}: auswählen",
+                "description": "{count} Tag(e) gefunden, jeweils mit dem nächsten Datum. Importiert werden nur die angehakten.\n\nEin Tag, der schon in Annuals ist, bleibt beim Abhaken unverändert - entfernen lassen sich Tage unter **Ereignisse entfernen → Börsen**.",
+                "data": {
+                    "holidays": "Tage"
                 }
             },
             "import_holidays_options": {
@@ -419,12 +461,27 @@
                     "include_observed": "Feiertage dieses Landes werden manchmal auf einen nahegelegenen Wochentag verschoben, wenn sie auf ein Wochenende fallen (z. B. am Freitag davor oder Montag danach nachgeholt) - importiere dieses nachgeholte Datum zusätzlich als eigenes Ereignis."
                 }
             },
+            "import_holidays_select": {
+                "title": "Feiertage importieren - {country}: auswählen",
+                "description": "{count} Feiertag(e) gefunden, jeweils mit dem nächsten Datum. Importiert werden nur die angehakten.\n\nEin Feiertag, der schon in Annuals ist, bleibt beim Abhaken unverändert - entfernen lassen sich Feiertage unter **Ereignisse entfernen → Feiertage**.",
+                "data": {
+                    "holidays": "Feiertage"
+                }
+            },
             "remove_holidays": {
                 "title": "Importierte Feiertage entfernen",
                 "description": "Aktuell importiert: {total} Feiertags-Ereignis(se). Aktiviere die Checkbox unten, um alle zu entfernen, oder lasse sie deaktiviert und wähle stattdessen einen bestimmten Import aus. Manuell angelegte Ereignisse sind davon nie betroffen.",
                 "data": {
                     "remove_all": "Alle importierten Feiertage entfernen",
                     "batch": "Zu entfernender Import"
+                }
+            },
+            "remove_markets": {
+                "title": "Importierte Börsentage entfernen",
+                "description": "{total} Börsentag(e) importiert. Aktiviere das Feld unten, um alle zu entfernen, oder lass es aus und wähle eine oder mehrere Börsen. Alles andere bleibt unverändert.",
+                "data": {
+                    "remove_all": "Alle importierten Börsentage entfernen",
+                    "batch": "Zu entfernende Börsen"
                 }
             },
             "annual_settings": {
@@ -539,7 +596,13 @@
             "interval_needs_year": "Ein Wiederholungsintervall wird ab dem Datum oben gezählt, daher ist das Jahr nötig.",
             "interval_no_rule": "Ein Wiederholungsintervall lässt sich nicht mit einer Wochentagsregel kombinieren.",
             "end_time_needs_time": "Eine Endzeit braucht eine Startzeit.",
-            "end_time_before_start": "Die Endzeit muss nach der Startzeit liegen."
+            "end_time_before_start": "Die Endzeit muss nach der Startzeit liegen.",
+            "no_holiday_selected": "Hake mindestens einen Feiertag an.",
+            "category_needs_region": "{category} hat für {where} im Jahr {year} keine Feiertage - nur diese Regionen haben welche: {regions}. Wähle eine davon unter „Bundesland/Provinz“ oder lass {category} weg.",
+            "category_empty": "{category} hat für {where} im Jahr {year} keine Feiertage. Lass die Kategorie weg, um die anderen zu importieren.",
+            "no_market_day_selected": "Hake mindestens einen Tag an.",
+            "market_category_empty": "{category} hat für {where} im Jahr {year} keine Tage. Lass es weg, um die anderen zu importieren.",
+            "no_market_batch_selected": "Aktiviere \"Alle importierten Börsentage entfernen\" oder wähle eine Börse aus."
         },
         "abort": {
             "translations_exported": "{count} Übersetzung(en) exportiert. [annuals_holiday_translations.csv herunterladen]({url}) (Strg/Cmd-Klick zum Herunterladen - ein einfacher Klick funktioniert hier nicht)\n\nOder kopiere die CSV unten:\n\n```\n{csv}\n```",
@@ -557,7 +620,10 @@
             "no_ics_imports": "Es wurden keine durch einen ICS-Import angelegten Ereignisse gefunden.",
             "ics_imports_removed": "{count} ICS-importierte(s) Ereignis(se) entfernt.",
             "no_vcard_imports": "Es wurden keine durch einen vCard-Import angelegten Ereignisse gefunden.",
-            "vcard_imports_removed": "{count} vCard-importierte(s) Ereignis(se) entfernt."
+            "vcard_imports_removed": "{count} vCard-importierte(s) Ereignis(se) entfernt.",
+            "market_import_started": "Import gestartet: {count} Tag(e) für {country} eingereiht ({new} neu, {updated} aktualisiert).",
+            "no_markets_imported": "Es wurden noch keine Börsentage importiert.",
+            "markets_removed": "{count} Börsentag(e) entfernt."
         }
     },
     "entity": {
@@ -601,6 +667,10 @@
             "holiday": {
                 "name": "{name}",
                 "unit_of_measurement": "Tage"
+            },
+            "market": {
+                "name": "{name}",
+                "unit_of_measurement": "Tage"
             }
         },
         "calendar": {
@@ -633,6 +703,9 @@
             },
             "holiday": {
                 "name": "Feiertage"
+            },
+            "market": {
+                "name": "Börsen"
             }
         }
     }
