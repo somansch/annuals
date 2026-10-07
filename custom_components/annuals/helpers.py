@@ -522,6 +522,8 @@ _REMINDER_STRINGS: dict[str, dict[str, str]] = {
     "nb": {"today": "I dag", "tomorrow": "I morgen", "in_days": "om {days} dager"},
     "da": {"today": "I dag", "tomorrow": "I morgen", "in_days": "om {days} dage"},
     "tr": {"today": "Bugün", "tomorrow": "Yarın", "in_days": "{days} gün sonra"},
+    "sk": {"today": "Dnes", "tomorrow": "Zajtra", "in_days": "o {days} dní"},
+    "lt": {"today": "Šiandien", "tomorrow": "Rytoj", "in_days": "po {days} dienų"},
 }
 
 
@@ -558,6 +560,7 @@ _HUB_TITLE_WORD = {
     "da": "Indstillinger",
     "tr": "Ayarları",
     "sk": "Nastavenia",
+    "lt": "Nustatymai",
 }
 
 

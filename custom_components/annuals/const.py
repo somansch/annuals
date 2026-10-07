@@ -254,7 +254,7 @@ CONF_NAME_TRANSLATIONS = "name_translations"
 # CONF_NAME_TRANSLATIONS translates its reason, the holiday it falls on.
 CONF_STATUS_TRANSLATIONS = "status_translations"
 
-# The languages a holiday name can be translated into - the same 16 this
+# The languages a holiday name can be translated into - the same 17 this
 # integration and its dashboard card are themselves translated into (one
 # file each in translations/), so a name can always be provided for whatever
 # language a viewer is actually reading the card in.
@@ -275,6 +275,7 @@ NAME_TRANSLATION_LANGUAGES = [
     "da",
     "tr",
     "sk",
+    "lt",
 ]
 # Whether this entry tracks a holiday's practically-observed (weekend-shifted)
 # date rather than its literal one - see dates.holiday_occurrence_in_year.

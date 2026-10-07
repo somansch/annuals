@@ -1,0 +1,712 @@
+{
+    "title": "Annuals",
+    "selector": {
+        "holiday_span": {
+            "options": {
+                "start": "pradžia",
+                "end": "pabaiga",
+                "day": "diena {day}"
+            }
+        },
+        "holiday_breaks": {
+            "options": {
+                "note": "Daugiau dienų trunkančios atostogos, tokios kaip, mokyklos atostogos, atkuriamos kaip vientisos atostogos - žemiau pasirinkite, kurias jų dalis importuoti."
+            }
+        },
+        "event_type": {
+            "options": {
+                "birthday": "Gimtadienis",
+                "anniversary": "Sukaktis",
+                "name_day": "Vardadienis",
+                "wedding_anniversary": "Vestuvių sukaktis",
+                "memorial": "Atminimas",
+                "pet_birthday": "Gyvūno gimtadienis",
+                "work_anniversary": "Darbo sukaktis",
+                "custom": "Pasirinktinis",
+                "one_time": "Vienkartinis įvykis",
+                "holiday": "Šventė",
+                "market": "Birža"
+            }
+        },
+        "month": {
+            "options": {
+                "1": "Sausis",
+                "2": "Vasaris",
+                "3": "Kovas",
+                "4": "Balandis",
+                "5": "Gegužė",
+                "6": "Birželis",
+                "7": "Liepa",
+                "8": "Rugpjūtis",
+                "9": "Rugsėjis",
+                "10": "Spalis",
+                "11": "Lapkritis",
+                "12": "Gruodis"
+            }
+        },
+        "holiday_category": {
+            "options": {
+                "public": "Valstybinė",
+                "bank": "Bankų",
+                "government": "Vyriausybės",
+                "school": "Mokyklų",
+                "optional": "Pasirenkama",
+                "optional_women": "Pasirenkama (moterų)",
+                "unofficial": "Neoficiali",
+                "half_day": "Pusdienis",
+                "armed_forces": "Ginkluotųjų pajėgų",
+                "workday": "Darbo diena",
+                "catholic": "Katalikų",
+                "christian": "Krikščionių",
+                "orthodox": "Ortodoksų",
+                "hebrew": "Judėjų",
+                "islamic": "Islamo",
+                "hindu": "Indų",
+                "buddhist": "Budistų",
+                "de_facto": "De facto",
+                "protestant": "Protestantų",
+                "sabian": "Sabiečių",
+                "yazidi": "Jazidų",
+                "albanian": "Albanų",
+                "armenian": "Armėnų",
+                "bosnian": "Bosnių",
+                "roma": "Romų",
+                "serbian": "Serbų",
+                "turkish": "Turkų",
+                "vlach": "Valachų"
+            }
+        },
+        "nth": {
+            "options": {
+                "1": "Pirmą",
+                "2": "Antrą",
+                "3": "Trečią",
+                "4": "Ketvirtą",
+                "last": "Paskutinį"
+            }
+        },
+        "weekday": {
+            "options": {
+                "0": "Pirmadienį",
+                "1": "Antradienį",
+                "2": "Trečiadienį",
+                "3": "Ketvirtadienį",
+                "4": "Penktadienį",
+                "5": "Šeštadienį",
+                "6": "Sekmadienį"
+            }
+        },
+        "interval_unit": {
+            "options": {
+                "months": "mėnesius",
+                "years": "metus"
+            }
+        },
+        "market_category": {
+            "options": {
+                "public": "Uždaryta",
+                "half_day": "Ankstesnis uždarymas",
+                "restricted_settlement": "Nėra atsiskaitymo"
+            }
+        },
+        "market_status": {
+            "options": {
+                "closed": "{market} uždaryta",
+                "closes_at": "{market} užsidaro {time}",
+                "closes_early": "{market} užsidaro anksčiau",
+                "no_settlement": "{market}: nėra atsiskaitymo"
+            }
+        }
+    },
+    "config": {
+        "step": {
+            "user": {
+                "title": "Pridėti įvykį",
+                "description": "Kokio tipo įvykis tai yra?\n\n**Metinis** apima gimtadienį, sukaktį, vardadienį, vestuvių sukaktį, atminimą, gyvūno gimtadienį ir darbo sukaktį. **Vienkartinis** - viena data, kuri po pabaigos išsitrina pati. **Pasirinktinis** - tavo paties metinė data, krentanti į dieną arba į taisyklę.",
+                "menu_options": {
+                    "recurring": "{icon_recurring} Metinė data kam nors",
+                    "one_time": "{icon_one_time} Vienkartinis įvykis",
+                    "custom": "{icon_custom} Pasirinktinis įvykis"
+                }
+            },
+            "recurring": {
+                "title": "Pridėti metinį įvykį",
+                "description": "Kiekvienam įvykiui sukuriamas atskiras įrašas, todėl vėliau jį galėsi rasti ir redaguoti per Nustatymai → Įrenginiai ir integracijos → Annuals, ieškodamas pagal pavadinimą.",
+                "data": {
+                    "name": "Vardas",
+                    "last_name": "Pavardė (neprivaloma)",
+                    "person": "Asmuo (neprivaloma)",
+                    "type": "Įvykio tipas",
+                    "day": "Diena",
+                    "month": "Mėnuo",
+                    "year": "Metai (palikite tuščius, jei nežinomi)",
+                    "icon": "Piktograma (neprivaloma)",
+                    "vip": "VIP"
+                },
+                "data_description": {
+                    "person": "Home Assistant asmuo, kurio nuotrauka įkeliama į įvykį - dashboard kortelėje ir priminimo pranešime."
+                }
+            },
+            "one_time": {
+                "title": "Pridėti vienkartinį įvykį",
+                "description": "Viena data, iki kurios skaičiuojama. Jis niekada nepasikartoja, todėl metai privalomi, ir jis automatiškai ištrinamas vidurnaktį po pabaigos.\n\nNurodykite pabaigos datą ir jis taps kelių dienų įvykiu - kelione, konferencija, viešnage.",
+                "data": {
+                    "name": "Vardas",
+                    "last_name": "Pavardė (neprivaloma)",
+                    "type": "Įvykio tipas",
+                    "day": "Diena",
+                    "month": "Mėnuo",
+                    "year": "Metai",
+                    "end_date": "Pabaigos data (neprivaloma - padaro jį kelių dienų įvykiu)",
+                    "time": "Laikas (neprivaloma)",
+                    "end_time": "Pabaigos laikas (neprivaloma)",
+                    "icon": "Piktograma (neprivaloma)",
+                    "vip": "VIP"
+                },
+                "data_description": {
+                    "time": "Kada tą dieną jis prasideda. Tada kalendoriaus įraše yra laikas ir dashboard kortelė jį rodo.",
+                    "end_time": "Kada jis baigiasi - pabaigos datos dieną, jei ji yra, kitu atveju tą pačią dieną. Reikalingas pradžios laikas; palikus tuščią, kalendorio įrašas trunka valandą."
+                }
+            },
+            "custom": {
+                "title": "Pridėti pasirinktinį įvykį",
+                "description": "Tavo paties metinė data, bet kam, ko kiti tipai neaprašo.\n\nVietoj konkrečios datos ji gali būti kuriama pagal **taisyklę**: Motinos diena yra antras gegužės sekmadienis, Tėvo diena Australijoje - pirmas rugsėjo sekmadienis. Užpildykite du laukelius apačioje, o **Mėnuo** viršuje nurodo, kuriam mėnesiui taisyklė taikoma - **Diena** tuo atveju nenaudojama. Palikite juos tuščius, jei norite paprastos, pastovios datos.",
+                "data": {
+                    "name": "Vardas",
+                    "last_name": "Pavardė (neprivaloma)",
+                    "type": "Įvykio tipas",
+                    "day": "Diena",
+                    "month": "Mėnuo",
+                    "year": "Metai",
+                    "icon": "Piktograma (neprivaloma)",
+                    "vip": "VIP",
+                    "interval": "Kartojasi kas",
+                    "interval_unit": "...mėnesius arba metus",
+                    "nth": "Kartojasi",
+                    "weekday": "...mėnesio savaitės dieną"
+                },
+                "data_description": {
+                    "interval": "Kartu su šalia esančiu vienetu - kas 6 mėnesius, kas 2 metus. Skaičiuojama nuo aukščiau esančios datos, todėl jai reikia metų. Palikite abu tuščius, jei norite kartoti kartą per metus.",
+                    "nth": "Pirmą, antrą, trečią, ketvirtą arba paskutinį mėnesyje.",
+                    "weekday": "Nustatykite kartu su aukščiau esančiu lauku arba palikite abu tuščius."
+                }
+            },
+            "reconfigure_recurring": {
+                "title": "Redaguoti įvykį",
+                "description": "Pakeiskite bet kurį žemiau esantį lauką ir pateikite, kad atnaujintumėte šį įvykį.",
+                "data": {
+                    "name": "Vardas",
+                    "last_name": "Pavardė (neprivaloma)",
+                    "person": "Asmuo (neprivaloma)",
+                    "type": "Įvykio tipas",
+                    "day": "Diena",
+                    "month": "Mėnuo",
+                    "year": "Metai (palikite tuščius, jei nežinomi)",
+                    "icon": "Piktograma (neprivaloma)",
+                    "vip": "VIP"
+                },
+                "data_description": {
+                    "person": "Home Assistant asmuo, kurio nuotrauka įkeliama į įvykį - dashboard kortelėje ir priminimo pranešime."
+                }
+            },
+            "reconfigure_one_time": {
+                "title": "Redaguoti vienkartinį įvykį",
+                "description": "Pakeiskite bet kurį žemiau esantį lauką ir pateikite, kad atnaujintumėte šį įvykį.\n\nPabaigos data padaro jį kelių dienų įvykiu; ją ištrynus jis vėl tampa vienos dienos.",
+                "data": {
+                    "name": "Vardas",
+                    "last_name": "Pavardė (neprivaloma)",
+                    "type": "Įvykio tipas",
+                    "day": "Diena",
+                    "month": "Mėnuo",
+                    "year": "Metai",
+                    "end_date": "Pabaigos data (neprivaloma - padaro jį kelių dienų įvykiu)",
+                    "time": "Laikas (neprivaloma)",
+                    "end_time": "Pabaigos laikas (neprivaloma)",
+                    "icon": "Piktograma (neprivaloma)",
+                    "vip": "VIP"
+                },
+                "data_description": {
+                    "time": "Kada tą dieną jis prasideda. Tada kalendoriaus įraše yra laikas ir dashboard kortelė jį rodo.",
+                    "end_time": "Kada jis baigiasi - pabaigos datos dieną, jei ji yra, kitu atveju tą pačią dieną. Reikalingas pradžios laikas; palikus tuščią, kalendorio įrašas trunka valandą."
+                }
+            },
+            "reconfigure_custom": {
+                "title": "Redaguoti pasirinktinį įvykį",
+                "description": "Pakeiskite bet kurį žemiau esantį lauką ir pateikite, kad atnaujintumėte šį įvykį.\n\nJis gali būti kuriamas pagal **taisyklę** - *antrą gegužės sekmadienį*. Užpildykite du laukelius apačioje, o **Mėnuo** viršuje nurodo, kuriam mėnesiui taikoma taisyklė; **Diena** tuo atveju nenaudojama. Juos ištrynus įvykis grįžta į tą dieną.",
+                "data": {
+                    "name": "Vardas",
+                    "last_name": "Pavardė (neprivaloma)",
+                    "type": "Įvykio tipas",
+                    "day": "Diena",
+                    "month": "Mėnuo",
+                    "year": "Metai",
+                    "icon": "Piktograma (neprivaloma)",
+                    "vip": "VIP",
+                    "interval": "Kartojasi kas",
+                    "interval_unit": "...mėnesius arba metus",
+                    "nth": "Kartojasi",
+                    "weekday": "...mėnesio savaitės dieną"
+                },
+                "data_description": {
+                    "interval": "Kartu su šalia esančiu vienetu - kas 6 mėnesius, kas 2 metus. Skaičiuojama nuo aukščiau esančios datos, todėl jai reikia metų. Palikite abu tuščius, jei norite kartoti kartą per metus.",
+                    "nth": "Pirmą, antrą, trečią, ketvirtą arba paskutinį mėnesyje.",
+                    "weekday": "Nustatykite kartu su aukščiau esančiu lauku arba palikite abu tuščius."
+                }
+            }
+        },
+        "error": {
+            "name_required": "Įveskite vardą.",
+            "end_date_one_time_only": "Pabaigos data gali būti nustatyta tik vienkartiniam įvykiui.",
+            "end_date_before_start": "Pabaigos data turi būti vėlesnė už pradžios datą.",
+            "invalid_date": "Tokia dienos/mėnesio/metų kombinacija nėra galiojanti data.",
+            "year_required": "Vienkartiniai įvykiai reikalauja metų.",
+            "rule_needs_both": "Pasikartojanti taisyklė reikalauja abiejų laukų arba nė vieno.",
+            "interval_needs_both": "Kartojimo intervalas reikalauja abiejų laukų arba nė vieno.",
+            "interval_needs_year": "Kartojimo intervalas skaičiuojamas nuo aukščiau esančios datos, todėl reikia metų.",
+            "interval_no_rule": "Kartojimo intervalo negalima derinti su savaitės dienos taisykle.",
+            "end_time_needs_time": "Pabaigos laikui reikia pradžios laiko.",
+            "end_time_before_start": "Pabaigos laikas turi būti vėlesnis už pradžios laiką."
+        },
+        "abort": {
+            "hub_not_configurable": "Annuals hub neturi savo nustatymų - jis tiesiog saugo bendrus kalendorius.",
+            "already_configured": "Annuals hub jau yra.",
+            "invalid_import_row": "Šios eilutės nepavyko importuoti."
+        }
+    },
+    "options": {
+        "step": {
+            "import_csv": {
+                "title": "Importuoti įvykius iš CSV",
+                "description": "Stulpeliai: name, type, day, month, year (neprivaloma, privaloma one_time), icon (neprivaloma), vip (neprivaloma), last_name (neprivaloma). `type` turi būti viena iš: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (visada angliškai, nepriklausomai nuo kalbos nustatymo). `vip` priima 1/true/yes/y/x (be raidžių registro); palikite tuščią arba praleiskite stulpelį ne-VIP įvykiui. Palikite kiekvieną stulpelį, net jei reikšmė tuščia - eilutėje trūkstant paskutinio kablelio, tolesnės reikšmės pasislinka į kairę. Neteisingos eilutės praleidžiamos ir užregistruojamos žurnale.\n\nPavyzdys:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamily Vacation,one_time,15,7,2026,mdi:airplane,,\n```",
+                "data": {
+                    "csv_file": "CSV byla"
+                }
+            },
+            "import_ics": {
+                "title": "Importuoti įvykius iš ICS kalendoriaus",
+                "description": "Įkelkite .ics kalendoriaus bylą - paprastai eksportuotą kalendorių. Skaitomos tik visos dienos, nekartojamos įrašai; su laiku įvykiai praleidžiami. Kituose žingsniuose galėsite peržiūrėti ir pataisyti siūlomą vardų skaidymą (ir vienu metu sukeisti vardą/pavardę visiems) prieš ką nors importuojant.",
+                "data": {
+                    "ics_file": "ICS byla"
+                }
+            },
+            "import_vcard_menu": {
+                "title": "Importuoti įvykius iš vCard",
+                "description": "Kontakto gimtadienis ir kitos jo datos (sukaktys, pasirinktinės datos) eina atskiromis šakomis, nes tik gimtadieniai visai partijai turi vieną įvykio tipą - kiekviena kita data peržiūros metu gauna savo tipą.",
+                "menu_options": {
+                    "import_vcard": "Importuoti gimtadienius",
+                    "import_vcard_other_dates": "Importuoti kitas datas (sukaktis, ...)"
+                }
+            },
+            "import_vcard": {
+                "title": "Importuoti gimtadienius iš vCard",
+                "description": "Įkelkite .vcf bylą - paprastai eksportuotus kontaktus. Skaitomi tik įrašai su nurodytu gimtadieniu. Vardas/pavardė imami iš kontakto struktūruotų vardo laukų, o ne spėjami, o gimtadienis be metų (vCard būdas tai išreikšti) lieka nežinomas, o ne išgalvotas. Kituose žingsniuose galėsite peržiūrėti ir pataisyti viską (ir vienu metu sukeisti vardą/pavardę visiems) prieš ką nors importuojant.",
+                "data": {
+                    "vcard_file": "vCard byla"
+                }
+            },
+            "import_vcard_other_dates": {
+                "title": "Importuoti kitas datas iš vCard",
+                "description": "Įkelkite .vcf bylą. Skaitomos visos datos išskyrus gimtadienį: standartinis laukas „Anniversary“, taip pat bet kuri pasirinktinė jūsų kontaktų programoje pagal kontaktą leidžiama data (pvz., „Anniversary“, „Other“ arba pats įrašytas žymuo). Skirtingai nuo gimtadienių, šios datos ne visos tokio paties tipo - kituose žingsniuose galėsite peržiūrėti kiekvieną su aptiktu žymekliu ir individualiai priskirti teisingą įvykio tipą.",
+                "data": {
+                    "vcard_file": "vCard byla"
+                }
+            },
+            "import_options": {
+                "title": "Importuoti iš {source_label} - nustatymai",
+                "description": "Tai taikoma kiekvienoje byloje rastam įrašui. Toliau galėsite peržiūrėti ir redaguoti atskirus įrašus.",
+                "data": {
+                    "swap_names": "Sukeisti vardą/pavardę visiems įrašams",
+                    "use_description_year": "Naudoti metais, rastus įrašo aprašyme, vietoj pradžios datos, jei jie rasti (pvz. „gim. 1985“)",
+                    "type": "Įvykio tipas"
+                }
+            },
+            "import_review": {
+                "title": "Importuoti iš {source_label} - peržiūra ({page}/{total_pages})",
+                "description": "{legend}\n\nPatikrinkite siūlomą vardo/pavardės skaidymą žemiau ir pataisykite tai, kas neteisinga - pats gimtadienis taip pat redaguojamas - arba nuimkite varnelę nuo įrašo, kad jį visai praleistumėte. Įtartinas dublikatas pažymimas esamo įrašo pavadinimu; palikite „create as new“ nepažymėtą, jei norite atnaujinti tą įrašą vietoj antro kūrimo. Laukų etiketės čia rodomos tik angliškai, nepriklausomai nuo kalbos nustatymo.",
+                "data": {
+                    "go_back": "Grįžti į ankstesnį puslapį"
+                }
+            },
+            "remove_ics_imports": {
+                "title": "Pašalinti ICS importuotus įvykius",
+                "description": "Ankstesnis ICS importas sukūrė {count} įvykį(-ius). Spustelėkite OK, kad juos visus pašalintumėte - įrašus, kuriuos ICS importas tik atnaujino (o ne sukūrė), tai niekada nepaveiks, taip pat ir ranka pridėtų, CSV ar vCard importuotų įvykių."
+            },
+            "remove_vcard_imports": {
+                "title": "Pašalinti vCard importuotus įvykius",
+                "description": "Ankstesnis vCard importas sukūrė {count} įvykį(-ius). Spustelėkite OK, kad juos visus pašalintumėte - įrašus, kuriuos vCard importas tik atnaujino (o ne sukūrė), tai niekada nepaveiks, taip pat ir ranka pridėtų, CSV ar ICS importuotų įvykių."
+            },
+            "holiday_menu": {
+                "title": "Šventė",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}",
+                "menu_options": {
+                    "holiday_settings": "⚙️ Nustatymai",
+                    "holiday_names": "🌐 Pavadinimas ir vertimai"
+                }
+            },
+            "holiday_settings": {
+                "title": "Šventės nustatymai",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nData, tipas ir regionas gaunami iš švenčių duomenų bazės ir čia redaguoti negalima.",
+                "data": {
+                    "icon": "Piktograma"
+                }
+            },
+            "holiday_names": {
+                "title": "Pavadinimas ir vertimai",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nPasirinkite kalbą, kuria norite rašyti šios šventės pavadinimą.",
+                "data": {
+                    "language": "Kalba"
+                }
+            },
+            "holiday_name_edit": {
+                "title": "Šventės pavadinimas",
+                "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nUžpildyta tuo, kas rodoma šiandien. Palikite tuščią, jei norite naudoti švenčių duomenų bazę.",
+                "data": {
+                    "name": "Pavadinimas",
+                    "reason": "Priežastis"
+                }
+            },
+            "holiday_translations": {
+                "title": "🌐 Švenčių vertimai",
+                "description": "Eksportuokite ir importuokite pačių rašytus šventių pavadinimus.",
+                "menu_options": {
+                    "export_translations": "📤 Eksportuoti vertimus",
+                    "import_translations": "📥 Importuoti vertimus"
+                }
+            },
+            "import_translations": {
+                "title": "Importuoti vertimus",
+                "description": "Įkelkite vertimų CSV. Stulpeliai: `country,subdivision,category,holiday_key,observed,language,name,status`. Eilutės siejamos su šventėmis pagal šalį, regioną, kategoriją, šventės raktą ir observed požymį - ne pagal įrašo id, todėl prieš šalies perimportavimą eksportuota byla vis tiek tinka. Eilutės, kurių šventės nėra, praleidžiamos ir suskaičiuojamos. Biržos dienai `name` yra jos priežastis, o `status` - jos pavadinimas; šventėms `status` palikite tuščią.",
+                "data": {
+                    "csv_file": "CSV"
+                }
+            },
+            "hub_menu": {
+                "title": "Annuals nustatymai",
+                "menu_options": {
+                    "annual_settings": "{icon_annual_settings} Metiniai nustatymai",
+                    "import_events": "{icon_import_events} Importuoti įvykius",
+                    "export_csv": "{icon_export_csv} Eksportuoti įvykius į CSV",
+                    "holiday_translations": "{icon_holiday_translations} Švenčių vertimai",
+                    "remove_events": "{icon_remove_events} Pašalinti įvykius",
+                    "delete_all": "{icon_delete_all} Ištrinti visus Annuals duomenis"
+                }
+            },
+            "import_events": {
+                "title": "Importuoti įvykius",
+                "description": "Pasirinkite šaltinį, iš kurio importuoti.",
+                "menu_options": {
+                    "import_csv": "CSV",
+                    "import_ics": "ICS kalendorius",
+                    "import_vcard_menu": "vCard",
+                    "import_holidays": "Šventės",
+                    "import_markets": "Biržos"
+                }
+            },
+            "remove_events": {
+                "title": "Pašalinti įvykius",
+                "description": "Pasirinkite, kuriuos anksčiau importuotus įvykius pašalinti.",
+                "menu_options": {
+                    "remove_ics_imports": "Importuoti per ICS",
+                    "remove_vcard_imports": "Importuoti per vCard",
+                    "remove_holidays": "Šventės",
+                    "remove_markets": "Biržos"
+                }
+            },
+            "import_holidays": {
+                "title": "Importuoti šventes",
+                "description": "Pasirinkite šalį, kurios šventes importuoti kaip įvykius. Vėliau iš naujo paleidus tą pačią šalį (ir regioną), esami įrašai atnaujinami vietoj dublikatų kūrimo - prieš ką nors importuojant matysite kiekvieną šventę ir išsirinksite norimas.",
+                "data": {
+                    "country": "Šalis"
+                }
+            },
+            "import_markets": {
+                "title": "Importuoti biržų šventes",
+                "description": "Pasirinkite biržą, kurios uždarymo dienas importuoti - ir, jei jos duomenyse yra, ankstyvo uždarymo dienas. Prieš ką nors importuojant matysite kiekvieną dieną ir išsirinksite norimas.",
+                "data": {
+                    "market": "Birža"
+                }
+            },
+            "import_markets_options": {
+                "title": "Importuoti biržų dienas - {country}",
+                "description": "Kokios rūšies dienos importuojamos ir jų pavadinimų kalba.",
+                "data": {
+                    "categories": "Dienos",
+                    "language": "Pavadinimų kalba"
+                }
+            },
+            "import_markets_select": {
+                "title": "Importuoti biržų dienas - {country}: pasirinkimas",
+                "description": "Rasta {count} dienų, kiekviena su savo kita data. Importuojamos tik pažymėtos.\n\nNuėmus varnelę nuo dienos, jau esančios Annuals, ji lieka kaip yra - dienoms pašalinti naudokite **Pašalinti įvykius → Biržos**.",
+                "data": {
+                    "holidays": "Dienos"
+                }
+            },
+            "import_holidays_options": {
+                "title": "Importuoti šventes - {country}",
+                "description": "Palikite regioną tuščią, jei reikia tik nacionalinių švenčių - valstija/provincija prideda savo regionines šventes. Kategorijos ir kalba priklauso nuo to, ką šalies švenčių duomenys turi.{breaks}",
+                "data": {
+                    "include_actual": "Importuoti tikrąją datą",
+                    "include_observed": "Importuoti stebimą (perkeltą) datą",
+                    "break_start": "Importuoti pirmą atostogų dieną",
+                    "break_end": "Importuoti paskutinę atostogų dieną",
+                    "break_days": "Importuoti kiekvieną atostogų dieną",
+                    "subdivision": "Regionas (valstija/provincija, neprivaloma)",
+                    "categories": "Kategorijos",
+                    "language": "Šventių pavadinimų kalba"
+                },
+                "data_description": {
+                    "break_start": "Mokyklos atostogose nurodomos tik mokslo dienos, todėl atostogos iš tikrųjų prasideda anksčiau - skaičiuojama atgal per savaitgalį ir valstybines šventes iki pirmos dienos, kai mokyklose tikrai nevyksta pamokos.",
+                    "break_end": "Ta pati logika atvirkščiai: paskutinė laisva diena, o ne paskutinė sąraše.",
+                    "break_days": "Po vieną įvykį kiekvienai atostogų dienai. Vien tik vasaros atostogos virsta daugiau nei keturiasdešimt įvykių.",
+                    "include_observed": "Šalies šventės kartais perkeliamos į gretimą savaitės dieną, jei krenta į savaitgalį (pvz., stebima penktadienį prieš arba pirmadienį po) - importuokite ir tą perkeltą datą kaip atskirą įvykį."
+                }
+            },
+            "import_holidays_select": {
+                "title": "Importuoti šventes - {country}: pasirinkimas",
+                "description": "Rasta {count} švenčių, kiekviena su savo kita data. Importuojamos tik pažymėtos.\n\nNuėmus varnelę nuo šventės, jau esančios Annuals, ji lieka kaip yra - šventėms pašalinti naudokite **Pašalinti įvykius → Šventės**.",
+                "data": {
+                    "holidays": "Šventės"
+                }
+            },
+            "remove_holidays": {
+                "title": "Pašalinti importuotas šventes",
+                "description": "Šiuo metu importuota {total} šventės(-ių) įvykis(-iai). Pažymėkite žemiau esantį langelį, kad juos visus pašalintumėte, arba jo nepažymėkite ir pasirinkite vieną partiją. Ranka pridėti įvykiai niekada neveikiami.",
+                "data": {
+                    "remove_all": "Pašalinti visas importuotas šventes",
+                    "batch": "Pašalinama partija"
+                }
+            },
+            "remove_markets": {
+                "title": "Pašalinti importuotas biržų dienas",
+                "description": "Šiuo metu importuota {total} biržos dienų. Pažymėkite žemiau esantį langelį, kad jas visas pašalintumėte, arba jo nepažymėkite ir pasirinkite vieną ar daugiau biržų. Niekas kitas neveikiamas.",
+                "data": {
+                    "remove_all": "Pašalinti visas importuotas biržų dienas",
+                    "batch": "Pašalinamos biržos"
+                }
+            },
+            "annual_settings": {
+                "title": "Metiniai nustatymai",
+                "sections": {
+                    "important_events": {
+                        "name": "❗ Svarbūs įvykiai",
+                        "description": "Kableliais skiriami sukakčių numeriai, kurie tą įvykio tipą automatiškai pažymi kaip „Svarbų“, pvz. „18,21,30,40,50“. Palikite lauką tuščią, kad tam tipui tai išjungtumėte.",
+                        "data": {
+                            "important_thresholds_birthday": "Gimtadienis",
+                            "important_thresholds_anniversary": "Sukaktis",
+                            "important_thresholds_name_day": "Vardadienis",
+                            "important_thresholds_wedding_anniversary": "Vestuvių sukaktis",
+                            "important_thresholds_memorial": "Atminimas",
+                            "important_thresholds_pet_birthday": "Gyvūno gimtadienis",
+                            "important_thresholds_work_anniversary": "Darbo sukaktis",
+                            "important_thresholds_custom": "Pasirinktinis"
+                        }
+                    },
+                    "todo": {
+                        "name": "📍 Užduočių sąrašai",
+                        "description": "Atviri šių sąrašų elementai žymi įvykį: kiekvieno įvykio jutiklis tada nešioja „todo“ atributą - true, kol bent vienas neatliktas elementas jam tinka, false kitu atveju - tavo automacijoms, šablonams ir dashboard'ams. Elementas siejamas pirmiausia pagal jo terminą, tada pagal tai, ar jo tekstas mini įvykį (pilnas vardas, vardas, tipas, sukakčių numeris); elementas, tinkantis dviems įvykiams vienodai, lieka nesujungtas. Palikite tuščią, kad tai išjungtumėte. Atskirai nuo dashboard kortelės pačios užduočių sąrašo nustatymo.",
+                        "data": {
+                            "todo_lists": "Užduočių sąrašai"
+                        }
+                    }
+                }
+            },
+            "delete_all": {
+                "title": "Ištrinti visus Annuals duomenis",
+                "description": "Tai visam laikui ištrina visus {count} įvykius, bendrus kalendorius ir patį Annuals hub - visą integraciją ir viską, ką ji sukūrė. To atšaukti negalima. Spustelėkite OK, kad patvirtintumėte."
+            },
+            "edit_recurring": {
+                "title": "Redaguoti įvykį",
+                "description": "Pakeiskite bet kurį žemiau esantį lauką ir pateikite, kad atnaujintumėte šį įvykį.",
+                "data": {
+                    "name": "Vardas",
+                    "last_name": "Pavardė (neprivaloma)",
+                    "person": "Asmuo (neprivaloma)",
+                    "type": "Įvykio tipas",
+                    "day": "Diena",
+                    "month": "Mėnuo",
+                    "year": "Metai (palikite tuščius, jei nežinomi)",
+                    "icon": "Piktograma (neprivaloma)",
+                    "vip": "VIP"
+                },
+                "data_description": {
+                    "person": "Home Assistant asmuo, kurio nuotrauka įkeliama į įvykį - dashboard kortelėje ir priminimo pranešime."
+                }
+            },
+            "edit_one_time": {
+                "title": "Redaguoti vienkartinį įvykį",
+                "description": "Pakeiskite bet kurį žemiau esantį lauką ir pateikite, kad atnaujintumėte šį įvykį.\n\nPabaigos data padaro jį kelių dienų įvykiu; ją ištrynus jis vėl tampa vienos dienos.",
+                "data": {
+                    "name": "Vardas",
+                    "last_name": "Pavardė (neprivaloma)",
+                    "type": "Įvykio tipas",
+                    "day": "Diena",
+                    "month": "Mėnuo",
+                    "year": "Metai",
+                    "end_date": "Pabaigos data (neprivaloma - padaro jį kelių dienų įvykiu)",
+                    "time": "Laikas (neprivaloma)",
+                    "end_time": "Pabaigos laikas (neprivaloma)",
+                    "icon": "Piktograma (neprivaloma)",
+                    "vip": "VIP"
+                },
+                "data_description": {
+                    "time": "Kada tą dieną jis prasideda. Tada kalendoriaus įraše yra laikas ir dashboard kortelė jį rodo.",
+                    "end_time": "Kada jis baigiasi - pabaigos datos dieną, jei ji yra, kitu atveju tą pačią dieną. Reikalingas pradžios laikas; palikus tuščią, kalendorio įrašas trunka valandą."
+                }
+            },
+            "edit_custom": {
+                "title": "Redaguoti pasirinktinį įvykį",
+                "description": "Pakeiskite bet kurį žemiau esantį lauką ir pateikite, kad atnaujintumėte šį įvykį.\n\nJis gali būti kuriamas pagal **taisyklę** - *antrą gegužės sekmadienį*. Užpildykite du laukelius apačioje, o **Mėnuo** viršuje nurodo, kuriam mėnesiui taikoma taisyklė; **Diena** tuo atveju nenaudojama. Juos ištrynus įvykis grįžta į tą dieną.",
+                "data": {
+                    "name": "Vardas",
+                    "last_name": "Pavardė (neprivaloma)",
+                    "type": "Įvykio tipas",
+                    "day": "Diena",
+                    "month": "Mėnuo",
+                    "year": "Metai",
+                    "icon": "Piktograma (neprivaloma)",
+                    "vip": "VIP",
+                    "interval": "Kartojasi kas",
+                    "interval_unit": "...mėnesius arba metus",
+                    "nth": "Kartojasi",
+                    "weekday": "...mėnesio savaitės dieną"
+                },
+                "data_description": {
+                    "interval": "Kartu su šalia esančiu vienetu - kas 6 mėnesius, kas 2 metus. Skaičiuojama nuo aukščiau esančios datos, todėl jai reikia metų. Palikite abu tuščius, jei norite kartoti kartą per metus.",
+                    "nth": "Pirmą, antrą, trečią, ketvirtą arba paskutinį mėnesyje.",
+                    "weekday": "Nustatykite kartu su aukščiau esančiu lauku arba palikite abu tuščius."
+                }
+            }
+        },
+        "error": {
+            "name_required": "Įveskite vardą.",
+            "end_date_one_time_only": "Pabaigos data gali būti nustatyta tik vienkartiniam įvykiui.",
+            "end_date_before_start": "Pabaigos data turi būti vėlesnė už pradžios datą.",
+            "invalid_date": "Tokia dienos/mėnesio/metų kombinacija nėra galiojanti data.",
+            "year_required": "Vienkartiniai įvykiai reikalauja metų.",
+            "invalid_csv": "Nepavyko perskaityti šio bylos kaip CSV. Patikrinkite koduotę ir formatą.",
+            "no_valid_rows": "Šiame byloje nerasta galiojančių eilučių. Žurnale žiūrėkite detales apie praleistas eilutes.",
+            "invalid_ics": "Nepavyko perskaityti šio bylos kaip ICS kalendoriaus. Patikrinkite formatą.",
+            "no_valid_entries": "Šiame byloje nerasta tinkamų visos dienos įrašų. Žurnale žiūrėkite detales apie praleistus įrašus.",
+            "invalid_vcard": "Nepavyko perskaityti šio bylos kaip vCard. Patikrinkite formatą.",
+            "no_valid_vcard_entries": "Šiame byloje nerasta kontaktų su tinkamu gimtadieniu. Žurnale žiūrėkite detales apie praleistus įrašus.",
+            "no_valid_vcard_dates": "Šiame byloje nerasta sukakčių ar kitų datų (be gimtadienių). Žurnale žiūrėkite detales apie praleistus įrašus.",
+            "no_batch_selected": "Pažymėkite „Pašalinti visas importuotas šventes“ arba pasirinkite partiją pašalinimui.",
+            "rule_needs_both": "Pasikartojanti taisyklė reikalauja abiejų laukų arba nė vieno.",
+            "interval_needs_both": "Kartojimo intervalas reikalauja abiejų laukų arba nė vieno.",
+            "interval_needs_year": "Kartojimo intervalas skaičiuojamas nuo aukščiau esančios datos, todėl reikia metų.",
+            "interval_no_rule": "Kartojimo intervalo negalima derinti su savaitės dienos taisykle.",
+            "end_time_needs_time": "Pabaigos laikui reikia pradžios laiko.",
+            "end_time_before_start": "Pabaigos laikas turi būti vėlesnis už pradžios laiką.",
+            "no_holiday_selected": "Pažymėkite bent vieną šventę.",
+            "category_needs_region": "{category} neturi švenčių {where} {year} m. - tik šie regionai jas turi: {regions}. Pasirinkite vieną pagal „Regioną“ arba praleiskite {category}.",
+            "category_empty": "{category} neturi švenčių {where} {year} m. Praleiskite ją, kad importuotumėte kitas.",
+            "no_market_day_selected": "Pažymėkite bent vieną dieną.",
+            "market_category_empty": "{category} neturi dienų {where} {year} m. Praleiskite ją, kad importuotumėte kitas.",
+            "no_market_batch_selected": "Pažymėkite „Pašalinti visas importuotas biržų dienas“ arba pasirinkite biržą pašalinimui."
+        },
+        "abort": {
+            "translations_exported": "Eksportuota {count} vertimų. [Atsisiųsti annuals_holiday_translations.csv]({url}) (Spauskite Ctrl/Cmd + paspaudimą - paprastas paspaudimas čia neveiks)\n\nArba nukopijuokite CSV žemiau:\n\n```\n{csv}\n```",
+            "translations_imported": "Atnaujinta {updated} švenčių, praleista {skipped} eilučių.",
+            "no_translations_to_export": "Šventių pavadinimų dar nebuvo įrašyta - nėra ką eksportuoti.",
+            "hub_not_configurable": "Annuals hub neturi savo nustatymų - jis tiesiog saugo bendrus kalendorius.",
+            "import_started": "Importas pradėtas: {created} įvykiai(-ių) eilėje, praleista {skipped} eilučių (žurnale rasite detales).",
+            "ics_import_started": "Importas pradėtas: sukurta {created} įvykių, atnaujinta {updated}, praleista arba atmesta {skipped} įrašų.",
+            "csv_exported": "Eksportuota {count} įvykių. [Atsisiųsti annuals_export.csv]({url}) (Spauskite Ctrl/Cmd + paspaudimą - paprastas paspaudimas čia neveiks)\n\nArba nukopijuokite CSV žemiau:\n\n```\n{csv}\n```",
+            "no_events_to_export": "Dar nėra ką eksportuoti - pirmiausia pridėkite įvykių.",
+            "deleted_all": "Visi Annuals įvykiai, kalendoriai ir hub pašalinti.",
+            "holiday_import_started": "Importas pradėtas: {count} šventės įvykiai(-ių) eilėje {country} ({new} nauji, {updated} atnaujinti).",
+            "no_holidays_imported": "Šventės dar neimportuotos.",
+            "holidays_removed": "Pašalinta {count} šventės įvykis(-iai).",
+            "no_ics_imports": "Nerasta įvykių, sukurtų ICS importo.",
+            "ics_imports_removed": "Pašalinta {count} ICS importuotų įvykių.",
+            "no_vcard_imports": "Nerasta įvykių, sukurtų vCard importo.",
+            "vcard_imports_removed": "Pašalinta {count} vCard importuotų įvykių.",
+            "market_import_started": "Importas pradėtas: {count} dienų eilėje {country} ({new} naujos, {updated} atnaujintos).",
+            "no_markets_imported": "Biržų dienos dar neimportuotos.",
+            "markets_removed": "Pašalinta {count} biržos dienų."
+        }
+    },
+    "entity": {
+        "sensor": {
+            "birthday": {
+                "name": "{name} gimtadienis",
+                "unit_of_measurement": "d."
+            },
+            "anniversary": {
+                "name": "{name} sukaktis",
+                "unit_of_measurement": "d."
+            },
+            "name_day": {
+                "name": "{name} vardadienis",
+                "unit_of_measurement": "d."
+            },
+            "wedding_anniversary": {
+                "name": "{name} vestuvių sukaktis",
+                "unit_of_measurement": "d."
+            },
+            "memorial": {
+                "name": "{name} atminimas",
+                "unit_of_measurement": "d."
+            },
+            "pet_birthday": {
+                "name": "{name} gimtadienis",
+                "unit_of_measurement": "d."
+            },
+            "work_anniversary": {
+                "name": "{name} darbo sukaktis",
+                "unit_of_measurement": "d."
+            },
+            "custom": {
+                "name": "{name}",
+                "unit_of_measurement": "d."
+            },
+            "one_time": {
+                "name": "{name}",
+                "unit_of_measurement": "d."
+            },
+            "holiday": {
+                "name": "{name}",
+                "unit_of_measurement": "d."
+            },
+            "market": {
+                "name": "{name}",
+                "unit_of_measurement": "d."
+            }
+        },
+        "calendar": {
+            "birthday": {
+                "name": "Gimtadieniai"
+            },
+            "anniversary": {
+                "name": "Sukaktys"
+            },
+            "name_day": {
+                "name": "Vardadieniai"
+            },
+            "wedding_anniversary": {
+                "name": "Vestuvių sukaktys"
+            },
+            "memorial": {
+                "name": "Atminimai"
+            },
+            "pet_birthday": {
+                "name": "Gyvūnų gimtadieniai"
+            },
+            "work_anniversary": {
+                "name": "Darbo sukaktys"
+            },
+            "custom": {
+                "name": "Pasirinktiniai įvykiai"
+            },
+            "one_time": {
+                "name": "Vienkartiniai įvykiai"
+            },
+            "holiday": {
+                "name": "Šventės"
+            },
+            "market": {
+                "name": "Biržos"
+            }
+        }
+    }
+}

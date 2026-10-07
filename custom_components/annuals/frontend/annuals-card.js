@@ -10467,6 +10467,665 @@
         groupDisplayDesc: "",
       },
     },
+    lt: {
+      defaultTitle: "Artėjantys įvykiai",
+      today: "Šiandien",
+      inDay: "Rytoj",
+      // "po" takes the genitive: "po 2 dienų", but "po 21 dienos" - the
+      // singular whenever the number ends in 1 but not in 11.
+      inDays: (n) => `po ${n} ${n % 10 === 1 && n % 100 !== 11 ? "dienos" : "dienų"}`,
+      dayAgo: "Vakar",
+      // "prieš" takes the accusative: 1/21/31 "dieną", 2-9 "dienas", the
+      // teens and the round tens "dienų".
+      daysAgo: (n) => {
+        const unit = n % 10;
+        const teen = n % 100 >= 11 && n % 100 <= 19;
+        const word = teen || unit === 0 ? "dienų" : unit === 1 ? "dieną" : "dienas";
+        return `prieš ${n} ${word}`;
+      },
+      multiDayStart: "pradžia",
+      multiDayEnd: "pabaiga",
+      multiDayDay: "diena {day}",
+      noEvents: "Artėjančių įvykių nėra",
+      separatorWeekLabel: "{week} savaitė",
+      todoCompleteConfirm: "Pažymėti „{item}“ kaip atliktą?",
+      todoCompleteConfirmMultiple: "Pažymėti visas {count} šio įvykio užduotis kaip atliktas?",
+      todoCompleteFailed: "Nepavyko užbaigti šios užduoties.",
+      // Lithuanian ordinals agree in gender with the noun ("27-asis
+      // gimtadienis", "10-oji sukaktis"), which the sentence cannot know, so
+      // the count is given as the occasion's number of times - "kartas" is
+      // masculine whatever the event type is.
+      possessive: (name) => name,
+      ordinalParts: (n) => ({ num: `${n}-asis`, sup: "" }),
+      timelineSentence: "{possessive}: {type} ({ordinal}{sup} kartas) — {when}",
+      timelineSentenceSimple: "{name} — {when}",
+      timelineSentencePast: "{possessive}: {type} ({ordinal}{sup} kartas) — {when}",
+      timelineSentenceSimplePast: "{name} — {when}",
+      timelineExpand: "Išsamiau",
+      timelineCollapse: "Mažiau",
+      foldShowMore: "Rodyti dar {count}",
+      foldShowLess: "Rodyti mažiau",
+      // Calendar navigation (see calendar_nav in defaultConfig): the three
+      // mode buttons' own letter and full name, the arrows' tooltips, the
+      // date picker's, and what an empty period says.
+      navModeShort: { day: "D", week: "S", month: "M", year: "M." },
+      navModes: { day: "Diena", week: "Savaitė", month: "Mėnuo", year: "Metai" },
+      navPrev: { day: "Ankstesnė diena", week: "Ankstesnė savaitė", month: "Ankstesnis mėnuo", year: "Ankstesni metai" },
+      navNext: { day: "Kita diena", week: "Kita savaitė", month: "Kitas mėnuo", year: "Kiti metai" },
+      navPickDate: "Pereiti prie datos",
+      noEventsRange: "Šiuo laikotarpiu įvykių nėra",
+      // The period label's tooltip, and the search field's placeholder and
+      // empty line.
+      navToday: "Grįžti į šiandieną",
+      searchPlaceholder: "Ieškoti",
+      searchNoMatch: "Nieko nerasta",
+      // The "+" beside the title (see show_add_button) and its dialog; the
+      // steps inside it speak with the integration's own translations.
+      addEvent: "Pridėti įvykį",
+      addSubmit: "Išsaugoti",
+      addCancel: "Atšaukti",
+      // The button of a flow step that leads on to another (last_step false).
+      addNext: "Toliau",
+      addClose: "Uždaryti",
+      addCreated: (title) => `„${title}“ pridėta`,
+      addFailed: "Įvykio pridėti nepavyko",
+      // The pencil and the trash can at the end of a row (see
+      // show_edit_buttons) and their dialogs.
+      editEvent: "Redaguoti įvykį",
+      deleteEvent: "Ištrinti įvykį",
+      deleteConfirm: (name) => `Ištrinti „${name}“?`,
+      deleteExplain: "Įvykis bus pašalintas iš Home Assistant.",
+      deleteButton: "Ištrinti",
+      editSaved: "Pakeitimai išsaugoti",
+      editFailed: "Pakeitimų išsaugoti nepavyko",
+      deleteFailed: "Įvykio ištrinti nepavyko",
+      timelineMore: "Daugiau",
+      types: {
+        birthday: "Gimtadienis",
+        anniversary: "Sukaktis",
+        name_day: "Vardadienis",
+        wedding_anniversary: "Vestuvių sukaktis",
+        memorial: "Atminimas",
+        pet_birthday: "Gyvūno gimtadienis",
+        work_anniversary: "Darbo sukaktis",
+        custom: "Pasirinktinis",
+        one_time: "Vienkartinis įvykis",
+        holiday: "Šventė",
+        market: "Birža",
+        calendar: "Kalendoriaus įvykis",
+      },
+      // What a stock exchange's day is, by its category - the type text of a
+      // market row in place of "Stock exchange (Public)" (see _marketDayLabel).
+      marketDays: {
+        public: "Birža uždaryta",
+        half_day: "Ankstesnis uždarymas",
+        restricted_settlement: "Nėra atsiskaitymo",
+      },
+      typesPlural: {
+        birthday: "Gimtadieniai",
+        anniversary: "Sukaktys",
+        name_day: "Vardadieniai",
+        wedding_anniversary: "Vestuvių sukaktys",
+        memorial: "Atminimai",
+        pet_birthday: "Gyvūnų gimtadieniai",
+        work_anniversary: "Darbo sukaktys",
+        custom: "Pasirinktiniai",
+        one_time: "Vienkartiniai įvykiai",
+        holiday: "Šventės",
+        market: "Biržos",
+        calendar: "Kalendoriaus įvykiai",
+      },
+      // Adjectives agree with "šventė" (feminine): singular here, plural in
+      // categoriesPlural for the editor's filter grid.
+      categories: {
+        public: "Valstybinė",
+        bank: "Bankų",
+        government: "Vyriausybės",
+        school: "Mokyklų",
+        optional: "Pasirenkama",
+        optional_women: "Pasirenkama (moterų)",
+        unofficial: "Neoficiali",
+        half_day: "Pusdienis",
+        armed_forces: "Ginkluotųjų pajėgų",
+        workday: "Darbo diena",
+        catholic: "Katalikų",
+        christian: "Krikščionių",
+        orthodox: "Ortodoksų",
+        hebrew: "Judėjų",
+        islamic: "Islamo",
+        hindu: "Indų",
+        de_facto: "De facto",
+        protestant: "Protestantų",
+        sabian: "Sabiečių",
+        yazidi: "Jazidų",
+        albanian: "Albanų",
+        armenian: "Armėnų",
+        bosnian: "Bosnių",
+        roma: "Romų",
+        serbian: "Serbų",
+        turkish: "Turkų",
+        vlach: "Valachų",
+      },
+      categoriesPlural: {
+        public: "Valstybinės",
+        bank: "Bankų",
+        government: "Vyriausybės",
+        school: "Mokyklų",
+        optional: "Pasirenkamos",
+        optional_women: "Pasirenkamos (moterų)",
+        unofficial: "Neoficialios",
+        half_day: "Pusdieniai",
+        armed_forces: "Ginkluotųjų pajėgų",
+        workday: "Darbo dienos",
+        catholic: "Katalikų",
+        christian: "Krikščionių",
+        orthodox: "Ortodoksų",
+        hebrew: "Judėjų",
+        islamic: "Islamo",
+        hindu: "Indų",
+        de_facto: "De facto",
+        protestant: "Protestantų",
+        sabian: "Sabiečių",
+        yazidi: "Jazidų",
+        albanian: "Albanų",
+        armenian: "Armėnų",
+        bosnian: "Bosnių",
+        roma: "Romų",
+        serbian: "Serbų",
+        turkish: "Turkų",
+        vlach: "Valachų",
+      },
+      editor: {
+        title: "Kortelės pavadinimas",
+        titleDesc: "Savas kortelės pavadinimas (palikite tuščią numatytajam)",
+        titlePlaceholder: "pvz., Artėjantys įvykiai",
+        count: "Įvykių skaičius",
+        countDesc: "Kiek įvykių iš viso rodoma kortelėje. Įjungus kalendoriaus naršymą, tai riboja sąrašą, su kuriuo kortelė atsidaro; perverstas laikotarpis rodo viską, ką turi.",
+        todayOnly: "Tik šiandien",
+        todayOnlyDesc: "Nepaisyti visų kitų žemiau esančių filtrų ir rodyti tik šiandienos įvykius",
+        nextEventDayOnly: "Tik artimiausia įvykių diena",
+        nextEventDayOnlyDesc:
+          "Rodyti tik vienos artimiausios dienos įvykius - šiandienos, jei tokių yra, kitaip kitos dienos, kurią yra įvykių (galbūt ne vieno)",
+        daysAhead: "Dienų į priekį (0 = be ribos)",
+        daysAheadDesc: "Rodyti tik įvykius, kurie įvyks per tiek dienų (0 = be ribos)",
+        hideFinishedToday: "Slėpti tai, kas jau praėjo",
+        hideFinishedTodayDesc: "Pašalina šiandienos įvykį iš kortelės, kai praeina jo pabaigos laikas - susitikimas nuo 2 iki 3 dingsta 3 valandą, o įvykis su pradžia, bet be pabaigos - vos prasidėjęs. Eilutė pasišalina pati, nelaukdama nieko kito. Įvykiai be laiko lieka iki dienos pabaigos, o verčiant laikotarpius kalendoriaus naršymu visas laikotarpis rodomas bet kuriuo atveju. Įjungus, sąraše lieka tik tai, kas dar laukia.",
+        daysPast: "Dienų atgal (0 = tik šiandien)",
+        daysPastDesc: "Kiek dienų atgal įvykis dar laikomas neseniu (0 = tik šiandien)",
+        soonDays: "„Netrukus“ riba (dienomis)",
+        soonDaysDesc: "Įvykiai per tiek dienų laikomi įvyksiančiais „netrukus“",
+        types: "Įvykių tipai",
+        typesDesc: "Rodyti tik pažymėtų tipų įvykius",
+        categories: "Švenčių kategorijos",
+        categoriesDesc: "Rodyti tik pažymėtų kategorijų šventes (kitų tipų įvykiams tai įtakos neturi)",
+        holidayDates: "Šventės data",
+        holidayDatesDesc:
+          "Savaitgalį tenkanti šventė dažnai faktiškai švenčiama gretimą darbo dieną (žr. integracijos žingsnį „Importuoti šventes“) - pasirinkite, kurią iš importuotų datų rodyti čia.",
+        holidayDateActual: "Tikroji",
+        holidayDateObserved: "Švenčiama",
+        holidayMergeObserved: "Pirmenybė švenčiamai datai",
+        holidayMergeRegions: "Sujungti kelių šalių bendras šventes",
+        holidayMergeRegionsDesc: "Vienas įrašas šventei, o ne vienas kiekvienai šaliai, su visais ją švenčiančiais regionais. Grupuojama pagal datą ir pagal pavadinimą, kuriuo šventė iš tikrųjų rodoma - tad dvi skirtingos tos pačios dienos šventės lieka atskiros, o šalys su skirtinga formuluote susijungia tik tada, kai joms suteikiate tą patį pavadinimą (žr. „Pavadinimas ir vertimai“ pačios šventės nustatymuose).",
+        regionFormat: "Regiono formatas",
+        regionFormatDesc: "Kaip rašoma šventės šalis ir regionas visur, kur jie rodomi.",
+        regionFormatShort: "US (CA)",
+        regionFormatLong: "US (Kalifornija)",
+        holidayRegions: "Šalys ir regionai",
+        holidayRegionsDesc:
+          "Kurias iš importuotų šalių ir regionų kortelė rodo. Pasirinkus visus, filtro nėra, tad vėliau importuota šalis atsiranda pati.",
+        holidayMergeObservedDesc:
+          "Kai šventė turi ir tikrosios, ir švenčiamos datos esybes, rodyti tik švenčiamą (be žymos „(švenčiama)“) ir slėpti tikrosios datos dublikatą - patogu tvarkingam laisvų dienų sąrašui.",
+        showAll: "Rodyti visus",
+        hideAll: "Slėpti visus",
+        layoutStyleLabel: "Išdėstymo stilius",
+        layoutStyleDesc:
+          "Sąrašas rodo įprastas eilutes su piktograma, vardu, tipu, ženkleliu ir atgaline atskaita. Laiko juosta rodo kompaktišką horizontalią ašį su paryškintu artimiausiu įvykiu ir kitais kaip spustelimais taškais - patogu siauram skilčių rodinio stulpeliui.",
+        layoutStyleList: "Sąrašas",
+        layoutStyleTimeline: "Laiko juosta",
+        collapseList: "Suskleisti likusius",
+        collapseListDesc:
+          "Rodo tik kelis pirmus įvykius, o likusius paslepia už rodyklės. Fiksuoto aukščio kortelė tada baigiasi ties sulenkimu, o ne įgyja slinkties juostą. Tik sąrašo išdėstymui - laiko juosta turi savą skleidiklį „Išsamiau“.",
+        collapseAfter: "Rodomų įvykių",
+        collapseAfterDesc: "Kiek jų matoma ekrane, kol likusius reikia išskleisti.",
+        calendarNav: "Kalendoriaus naršymas",
+        calendarNavDesc:
+          "Juosta po pavadinimu su rodyklėmis ir rodomu laikotarpiu - po vieną dieną, savaitę ar mėnesį. Kol juosta nenaudojama, kortelė rodo tai, ką visada: kas laukia, pagal Nustatymai → Įvykiai ir Laikotarpis, iki įvykių skaičiaus. Rodyklės ir datos parinkiklis tada rodo po vieną laikotarpį - visą, įskaitant praėjusius įvykius - o mygtukas Diena, Savaitė ar Mėnuo iš naujo atveria sąrašą tuo režimu.",
+        calendarNavMode: "Atsidaro su",
+        calendarNavModeDesc:
+          "Kuriuo laikotarpiu juosta prasideda - šiandiena, šia savaite ar šiuo mėnesiu - ir kokiu žingsniu eina rodyklės. Šalia esantys jungikliai prideda juostai mygtukų: Diena, Savaitė ir Mėnuo, kiekvienas iš naujo atveriantis sąrašą tuo režimu, ir datos parinkiklį. Mėnuo įjungtas iš pradžių, kad perverčius būtų kelias atgal. Vertimas ir perjungimas pačioje kortelėje yra tik rodinys, ne nustatymas, ir neišsaugomas.",
+        countdownUnits: "Atgalinė atskaita",
+        countdownUnitsDesc:
+          "Kaip rašomas atstumas dienomis: visur dienomis, ar savaitėmis, mėnesiais ir metais, kai lieka dvi savaitės ar daugiau - „po 3 savaičių“, „prieš 2 mėnesius“. Galioja atgalinės atskaitos stulpeliui, {when} vietaženkliui ir laiko juostai.",
+        countdownUnitsDays: "Dienomis",
+        countdownUnitsAuto: "Savaitėmis, mėnesiais ir metais",
+        showSearch: "Paieškos laukas",
+        showSearchDesc:
+          "Laukas po pavadinimu - ir po kalendoriaus naršymu, jei šis įjungtas - filtruojantis sąrašą rašant, pagal vardą, pavardę ir tipą. Įvestas tekstas neišsaugomas.",
+        calendarNavPicker: "Data",
+        navLabel: "Laikotarpis",
+        navLabelColorDesc: "Laikotarpio tarp rodyklių spalva.",
+        navLabelFontDesc: "Laikotarpio tarp rodyklių šriftas.",
+        navButtons: "Naršymo mygtukai",
+        navButtonColorDesc: "Rodyklių, režimo mygtukų ir kalendoriaus mygtuko teksto bei piktogramų spalva.",
+        navButtonBackground: "Fonas",
+        navButtonBackgroundDesc: "Šių mygtukų fonas.",
+        navActiveColor: "Pasirinkto spalva",
+        navActiveColorDesc: "Pasirinkto režimo teksto spalva, taip pat kalendoriaus mygtuko, kol atidarytas jo parinkiklis.",
+        navActiveBackground: "Pasirinkto fonas",
+        navActiveBackgroundDesc: "Pasirinkto režimo fonas, taip pat kalendoriaus mygtuko, kol atidarytas jo parinkiklis.",
+        navButtonHeight: "Aukštis",
+        navButtonHeightDesc: "Kiekvieno juostos mygtuko aukštis, pvz., „26px“. Palikus tuščią - 26px.",
+        navButtonFontDesc: "Raidžių ant mygtukų Diena, Savaitė, Mėnuo ir Metai šriftas.",
+        timelineLineHeading: "Laiko juostos linija",
+        timelineLineWidth: "Plotis",
+        timelineLineWidthDesc: "Horizontalios ašies linijos storis, pvz., „4px“.",
+        timelineLineColor: "Spalva",
+        timelineLineColorDesc: "Horizontalios ašies linijos spalva.",
+        timelineDividerHeading: "Skiriamoji linija",
+        timelineDividerWidth: "Plotis",
+        timelineDividerWidthDesc:
+          "Vertikalios linijos, žyminčios praeities ir ateities ribą, storis, pvz., „1px“.",
+        timelineDividerColor: "Spalva",
+        timelineDividerColorDesc: "Vertikalios praeities ir ateities skiriamosios linijos spalva.",
+        lineStyleLabel: "Stilius",
+        lineStyleSolid: "Ištisinė",
+        lineStyleDashed: "Brūkšninė",
+        lineStyleDotted: "Taškinė",
+        timelineOptionsHeading: "Parinktys",
+        timelineShowFullName: "Rodyti visą vardą",
+        timelineShowFullNameDesc:
+          "Rodyti visą kiekvieno įvykio vardą (vardą ir pavardę), o ne tik vardą - antraštėje, patarime ir išskleidžiamame sąraše.",
+        showHolidaySuffix: "Rodyti šventės priesagą",
+        showHolidaySuffixDesc:
+          "Po šventės pavadinimo skliaustuose pridėti jos šalį (ir regioną, jei yra), pvz., „Pioneer Day (US-UT)“.",
+        timelineShowDate: "Rodyti datą",
+        timelineShowDateDesc:
+          "Pabaigoje skliaustuose pridėti trumpą kalendorinę datą, pvz., „...po 3 dienų (rugpj. 6)“. Pačią įvykio dieną slepiama, nes sakinys prieš pat tai jau baigiasi „...šiandien“.",
+        timelineShowTime: "Rodyti laiką",
+        timelineShowTimeDesc:
+          "Tuose pačiuose skliaustuose pridėti išorinio kalendoriaus įvykio laiko intervalą, pvz., „...po 3 dienų (15:00–16:00)“. Rodoma tik išorinio kalendoriaus įvykiui su laiku (ne visos dienos). Laiko formatas atitinka jūsų Home Assistant kalbą. Vienkartinis įvykis su nurodytu laiku jį rodo čia taip pat.",
+        timelineShowLocation: "Rodyti vietą",
+        timelineShowLocationDesc:
+          "Tuose pačiuose skliaustuose pridėti išorinio kalendoriaus įvykio vietą. Rodoma tik išorinio kalendoriaus įvykiui, kuriam ji nurodyta.",
+        timelineShowDescription: "Rodyti aprašymą",
+        timelineShowDescriptionDesc:
+          "Tuose pačiuose skliaustuose pridėti išorinio kalendoriaus įvykio aprašymą. Rodoma tik išorinio kalendoriaus įvykiui, kuriam jis nurodytas.",
+        timelineHeaderMaxEvents: "Daugiausia įvykių per dieną",
+        timelineHeaderMaxEventsDesc:
+          "Riboja, kiek antraštės eilučių duoda viena diena su keliais įvykiais, pvz., 3 gimtadieniai tą pačią dieną. Likę tos dienos įvykiai vis tiek gauna savo tašką ašyje, tik be antraštės eilutės. Palikite tuščią, jei ribos nereikia.",
+        timelineHeaderMinEvents: "Visada rodyti N artėjančių",
+        timelineHeaderMinEventsDesc:
+          "Visada rodo bent tiek antraštės eilučių, prireikus įtraukdama tolesnes artėjančias (o joms pasibaigus - tolesnes neseniai praėjusias) dienas po pačios artimiausios - kiekvieną vis tiek ribojant „daugiausia įvykių per dieną“ aukščiau. Palikite tuščią (arba 0), kad būtų rodomi tik pačios artimiausios dienos įvykiai.",
+        moreAction: "Mygtukas „Daugiau“",
+        moreActionDesc:
+          "Ką daro laiko juostos mygtukas „Daugiau“ apačioje dešinėje. Paprastai tai naršymo veiksmas į skydelį, rodantį tuos pačius įvykius visame sąrašo išdėstyme. Palikite „Nieko“, kad mygtukas būtų paslėptas.",
+        groupTimeline: "Laiko juosta",
+        groupTimelineDesc: "Naudojama tik tada, kai išdėstymo stilius yra Laiko juosta.",
+        timelineHeaderLabel: "Antraštė",
+        timelineHeaderFontDesc:
+          "Aprašomosios eilutės virš ašies šriftas, pvz., „Kevinas: gimtadienis (27-asis kartas) — šiandien“.",
+        timelineHeaderColorDesc: "Aprašomosios eilutės virš ašies teksto spalva.",
+        timelineTooltipLabel: "Patarimas",
+        timelineTooltipFontDesc: "Teksto, rodomo spustelėjus tašką ašyje, šriftas.",
+        timelineTooltipColorDesc: "Teksto, rodomo spustelėjus tašką ašyje, spalva.",
+        timelineListLabel: "Sąrašas (Išsamiau)",
+        timelineListFontDesc: "Išskleidžiamo chronologinio sąrašo po ašimi šriftas.",
+        timelineListColorDesc: "Išskleidžiamo chronologinio sąrašo po ašimi teksto spalva.",
+        timelineButtonLabel: "Mygtukai „Išsamiau“ / „Daugiau“",
+        timelineButtonFontDesc: "Poraštės mygtukų „Išsamiau“ ir „Daugiau“ šriftas.",
+        timelineButtonColorDesc: "Poraštės mygtukų „Išsamiau“ ir „Daugiau“ teksto spalva.",
+        eventTypesHeading: "Įvykių tipai",
+        eventTypeColorDesc: "Šio įvykių tipo piktogramos ir taško laiko juostoje spalva.",
+        visibilityHeading: "Rodyti / slėpti",
+        hideCardTitle: "Slėpti",
+        hideCardTitleDesc: "Slėpti pačios kortelės pavadinimą, net jei jis nustatytas aukščiau",
+        buttonsHeading: "Mygtukai",
+        textFormatHeading: "Tekstas ir formatas",
+        buttonsGroupDesc: "Kaip atrodo „+“ šalia pavadinimo ir eilutės pieštukas bei šiukšliadėžė. Kiekvienas iš trijų nustatomas atskirai žemiau; tuščias laukas palieka numatytąją išvaizdą.",
+        buttonAdd: "Pridėti",
+        buttonEdit: "Redaguoti",
+        buttonDelete: "Ištrinti",
+        buttonElementDesc: "Šio mygtuko simbolis, jo dydis ir dvi spalvos.",
+        buttonIcon: "Piktograma",
+        buttonIconDesc: "Šio mygtuko simbolis, pvz., „mdi:plus“. Palikus tuščią - numatytasis.",
+        buttonSize: "Dydis",
+        buttonSizeDesc: "Šio mygtuko plotis ir aukštis, pvz., „28px“. Simbolis auga kartu, o eilutė auga su už ją aukštesniu mygtuku. Palikus tuščią - 28px „+“, 26px dviem eilutės mygtukams ir mažiau ten, kur pati eilutė mažesnė.",
+        buttonColorDesc: "Šio mygtuko simbolio spalva, kol niekas į jį nerodo. Palikus tuščią - temos antrinė teksto spalva.",
+        buttonHoverColor: "Spalva užvedus",
+        buttonHoverColorDesc: "Simbolio spalva, kol žymeklis yra virš šio mygtuko arba jis pasiektas klaviatūra. Palikus tuščią - temos akcento spalva; šiukšliadėžei - jos klaidos spalva, kuri ir pasako, ką ji daro.",
+        addButton: "Pridėti įvykį",
+        addButtonDesc: "„+“ kortelės pavadinimo dešinėje, pridedantis įvykį per pačios integracijos formą, neišeinant iš skydelio - tie patys žingsniai kaip „Pridėti įrašą“ skiltyje Nustatymai → Integracijos. Home Assistant įrašus pridėti leidžia tik administratoriams, tad kiti mygtuko nemato.",
+        editButtons: "Redaguoti ir ištrinti įvykius",
+        editButtonsDesc: "Pieštukas ir šiukšliadėžė kiekvienos įvykio eilutės gale, abiejuose išdėstymuose, įvykiui keisti ar pašalinti per pačios integracijos formą ir patvirtinimą - neišeinant iš skydelio. Jie išnyra virš eilutės galo, kol žymeklis yra virš jos, ir vietos neužima. Tik administratoriams, kaip ir „+“ šalia pavadinimo; kiti naudotojai nemato nė vieno.",
+        editOnClick: "Rodyti spustelėjus",
+        editOnClickDesc: "Iškviečia pieštuką ir šiukšliadėžę spustelėjus eilutę, o ne užvedus žymeklį - taip juos pasieksite telefone ar planšetėje, kur užvedimo nėra. Spustelėjus tokią eilutę, bakstelėjimo veiksmas (pagal numatymą - įvykio informacija) nebevykdomas; laikymo veiksmas veikia toliau. Kitas spustelėjimas ant eilutės arba bet kur kitur juos vėl paslepia.",
+        noEventsText: "Tekstas, kai įvykių nėra",
+        noEventsTextDesc:
+          "Ką kortelė sako, kai neturi ko rodyti (palikite tuščią numatytajam).",
+        noEventsLabel: "Nėra įvykių",
+        noEventsColorDesc: "Eilutės, kurią kortelė rodo neturėdama ko rodyti, teksto spalva.",
+        noEventsFontDesc: "Eilutės, kurią kortelė rodo neturėdama ko rodyti, šriftas.",
+        tapAction: "Bakstelėjimo veiksmas",
+        tapActionDesc: "Kas vyksta bakstelėjus ar spustelėjus eilutę",
+        holdAction: "Laikymo veiksmas",
+        holdActionDesc: "Kas vyksta paspaudus ir palaikius eilutę",
+        cardLanguage: "Kalba",
+        missingLanguage: "Trūksta jūsų kalbos?",
+        dateFormat: "Datos formatas",
+        dateFormatDesc:
+          "Kaip datos stulpelis rašo įvykio datą - kiekviena parinktis rodoma kaip pati data, tad matote, ką renkatės. Taip pat galioja {date} vietaženkliui savo teksto stulpelyje ir laiko juostos „Rodyti datą“. Visa data už bakstelėtos atgalinės atskaitos visada lieka išrašyta, kad ir kas čia pasirinkta.",
+        dateShowToday: "Rašyti „Šiandien“",
+        dateShowTodayDesc:
+          "Pačią įvykio dieną vietoj tos dienos datos rašyti „Šiandien“. Išjunkite kortelei, kuri turi skaitytis kaip paprastas datų sąrašas.",
+        cardLanguageDesc:
+          "Pririša šią kortelę prie vienos kalbos visiems, kurie ją mato, užuot sekus kiekvieno žiūrinčiojo profilio kalbą. Galioja ir pačios kortelės tekstui, ir jos datų formatavimui - ne įvykių pavadinimams, kurie ateina iš integracijos. Šis redaktorius bet kuriuo atveju toliau seka jūsų kalbą.",
+        cardLanguageAuto: "Automatiškai",
+        visibilityCountrySuffixDesc: "Po šventės pavadinimo / tipo pridėti šalį (ir regioną, jei yra), pvz., „Independence Day · US (UT)“",
+        columnsHeading: "Eilutės stulpeliai",
+        columnsDesc:
+          "Pridėkite, pašalinkite ir pertvarkykite, ką rodo kiekviena eilutė, arba pradėkite nuo vieno iš šių.",
+        columnsPresetDefault: "Numatytasis",
+        columnsPresetAgenda: "Darbotvarkė",
+        columnsPresetMinimal: "Minimalus",
+        columnTypeIcon: "Piktograma",
+        columnTypeInfo: "Vardas + tipas",
+        columnTypeName: "Vardas",
+        columnTypeLastName: "Pavardė",
+        columnTypeFullName: "Visas vardas",
+        columnTypeFullNameType: "Visas vardas + tipas",
+        columnTypeType: "Tipas",
+        columnTypeText: "Savas tekstas",
+        columnTypeDate: "Data",
+        columnTypeDateBlock: "Datos blokas",
+        columnTypeAccentBar: "Akcento juosta",
+        columnTypeTime: "Laikas",
+        columnTypeLocation: "Vieta",
+        columnTypeDescription: "Aprašymas",
+        columnTypeTimeDesc:
+          "Pridėti išorinio kalendoriaus įvykio laiko intervalą, pvz., „...15:00–17:00“. Rodoma tik išorinio kalendoriaus įvykiui su laiku (ne visos dienos). Vienkartinis įvykis su nurodytu laiku jį rodo čia taip pat.",
+        columnTypeLocationDesc:
+          "Pridėti išorinio kalendoriaus įvykio vietą. Rodoma tik išorinio kalendoriaus įvykiui, kuriam ji nurodyta.",
+        columnTypeDescriptionDesc:
+          "Pridėti išorinio kalendoriaus įvykio aprašymą. Rodoma tik išorinio kalendoriaus įvykiui, kuriam jis nurodytas.",
+        suffixLabel: "Priesaga",
+        suffixGroupHolidayTitle: "Tik šventėms",
+        suffixGroupExternalTitle: "Tik išoriniams kalendoriams",
+        suffixShowHolidayType: "Tipo žyma",
+        suffixShowHolidayTypeDesc:
+          "Rodyti pačios šventės tipo žymą, pvz., „Šventė (Valstybinė)“. Išjunkite, kad šiame langelyje liktų tik šalies / regiono priesaga.",
+        multiDayDisplay: "Kelių dienų įvykiai",
+        multiDayDisplayDesc: "Kaip rodomas kelias dienas trunkantis įvykis - atostogų kelionė, konferencija. Galioja ir vienkartiniam įvykiui su pabaigos data, ir kelių dienų įrašui iš įterpto kalendoriaus; visa kita bet kuriuo atveju yra vienas įrašas.",
+        multiDayStartOnly: "Tik pirma diena",
+        multiDayEndOnly: "Tik paskutinė diena",
+        multiDayStartEnd: "Pirma ir paskutinė diena",
+        multiDayEveryDay: "Kiekviena diena",
+        suffixShowCalendarName: "Kalendoriaus pavadinimas",
+        suffixShowCalendarNameDesc:
+          "Rodyti čia išorinio kalendoriaus pavadinimą (pvz., „Asmeninis“). Išjunkite, kai laikas, vieta ir aprašymas žemiau jau pasako pakankamai.",
+        externalCalendarsHeading: "Išoriniai kalendoriai",
+        externalCalendarsDesc:
+          "Įterpkite vieną ar kelis esamus Home Assistant kalendorius šalia pačios Annuals įvykių - kiekvienas patenka į savo tikrąją dieną (o įvykiai su laiku tą dieną rikiuojami pagal paros laiką), be jokių „kito pasikartojimo“ skaičiavimų. Pridėkite laiko, vietos ar aprašymo stulpelį aukščiau, kad šių įvykių laukai būtų rodomi.",
+        externalCalendarsLabel: "Kalendoriai",
+        externalCalendarsLabelDesc: "Kurias calendar.* esybes įterpti.",
+        todoHeading: "Užduotys",
+        todoDesc:
+          "Pažymėti kiekvieną įvykį, kuris dar turi neatliktą užduotį - paprastai sąraše, į kurį rašo pridėtas priminimų planas. Užduotys įvykiui priskiriamos pirmiausia pagal terminą, tada pagal tai, ką apie jį sako užduoties tekstas (visas vardas, vardas, tipas, pasikartojimo numeris), tad įvykį mininti užduotis laimi prieš tą, kuri sutampa tik data; vienodai tinkanti dviem įvykiams lieka nepriskirta. Atitinkantys įvykiai gauna mažą ženklelį ant piktogramos abiejuose išdėstymuose - jo piktogramą ir spalvą žr. skiltyje „Paryškinimas“.",
+        todoListsLabel: "Užduočių sąrašai",
+        todoListsLabelDesc: "Kuriose todo.* esybėse ieškoti. Palikite tuščią, kad funkcija būtų išjungta.",
+        todoCompleteFromCard: "Užbaigti iš kortelės",
+        todoCompleteFromCardDesc:
+          "Spustelėjus ženklelį turinčio įvykio piktogramą, prašoma patvirtinimo ir visos to įvykio neatliktos užduotys pažymimos atliktomis - ir laiko juostoje, įskaitant išskleidus sąrašą pasirodančius įvykius. Išjunkite, kad ženklelis liktų tik žyma.",
+        columnAdd: "Pridėti",
+        columnMoveUp: "Perkelti aukštyn",
+        columnMoveDown: "Perkelti žemyn",
+        columnRemove: "Pašalinti",
+        columnTemplatePlaceholder: "pvz., {name} šiandien švenčia {occurrence}-ąjį kartą",
+        columnsCompact: "Kompaktiškai (be tarpų, centruota)",
+        columnsCompactDesc: "Pašalinti tarpus tarp stulpelių, centruoti eilutę ir suvienodinti visų laukų storį bei permatomumą - naudinga, kai stulpeliai sudaro vieną ištisinį sakinį.",
+        minimalCard: "Minimali (viena eilutė, siauri kraštai)",
+        minimalCardDesc:
+          "Sumažina pačios kortelės paraštes, kad viena eilutė tilptų į vienos tinklelio eilutės aukščio kortelę, kur vien įprasti kraštai užimtų daugiau nei pusę jos aukščio. Verta įjungti tik kortelei su vienu įvykiu - su daugiau, likusieji nukerpami arba juos tenka slinkti.",
+        monthSeparators: "Mėnesių skirtukai",
+        monthSeparatorsDesc: "Brėžti liniją visur, kur gretimos eilutės tenka skirtingiems mėnesiams, dalijant ilgą sąrašą į mėnesių blokus. Pačių eilučių tvarka nesikeičia.",
+        weekSeparators: "Savaičių skirtukai",
+        weekSeparatorsDesc: "Tas pats, tik smulkiau: linija visur, kur gretimos eilutės tenka skirtingoms savaitėms, pagal jūsų Home Assistant pirmos savaitės dienos nustatymą. Įjungus ir mėnesių skirtukus, abu pradedanti eilutė gauna vieną liniją.",
+        daySeparators: "Dienų skirtukai",
+        daySeparatorsDesc: "Linija visur, kur gretimos eilutės tenka skirtingoms dienoms, dalijant sąrašą į vienos dienos blokus. Smulkiausias iš trijų - įjungus ir savaičių ar mėnesių skirtukus, du iš jų pradedanti eilutė gauna tik stambesnę liniją.",
+        separatorWidth: "Plotis",
+        separatorWidthDesc: "Linijos storis, pvz., „1px“. Palikus tuščią - 1px.",
+        separatorColor: "Spalva",
+        separatorColorDesc: "Linijos spalva. Palikus tuščią, ji seka temos teksto spalvą, tą pačią, kurią naudoja kortelės pavadinimas.",
+        separatorShowDayLabel: "Rodyti savaitės dieną",
+        separatorShowDayLabelDesc: "Rašyti savaitės dieną ant pačios linijos, centruotą ant elipsinės kortelės fono spalvos plokštelės, kad linija nutrūktų aplink tekstą, o ne eitų per jį.",
+        separatorShowWeekLabel: "Rodyti kalendorinę savaitę",
+        separatorShowWeekLabelDesc: "Rašyti kalendorinę savaitę ant pačios linijos, centruotą ant elipsinės kortelės fono spalvos plokštelės. Numeris atitinka jūsų Home Assistant pirmos savaitės dienos nustatymą, tą patį, kuris lemia, kur krenta linijos.",
+        separatorShowMonthLabel: "Rodyti mėnesį",
+        separatorShowMonthLabelDesc: "Rašyti mėnesį ant pačios linijos, centruotą ant elipsinės kortelės fono spalvos plokštelės, kad linija nutrūktų aplink tekstą, o ne eitų per jį.",
+        separatorLabelColor: "Užrašo spalva",
+        separatorLabelColorDesc: "Užrašo teksto spalva. Palikus tuščią, ji seka temos teksto spalvą, tą pačią, kurią naudoja kortelės pavadinimas.",
+        separatorLabelBackground: "Užrašo fonas",
+        separatorLabelBackgroundDesc: "Plokštelės už užrašo spalva - būtent ji paslepia liniją po juo. Palikus tuščią - pačios kortelės fono spalva, tad užrašas atrodo kaip tarpas linijoje.",
+        separatorLabelFontDesc: "Užrašo teksto dydis, pvz., „0.8em“ arba „11px“. Palikus tuščią - 0.75em pačios kortelės šrifto dydžio atžvilgiu, plius keturi stiliaus jungikliai ir tarpai tarp raidžių žemiau.",
+        accentBarWidthDesc: "Juostos storis, pvz., „3px“. Palikus tuščią - 3px. Pridėkite akcento juostos stulpelį aukščiau, kad ji apskritai būtų rodoma.",
+        accentBarColorDesc: "Numatytoji juostos spalva. Įvykio tipas ir eilutės būsena gali ją pakeisti.",
+        whenClickShowsDate: "Bakstelėti atskaitą datai",
+        whenClickShowsDateDesc:
+          "Bakstelėjus eilutės atgalinę atskaitą, ji pakeičiama tikrąja įvykio data (pvz., „pr., 2026 m. rugpjūčio 3 d.“), bakstelėjus dar kartą - grąžinama; eilutės bakstelėjimo ir laikymo veiksmai visur kitur eilutėje veikia toliau.",
+        timelineWhenClickShowsDateDesc:
+          "Bakstelėjus atgalinę atskaitą sakinio gale („...po 2 dienų“), tik ta dalis pakeičiama tikrąja įvykio data (pvz., „pr., 2026 m. rugpjūčio 3 d.“), bakstelėjus dar kartą - grąžinama; vienodai antraštėje, taško patarime ir išskleistame sąraše.",
+        visibilityVipOnly: "Tik VIP",
+        visibilityVipOnlyDesc: "Rodyti tik įvykius, pažymėtus kaip „VIP Annual“",
+        visibilityImportantOnly: "Tik svarbūs",
+        visibilityImportantOnlyDesc:
+          "Rodyti tik įvykius, automatiškai pažymėtus kaip svarbius (nustatoma integracijos skiltyje „Annual Settings“)",
+        visibilityTodoOnly: "Tik su neatliktomis užduotimis",
+        visibilityTodoOnlyDesc:
+          "Rodyti tik įvykius, kurie dar turi neatliktą užduotį (žr. „Užduotys“ skiltyje Nustatymai → Įvykiai). Siaurina du filtrus aukščiau, o ne papildo juos: įjungus ir „Tik VIP“, rodomi VIP įvykiai, kuriems dar yra ką padaryti.",
+        badgesHeading: "Ženkleliai",
+        badgeTargetIcon: "Įvykio piktograma",
+        badgeTargetIconDesc: "Piešti šį ženklelį eilutės įvykio piktogramos kampe.",
+        badgeTargetAccentBar: "Akcento juosta",
+        badgeTargetAccentBarDesc: "Piešti šį ženklelį stulpelyje kairiau akcento juostos, centruotą eilutės atžvilgiu. Reikia akcento juostos stulpelio.",
+        badgeColor: "Ženklelio spalva",
+        badgeColorDesc: "Simbolio ženklelyje spalva.",
+        badgeBgColor: "Ženklelio fono spalva",
+        badgeBgColorDesc: "Disko už simbolio spalva.",
+        vipBadgeIcon: "Ženklelio piktograma",
+        vipBadgeIconDesc: "MDI piktograma, naudojama kaip ženklelis VIP pažymėtiems įvykiams.",
+        vipBadgeIconPlaceholder: "mdi:star",
+        importantBadgeIcon: "Ženklelio piktograma",
+        importantBadgeIconDesc: "MDI piktograma, naudojama kaip ženklelis automatiškai svarbiais pažymėtiems įvykiams.",
+        importantBadgeIconPlaceholder: "mdi:exclamation-thick",
+        todoBadgeIcon: "Ženklelio piktograma",
+        todoBadgeIconDesc: "MDI piktograma, naudojama kaip ženklelis įvykiams su dar neatlikta užduotimi (žr. „Užduotys“ skiltyje Įvykiai).",
+        todoBadgeColorTimelineDesc: "To ženklelio spalva laiko juostos išdėstyme - numatytoji yra temos raudona",
+        highlightHeading: "Paryškinimas",
+        highlightPast: "Praėję įvykiai",
+        highlightBgColor: "Fono spalva",
+        highlightBgColorDesc: "Šio paryškinimo fono atspalvis",
+        highlightVip: "VIP įvykiai",
+        highlightVipDesc: "Rodyti ženklelį VIP pažymėtiems įvykiams.",
+        highlightImportant: "Svarbūs įvykiai",
+        highlightImportantDesc: "Rodyti ženklelį automatiškai svarbiais pažymėtiems įvykiams.",
+        highlightTodo: "Užduotys",
+        highlightTodoDesc: "Rodyti ženklelį įvykiams su dar neatlikta užduotimi.",
+        vipBadgeColorTimelineDesc: "To ženklelio spalva laiko juostos išdėstyme - numatytoji yra temos raudona",
+        importantBadgeColorTimelineDesc:
+          "To ženklelio spalva laiko juostos išdėstyme - numatytoji yra temos gintarinė",
+        colors: "Spalvos",
+        cardBackgroundTabTitle: "Kortelės fonas",
+        cardBackgroundEnable: "Rodyti foną",
+        cardBackgroundEnableDesc: "Rodyti savą spalvą ir (arba) paveikslėlį už visos kortelės",
+        cardBackgroundColor: "Spalva",
+        cardBackgroundColorDesc: "Kortelės fono spalva",
+        cardBackgroundImage: "Paveikslėlis",
+        cardBackgroundImageDesc:
+          "Įkelkite paveikslėlį arba įklijuokite URL ar vietinį medijos kelią (pvz., iš HA medijos naršyklės) kortelės fonui. Palaikomi formatai: JPEG, PNG, GIF, WebP. Kad įkeltų greitai, laikykite failą nedidelį (daugiausia kelių MB).",
+        cardBackgroundImagePlaceholder: "pvz., /local/my-image.jpg",
+        cardBackgroundUpload: "Įkelti paveikslėlį",
+        cardBackgroundClear: "Pašalinti paveikslėlį",
+        cardBackgroundSize: "Paveikslėlio elgsena",
+        cardBackgroundSizeDesc:
+          "Užpildyti (cover): paveikslėlis padidinamas taip, kad visiškai užpildytų kortelę, prireikus apkerpamas. Įtalpinti (contain): paveikslėlis telpa kortelėje neapkerpamas, gali likti tuščios vietos. Tikrasis dydis: paveikslėlis rodomas pradinio dydžio, centruotas. Kartoti (tile): paveikslėlis pradinio dydžio kartojamas, iškloja kortelę.",
+        cardBackgroundSizeCover: "Užpildyti (cover)",
+        cardBackgroundSizeContain: "Įtalpinti (contain)",
+        cardBackgroundSizeAuto: "Tikrasis dydis",
+        cardBackgroundSizeRepeat: "Kartoti (tile)",
+        cardBackgroundOpacity: "Nepermatomumas",
+        cardBackgroundOpacityDesc: "Fono spalvos / paveikslėlio nepermatomumas procentais",
+        statusHeading: "Įvykio būsena",
+        statusTimelineIconColorDesc: "Šios būsenos taškas ir simboliai laiko juostoje.",
+        statusEntryTextColor: "Įrašo teksto spalva",
+        statusEntryTextColorDesc: "Šios būsenos tekstas laiko juostoje. Tuščias ima pačios būsenos spalvą.",
+        typeRowColor: "Visos eilutės spalva",
+        typeRowColorDesc: "Eilutės teksto spalva, kai įjungta „Visa eilutė“. Tuščias ima paties tipo spalvą.",
+        typeEntryColor: "Įrašo teksto spalva",
+        typeEntryColorDesc: "Įvykio teksto laiko juostoje spalva, kai įjungtas „Įrašo tekstas“. Tuščias ima paties tipo spalvą.",
+        typeBarColor: "Akcento juostos spalva",
+        typeBarColorDesc: "Akcento juostos spalva, kai įjungta „Akcento juosta“. Tuščias ima paties tipo spalvą.",
+        typeIconColor: "Piktogramos spalva",
+        typeIconColorDesc: "Piktogramos spalva - eilutės sąraše, taško laiko juostoje. Tuščias ima paties tipo spalvą.",
+        typeAnimationDesc: "Šio įvykių tipo piktogramų animacija, pakeičianti piktogramos bloko numatytąją skiltyje „Dizainas“. Palikus „Nėra“, galioja ta numatytoji. Būsena gali ją vėl pakeisti.",
+        rowTargetTimeline: "Įrašo tekstas",
+        rowTargetTimelineDesc: "Šia spalva nuspalvinti ir įvykio tekstą sąraše po ašimi, ne tik jo tašką.",
+        fontLetterSpacingDesc: "Tarpas tarp raidžių, pvz., 0.05em arba 1px. Tuščias palieka paties šrifto tarpus.",
+        lineStyleDesc: "Ar linija ištisinė, brūkšninė ar taškinė.",
+        designLineBlockDesc: "Linijos plotis, brūkšnio stilius ir spalva.",
+        statusOverrideHint: "Išjungus galioja įvykio tipo spalva arba dizaino numatytoji.",
+        designIconBlockDesc: "Numatytoji kortelės piktogramų spalva ir animacija. Kiekvienas įvykių tipas ir kiekviena būsena grįžta prie jų, jei pati jų nepakeičia.",
+        designBarBlockDesc: "Numatytoji juostos spalva ir jos plotis.",
+        designElementDesc: "Viskas, kas formuoja šią kortelės dalį: jos spalva, šriftas ir jungikliai žemiau.",
+        designGroupDesc: "Eilutės, iš kurių sudarytas šis stulpelis. Kiekviena formuojama atskirai žemiau.",
+        statusTextColor: "Viso teksto spalva",
+        statusTextColorDesc: "Eilutės tekstas, be piktogramos ir akcento juostos. Tuščias ima pačios būsenos spalvą.",
+        statusIconAnimation: "Piktogramos animacija",
+        statusIconAnimationDesc: "Piktogramos animacija. Išjungus galioja dizaino numatytoji.",
+        designIconColorDesc: "Numatytoji eilutės piktogramos spalva. Kiekviena būsena grįžta prie jos, jei pati jos nepakeičia.",
+        statusPastDesc: "Įvykiai, kurie jau praėjo.",
+        statusIconColor: "Piktogramos spalva",
+        statusIconColorDesc: "Eilutės piktograma.",
+        statusBarColor: "Akcento juostos spalva",
+        statusBarColorDesc: "Eilutės akcento juosta. Tuščias seka piktogramos spalvą.",
+        colorToday: "Šiandien",
+        colorSoon: "Netrukus",
+        colorTodayDesc: "Šiandien vykstantys įvykiai.",
+        colorSoonDesc: "Įvykiai „netrukus“ ribos viduje.",
+        animationLabel: "Animacija",
+        animationDesc: "Pridėti šiai piktogramai kartotinę animaciją",
+        animationNone: "Nėra",
+        animationPulse: "Pulsavimas",
+        animationBounce: "Šokinėjimas",
+        animationShake: "Drebėjimas",
+        animationSpin: "Sukimasis",
+        animationFlash: "Mirksėjimas",
+        rowColorsLabel: "Eilučių dizainas pagal įvykio tipą",
+        rowColorsDesc: "Leisti kiekvienam įvykių tipui turėti savą dizainą - spalvą ir tai, kurias eilutės ar laiko juostos įrašo dalis ji nuspalvina - vietoj dizaino numatytųjų. Eilutės būsena vis tiek gali jį pakeisti.",
+        calendarColorsHeading: "Įterpti kalendoriai",
+        calendarColorDesc: "Šio kalendoriaus spalva - jo eilučių sąraše, jo taško laiko juostoje. Palikus tuščią, naudojama spalva, kurią kalendoriui saugo pats Home Assistant.",
+        eventTypeRowColorDesc: "Šio įvykių tipo spalva - jo eilučių sąraše, jo taško laiko juostoje. Sąraše šalia esantys jungikliai parenka, kurias eilutės dalis ji nuspalvina.",
+        rowTargetIcon: "Piktograma",
+        rowTargetIconDesc: "Nuspalvinti šio tipo piktogramą.",
+        rowTargetAccentBar: "Akcento juosta",
+        rowTargetAccentBarDesc: "Nuspalvinti šio tipo akcento juostą.",
+        rowTargetRow: "Visa eilutė",
+        rowTargetRowDesc: "Nuspalvinti visą eilutę, įskaitant tekstą - o kartu piktogramą ir akcento juostą, kad ir ką sakytų jų pačių jungikliai.",
+        colorName: "Vardas",
+        colorType: "Tipas",
+        combinedFontDesc: "Šios jungtinio stulpelio eilutės dydis ir stilius.",
+        combinedColorDesc: "Šios jungtinio stulpelio eilutės spalva.",
+        colorBadge: "Pasikartojimas",
+        colorWhen: "Atgalinė atskaita",
+        colorText: "Savas tekstas",
+        colorDate: "Data",
+        dateBlockWeekday: "Savaitės diena",
+        dateBlockDay: "Diena",
+        dateBlockMonth: "Mėnuo",
+        dateBlockFontDesc: "Galioja tik datos bloko stulpeliui. Dydžiai pačios kortelės šrifto dydžio atžvilgiu - 0.75 / 1.5 / 0.75, palikus tuščia.",
+        dateBlockColorDesc: "Galioja tik datos bloko stulpeliui. Palikus tuščia, savaitės diena ir mėnuo ima temos antrinę teksto spalvą, o diena - pagrindinę.",
+        colorCalendar: "Išorinio kalendoriaus laukai",
+        colorDateDesc:
+          "Datos stulpelio teksto spalva",
+        colorCalendarDesc:
+          "Galioja tik išorinių kalendorių įvykiams. Palikus tuščia, kiekviena eilutė ima temos antrinę teksto spalvą.",
+        fontDateDesc:
+          "Datos stulpelio šrifto dydis (žr. „Eilutės stulpeliai“ skiltyje Išdėstymas -> Rodymas)",
+        fontCalendarDesc:
+          "Galioja tik išorinių kalendorių įvykiams. Dydžiai pačios kortelės šrifto dydžio atžvilgiu.",
+        cardTitleColorDesc: "Pačios kortelės pavadinimo teksto spalva",
+        colorNameDesc: "Įvykio vardo teksto spalva",
+        colorLastName: "Pavardė",
+        colorLastNameDesc: "Įvykio pavardės teksto spalva",
+        colorFullName: "Visas vardas",
+        colorFullNameDesc: "Viso įvykio vardo (vardo + pavardės) teksto spalva",
+        colorTypeDesc: "Įvykio tipo teksto spalva",
+        colorBadgeDesc: "Pasikartojimo numerio ženklelio teksto spalva",
+        colorWhenDesc: "Atgalinės atskaitos (pvz., „po 3 dienų“) teksto spalva",
+        colorTextDesc: "Savo teksto stulpelių teksto spalva (žr. „Eilutės stulpeliai“ skiltyje Išdėstymas -> Rodymas)",
+        backgroundLabel: "Rodyti foną",
+        backgroundDesc: "Rodyti apvalintą foną už pasikartojimo numerio",
+        colorBadgeBackground: "Fono spalva",
+        colorBadgeBackgroundDesc: "Fono už pasikartojimo numerio spalva",
+        colorPlaceholder: "pvz., #ff5722 arba var(--my-red)",
+        presetDefault: "Numatytoji",
+        presetPrimary: "Pagrindinė",
+        presetAccent: "Akcento",
+        presetCustom: "Sava",
+        presetRed: "Raudona",
+        presetPink: "Rožinė",
+        presetPurple: "Violetinė",
+        presetDeepPurple: "Tamsiai violetinė",
+        presetIndigo: "Indigo",
+        presetBlue: "Mėlyna",
+        presetLightBlue: "Šviesiai mėlyna",
+        presetCyan: "Žydra",
+        presetTeal: "Žalsvai mėlyna",
+        presetGreen: "Žalia",
+        presetLightGreen: "Šviesiai žalia",
+        presetLime: "Salotinė",
+        presetYellow: "Geltona",
+        presetAmber: "Gintarinė",
+        presetOrange: "Oranžinė",
+        presetDeepOrange: "Tamsiai oranžinė",
+        presetBrown: "Ruda",
+        presetGrey: "Pilka",
+        presetBlueGrey: "Melsvai pilka",
+        fonts: "Šriftai",
+        fontCardTitle: "Kortelės pavadinimas",
+        fontCardTitleDesc: "Pačios kortelės pavadinimo šrifto dydis",
+        fontNameDesc: "Įvykio vardo šrifto dydis",
+        fontLastNameDesc: "Įvykio pavardės šrifto dydis",
+        fontFullNameDesc: "Viso įvykio vardo (vardo + pavardės) šrifto dydis",
+        fontTypeDesc: "Įvykio tipo šrifto dydis",
+        fontBadgeDesc: "Pasikartojimo numerio ženklelio šrifto dydis",
+        fontWhenDesc: "Atgalinės atskaitos (pvz., „po 3 dienų“) šrifto dydis",
+        fontTextDesc: "Savo teksto stulpelių šrifto dydis (žr. „Eilutės stulpeliai“ skiltyje Išdėstymas -> Rodymas)",
+        fontPlaceholder: "pvz., 1.2em arba 20px",
+        fontBold: "Pusjuodis",
+        fontItalic: "Kursyvas",
+        fontUppercase: "Didžiosios raidės",
+        fontUnderline: "Pabrauktas",
+        fontLetterSpacing: "Tarpai tarp raidžių",
+        fontLetterSpacingPlaceholder: "pvz., 0.05em arba 1px",
+        panelSettings: "Nustatymai",
+        panelSettingsDesc: "Bendra, įvykiai ir laikotarpis",
+        panelLayout: "Išdėstymas",
+        panelLayoutDesc: "Bendra, sąrašo ir laiko juostos rodinys, dizainas, paryškinimas ir kortelės fonas",
+        groupGeneral: "Bendra",
+        groupGeneralDesc: "",
+        groupEvents: "Įvykiai",
+        groupEventsDesc: "",
+        groupPeriod: "Laikotarpis",
+        groupPeriodDesc: "",
+        groupDisplay: "Bendra",
+        groupListView: "Sąrašo rodinys",
+        groupListViewDesc:
+          "Naudojama tik tada, kai išdėstymo stilius yra Sąrašas.",
+        groupDesign: "Dizainas",
+        designColor: "Spalva",
+        designFont: "Šriftas",
+        groupDisplayDesc: "",
+      },
+    },
   };
 
   // Every language the card itself is translated into, as BCP-47 codes -
@@ -13345,8 +14004,9 @@
       letter-spacing: var(--annuals-card-nav-button-spacing, normal);
     }
     .nav-mode[hidden], .nav-pick[hidden] { display: none; }
-    /* The selected mode, and the calendar button while its picker has the
-       focus - the statistics card lights its own up the same way. */
+    /* The selected mode, and the calendar button while its date input has
+       the keyboard focus (tabbed to). Not while the picker is open: the
+       click that opens it never focuses the input (see _navOpenPicker). */
     .nav-mode.active, .nav-pick:focus-within {
       background: var(--annuals-card-nav-active-background-color, var(--primary-color));
       color: var(--annuals-card-nav-active-color, var(--text-primary-color, #fff));
@@ -13355,9 +14015,14 @@
       outline: 2px solid var(--primary-color);
       outline-offset: 2px;
     }
-    /* The browser's own date input, laid over the calendar button so the
-       tap lands on it (a phone opens the picker from that alone) while the
-       button underneath is what is seen. Not display:none - showPicker()
+    /* The browser's own date input, laid over the calendar button: it is
+       what the picker belongs to and what reports the day picked, while the
+       button underneath is what is seen - and what is hovered and clicked.
+       The input itself takes no pointer events: a date input paints its own
+       arrow cursor over the card's hand in Firefox and Chrome alike, whatever
+       its computed cursor says (#14), so the hover goes to the button and
+       the click falls through to it, which opens the picker through
+       showPicker() (see _navOpenPicker). Not display:none - showPicker()
        refuses an element that is not rendered. */
     .nav-pick .nav-date {
       position: absolute;
@@ -13368,20 +14033,11 @@
       padding: 0;
       border: none;
       opacity: 0;
-      cursor: pointer;
+      pointer-events: none;
     }
-    /* The glyph takes no clicks of its own: whatever a browser paints on
-       top, a click on the calendar button is a click on the button. */
+    /* Nor does the glyph: whatever a browser paints on top, a click on the
+       calendar button is a click on the button. */
     .nav-pick ha-icon { pointer-events: none; }
-    /* Firefox - and only Firefox - draws the date input's own arrow cursor
-       over ours, and its showPicker() returns without opening anything for
-       an input inside a shadow root (#14, measured on Firefox 157). There
-       the input only marks the spot: the click falls through to the button,
-       which opens the picker on a twin in the document (see FIREFOX_PICKER).
-       -moz-appearance is the Firefox-only property this rule keys on. */
-    @supports (-moz-appearance: none) {
-      .nav-pick .nav-date { pointer-events: none; }
-    }
     .list {
       position: relative;
       z-index: 1;
@@ -15477,14 +16133,21 @@
     // on iOS anyway, which fills an empty or untouched date input with
     // today and reports that as a change the moment the picker opens.
     // Choosing today then shows today's period, and choosing it again is
-    // no change that needs reporting. Then the browser's own picker: desktop
-    // browsers focus a date input on click and open its picker only from
-    // the icon inside it - which is under the calendar glyph here, not
-    // where the tap landed - so it is asked for; phones open it on the tap
-    // itself and either ignore the call or refuse it, which is what the
-    // catch is for. Firefox gets the twin (see FIREFOX_PICKER), laid over
-    // the button and filled like the input, so the picker drops down from
-    // the button and its Clear has something to clear.
+    // no change that needs reporting. Then the browser's own picker, asked
+    // for through showPicker() since the click never reaches the input (see
+    // .nav-date) - and the input is deliberately not focused for it. Chrome
+    // keeps the input focused while its picker is open and after it has
+    // closed, and a click beside the picker, which closes it, never reaches
+    // the page - so a button lit by the input's focus stayed lit after
+    // Clear and after that click, with nothing to switch it off by (#14).
+    // Unfocused, the button lights up for no picker in any browser, and
+    // the picker still opens where the input is. The catch is for a phone
+    // that opens the picker on the tap alone and refuses the call. Firefox
+    // gets the twin (see FIREFOX_PICKER), laid over the button and filled
+    // like the input, so the picker drops down from the button and its
+    // Clear has something to clear; the twin takes the focus, since
+    // Firefox's panel answers Escape through the input it belongs to, and
+    // the twin is outside the card, so nothing on it lights up either.
     _navOpenPicker(input) {
       if (!this._navTouched) this._navGoTo(this._navAnchor || this._navToday());
       let target = input;
@@ -15597,9 +16260,7 @@
           btn.addEventListener("click", () => this._navSetMode(btn.dataset.mode));
         });
         const input = nav.querySelector(".nav-date");
-        // On the button rather than the input: a click on the input bubbles
-        // up to it, and in Firefox the input takes no clicks at all (see
-        // .nav-date) - the one listener serves both.
+        // On the button: the input over it takes no clicks (see .nav-date).
         nav.querySelector(".nav-pick").addEventListener("click", () => this._navOpenPicker(input));
         input.addEventListener("change", () => this._navPicked(input.value));
         // The period itself is the way back to today - the same fresh
