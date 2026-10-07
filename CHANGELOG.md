@@ -2,6 +2,12 @@
 
 All notable changes to this integration are documented here.
 
+## v3.4.1
+
+### Fixed
+- **The calendar button opens its date picker in Firefox.** Calendar navigation (Layout → List view) opens the browser's own date picker from a date input laid over the calendar button, and Firefox never opened it: the input sits inside the card's shadow root, and there Firefox's `showPicker()` returns without opening anything - measured on Firefox 157, where the identical call on an input in the document itself opens it at once. Only Firefox's own small calendar glyph at the right edge of the invisible input worked, and the pointer stayed an arrow over the button, since Firefox draws the date input's own cursor over the card's. In Firefox the input now only marks the spot: the click falls through to the button, which opens the picker on a twin input in the document, laid over the button so the picker drops down from it, filled with the date on screen - and the cursor is the hand it always should have been. Every other browser opens the picker exactly as before. Reported, with the diagnosis, in [#14](https://github.com/somansch/annuals/issues/14).
+- **The picker's Clear button does something now.** Clear empties the date, and the card ignored an empty answer - in every browser. It is now the way back to the opening list, the same fresh start the period's own label gives. Also from [#14](https://github.com/somansch/annuals/issues/14).
+
 ## v3.4.0
 
 ### Added

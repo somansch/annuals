@@ -12188,6 +12188,37 @@
     return `${when.getFullYear()}-${pad(when.getMonth() + 1)}-${pad(when.getDate())}`;
   }
 
+  // Firefox only: the calendar button's date picker has to be opened on an
+  // input in the document itself, since showPicker() on one inside a shadow
+  // root returns there without opening anything (#14, measured on Firefox
+  // 157 - the identical call on a document-level input opens it). Detected
+  // by the one CSS property Firefox alone understands, which is also what
+  // the matching style rule keys on (see .nav-date). One twin for the page,
+  // parked out of sight and moved over whichever card's button was clicked,
+  // so the picker drops down from that button; it carries that card's
+  // handler until another card borrows it.
+  const FIREFOX_PICKER =
+    typeof CSS !== "undefined" && typeof CSS.supports === "function" && CSS.supports("-moz-appearance", "none");
+  let navPickerTwin = null;
+  function navPickerTwinFor(onChange) {
+    if (!navPickerTwin) {
+      navPickerTwin = document.createElement("input");
+      navPickerTwin.type = "date";
+      navPickerTwin.tabIndex = -1;
+      // Not display:none - showPicker() refuses an element that is not
+      // rendered - and no pointer events, so it never takes a click meant
+      // for whatever it is parked over.
+      navPickerTwin.style.cssText =
+        "position:fixed;left:-9999px;top:-9999px;width:26px;height:26px;margin:0;padding:0;border:none;opacity:0;pointer-events:none;";
+      navPickerTwin.addEventListener("change", () => {
+        if (navPickerTwin._onChange) navPickerTwin._onChange(navPickerTwin.value);
+      });
+      document.body.appendChild(navPickerTwin);
+    }
+    navPickerTwin._onChange = onChange;
+    return navPickerTwin;
+  }
+
   // Whole days between two "YYYY-MM-DD" strings. Anchored at midday so a
   // daylight-saving change inside the range - which shortens or lengthens
   // one of its days by an hour - can't round the result to the wrong day.
@@ -13338,6 +13369,18 @@
       border: none;
       opacity: 0;
       cursor: pointer;
+    }
+    /* The glyph takes no clicks of its own: whatever a browser paints on
+       top, a click on the calendar button is a click on the button. */
+    .nav-pick ha-icon { pointer-events: none; }
+    /* Firefox - and only Firefox - draws the date input's own arrow cursor
+       over ours, and its showPicker() returns without opening anything for
+       an input inside a shadow root (#14, measured on Firefox 157). There
+       the input only marks the spot: the click falls through to the button,
+       which opens the picker on a twin in the document (see FIREFOX_PICKER).
+       -moz-appearance is the Firefox-only property this rule keys on. */
+    @supports (-moz-appearance: none) {
+      .nav-pick .nav-date { pointer-events: none; }
     }
     .list {
       position: relative;
@@ -15429,6 +15472,50 @@
       this._navGoTo(next);
     }
 
+    // The calendar button was clicked. Opening the picker is using the
+    // bar: the list becomes the period on screen straight away, as it does
+    // on iOS anyway, which fills an empty or untouched date input with
+    // today and reports that as a change the moment the picker opens.
+    // Choosing today then shows today's period, and choosing it again is
+    // no change that needs reporting. Then the browser's own picker: desktop
+    // browsers focus a date input on click and open its picker only from
+    // the icon inside it - which is under the calendar glyph here, not
+    // where the tap landed - so it is asked for; phones open it on the tap
+    // itself and either ignore the call or refuse it, which is what the
+    // catch is for. Firefox gets the twin (see FIREFOX_PICKER), laid over
+    // the button and filled like the input, so the picker drops down from
+    // the button and its Clear has something to clear.
+    _navOpenPicker(input) {
+      if (!this._navTouched) this._navGoTo(this._navAnchor || this._navToday());
+      let target = input;
+      if (FIREFOX_PICKER) {
+        target = navPickerTwinFor((value) => this._navPicked(value));
+        const rect = input.getBoundingClientRect();
+        target.style.left = `${rect.left}px`;
+        target.style.top = `${rect.top}px`;
+        target.style.width = `${rect.width}px`;
+        target.style.height = `${rect.height}px`;
+        target.setAttribute("aria-label", input.getAttribute("aria-label") || "");
+        target.value = input.value;
+        target.focus({ preventScroll: true });
+      }
+      try {
+        if (typeof target.showPicker === "function") target.showPicker();
+      } catch (err) {
+        // Not rendered, no user gesture, or already open - the input
+        // itself still works.
+      }
+    }
+
+    // What the picker handed back: a day, or nothing - its Clear button,
+    // which used to do nothing here (#14) and is now the way back to the
+    // opening list, the same fresh start the period's own label gives.
+    _navPicked(value) {
+      const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value || "");
+      if (match) this._navGoTo(new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
+      else this._navSetMode(this._navModeCurrent());
+    }
+
     _navGoTo(date) {
       if (!(date instanceof Date) || Number.isNaN(date.getTime())) return;
       this._navAnchor = new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -15510,30 +15597,11 @@
           btn.addEventListener("click", () => this._navSetMode(btn.dataset.mode));
         });
         const input = nav.querySelector(".nav-date");
-        input.addEventListener("click", () => {
-          // Opening the picker is using the bar: the list becomes the
-          // period on screen straight away, as it does on iOS anyway,
-          // which fills an empty or untouched date input with today and
-          // reports that as a change the moment the picker opens. Choosing
-          // today then shows today's period, and choosing it again is no
-          // change that needs reporting.
-          if (!this._navTouched) this._navGoTo(this._navAnchor || this._navToday());
-          // Desktop browsers focus a date input on click and open its
-          // picker only from the icon inside it - which is under the
-          // calendar glyph here, not where the tap landed. Phones open it
-          // on the tap itself and either ignore this or refuse it, which
-          // is what the catch is for.
-          try {
-            if (typeof input.showPicker === "function") input.showPicker();
-          } catch (err) {
-            // Not rendered, no user gesture, or already open - the input
-            // itself still works.
-          }
-        });
-        input.addEventListener("change", () => {
-          const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(input.value || "");
-          if (match) this._navGoTo(new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
-        });
+        // On the button rather than the input: a click on the input bubbles
+        // up to it, and in Firefox the input takes no clicks at all (see
+        // .nav-date) - the one listener serves both.
+        nav.querySelector(".nav-pick").addEventListener("click", () => this._navOpenPicker(input));
+        input.addEventListener("change", () => this._navPicked(input.value));
         // The period itself is the way back to today - the same fresh
         // start the mode buttons give, in the mode already showing.
         nav.querySelector(".nav-label").addEventListener("click", () => this._navSetMode(this._navModeCurrent()));
