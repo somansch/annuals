@@ -10491,15 +10491,23 @@
       todoCompleteConfirm: "Pažymėti „{item}“ kaip atliktą?",
       todoCompleteConfirmMultiple: "Pažymėti visas {count} šio įvykio užduotis kaip atliktas?",
       todoCompleteFailed: "Nepavyko užbaigti šios užduoties.",
-      // Lithuanian ordinals agree in gender with the noun ("27-asis
-      // gimtadienis", "10-oji sukaktis"), which the sentence cannot know, so
-      // the count is given as the occasion's number of times - "kartas" is
-      // masculine whatever the event type is.
+      // Lithuanian ordinals agree in gender with the noun they stand before
+      // ("60-asis gimtadienis" masculine, "27-oji sukaktis" feminine), so the
+      // ordinal is inflected from the event type (see ordinalParts' second
+      // argument). The name keeps its nominative form with a colon - the card
+      // cannot decline it, and "Ričardas: 60-asis gimtadienis" reads naturally
+      // for any name, declinable or foreign (confirmed in #13).
       possessive: (name) => name,
-      ordinalParts: (n) => ({ num: `${n}-asis`, sup: "" }),
-      timelineSentence: "{possessive}: {type} ({ordinal}{sup} kartas) — {when}",
+      ordinalParts: (n, type) => {
+        // sukaktis (anniversary, wedding/work anniversary) and šventė
+        // (holiday) are feminine; gimtadienis, vardadienis, atminimas and the
+        // rest are masculine. Unknowns take the masculine, the default form.
+        const feminine = type === "anniversary" || type === "wedding_anniversary" || type === "work_anniversary" || type === "holiday";
+        return { num: `${n}-${feminine ? "oji" : "asis"}`, sup: "" };
+      },
+      timelineSentence: "{possessive}: {ordinal}{sup} {type} — {when}",
       timelineSentenceSimple: "{name} — {when}",
-      timelineSentencePast: "{possessive}: {type} ({ordinal}{sup} kartas) — {when}",
+      timelineSentencePast: "{possessive}: {ordinal}{sup} {type} — {when}",
       timelineSentenceSimplePast: "{name} — {when}",
       timelineExpand: "Išsamiau",
       timelineCollapse: "Mažiau",
@@ -10763,7 +10771,7 @@
         groupTimelineDesc: "Naudojama tik tada, kai išdėstymo stilius yra Laiko juosta.",
         timelineHeaderLabel: "Antraštė",
         timelineHeaderFontDesc:
-          "Aprašomosios eilutės virš ašies šriftas, pvz., „Kevinas: gimtadienis (27-asis kartas) — šiandien“.",
+          "Aprašomosios eilutės virš ašies šriftas, pvz., „Kevinas: 27-asis gimtadienis — šiandien“.",
         timelineHeaderColorDesc: "Aprašomosios eilutės virš ašies teksto spalva.",
         timelineTooltipLabel: "Patarimas",
         timelineTooltipFontDesc: "Teksto, rodomo spustelėjus tašką ašyje, šriftas.",
@@ -14120,6 +14128,13 @@
            (see .row.has-row-actions): what "auto" does for a row without
            one, said outright. */
         grid-auto-rows: minmax(min-content, auto);
+        /* A grid's default align-content is "normal", which for auto rows
+           means "stretch": in a card given a fixed height - a sections cell
+           with grid_options.rows - the list's leftover height was shared
+           out among the rows, and a search leaving one row handed it all
+           to that one, a single event stretched across the card (#15).
+           Rows keep their content height; the space below stays empty. */
+        align-content: start;
       }
       /* The occurrence badge's slot and the countdown carry a fixed width and
          a minimum width below. Those belong to the flex fallback, where every
@@ -17826,7 +17841,7 @@
         ? typeLabel
         : typeLabel.charAt(0).toLowerCase() + typeLabel.slice(1);
       const possessive = (strings.possessive || ((n) => `${n}'s`))(displayName);
-      const { num, sup } = (strings.ordinalParts || ((n) => ({ num: `${n}.`, sup: "" })))(occurrence);
+      const { num, sup } = (strings.ordinalParts || ((n) => ({ num: `${n}.`, sup: "" })))(occurrence, e.type);
       // {sup} is the one placeholder handled specially below (split instead
       // of replaced) so its value can become a real <sup> element; every
       // other placeholder is a plain string substitution.
