@@ -140,11 +140,13 @@
                     "month": "Ay",
                     "year": "Yıl (bilinmiyorsa boş bırakın)",
                     "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Vefat etti"
                 },
                 "description": "Her etkinlik kendi girişini alır; daha sonra Ayarlar → Cihazlar ve hizmetler → Annuals bölümünden adını arayarak bulup düzenleyebilirsiniz.",
                 "data_description": {
-                    "person": "Home Assistant'ta fotoğrafı bu etkinliği temsil eden bir kişi – panel kartında ve hatırlatıcının bildiriminde."
+                    "person": "Home Assistant'ta fotoğrafı bu etkinliği temsil eden bir kişi – panel kartında ve hatırlatıcının bildiriminde.",
+                    "deceased": "Kişi vefat etti: gün korunur ve işaretlenir, kart o günün ne olacağını söyler ve otomasyonlarınız onu ayırt edebilir."
                 }
             },
             "one_time": {
@@ -203,10 +205,12 @@
                     "month": "Ay",
                     "year": "Yıl (bilinmiyorsa boş bırakın)",
                     "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Vefat etti"
                 },
                 "data_description": {
-                    "person": "Home Assistant'ta fotoğrafı bu etkinliği temsil eden bir kişi – panel kartında ve hatırlatıcının bildiriminde."
+                    "person": "Home Assistant'ta fotoğrafı bu etkinliği temsil eden bir kişi – panel kartında ve hatırlatıcının bildiriminde.",
+                    "deceased": "Kişi vefat etti: gün korunur ve işaretlenir, kart o günün ne olacağını söyler ve otomasyonlarınız onu ayırt edebilir."
                 }
             },
             "reconfigure_one_time": {
@@ -526,10 +530,12 @@
                     "month": "Ay",
                     "year": "Yıl (bilinmiyorsa boş bırakın)",
                     "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Vefat etti"
                 },
                 "data_description": {
-                    "person": "Home Assistant'ta fotoğrafı bu etkinliği temsil eden bir kişi – panel kartında ve hatırlatıcının bildiriminde."
+                    "person": "Home Assistant'ta fotoğrafı bu etkinliği temsil eden bir kişi – panel kartında ve hatırlatıcının bildiriminde.",
+                    "deceased": "Kişi vefat etti: gün korunur ve işaretlenir, kart o günün ne olacağını söyler ve otomasyonlarınız onu ayırt edebilir."
                 }
             },
             "edit_one_time": {

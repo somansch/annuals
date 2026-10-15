@@ -36,7 +36,8 @@ blueprint:
     - `{{ ev_type }}` - the event type, translated into your HA's configured language, e.g. "Birthday"/"Geburtstag" (16 languages translated, see Annuals readme)
     - `{{ occurrence }}` - the occurrence number, e.g. "30"
     - `{{ days_until }}` - number of days until the event, e.g. "7"
-    - `{{ reminder_message }}` - a ready-made, translated countdown phrase, e.g. "in 7 days (#30)", "Tomorrow" or "Today"
+    - `{{ reminder_message }}` - a ready-made, translated countdown phrase, e.g. "in 7 days (#30)", "Tomorrow" or "Today" - and, for a day of someone who has died, "Would have been today"
+    - `{{ deceased }}` - `true` on an event flagged "Deceased" in Annuals, `false` otherwise
     - `{{ summary }}` - the rendered Notification title (see below) - also what becomes the to-do list item text; only available in the message and any additional actions, not in the title template itself
     - `{{ ent }}` - the event's entity id
 
@@ -566,6 +567,11 @@ action:
                     # English text.
                     ev_type: "{{ state_attr(ent, 'type_label') }}"
                     occurrence: "{{ state_attr(ent, 'occurrence_number') }}"
+                    # A day of someone who has died (see CONF_DECEASED in
+                    # const.py). The countdown phrase above already says
+                    # "would have been" for it; this is for a template that
+                    # wants to say more, or nothing.
+                    deceased: "{{ state_attr(ent, 'deceased') | bool(false) }}"
                     # Only a multi-day one-time event has this at all (see
                     # CONF_END_DATE in const.py); it is none for everything
                     # else, which is what keeps the whole block below a

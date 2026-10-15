@@ -140,11 +140,13 @@
                     "month": "Mes",
                     "year": "Año (dejar vacío si se desconoce)",
                     "icon": "Sobrescribir icono (opcional)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Fallecido/a"
                 },
                 "description": "Cada evento obtiene su propia entrada, que luego puedes encontrar y editar desde Ajustes → Dispositivos y servicios → Annuals buscando su nombre.",
                 "data_description": {
-                    "person": "Una persona en Home Assistant cuya foto representa este evento: en la tarjeta del panel y en la notificación del recordatorio."
+                    "person": "Una persona en Home Assistant cuya foto representa este evento: en la tarjeta del panel y en la notificación del recordatorio.",
+                    "deceased": "La persona ha fallecido: el día se conserva y se marca, la tarjeta dice lo que habría sido y tus automatizaciones pueden distinguirlo."
                 }
             },
             "one_time": {
@@ -203,10 +205,12 @@
                     "month": "Mes",
                     "year": "Año (dejar vacío si se desconoce)",
                     "icon": "Sobrescribir icono (opcional)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Fallecido/a"
                 },
                 "data_description": {
-                    "person": "Una persona en Home Assistant cuya foto representa este evento: en la tarjeta del panel y en la notificación del recordatorio."
+                    "person": "Una persona en Home Assistant cuya foto representa este evento: en la tarjeta del panel y en la notificación del recordatorio.",
+                    "deceased": "La persona ha fallecido: el día se conserva y se marca, la tarjeta dice lo que habría sido y tus automatizaciones pueden distinguirlo."
                 }
             },
             "reconfigure_one_time": {
@@ -526,10 +530,12 @@
                     "month": "Mes",
                     "year": "Año (dejar vacío si se desconoce)",
                     "icon": "Sobrescribir icono (opcional)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Fallecido/a"
                 },
                 "data_description": {
-                    "person": "Una persona en Home Assistant cuya foto representa este evento: en la tarjeta del panel y en la notificación del recordatorio."
+                    "person": "Una persona en Home Assistant cuya foto representa este evento: en la tarjeta del panel y en la notificación del recordatorio.",
+                    "deceased": "La persona ha fallecido: el día se conserva y se marca, la tarjeta dice lo que habría sido y tus automatizaciones pueden distinguirlo."
                 }
             },
             "edit_one_time": {

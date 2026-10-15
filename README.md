@@ -68,6 +68,7 @@ That's the whole setup - everything below covers the individual features and opt
 **How events behave**
 
 - [Leap years](#leap-years)
+- [Days of people who have died](#days-of-people-who-have-died) - the Deceased switch, what it changes on the sensor, the reminder and the card
 - [Created entities](#created-entities) - every sensor attribute, for your own templates
 
 **Automations**
@@ -143,6 +144,7 @@ Each kind then gets a form carrying only its own fields, instead of one form car
 | **Repeats every** / **…months or years** | **Custom events only**, optional, both together - see [Dates that repeat every few months or years](#dates-that-repeat-every-few-months-or-years). |
 | **Icon override** | Optional. Home Assistant's native icon picker. Leave empty to use the type's default icon. |
 | **VIP annual** | Optional, off by default. Marks this one event as VIP - independent of type or occurrence number, e.g. a close family member's birthday you always want to stand out. Purely a display flag: the [custom dashboard card](#custom-dashboard-card) below can filter to VIP-only and show a distinct badge. |
+| **Deceased** | Optional, off by default, for birthdays, name days, pet birthdays and wedding anniversaries: the person has died. The day is kept and marked - the sensor carries `deceased: true`, its reminder reads *Would have been today*, and the card says what the day would have been. See [Days of people who have died](#days-of-people-who-have-died). |
 
 | Type | Default icon |
 |---|---|
@@ -262,6 +264,7 @@ The file needs a header row with these columns:
 | `year` | No, except required for `one_time` | Leave empty if unknown - not allowed for `one_time` rows, see [Adding an event](#adding-an-event) above. |
 | `icon` | No | An MDI icon name (e.g. `mdi:cake-variant`) to override the type's default. |
 | `vip` | No | Accepts `1`/`true`/`yes`/`y`/`x` (case-insensitive) to mark the event VIP. Leave empty or omit the column otherwise. |
+| `deceased` | No | Same values as `vip`, on `birthday`, `name_day`, `pet_birthday` and `wedding_anniversary`: a day of someone who has died - see [Days of people who have died](#days-of-people-who-have-died). Ignored on every other type. |
 | `last_name` | No | Kept separate from `name` - see [Adding an event](#adding-an-event) above. |
 | `end_date` | No | `one_time` rows only - an ISO `YYYY-MM-DD` date after the row's own date, which makes it a multi-day event (see [Events that span several days](#events-that-span-several-days)). |
 | `nth`, `weekday` | No | `custom` rows only, and only both together - the recurrence rule described under [Dates that are a rule, not a day](#dates-that-are-a-rule-not-a-day). `nth` is `1` to `4`, or `-1` for the last one in the month; `weekday` is `0` for Monday to `6` for Sunday. The row's own `month` is the month the rule applies to, and its `day` is then not read. |
@@ -272,7 +275,7 @@ The file needs a header row with these columns:
 Keep every column even when a value is empty - a row with a missing trailing comma shifts the following values left.
 
 ```csv
-name,type,day,month,year,icon,vip,last_name,end_date,nth,weekday,person,interval,interval_unit,time,end_time
+name,type,day,month,year,icon,vip,last_name,end_date,nth,weekday,person,interval,interval_unit,time,end_time,deceased
 Anna,birthday,12,4,1988,,,Miller,,,,person.anna,,,,
 Max,pet_birthday,3,9,2020,mdi:dog,,,,,,,,,,
 Acme Corp,work_anniversary,1,7,2015,,,,,,,,,,,
@@ -477,6 +480,18 @@ Concretely:
 
 This is a deliberate design choice: it guarantees an occurrence every year (not just once every four years), and `occurrence_number` (e.g. "turning 30") still counts correctly, since it's simply computed as target year - birth year, independent of the exact day.
 
+## Days of people who have died
+
+A birthday is often kept after the person is gone - to remember the day, not to be told that someone "turns 90 today". The yearly event form has a **Deceased** switch for that, on birthdays, name days, pet birthdays and wedding anniversaries (it is shown on every yearly type, since the form cannot know the type before it is submitted, and ignored on the others). The event stays, with its year and occurrence number, and three things change:
+
+- The sensor carries `deceased: true`, so a template or an automation can tell such a day apart without naming anyone - `selectattr('attributes.deceased', 'equalto', false)` keeps the living.
+- Its `reminder_message` reads *Would have been today* / *Would have been in 7 days* instead of *Today* / *in 7 days*, in the server's language - which is what the bundled reminder blueprint's notification says.
+- The card words the Timeline sentence as *Anna's 90th birthday would have been today*, and the row is muted by default; **Events of the deceased** under Layout → General sets it to muted, hidden, or drawn like any other event. **Deceased only** beside the VIP and Important filters narrows the card to those days - a card of its own for remembrance days.
+
+The flag is never guessed from a memorial entry: the day of death is often unknown, and a name is not an identity. CSV import and export carry it as a `deceased` column.
+
+<img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-deceased.png" alt="The card in the Timeline layout: Matthew's 95th birthday would have been tomorrow as the sentence over the axis, and in the list below it and Cooper's 5th pet birthday muted among the other events, each worded would have been" width="60%">
+
 ## Created entities
 
 Each event you add is its own config entry, titled `<Type>: <Name>` (e.g. "Birthday: Anna") so the integration page groups and searches by type. The single **"Annuals Settings" hub entry**, created during first-time setup, owns the shared per-type calendars (and any future cross-event entities). It has no event fields of its own beyond the tools listed under [Annuals Settings](#annuals-settings) above; don't delete it manually unless you're removing the whole integration.
@@ -506,6 +521,7 @@ Attributes on each event's sensor:
 | `time`, `end_time` | `one_time` events given a time only - `HH:MM`, see [A time of day](#a-time-of-day). |
 | `todo` | `true` if a still-open item on one of the to-do lists picked under [Annual Settings](#annual-settings-automatic-milestones) is currently matched to this event, `false` otherwise (and always `false` while no list is picked). |
 | `vip` | `true` if the **VIP annual** flag is set on this event, `false` otherwise. |
+| `deceased` | `true` on a birthday, name day, pet birthday or wedding anniversary flagged **Deceased**, `false` on everything else - see [Days of people who have died](#days-of-people-who-have-died). Its `reminder_message` then reads *Would have been today*. |
 | `important` | `true` if the upcoming occurrence number matches one of that type's milestones in [Annual Settings](#annual-settings-automatic-milestones), `false` otherwise (always `false` when no year was entered, since there's no occurrence number to check - always `false` for `one_time` events for the same reason). |
 | `category`, `country`, `subdivision`, `holiday_key` | `holiday` and `market` events only - the imported holiday's category (see [Importing public holidays](#importing-public-holidays)), country code (a market code such as `XNYS` for a `market` event), subdivision code (empty if none was chosen), and its stable identity key (e.g. "New Year's Day") used to match its actual/observed counterpart. `null`/absent on every other type. |
 | `observed` | `holiday` events only - `true` if this entity tracks the holiday's practically-observed (weekend-shifted) date rather than its literal one, see [Importing public holidays](#importing-public-holidays). `false`/absent on every other type. |

@@ -141,10 +141,12 @@
                     "month": "Monat",
                     "year": "Jahr (leer lassen, wenn unbekannt)",
                     "icon": "Icon überschreiben (optional)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Verstorben"
                 },
                 "data_description": {
-                    "person": "Eine Person in Home Assistant, deren Bild für dieses Ereignis steht – auf der Dashboard-Karte und in der Benachrichtigung der Erinnerung."
+                    "person": "Eine Person in Home Assistant, deren Bild für dieses Ereignis steht – auf der Dashboard-Karte und in der Benachrichtigung der Erinnerung.",
+                    "deceased": "Die Person ist verstorben: Der Tag bleibt und wird markiert, die Karte sagt, was er gewesen wäre, und deine Automatisierungen können ihn unterscheiden."
                 }
             },
             "one_time": {
@@ -203,10 +205,12 @@
                     "month": "Monat",
                     "year": "Jahr (leer lassen, wenn unbekannt)",
                     "icon": "Icon überschreiben (optional)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Verstorben"
                 },
                 "data_description": {
-                    "person": "Eine Person in Home Assistant, deren Bild für dieses Ereignis steht – auf der Dashboard-Karte und in der Benachrichtigung der Erinnerung."
+                    "person": "Eine Person in Home Assistant, deren Bild für dieses Ereignis steht – auf der Dashboard-Karte und in der Benachrichtigung der Erinnerung.",
+                    "deceased": "Die Person ist verstorben: Der Tag bleibt und wird markiert, die Karte sagt, was er gewesen wäre, und deine Automatisierungen können ihn unterscheiden."
                 }
             },
             "reconfigure_one_time": {
@@ -526,10 +530,12 @@
                     "month": "Monat",
                     "year": "Jahr (leer lassen, wenn unbekannt)",
                     "icon": "Icon überschreiben (optional)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Verstorben"
                 },
                 "data_description": {
-                    "person": "Eine Person in Home Assistant, deren Bild für dieses Ereignis steht – auf der Dashboard-Karte und in der Benachrichtigung der Erinnerung."
+                    "person": "Eine Person in Home Assistant, deren Bild für dieses Ereignis steht – auf der Dashboard-Karte und in der Benachrichtigung der Erinnerung.",
+                    "deceased": "Die Person ist verstorben: Der Tag bleibt und wird markiert, die Karte sagt, was er gewesen wäre, und deine Automatisierungen können ihn unterscheiden."
                 }
             },
             "edit_one_time": {

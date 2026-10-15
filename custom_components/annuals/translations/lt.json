@@ -141,10 +141,12 @@
                     "month": "Mėnuo",
                     "year": "Metai (palikite tuščius, jei nežinomi)",
                     "icon": "Piktograma (neprivaloma)",
-                    "vip": "VIP"
+                    "vip": "VIP",
+                    "deceased": "Miręs (-usi)"
                 },
                 "data_description": {
-                    "person": "Home Assistant asmuo, kurio nuotrauka įkeliama į įvykį - dashboard kortelėje ir priminimo pranešime."
+                    "person": "Home Assistant asmuo, kurio nuotrauka įkeliama į įvykį - dashboard kortelėje ir priminimo pranešime.",
+                    "deceased": "Asmuo mirė: diena lieka ir pažymima, kortelė sako, kokia ji būtų buvusi, o automatizacijos gali ją atskirti."
                 }
             },
             "one_time": {
@@ -203,10 +205,12 @@
                     "month": "Mėnuo",
                     "year": "Metai (palikite tuščius, jei nežinomi)",
                     "icon": "Piktograma (neprivaloma)",
-                    "vip": "VIP"
+                    "vip": "VIP",
+                    "deceased": "Miręs (-usi)"
                 },
                 "data_description": {
-                    "person": "Home Assistant asmuo, kurio nuotrauka įkeliama į įvykį - dashboard kortelėje ir priminimo pranešime."
+                    "person": "Home Assistant asmuo, kurio nuotrauka įkeliama į įvykį - dashboard kortelėje ir priminimo pranešime.",
+                    "deceased": "Asmuo mirė: diena lieka ir pažymima, kortelė sako, kokia ji būtų buvusi, o automatizacijos gali ją atskirti."
                 }
             },
             "reconfigure_one_time": {
@@ -526,10 +530,12 @@
                     "month": "Mėnuo",
                     "year": "Metai (palikite tuščius, jei nežinomi)",
                     "icon": "Piktograma (neprivaloma)",
-                    "vip": "VIP"
+                    "vip": "VIP",
+                    "deceased": "Miręs (-usi)"
                 },
                 "data_description": {
-                    "person": "Home Assistant asmuo, kurio nuotrauka įkeliama į įvykį - dashboard kortelėje ir priminimo pranešime."
+                    "person": "Home Assistant asmuo, kurio nuotrauka įkeliama į įvykį - dashboard kortelėje ir priminimo pranešime.",
+                    "deceased": "Asmuo mirė: diena lieka ir pažymima, kortelė sako, kokia ji būtų buvusi, o automatizacijos gali ją atskirti."
                 }
             },
             "edit_one_time": {

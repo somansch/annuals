@@ -140,11 +140,13 @@
                     "month": "月",
                     "year": "年份（未知可留空）",
                     "icon": "自定义图标（可选）",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "已去世"
                 },
                 "description": "每个事件都会创建独立的条目，之后可以在“设置 → 设备与服务 → Annuals”中通过搜索名称找到并编辑。",
                 "data_description": {
-                    "person": "Home Assistant 中的一个人员，其照片代表此事件——显示在仪表板卡片和提醒通知中。"
+                    "person": "Home Assistant 中的一个人员，其照片代表此事件——显示在仪表板卡片和提醒通知中。",
+                    "deceased": "此人已去世：这一天会保留并被标记，卡片会显示它本应是什么，自动化也能将其区分开。"
                 }
             },
             "one_time": {
@@ -203,10 +205,12 @@
                     "month": "月",
                     "year": "年份（未知可留空）",
                     "icon": "自定义图标（可选）",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "已去世"
                 },
                 "data_description": {
-                    "person": "Home Assistant 中的一个人员，其照片代表此事件——显示在仪表板卡片和提醒通知中。"
+                    "person": "Home Assistant 中的一个人员，其照片代表此事件——显示在仪表板卡片和提醒通知中。",
+                    "deceased": "此人已去世：这一天会保留并被标记，卡片会显示它本应是什么，自动化也能将其区分开。"
                 }
             },
             "reconfigure_one_time": {
@@ -526,10 +530,12 @@
                     "month": "月",
                     "year": "年份（未知可留空）",
                     "icon": "自定义图标（可选）",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "已去世"
                 },
                 "data_description": {
-                    "person": "Home Assistant 中的一个人员，其照片代表此事件——显示在仪表板卡片和提醒通知中。"
+                    "person": "Home Assistant 中的一个人员，其照片代表此事件——显示在仪表板卡片和提醒通知中。",
+                    "deceased": "此人已去世：这一天会保留并被标记，卡片会显示它本应是什么，自动化也能将其区分开。"
                 }
             },
             "edit_one_time": {

@@ -140,11 +140,13 @@
                     "month": "Maand",
                     "year": "Jaar (leeg laten indien onbekend)",
                     "icon": "Icoon overschrijven (optioneel)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Overleden"
                 },
                 "description": "Elk evenement krijgt een eigen item, dat je later kunt terugvinden en bewerken via Instellingen → Apparaten en diensten → Annuals door op de naam te zoeken.",
                 "data_description": {
-                    "person": "Een persoon in Home Assistant wiens foto voor dit evenement staat – op de dashboardkaart en in de melding van de herinnering."
+                    "person": "Een persoon in Home Assistant wiens foto voor dit evenement staat – op de dashboardkaart en in de melding van de herinnering.",
+                    "deceased": "De persoon is overleden: de dag blijft en wordt gemarkeerd, de kaart zegt wat hij zou zijn geweest en je automatiseringen kunnen hem onderscheiden."
                 }
             },
             "one_time": {
@@ -203,10 +205,12 @@
                     "month": "Maand",
                     "year": "Jaar (leeg laten indien onbekend)",
                     "icon": "Icoon overschrijven (optioneel)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Overleden"
                 },
                 "data_description": {
-                    "person": "Een persoon in Home Assistant wiens foto voor dit evenement staat – op de dashboardkaart en in de melding van de herinnering."
+                    "person": "Een persoon in Home Assistant wiens foto voor dit evenement staat – op de dashboardkaart en in de melding van de herinnering.",
+                    "deceased": "De persoon is overleden: de dag blijft en wordt gemarkeerd, de kaart zegt wat hij zou zijn geweest en je automatiseringen kunnen hem onderscheiden."
                 }
             },
             "reconfigure_one_time": {
@@ -526,10 +530,12 @@
                     "month": "Maand",
                     "year": "Jaar (leeg laten indien onbekend)",
                     "icon": "Icoon overschrijven (optioneel)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Overleden"
                 },
                 "data_description": {
-                    "person": "Een persoon in Home Assistant wiens foto voor dit evenement staat – op de dashboardkaart en in de melding van de herinnering."
+                    "person": "Een persoon in Home Assistant wiens foto voor dit evenement staat – op de dashboardkaart en in de melding van de herinnering.",
+                    "deceased": "De persoon is overleden: de dag blijft en wordt gemarkeerd, de kaart zegt wat hij zou zijn geweest en je automatiseringen kunnen hem onderscheiden."
                 }
             },
             "edit_one_time": {

@@ -140,11 +140,13 @@
                     "month": "Månad",
                     "year": "År (lämna tomt om okänt)",
                     "icon": "Åsidosätt ikon (valfritt)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Avliden"
                 },
                 "description": "Varje händelse får en egen post, som du senare kan hitta och redigera under Inställningar → Enheter och tjänster → Annuals genom att söka på namnet.",
                 "data_description": {
-                    "person": "En person i Home Assistant vars bild står för den här händelsen – på kortet i instrumentpanelen och i påminnelsens avisering."
+                    "person": "En person i Home Assistant vars bild står för den här händelsen – på kortet i instrumentpanelen och i påminnelsens avisering.",
+                    "deceased": "Personen har avlidit: dagen behålls och markeras, kortet säger vad den skulle ha varit och dina automationer kan skilja den åt."
                 }
             },
             "one_time": {
@@ -203,10 +205,12 @@
                     "month": "Månad",
                     "year": "År (lämna tomt om okänt)",
                     "icon": "Åsidosätt ikon (valfritt)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Avliden"
                 },
                 "data_description": {
-                    "person": "En person i Home Assistant vars bild står för den här händelsen – på kortet i instrumentpanelen och i påminnelsens avisering."
+                    "person": "En person i Home Assistant vars bild står för den här händelsen – på kortet i instrumentpanelen och i påminnelsens avisering.",
+                    "deceased": "Personen har avlidit: dagen behålls och markeras, kortet säger vad den skulle ha varit och dina automationer kan skilja den åt."
                 }
             },
             "reconfigure_one_time": {
@@ -526,10 +530,12 @@
                     "month": "Månad",
                     "year": "År (lämna tomt om okänt)",
                     "icon": "Åsidosätt ikon (valfritt)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Avliden"
                 },
                 "data_description": {
-                    "person": "En person i Home Assistant vars bild står för den här händelsen – på kortet i instrumentpanelen och i påminnelsens avisering."
+                    "person": "En person i Home Assistant vars bild står för den här händelsen – på kortet i instrumentpanelen och i påminnelsens avisering.",
+                    "deceased": "Personen har avlidit: dagen behålls och markeras, kortet säger vad den skulle ha varit och dina automationer kan skilja den åt."
                 }
             },
             "edit_one_time": {

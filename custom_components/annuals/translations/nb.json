@@ -140,11 +140,13 @@
                     "month": "Måned",
                     "year": "År (la stå tomt hvis ukjent)",
                     "icon": "Overstyr ikon (valgfritt)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Avdød"
                 },
                 "description": "Hver hendelse får sin egen oppføring, som du senere kan finne og redigere under Innstillinger → Enheter og tjenester → Annuals ved å søke på navnet.",
                 "data_description": {
-                    "person": "En person i Home Assistant hvis bilde står for denne hendelsen – på dashbordkortet og i påminnelsens varsel."
+                    "person": "En person i Home Assistant hvis bilde står for denne hendelsen – på dashbordkortet og i påminnelsens varsel.",
+                    "deceased": "Personen er død: dagen beholdes og merkes, kortet sier hva den ville ha vært, og automasjonene dine kan skille den ut."
                 }
             },
             "one_time": {
@@ -203,10 +205,12 @@
                     "month": "Måned",
                     "year": "År (la stå tomt hvis ukjent)",
                     "icon": "Overstyr ikon (valgfritt)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Avdød"
                 },
                 "data_description": {
-                    "person": "En person i Home Assistant hvis bilde står for denne hendelsen – på dashbordkortet og i påminnelsens varsel."
+                    "person": "En person i Home Assistant hvis bilde står for denne hendelsen – på dashbordkortet og i påminnelsens varsel.",
+                    "deceased": "Personen er død: dagen beholdes og merkes, kortet sier hva den ville ha vært, og automasjonene dine kan skille den ut."
                 }
             },
             "reconfigure_one_time": {
@@ -526,10 +530,12 @@
                     "month": "Måned",
                     "year": "År (la stå tomt hvis ukjent)",
                     "icon": "Overstyr ikon (valgfritt)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Avdød"
                 },
                 "data_description": {
-                    "person": "En person i Home Assistant hvis bilde står for denne hendelsen – på dashbordkortet og i påminnelsens varsel."
+                    "person": "En person i Home Assistant hvis bilde står for denne hendelsen – på dashbordkortet og i påminnelsens varsel.",
+                    "deceased": "Personen er død: dagen beholdes og merkes, kortet sier hva den ville ha vært, og automasjonene dine kan skille den ut."
                 }
             },
             "edit_one_time": {

@@ -2,6 +2,11 @@
 
 All notable changes to this integration are documented here.
 
+## v3.5.0
+
+### Added
+- **Days of people who have died.** A **Deceased** switch on the yearly event form, for birthdays, name days, pet birthdays and wedding anniversaries ([#16](https://github.com/somansch/annuals/issues/16)). The day is kept and marked rather than deleted or guessed from a memorial: the sensor carries `deceased: true`, its `reminder_message` - and so the bundled blueprint's notification - reads *Would have been today* instead of *Today*, and the card's Timeline sentence says *Anna's 90th birthday would have been today*. On the card such a row is muted by default; **Events of the deceased** under Layout → General makes it muted, hidden, or like any other event, and **Deceased only** beside the VIP and Important filters narrows the card to them. CSV import and export carry the flag as a `deceased` column. In every one of the seventeen languages.
+
 ## v3.4.1
 
 ### Added

@@ -140,11 +140,13 @@
                     "month": "Miesiąc",
                     "year": "Rok (pozostaw puste, jeśli nieznany)",
                     "icon": "Zastąp ikonę (opcjonalnie)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Nie żyje"
                 },
                 "description": "Każde wydarzenie otrzymuje własny wpis, który później znajdziesz i edytujesz w Ustawienia → Urządzenia i usługi → Annuals, wyszukując po nazwie.",
                 "data_description": {
-                    "person": "Osoba w Home Assistant, której zdjęcie reprezentuje to wydarzenie – na karcie panelu i w powiadomieniu przypomnienia."
+                    "person": "Osoba w Home Assistant, której zdjęcie reprezentuje to wydarzenie – na karcie panelu i w powiadomieniu przypomnienia.",
+                    "deceased": "Osoba nie żyje: dzień zostaje i jest oznaczony, karta mówi, czym by był, a automatyzacje mogą go odróżnić."
                 }
             },
             "one_time": {
@@ -203,10 +205,12 @@
                     "month": "Miesiąc",
                     "year": "Rok (pozostaw puste, jeśli nieznany)",
                     "icon": "Zastąp ikonę (opcjonalnie)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Nie żyje"
                 },
                 "data_description": {
-                    "person": "Osoba w Home Assistant, której zdjęcie reprezentuje to wydarzenie – na karcie panelu i w powiadomieniu przypomnienia."
+                    "person": "Osoba w Home Assistant, której zdjęcie reprezentuje to wydarzenie – na karcie panelu i w powiadomieniu przypomnienia.",
+                    "deceased": "Osoba nie żyje: dzień zostaje i jest oznaczony, karta mówi, czym by był, a automatyzacje mogą go odróżnić."
                 }
             },
             "reconfigure_one_time": {
@@ -526,10 +530,12 @@
                     "month": "Miesiąc",
                     "year": "Rok (pozostaw puste, jeśli nieznany)",
                     "icon": "Zastąp ikonę (opcjonalnie)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Nie żyje"
                 },
                 "data_description": {
-                    "person": "Osoba w Home Assistant, której zdjęcie reprezentuje to wydarzenie – na karcie panelu i w powiadomieniu przypomnienia."
+                    "person": "Osoba w Home Assistant, której zdjęcie reprezentuje to wydarzenie – na karcie panelu i w powiadomieniu przypomnienia.",
+                    "deceased": "Osoba nie żyje: dzień zostaje i jest oznaczony, karta mówi, czym by był, a automatyzacje mogą go odróżnić."
                 }
             },
             "edit_one_time": {

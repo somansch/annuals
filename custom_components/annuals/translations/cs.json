@@ -140,11 +140,13 @@
                     "month": "Měsíc",
                     "year": "Rok (ponechte prázdné, pokud není znám)",
                     "icon": "Vlastní ikona (volitelné)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Zemřel(a)"
                 },
                 "description": "Každá událost má vlastní záznam, který později najdeš a upravíš v Nastavení → Zařízení a služby → Annuals vyhledáním podle jména.",
                 "data_description": {
-                    "person": "Osoba v Home Assistantu, jejíž fotka zastupuje tuto událost – na kartě dashboardu a v oznámení připomínky."
+                    "person": "Osoba v Home Assistantu, jejíž fotka zastupuje tuto událost – na kartě dashboardu a v oznámení připomínky.",
+                    "deceased": "Osoba zemřela: den zůstane a je označen, karta říká, co by byl, a vaše automatizace ho rozliší."
                 }
             },
             "one_time": {
@@ -203,10 +205,12 @@
                     "month": "Měsíc",
                     "year": "Rok (ponechte prázdné, pokud není znám)",
                     "icon": "Vlastní ikona (volitelné)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Zemřel(a)"
                 },
                 "data_description": {
-                    "person": "Osoba v Home Assistantu, jejíž fotka zastupuje tuto událost – na kartě dashboardu a v oznámení připomínky."
+                    "person": "Osoba v Home Assistantu, jejíž fotka zastupuje tuto událost – na kartě dashboardu a v oznámení připomínky.",
+                    "deceased": "Osoba zemřela: den zůstane a je označen, karta říká, co by byl, a vaše automatizace ho rozliší."
                 }
             },
             "reconfigure_one_time": {
@@ -526,10 +530,12 @@
                     "month": "Měsíc",
                     "year": "Rok (ponechte prázdné, pokud není znám)",
                     "icon": "Vlastní ikona (volitelné)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Zemřel(a)"
                 },
                 "data_description": {
-                    "person": "Osoba v Home Assistantu, jejíž fotka zastupuje tuto událost – na kartě dashboardu a v oznámení připomínky."
+                    "person": "Osoba v Home Assistantu, jejíž fotka zastupuje tuto událost – na kartě dashboardu a v oznámení připomínky.",
+                    "deceased": "Osoba zemřela: den zůstane a je označen, karta říká, co by byl, a vaše automatizace ho rozliší."
                 }
             },
             "edit_one_time": {

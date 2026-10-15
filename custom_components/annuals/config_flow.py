@@ -53,7 +53,9 @@ from .const import (
     CONF_SUBDIVISION,
     CONF_TIME,
     CONF_TODO_LISTS,
+    CONF_DECEASED,
     CONF_VIP,
+    DECEASED_TYPES,
     CONF_WEEKDAY,
     CONF_YEAR,
     INTERVAL_UNIT_OPTIONS,
@@ -509,6 +511,18 @@ def _event_schema(defaults: dict | None, *, group: str) -> vol.Schema:
             vol.Optional(
                 CONF_VIP, default=defaults.get(CONF_VIP, False)
             ): selector({"boolean": {}}),
+            # Only the yearly shape offers it, and only the types in
+            # DECEASED_TYPES keep it (see _validate_and_normalise): the
+            # form cannot show a field for some types of the seven.
+            **(
+                {
+                    vol.Optional(
+                        CONF_DECEASED, default=defaults.get(CONF_DECEASED, False)
+                    ): selector({"boolean": {}})
+                }
+                if group == GROUP_RECURRING
+                else {}
+            ),
         }
     )
 
@@ -634,6 +648,8 @@ def _validate_and_normalise(user_input: dict) -> tuple[dict | None, dict[str, st
         CONF_YEAR: year,
         CONF_ICON: user_input.get(CONF_ICON, "").strip(),
         CONF_VIP: bool(user_input.get(CONF_VIP, False)),
+        CONF_DECEASED: bool(user_input.get(CONF_DECEASED, False))
+        and user_input[CONF_EVENT_TYPE] in DECEASED_TYPES,
         # Always written, None included: reconfiguring a multi-day event back
         # to a single day has to actually clear the stored end date, which a
         # "only set it when present" would silently fail to do.
@@ -813,6 +829,8 @@ def _parse_csv_rows(text: str) -> tuple[list[dict], list[str]]:
                 CONF_YEAR: year,
                 CONF_ICON: icon_raw,
                 CONF_VIP: row.get("vip", "").lower() in _CSV_TRUE_VALUES,
+                CONF_DECEASED: row.get("deceased", "").lower() in _CSV_TRUE_VALUES
+                and event_type in DECEASED_TYPES,
                 CONF_END_DATE: end_date or None,
                 CONF_NTH: int(nth) if nth else None,
                 CONF_WEEKDAY: int(weekday) if nth else None,

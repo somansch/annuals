@@ -141,10 +141,12 @@
                     "month": "Mesiac",
                     "year": "Rok (ak je neznámy, nechajte prázdne)",
                     "icon": "Vlastná ikona (voliteľné)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Zomrel(a)"
                 },
                 "data_description": {
-                    "person": "Osoba v Home Assistante, ktorej fotka zastupuje túto udalosť – na karte dashboardu a v oznámení pripomienky."
+                    "person": "Osoba v Home Assistante, ktorej fotka zastupuje túto udalosť – na karte dashboardu a v oznámení pripomienky.",
+                    "deceased": "Osoba zomrela: deň zostane a je označený, karta hovorí, čo by bol, a vaše automatizácie ho rozlíšia."
                 }
             },
             "one_time": {
@@ -203,10 +205,12 @@
                     "month": "Mesiac",
                     "year": "Rok (ak je neznámy, nechajte prázdne)",
                     "icon": "Vlastná ikona (voliteľné)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Zomrel(a)"
                 },
                 "data_description": {
-                    "person": "Osoba v Home Assistante, ktorej fotka zastupuje túto udalosť – na karte dashboardu a v oznámení pripomienky."
+                    "person": "Osoba v Home Assistante, ktorej fotka zastupuje túto udalosť – na karte dashboardu a v oznámení pripomienky.",
+                    "deceased": "Osoba zomrela: deň zostane a je označený, karta hovorí, čo by bol, a vaše automatizácie ho rozlíšia."
                 }
             },
             "reconfigure_one_time": {
@@ -287,10 +291,12 @@
                     "month": "Mesiac",
                     "year": "Rok (ak je neznámy, nechajte prázdne)",
                     "icon": "Vlastná ikona (voliteľné)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Zomrel(a)"
                 },
                 "data_description": {
-                    "person": "Osoba v Home Assistante, ktorej fotka zastupuje túto udalosť – na karte dashboardu a v oznámení pripomienky."
+                    "person": "Osoba v Home Assistante, ktorej fotka zastupuje túto udalosť – na karte dashboardu a v oznámení pripomienky.",
+                    "deceased": "Osoba zomrela: deň zostane a je označený, karta hovorí, čo by bol, a vaše automatizácie ho rozlíšia."
                 }
             },
             "edit_one_time": {

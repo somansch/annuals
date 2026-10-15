@@ -43,6 +43,7 @@ from .const import (
     CONF_PERSON,
     CONF_TIME,
     CONF_NAME_TRANSLATIONS,
+    CONF_DECEASED,
     CONF_VIP,
     CONF_WEEKDAY,
     CONF_YEAR,
@@ -159,6 +160,7 @@ def export_csv_text(hass: HomeAssistant) -> tuple[str, int]:
             "interval_unit",
             "time",
             "end_time",
+            "deceased",
         ]
     )
     for data in rows:
@@ -187,6 +189,8 @@ def export_csv_text(hass: HomeAssistant) -> tuple[str, int]:
                 data.get(CONF_INTERVAL_UNIT) or "",
                 data.get(CONF_TIME) or "",
                 data.get(CONF_END_TIME) or "",
+                # The deceased flag - see CONF_DECEASED and DECEASED_TYPES.
+                "1" if data.get(CONF_DECEASED) else "",
             ]
         )
     return buffer.getvalue(), len(rows)
@@ -507,23 +511,23 @@ async def async_break_note(hass: HomeAssistant) -> str:
 # language's full CLDR plural rules (Polish/Russian/Czech, notably, have more
 # than two forms), the same trade-off the card's own strings already make.
 _REMINDER_STRINGS: dict[str, dict[str, str]] = {
-    "en": {"today": "Today", "tomorrow": "Tomorrow", "in_days": "in {days} days"},
-    "de": {"today": "Heute", "tomorrow": "Morgen", "in_days": "in {days} Tagen"},
-    "fr": {"today": "Aujourd'hui", "tomorrow": "Demain", "in_days": "dans {days} jours"},
-    "nl": {"today": "Vandaag", "tomorrow": "Morgen", "in_days": "over {days} dagen"},
-    "pl": {"today": "Dzisiaj", "tomorrow": "Jutro", "in_days": "za {days} dni"},
-    "es": {"today": "Hoy", "tomorrow": "Mañana", "in_days": "en {days} días"},
-    "it": {"today": "Oggi", "tomorrow": "Domani", "in_days": "tra {days} giorni"},
-    "pt-BR": {"today": "Hoje", "tomorrow": "Amanhã", "in_days": "em {days} dias"},
-    "ru": {"today": "Сегодня", "tomorrow": "Завтра", "in_days": "через {days} дн."},
-    "sv": {"today": "Idag", "tomorrow": "Imorgon", "in_days": "om {days} dagar"},
-    "zh-Hans": {"today": "今天", "tomorrow": "明天", "in_days": "{days} 天后"},
-    "cs": {"today": "Dnes", "tomorrow": "Zítra", "in_days": "za {days} dní"},
-    "nb": {"today": "I dag", "tomorrow": "I morgen", "in_days": "om {days} dager"},
-    "da": {"today": "I dag", "tomorrow": "I morgen", "in_days": "om {days} dage"},
-    "tr": {"today": "Bugün", "tomorrow": "Yarın", "in_days": "{days} gün sonra"},
-    "sk": {"today": "Dnes", "tomorrow": "Zajtra", "in_days": "o {days} dní"},
-    "lt": {"today": "Šiandien", "tomorrow": "Rytoj", "in_days": "po {days} dienų"},
+    "en": {"today": "Today", "tomorrow": "Tomorrow", "in_days": "in {days} days", "today_deceased": "Would have been today", "tomorrow_deceased": "Would have been tomorrow", "in_days_deceased": "Would have been in {days} days"},
+    "de": {"today": "Heute", "tomorrow": "Morgen", "in_days": "in {days} Tagen", "today_deceased": "Wäre heute gewesen", "tomorrow_deceased": "Wäre morgen gewesen", "in_days_deceased": "Wäre in {days} Tagen gewesen"},
+    "fr": {"today": "Aujourd'hui", "tomorrow": "Demain", "in_days": "dans {days} jours", "today_deceased": "Aurait été aujourd'hui", "tomorrow_deceased": "Aurait été demain", "in_days_deceased": "Aurait été dans {days} jours"},
+    "nl": {"today": "Vandaag", "tomorrow": "Morgen", "in_days": "over {days} dagen", "today_deceased": "Zou vandaag zijn geweest", "tomorrow_deceased": "Zou morgen zijn geweest", "in_days_deceased": "Zou over {days} dagen zijn geweest"},
+    "pl": {"today": "Dzisiaj", "tomorrow": "Jutro", "in_days": "za {days} dni", "today_deceased": "Przypadałyby dzisiaj", "tomorrow_deceased": "Przypadałyby jutro", "in_days_deceased": "Przypadałyby za {days} dni"},
+    "es": {"today": "Hoy", "tomorrow": "Mañana", "in_days": "en {days} días", "today_deceased": "Habría sido hoy", "tomorrow_deceased": "Habría sido mañana", "in_days_deceased": "Habría sido en {days} días"},
+    "it": {"today": "Oggi", "tomorrow": "Domani", "in_days": "tra {days} giorni", "today_deceased": "Sarebbe stato oggi", "tomorrow_deceased": "Sarebbe stato domani", "in_days_deceased": "Sarebbe stato tra {days} giorni"},
+    "pt-BR": {"today": "Hoje", "tomorrow": "Amanhã", "in_days": "em {days} dias", "today_deceased": "Teria sido hoje", "tomorrow_deceased": "Teria sido amanhã", "in_days_deceased": "Teria sido em {days} dias"},
+    "ru": {"today": "Сегодня", "tomorrow": "Завтра", "in_days": "через {days} дн.", "today_deceased": "Был бы сегодня", "tomorrow_deceased": "Был бы завтра", "in_days_deceased": "Был бы через {days} дн."},
+    "sv": {"today": "Idag", "tomorrow": "Imorgon", "in_days": "om {days} dagar", "today_deceased": "Skulle ha varit idag", "tomorrow_deceased": "Skulle ha varit imorgon", "in_days_deceased": "Skulle ha varit om {days} dagar"},
+    "zh-Hans": {"today": "今天", "tomorrow": "明天", "in_days": "{days} 天后", "today_deceased": "本应是今天", "tomorrow_deceased": "本应是明天", "in_days_deceased": "本应是 {days} 天后"},
+    "cs": {"today": "Dnes", "tomorrow": "Zítra", "in_days": "za {days} dní", "today_deceased": "Byly by dnes", "tomorrow_deceased": "Byly by zítra", "in_days_deceased": "Byly by za {days} dní"},
+    "nb": {"today": "I dag", "tomorrow": "I morgen", "in_days": "om {days} dager", "today_deceased": "Ville ha vært i dag", "tomorrow_deceased": "Ville ha vært i morgen", "in_days_deceased": "Ville ha vært om {days} dager"},
+    "da": {"today": "I dag", "tomorrow": "I morgen", "in_days": "om {days} dage", "today_deceased": "Ville have været i dag", "tomorrow_deceased": "Ville have været i morgen", "in_days_deceased": "Ville have været om {days} dage"},
+    "tr": {"today": "Bugün", "tomorrow": "Yarın", "in_days": "{days} gün sonra", "today_deceased": "Bugün olacaktı", "tomorrow_deceased": "Yarın olacaktı", "in_days_deceased": "{days} gün sonra olacaktı"},
+    "sk": {"today": "Dnes", "tomorrow": "Zajtra", "in_days": "o {days} dní", "today_deceased": "Boli by dnes", "tomorrow_deceased": "Boli by zajtra", "in_days_deceased": "Boli by o {days} dní"},
+    "lt": {"today": "Šiandien", "tomorrow": "Rytoj", "in_days": "po {days} dienų", "today_deceased": "Būtų buvęs šiandien", "tomorrow_deceased": "Būtų buvęs rytoj", "in_days_deceased": "Būtų buvęs po {days} dienų"},
 }
 
 

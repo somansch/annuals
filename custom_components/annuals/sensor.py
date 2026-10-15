@@ -37,6 +37,7 @@ from .const import (
     CONF_PERSON,
     CONF_SUBDIVISION,
     CONF_TIME,
+    CONF_DECEASED,
     CONF_VIP,
     CONF_YEAR,
     DATA_REMINDER_STRINGS,
@@ -246,8 +247,11 @@ class AnnualEventSensor(SensorEntity):
             "month": month,
             "year": year,
             "vip": bool(data.get(CONF_VIP, False)),
+            # A day of someone who has died - see CONF_DECEASED. False on
+            # every other event, so a template can read it blindly.
+            "deceased": bool(data.get(CONF_DECEASED, False)),
             "important": important,
-            "reminder_message": self._reminder_message(days),
+            "reminder_message": self._reminder_message(days, bool(data.get(CONF_DECEASED, False))),
             "todo": self._has_open_todo(),
         }
         # The person whose picture stands for this event (see CONF_PERSON):
@@ -447,20 +451,24 @@ class AnnualEventSensor(SensorEntity):
         labels: dict[str, str] = self._hass_ref.data.get(DOMAIN, {}).get(DATA_TYPE_LABELS, {})
         return labels.get(event_type, event_type.replace("_", " ").title())
 
-    def _reminder_message(self, days: int | None) -> str | None:
+    def _reminder_message(self, days: int | None, deceased: bool = False) -> str | None:
         """A translated "days until" countdown phrase (see DATA_REMINDER_STRINGS/
         helpers.async_reminder_strings) - None only when there's no
         occurrence to count down to at all (a holiday that didn't resolve
-        this update, see _update_holiday_state).
+        this update, see _update_holiday_state). For a day of someone who
+        has died the phrase says what the day would have been - "Would
+        have been today" - so the blueprint's notification and anything
+        else reading it speaks of the day the way one does.
         """
         if days is None:
             return None
         strings: dict[str, str] = self._hass_ref.data.get(DOMAIN, {}).get(DATA_REMINDER_STRINGS, {})
+        suffix = "_deceased" if deceased else ""
         if days == 0:
-            return strings.get("today", "Today")
+            return strings.get("today" + suffix, strings.get("today", "Today"))
         if days == 1:
-            return strings.get("tomorrow", "Tomorrow")
-        return strings.get("in_days", "in {days} days").format(days=days)
+            return strings.get("tomorrow" + suffix, strings.get("tomorrow", "Tomorrow"))
+        return strings.get("in_days" + suffix, strings.get("in_days", "in {days} days")).format(days=days)
 
     def _has_open_todo(self) -> bool:
         """Whether an open to-do item is currently matched to this event.

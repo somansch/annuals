@@ -140,11 +140,13 @@
                     "month": "Mese",
                     "year": "Anno (lasciare vuoto se sconosciuto)",
                     "icon": "Sovrascrivi icona (opzionale)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Deceduto/a"
                 },
                 "description": "Ogni evento ottiene una propria voce, che puoi trovare e modificare in seguito da Impostazioni → Dispositivi e servizi → Annuals cercandone il nome.",
                 "data_description": {
-                    "person": "Una persona in Home Assistant la cui foto rappresenta questo evento: sulla scheda della dashboard e nella notifica del promemoria."
+                    "person": "Una persona in Home Assistant la cui foto rappresenta questo evento: sulla scheda della dashboard e nella notifica del promemoria.",
+                    "deceased": "La persona è deceduta: il giorno resta e viene contrassegnato, la scheda dice cosa sarebbe stato e le tue automazioni possono distinguerlo."
                 }
             },
             "one_time": {
@@ -203,10 +205,12 @@
                     "month": "Mese",
                     "year": "Anno (lasciare vuoto se sconosciuto)",
                     "icon": "Sovrascrivi icona (opzionale)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Deceduto/a"
                 },
                 "data_description": {
-                    "person": "Una persona in Home Assistant la cui foto rappresenta questo evento: sulla scheda della dashboard e nella notifica del promemoria."
+                    "person": "Una persona in Home Assistant la cui foto rappresenta questo evento: sulla scheda della dashboard e nella notifica del promemoria.",
+                    "deceased": "La persona è deceduta: il giorno resta e viene contrassegnato, la scheda dice cosa sarebbe stato e le tue automazioni possono distinguerlo."
                 }
             },
             "reconfigure_one_time": {
@@ -526,10 +530,12 @@
                     "month": "Mese",
                     "year": "Anno (lasciare vuoto se sconosciuto)",
                     "icon": "Sovrascrivi icona (opzionale)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Deceduto/a"
                 },
                 "data_description": {
-                    "person": "Una persona in Home Assistant la cui foto rappresenta questo evento: sulla scheda della dashboard e nella notifica del promemoria."
+                    "person": "Una persona in Home Assistant la cui foto rappresenta questo evento: sulla scheda della dashboard e nella notifica del promemoria.",
+                    "deceased": "La persona è deceduta: il giorno resta e viene contrassegnato, la scheda dice cosa sarebbe stato e le tue automazioni possono distinguerlo."
                 }
             },
             "edit_one_time": {

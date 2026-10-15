@@ -16,6 +16,11 @@ CONF_MONTH = "month"
 CONF_YEAR = "year"
 CONF_ICON = "icon"
 CONF_VIP = "vip"
+# A day of someone who has died (issue #16): kept and marked, never matched
+# against a memorial - the day of death is often unknown, and a name is
+# not an identity. Read on DECEASED_TYPES only; False everywhere else,
+# however the form or a CSV spells it.
+CONF_DECEASED = "deceased"
 
 # One-time events only (TYPE_ONE_TIME): the last day of an event that spans
 # several days - a holiday trip, a conference, a hospital stay. An ISO
@@ -128,6 +133,9 @@ TYPE_WORK_ANNIVERSARY = "work_anniversary"
 TYPE_CUSTOM = "custom"
 TYPE_ONE_TIME = "one_time"
 TYPE_HOLIDAY = "holiday"
+# The types CONF_DECEASED applies to: the days that are a person's - or a
+# pet's - own, which go on being kept once they are gone.
+DECEASED_TYPES = (TYPE_BIRTHDAY, TYPE_NAME_DAY, TYPE_PET_BIRTHDAY, TYPE_WEDDING_ANNIVERSARY)
 # The days a stock exchange is closed, or closes early - imported from the
 # `holidays` library's market calendars (see dates.market_names). Stored
 # exactly like a holiday, with the market's code where a holiday has its

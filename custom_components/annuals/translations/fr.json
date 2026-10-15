@@ -140,11 +140,13 @@
                     "month": "Mois",
                     "year": "Année (laisser vide si inconnue)",
                     "icon": "Icône personnalisée (optionnel)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Décédé(e)"
                 },
                 "description": "Chaque événement obtient sa propre entrée, que vous pouvez retrouver et modifier plus tard depuis Paramètres → Appareils et services → Annuals en recherchant son nom.",
                 "data_description": {
-                    "person": "Une personne dans Home Assistant dont la photo représente cet événement – sur la carte du tableau de bord et dans la notification du rappel."
+                    "person": "Une personne dans Home Assistant dont la photo représente cet événement – sur la carte du tableau de bord et dans la notification du rappel.",
+                    "deceased": "La personne est décédée : le jour est conservé et marqué, la carte indique ce qu'il aurait été et vos automatisations peuvent le distinguer."
                 }
             },
             "one_time": {
@@ -203,10 +205,12 @@
                     "month": "Mois",
                     "year": "Année (laisser vide si inconnue)",
                     "icon": "Icône personnalisée (optionnel)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Décédé(e)"
                 },
                 "data_description": {
-                    "person": "Une personne dans Home Assistant dont la photo représente cet événement – sur la carte du tableau de bord et dans la notification du rappel."
+                    "person": "Une personne dans Home Assistant dont la photo représente cet événement – sur la carte du tableau de bord et dans la notification du rappel.",
+                    "deceased": "La personne est décédée : le jour est conservé et marqué, la carte indique ce qu'il aurait été et vos automatisations peuvent le distinguer."
                 }
             },
             "reconfigure_one_time": {
@@ -526,10 +530,12 @@
                     "month": "Mois",
                     "year": "Année (laisser vide si inconnue)",
                     "icon": "Icône personnalisée (optionnel)",
-                    "vip": "VIP Annual"
+                    "vip": "VIP Annual",
+                    "deceased": "Décédé(e)"
                 },
                 "data_description": {
-                    "person": "Une personne dans Home Assistant dont la photo représente cet événement – sur la carte du tableau de bord et dans la notification du rappel."
+                    "person": "Une personne dans Home Assistant dont la photo représente cet événement – sur la carte du tableau de bord et dans la notification du rappel.",
+                    "deceased": "La personne est décédée : le jour est conservé et marqué, la carte indique ce qu'il aurait été et vos automatisations peuvent le distinguer."
                 }
             },
             "edit_one_time": {

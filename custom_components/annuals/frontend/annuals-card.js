@@ -111,6 +111,8 @@
       // read wrong for something that already happened ("...is 2 days ago").
       timelineSentencePast: "{possessive} {ordinal}{sup} {type} was {when}",
       timelineSentenceSimplePast: "{name} was {when}",
+      timelineSentenceDeceased: "{possessive} {ordinal}{sup} {type} would have been {when}",
+      timelineSentenceSimpleDeceased: "{possessive} {type} would have been {when}",
       timelineExpand: "Details",
       timelineCollapse: "Less",
       // The chevron under a folded list (see collapse_list). {count} is how
@@ -511,6 +513,15 @@
         visibilityTodoOnly: "Open to-dos only",
         visibilityTodoOnlyDesc:
           "Only show events that still have an open to-do item (see To-dos under Settings → Events). Narrows the two filters above rather than joining them: with VIP only also on, this shows the VIP events that still have something to do.",
+        visibilityDeceasedOnly: "Deceased only",
+        visibilityDeceasedOnlyDesc:
+          "Only show events flagged \"Deceased\" in the integration. Narrows the filters above rather than joining them.",
+        deceasedStyle: "Events of the deceased",
+        deceasedStyleDesc:
+          "How an event flagged \"Deceased\" in the integration appears: like any other event, muted, or not at all. The Timeline sentence says \"would have been\" either way.",
+        deceasedStyleNormal: "As any other event",
+        deceasedStyleMuted: "Muted",
+        deceasedStyleHidden: "Hidden",
         badgesHeading: "Badges",
         badgeTargetIcon: "Event icon",
         badgeTargetIconDesc: "Draw this badge in the corner of the row's event icon.",
@@ -747,6 +758,8 @@
       timelineSentenceSimple: "{name} ist {when}",
       timelineSentencePast: "{possessive} {ordinal}{sup} {type} war {when}",
       timelineSentenceSimplePast: "{name} war {when}",
+      timelineSentenceDeceased: "{possessive} {ordinal}{sup} {type} wäre {when} gewesen",
+      timelineSentenceSimpleDeceased: "{possessive} {type} wäre {when} gewesen",
       timelineExpand: "Details",
       timelineCollapse: "Weniger",
       foldShowMore: "{count} weitere anzeigen",
@@ -1170,6 +1183,15 @@
         visibilityTodoOnly: "Nur offene To-dos",
         visibilityTodoOnlyDesc:
           "Nur Ereignisse anzeigen, die noch ein offenes To-do haben (siehe To-dos unter Einstellungen → Ereignisse). Schränkt die beiden Filter darüber weiter ein, statt sich mit ihnen zu vereinen: zusammen mit „Nur VIP“ werden die VIP-Ereignisse gezeigt, bei denen noch etwas zu tun ist.",
+        visibilityDeceasedOnly: "Nur Verstorbene",
+        visibilityDeceasedOnlyDesc:
+          "Nur Ereignisse anzeigen, die in der Integration als „Verstorben“ markiert sind. Schränkt die Filter darüber weiter ein, statt sich mit ihnen zu vereinen.",
+        deceasedStyle: "Ereignisse Verstorbener",
+        deceasedStyleDesc:
+          "Wie ein Ereignis erscheint, das in der Integration als „Verstorben“ markiert ist: wie jedes andere Ereignis, gedämpft oder gar nicht. Der Timeline-Satz sagt in jedem Fall „wäre gewesen“.",
+        deceasedStyleNormal: "Wie jedes andere Ereignis",
+        deceasedStyleMuted: "Gedämpft",
+        deceasedStyleHidden: "Ausgeblendet",
         badgesHeading: "Badges",
         badgeTargetIcon: "Ereignis-Icon",
         badgeTargetIconDesc: "Zeichnet dieses Badge in die Ecke des Zeilen-Icons.",
@@ -1399,6 +1421,8 @@
       timelineSentenceSimple: "{name} est {when}",
       timelineSentencePast: "{ordinal}{sup} {type} de {possessive} était {when}",
       timelineSentenceSimplePast: "{name} était {when}",
+      timelineSentenceDeceased: "{ordinal}{sup} {type} de {possessive} aurait été {when}",
+      timelineSentenceSimpleDeceased: "{type} de {possessive} aurait été {when}",
       timelineExpand: "Détails",
       timelineCollapse: "Réduire",
       foldShowMore: "Afficher {count} de plus",
@@ -1817,6 +1841,15 @@
         visibilityTodoOnly: "Tâches ouvertes uniquement",
         visibilityTodoOnlyDesc:
           "N'afficher que les événements ayant encore une tâche ouverte (voir Tâches sous Paramètres → Événements). Restreint les deux filtres ci-dessus au lieu de s'y ajouter : avec « VIP uniquement » également actif, cela montre les événements VIP pour lesquels il reste quelque chose à faire.",
+        visibilityDeceasedOnly: "Personnes décédées uniquement",
+        visibilityDeceasedOnlyDesc:
+          "N'afficher que les événements marqués « Décédé(e) » dans l'intégration. Restreint les filtres ci-dessus au lieu de s'y ajouter.",
+        deceasedStyle: "Événements de personnes décédées",
+        deceasedStyleDesc:
+          "Comment apparaît un événement marqué « Décédé(e) » dans l'intégration : comme tout autre événement, atténué ou pas du tout. La phrase de la chronologie dit « aurait été » dans tous les cas.",
+        deceasedStyleNormal: "Comme tout autre événement",
+        deceasedStyleMuted: "Atténué",
+        deceasedStyleHidden: "Masqué",
         badgesHeading: "Badges",
         badgeTargetIcon: "Icône de l'événement",
         badgeTargetIconDesc: "Dessine ce badge dans le coin de l'icône de la ligne.",
@@ -2046,6 +2079,8 @@
       timelineSentenceSimple: "{name} is {when}",
       timelineSentencePast: "{possessive} {ordinal}{sup} {type} was {when}",
       timelineSentenceSimplePast: "{name} was {when}",
+      timelineSentenceDeceased: "{possessive} {ordinal}{sup} {type} zou {when} zijn geweest",
+      timelineSentenceSimpleDeceased: "{possessive} {type} zou {when} zijn geweest",
       timelineExpand: "Details",
       timelineCollapse: "Minder",
       foldShowMore: "Nog {count} tonen",
@@ -2464,6 +2499,15 @@
         visibilityTodoOnly: "Alleen open taken",
         visibilityTodoOnlyDesc:
           "Toon alleen evenementen met een nog openstaande taak (zie Taken onder Instellingen → Evenementen). Beperkt de twee filters hierboven in plaats van zich ermee te verenigen: met ook „Alleen VIP“ aan worden de VIP-evenementen getoond waarvoor nog iets te doen is.",
+        visibilityDeceasedOnly: "Alleen overledenen",
+        visibilityDeceasedOnlyDesc:
+          "Alleen evenementen tonen die in de integratie als 'Overleden' zijn gemarkeerd. Beperkt de filters hierboven in plaats van ze aan te vullen.",
+        deceasedStyle: "Evenementen van overledenen",
+        deceasedStyleDesc:
+          "Hoe een evenement verschijnt dat in de integratie als 'Overleden' is gemarkeerd: als elk ander evenement, gedempt of helemaal niet. De tijdlijnzin zegt hoe dan ook 'zou zijn geweest'.",
+        deceasedStyleNormal: "Als elk ander evenement",
+        deceasedStyleMuted: "Gedempt",
+        deceasedStyleHidden: "Verborgen",
         badgesHeading: "Badges",
         badgeTargetIcon: "Evenementicoon",
         badgeTargetIconDesc: "Tekent dit badge in de hoek van het rij-icoon.",
@@ -2699,6 +2743,8 @@
       timelineSentenceSimple: "{name} — {when}",
       timelineSentencePast: "{possessive}: {ordinal}{sup} {type} — {when}",
       timelineSentenceSimplePast: "{name} — {when}",
+      timelineSentenceDeceased: "{possessive}: {ordinal}{sup} {type} przypadałyby {when}",
+      timelineSentenceSimpleDeceased: "{possessive}: {type} przypadałyby {when}",
       timelineExpand: "Szczegóły",
       timelineCollapse: "Mniej",
       foldShowMore: "Pokaż jeszcze {count}",
@@ -3117,6 +3163,15 @@
         visibilityTodoOnly: "Tylko otwarte zadania",
         visibilityTodoOnlyDesc:
           "Pokaż tylko wydarzenia z wciąż otwartym zadaniem (zobacz Zadania w Ustawienia → Wydarzenia). Zawęża oba filtry powyżej, zamiast się z nimi łączyć: przy włączonym również „Tylko VIP“ pokazuje wydarzenia VIP, przy których zostało jeszcze coś do zrobienia.",
+        visibilityDeceasedOnly: "Tylko zmarli",
+        visibilityDeceasedOnlyDesc:
+          "Pokazuj tylko wydarzenia oznaczone w integracji jako „Nie żyje”. Zawęża powyższe filtry, zamiast je łączyć.",
+        deceasedStyle: "Wydarzenia osób zmarłych",
+        deceasedStyleDesc:
+          "Jak wyświetlane jest wydarzenie oznaczone w integracji jako „Nie żyje”: jak każde inne wydarzenie, wyciszone lub wcale. Zdanie na osi czasu mówi w każdym przypadku „przypadałyby”.",
+        deceasedStyleNormal: "Jak każde inne wydarzenie",
+        deceasedStyleMuted: "Wyciszone",
+        deceasedStyleHidden: "Ukryte",
         badgesHeading: "Odznaki",
         badgeTargetIcon: "Ikona wydarzenia",
         badgeTargetIconDesc: "Rysuje tę odznakę w rogu ikony wiersza.",
@@ -3345,6 +3400,8 @@
       timelineSentenceSimple: "{name} es {when}",
       timelineSentencePast: "{ordinal}{sup} {type} de {possessive} fue {when}",
       timelineSentenceSimplePast: "{name} fue {when}",
+      timelineSentenceDeceased: "{ordinal}{sup} {type} de {possessive} habría sido {when}",
+      timelineSentenceSimpleDeceased: "{type} de {possessive} habría sido {when}",
       timelineExpand: "Detalles",
       timelineCollapse: "Menos",
       foldShowMore: "Mostrar {count} más",
@@ -3763,6 +3820,15 @@
         visibilityTodoOnly: "Solo tareas pendientes",
         visibilityTodoOnlyDesc:
           "Mostrar solo los eventos que aún tienen una tarea pendiente (ver Tareas en Ajustes → Eventos). Restringe los dos filtros de arriba en lugar de sumarse a ellos: con «Solo VIP» también activo, muestra los eventos VIP en los que aún queda algo por hacer.",
+        visibilityDeceasedOnly: "Solo fallecidos",
+        visibilityDeceasedOnlyDesc:
+          "Mostrar solo los eventos marcados como «Fallecido/a» en la integración. Restringe los filtros anteriores en lugar de sumarse a ellos.",
+        deceasedStyle: "Eventos de personas fallecidas",
+        deceasedStyleDesc:
+          "Cómo aparece un evento marcado como «Fallecido/a» en la integración: como cualquier otro evento, atenuado o no aparece. La frase de la línea de tiempo dice «habría sido» en cualquier caso.",
+        deceasedStyleNormal: "Como cualquier otro evento",
+        deceasedStyleMuted: "Atenuado",
+        deceasedStyleHidden: "Oculto",
         badgesHeading: "Insignias",
         badgeTargetIcon: "Icono del evento",
         badgeTargetIconDesc: "Dibuja esta insignia en la esquina del icono de la fila.",
@@ -3992,6 +4058,8 @@
       timelineSentenceSimple: "{name} è {when}",
       timelineSentencePast: "{ordinal}{sup} {type} di {possessive} era {when}",
       timelineSentenceSimplePast: "{name} era {when}",
+      timelineSentenceDeceased: "{ordinal}{sup} {type} di {possessive} sarebbe stato {when}",
+      timelineSentenceSimpleDeceased: "{type} di {possessive} sarebbe stato {when}",
       timelineExpand: "Dettagli",
       timelineCollapse: "Meno",
       foldShowMore: "Mostra altri {count}",
@@ -4410,6 +4478,15 @@
         visibilityTodoOnly: "Solo attività aperte",
         visibilityTodoOnlyDesc:
           "Mostra solo gli eventi che hanno ancora un'attività aperta (vedi Attività in Impostazioni → Eventi). Restringe i due filtri sopra invece di unirsi a loro: con anche «Solo VIP» attivo, mostra gli eventi VIP per cui resta qualcosa da fare.",
+        visibilityDeceasedOnly: "Solo scomparsi",
+        visibilityDeceasedOnlyDesc:
+          "Mostra solo gli eventi contrassegnati come «Deceduto/a» nell'integrazione. Restringe i filtri sopra invece di unirsi a essi.",
+        deceasedStyle: "Eventi di persone scomparse",
+        deceasedStyleDesc:
+          "Come appare un evento contrassegnato come «Deceduto/a» nell'integrazione: come ogni altro evento, attenuato o per niente. La frase della timeline dice «sarebbe stato» in ogni caso.",
+        deceasedStyleNormal: "Come ogni altro evento",
+        deceasedStyleMuted: "Attenuato",
+        deceasedStyleHidden: "Nascosto",
         badgesHeading: "Badge",
         badgeTargetIcon: "Icona dell'evento",
         badgeTargetIconDesc: "Disegna questo badge nell'angolo dell'icona della riga.",
@@ -4639,6 +4716,8 @@
       timelineSentenceSimple: "{name} é {when}",
       timelineSentencePast: "{ordinal}{sup} {type} de {possessive} foi {when}",
       timelineSentenceSimplePast: "{name} foi {when}",
+      timelineSentenceDeceased: "{ordinal}{sup} {type} de {possessive} teria sido {when}",
+      timelineSentenceSimpleDeceased: "{type} de {possessive} teria sido {when}",
       timelineExpand: "Detalhes",
       timelineCollapse: "Menos",
       foldShowMore: "Mostrar mais {count}",
@@ -5057,6 +5136,15 @@
         visibilityTodoOnly: "Apenas tarefas em aberto",
         visibilityTodoOnlyDesc:
           "Mostrar apenas os eventos que ainda têm uma tarefa em aberto (veja Tarefas em Configurações → Eventos). Restringe os dois filtros acima em vez de se juntar a eles: com «Apenas VIP» também ativo, mostra os eventos VIP em que ainda há algo a fazer.",
+        visibilityDeceasedOnly: "Somente falecidos",
+        visibilityDeceasedOnlyDesc:
+          "Mostrar apenas eventos marcados como \"Falecido(a)\" na integração. Restringe os filtros acima em vez de se somar a eles.",
+        deceasedStyle: "Eventos de pessoas falecidas",
+        deceasedStyleDesc:
+          "Como aparece um evento marcado como \"Falecido(a)\" na integração: como qualquer outro evento, esmaecido ou não aparece. A frase da linha do tempo diz \"teria sido\" de qualquer forma.",
+        deceasedStyleNormal: "Como qualquer outro evento",
+        deceasedStyleMuted: "Esmaecido",
+        deceasedStyleHidden: "Oculto",
         badgesHeading: "Emblemas",
         badgeTargetIcon: "Ícone do evento",
         badgeTargetIconDesc: "Desenha este emblema no canto do ícone da linha.",
@@ -5290,6 +5378,8 @@
       timelineSentenceSimple: "{name} — {when}",
       timelineSentencePast: "{possessive}: {ordinal}{sup} {type} — {when}",
       timelineSentenceSimplePast: "{name} — {when}",
+      timelineSentenceDeceased: "{possessive}: {ordinal}{sup} {type} был бы {when}",
+      timelineSentenceSimpleDeceased: "{possessive}: {type} был бы {when}",
       timelineExpand: "Подробнее",
       timelineCollapse: "Свернуть",
       foldShowMore: "Показать ещё {count}",
@@ -5708,6 +5798,15 @@
         visibilityTodoOnly: "Только с открытыми задачами",
         visibilityTodoOnlyDesc:
           "Показывать только события, у которых осталась невыполненная задача (см. «Задачи» в разделе Настройки → События). Сужает два фильтра выше, а не объединяется с ними: вместе с «Только VIP» показывает VIP-события, по которым ещё есть что сделать.",
+        visibilityDeceasedOnly: "Только умершие",
+        visibilityDeceasedOnlyDesc:
+          "Показывать только события, отмеченные в интеграции как «Умер(ла)». Сужает фильтры выше, а не дополняет их.",
+        deceasedStyle: "События умерших",
+        deceasedStyleDesc:
+          "Как показывать событие, отмеченное в интеграции как «Умер(ла)»: как любое другое событие, приглушённо или не показывать. Фраза на ленте времени в любом случае говорит «был бы».",
+        deceasedStyleNormal: "Как любое другое событие",
+        deceasedStyleMuted: "Приглушённо",
+        deceasedStyleHidden: "Скрыто",
         badgesHeading: "Значки",
         badgeTargetIcon: "Значок события",
         badgeTargetIconDesc: "Рисует этот бейдж в углу значка строки.",
@@ -5941,6 +6040,8 @@
       timelineSentenceSimple: "{name} är {when}",
       timelineSentencePast: "{possessive} {ordinal}{sup} {type} var {when}",
       timelineSentenceSimplePast: "{name} var {when}",
+      timelineSentenceDeceased: "{possessive} {ordinal}{sup} {type} skulle ha varit {when}",
+      timelineSentenceSimpleDeceased: "{possessive} {type} skulle ha varit {when}",
       timelineExpand: "Detaljer",
       timelineCollapse: "Mindre",
       foldShowMore: "Visa {count} till",
@@ -6360,6 +6461,15 @@
         visibilityTodoOnly: "Endast öppna uppgifter",
         visibilityTodoOnlyDesc:
           "Visa endast händelser som fortfarande har en öppen uppgift (se Uppgifter under Inställningar → Händelser). Smalnar av de två filtren ovan i stället för att slås ihop med dem: med även ”Endast VIP” på visas de VIP-händelser som fortfarande har något kvar att göra.",
+        visibilityDeceasedOnly: "Endast avlidna",
+        visibilityDeceasedOnlyDesc:
+          "Visa bara händelser som i integrationen är markerade \"Avliden\". Begränsar filtren ovan i stället för att läggas till dem.",
+        deceasedStyle: "Händelser för avlidna",
+        deceasedStyleDesc:
+          "Hur en händelse som i integrationen är markerad \"Avliden\" visas: som alla andra händelser, nedtonad eller inte alls. Tidslinjens mening säger \"skulle ha varit\" oavsett.",
+        deceasedStyleNormal: "Som alla andra händelser",
+        deceasedStyleMuted: "Nedtonad",
+        deceasedStyleHidden: "Dold",
         badgesHeading: "Märken",
         badgeTargetIcon: "Händelseikon",
         badgeTargetIconDesc: "Ritar det här märket i hörnet av radens ikon.",
@@ -6593,6 +6703,8 @@
       timelineSentenceSimple: "{name} {when}",
       timelineSentencePast: "{possessive}{ordinal}{sup}{type}是{when}",
       timelineSentenceSimplePast: "{name} {when}",
+      timelineSentenceDeceased: "{possessive}{ordinal}{sup}{type}本应是{when}",
+      timelineSentenceSimpleDeceased: "{possessive}{type}本应是{when}",
       timelineExpand: "详情",
       timelineCollapse: "收起",
       foldShowMore: "再显示 {count} 条",
@@ -7005,6 +7117,15 @@
         visibilityTodoOnly: "仅未完成待办",
         visibilityTodoOnlyDesc:
           "仅显示仍有未完成待办的事件（见“设置 → 事件”下的“待办事项”）。它是在上面两个筛选之上进一步收窄，而不是与它们取并集：同时开启“仅 VIP”时，显示的是仍有待办的 VIP 事件。",
+        visibilityDeceasedOnly: "仅已故者",
+        visibilityDeceasedOnlyDesc:
+          "仅显示在集成中标记为“已去世”的事件。在上方筛选的基础上进一步缩小，而不是与之并列。",
+        deceasedStyle: "已故者的事件",
+        deceasedStyleDesc:
+          "在集成中标记为“已去世”的事件如何显示：与其他事件一样、弱化显示或不显示。时间线的句子无论如何都会写“本应是”。",
+        deceasedStyleNormal: "与其他事件一样",
+        deceasedStyleMuted: "弱化显示",
+        deceasedStyleHidden: "隐藏",
         badgesHeading: "徽章",
         badgeTargetIcon: "事件图标",
         badgeTargetIconDesc: "在行图标的角上绘制此徽章。",
@@ -7238,6 +7359,8 @@
       timelineSentenceSimple: "{name} — {when}",
       timelineSentencePast: "{possessive}: {ordinal}{sup} {type} — {when}",
       timelineSentenceSimplePast: "{name} — {when}",
+      timelineSentenceDeceased: "{possessive}: {ordinal}{sup} {type} by byly {when}",
+      timelineSentenceSimpleDeceased: "{possessive}: {type} by byly {when}",
       timelineExpand: "Podrobnosti",
       timelineCollapse: "Méně",
       foldShowMore: "Zobrazit dalších {count}",
@@ -7657,6 +7780,15 @@
         visibilityTodoOnly: "Pouze otevřené úkoly",
         visibilityTodoOnlyDesc:
           "Zobrazit pouze události, které mají dosud otevřený úkol (viz Úkoly v Nastavení → Události). Zužuje oba filtry výše, místo aby se s nimi spojoval: se zapnutým „Pouze VIP“ ukáže VIP události, u kterých ještě něco zbývá udělat.",
+        visibilityDeceasedOnly: "Jen zesnulí",
+        visibilityDeceasedOnlyDesc:
+          "Zobrazit jen události označené v integraci jako „Zemřel(a)“. Zužuje filtry výše, místo aby se k nim přidával.",
+        deceasedStyle: "Události zesnulých",
+        deceasedStyleDesc:
+          "Jak se zobrazí událost označená v integraci jako „Zemřel(a)“: jako každá jiná událost, ztlumeně nebo vůbec. Věta na časové ose říká v každém případě „by byly“.",
+        deceasedStyleNormal: "Jako každá jiná událost",
+        deceasedStyleMuted: "Ztlumeně",
+        deceasedStyleHidden: "Skryté",
         badgesHeading: "Odznaky",
         badgeTargetIcon: "Ikona události",
         badgeTargetIconDesc: "Vykreslí tento odznak v rohu ikony řádku.",
@@ -7888,6 +8020,8 @@
       timelineSentenceSimple: "{name} er {when}",
       timelineSentencePast: "{possessive} {ordinal}{sup} {type} var {when}",
       timelineSentenceSimplePast: "{name} var {when}",
+      timelineSentenceDeceased: "{possessive} {ordinal}{sup} {type} ville ha vært {when}",
+      timelineSentenceSimpleDeceased: "{possessive} {type} ville ha vært {when}",
       timelineExpand: "Detaljer",
       timelineCollapse: "Mindre",
       foldShowMore: "Vis {count} til",
@@ -8307,6 +8441,15 @@
         visibilityTodoOnly: "Bare åpne oppgaver",
         visibilityTodoOnlyDesc:
           "Vis bare hendelser som fortsatt har en åpen oppgave (se Oppgaver under Innstillinger → Hendelser). Snevrer inn de to filtrene over i stedet for å slås sammen med dem: med «Bare VIP» også på vises de VIP-hendelsene som fortsatt har noe å gjøre.",
+        visibilityDeceasedOnly: "Bare avdøde",
+        visibilityDeceasedOnlyDesc:
+          "Vis bare hendelser merket «Avdød» i integrasjonen. Snevrer inn filtrene over i stedet for å legges til dem.",
+        deceasedStyle: "Hendelser for avdøde",
+        deceasedStyleDesc:
+          "Hvordan en hendelse merket «Avdød» i integrasjonen vises: som alle andre hendelser, dempet eller ikke i det hele tatt. Tidslinjesetningen sier «ville ha vært» uansett.",
+        deceasedStyleNormal: "Som alle andre hendelser",
+        deceasedStyleMuted: "Dempet",
+        deceasedStyleHidden: "Skjult",
         badgesHeading: "Merker",
         badgeTargetIcon: "Hendelsesikon",
         badgeTargetIconDesc: "Tegner dette merket i hjørnet av radens ikon.",
@@ -8538,6 +8681,8 @@
       timelineSentenceSimple: "{name} er {when}",
       timelineSentencePast: "{possessive} {ordinal}{sup} {type} var {when}",
       timelineSentenceSimplePast: "{name} var {when}",
+      timelineSentenceDeceased: "{possessive} {ordinal}{sup} {type} ville have været {when}",
+      timelineSentenceSimpleDeceased: "{possessive} {type} ville have været {when}",
       timelineExpand: "Detaljer",
       timelineCollapse: "Mindre",
       foldShowMore: "Vis {count} mere",
@@ -8957,6 +9102,15 @@
         visibilityTodoOnly: "Kun åbne opgaver",
         visibilityTodoOnlyDesc:
           "Vis kun begivenheder, der stadig har en åben opgave (se Opgaver under Indstillinger → Begivenheder). Indsnævrer de to filtre ovenfor i stedet for at blive slået sammen med dem: med «Kun VIP» også slået til vises de VIP-begivenheder, hvor der stadig er noget at gøre.",
+        visibilityDeceasedOnly: "Kun afdøde",
+        visibilityDeceasedOnlyDesc:
+          "Vis kun begivenheder, der i integrationen er markeret \"Afdød\". Indsnævrer filtrene ovenfor i stedet for at føje sig til dem.",
+        deceasedStyle: "Begivenheder for afdøde",
+        deceasedStyleDesc:
+          "Hvordan en begivenhed, der i integrationen er markeret \"Afdød\", vises: som enhver anden begivenhed, dæmpet eller slet ikke. Tidslinjesætningen siger \"ville have været\" under alle omstændigheder.",
+        deceasedStyleNormal: "Som enhver anden begivenhed",
+        deceasedStyleMuted: "Dæmpet",
+        deceasedStyleHidden: "Skjult",
         badgesHeading: "Badges",
         badgeTargetIcon: "Begivenhedsikon",
         badgeTargetIconDesc: "Tegner dette badge i hjørnet af rækkens ikon.",
@@ -9194,6 +9348,8 @@
       timelineSentenceSimple: "{name} — {when}",
       timelineSentencePast: "{possessive}: {ordinal}{sup} {type} — {when}",
       timelineSentenceSimplePast: "{name} — {when}",
+      timelineSentenceDeceased: "{possessive}: {ordinal}{sup} {type} {when} olacaktı",
+      timelineSentenceSimpleDeceased: "{possessive}: {type} {when} olacaktı",
       timelineExpand: "Ayrıntılar",
       timelineCollapse: "Daha az",
       foldShowMore: "{count} tane daha göster",
@@ -9613,6 +9769,15 @@
         visibilityTodoOnly: "Yalnızca açık görevler",
         visibilityTodoOnlyDesc:
           "Yalnızca hâlâ açık bir yapılacak öğesi olan etkinlikleri göster (Ayarlar → Etkinlikler altındaki Yapılacaklar'a bakın). Yukarıdaki iki filtreyle birleşmek yerine onları daraltır: «Yalnızca VIP» de açıkken, hâlâ yapılacak bir şeyi olan VIP etkinlikleri gösterir.",
+        visibilityDeceasedOnly: "Yalnızca vefat edenler",
+        visibilityDeceasedOnlyDesc:
+          "Yalnızca entegrasyonda \"Vefat etti\" olarak işaretlenen etkinlikleri göster. Yukarıdaki filtreleri birleştirmek yerine daraltır.",
+        deceasedStyle: "Vefat edenlerin etkinlikleri",
+        deceasedStyleDesc:
+          "Entegrasyonda \"Vefat etti\" olarak işaretlenen bir etkinliğin nasıl görüneceği: diğer etkinlikler gibi, soluk ya da hiç. Zaman çizelgesi cümlesi her durumda \"olacaktı\" der.",
+        deceasedStyleNormal: "Diğer etkinlikler gibi",
+        deceasedStyleMuted: "Soluk",
+        deceasedStyleHidden: "Gizli",
         badgesHeading: "Rozetler",
         badgeTargetIcon: "Etkinlik simgesi",
         badgeTargetIconDesc: "Bu rozeti satır simgesinin köşesine çizer.",
@@ -9841,6 +10006,8 @@
       timelineSentenceSimple: "{name} — {when}",
       timelineSentencePast: "{possessive}: {ordinal}{sup} {type} — {when}",
       timelineSentenceSimplePast: "{name} — {when}",
+      timelineSentenceDeceased: "{possessive}: {ordinal}{sup} {type} by boli {when}",
+      timelineSentenceSimpleDeceased: "{possessive}: {type} by boli {when}",
       timelineExpand: "Podrobnosti",
       timelineCollapse: "Menej",
       foldShowMore: "Zobraziť ďalších {count}",
@@ -10262,6 +10429,15 @@
         visibilityTodoOnly: "Iba s otvorenými úlohami",
         visibilityTodoOnlyDesc:
           "Zobraziť iba udalosti, ktoré majú ešte otvorenú úlohu (pozri Úlohy v Nastavenia → Udalosti). Zužuje dva filtre vyššie, nespája ich: so zapnutým „Iba VIP“ zobrazí tie VIP udalosti, ktoré ešte niečo čaká.",
+        visibilityDeceasedOnly: "Len zosnulí",
+        visibilityDeceasedOnlyDesc:
+          "Zobraziť len udalosti označené v integrácii ako „Zomrel(a)“. Zužuje filtre vyššie, namiesto toho, aby sa k nim pridával.",
+        deceasedStyle: "Udalosti zosnulých",
+        deceasedStyleDesc:
+          "Ako sa zobrazí udalosť označená v integrácii ako „Zomrel(a)“: ako každá iná udalosť, stlmene alebo vôbec. Veta na časovej osi hovorí v každom prípade „by boli“.",
+        deceasedStyleNormal: "Ako každá iná udalosť",
+        deceasedStyleMuted: "Stlmene",
+        deceasedStyleHidden: "Skryté",
         badgesHeading: "Odznaky",
         badgeTargetIcon: "Ikona udalosti",
         badgeTargetIconDesc: "Vykresliť tento odznak v rohu ikony udalosti v riadku.",
@@ -10509,6 +10685,8 @@
       timelineSentenceSimple: "{name} — {when}",
       timelineSentencePast: "{possessive}: {ordinal}{sup} {type} — {when}",
       timelineSentenceSimplePast: "{name} — {when}",
+      timelineSentenceDeceased: "{possessive}: {ordinal}{sup} {type} būtų buvęs {when}",
+      timelineSentenceSimpleDeceased: "{possessive}: {type} būtų buvęs {when}",
       timelineExpand: "Išsamiau",
       timelineCollapse: "Mažiau",
       foldShowMore: "Rodyti dar {count}",
@@ -10929,6 +11107,15 @@
         visibilityTodoOnly: "Tik su neatliktomis užduotimis",
         visibilityTodoOnlyDesc:
           "Rodyti tik įvykius, kurie dar turi neatliktą užduotį (žr. „Užduotys“ skiltyje Nustatymai → Įvykiai). Siaurina du filtrus aukščiau, o ne papildo juos: įjungus ir „Tik VIP“, rodomi VIP įvykiai, kuriems dar yra ką padaryti.",
+        visibilityDeceasedOnly: "Tik mirusieji",
+        visibilityDeceasedOnlyDesc:
+          "Rodyti tik įvykius, integracijoje pažymėtus „Miręs (-usi)“. Susiaurina aukščiau esančius filtrus, o ne papildo juos.",
+        deceasedStyle: "Mirusiųjų įvykiai",
+        deceasedStyleDesc:
+          "Kaip rodomas įvykis, integracijoje pažymėtas „Miręs (-usi)“: kaip bet kuris kitas įvykis, prislopintas arba visai nerodomas. Laiko juostos sakinys bet kuriuo atveju sako „būtų buvęs“.",
+        deceasedStyleNormal: "Kaip bet kuris kitas įvykis",
+        deceasedStyleMuted: "Prislopintas",
+        deceasedStyleHidden: "Paslėptas",
         badgesHeading: "Ženkleliai",
         badgeTargetIcon: "Įvykio piktograma",
         badgeTargetIconDesc: "Piešti šį ženklelį eilutės įvykio piktogramos kampe.",
@@ -12040,6 +12227,14 @@
       // over would change existing dashboards' click behavior.
       when_click_shows_date: false,
       show_vip_only: false,
+      // A day flagged as a deceased person's in the integration (its
+      // `deceased` attribute): "muted" dims the row, "hidden" leaves it
+      // out, "normal" draws it like any other. The timeline's sentence
+      // says "would have been" whichever is picked.
+      deceased_style: "muted",
+      // Only such birthdays - narrows the other filters, the way the
+      // to-do filter does, rather than joining their OR.
+      show_deceased_only: false,
       show_important_only: false,
       // Unlike the two above, which combine as OR with each other, this one
       // narrows whatever they leave (see _filteredEvents) - "the VIP events
@@ -12751,6 +12946,7 @@
         occurrence:
           state.attributes.occurrence_number == null ? null : state.attributes.occurrence_number,
         vip: state.attributes.vip === true,
+        deceased: state.attributes.deceased === true,
         important: state.attributes.important === true,
         category: state.attributes.category,
         // A stock exchange day only: the holiday it falls on ("Thanksgiving
@@ -14110,6 +14306,10 @@
       padding: 6px 12px 6px 4px;
       border-radius: 8px;
     }
+    /* A deceased person's day, muted (see deceased_style): the whole
+       row steps back, icon and badges with it, so it is read but not
+       celebrated. */
+    .row.is-deceased, .timeline-list-item.is-deceased { opacity: 0.55; }
     /* One shared set of column tracks for the whole list, so a column keeps
        the same width - and therefore the same x - on every row (see
        rowColumnTemplate). Each row stays a real box rather than being
@@ -17125,6 +17325,11 @@
         // not AND - otherwise enabling both would only show events that are
         // both at once, which reads as "either" to anyone flipping two
         // separate toggles.
+        // A deceased person's day, where the card is set to leave it
+        // out (see deceased_style in defaultConfig) - or to show nothing
+        // else (show_deceased_only, which narrows like the to-do filter).
+        if (config.show_deceased_only && !e.deceased) return false;
+        if (e.deceased && config.deceased_style === "hidden") return false;
         if (config.show_vip_only || config.show_important_only) {
           const isVip = config.show_vip_only && e.vip;
           const isImportant = config.show_important_only && e.important;
@@ -17821,13 +18026,6 @@
         (part) => part
       );
       const dateSuffix = parenParts.length ? ` (${parenParts.join(" · ")})` : "";
-      if (!(config.show_badge !== false && occurrence != null)) {
-        const tmpl =
-          (readsAsPast ? strings.timelineSentenceSimplePast : strings.timelineSentenceSimple) || "{name} is {when}";
-        appendTemplate(tmpl, (s) => s.replace("{name}", displayName));
-        frag.appendChild(document.createTextNode(dateSuffix));
-        return frag;
-      }
       let typeLabel = strings.types[e.type] || e.type;
       if (e.type === "holiday" && e.category) {
         typeLabel = `${typeLabel} (${(strings.categories || {})[e.category] || _humanizeCategory(e.category)})`;
@@ -17841,13 +18039,27 @@
         ? typeLabel
         : typeLabel.charAt(0).toLowerCase() + typeLabel.slice(1);
       const possessive = (strings.possessive || ((n) => `${n}'s`))(displayName);
+      // A day of someone who has died (see `deceased` in buildEvent) is
+      // worded as what it would have been, in either sentence -
+      // the tense of "is"/"was" has no say in it.
+      if (!(config.show_badge !== false && occurrence != null)) {
+        const tmpl = e.deceased
+          ? strings.timelineSentenceSimpleDeceased || "{possessive} {type} would have been {when}"
+          : (readsAsPast ? strings.timelineSentenceSimplePast : strings.timelineSentenceSimple) || "{name} is {when}";
+        appendTemplate(tmpl, (s) =>
+          s.replace("{name}", displayName).replace("{possessive}", possessive).replace("{type}", typeText)
+        );
+        frag.appendChild(document.createTextNode(dateSuffix));
+        return frag;
+      }
       const { num, sup } = (strings.ordinalParts || ((n) => ({ num: `${n}.`, sup: "" })))(occurrence, e.type);
       // {sup} is the one placeholder handled specially below (split instead
       // of replaced) so its value can become a real <sup> element; every
       // other placeholder is a plain string substitution.
-      const tmpl =
-        (readsAsPast ? strings.timelineSentencePast : strings.timelineSentence) ||
-        "{possessive} {ordinal}{sup} {type} is {when}";
+      const tmpl = e.deceased
+        ? strings.timelineSentenceDeceased || "{possessive} {ordinal}{sup} {type} would have been {when}"
+        : (readsAsPast ? strings.timelineSentencePast : strings.timelineSentence) ||
+          "{possessive} {ordinal}{sup} {type} is {when}";
       const [before, after] = tmpl.split("{sup}");
       const fill = (s) =>
         (s || "").replace("{possessive}", possessive).replace("{ordinal}", num).replace("{type}", typeText);
@@ -18367,7 +18579,8 @@
       listEl.className = "timeline-list";
       events.forEach((e) => {
         const item = document.createElement("div");
-        item.className = "timeline-list-item";
+        item.className =
+          "timeline-list-item" + (e.deceased && config.deceased_style !== "normal" ? " is-deceased" : "");
         // The dot always carries the event type's color; this is what says
         // whether the entry's text carries it too (see row_color_targets).
         const entryTargets = rowColorTargets(
@@ -18558,7 +18771,8 @@
       const rowPaint = rowColors(config, e, colorCategory, this._calendarColors);
       const matchClass = rowPaint.text ? " match-row-text" : "";
       div.className =
-        "row" + (highlightClass ? ` ${highlightClass}` : "") + matchClass + (iconVisible ? "" : " icon-hidden");
+        "row" + (highlightClass ? ` ${highlightClass}` : "") + matchClass + (iconVisible ? "" : " icon-hidden") +
+        (e.deceased && config.deceased_style !== "normal" ? " is-deceased" : "");
       div.style.setProperty("--annuals-row-resolved-icon-color", rowPaint.icon);
       div.style.setProperty("--annuals-row-resolved-bar-color", rowPaint.bar);
       if (rowPaint.text) div.style.setProperty("--annuals-row-resolved-text-color", rowPaint.text);
@@ -23984,6 +24198,7 @@
         vip_only: config.show_vip_only === true,
         important_only: config.show_important_only === true,
         todo_only: config.show_todo_only === true,
+        deceased_only: config.show_deceased_only === true,
         columns_compact: config.columns_compact === true,
         minimal_card: config.minimal_card === true,
         month_separators: config.month_separators === true,
@@ -24810,7 +25025,7 @@
       // instead of a fixed icon/name/type/badge/when grid.
       visRows.innerHTML = this._visibilityTwoColHtml(
         ["vip_only", "important_only"],
-        ["todo_only"]
+        ["todo_only", "deceased_only"]
       );
       body.appendChild(visRows);
 
@@ -24818,16 +25033,53 @@
         vip_only: [strings.editor.visibilityVipOnly, strings.editor.visibilityVipOnlyDesc],
         important_only: [strings.editor.visibilityImportantOnly, strings.editor.visibilityImportantOnlyDesc],
         todo_only: [strings.editor.visibilityTodoOnly, strings.editor.visibilityTodoOnlyDesc],
+        deceased_only: [strings.editor.visibilityDeceasedOnly, strings.editor.visibilityDeceasedOnlyDesc],
       };
       const visConfigKeys = {
         vip_only: "show_vip_only",
         important_only: "show_important_only",
         todo_only: "show_todo_only",
+        deceased_only: "show_deceased_only",
       };
       for (const key of Object.keys(visConfigKeys)) {
         const [label, desc] = visLabels[key];
         this._wireVisibilityRow(body, key, label, desc, { configKey: visConfigKeys[key] });
       }
+
+      // How a deceased person's birthday appears (see deceased_style in
+      // defaultConfig) - a choice of three rather than a switch, under the
+      // filters it belongs with.
+      const deceasedWrap = document.createElement("div");
+      deceasedWrap.innerHTML = `
+        <div class="field-row">
+          <div class="field-label">
+            <span class="label-text"></span>
+            <span class="tooltip-anchor" data-tooltip="">
+              <ha-icon icon="mdi:information-outline"></ha-icon>
+            </span>
+          </div>
+          <div class="field-input-row">
+            <select data-deceased-style>
+              <option value="normal"></option>
+              <option value="muted"></option>
+              <option value="hidden"></option>
+            </select>
+          </div>
+        </div>
+      `;
+      const deceasedRow = deceasedWrap.firstElementChild;
+      deceasedRow.querySelector(".label-text").textContent = strings.editor.deceasedStyle;
+      deceasedRow.querySelector(".tooltip-anchor").dataset.tooltip = strings.editor.deceasedStyleDesc;
+      const deceasedSelect = deceasedRow.querySelector("select[data-deceased-style]");
+      deceasedSelect.querySelector('option[value="normal"]').textContent = strings.editor.deceasedStyleNormal;
+      deceasedSelect.querySelector('option[value="muted"]').textContent = strings.editor.deceasedStyleMuted;
+      deceasedSelect.querySelector('option[value="hidden"]').textContent = strings.editor.deceasedStyleHidden;
+      deceasedSelect.value = this._config.deceased_style || "muted";
+      deceasedSelect.addEventListener("change", () => {
+        this._config = defaultConfig({ ...this._config, deceased_style: deceasedSelect.value });
+        this._emit();
+      });
+      body.appendChild(deceasedRow);
 
       return body;
     }

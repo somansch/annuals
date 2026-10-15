@@ -141,10 +141,12 @@
                     "month": "Month",
                     "year": "Year (leave empty if unknown)",
                     "icon": "Icon override (optional)",
-                    "vip": "VIP annual"
+                    "vip": "VIP annual",
+                    "deceased": "Deceased"
                 },
                 "data_description": {
-                    "person": "A person in Home Assistant whose picture stands for this event – on the dashboard card and in the reminder's notification."
+                    "person": "A person in Home Assistant whose picture stands for this event – on the dashboard card and in the reminder's notification.",
+                    "deceased": "The person has died: the day is kept and marked, so the card says what it would have been and your automations can tell it apart."
                 }
             },
             "one_time": {
@@ -203,10 +205,12 @@
                     "month": "Month",
                     "year": "Year (leave empty if unknown)",
                     "icon": "Icon override (optional)",
-                    "vip": "VIP annual"
+                    "vip": "VIP annual",
+                    "deceased": "Deceased"
                 },
                 "data_description": {
-                    "person": "A person in Home Assistant whose picture stands for this event – on the dashboard card and in the reminder's notification."
+                    "person": "A person in Home Assistant whose picture stands for this event – on the dashboard card and in the reminder's notification.",
+                    "deceased": "The person has died: the day is kept and marked, so the card says what it would have been and your automations can tell it apart."
                 }
             },
             "reconfigure_one_time": {
@@ -526,10 +530,12 @@
                     "month": "Month",
                     "year": "Year (leave empty if unknown)",
                     "icon": "Icon override (optional)",
-                    "vip": "VIP annual"
+                    "vip": "VIP annual",
+                    "deceased": "Deceased"
                 },
                 "data_description": {
-                    "person": "A person in Home Assistant whose picture stands for this event – on the dashboard card and in the reminder's notification."
+                    "person": "A person in Home Assistant whose picture stands for this event – on the dashboard card and in the reminder's notification.",
+                    "deceased": "The person has died: the day is kept and marked, so the card says what it would have been and your automations can tell it apart."
                 }
             },
             "edit_one_time": {
