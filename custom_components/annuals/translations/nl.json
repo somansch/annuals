@@ -146,7 +146,7 @@
                 "description": "Elk evenement krijgt een eigen item, dat je later kunt terugvinden en bewerken via Instellingen → Apparaten en diensten → Annuals door op de naam te zoeken.",
                 "data_description": {
                     "person": "Een persoon in Home Assistant wiens foto voor dit evenement staat – op de dashboardkaart en in de melding van de herinnering.",
-                    "deceased": "De persoon is overleden: de dag blijft en wordt gemarkeerd, de kaart zegt wat hij zou zijn geweest en je automatiseringen kunnen hem onderscheiden."
+                    "deceased": "Verjaardag, Naamdag, Verjaardag huisdier en Trouwdag - De persoon is overleden: de dag blijft en wordt gemarkeerd, de kaart zegt wat hij zou zijn geweest en je automatiseringen kunnen hem onderscheiden. Zonder effect bij de andere typen."
                 }
             },
             "one_time": {

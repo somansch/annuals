@@ -146,7 +146,7 @@
                 "description": "Chaque événement obtient sa propre entrée, que vous pouvez retrouver et modifier plus tard depuis Paramètres → Appareils et services → Annuals en recherchant son nom.",
                 "data_description": {
                     "person": "Une personne dans Home Assistant dont la photo représente cet événement – sur la carte du tableau de bord et dans la notification du rappel.",
-                    "deceased": "La personne est décédée : le jour est conservé et marqué, la carte indique ce qu'il aurait été et vos automatisations peuvent le distinguer."
+                    "deceased": "Anniversaire, Fête, Anniversaire d'animal et Anniversaire de mariage - La personne est décédée : le jour est conservé et marqué, la carte indique ce qu'il aurait été et vos automatisations peuvent le distinguer. Sans effet sur les autres types."
                 }
             },
             "one_time": {

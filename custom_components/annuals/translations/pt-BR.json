@@ -146,7 +146,7 @@
                 "description": "Cada evento recebe sua própria entrada, que você pode encontrar e editar depois em Configurações → Dispositivos e serviços → Annuals pesquisando pelo nome.",
                 "data_description": {
                     "person": "Uma pessoa no Home Assistant cuja foto representa este evento: no cartão do painel e na notificação do lembrete.",
-                    "deceased": "A pessoa faleceu: o dia é mantido e marcado, o cartão diz o que teria sido e suas automações podem distingui-lo."
+                    "deceased": "Aniversário, Dia do nome, Aniversário de animal de estimação e Aniversário de casamento - A pessoa faleceu: o dia é mantido e marcado, o cartão diz o que teria sido e suas automações podem distingui-lo. Sem efeito nos outros tipos."
                 }
             },
             "one_time": {

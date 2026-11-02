@@ -146,7 +146,7 @@
                 },
                 "data_description": {
                     "person": "Eine Person in Home Assistant, deren Bild für dieses Ereignis steht – auf der Dashboard-Karte und in der Benachrichtigung der Erinnerung.",
-                    "deceased": "Die Person ist verstorben: Der Tag bleibt und wird markiert, die Karte sagt, was er gewesen wäre, und deine Automatisierungen können ihn unterscheiden."
+                    "deceased": "Geburtstag, Namenstag, Tiergeburtstag und Hochzeitstag - Die Person ist verstorben: Der Tag bleibt und wird markiert, die Karte sagt, was er gewesen wäre, und deine Automatisierungen können ihn unterscheiden. Bei den anderen Typen ohne Wirkung."
                 }
             },
             "one_time": {

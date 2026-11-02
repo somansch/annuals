@@ -2,6 +2,18 @@
 
 All notable changes to this integration are documented here.
 
+## v3.5.1
+
+### Added
+- **An updated card reaches every open page by itself.** A dashboard that is open while Home Assistant restarts is not served again, and the dashboards' resources are read once per page - so a new version of the card used to show up only after a reload, and only after a hard one where a service worker kept the old file. The card's loader, which stays in the page, now asks the integration after every reconnect which version it serves and fetches a newer one into the page; the new file takes over the registered elements and redraws every card and editor on the page, the editor's open panel and tab included. No reload, no message. The first installation is the one page that cannot do this - it holds nothing of the card yet - and still needs the page loaded once.
+
+### Fixed
+- **The card editor's tooltips show inside a Bubble Card pop-up editor.** Opened from the pencil in Bubble Card's pop-up editor, the page under the dialogs ends up scrolled away; the card then took the page's body, an overflow-hidden box far above the window, for something that clips the dialog, and hid every tooltip for lying outside it. A fixed dialog is not clipped by the page it floats over, and the tooltips now know that.
+- **The colour menus in the card editor stay in view.** The menu beside every colour field opens towards the side with more room and is capped to it. Which room that was, the card measured against the first scrolling box above the editor - and in some dialogs that is not the box that actually clips the menu. Opened upwards near the top of a block, the menu then ran off the top of the dialog, with its first entries out of reach. It now measures against every box that really clips it, and keeps at least room for about three entries.
+
+### Changed
+- **The Deceased switch is gone from the types it never applied to - when editing.** Editing an anniversary, a work anniversary or a death day no longer shows it; the type is known there. When adding an event the type is picked on the same form, which Home Assistant's forms cannot react to, so the switch stays and its description now names the four types it is for. What is stored has not changed: the flag was never kept on the other types.
+
 ## v3.5.0
 
 ### Added

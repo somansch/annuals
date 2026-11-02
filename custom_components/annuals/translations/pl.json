@@ -146,7 +146,7 @@
                 "description": "Każde wydarzenie otrzymuje własny wpis, który później znajdziesz i edytujesz w Ustawienia → Urządzenia i usługi → Annuals, wyszukując po nazwie.",
                 "data_description": {
                     "person": "Osoba w Home Assistant, której zdjęcie reprezentuje to wydarzenie – na karcie panelu i w powiadomieniu przypomnienia.",
-                    "deceased": "Osoba nie żyje: dzień zostaje i jest oznaczony, karta mówi, czym by był, a automatyzacje mogą go odróżnić."
+                    "deceased": "Urodziny, Imieniny, Urodziny zwierzaka i Rocznica ślubu - Osoba nie żyje: dzień zostaje i jest oznaczony, karta mówi, czym by był, a automatyzacje mogą go odróżnić. Bez wpływu na inne typy."
                 }
             },
             "one_time": {

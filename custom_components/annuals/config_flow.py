@@ -441,7 +441,9 @@ def _end_date_field(defaults: dict, group: str) -> dict:
     }
 
 
-def _event_schema(defaults: dict | None, *, group: str) -> vol.Schema:
+def _event_schema(
+    defaults: dict | None, *, group: str, known_type: str | None = None
+) -> vol.Schema:
     """The form for one shape of event (see EVENT_TYPE_GROUPS in const.py).
 
     Each shape gets only the fields that can apply to it: the year is
@@ -512,8 +514,11 @@ def _event_schema(defaults: dict | None, *, group: str) -> vol.Schema:
                 CONF_VIP, default=defaults.get(CONF_VIP, False)
             ): selector({"boolean": {}}),
             # Only the yearly shape offers it, and only the types in
-            # DECEASED_TYPES keep it (see _validate_and_normalise): the
-            # form cannot show a field for some types of the seven.
+            # DECEASED_TYPES keep it (see _validate_and_normalise). A form
+            # cannot show a field for some of the types picked on that
+            # same form, so a new event is offered it whatever it becomes;
+            # an event being edited has its type already (`known_type`),
+            # and there the field goes where it would be stored as False.
             **(
                 {
                     vol.Optional(
@@ -521,6 +526,7 @@ def _event_schema(defaults: dict | None, *, group: str) -> vol.Schema:
                     ): selector({"boolean": {}})
                 }
                 if group == GROUP_RECURRING
+                and (known_type is None or known_type in DECEASED_TYPES)
                 else {}
             ),
         }
@@ -2146,7 +2152,11 @@ class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
 
         return self.async_show_form(
             step_id=f"reconfigure_{group}",
-            data_schema=_event_schema(user_input or dict(entry.data), group=group),
+            data_schema=_event_schema(
+                user_input or dict(entry.data),
+                group=group,
+                known_type=entry.data.get(CONF_EVENT_TYPE),
+            ),
             errors=errors,
         )
 
@@ -2202,7 +2212,11 @@ class AnnualsOptionsFlow(OptionsFlow):
 
         return self.async_show_form(
             step_id=f"edit_{group}",
-            data_schema=_event_schema(user_input or dict(entry.data), group=group),
+            data_schema=_event_schema(
+                user_input or dict(entry.data),
+                group=group,
+                known_type=entry.data.get(CONF_EVENT_TYPE),
+            ),
             errors=errors,
         )
 

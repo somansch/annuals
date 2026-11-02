@@ -146,7 +146,7 @@
                 "description": "Hver hendelse får sin egen oppføring, som du senere kan finne og redigere under Innstillinger → Enheter og tjenester → Annuals ved å søke på navnet.",
                 "data_description": {
                     "person": "En person i Home Assistant hvis bilde står for denne hendelsen – på dashbordkortet og i påminnelsens varsel.",
-                    "deceased": "Personen er død: dagen beholdes og merkes, kortet sier hva den ville ha vært, og automasjonene dine kan skille den ut."
+                    "deceased": "Bursdag, Navnedag, Kjæledyrs bursdag og Bryllupsdag - Personen er død: dagen beholdes og merkes, kortet sier hva den ville ha vært, og automasjonene dine kan skille den ut. Uten virkning på de andre typene."
                 }
             },
             "one_time": {

@@ -146,7 +146,7 @@
                 },
                 "data_description": {
                     "person": "A person in Home Assistant whose picture stands for this event – on the dashboard card and in the reminder's notification.",
-                    "deceased": "The person has died: the day is kept and marked, so the card says what it would have been and your automations can tell it apart."
+                    "deceased": "Birthday, Name day, Pet birthday and Wedding anniversary - The person has died: the day is kept and marked, so the card says what it would have been and your automations can tell it apart. Ignored on the other types."
                 }
             },
             "one_time": {

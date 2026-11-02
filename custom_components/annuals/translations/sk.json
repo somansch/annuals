@@ -146,7 +146,7 @@
                 },
                 "data_description": {
                     "person": "Osoba v Home Assistante, ktorej fotka zastupuje túto udalosť – na karte dashboardu a v oznámení pripomienky.",
-                    "deceased": "Osoba zomrela: deň zostane a je označený, karta hovorí, čo by bol, a vaše automatizácie ho rozlíšia."
+                    "deceased": "Narodeniny, Meniny, Narodeniny domáceho maznáčika a Výročie svadby - Osoba zomrela: deň zostane a je označený, karta hovorí, čo by bol, a vaše automatizácie ho rozlíšia. Pri ostatných typoch bez účinku."
                 }
             },
             "one_time": {

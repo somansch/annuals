@@ -482,7 +482,7 @@ This is a deliberate design choice: it guarantees an occurrence every year (not 
 
 ## Days of people who have died
 
-A birthday is often kept after the person is gone - to remember the day, not to be told that someone "turns 90 today". The yearly event form has a **Deceased** switch for that, on birthdays, name days, pet birthdays and wedding anniversaries (it is shown on every yearly type, since the form cannot know the type before it is submitted, and ignored on the others). The event stays, with its year and occurrence number, and three things change:
+A birthday is often kept after the person is gone - to remember the day, not to be told that someone "turns 90 today". The yearly event form has a **Deceased** switch for that, on birthdays, name days, pet birthdays and wedding anniversaries. When adding an event the switch is shown whatever the type, since the type is picked on that same form and a form cannot hide a field by another field's value; it is ignored on the other types, and the form says so. When editing, the type is known, and the switch is only there on those four. The event stays, with its year and occurrence number, and three things change:
 
 - The sensor carries `deceased: true`, so a template or an automation can tell such a day apart without naming anyone - `selectattr('attributes.deceased', 'equalto', false)` keeps the living.
 - Its `reminder_message` reads *Would have been today* / *Would have been in 7 days* instead of *Today* / *in 7 days*, in the server's language - which is what the bundled reminder blueprint's notification says.

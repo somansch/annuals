@@ -146,7 +146,7 @@
                 "description": "Každá událost má vlastní záznam, který později najdeš a upravíš v Nastavení → Zařízení a služby → Annuals vyhledáním podle jména.",
                 "data_description": {
                     "person": "Osoba v Home Assistantu, jejíž fotka zastupuje tuto událost – na kartě dashboardu a v oznámení připomínky.",
-                    "deceased": "Osoba zemřela: den zůstane a je označen, karta říká, co by byl, a vaše automatizace ho rozliší."
+                    "deceased": "Narozeniny, Svátek, Narozeniny mazlíčka a Výročí svatby - Osoba zemřela: den zůstane a je označen, karta říká, co by byl, a vaše automatizace ho rozliší. U ostatních typů bez účinku."
                 }
             },
             "one_time": {

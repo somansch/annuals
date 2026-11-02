@@ -146,7 +146,7 @@
                 "description": "Her etkinlik kendi girişini alır; daha sonra Ayarlar → Cihazlar ve hizmetler → Annuals bölümünden adını arayarak bulup düzenleyebilirsiniz.",
                 "data_description": {
                     "person": "Home Assistant'ta fotoğrafı bu etkinliği temsil eden bir kişi – panel kartında ve hatırlatıcının bildiriminde.",
-                    "deceased": "Kişi vefat etti: gün korunur ve işaretlenir, kart o günün ne olacağını söyler ve otomasyonlarınız onu ayırt edebilir."
+                    "deceased": "Doğum günü, İsim günü, Evcil hayvan doğum günü ve Evlilik yıl dönümü - Kişi vefat etti: gün korunur ve işaretlenir, kart o günün ne olacağını söyler ve otomasyonlarınız onu ayırt edebilir. Diğer türlerde etkisi yoktur."
                 }
             },
             "one_time": {

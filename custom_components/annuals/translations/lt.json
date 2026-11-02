@@ -146,7 +146,7 @@
                 },
                 "data_description": {
                     "person": "Home Assistant asmuo, kurio nuotrauka įkeliama į įvykį - dashboard kortelėje ir priminimo pranešime.",
-                    "deceased": "Asmuo mirė: diena lieka ir pažymima, kortelė sako, kokia ji būtų buvusi, o automatizacijos gali ją atskirti."
+                    "deceased": "Gimtadienis, Vardadienis, Gyvūno gimtadienis ir Vestuvių sukaktis - Asmuo mirė: diena lieka ir pažymima, kortelė sako, kokia ji būtų buvusi, o automatizacijos gali ją atskirti. Kitiems tipams poveikio neturi."
                 }
             },
             "one_time": {

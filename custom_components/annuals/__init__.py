@@ -2,14 +2,16 @@ from __future__ import annotations
 
 from datetime import date
 import functools
+
+import voluptuous as vol
 import logging
 from pathlib import Path
 
-from homeassistant.components import frontend
+from homeassistant.components import frontend, websocket_api
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.event import async_track_time_change
 from homeassistant.helpers.storage import Store
@@ -155,9 +157,26 @@ async def _async_midnight_tasks(hass: HomeAssistant, _now) -> None:
     await async_refresh_todo_matches(hass)
 
 
+# Where the version the card is served under is kept, for the websocket
+# command the loader asks after every reconnect.
+CARD_VERSION_DATA = f"{DOMAIN}_card_version"
+
+
+@websocket_api.websocket_command({vol.Required("type"): f"{DOMAIN}/card_version"})
+@callback
+def websocket_card_version(
+    hass: HomeAssistant, connection: websocket_api.ActiveConnection, msg: dict
+) -> None:
+    """The version the card is served under right now - what the loader in
+    an open page asks after Home Assistant has restarted, to fetch a newer
+    card into that page without anyone reloading it."""
+    connection.send_result(msg["id"], {"version": hass.data.get(CARD_VERSION_DATA) or 0})
+
+
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Register the bundled Lovelace card once at startup."""
     hass.data.setdefault(DOMAIN, {})
+    websocket_api.async_register_command(hass, websocket_card_version)
 
     # Before any entry is set up, so nothing is loaded that is about to be
     # removed, and so the entries the platforms then see are the ones that
@@ -395,6 +414,9 @@ async def _async_register_frontend(hass: HomeAssistant) -> None:
     url = FRONTEND_LOADER_URL if loader_path.is_file() else FRONTEND_JS_URL
     url = f"{url}?v={version}"
     frontend.add_extra_js_url(hass, url)
+    # The number the loader asks for after every reconnect, to fetch a newer
+    # card into a page that is already open - see annuals-card-loader.js.
+    hass.data[CARD_VERSION_DATA] = version
 
     # The same URL in the dashboards' own resource list, which the frontend
     # reads for itself after it connects rather than finding it written into the

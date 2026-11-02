@@ -146,7 +146,7 @@
                 "description": "Hver begivenhed får sin egen post, som du senere kan finde og redigere under Indstillinger → Enheder og tjenester → Annuals ved at søge på navnet.",
                 "data_description": {
                     "person": "En person i Home Assistant, hvis billede står for denne begivenhed – på dashboardkortet og i påmindelsens notifikation.",
-                    "deceased": "Personen er død: dagen beholdes og markeres, kortet siger, hvad den ville have været, og dine automatiseringer kan kende den fra andre."
+                    "deceased": "Fødselsdag, Navnedag, Kæledyrs fødselsdag og Bryllupsdag - Personen er død: dagen beholdes og markeres, kortet siger, hvad den ville have været, og dine automatiseringer kan kende den fra andre. Uden virkning på de andre typer."
                 }
             },
             "one_time": {
