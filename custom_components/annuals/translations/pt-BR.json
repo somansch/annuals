@@ -120,10 +120,25 @@
     },
     "config": {
         "step": {
+            "telework": {
+                "title": "Adicionar agenda de trabalho em casa",
+                "description": "Adicione um dia avulso de trabalho em casa ou uma agenda semanal. Selecione os dias para repetir toda semana; deixe vazio para um único dia. A data final limita a agenda semanal; deixe vazia para repetir sem prazo.",
+                "data": {
+                    "telework_user": "Usuário",
+                    "telework_start_date": "Data inicial",
+                    "telework_weekdays": "Dias da semana",
+                    "telework_end_date": "Data final"
+                },
+                "data_description": {
+                    "telework_weekdays": "Selecione um ou mais dias para uma agenda semanal de trabalho em casa. Deixe vazio para registrar apenas a data inicial.",
+                    "telework_end_date": "Aplica-se apenas a agendas semanais de trabalho em casa. Deixe vazio para não definir uma data final."
+                }
+            },
             "user": {
                 "title": "Adicionar evento",
                 "description": "Que tipo de evento é este?\n\n**Anual** abrange aniversário, data comemorativa, dia do nome, aniversário de casamento, aniversário de falecimento, aniversário de animal de estimação e aniversário de trabalho. **Único** é uma só data, que se exclui sozinha depois de passar. **Personalizado** é a sua própria data anual, em um dia fixo ou segundo uma regra.",
                 "menu_options": {
+                    "telework": "{icon_telework} Agenda de trabalho em casa",
                     "recurring": "{icon_recurring} Uma data anual de alguém",
                     "one_time": "{icon_one_time} Um evento único",
                     "custom": "{icon_custom} Um evento personalizado"
@@ -259,6 +274,10 @@
             }
         },
         "error": {
+            "telework_user_required": "Informe o nome de um usuário.",
+            "invalid_weekday": "Selecione dias da semana válidos.",
+            "telework_end_before_start": "A data final deve ser igual ou posterior à data inicial.",
+            "telework_end_requires_weekdays": "A data final só pode ser usada com uma agenda semanal.",
             "name_required": "Informe um nome.",
             "end_date_one_time_only": "Uma data de término só pode ser definida em um evento único.",
             "end_date_before_start": "A data de término deve ser posterior à data de início.",
@@ -279,6 +298,20 @@
     },
     "options": {
         "step": {
+            "telework": {
+                "title": "Editar agenda de trabalho em casa",
+                "description": "Edite o dia ou a agenda semanal de trabalho em casa deste usuário.",
+                "data": {
+                    "telework_user": "Usuário",
+                    "telework_start_date": "Data inicial",
+                    "telework_weekdays": "Dias da semana",
+                    "telework_end_date": "Data final"
+                },
+                "data_description": {
+                    "telework_weekdays": "Selecione um ou mais dias para uma agenda semanal de trabalho em casa. Deixe vazio para registrar apenas a data inicial.",
+                    "telework_end_date": "Aplica-se apenas a agendas semanais de trabalho em casa. Deixe vazio para não definir uma data final."
+                }
+            },
             "import_csv": {
                 "title": "Importar eventos de um CSV",
                 "description": "Colunas: name, type, day, month, year (opcional, obrigatório para one_time), icon (opcional), vip (opcional), last_name (opcional). \"type\" deve ser uma destas chaves em inglês: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (sempre em inglês, independente do seu idioma). \"vip\" aceita 1/true/yes/y/x (sem diferenciar maiúsculas/minúsculas); deixe vazio ou omita a coluna para um evento que não seja VIP. Mantenha todas as colunas mesmo quando um valor estiver vazio - uma linha sem a vírgula final desloca os valores seguintes para a esquerda. Linhas inválidas são ignoradas e registradas.\n\nExemplo:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFérias em família,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -680,6 +713,9 @@
             }
         },
         "calendar": {
+            "homeworking": {
+                "name": "Trabalho em casa"
+            },
             "birthday": {
                 "name": "Aniversários"
             },

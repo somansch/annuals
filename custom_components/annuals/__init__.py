@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import date
 import functools
+import hashlib
 import logging
 from pathlib import Path
 
@@ -33,6 +34,7 @@ from .const import (
     CONF_HOLIDAY_SPAN,
     CONF_SUBDIVISION,
     CONF_HUB,
+    CONF_TELEWORK,
     CONF_MONTH,
     CONF_NAME_TRANSLATIONS,
     CONF_YEAR,
@@ -342,7 +344,7 @@ async def _async_register_frontend(hass: HomeAssistant) -> None:
     loader_path = frontend_dir / "annuals-card-loader.js"
 
     try:
-        version = int(card_path.stat().st_mtime)
+        version = hashlib.sha256(card_path.read_bytes()).hexdigest()
     except OSError as err:
         _LOGGER.warning(
             "The bundled dashboard card is missing (%s): %s. Everything else is "
@@ -360,8 +362,8 @@ async def _async_register_frontend(hass: HomeAssistant) -> None:
     # cache_headers=False omits an explicit Cache-Control header - browsers
     # still apply heuristic caching from Last-Modified/ETag, so a stale copy
     # can survive a reload after the card is updated. Busting the URL with
-    # the file's own mtime forces a fresh fetch whenever it changes (i.e. on
-    # every restart after an update).
+    # the file's content hash forces a fresh fetch whenever its contents
+    # change, even if an update preserves the file's modification time.
     #
     # A tempting-looking "improvement" was tried here once: cache_headers=True
     # for a long, aggressive max-age, reasoning that the "?v=" cache-buster

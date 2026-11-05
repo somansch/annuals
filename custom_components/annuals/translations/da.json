@@ -120,10 +120,25 @@
     },
     "config": {
         "step": {
+            "telework": {
+                "title": "Tilføj hjemmearbejdsplan",
+                "description": "Tilføj en enkelt hjemmearbejdsdag eller en ugentlig plan. Vælg ugedage for gentagelse hver uge; lad feltet stå tomt for én dag. En slutdato begrænser den ugentlige plan; lad den stå tom for ubegrænset gentagelse.",
+                "data": {
+                    "telework_user": "Bruger",
+                    "telework_start_date": "Startdato",
+                    "telework_weekdays": "Ugedage",
+                    "telework_end_date": "Slutdato"
+                },
+                "data_description": {
+                    "telework_weekdays": "Vælg en eller flere dage til en ugentlig plan. Lad feltet stå tomt for kun at registrere startdatoen.",
+                    "telework_end_date": "Gælder kun for ugentlige planer. Lad feltet stå tomt for ingen slutdato."
+                }
+            },
             "user": {
                 "title": "Tilføj begivenhed",
                 "description": "Hvilken slags begivenhed er det?\n\n**Årlig** dækker fødselsdag, mærkedag, navnedag, bryllupsdag, mindedag, kæledyrs fødselsdag og jubilæum på arbejdet. **Engangs** er en enkelt dato, som sletter sig selv, når den er overstået. **Tilpasset** er din egen årlige dato – på en bestemt dag eller efter en regel.",
                 "menu_options": {
+                    "telework": "{icon_telework} Hjemmearbejdsplan",
                     "recurring": "{icon_recurring} En årlig dato for nogen",
                     "one_time": "{icon_one_time} En engangsbegivenhed",
                     "custom": "{icon_custom} En tilpasset begivenhed"
@@ -259,6 +274,10 @@
             }
         },
         "error": {
+            "telework_user_required": "Angiv et brugernavn.",
+            "invalid_weekday": "Vælg gyldige ugedage.",
+            "telework_end_before_start": "Slutdatoen skal være på eller efter startdatoen.",
+            "telework_end_requires_weekdays": "En slutdato kan kun bruges med en ugentlig plan.",
             "name_required": "Angiv et navn.",
             "end_date_one_time_only": "En slutdato kan kun sættes på en engangsbegivenhed.",
             "end_date_before_start": "Slutdatoen skal være efter startdatoen.",
@@ -279,6 +298,20 @@
     },
     "options": {
         "step": {
+            "telework": {
+                "title": "Rediger hjemmearbejdsplan",
+                "description": "Rediger denne brugers hjemmearbejdsdag eller ugentlige plan.",
+                "data": {
+                    "telework_user": "Bruger",
+                    "telework_start_date": "Startdato",
+                    "telework_weekdays": "Ugedage",
+                    "telework_end_date": "Slutdato"
+                },
+                "data_description": {
+                    "telework_weekdays": "Vælg en eller flere dage til en ugentlig plan. Lad feltet stå tomt for kun at registrere startdatoen.",
+                    "telework_end_date": "Gælder kun for ugentlige planer. Lad feltet stå tomt for ingen slutdato."
+                }
+            },
             "import_csv": {
                 "title": "Importer begivenheder fra CSV",
                 "description": "Kolonner: name, type, day, month, year (valgfrit, påkrævet for one_time), icon (valgfrit), vip (valgfrit), last_name (valgfrit). \"type\" skal være en af følgende engelske nøgler: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (altid på engelsk, uanset dit sprogvalg). \"vip\" accepterer 1/true/yes/y/x (der skelnes ikke mellem store/små bogstaver); lad stå tomt eller undlad kolonnen for en ikke-VIP-begivenhed. Behold alle kolonner, selv når en værdi er tom - en række uden afsluttende komma rykker de følgende værdier et trin til venstre. Ugyldige rækker springes over og logges.\n\nEksempel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamilieferie,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -680,6 +713,9 @@
             }
         },
         "calendar": {
+            "homeworking": {
+                "name": "Arbejde hjemmefra"
+            },
             "birthday": {
                 "name": "Fødselsdage"
             },

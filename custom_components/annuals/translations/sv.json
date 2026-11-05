@@ -120,10 +120,25 @@
     },
     "config": {
         "step": {
+            "telework": {
+                "title": "Lägg till schema för arbete hemifrån",
+                "description": "Lägg till en enstaka dag för arbete hemifrån eller ett veckoschema. Välj veckodagar för att upprepa varje vecka; lämna tomt för en dag. Ett slutdatum begränsar veckoschemat; lämna tomt för obegränsad upprepning.",
+                "data": {
+                    "telework_user": "Användare",
+                    "telework_start_date": "Startdatum",
+                    "telework_weekdays": "Veckodagar",
+                    "telework_end_date": "Slutdatum"
+                },
+                "data_description": {
+                    "telework_weekdays": "Välj en eller flera dagar för ett veckoschema för arbete hemifrån. Lämna tomt för att bara registrera startdatumet.",
+                    "telework_end_date": "Gäller endast veckoscheman för arbete hemifrån. Lämna tomt för inget slutdatum."
+                }
+            },
             "user": {
                 "title": "Lägg till händelse",
                 "description": "Vilken sorts händelse är detta?\n\n**Årlig** omfattar födelsedag, årsdag, namnsdag, bröllopsdag, dödsdag, husdjurets födelsedag och arbetsjubileum. **Engångs** är ett enda datum, som raderar sig självt när det har passerat. **Anpassad** är ditt eget årliga datum – på en bestämd dag eller enligt en regel.",
                 "menu_options": {
+                    "telework": "{icon_telework} Schema för arbete hemifrån",
                     "recurring": "{icon_recurring} Ett årligt datum för någon",
                     "one_time": "{icon_one_time} En engångshändelse",
                     "custom": "{icon_custom} En anpassad händelse"
@@ -259,6 +274,10 @@
             }
         },
         "error": {
+            "telework_user_required": "Ange ett användarnamn.",
+            "invalid_weekday": "Välj giltiga veckodagar.",
+            "telework_end_before_start": "Slutdatumet måste vara samma som eller senare än startdatumet.",
+            "telework_end_requires_weekdays": "Ett slutdatum kan bara användas med ett veckoschema.",
             "name_required": "Ange ett namn.",
             "end_date_one_time_only": "Ett slutdatum kan bara anges för en engångshändelse.",
             "end_date_before_start": "Slutdatumet måste vara efter startdatumet.",
@@ -279,6 +298,20 @@
     },
     "options": {
         "step": {
+            "telework": {
+                "title": "Redigera schema för arbete hemifrån",
+                "description": "Ändra den här användarens dag för arbete hemifrån eller veckoschema.",
+                "data": {
+                    "telework_user": "Användare",
+                    "telework_start_date": "Startdatum",
+                    "telework_weekdays": "Veckodagar",
+                    "telework_end_date": "Slutdatum"
+                },
+                "data_description": {
+                    "telework_weekdays": "Välj en eller flera dagar för ett veckoschema för arbete hemifrån. Lämna tomt för att bara registrera startdatumet.",
+                    "telework_end_date": "Gäller endast veckoscheman för arbete hemifrån. Lämna tomt för inget slutdatum."
+                }
+            },
             "import_csv": {
                 "title": "Importera händelser från CSV",
                 "description": "Kolumner: name, type, day, month, year (valfritt, krävs för one_time), icon (valfritt), vip (valfritt), last_name (valfritt). \"type\" måste vara en av dessa engelska nycklar: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (alltid på engelska, oavsett språkinställning). \"vip\" accepterar 1/true/yes/y/x (skiftlägesokänsligt); lämna tomt eller utelämna kolumnen för en icke-VIP-händelse. Behåll alla kolumner även när ett värde är tomt - en rad utan avslutande kommatecken förskjuter efterföljande värden ett steg åt vänster. Ogiltiga rader hoppas över och loggas.\n\nExempel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamiljesemester,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -680,6 +713,9 @@
             }
         },
         "calendar": {
+            "homeworking": {
+                "name": "Arbete hemifrån"
+            },
             "birthday": {
                 "name": "Födelsedagar"
             },

@@ -120,10 +120,25 @@
     },
     "config": {
         "step": {
+            "telework": {
+                "title": "Pridėti darbo iš namų grafiką",
+                "description": "Pridėkite vieną darbo iš namų dieną arba savaitinį grafiką. Pasirinkite savaitės dienas, kad grafikas kartotųsi kas savaitę; palikite tuščia, jei norite tik vienos dienos. Pabaigos data apriboja savaitinį grafiką; palikite tuščią, jei kartojimo pabaigos nėra.",
+                "data": {
+                    "telework_user": "Naudotojas",
+                    "telework_start_date": "Pradžios data",
+                    "telework_weekdays": "Savaitės dienos",
+                    "telework_end_date": "Pabaigos data"
+                },
+                "data_description": {
+                    "telework_weekdays": "Pasirinkite vieną ar daugiau savaitės dienų darbo iš namų grafikui. Palikite tuščią, jei norite įrašyti tik pradžios datą.",
+                    "telework_end_date": "Taikoma tik savaitiniams darbo iš namų grafikams. Palikite tuščią, jei pabaigos data nenustatoma."
+                }
+            },
             "user": {
                 "title": "Pridėti įvykį",
                 "description": "Kokio tipo įvykis tai yra?\n\n**Metinis** apima gimtadienį, sukaktį, vardadienį, vestuvių sukaktį, atminimą, gyvūno gimtadienį ir darbo sukaktį. **Vienkartinis** - viena data, kuri po pabaigos išsitrina pati. **Pasirinktinis** - tavo paties metinė data, krentanti į dieną arba į taisyklę.",
                 "menu_options": {
+                    "telework": "{icon_telework} Darbo iš namų grafikas",
                     "recurring": "{icon_recurring} Metinė data kam nors",
                     "one_time": "{icon_one_time} Vienkartinis įvykis",
                     "custom": "{icon_custom} Pasirinktinis įvykis"
@@ -259,6 +274,10 @@
             }
         },
         "error": {
+            "telework_user_required": "Įveskite naudotojo vardą.",
+            "invalid_weekday": "Pasirinkite galiojančias savaitės dienas.",
+            "telework_end_before_start": "Pabaigos data turi būti ne ankstesnė už pradžios datą.",
+            "telework_end_requires_weekdays": "Pabaigos datą galima nustatyti tik savaitiniam grafikui.",
             "name_required": "Įveskite vardą.",
             "end_date_one_time_only": "Pabaigos data gali būti nustatyta tik vienkartiniam įvykiui.",
             "end_date_before_start": "Pabaigos data turi būti vėlesnė už pradžios datą.",
@@ -279,6 +298,20 @@
     },
     "options": {
         "step": {
+            "telework": {
+                "title": "Redaguoti darbo iš namų grafiką",
+                "description": "Redaguokite šio naudotojo darbo iš namų dieną arba savaitinį grafiką.",
+                "data": {
+                    "telework_user": "Naudotojas",
+                    "telework_start_date": "Pradžios data",
+                    "telework_weekdays": "Savaitės dienos",
+                    "telework_end_date": "Pabaigos data"
+                },
+                "data_description": {
+                    "telework_weekdays": "Pasirinkite vieną ar daugiau savaitės dienų darbo iš namų grafikui. Palikite tuščią, jei norite įrašyti tik pradžios datą.",
+                    "telework_end_date": "Taikoma tik savaitiniams darbo iš namų grafikams. Palikite tuščią, jei pabaigos data nenustatoma."
+                }
+            },
             "import_csv": {
                 "title": "Importuoti įvykius iš CSV",
                 "description": "Stulpeliai: name, type, day, month, year (neprivaloma, privaloma one_time), icon (neprivaloma), vip (neprivaloma), last_name (neprivaloma). `type` turi būti viena iš: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (visada angliškai, nepriklausomai nuo kalbos nustatymo). `vip` priima 1/true/yes/y/x (be raidžių registro); palikite tuščią arba praleiskite stulpelį ne-VIP įvykiui. Palikite kiekvieną stulpelį, net jei reikšmė tuščia - eilutėje trūkstant paskutinio kablelio, tolesnės reikšmės pasislinka į kairę. Neteisingos eilutės praleidžiamos ir užregistruojamos žurnale.\n\nPavyzdys:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamily Vacation,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -680,6 +713,9 @@
             }
         },
         "calendar": {
+            "homeworking": {
+                "name": "Darbas iš namų"
+            },
             "birthday": {
                 "name": "Gimtadieniai"
             },

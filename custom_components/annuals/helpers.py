@@ -42,6 +42,8 @@ from .const import (
     CONF_NTH,
     CONF_PERSON,
     CONF_TIME,
+    CONF_TELEWORK,
+    CONF_TELEWORK_USER,
     CONF_NAME_TRANSLATIONS,
     CONF_DECEASED,
     CONF_VIP,
@@ -122,7 +124,9 @@ def export_rows(hass: HomeAssistant) -> list[dict]:
     return [
         entry.data
         for entry in hass.config_entries.async_entries(DOMAIN)
-        if not entry.data.get(CONF_HUB) and entry.data.get(CONF_EVENT_TYPE) not in LIBRARY_TYPES
+        if not entry.data.get(CONF_HUB)
+        and not entry.data.get(CONF_TELEWORK)
+        and entry.data.get(CONF_EVENT_TYPE) not in LIBRARY_TYPES
     ]
 
 
@@ -367,6 +371,34 @@ async def async_event_type_labels(hass: HomeAssistant) -> dict[str, str]:
         )
         for event_type in ALL_EVENT_TYPES
     }
+
+
+async def async_telework_label(hass: HomeAssistant) -> str:
+    """The translated label used for telework calendar events and entries."""
+    translations = await translation.async_get_translations(
+        hass, hass.config.language, "entity", {DOMAIN}
+    )
+    return translations.get(
+        f"component.{DOMAIN}.entity.calendar.homeworking.name", "Homeworking"
+    )
+
+
+def telework_person_name(hass: HomeAssistant, data: dict) -> str:
+    """Resolve a linked person entity to its first name.
+
+    Older schedules stored a free-text name in CONF_TELEWORK_USER; keeping
+    that as the fallback lets those entries remain readable until edited.
+    """
+    person_id = str(data.get(CONF_TELEWORK_USER) or "")
+    if person_id.startswith("person."):
+        state = hass.states.get(person_id)
+        if state:
+            display_name = state.attributes.get("friendly_name") or person_id
+        else:
+            display_name = person_id
+    else:
+        display_name = person_id
+    return display_name.split(maxsplit=1)[0] if display_name else display_name
 
 
 async def async_category_labels(

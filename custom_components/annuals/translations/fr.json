@@ -120,13 +120,28 @@
     },
     "config": {
         "step": {
+            "telework": {
+                "title": "Ajouter un planning de télétravail à domicile",
+                "description": "Ajoutez une journée ponctuelle de travail à domicile ou un planning hebdomadaire. Choisissez des jours pour répéter chaque semaine ; laissez-les vides pour une seule journée. Une date de fin limite le planning ; laissez-la vide pour une répétition sans fin.",
+                "data": {
+                    "telework_user": "Personne",
+                    "telework_start_date": "Date de début",
+                    "telework_weekdays": "Jours de la semaine",
+                    "telework_end_date": "Date de fin"
+                },
+                "data_description": {
+                    "telework_weekdays": "Choisissez un ou plusieurs jours pour le planning hebdomadaire de travail à domicile. Laissez vide pour enregistrer uniquement la date de début.",
+                    "telework_end_date": "S'applique uniquement aux plannings hebdomadaires de travail à domicile. Laissez vide pour ne pas définir de fin."
+                }
+            },
             "user": {
                 "title": "Ajouter un événement",
                 "description": "De quel type d'événement s'agit-il ?\n\n**Annuel** couvre anniversaire, date commémorative, fête, anniversaire de mariage, commémoration, anniversaire d'animal et anniversaire professionnel. **Ponctuel** est une date unique, qui se supprime d'elle-même une fois passée. **Personnalisé** est votre propre date annuelle, à un jour donné ou selon une règle.",
                 "menu_options": {
                     "recurring": "{icon_recurring} Une date annuelle pour quelqu'un",
                     "one_time": "{icon_one_time} Un événement ponctuel",
-                    "custom": "{icon_custom} Un événement personnalisé"
+                    "custom": "{icon_custom} Un événement personnalisé",
+                    "telework": "{icon_telework} Un planning de télétravail à domicile"
                 }
             },
             "recurring": {
@@ -259,6 +274,10 @@
             }
         },
         "error": {
+            "telework_user_required": "Veuillez sélectionner une personne.",
+            "invalid_weekday": "Choisissez des jours de la semaine valides.",
+            "telework_end_before_start": "La date de fin doit être égale ou postérieure à la date de début.",
+            "telework_end_requires_weekdays": "Une date de fin ne peut être utilisée qu'avec un planning hebdomadaire.",
             "name_required": "Veuillez saisir un nom.",
             "end_date_one_time_only": "Une date de fin ne peut être définie que sur un événement unique.",
             "end_date_before_start": "La date de fin doit être postérieure à la date de début.",
@@ -279,6 +298,20 @@
     },
     "options": {
         "step": {
+            "telework": {
+                "title": "Modifier le planning de télétravail à domicile",
+                "description": "Modifiez la journée ou le planning hebdomadaire de travail à domicile de cet utilisateur.",
+                "data": {
+                    "telework_user": "Personne",
+                    "telework_start_date": "Date de début",
+                    "telework_weekdays": "Jours de la semaine",
+                    "telework_end_date": "Date de fin"
+                },
+                "data_description": {
+                    "telework_weekdays": "Choisissez un ou plusieurs jours pour le planning hebdomadaire de travail à domicile. Laissez vide pour enregistrer uniquement la date de début.",
+                    "telework_end_date": "S'applique uniquement aux plannings hebdomadaires de travail à domicile. Laissez vide pour ne pas définir de fin."
+                }
+            },
             "import_csv": {
                 "title": "Importer des événements depuis un CSV",
                 "description": "Colonnes : name, type, day, month, year (optionnel, obligatoire pour one_time), icon (optionnel), vip (optionnel), last_name (optionnel). « type » doit être l'une des clés anglaises suivantes : birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (toujours en anglais, quel que soit votre paramètre de langue). « vip » accepte 1/true/yes/y/x (peu importe la casse) ; laissez vide ou omettez la colonne pour un événement non-VIP. Conservez toutes les colonnes même si une valeur est vide - une ligne sans virgule finale décale les valeurs suivantes vers la gauche. Les lignes invalides sont ignorées et journalisées.\n\nExemple :\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nVacances en famille,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -680,6 +713,9 @@
             }
         },
         "calendar": {
+            "homeworking": {
+                "name": "Travail à domicile"
+            },
             "birthday": {
                 "name": "Anniversaires"
             },

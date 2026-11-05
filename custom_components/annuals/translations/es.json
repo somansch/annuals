@@ -120,10 +120,25 @@
     },
     "config": {
         "step": {
+            "telework": {
+                "title": "Añadir horario de trabajo desde casa",
+                "description": "Añade un día puntual de trabajo desde casa o un horario semanal. Selecciona los días para repetirlo cada semana; déjalos vacíos para un solo día. La fecha de fin limita el horario semanal; déjala vacía para repetirlo indefinidamente.",
+                "data": {
+                    "telework_user": "Usuario",
+                    "telework_start_date": "Fecha de inicio",
+                    "telework_weekdays": "Días de la semana",
+                    "telework_end_date": "Fecha de fin"
+                },
+                "data_description": {
+                    "telework_weekdays": "Selecciona uno o varios días para un horario semanal de trabajo desde casa. Déjalo vacío para registrar solo la fecha de inicio.",
+                    "telework_end_date": "Solo se aplica a horarios semanales de trabajo desde casa. Déjala vacía para que no tenga fin."
+                }
+            },
             "user": {
                 "title": "Añadir evento",
                 "description": "¿Qué tipo de evento es?\n\n**Anual** abarca cumpleaños, aniversario, onomástica, aniversario de boda, aniversario de fallecimiento, cumpleaños de mascota y aniversario laboral. **Puntual** es una única fecha, que se elimina sola una vez pasada. **Personalizado** es tu propia fecha anual, en un día concreto o según una regla.",
                 "menu_options": {
+                    "telework": "{icon_telework} Horario de trabajo desde casa",
                     "recurring": "{icon_recurring} Una fecha anual de alguien",
                     "one_time": "{icon_one_time} Un evento puntual",
                     "custom": "{icon_custom} Un evento personalizado"
@@ -259,6 +274,10 @@
             }
         },
         "error": {
+            "telework_user_required": "Introduce un nombre de usuario.",
+            "invalid_weekday": "Selecciona días de la semana válidos.",
+            "telework_end_before_start": "La fecha de fin debe ser igual o posterior a la fecha de inicio.",
+            "telework_end_requires_weekdays": "La fecha de fin solo se puede usar con un horario semanal.",
             "name_required": "Introduce un nombre.",
             "end_date_one_time_only": "Solo se puede establecer una fecha de fin en un evento único.",
             "end_date_before_start": "La fecha de fin debe ser posterior a la de inicio.",
@@ -279,6 +298,20 @@
     },
     "options": {
         "step": {
+            "telework": {
+                "title": "Editar horario de trabajo desde casa",
+                "description": "Modifica el día o el horario semanal de trabajo desde casa de este usuario.",
+                "data": {
+                    "telework_user": "Usuario",
+                    "telework_start_date": "Fecha de inicio",
+                    "telework_weekdays": "Días de la semana",
+                    "telework_end_date": "Fecha de fin"
+                },
+                "data_description": {
+                    "telework_weekdays": "Selecciona uno o varios días para un horario semanal de trabajo desde casa. Déjalo vacío para registrar solo la fecha de inicio.",
+                    "telework_end_date": "Solo se aplica a horarios semanales de trabajo desde casa. Déjala vacía para que no tenga fin."
+                }
+            },
             "import_csv": {
                 "title": "Importar eventos desde CSV",
                 "description": "Columnas: name, type, day, month, year (opcional, obligatorio para one_time), icon (opcional), vip (opcional), last_name (opcional). «type» debe ser una de estas claves en inglés: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (siempre en inglés, sin importar tu idioma). «vip» acepta 1/true/yes/y/x (sin distinguir mayúsculas/minúsculas); déjalo vacío u omite la columna para un evento que no sea VIP. Mantén todas las columnas aunque un valor esté vacío: una fila sin la coma final desplaza los valores siguientes hacia la izquierda. Las filas no válidas se omiten y quedan registradas.\n\nEjemplo:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nVacaciones familiares,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -680,6 +713,9 @@
             }
         },
         "calendar": {
+            "homeworking": {
+                "name": "Trabajo desde casa"
+            },
             "birthday": {
                 "name": "Cumpleaños"
             },

@@ -15,7 +15,13 @@ import voluptuous as vol
 from homeassistant.components.file_upload import process_uploaded_file
 from homeassistant.data_entry_flow import section
 from homeassistant.components.http.auth import async_sign_path
-from homeassistant.config_entries import ConfigEntry, SOURCE_IMPORT, ConfigFlow, OptionsFlow
+from homeassistant.config_entries import (
+    ConfigEntry,
+    SOURCE_IMPORT,
+    SOURCE_RECONFIGURE,
+    ConfigFlow,
+    OptionsFlow,
+)
 from homeassistant.core import HomeAssistant, callback
 # The same list CountrySelector validates the submitted value against - see
 # _SUPPORTED_HOLIDAY_COUNTRIES below for why this has to be consulted here.
@@ -53,6 +59,11 @@ from .const import (
     CONF_SUBDIVISION,
     CONF_TIME,
     CONF_TODO_LISTS,
+    CONF_TELEWORK,
+    CONF_TELEWORK_END_DATE,
+    CONF_TELEWORK_START_DATE,
+    CONF_TELEWORK_USER,
+    CONF_TELEWORK_WEEKDAYS,
     CONF_DECEASED,
     CONF_VIP,
     DECEASED_TYPES,
@@ -124,6 +135,8 @@ from .helpers import (
     holiday_identity,
     holiday_span_suffix,
     hub_title,
+    async_telework_label,
+    telework_person_name,
     library_language,
     translations_csv_text,
     ui_language,
@@ -2003,6 +2016,88 @@ async def _entry_title(hass: HomeAssistant, data: dict) -> str:
     return event_title(await async_event_type_labels(hass), data)
 
 
+def _telework_schema(defaults: dict | None = None) -> vol.Schema:
+    defaults = defaults or {}
+    return vol.Schema(
+        {
+            vol.Required(
+                CONF_TELEWORK_USER,
+                description={
+                    "suggested_value": (
+                        defaults.get(CONF_TELEWORK_USER)
+                        if str(defaults.get(CONF_TELEWORK_USER, "")).startswith("person.")
+                        else None
+                    )
+                },
+            ): selector({"entity": {"domain": "person"}}),
+            vol.Required(
+                CONF_TELEWORK_START_DATE,
+                description={"suggested_value": defaults.get(CONF_TELEWORK_START_DATE)},
+            ): selector({"date": {}}),
+            vol.Optional(
+                CONF_TELEWORK_WEEKDAYS,
+                description={
+                    "suggested_value": [
+                        str(day) for day in defaults.get(CONF_TELEWORK_WEEKDAYS, [])
+                    ]
+                },
+            ): selector(
+                {
+                    "select": {
+                        "options": WEEKDAY_OPTIONS,
+                        "translation_key": "weekday",
+                        "multiple": True,
+                        "mode": "dropdown",
+                    }
+                }
+            ),
+            vol.Optional(
+                CONF_TELEWORK_END_DATE,
+                description={"suggested_value": defaults.get(CONF_TELEWORK_END_DATE)},
+            ): selector({"date": {}}),
+        }
+    )
+
+
+def _validate_telework(user_input: dict) -> tuple[dict | None, dict[str, str]]:
+    errors: dict[str, str] = {}
+    user = str(user_input.get(CONF_TELEWORK_USER) or "").strip()
+    if not user.startswith("person."):
+        return None, {"base": "telework_user_required"}
+
+    start = parse_iso_date(str(user_input.get(CONF_TELEWORK_START_DATE, "")))
+    if start is None:
+        return None, {CONF_TELEWORK_START_DATE: "invalid_date"}
+
+    try:
+        weekdays = [int(day) for day in user_input.get(CONF_TELEWORK_WEEKDAYS, [])]
+    except (TypeError, ValueError):
+        return None, {CONF_TELEWORK_WEEKDAYS: "invalid_weekday"}
+    if any(day not in range(7) for day in weekdays):
+        return None, {CONF_TELEWORK_WEEKDAYS: "invalid_weekday"}
+
+    end_value = user_input.get(CONF_TELEWORK_END_DATE)
+    end = parse_iso_date(str(end_value)) if end_value else None
+    if end_value and end is None:
+        return None, {CONF_TELEWORK_END_DATE: "invalid_date"}
+    if end is not None and end < start:
+        return None, {CONF_TELEWORK_END_DATE: "telework_end_before_start"}
+    if end is not None and not weekdays:
+        return None, {CONF_TELEWORK_END_DATE: "telework_end_requires_weekdays"}
+
+    return {
+        CONF_TELEWORK: True,
+        CONF_TELEWORK_USER: user,
+        CONF_TELEWORK_START_DATE: start.isoformat(),
+        CONF_TELEWORK_WEEKDAYS: weekdays,
+        CONF_TELEWORK_END_DATE: end.isoformat() if end else None,
+    }, errors
+
+
+async def _telework_entry_title(hass: HomeAssistant, data: dict) -> str:
+    return f"{await async_telework_label(hass)}: {telework_person_name(hass, data)}"
+
+
 class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
     """Each event is its own config entry - lets Home Assistant's own
     Devices & Services search/list handle finding and managing events,
@@ -2031,11 +2126,12 @@ class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
         # and changing one never means touching all 16 files.
         return self.async_show_menu(
             step_id="user",
-            menu_options=[GROUP_RECURRING, GROUP_ONE_TIME, GROUP_CUSTOM],
+            menu_options=[GROUP_RECURRING, GROUP_ONE_TIME, GROUP_CUSTOM, CONF_TELEWORK],
             description_placeholders={
                 "icon_recurring": "\U0001F382",
                 "icon_one_time": "\u23F3",
                 "icon_custom": "\U0001F5D3\uFE0F",
+                "icon_telework": "\U0001F3E0",
             },
         )
 
@@ -2047,6 +2143,25 @@ class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
 
     async def async_step_custom(self, user_input=None):
         return await self._async_add_event(GROUP_CUSTOM, user_input)
+
+    async def async_step_telework(self, user_input=None):
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            data, errors = _validate_telework(user_input)
+            if data is not None:
+                if self.context.get("source") == SOURCE_RECONFIGURE:
+                    entry = self._get_reconfigure_entry()
+                    return self.async_update_reload_and_abort(
+                        entry, title=await _telework_entry_title(self.hass, data), data=data
+                    )
+                return self.async_create_entry(
+                    title=await _telework_entry_title(self.hass, data), data=data
+                )
+        return self.async_show_form(
+            step_id=CONF_TELEWORK,
+            data_schema=_telework_schema(user_input),
+            errors=errors,
+        )
 
     async def _async_add_event(self, group: str, user_input):
         """One of the three add forms - the step id is the group's name."""
@@ -2118,12 +2233,17 @@ class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
         entry = self._get_reconfigure_entry()
         if entry.data.get(CONF_HUB):
             return self.async_abort(reason="hub_not_configurable")
+        if entry.data.get(CONF_TELEWORK):
+            return await self.async_step_reconfigure_telework()
 
         # No menu when editing: this event has already chosen its shape, so
         # it goes straight to that shape's form. Which also means the type
         # dropdown there offers only that group's types - see
         # _event_type_selector.
         return await getattr(self, _RECONFIGURE_STEPS[_group_of(entry)])()
+
+    async def async_step_reconfigure_telework(self, user_input=None):
+        return await self.async_step_telework(user_input)
 
     async def async_step_reconfigure_recurring(self, user_input=None):
         return await self._async_reconfigure_event(GROUP_RECURRING, user_input)
@@ -2167,6 +2287,8 @@ class AnnualsOptionsFlow(OptionsFlow):
     async def async_step_init(self, user_input=None):
         if self.config_entry.data.get(CONF_HUB):
             return await self.async_step_hub_menu()
+        if self.config_entry.data.get(CONF_TELEWORK):
+            return await self.async_step_telework()
         # A holiday has no day/month/year of its own to edit (its date is
         # resolved live per year - see dates.py) and no last name or VIP flag
         # either, so it gets its own reduced pair of screens rather than the
@@ -2178,6 +2300,23 @@ class AnnualsOptionsFlow(OptionsFlow):
         # Same as reconfigure above: the event's own shape decides which
         # form it gets, so there is no menu and no field it cannot use.
         return await getattr(self, _EDIT_STEPS[_group_of(self.config_entry)])()
+
+    async def async_step_telework(self, user_input=None):
+        entry = self.config_entry
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            data, errors = _validate_telework(user_input)
+            if data is not None:
+                self.hass.config_entries.async_update_entry(
+                    entry, title=await _telework_entry_title(self.hass, data), data=data
+                )
+                self.hass.config_entries.async_schedule_reload(entry.entry_id)
+                return self.async_create_entry(title="", data={})
+        return self.async_show_form(
+            step_id=CONF_TELEWORK,
+            data_schema=_telework_schema(user_input or dict(entry.data)),
+            errors=errors,
+        )
 
     async def async_step_edit_recurring(self, user_input=None):
         return await self._async_edit_event(GROUP_RECURRING, user_input)

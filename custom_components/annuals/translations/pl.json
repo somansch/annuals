@@ -120,10 +120,25 @@
     },
     "config": {
         "step": {
+            "telework": {
+                "title": "Dodaj harmonogram pracy z domu",
+                "description": "Dodaj pojedynczy dzień pracy z domu lub harmonogram tygodniowy. Wybierz dni tygodnia, aby powtarzać go co tydzień; pozostaw puste, aby zapisać jeden dzień. Data końcowa ogranicza harmonogram tygodniowy; pozostaw ją pustą, aby powtarzać bezterminowo.",
+                "data": {
+                    "telework_user": "Użytkownik",
+                    "telework_start_date": "Data początkowa",
+                    "telework_weekdays": "Dni tygodnia",
+                    "telework_end_date": "Data końcowa"
+                },
+                "data_description": {
+                    "telework_weekdays": "Wybierz jeden lub więcej dni dla tygodniowego harmonogramu pracy z domu. Pozostaw puste, aby zapisać tylko datę początkową.",
+                    "telework_end_date": "Dotyczy tylko tygodniowych harmonogramów pracy z domu. Pozostaw puste, aby nie ustawiać daty końcowej."
+                }
+            },
             "user": {
                 "title": "Dodaj wydarzenie",
                 "description": "Jakiego rodzaju jest to wydarzenie?\n\n**Coroczne** obejmuje urodziny, rocznicę, imieniny, rocznicę ślubu, rocznicę śmierci, urodziny zwierzaka i jubileusz pracy. **Jednorazowe** to pojedyncza data, która usuwa się sama po upływie. **Inne** to twoja własna coroczna data – w konkretnym dniu albo według reguły.",
                 "menu_options": {
+                    "telework": "{icon_telework} Harmonogram pracy z domu",
                     "recurring": "{icon_recurring} Coroczna data dla kogoś",
                     "one_time": "{icon_one_time} Wydarzenie jednorazowe",
                     "custom": "{icon_custom} Inne wydarzenie"
@@ -259,6 +274,10 @@
             }
         },
         "error": {
+            "telework_user_required": "Wpisz nazwę użytkownika.",
+            "invalid_weekday": "Wybierz prawidłowe dni tygodnia.",
+            "telework_end_before_start": "Data końcowa musi przypadać w dniu początkowym lub później.",
+            "telework_end_requires_weekdays": "Daty końcowej można użyć tylko z harmonogramem tygodniowym.",
             "name_required": "Podaj nazwę.",
             "end_date_one_time_only": "Datę zakończenia można ustawić tylko dla wydarzenia jednorazowego.",
             "end_date_before_start": "Data zakończenia musi być późniejsza niż data rozpoczęcia.",
@@ -279,6 +298,20 @@
     },
     "options": {
         "step": {
+            "telework": {
+                "title": "Edytuj harmonogram pracy z domu",
+                "description": "Edytuj dzień lub harmonogram tygodniowy pracy z domu tego użytkownika.",
+                "data": {
+                    "telework_user": "Użytkownik",
+                    "telework_start_date": "Data początkowa",
+                    "telework_weekdays": "Dni tygodnia",
+                    "telework_end_date": "Data końcowa"
+                },
+                "data_description": {
+                    "telework_weekdays": "Wybierz jeden lub więcej dni dla tygodniowego harmonogramu pracy z domu. Pozostaw puste, aby zapisać tylko datę początkową.",
+                    "telework_end_date": "Dotyczy tylko tygodniowych harmonogramów pracy z domu. Pozostaw puste, aby nie ustawiać daty końcowej."
+                }
+            },
             "import_csv": {
                 "title": "Importuj wydarzenia z pliku CSV",
                 "description": "Kolumny: name, type, day, month, year (opcjonalnie, wymagane dla one_time), icon (opcjonalnie), vip (opcjonalnie), last_name (opcjonalnie). „type” musi być jednym z następujących angielskich kluczy: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (zawsze po angielsku, niezależnie od ustawień języka). „vip” akceptuje 1/true/yes/y/x (wielkość liter nie ma znaczenia); pozostaw puste lub pomiń kolumnę dla wydarzenia bez statusu VIP. Zachowaj każdą kolumnę, nawet jeśli wartość jest pusta – wiersz bez przecinka na końcu przesuwa kolejne wartości w lewo. Nieprawidłowe wiersze są pomijane i zapisywane w dzienniku.\n\nPrzykład:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nWakacje rodzinne,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -680,6 +713,9 @@
             }
         },
         "calendar": {
+            "homeworking": {
+                "name": "Praca z domu"
+            },
             "birthday": {
                 "name": "Urodziny"
             },

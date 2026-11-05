@@ -120,10 +120,25 @@
     },
     "config": {
         "step": {
+            "telework": {
+                "title": "Přidat plán práce z domova",
+                "description": "Přidej jeden den práce z domova nebo týdenní plán. Vyber dny v týdnu pro opakování každý týden; pro jeden den je nech prázdné. Datum konce omezí týdenní plán; pokud ho necháš prázdné, bude se opakovat neomezeně.",
+                "data": {
+                    "telework_user": "Uživatel",
+                    "telework_start_date": "Datum začátku",
+                    "telework_weekdays": "Dny v týdnu",
+                    "telework_end_date": "Datum konce"
+                },
+                "data_description": {
+                    "telework_weekdays": "Vyber jeden nebo více dnů pro týdenní plán. Nech prázdné, pokud chceš zaznamenat pouze datum začátku.",
+                    "telework_end_date": "Platí pouze pro týdenní plány. Nech prázdné, pokud plán nemá končit."
+                }
+            },
             "user": {
                 "title": "Přidat událost",
                 "description": "O jaký druh události jde?\n\n**Roční** zahrnuje narozeniny, výročí, svátek, výročí svatby, výročí úmrtí, narozeniny mazlíčka a pracovní výročí. **Jednorázová** je jediné datum, které se po uplynutí samo smaže. **Vlastní** je tvoje vlastní roční datum – v konkrétní den, nebo podle pravidla.",
                 "menu_options": {
+                    "telework": "{icon_telework} Plán práce z domova",
                     "recurring": "{icon_recurring} Roční datum pro někoho",
                     "one_time": "{icon_one_time} Jednorázová událost",
                     "custom": "{icon_custom} Vlastní událost"
@@ -259,6 +274,10 @@
             }
         },
         "error": {
+            "telework_user_required": "Zadej jméno uživatele.",
+            "invalid_weekday": "Vyber platné dny v týdnu.",
+            "telework_end_before_start": "Datum konce musí být stejné nebo pozdější než datum začátku.",
+            "telework_end_requires_weekdays": "Datum konce lze použít pouze u týdenního plánu.",
             "name_required": "Zadejte jméno.",
             "end_date_one_time_only": "Datum konce lze nastavit jen u jednorázové události.",
             "end_date_before_start": "Datum konce musí být po datu začátku.",
@@ -279,6 +298,20 @@
     },
     "options": {
         "step": {
+            "telework": {
+                "title": "Upravit plán práce z domova",
+                "description": "Uprav den nebo týdenní plán práce z domova tohoto uživatele.",
+                "data": {
+                    "telework_user": "Uživatel",
+                    "telework_start_date": "Datum začátku",
+                    "telework_weekdays": "Dny v týdnu",
+                    "telework_end_date": "Datum konce"
+                },
+                "data_description": {
+                    "telework_weekdays": "Vyber jeden nebo více dnů pro týdenní plán. Nech prázdné, pokud chceš zaznamenat pouze datum začátku.",
+                    "telework_end_date": "Platí pouze pro týdenní plány. Nech prázdné, pokud plán nemá končit."
+                }
+            },
             "import_csv": {
                 "title": "Import událostí z CSV",
                 "description": "Sloupce: name, type, day, month, year (volitelné, u one_time povinné), icon (volitelné), vip (volitelné), last_name (volitelné). „type“ musí být jeden z těchto anglických klíčů: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (vždy anglicky, bez ohledu na nastavení jazyka). „vip“ přijímá 1/true/yes/y/x (nezáleží na velikosti písmen); ponechte prázdné nebo sloupec vynechte pro událost bez VIP statusu. Zachovejte všechny sloupce i při prázdné hodnotě – řádek bez koncové čárky posune následující hodnoty o jednu doleva. Neplatné řádky se přeskočí a zaznamenají do protokolu.\n\nPříklad:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nRodinná dovolená,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -680,6 +713,9 @@
             }
         },
         "calendar": {
+            "homeworking": {
+                "name": "Práce z domova"
+            },
             "birthday": {
                 "name": "Narozeniny"
             },

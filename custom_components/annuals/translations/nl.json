@@ -120,10 +120,25 @@
     },
     "config": {
         "step": {
+            "telework": {
+                "title": "Thuiswerkplanning toevoegen",
+                "description": "Voeg een losse thuiswerkdag of een wekelijkse planning toe. Kies weekdagen om wekelijks te herhalen; laat ze leeg voor één dag. Een einddatum begrenst de wekelijkse planning; laat deze leeg om onbeperkt te herhalen.",
+                "data": {
+                    "telework_user": "Gebruiker",
+                    "telework_start_date": "Begindatum",
+                    "telework_weekdays": "Weekdagen",
+                    "telework_end_date": "Einddatum"
+                },
+                "data_description": {
+                    "telework_weekdays": "Kies een of meer dagen voor een wekelijkse planning. Laat leeg om alleen de begindatum vast te leggen.",
+                    "telework_end_date": "Alleen van toepassing op wekelijkse planningen. Laat leeg voor geen einddatum."
+                }
+            },
             "user": {
                 "title": "Evenement toevoegen",
                 "description": "Wat voor soort evenement is dit?\n\n**Jaarlijks** omvat verjaardag, jaardag, naamdag, trouwdag, sterfdag, verjaardag huisdier en werkjubileum. **Eenmalig** is één datum, die zichzelf verwijdert zodra hij voorbij is. **Aangepast** is je eigen jaarlijkse datum – op een vaste dag of volgens een regel.",
                 "menu_options": {
+                    "telework": "{icon_telework} Thuiswerkplanning",
                     "recurring": "{icon_recurring} Een jaarlijkse datum van iemand",
                     "one_time": "{icon_one_time} Een eenmalig evenement",
                     "custom": "{icon_custom} Een aangepast evenement"
@@ -259,6 +274,10 @@
             }
         },
         "error": {
+            "telework_user_required": "Voer een gebruikersnaam in.",
+            "invalid_weekday": "Kies geldige weekdagen.",
+            "telework_end_before_start": "De einddatum moet op of na de begindatum liggen.",
+            "telework_end_requires_weekdays": "Een einddatum kan alleen bij een wekelijkse planning worden gebruikt.",
             "name_required": "Voer een naam in.",
             "end_date_one_time_only": "Een einddatum kan alleen bij een eenmalig evenement worden ingesteld.",
             "end_date_before_start": "De einddatum moet na de startdatum liggen.",
@@ -279,6 +298,20 @@
     },
     "options": {
         "step": {
+            "telework": {
+                "title": "Thuiswerkplanning bewerken",
+                "description": "Wijzig de thuiswerkdag of wekelijkse planning van deze gebruiker.",
+                "data": {
+                    "telework_user": "Gebruiker",
+                    "telework_start_date": "Begindatum",
+                    "telework_weekdays": "Weekdagen",
+                    "telework_end_date": "Einddatum"
+                },
+                "data_description": {
+                    "telework_weekdays": "Kies een of meer dagen voor een wekelijkse planning. Laat leeg om alleen de begindatum vast te leggen.",
+                    "telework_end_date": "Alleen van toepassing op wekelijkse planningen. Laat leeg voor geen einddatum."
+                }
+            },
             "import_csv": {
                 "title": "Evenementen importeren vanuit CSV",
                 "description": "Kolommen: name, type, day, month, year (optioneel, verplicht voor one_time), icon (optioneel), vip (optioneel), last_name (optioneel). „type” moet een van de volgende Engelse sleutels zijn: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (altijd in het Engels, ongeacht je taalinstelling). „vip” accepteert 1/true/yes/y/x (hoofdlettergevoeligheid maakt niet uit); laat leeg of laat de kolom weg voor een niet-VIP-evenement. Houd elke kolom aan, ook als een waarde leeg is - een rij zonder komma aan het einde schuift de volgende waarden naar links. Ongeldige rijen worden overgeslagen en gelogd.\n\nVoorbeeld:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamilievakantie,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -680,6 +713,9 @@
             }
         },
         "calendar": {
+            "homeworking": {
+                "name": "Thuiswerken"
+            },
             "birthday": {
                 "name": "Verjaardagen"
             },

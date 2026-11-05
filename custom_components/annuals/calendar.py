@@ -23,6 +23,10 @@ from .const import (
     CONF_SUBDIVISION,
     CONF_TIME,
     CONF_YEAR,
+    CONF_TELEWORK,
+    CONF_TELEWORK_END_DATE,
+    CONF_TELEWORK_START_DATE,
+    CONF_TELEWORK_WEEKDAYS,
     DOMAIN,
     TYPE_CUSTOM,
     CONF_MARKET_STATUS,
@@ -41,12 +45,18 @@ from .dates import (
     interval_rule,
     next_event_occurrence,
     next_holiday_occurrence,
+    next_telework_occurrence,
     occurrence_number,
     one_time_date,
     one_time_span,
     parse_time,
 )
-from .helpers import async_event_type_labels, full_name
+from .helpers import (
+    async_event_type_labels,
+    async_telework_label,
+    full_name,
+    telework_person_name,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -64,8 +74,10 @@ async def async_setup_entry(
     """
     labels = await async_event_type_labels(hass)
     async_add_entities(
-        AnnualsTypeCalendar(hass, event_type, labels[event_type])
-        for event_type in ALL_EVENT_TYPES
+        [
+            *(AnnualsTypeCalendar(hass, event_type, labels[event_type]) for event_type in ALL_EVENT_TYPES),
+            AnnualsTeleworkCalendar(hass, await async_telework_label(hass)),
+        ]
     )
 
 
@@ -283,3 +295,79 @@ class AnnualsTypeCalendar(CalendarEntity):
         # Same blocking-I/O concern as event/async_update above for holidays;
         # negligible overhead either way for the other types.
         return await hass.async_add_executor_job(_collect)
+
+
+class AnnualsTeleworkCalendar(CalendarEntity):
+    """One shared calendar for individual and weekly telework schedules."""
+
+    _attr_should_poll = True
+    _attr_has_entity_name = True
+    _attr_translation_key = "homeworking"
+    _attr_icon = "mdi:home-city"
+    _attr_unique_id = f"{DOMAIN}-calendar-homeworking"
+    entity_id = "calendar.annuals_homeworking"
+
+    def __init__(self, hass: HomeAssistant, telework_label: str) -> None:
+        self.hass = hass
+        self._telework_label = telework_label
+
+    @staticmethod
+    def _occurrences(entry: ConfigEntry, start: date, end: date):
+        data = entry.data
+        schedule_start = date.fromisoformat(data[CONF_TELEWORK_START_DATE])
+        weekdays = data.get(CONF_TELEWORK_WEEKDAYS, [])
+        if not weekdays:
+            if start <= schedule_start <= end:
+                yield schedule_start
+            return
+
+        first = max(start, schedule_start)
+        last = min(
+            end,
+            date.fromisoformat(data[CONF_TELEWORK_END_DATE])
+            if data.get(CONF_TELEWORK_END_DATE)
+            else end,
+        )
+        if first > last:
+            return
+        for weekday in weekdays:
+            occurrence = first + timedelta(days=(int(weekday) - first.weekday()) % 7)
+            while occurrence <= last:
+                yield occurrence
+                occurrence += timedelta(days=7)
+
+    @staticmethod
+    def _next_occurrence(entry: ConfigEntry, today: date) -> date | None:
+        return next_telework_occurrence(entry.data, today)
+
+    def _calendar_event(self, entry: ConfigEntry, occurrence: date) -> CalendarEvent:
+        return CalendarEvent(
+            start=occurrence,
+            end=occurrence + timedelta(days=1),
+            summary=f"{telework_person_name(self.hass, entry.data)} - {self._telework_label}",
+            uid=f"{DOMAIN}-telework-{entry.entry_id}-{occurrence.isoformat()}",
+        )
+
+    @property
+    def event(self) -> CalendarEvent | None:
+        today = dt_util.now().date()
+        upcoming = [
+            self._calendar_event(entry, occurrence)
+            for entry in self.hass.config_entries.async_entries(DOMAIN)
+            if entry.data.get(CONF_TELEWORK)
+            for occurrence in [self._next_occurrence(entry, today)]
+            if occurrence is not None
+        ]
+        return min(upcoming, key=lambda event: event.start_datetime_local) if upcoming else None
+
+    async def async_get_events(
+        self, hass: HomeAssistant, start_date: datetime, end_date: datetime
+    ) -> list[CalendarEvent]:
+        start, end = start_date.date(), end_date.date()
+        events = [
+            self._calendar_event(entry, occurrence)
+            for entry in hass.config_entries.async_entries(DOMAIN)
+            if entry.data.get(CONF_TELEWORK)
+            for occurrence in self._occurrences(entry, start, end)
+        ]
+        return sorted(events, key=lambda event: event.start_datetime_local)

@@ -4,8 +4,9 @@ from datetime import date, timedelta
 import logging
 from typing import Any
 
-from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import UnitOfTime
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_state_change_event
@@ -37,6 +38,7 @@ from .const import (
     CONF_PERSON,
     CONF_SUBDIVISION,
     CONF_TIME,
+    CONF_TELEWORK,
     CONF_DECEASED,
     CONF_VIP,
     CONF_YEAR,
@@ -68,13 +70,19 @@ from .dates import (
     is_important,
     next_event_occurrence,
     next_holiday_occurrence,
+    next_telework_occurrence,
     occurrence_number,
     one_time_span,
     parse_thresholds,
     subdivision_name,
     weekday_rule,
 )
-from .helpers import holiday_span_suffix, ui_language
+from .helpers import (
+    async_telework_label,
+    holiday_span_suffix,
+    telework_person_name,
+    ui_language,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -86,7 +94,49 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    async_add_entities([AnnualEventSensor(hass, config_entry)])
+    if config_entry.data.get(CONF_TELEWORK):
+        label = await async_telework_label(hass)
+        async_add_entities([TeleworkSensor(hass, config_entry, label)])
+    else:
+        async_add_entities([AnnualEventSensor(hass, config_entry)])
+
+
+class TeleworkSensor(SensorEntity):
+    """One telework schedule. State is days until its next scheduled day."""
+
+    _attr_should_poll = True
+    _attr_device_class = SensorDeviceClass.DURATION
+    _attr_native_unit_of_measurement = UnitOfTime.DAYS
+    _attr_icon = "mdi:home-city"
+
+    def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry, label: str) -> None:
+        self._hass_ref = hass
+        self._config_entry = config_entry
+        self._label = label
+        self._user = telework_person_name(hass, config_entry.data)
+        self._attr_unique_id = f"{DOMAIN}-{config_entry.entry_id}"
+        self._attr_name = f"{label}: {self._user}"
+        self.entity_id = f"sensor.annuals_homeworking_{slugify(self._user)}"
+        self._update_state()
+
+    def _update_state(self) -> None:
+        today = dt_util.now().date()
+        self._user = telework_person_name(self._hass_ref, self._config_entry.data)
+        self._attr_name = f"{self._label}: {self._user}"
+        occurrence = next_telework_occurrence(self._config_entry.data, today)
+        self._attr_native_value = days_until(occurrence, today) if occurrence else None
+        self._attr_extra_state_attributes = {
+            "type": CONF_TELEWORK,
+            "type_label": self._label,
+            "name": self._user,
+            "next_date": occurrence.isoformat() if occurrence else None,
+        }
+
+    async def async_update(self) -> None:
+        self._update_state()
+
+    async def async_added_to_hass(self) -> None:
+        self._hass_ref.data.setdefault(DOMAIN, {}).setdefault(DATA_SENSORS, set()).add(self)
 
 
 class AnnualEventSensor(SensorEntity):

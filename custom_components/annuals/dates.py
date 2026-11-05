@@ -25,6 +25,7 @@ from __future__ import annotations
 from datetime import date, time, timedelta
 from functools import lru_cache
 import re
+from typing import Any
 
 import holidays as holidays_lib
 
@@ -39,6 +40,9 @@ from .const import (
     CONF_MONTH,
     CONF_NTH,
     CONF_TIME,
+    CONF_TELEWORK_END_DATE,
+    CONF_TELEWORK_START_DATE,
+    CONF_TELEWORK_WEEKDAYS,
     CONF_WEEKDAY,
     CONF_YEAR,
     INTERVAL_MONTHS,
@@ -121,6 +125,32 @@ def next_event_occurrence(data: dict, today: date) -> date:
 def days_until(target: date, today: date) -> int:
     """Whole days from today to target (0 if target is today)."""
     return (target - today).days
+
+
+def next_telework_occurrence(data: Any, today: date) -> date | None:
+    """The next date in a telework schedule, if it has not ended."""
+    schedule_start = date.fromisoformat(data[CONF_TELEWORK_START_DATE])
+    first = max(today, schedule_start)
+    last = (
+        date.fromisoformat(data[CONF_TELEWORK_END_DATE])
+        if data.get(CONF_TELEWORK_END_DATE)
+        else date.max
+    )
+    if first > last:
+        return None
+
+    weekdays = data.get(CONF_TELEWORK_WEEKDAYS, [])
+    if not weekdays:
+        return first if first == schedule_start else None
+
+    return min(
+        (
+            first + timedelta(days=(int(weekday) - first.weekday()) % 7)
+            for weekday in weekdays
+            if first + timedelta(days=(int(weekday) - first.weekday()) % 7) <= last
+        ),
+        default=None,
+    )
 
 
 def one_time_date(year: int, month: int, day: int) -> date:

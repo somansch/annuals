@@ -120,10 +120,25 @@
     },
     "config": {
         "step": {
+            "telework": {
+                "title": "Pridať plán práce z domu",
+                "description": "Pridaj jeden deň práce z domu alebo týždenný plán. Vyber dni v týždni na opakovanie každý týždeň; pri jednom dni ich nechaj prázdne. Dátum ukončenia obmedzí týždenný plán; ak ho necháš prázdny, bude sa opakovať neobmedzene.",
+                "data": {
+                    "telework_user": "Používateľ",
+                    "telework_start_date": "Dátum začiatku",
+                    "telework_weekdays": "Dni v týždni",
+                    "telework_end_date": "Dátum ukončenia"
+                },
+                "data_description": {
+                    "telework_weekdays": "Vyber jeden alebo viac dní pre týždenný plán. Nechaj prázdne, ak chceš zaznamenať iba dátum začiatku.",
+                    "telework_end_date": "Platí len pre týždenné plány. Nechaj prázdne, ak plán nemá koniec."
+                }
+            },
             "user": {
                 "title": "Pridať udalosť",
                 "description": "O aký druh udalosti ide?\n\n**Ročné** zahŕňa narodeniny, výročie, meniny, výročie svadby, spomienku, narodeniny domáceho maznáčika a pracovné výročie. **Jednorazová** je jediný dátum, ktorý sa po uplynutí sám vymaže. **Vlastná** je vaša vlastná ročná udalosť – v konkrétny deň alebo podľa pravidla.",
                 "menu_options": {
+                    "telework": "{icon_telework} Plán práce z domu",
                     "recurring": "{icon_recurring} Ročný dátum pre niekoho",
                     "one_time": "{icon_one_time} Jednorazová udalosť",
                     "custom": "{icon_custom} Vlastná udalosť"
@@ -259,6 +274,10 @@
             }
         },
         "error": {
+            "telework_user_required": "Zadaj meno používateľa.",
+            "invalid_weekday": "Vyber platné dni v týždni.",
+            "telework_end_before_start": "Dátum ukončenia musí byť rovnaký alebo neskorší ako dátum začiatku.",
+            "telework_end_requires_weekdays": "Dátum ukončenia možno použiť iba pri týždennom pláne.",
             "name_required": "Zadajte meno.",
             "end_date_one_time_only": "Dátum ukončenia je možné nastaviť iba pre jednorazovú udalosť.",
             "end_date_before_start": "Dátum ukončenia musí byť po dátume začiatku.",
@@ -279,6 +298,20 @@
     },
     "options": {
         "step": {
+            "telework": {
+                "title": "Upraviť plán práce z domu",
+                "description": "Uprav deň alebo týždenný plán práce z domu tohto používateľa.",
+                "data": {
+                    "telework_user": "Používateľ",
+                    "telework_start_date": "Dátum začiatku",
+                    "telework_weekdays": "Dni v týždni",
+                    "telework_end_date": "Dátum ukončenia"
+                },
+                "data_description": {
+                    "telework_weekdays": "Vyber jeden alebo viac dní pre týždenný plán. Nechaj prázdne, ak chceš zaznamenať iba dátum začiatku.",
+                    "telework_end_date": "Platí len pre týždenné plány. Nechaj prázdne, ak plán nemá koniec."
+                }
+            },
             "edit_recurring": {
                 "title": "Upraviť udalosť",
                 "description": "Zmeňte ľubovoľné pole nižšie a odošlite na aktualizáciu tejto udalosti.",
@@ -680,6 +713,9 @@
             }
         },
         "calendar": {
+            "homeworking": {
+                "name": "Práca z domu"
+            },
             "birthday": {
                 "name": "Narodeniny"
             },

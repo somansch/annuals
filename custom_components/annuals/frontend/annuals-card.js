@@ -49,6 +49,7 @@
     "custom",
     "one_time",
     "holiday",
+    "telework",
     "market",
   ];
 
@@ -165,6 +166,7 @@
         custom: "Custom",
         one_time: "One-time event",
         holiday: "Holiday",
+        telework: "Homeworking",
         market: "Stock exchange",
         // Fallback only - an embedded external calendar's own event.typeLabel
         // (its source calendar's name, see buildExternalEvent) is always
@@ -810,6 +812,7 @@
         custom: "Frei wählbar",
         one_time: "Einmaliges Ereignis",
         holiday: "Feiertag",
+        telework: "Arbeiten von zu Hause",
         market: "Börse",
         calendar: "Kalenderereignis",
       },
@@ -1473,6 +1476,7 @@
         custom: "Personnalisé",
         one_time: "Événement ponctuel",
         holiday: "Jour férié",
+        telework: "Télétravail",
         market: "Bourse",
         calendar: "Événement de calendrier",
       },
@@ -2131,6 +2135,7 @@
         custom: "Aangepast",
         one_time: "Eenmalig evenement",
         holiday: "Feestdag",
+        telework: "Thuiswerken",
         market: "Beurs",
         calendar: "Kalenderevenement",
       },
@@ -2795,6 +2800,7 @@
         custom: "Inne",
         one_time: "Wydarzenie jednorazowe",
         holiday: "Święto",
+        telework: "Praca z domu",
         market: "Giełda",
         calendar: "Wydarzenie z kalendarza",
       },
@@ -3452,6 +3458,7 @@
         custom: "Personalizado",
         one_time: "Evento puntual",
         holiday: "Festivo",
+        telework: "Trabajo desde casa",
         market: "Bolsa",
         calendar: "Evento de calendario",
       },
@@ -4110,6 +4117,7 @@
         custom: "Personalizzato",
         one_time: "Evento occasionale",
         holiday: "Festività",
+        telework: "Lavoro da casa",
         market: "Borsa",
         calendar: "Evento del calendario",
       },
@@ -4768,6 +4776,7 @@
         custom: "Personalizado",
         one_time: "Evento único",
         holiday: "Feriado",
+        telework: "Trabalho em casa",
         market: "Bolsa de valores",
         calendar: "Evento do calendário",
       },
@@ -5430,6 +5439,7 @@
         custom: "Другое",
         one_time: "Разовое событие",
         holiday: "Праздник",
+        telework: "Работа из дома",
         market: "Биржа",
         calendar: "Событие календаря",
       },
@@ -6092,6 +6102,7 @@
         custom: "Anpassad",
         one_time: "Engångshändelse",
         holiday: "Helgdag",
+        telework: "Arbete hemifrån",
         market: "Börs",
         calendar: "Kalenderhändelse",
       },
@@ -6755,6 +6766,7 @@
         custom: "自定义",
         one_time: "一次性事件",
         holiday: "假日",
+        telework: "居家办公",
         market: "证券交易所",
         calendar: "日历事件",
       },
@@ -7411,6 +7423,7 @@
         custom: "Vlastní",
         one_time: "Jednorázová událost",
         holiday: "Státní svátek",
+        telework: "Práce z domova",
         market: "Burza",
         calendar: "Kalendářní událost",
       },
@@ -8072,6 +8085,7 @@
         custom: "Egendefinert",
         one_time: "Engangshendelse",
         holiday: "Helligdag",
+        telework: "Arbeid hjemmefra",
         market: "Børs",
         calendar: "Kalenderhendelse",
       },
@@ -8733,6 +8747,7 @@
         custom: "Tilpasset",
         one_time: "Engangsbegivenhed",
         holiday: "Helligdag",
+        telework: "Arbejde hjemmefra",
         market: "Børs",
         calendar: "Kalenderbegivenhed",
       },
@@ -9400,6 +9415,7 @@
         custom: "Özel",
         one_time: "Tek seferlik etkinlik",
         holiday: "Resmi tatil",
+        telework: "Evden çalışma",
         market: "Borsa",
         calendar: "Takvim etkinliği",
       },
@@ -10058,6 +10074,7 @@
         custom: "Vlastná udalosť",
         one_time: "Jednorazová udalosť",
         holiday: "Sviatok",
+        telework: "Práca z domu",
         market: "Burza",
         calendar: "Udalosť z kalendára",
       },
@@ -10737,6 +10754,7 @@
         custom: "Pasirinktinis",
         one_time: "Vienkartinis įvykis",
         holiday: "Šventė",
+        telework: "Darbas iš namų",
         market: "Birža",
         calendar: "Kalendoriaus įvykis",
       },
@@ -11383,7 +11401,7 @@
   // risk on every dashboard saved before this feature existed).
   const DEFAULT_COLUMNS = [
     { id: "icon", type: "icon" },
-    { id: "full_name_type", type: "full_name_type" },
+    { id: "info", type: "info" },
     { id: "badge", type: "badge" },
     { id: "when", type: "when" },
   ];
@@ -11394,7 +11412,7 @@
   const AGENDA_DEFAULT_COLUMNS = [
     { id: "date_block", type: "date_block" },
     { id: "accent_bar", type: "accent_bar" },
-    { id: "full_name_type", type: "full_name_type" },
+    { id: "info", type: "info" },
     { id: "badge", type: "badge" },
     { id: "icon", type: "icon" },
   ];
@@ -11981,6 +11999,21 @@
     }
     if (Array.isArray(c.columns)) {
       c.columns = c.columns.map((col) => (col.type === "subtitle" ? { ...col, type: "type" } : col));
+      const oldNamePresets = [
+        ["icon", "full_name_type", "badge", "when"],
+        ["date_block", "accent_bar", "full_name_type", "badge", "icon"],
+      ];
+      const columnTypes = c.columns.map((col) => col.type);
+      if (
+        oldNamePresets.some(
+          (preset) =>
+            preset.length === columnTypes.length && preset.every((type, index) => type === columnTypes[index])
+        )
+      ) {
+        c.columns = c.columns.map((col) =>
+          col.type === "full_name_type" ? { ...col, type: "info" } : col
+        );
+      }
     }
     return c;
   }
@@ -12324,11 +12357,6 @@
       // list layout's own show_*_country toggles - most setups only ever
       // import a single country/region and don't need it repeated.
       show_holiday_suffix: false,
-      // Timeline layout only, under Layout -> Timeline -> Options: shows
-      // each event's full name (first + last) instead of just the first
-      // name, everywhere _timelineSentenceFragment is used (header, tooltip,
-      // expandable list) since they all share that one function.
-      timeline_show_full_name: false,
       // Timeline layout only, under Layout -> Timeline -> Options: appends
       // " (<short date>)" at the very end of the sentence, e.g. "...is in 3
       // days (6 Aug)" - same short-date text the List layout's own Date
@@ -15187,6 +15215,7 @@
        the same 6px pull-up lands the icon within ~1px of the real baseline
        in both, so it's a genuine constant, not a per-font-size guess. */
     .list.columns-compact .icon-wrap { align-self: flex-end; margin-bottom: 6px; }
+    .list.columns-compact .row.telework .icon-wrap { margin-right: 4px; }
     .list.columns-compact .info,
     .list.columns-compact .text-col,
     .list.columns-compact .date-col,
@@ -15241,6 +15270,7 @@
       align-items: center;
       gap: 6px;
     }
+    .timeline-header-row.telework .timeline-header-icons { margin-right: 4px; }
     /* This event has no circle behind its icon at all - just the bare glyph,
        since the header line is a single description rather than one row
        among many that needs a strong visual anchor. position:relative is the
@@ -18003,8 +18033,12 @@
         config.show_holiday_suffix && (e.type === "holiday" || e.type === "market") && e.country
           ? ` (${[...new Set((e.mergedFrom || [e]).map(regionPart))].join(" · ")})`
           : "";
-      const baseName = config.timeline_show_full_name && e.fullName ? e.fullName : e.name;
-      const displayName = `${baseName}${holidaySuffix}`;
+      const baseName = e.name;
+      const hasOccurrence = config.show_badge !== false && occurrence != null;
+      const displayName =
+        e.type === "telework" && !hasOccurrence
+          ? `${strings.types[e.type] || e.type} ${baseName}`
+          : `${baseName}${holidaySuffix}`;
       // Layout -> Timeline -> Options: "Show date"/"Show time"/"Show
       // location"/"Show description" each contribute their own piece (any
       // combination of which can be on at once) to one shared trailing
@@ -18042,7 +18076,7 @@
       // A day of someone who has died (see `deceased` in buildEvent) is
       // worded as what it would have been, in either sentence -
       // the tense of "is"/"was" has no say in it.
-      if (!(config.show_badge !== false && occurrence != null)) {
+      if (!hasOccurrence) {
         const tmpl = e.deceased
           ? strings.timelineSentenceSimpleDeceased || "{possessive} {type} would have been {when}"
           : (readsAsPast ? strings.timelineSentenceSimplePast : strings.timelineSentenceSimple) || "{name} is {when}";
@@ -18142,7 +18176,7 @@
       nextGroup.forEach((ev) => {
         const badges = this._timelineBadges(ev, config);
         const row = document.createElement("div");
-        row.className = "timeline-header-row";
+        row.className = "timeline-header-row" + (ev.type === "telework" ? " telework" : "");
         // The header line is an entry for this event just as the list below
         // is, so it follows the same switch (see row_color_targets).
         const headerTargets = rowColorTargets(
@@ -18771,7 +18805,7 @@
       const rowPaint = rowColors(config, e, colorCategory, this._calendarColors);
       const matchClass = rowPaint.text ? " match-row-text" : "";
       div.className =
-        "row" + (highlightClass ? ` ${highlightClass}` : "") + matchClass + (iconVisible ? "" : " icon-hidden") +
+        "row" + (e.type === "telework" ? " telework" : "") + (highlightClass ? ` ${highlightClass}` : "") + matchClass + (iconVisible ? "" : " icon-hidden") +
         (e.deceased && config.deceased_style !== "normal" ? " is-deceased" : "");
       div.style.setProperty("--annuals-row-resolved-icon-color", rowPaint.icon);
       div.style.setProperty("--annuals-row-resolved-bar-color", rowPaint.bar);
@@ -25890,7 +25924,7 @@
       body.appendChild(optionsHeading);
       const optionsRows = document.createElement("div");
       optionsRows.innerHTML = this._visibilityTwoColHtml(
-        ["timeline_show_full_name", "timeline_show_date", "timeline_show_time", "timeline_when_click_shows_date"],
+        ["timeline_show_date", "timeline_show_time", "timeline_when_click_shows_date"],
         ["show_holiday_suffix", "timeline_show_location", "timeline_show_description"]
       );
       body.appendChild(optionsRows);
@@ -25899,7 +25933,6 @@
       // timeline's own description - the control is the same idea, what it
       // acts on is not.
       for (const [key, label, desc] of [
-        ["timeline_show_full_name", strings.editor.timelineShowFullName, strings.editor.timelineShowFullNameDesc],
         ["timeline_show_date", strings.editor.timelineShowDate, strings.editor.timelineShowDateDesc],
         ["timeline_show_time", strings.editor.timelineShowTime, strings.editor.timelineShowTimeDesc],
         [
@@ -25938,8 +25971,6 @@
     }
 
     _syncTimelineInputs() {
-      const fullNameToggle = this.shadowRoot.querySelector('input[data-visibility="timeline_show_full_name"]');
-      if (fullNameToggle) fullNameToggle.checked = this._config.timeline_show_full_name === true;
       this._syncActionSelector("more_action", this._config.more_action || { action: "none" });
       this._syncFieldRow("timeline_line_width", this._config.timeline_line_width);
       const lineStyleSelect = this.shadowRoot.querySelector('select[data-line-style="timeline_line_width"]');

@@ -120,10 +120,25 @@
     },
     "config": {
         "step": {
+            "telework": {
+                "title": "Homeoffice-Plan hinzufügen",
+                "description": "Füge einen einzelnen Homeoffice-Tag oder einen Wochenplan hinzu. Wähle Wochentage für eine wöchentliche Wiederholung; lasse sie für einen einzelnen Tag leer. Ein Enddatum begrenzt den Wochenplan; ohne Enddatum wird er unbegrenzt wiederholt.",
+                "data": {
+                    "telework_user": "Benutzer",
+                    "telework_start_date": "Startdatum",
+                    "telework_weekdays": "Wochentage",
+                    "telework_end_date": "Enddatum"
+                },
+                "data_description": {
+                    "telework_weekdays": "Wähle einen oder mehrere Tage für einen Wochenplan. Leer lassen, um nur das Startdatum einzutragen.",
+                    "telework_end_date": "Gilt nur für Wochenpläne. Leer lassen für ein unbegrenztes Ende."
+                }
+            },
             "user": {
                 "title": "Ereignis hinzufügen",
                 "description": "Um welche Art von Ereignis geht es?\n\n**Jährlich** umfasst Geburtstag, Jahrestag, Namenstag, Hochzeitstag, Gedenktag, Haustier-Geburtstag und Arbeitsjubiläum. **Einmalig** ist ein einzelnes Datum, das sich nach Ablauf selbst löscht. **Frei wählbar** ist dein eigenes jährliches Ereignis, an einem Tag oder nach einer Regel.",
                 "menu_options": {
+                    "telework": "{icon_telework} Ein Homeoffice-Plan",
                     "recurring": "{icon_recurring} Ein jährliches Ereignis für jemanden",
                     "one_time": "{icon_one_time} Ein einmaliges Ereignis",
                     "custom": "{icon_custom} Ein frei wählbares Ereignis"
@@ -259,6 +274,10 @@
             }
         },
         "error": {
+            "telework_user_required": "Bitte gib einen Benutzernamen ein.",
+            "invalid_weekday": "Wähle gültige Wochentage aus.",
+            "telework_end_before_start": "Das Enddatum muss am oder nach dem Startdatum liegen.",
+            "telework_end_requires_weekdays": "Ein Enddatum ist nur bei einem Wochenplan zulässig.",
             "name_required": "Bitte einen Namen eingeben.",
             "end_date_one_time_only": "Ein Enddatum kann nur bei einem einmaligen Ereignis gesetzt werden.",
             "end_date_before_start": "Das Enddatum muss nach dem Startdatum liegen.",
@@ -279,6 +298,20 @@
     },
     "options": {
         "step": {
+            "telework": {
+                "title": "Homeoffice-Plan bearbeiten",
+                "description": "Bearbeite den Homeoffice-Tag oder Wochenplan dieses Benutzers.",
+                "data": {
+                    "telework_user": "Benutzer",
+                    "telework_start_date": "Startdatum",
+                    "telework_weekdays": "Wochentage",
+                    "telework_end_date": "Enddatum"
+                },
+                "data_description": {
+                    "telework_weekdays": "Wähle einen oder mehrere Tage für einen Wochenplan. Leer lassen, um nur das Startdatum einzutragen.",
+                    "telework_end_date": "Gilt nur für Wochenpläne. Leer lassen für ein unbegrenztes Ende."
+                }
+            },
             "import_csv": {
                 "title": "Ereignisse aus CSV importieren",
                 "description": "Spalten: name, type, day, month, year (optional), icon (optional), vip (optional), last_name (optional). Bei „type“ ist ausschließlich einer der folgenden englischen Schlüssel gültig: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (unabhängig von deiner Spracheinstellung). Bei one_time ist year zwingend erforderlich. „vip“ akzeptiert 1/true/yes/y/x (Groß-/Kleinschreibung egal); leer lassen oder Spalte weglassen für ein nicht-VIP-Ereignis. Jede Spalte muss auch bei einem leeren Wert erhalten bleiben - fehlt ein Komma am Zeilenende, rutschen die folgenden Werte nach links. Ungültige Zeilen werden übersprungen und protokolliert.\n\nBeispiel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamilienurlaub,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -680,6 +713,9 @@
             }
         },
         "calendar": {
+            "homeworking": {
+                "name": "Arbeiten von zu Hause"
+            },
             "birthday": {
                 "name": "Geburtstage"
             },

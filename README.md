@@ -125,6 +125,7 @@ The first screen asks **what kind of event this is**, because the answer decides
 | 🎂 | **A yearly date for someone** | Birthday, Anniversary, Name day, Wedding anniversary, Memorial, Pet birthday, Work anniversary |
 | ⏳ | **A one-time event** | One-time event - a single date, deleted automatically once it is over |
 | 🗓️ | **A custom event** | Custom - your own yearly date, on a day or on a [rule](#dates-that-are-a-rule-not-a-day) |
+| 🏠 | **A homeworking schedule** | A user's single day working from home or weekly schedule |
 
 Each kind then gets a form carrying only its own fields, instead of one form carrying every field with labels explaining which types they do not apply to. Editing an event later skips this screen: the event has already chosen its kind, so **Configure** opens its form directly.
 
@@ -163,6 +164,10 @@ Each kind then gets a form carrying only its own fields, instead of one form car
 There's a 10th type, **Holiday**, but it isn't offered in this form - it has no single day/month/year of its own (a public holiday's date shifts by country and year), so it's only ever created via [Importing public holidays](#importing-public-holidays) below.
 
 To edit or remove an event afterwards, find its entry under **Settings → Devices & Services → Annuals**, and use **Configure** (edit) or the "⋮" menu (delete).
+
+### Homeworking schedules
+
+Choose **A homeworking schedule** from the add-entry menu, enter the user's name and a start date, then optionally select one or more weekdays. With no weekdays, the calendar contains just the start date. With weekdays selected, those days repeat every week from the start date; set an end date to limit the recurrence, or leave it empty for an indefinite schedule. Each user's schedule is its own editable entry, and all schedules appear in `calendar.annuals_homeworking`.
 
 To add many events at once instead of one at a time see [Annuals Settings](#annuals-settings) below.
 
@@ -500,6 +505,7 @@ Each event you add is its own config entry, titled `<Type>: <Name>` (e.g. "Birth
 |---|---|
 | `sensor.annuals_<type>_<name>` | One per event. State is the number of days until its next occurrence; the display name is the translated, type-prefixed event name (e.g. "Birthday Anna"). The `<type>` in the entity_id keeps two events sharing a name (e.g. a birthday and a wedding anniversary) from colliding, and applies to every type including "Custom". |
 | `calendar.annuals_<type>` | One per event *type* (ten total, including Holiday), named in the plural (e.g. "Birthdays"), aggregating every event of that type across all your entries - open it from the built-in Calendar dashboard. |
+| `calendar.annuals_homeworking` | One shared calendar aggregating all users' one-day and weekly homeworking schedules. |
 
 Attributes on each event's sensor:
 

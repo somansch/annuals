@@ -120,10 +120,25 @@
     },
     "config": {
         "step": {
+            "telework": {
+                "title": "Evden çalışma programı ekle",
+                "description": "Tek bir evden çalışma günü veya haftalık program ekleyin. Her hafta tekrarlamak için günleri seçin; tek gün için boş bırakın. Bitiş tarihi haftalık programı sınırlar; süresiz tekrarlama için boş bırakın.",
+                "data": {
+                    "telework_user": "Kullanıcı",
+                    "telework_start_date": "Başlangıç tarihi",
+                    "telework_weekdays": "Hafta içi günler",
+                    "telework_end_date": "Bitiş tarihi"
+                },
+                "data_description": {
+                    "telework_weekdays": "Haftalık evden çalışma programı için bir veya daha fazla gün seçin. Yalnızca başlangıç tarihini kaydetmek için boş bırakın.",
+                    "telework_end_date": "Yalnızca haftalık evden çalışma programları için geçerlidir. Bitiş tarihi olmaması için boş bırakın."
+                }
+            },
             "user": {
                 "title": "Etkinlik ekle",
                 "description": "Bu ne tür bir etkinlik?\n\n**Yıllık**; doğum günü, yıl dönümü, isim günü, evlilik yıl dönümü, ölüm yıl dönümü, evcil hayvan doğum günü ve iş yıl dönümünü kapsar. **Tek seferlik**, geçtikten sonra kendini silen tek bir tarihtir. **Özel** ise kendi yıllık tarihinizdir: belirli bir günde ya da bir kurala göre.",
                 "menu_options": {
+                    "telework": "{icon_telework} Evden çalışma programı",
                     "recurring": "{icon_recurring} Birine ait yıllık bir tarih",
                     "one_time": "{icon_one_time} Tek seferlik bir etkinlik",
                     "custom": "{icon_custom} Özel bir etkinlik"
@@ -259,6 +274,10 @@
             }
         },
         "error": {
+            "telework_user_required": "Bir kullanıcı adı girin.",
+            "invalid_weekday": "Geçerli hafta günlerini seçin.",
+            "telework_end_before_start": "Bitiş tarihi başlangıç tarihiyle aynı veya daha sonra olmalıdır.",
+            "telework_end_requires_weekdays": "Bitiş tarihi yalnızca haftalık programda kullanılabilir.",
             "name_required": "Lütfen bir ad girin.",
             "end_date_one_time_only": "Bitiş tarihi yalnızca tek seferlik bir etkinlikte ayarlanabilir.",
             "end_date_before_start": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır.",
@@ -279,6 +298,20 @@
     },
     "options": {
         "step": {
+            "telework": {
+                "title": "Evden çalışma programını düzenle",
+                "description": "Bu kullanıcının evden çalışma gününü veya haftalık programını düzenleyin.",
+                "data": {
+                    "telework_user": "Kullanıcı",
+                    "telework_start_date": "Başlangıç tarihi",
+                    "telework_weekdays": "Hafta içi günler",
+                    "telework_end_date": "Bitiş tarihi"
+                },
+                "data_description": {
+                    "telework_weekdays": "Haftalık evden çalışma programı için bir veya daha fazla gün seçin. Yalnızca başlangıç tarihini kaydetmek için boş bırakın.",
+                    "telework_end_date": "Yalnızca haftalık evden çalışma programları için geçerlidir. Bitiş tarihi olmaması için boş bırakın."
+                }
+            },
             "import_csv": {
                 "title": "CSV'den etkinlik içe aktar",
                 "description": "Sütunlar: name, type, day, month, year (isteğe bağlı, one_time için zorunlu), icon (isteğe bağlı), vip (isteğe bağlı), last_name (isteğe bağlı). \"type\" şu İngilizce anahtarlardan biri olmalıdır: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (dil ayarınızdan bağımsız olarak her zaman İngilizce). \"vip\" 1/true/yes/y/x değerlerini kabul eder (büyük/küçük harf duyarlı değildir); VIP olmayan bir etkinlik için boş bırakın veya sütunu atlayın. Bir değer boş olsa bile her sütunu koruyun - sonundaki virgülü eksik bir satır, sonraki değerleri sola kaydırır. Geçersiz satırlar atlanır ve günlüğe kaydedilir.\n\nÖrnek:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nAile Tatili,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -680,6 +713,9 @@
             }
         },
         "calendar": {
+            "homeworking": {
+                "name": "Evden çalışma"
+            },
             "birthday": {
                 "name": "Doğum günleri"
             },

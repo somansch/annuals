@@ -120,10 +120,25 @@
     },
     "config": {
         "step": {
+            "telework": {
+                "title": "添加居家办公计划",
+                "description": "添加单个居家办公日或每周计划。选择要每周重复的星期；留空表示仅安排一天。结束日期用于限制每周计划；留空表示无限期重复。",
+                "data": {
+                    "telework_user": "用户",
+                    "telework_start_date": "开始日期",
+                    "telework_weekdays": "星期",
+                    "telework_end_date": "结束日期"
+                },
+                "data_description": {
+                    "telework_weekdays": "为每周居家办公计划选择一个或多个星期。留空则只记录开始日期当天。",
+                    "telework_end_date": "仅适用于每周居家办公计划。留空表示不设置结束日期。"
+                }
+            },
             "user": {
                 "title": "添加事件",
                 "description": "这是哪一类事件？\n\n**每年**包括生日、纪念日、命名日、结婚纪念日、忌日、宠物生日和工作纪念日。**单次**是一个日期，过期后会自动删除。**自定义**是你自己的每年日期，可以固定在某一天，也可以按规则计算。",
                 "menu_options": {
+                    "telework": "{icon_telework} 居家办公计划",
                     "recurring": "{icon_recurring} 某人的每年日期",
                     "one_time": "{icon_one_time} 单次事件",
                     "custom": "{icon_custom} 自定义事件"
@@ -259,6 +274,10 @@
             }
         },
         "error": {
+            "telework_user_required": "请输入用户名。",
+            "invalid_weekday": "请选择有效的星期。",
+            "telework_end_before_start": "结束日期必须不早于开始日期。",
+            "telework_end_requires_weekdays": "只有每周计划才能设置结束日期。",
             "name_required": "请输入姓名。",
             "end_date_one_time_only": "只有一次性事件才能设置结束日期。",
             "end_date_before_start": "结束日期必须晚于开始日期。",
@@ -279,6 +298,20 @@
     },
     "options": {
         "step": {
+            "telework": {
+                "title": "编辑居家办公计划",
+                "description": "修改此用户的居家办公日或每周计划。",
+                "data": {
+                    "telework_user": "用户",
+                    "telework_start_date": "开始日期",
+                    "telework_weekdays": "星期",
+                    "telework_end_date": "结束日期"
+                },
+                "data_description": {
+                    "telework_weekdays": "为每周居家办公计划选择一个或多个星期。留空则只记录开始日期当天。",
+                    "telework_end_date": "仅适用于每周居家办公计划。留空表示不设置结束日期。"
+                }
+            },
             "import_csv": {
                 "title": "从 CSV 导入事件",
                 "description": "列：name、type、day、month、year（可选，单次事件必填）、icon（可选）、vip（可选）、last_name（可选）。“type”必须是以下英文键之一：birthday、anniversary、name_day、wedding_anniversary、memorial、pet_birthday、work_anniversary、custom、one_time（始终使用英文，与语言设置无关）。“vip”接受 1/true/yes/y/x（不区分大小写）；留空或省略该列表示非 VIP 事件。即使某个值为空，也要保留该列 —— 缺少末尾逗号会导致后面的值向左移位。无效行会被跳过并记录到日志中。\n\n示例：\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n家庭度假,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -680,6 +713,9 @@
             }
         },
         "calendar": {
+            "homeworking": {
+                "name": "居家办公"
+            },
             "birthday": {
                 "name": "生日"
             },

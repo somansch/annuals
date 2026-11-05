@@ -120,10 +120,25 @@
     },
     "config": {
         "step": {
+            "telework": {
+                "title": "Aggiungi un programma di lavoro da casa",
+                "description": "Aggiungi un singolo giorno di lavoro da casa o un programma settimanale. Seleziona i giorni per ripeterlo ogni settimana; lasciali vuoti per un solo giorno. Una data di fine limita il programma settimanale; lasciala vuota per ripeterlo senza scadenza.",
+                "data": {
+                    "telework_user": "Utente",
+                    "telework_start_date": "Data di inizio",
+                    "telework_weekdays": "Giorni della settimana",
+                    "telework_end_date": "Data di fine"
+                },
+                "data_description": {
+                    "telework_weekdays": "Seleziona uno o più giorni per un programma settimanale di lavoro da casa. Lascia vuoto per registrare solo la data di inizio.",
+                    "telework_end_date": "Si applica solo ai programmi settimanali di lavoro da casa. Lascia vuoto per non impostare una fine."
+                }
+            },
             "user": {
                 "title": "Aggiungi evento",
                 "description": "Di che tipo di evento si tratta?\n\n**Annuale** comprende compleanno, anniversario, onomastico, anniversario di matrimonio, anniversario della morte, compleanno animale e anniversario lavorativo. **Occasionale** è una data singola, che si elimina da sola una volta passata. **Personalizzato** è la tua data annuale, in un giorno preciso o secondo una regola.",
                 "menu_options": {
+                    "telework": "{icon_telework} Programma di lavoro da casa",
                     "recurring": "{icon_recurring} Una data annuale di qualcuno",
                     "one_time": "{icon_one_time} Un evento occasionale",
                     "custom": "{icon_custom} Un evento personalizzato"
@@ -259,6 +274,10 @@
             }
         },
         "error": {
+            "telework_user_required": "Inserisci il nome di un utente.",
+            "invalid_weekday": "Seleziona giorni della settimana validi.",
+            "telework_end_before_start": "La data di fine deve essere uguale o successiva alla data di inizio.",
+            "telework_end_requires_weekdays": "La data di fine può essere usata solo con un programma settimanale.",
             "name_required": "Inserisci un nome.",
             "end_date_one_time_only": "Una data di fine può essere impostata solo su un evento singolo.",
             "end_date_before_start": "La data di fine deve essere successiva a quella di inizio.",
@@ -279,6 +298,20 @@
     },
     "options": {
         "step": {
+            "telework": {
+                "title": "Modifica programma di lavoro da casa",
+                "description": "Modifica il giorno o il programma settimanale di lavoro da casa di questo utente.",
+                "data": {
+                    "telework_user": "Utente",
+                    "telework_start_date": "Data di inizio",
+                    "telework_weekdays": "Giorni della settimana",
+                    "telework_end_date": "Data di fine"
+                },
+                "data_description": {
+                    "telework_weekdays": "Seleziona uno o più giorni per un programma settimanale di lavoro da casa. Lascia vuoto per registrare solo la data di inizio.",
+                    "telework_end_date": "Si applica solo ai programmi settimanali di lavoro da casa. Lascia vuoto per non impostare una fine."
+                }
+            },
             "import_csv": {
                 "title": "Importa eventi da CSV",
                 "description": "Colonne: name, type, day, month, year (opzionale, obbligatorio per one_time), icon (opzionale), vip (opzionale), last_name (opzionale). «type» deve essere una di queste chiavi inglesi: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (sempre in inglese, indipendentemente dalla lingua impostata). «vip» accetta 1/true/yes/y/x (senza distinzione tra maiuscole e minuscole); lascia vuoto oppure ometti la colonna per un evento non VIP. Mantieni ogni colonna anche se un valore è vuoto - una riga senza virgola finale sposta a sinistra i valori successivi. Le righe non valide vengono ignorate e registrate.\n\nEsempio:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nVacanza in famiglia,one_time,15,7,2026,mdi:airplane,,\n```",
@@ -680,6 +713,9 @@
             }
         },
         "calendar": {
+            "homeworking": {
+                "name": "Lavoro da casa"
+            },
             "birthday": {
                 "name": "Compleanni"
             },
