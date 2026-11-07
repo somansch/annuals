@@ -1,10 +1,12 @@
 # <img src="https://raw.githubusercontent.com/somansch/annuals/main/custom_components/annuals/brand/icon.png" width="40" height="40" align="top"> Annuals Integration for Home Assistant - more than birthdays/holidays only
 
-[![GitHub release](https://img.shields.io/github/v/release/somansch/annuals)](https://github.com/somansch/annuals/releases/latest)
-[![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/default)
-[![License](https://img.shields.io/github/license/somansch/annuals)](https://github.com/somansch/annuals/blob/main/LICENSE)
-[![Downloads](https://img.shields.io/github/downloads/somansch/annuals/total)](https://github.com/somansch/annuals/releases)
-[![Downloads@latest](https://img.shields.io/github/downloads/somansch/annuals/latest/total)](https://github.com/somansch/annuals/releases/latest)
+[![Marketplace (HACS)](https://img.shields.io/badge/Marketplace%20%28HACS%29-Default-41BDF5?style=for-the-badge&logo=homeassistantcommunitystore&logoColor=white)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=somansch&repository=annuals&category=Integration)
+[![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2024.7%2B-41BDF5?style=for-the-badge&logo=homeassistant&logoColor=white)](https://www.home-assistant.io/)
+[![License](https://img.shields.io/github/license/somansch/annuals?style=for-the-badge)](https://github.com/somansch/annuals/blob/main/LICENSE)
+[![Downloads](https://img.shields.io/github/downloads/somansch/annuals/total?style=for-the-badge&label=Downloads)](https://github.com/somansch/annuals/releases)
+[![Downloads latest](https://img.shields.io/github/downloads/somansch/annuals/latest/total?style=for-the-badge&label=Downloads%20latest)](https://github.com/somansch/annuals/releases/latest)
+[![Version](https://img.shields.io/github/v/release/somansch/annuals?style=for-the-badge&label=Version&color=e83ef7)](https://github.com/somansch/annuals/releases/latest)
+[![Buy me a coffee](https://img.shields.io/badge/-Buy%20me%20a%20%E2%98%95%2F%F0%9F%8D%BA-ff6b6b?style=for-the-badge&logo=buymeacoffee&logoColor=white)](https://buymeacoffee.com/ou4lgpvlju)
 
 **Available languages:** English, Deutsch, Français, Nederlands, Polski, Español, Italiano, Português (Brasil), Русский, Svenska, 简体中文, Čeština, Norsk bokmål, Dansk, Türkçe, Slovenčina, Lietuvių
 
@@ -34,7 +36,7 @@ Annuals tracks yearly-recurring events - birthdays, holidays, anniversaries, nam
 
 ## Quick start
 
-1. **Install** via [HACS](#hacs-recommended) (or [manually](#manual)), then restart Home Assistant.
+1. **Install** via [Marketplace (HACS)](#marketplace-hacs) (or [manually](#manual)), then restart Home Assistant.
 2. **Settings → Devices & Services → Add Integration → "Annuals"** - this only sets up the shared "Annuals Settings" hub, no event form yet ([First-time setup](#first-time-setup)).
 3. Open the new **"Annuals"** tile and click **Add entry** to create your first event - a name, a type (e.g. Birthday), and a day/month (year optional) ([Adding an event](#adding-an-event)). Repeat for each event, bring in a whole list at once via [CSV](#importing-events-from-a-csv-file), [ICS](#importing-events-from-an-ics-calendar), or [vCard](#importing-events-from-a-vcard-vcf-file) import, or add a country's public [holidays](#importing-public-holidays).
 4. Add the events to a dashboard, either way:
@@ -1285,14 +1287,15 @@ Three more are written by the card onto each row rather than read from a theme, 
 
 ## Installation
 
-### HACS (recommended)
+### Marketplace (HACS)
 
-Annuals is part of the default HACS integration list:
+The recommended way. Annuals is in the default list of the Marketplace - the store Home Assistant 2026.11 ships, HACS on earlier versions - so there is no repository to add:
 
-1. Open HACS in Home Assistant
-2. Search for "Annuals"
-3. Click the "Download" button
-4. Restart HA
+[![Open Marketplace repository on My Home Assistant](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=somansch&repository=annuals&category=Integration)
+
+1. Click the button above, or open Marketplace (HACS) in Home Assistant and search for "Annuals"
+2. Click **Download**
+3. Restart Home Assistant
 
 ### Manual
 
