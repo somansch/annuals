@@ -2055,6 +2055,12 @@ def _telework_schema(defaults: dict | None = None) -> vol.Schema:
                 CONF_TELEWORK_END_DATE,
                 description={"suggested_value": defaults.get(CONF_TELEWORK_END_DATE)},
             ): selector({"date": {}}),
+            vol.Optional(
+                CONF_ICON, default=defaults.get(CONF_ICON, "")
+            ): selector({"icon": {}}),
+            vol.Optional(
+                CONF_VIP, default=defaults.get(CONF_VIP, False)
+            ): selector({"boolean": {}}),
         }
     )
 
@@ -2091,6 +2097,8 @@ def _validate_telework(user_input: dict) -> tuple[dict | None, dict[str, str]]:
         CONF_TELEWORK_START_DATE: start.isoformat(),
         CONF_TELEWORK_WEEKDAYS: weekdays,
         CONF_TELEWORK_END_DATE: end.isoformat() if end else None,
+        CONF_ICON: (user_input.get(CONF_ICON) or "").strip(),
+        CONF_VIP: bool(user_input.get(CONF_VIP, False)),
     }, errors
 
 

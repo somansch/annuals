@@ -127,7 +127,9 @@
                     "telework_user": "Personne",
                     "telework_start_date": "Date de début",
                     "telework_weekdays": "Jours de la semaine",
-                    "telework_end_date": "Date de fin"
+                    "telework_end_date": "Date de fin",
+                    "icon": "Icône personnalisée (optionnel)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Choisissez un ou plusieurs jours pour le planning hebdomadaire de travail à domicile. Laissez vide pour enregistrer uniquement la date de début.",
@@ -305,7 +307,9 @@
                     "telework_user": "Personne",
                     "telework_start_date": "Date de début",
                     "telework_weekdays": "Jours de la semaine",
-                    "telework_end_date": "Date de fin"
+                    "telework_end_date": "Date de fin",
+                    "icon": "Icône personnalisée (optionnel)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Choisissez un ou plusieurs jours pour le planning hebdomadaire de travail à domicile. Laissez vide pour enregistrer uniquement la date de début.",
@@ -714,7 +718,7 @@
         },
         "calendar": {
             "homeworking": {
-                "name": "Travail à domicile"
+                "name": "Télétravail"
             },
             "birthday": {
                 "name": "Anniversaires"

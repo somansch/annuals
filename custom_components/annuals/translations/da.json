@@ -127,7 +127,9 @@
                     "telework_user": "Bruger",
                     "telework_start_date": "Startdato",
                     "telework_weekdays": "Ugedage",
-                    "telework_end_date": "Slutdato"
+                    "telework_end_date": "Slutdato",
+                    "icon": "Tilsidesæt ikon (valgfrit)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Vælg en eller flere dage til en ugentlig plan. Lad feltet stå tomt for kun at registrere startdatoen.",
@@ -305,7 +307,9 @@
                     "telework_user": "Bruger",
                     "telework_start_date": "Startdato",
                     "telework_weekdays": "Ugedage",
-                    "telework_end_date": "Slutdato"
+                    "telework_end_date": "Slutdato",
+                    "icon": "Tilsidesæt ikon (valgfrit)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Vælg en eller flere dage til en ugentlig plan. Lad feltet stå tomt for kun at registrere startdatoen.",
@@ -714,7 +718,7 @@
         },
         "calendar": {
             "homeworking": {
-                "name": "Arbejde hjemmefra"
+                "name": "Telearbejde"
             },
             "birthday": {
                 "name": "Fødselsdage"

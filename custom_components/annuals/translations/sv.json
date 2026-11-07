@@ -127,7 +127,9 @@
                     "telework_user": "Användare",
                     "telework_start_date": "Startdatum",
                     "telework_weekdays": "Veckodagar",
-                    "telework_end_date": "Slutdatum"
+                    "telework_end_date": "Slutdatum",
+                    "icon": "Åsidosätt ikon (valfritt)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Välj en eller flera dagar för ett veckoschema för arbete hemifrån. Lämna tomt för att bara registrera startdatumet.",
@@ -305,7 +307,9 @@
                     "telework_user": "Användare",
                     "telework_start_date": "Startdatum",
                     "telework_weekdays": "Veckodagar",
-                    "telework_end_date": "Slutdatum"
+                    "telework_end_date": "Slutdatum",
+                    "icon": "Åsidosätt ikon (valfritt)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Välj en eller flera dagar för ett veckoschema för arbete hemifrån. Lämna tomt för att bara registrera startdatumet.",
@@ -714,7 +718,7 @@
         },
         "calendar": {
             "homeworking": {
-                "name": "Arbete hemifrån"
+                "name": "Distansarbete"
             },
             "birthday": {
                 "name": "Födelsedagar"

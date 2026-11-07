@@ -127,7 +127,9 @@
                     "telework_user": "Benutzer",
                     "telework_start_date": "Startdatum",
                     "telework_weekdays": "Wochentage",
-                    "telework_end_date": "Enddatum"
+                    "telework_end_date": "Enddatum",
+                    "icon": "Icon überschreiben (optional)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Wähle einen oder mehrere Tage für einen Wochenplan. Leer lassen, um nur das Startdatum einzutragen.",
@@ -305,7 +307,9 @@
                     "telework_user": "Benutzer",
                     "telework_start_date": "Startdatum",
                     "telework_weekdays": "Wochentage",
-                    "telework_end_date": "Enddatum"
+                    "telework_end_date": "Enddatum",
+                    "icon": "Icon überschreiben (optional)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Wähle einen oder mehrere Tage für einen Wochenplan. Leer lassen, um nur das Startdatum einzutragen.",
@@ -714,7 +718,7 @@
         },
         "calendar": {
             "homeworking": {
-                "name": "Arbeiten von zu Hause"
+                "name": "Telearbeit"
             },
             "birthday": {
                 "name": "Geburtstage"

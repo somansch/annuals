@@ -127,7 +127,9 @@
                     "telework_user": "Uživatel",
                     "telework_start_date": "Datum začátku",
                     "telework_weekdays": "Dny v týdnu",
-                    "telework_end_date": "Datum konce"
+                    "telework_end_date": "Datum konce",
+                    "icon": "Vlastní ikona (volitelné)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Vyber jeden nebo více dnů pro týdenní plán. Nech prázdné, pokud chceš zaznamenat pouze datum začátku.",
@@ -305,7 +307,9 @@
                     "telework_user": "Uživatel",
                     "telework_start_date": "Datum začátku",
                     "telework_weekdays": "Dny v týdnu",
-                    "telework_end_date": "Datum konce"
+                    "telework_end_date": "Datum konce",
+                    "icon": "Vlastní ikona (volitelné)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Vyber jeden nebo více dnů pro týdenní plán. Nech prázdné, pokud chceš zaznamenat pouze datum začátku.",
@@ -714,7 +718,7 @@
         },
         "calendar": {
             "homeworking": {
-                "name": "Práce z domova"
+                "name": "Práce na dálku"
             },
             "birthday": {
                 "name": "Narozeniny"

@@ -127,7 +127,9 @@
                     "telework_user": "Naudotojas",
                     "telework_start_date": "Pradžios data",
                     "telework_weekdays": "Savaitės dienos",
-                    "telework_end_date": "Pabaigos data"
+                    "telework_end_date": "Pabaigos data",
+                    "icon": "Piktograma (neprivaloma)",
+                    "vip": "VIP"
                 },
                 "data_description": {
                     "telework_weekdays": "Pasirinkite vieną ar daugiau savaitės dienų darbo iš namų grafikui. Palikite tuščią, jei norite įrašyti tik pradžios datą.",
@@ -305,7 +307,9 @@
                     "telework_user": "Naudotojas",
                     "telework_start_date": "Pradžios data",
                     "telework_weekdays": "Savaitės dienos",
-                    "telework_end_date": "Pabaigos data"
+                    "telework_end_date": "Pabaigos data",
+                    "icon": "Piktograma (neprivaloma)",
+                    "vip": "VIP"
                 },
                 "data_description": {
                     "telework_weekdays": "Pasirinkite vieną ar daugiau savaitės dienų darbo iš namų grafikui. Palikite tuščią, jei norite įrašyti tik pradžios datą.",
@@ -714,7 +718,7 @@
         },
         "calendar": {
             "homeworking": {
-                "name": "Darbas iš namų"
+                "name": "Nuotolinis darbas"
             },
             "birthday": {
                 "name": "Gimtadieniai"

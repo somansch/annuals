@@ -127,7 +127,9 @@
                     "telework_user": "用户",
                     "telework_start_date": "开始日期",
                     "telework_weekdays": "星期",
-                    "telework_end_date": "结束日期"
+                    "telework_end_date": "结束日期",
+                    "icon": "自定义图标（可选）",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "为每周居家办公计划选择一个或多个星期。留空则只记录开始日期当天。",
@@ -305,7 +307,9 @@
                     "telework_user": "用户",
                     "telework_start_date": "开始日期",
                     "telework_weekdays": "星期",
-                    "telework_end_date": "结束日期"
+                    "telework_end_date": "结束日期",
+                    "icon": "自定义图标（可选）",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "为每周居家办公计划选择一个或多个星期。留空则只记录开始日期当天。",
@@ -714,7 +718,7 @@
         },
         "calendar": {
             "homeworking": {
-                "name": "居家办公"
+                "name": "远程办公"
             },
             "birthday": {
                 "name": "生日"

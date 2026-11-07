@@ -127,7 +127,9 @@
                     "telework_user": "Gebruiker",
                     "telework_start_date": "Begindatum",
                     "telework_weekdays": "Weekdagen",
-                    "telework_end_date": "Einddatum"
+                    "telework_end_date": "Einddatum",
+                    "icon": "Icoon overschrijven (optioneel)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Kies een of meer dagen voor een wekelijkse planning. Laat leeg om alleen de begindatum vast te leggen.",
@@ -305,7 +307,9 @@
                     "telework_user": "Gebruiker",
                     "telework_start_date": "Begindatum",
                     "telework_weekdays": "Weekdagen",
-                    "telework_end_date": "Einddatum"
+                    "telework_end_date": "Einddatum",
+                    "icon": "Icoon overschrijven (optioneel)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Kies een of meer dagen voor een wekelijkse planning. Laat leeg om alleen de begindatum vast te leggen.",
@@ -714,7 +718,7 @@
         },
         "calendar": {
             "homeworking": {
-                "name": "Thuiswerken"
+                "name": "Telewerken"
             },
             "birthday": {
                 "name": "Verjaardagen"

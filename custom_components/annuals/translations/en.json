@@ -127,7 +127,9 @@
                     "telework_user": "User",
                     "telework_start_date": "Start date",
                     "telework_weekdays": "Weekdays",
-                    "telework_end_date": "End date"
+                    "telework_end_date": "End date",
+                    "icon": "Icon override (optional)",
+                    "vip": "VIP annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Choose one or more days for a weekly homeworking schedule. Leave empty to record only the start date.",
@@ -305,7 +307,9 @@
                     "telework_user": "User",
                     "telework_start_date": "Start date",
                     "telework_weekdays": "Weekdays",
-                    "telework_end_date": "End date"
+                    "telework_end_date": "End date",
+                    "icon": "Icon override (optional)",
+                    "vip": "VIP annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Choose one or more days for a weekly homeworking schedule. Leave empty to record only the start date.",
@@ -714,7 +718,7 @@
         },
         "calendar": {
             "homeworking": {
-                "name": "Homeworking"
+                "name": "Telework"
             },
             "birthday": {
                 "name": "Birthdays"

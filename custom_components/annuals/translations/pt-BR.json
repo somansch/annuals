@@ -127,7 +127,9 @@
                     "telework_user": "Usuário",
                     "telework_start_date": "Data inicial",
                     "telework_weekdays": "Dias da semana",
-                    "telework_end_date": "Data final"
+                    "telework_end_date": "Data final",
+                    "icon": "Substituir ícone (opcional)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Selecione um ou mais dias para uma agenda semanal de trabalho em casa. Deixe vazio para registrar apenas a data inicial.",
@@ -305,7 +307,9 @@
                     "telework_user": "Usuário",
                     "telework_start_date": "Data inicial",
                     "telework_weekdays": "Dias da semana",
-                    "telework_end_date": "Data final"
+                    "telework_end_date": "Data final",
+                    "icon": "Substituir ícone (opcional)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Selecione um ou mais dias para uma agenda semanal de trabalho em casa. Deixe vazio para registrar apenas a data inicial.",
@@ -714,7 +718,7 @@
         },
         "calendar": {
             "homeworking": {
-                "name": "Trabalho em casa"
+                "name": "Teletrabalho"
             },
             "birthday": {
                 "name": "Aniversários"

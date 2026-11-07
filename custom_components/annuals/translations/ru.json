@@ -127,7 +127,9 @@
                     "telework_user": "Пользователь",
                     "telework_start_date": "Дата начала",
                     "telework_weekdays": "Дни недели",
-                    "telework_end_date": "Дата окончания"
+                    "telework_end_date": "Дата окончания",
+                    "icon": "Переопределить значок (необязательно)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Выберите один или несколько дней для еженедельного графика работы из дома. Оставьте пустым, чтобы указать только дату начала.",
@@ -305,7 +307,9 @@
                     "telework_user": "Пользователь",
                     "telework_start_date": "Дата начала",
                     "telework_weekdays": "Дни недели",
-                    "telework_end_date": "Дата окончания"
+                    "telework_end_date": "Дата окончания",
+                    "icon": "Переопределить значок (необязательно)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Выберите один или несколько дней для еженедельного графика работы из дома. Оставьте пустым, чтобы указать только дату начала.",
@@ -714,7 +718,7 @@
         },
         "calendar": {
             "homeworking": {
-                "name": "Работа из дома"
+                "name": "Удалённая работа"
             },
             "birthday": {
                 "name": "Дни рождения"

@@ -127,7 +127,9 @@
                     "telework_user": "Usuario",
                     "telework_start_date": "Fecha de inicio",
                     "telework_weekdays": "Días de la semana",
-                    "telework_end_date": "Fecha de fin"
+                    "telework_end_date": "Fecha de fin",
+                    "icon": "Sobrescribir icono (opcional)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Selecciona uno o varios días para un horario semanal de trabajo desde casa. Déjalo vacío para registrar solo la fecha de inicio.",
@@ -305,7 +307,9 @@
                     "telework_user": "Usuario",
                     "telework_start_date": "Fecha de inicio",
                     "telework_weekdays": "Días de la semana",
-                    "telework_end_date": "Fecha de fin"
+                    "telework_end_date": "Fecha de fin",
+                    "icon": "Sobrescribir icono (opcional)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Selecciona uno o varios días para un horario semanal de trabajo desde casa. Déjalo vacío para registrar solo la fecha de inicio.",
@@ -714,7 +718,7 @@
         },
         "calendar": {
             "homeworking": {
-                "name": "Trabajo desde casa"
+                "name": "Teletrabajo"
             },
             "birthday": {
                 "name": "Cumpleaños"

@@ -127,7 +127,9 @@
                     "telework_user": "Kullanıcı",
                     "telework_start_date": "Başlangıç tarihi",
                     "telework_weekdays": "Hafta içi günler",
-                    "telework_end_date": "Bitiş tarihi"
+                    "telework_end_date": "Bitiş tarihi",
+                    "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Haftalık evden çalışma programı için bir veya daha fazla gün seçin. Yalnızca başlangıç tarihini kaydetmek için boş bırakın.",
@@ -305,7 +307,9 @@
                     "telework_user": "Kullanıcı",
                     "telework_start_date": "Başlangıç tarihi",
                     "telework_weekdays": "Hafta içi günler",
-                    "telework_end_date": "Bitiş tarihi"
+                    "telework_end_date": "Bitiş tarihi",
+                    "icon": "Simgeyi geçersiz kıl (isteğe bağlı)",
+                    "vip": "VIP Annual"
                 },
                 "data_description": {
                     "telework_weekdays": "Haftalık evden çalışma programı için bir veya daha fazla gün seçin. Yalnızca başlangıç tarihini kaydetmek için boş bırakın.",
@@ -714,7 +718,7 @@
         },
         "calendar": {
             "homeworking": {
-                "name": "Evden çalışma"
+                "name": "Uzaktan çalışma"
             },
             "birthday": {
                 "name": "Doğum günleri"

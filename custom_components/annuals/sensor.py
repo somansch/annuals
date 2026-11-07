@@ -114,6 +114,7 @@ class TeleworkSensor(SensorEntity):
         self._config_entry = config_entry
         self._label = label
         self._user = telework_person_name(hass, config_entry.data)
+        self._attr_icon = config_entry.data.get(CONF_ICON) or "mdi:home-city"
         self._attr_unique_id = f"{DOMAIN}-{config_entry.entry_id}"
         self._attr_name = f"{label}: {self._user}"
         self.entity_id = f"sensor.annuals_homeworking_{slugify(self._user)}"
@@ -129,6 +130,8 @@ class TeleworkSensor(SensorEntity):
             "type": CONF_TELEWORK,
             "type_label": self._label,
             "name": self._user,
+            "full_name": f"{self._label} {self._user}".strip(),
+            "vip": bool(self._config_entry.data.get(CONF_VIP, False)),
             "next_date": occurrence.isoformat() if occurrence else None,
         }
 
