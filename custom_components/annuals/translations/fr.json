@@ -274,7 +274,9 @@
         "abort": {
             "hub_not_configurable": "Le hub Annuals n'a pas de paramètres propres - il contient uniquement les calendriers partagés.",
             "already_configured": "Le hub Annuals existe déjà.",
-            "invalid_import_row": "Cette ligne n'a pas pu être importée."
+            "invalid_import_row": "Cette ligne n'a pas pu être importée.",
+            "reconfigure_successful": "L'événement a été mis à jour.",
+            "holiday_not_reconfigurable": "La date de cette entrée provient des données des jours fériés et ne peut pas être modifiée ici. Utilisez **Configurer** pour changer son icône ou ses noms."
         }
     },
     "options": {
@@ -614,7 +616,6 @@
             "translations_exported": "{count} traduction(s) exporté(s). [Télécharger annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+clic pour télécharger - un simple clic ne fonctionne pas ici)\n\nOu copiez le CSV ci-dessous :\n\n```\n{csv}\n```",
             "translations_imported": "{updated} jour(s) férié(s) mis à jour, {skipped} ligne(s) ignorée(s).",
             "no_translations_to_export": "Aucun nom de jour férié n'a encore été écrit – il n'y a rien à exporter.",
-            "hub_not_configurable": "Le hub Annuals n'a pas de paramètres propres - il contient uniquement les calendriers partagés.",
             "import_started": "Import démarré : {created} événement(s) en cours d'ajout, {skipped} ligne(s) ignorée(s) (voir le journal pour le détail).",
             "ics_import_started": "Import démarré : {created} événement(s) créé(s), {updated} mis à jour, {skipped} entrée(s) ignorée(s) ou exclue(s).",
             "csv_exported": "{count} événement(s) exporté(s). [Télécharger annuals_export.csv]({url}) (Ctrl/Cmd+clic pour télécharger - un simple clic ne fonctionne pas ici)\n\nOu copiez le CSV ci-dessous :\n\n```\n{csv}\n```",

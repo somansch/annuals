@@ -1,7 +1,7 @@
 # <img src="https://raw.githubusercontent.com/somansch/annuals/main/custom_components/annuals/brand/icon.png" width="40" height="40" align="top"> Annuals Integration for Home Assistant - more than birthdays/holidays only
 
 [![Marketplace (HACS)](https://img.shields.io/badge/Marketplace%20%28HACS%29-Default-41BDF5?style=for-the-badge&logo=homeassistantcommunitystore&logoColor=white)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=somansch&repository=annuals&category=Integration)
-[![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2024.7%2B-41BDF5?style=for-the-badge&logo=homeassistant&logoColor=white)](https://www.home-assistant.io/)
+[![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2024.12%2B-41BDF5?style=for-the-badge&logo=homeassistant&logoColor=white)](https://www.home-assistant.io/)
 [![License](https://img.shields.io/github/license/somansch/annuals?style=for-the-badge)](https://github.com/somansch/annuals/blob/main/LICENSE)
 [![Downloads](https://img.shields.io/github/downloads/somansch/annuals/total?style=for-the-badge&label=Downloads)](https://github.com/somansch/annuals/releases)
 [![Downloads latest](https://img.shields.io/github/downloads/somansch/annuals/latest/total?style=for-the-badge&label=Downloads%20latest)](https://github.com/somansch/annuals/releases/latest)
@@ -274,7 +274,7 @@ The file needs a header row with these columns:
 | `interval`, `interval_unit` | No | `custom` rows only, and only both together, and only with a `year` - the repeat interval described under [Dates that repeat every few months or years](#dates-that-repeat-every-few-months-or-years). `interval` is a whole number, `interval_unit` is `months` or `years`. |
 | `time`, `end_time` | No | `one_time` rows only - `HH:MM`, see [A time of day](#a-time-of-day). `end_time` needs a `time`, and on a single-day row has to be after it. |
 
-Keep every column even when a value is empty - a row with a missing trailing comma shifts the following values left.
+Keep every column even when a value is empty - a row with a missing trailing comma shifts the following values left. A row with a cell too many is read without it. The cells may be separated by commas, semicolons or tabs - whichever the header row uses - so a file saved by a spreadsheet that writes semicolons imports as it is.
 
 ```csv
 name,type,day,month,year,icon,vip,last_name,end_date,nth,weekday,person,interval,interval_unit,time,end_time,deceased
@@ -288,7 +288,7 @@ Dentist,custom,10,3,2026,mdi:tooth,,,,,,,6,months,,
 Concert,one_time,20,9,2026,mdi:music,,,,,,,,,20:00,22:30
 ```
 
-Re-importing the same CSV later - e.g. a centrally maintained file synced on a schedule - does not create duplicate events. Each row is matched against existing entries by type + day/month + name (not year or last_name, so correcting a wrong birth year or filling in a previously-missing last name still matches the same person); a match updates that event's data in place instead of adding a second one. This only applies to CSV-imported events - manually added events are never touched or matched by a later import.
+Re-importing the same CSV later - e.g. a centrally maintained file synced on a schedule - does not create duplicate events. Each row is matched against existing entries by type + day/month + name (not year or last_name, so correcting a wrong birth year or filling in a previously-missing last name still matches the same person); a match updates that event's data in place instead of adding a second one. The one exception is a row whose last name differs from the one the matching entry already has: Anna Miller and Anna Smith, both born on May 3, are two people and stay two events. This only applies to CSV-imported events - manually added events are never touched or matched by a later import.
 
 For scheduled or automated imports (instead of clicking through the UI each time), call the **`annuals.import_csv`** action from an automation, script, or Developer Tools → Actions. Same columns, same file-based dedup behavior as above. Provide the CSV either as inline text or as a path on the HA host:
 
@@ -441,7 +441,7 @@ Each day is named for what it is to the market - `New York Stock Exchange closed
 
 ## Exporting events to CSV
 
-Find the **"Annuals Settings" hub entry** under **Settings → Devices & Services → Annuals**, click **Configure**, and pick **"Export events to CSV"** - it immediately generates the file, offers a **download link** (real file, using the exact same columns as CSV import - `name,type,day,month,year,icon,vip,last_name,end_date,nth,weekday` - so a freshly exported file can be re-imported unchanged), and also shows it inline as a copyable code block as a fallback. Only manually added and CSV/ICS/vCard-imported events are included; imported holidays aren't, re-import them via [Importing public holidays](#importing-public-holidays) instead.
+Find the **"Annuals Settings" hub entry** under **Settings → Devices & Services → Annuals**, click **Configure**, and pick **"Export events to CSV"** - it immediately generates the file, offers a **download link** (real file, using the exact same columns as CSV import - `name,type,day,month,year,icon,vip,last_name,end_date,nth,weekday` - so a freshly exported file can be re-imported unchanged), and also shows it inline as a copyable code block as a fallback. The downloaded file starts with a UTF-8 byte order mark, so a spreadsheet opens it with accented names intact; the import reads it either way. Only manually added and CSV/ICS/vCard-imported events are included; imported holidays aren't, re-import them via [Importing public holidays](#importing-public-holidays) instead.
 
 **Use Ctrl/Cmd+click (or right-click → "Save link as") on the download link, not a plain click** - Home Assistant's own UI intercepts a plain click on any link inside this kind of dialog for its own in-app navigation, which never lets the download happen. This is spelled out in the dialog itself as a reminder.
 
@@ -514,6 +514,7 @@ Attributes on each event's sensor:
 | `last_name` | The **Last name** field as entered, or an empty string if not set. Always an empty string for `holiday` events. |
 | `full_name` | `name` + `last_name` (e.g. "Anna Miller"), or just `name` if no last name was set. Always equal to `name` for `holiday` events. |
 | `next_date` | Date (ISO format) of the next occurrence - for `one_time` events, its fixed, non-recurring date, handy for building a countdown display. |
+| `previous_date` | `holiday` and `market` events only - date (ISO format) of the last occurrence before today, `null` before its first one. What the card's **Days in the past** window counts back from, since a holiday that moves was not on this year's day a year ago. |
 | `occurrence_number` | Which occurrence the next date will be (e.g. `30` for a 30th birthday) - `null` when no year was entered. Always `null` for `holiday` and `one_time` events, since neither recurs in a way "occurrence number" applies to. |
 | `reminder_message` | A ready-made, translated countdown phrase for `state`, e.g. "in 7 days", "Tomorrow", or "Today" - same language as `type_label`. |
 | `day`, `month`, `year` | The event's date as entered (`year` is `null` when unknown - always set for `one_time` events, see [Adding an event](#adding-an-event) above). Not applicable to `holiday` events - see `next_date` instead, since a public holiday's date shifts by year. On a `custom` event with a recurrence rule, `day` is the date it would fall back to rather than the one it is on - `next_date` is where it actually lands. |
@@ -1000,7 +1001,7 @@ A line can also say which boundary it marks. **Show weekday**, **Show calendar w
 
 ### Row click/tap behavior
 
-Clicking or tapping a row opens its more-info dialog by default, and **Layout → List view** has a **Tap action** and a **Hold action** field to change that: More info, Navigate, URL, Perform action, Toggle, Assist, or Nothing. They sit with the row columns because they configure the list layout's own rows - the [Timeline layout](#timeline-layout) has no row to tap, its axis dots and header sentence having their own fixed behavior. One exception: with [**Show them on click**](#adding-editing-and-deleting-from-the-card) on, a click on a row that carries the pencil and the trash can brings those up instead of running the tap action; the hold action is untouched, and rows without the two buttons keep both.
+Clicking or tapping a row opens its more-info dialog by default, and **Layout → List view** has a **Tap action** and a **Hold action** field to change that: More info, Navigate, URL, Perform action, Toggle, Assist, or Nothing. A row that does something can be reached with the Tab key, and Enter or Space runs its tap action. They sit with the row columns because they configure the list layout's own rows - the [Timeline layout](#timeline-layout) has no row to tap, its axis dots and header sentence having their own fixed behavior. One exception: with [**Show them on click**](#adding-editing-and-deleting-from-the-card) on, a click on a row that carries the pencil and the trash can brings those up instead of running the tap action; the hold action is untouched, and rows without the two buttons keep both.
 
 ### Calendar navigation
 
@@ -1014,11 +1015,11 @@ The bar is sized like the period selector of the Statistics Graph Chart Card - 2
 
 On a phone or a tablet, a **swipe** across the list or the bar steps the period too - left for the next, right for the previous - and a tap on the period itself is the way back to today, in the mode already showing. An event with a [repeat interval](#dates-that-repeat-every-few-months-or-years) is put on each of its steps inside the period, however many that is.
 
-One limit worth knowing. A yearly event is placed on its day in whichever year is on screen, and a custom event's rule - *the first Sunday in September* - is worked out for that year. A holiday only carries the date of its *next* occurrence: in that year it is exact, and in any other year it is put on the same month and day, which is right for Christmas and up to a few weeks out for Easter and everything that moves with it.
+A yearly event is placed on its day in whichever year is on screen, and a custom event's rule - *the first Sunday in September* - is worked out for that year. A holiday has no day of its own to carry into another year, so the card asks the integration where each one falls in the year on screen: Thanksgiving, Easter and everything that moves with it stand on their real days, whichever year is paged to.
 
 ### Search field
 
-**Search field** (Layout → List view) puts a field under the title - and under the [calendar navigation](#calendar-navigation), if that is on - that filters the list as you type: by name, last name and type, a holiday's category and an embedded calendar entry's location. Two letters are usually enough. A search that finds nothing says so, and Escape clears it. What is typed is a look, not a setting: it is never written to the dashboard. List layout only - the [Timeline](#timeline-layout) has no rows to filter. The field takes the bar's height and ground, and its own colors are `--annuals-card-search-color`, `--annuals-card-search-background-color` and `--annuals-card-search-size`, listed under [Theming with CSS variables](#theming-with-css-variables).
+**Search field** (Layout → List view) puts a field under the title - and under the [calendar navigation](#calendar-navigation), if that is on - that filters the list as you type: by name, last name and type, a holiday's category and an embedded calendar entry's location. Two letters are usually enough. It looks through every event the card's other settings let through, not only the rows on screen - **Number of events** limits what is shown of what was found. A search that finds nothing says so, and Escape clears it. What is typed is a look, not a setting: it is never written to the dashboard. List layout only - the [Timeline](#timeline-layout) has no rows to filter. The field takes the bar's height and ground, and its own colors are `--annuals-card-search-color`, `--annuals-card-search-background-color` and `--annuals-card-search-size`, listed under [Theming with CSS variables](#theming-with-css-variables).
 
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-nav-search.gif" alt="The bar in use: stepping through a month, switching to week and to year, picking a date from the browser's own calendar, then a search narrowing the list to one event - which shows its pencil and trash can as the pointer reaches it" width="55%">
 

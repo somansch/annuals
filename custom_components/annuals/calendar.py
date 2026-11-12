@@ -35,6 +35,7 @@ from .dates import (
     market_reason,
     event_occurrence_in_year,
     holiday_occurrence_in_year,
+    holiday_occurrences_in_years,
     holiday_span_kwargs,
     interval_occurrence,
     interval_occurrences_between,
@@ -49,6 +50,12 @@ from .dates import (
 from .helpers import async_event_type_labels, full_name
 
 _LOGGER = logging.getLogger(__name__)
+
+# What the holidays library raises for a country, a region or a category it
+# does not have - which can be one it had when the entry was imported: it
+# drops and renames them between releases. Such an entry has no date, and is
+# left out; raised through, it emptied the Holiday calendar for every entry.
+_LIBRARY_REFUSED = (KeyError, NotImplementedError, ValueError)
 
 
 async def async_setup_entry(
@@ -173,15 +180,20 @@ class AnnualsTypeCalendar(CalendarEntity):
     def _next_occurrence_for_entry(entry: ConfigEntry, today: date) -> date | None:
         data = entry.data
         if data[CONF_EVENT_TYPE] in LIBRARY_TYPES:
-            return next_holiday_occurrence(
-                data[CONF_COUNTRY],
-                data.get(CONF_SUBDIVISION),
-                data[CONF_CATEGORY],
-                data[CONF_HOLIDAY_KEY],
-                today,
-                data.get(CONF_HOLIDAY_OBSERVED, False),
-                **holiday_span_kwargs(data),
-            )
+            try:
+                return next_holiday_occurrence(
+                    data[CONF_COUNTRY],
+                    data.get(CONF_SUBDIVISION),
+                    data[CONF_CATEGORY],
+                    data[CONF_HOLIDAY_KEY],
+                    today,
+                    data.get(CONF_HOLIDAY_OBSERVED, False),
+                    **holiday_span_kwargs(data),
+                )
+            except _LIBRARY_REFUSED:
+                # One entry the library no longer has data for must not take
+                # the whole calendar down with it - see _LIBRARY_REFUSED.
+                return None
         if data[CONF_EVENT_TYPE] == TYPE_ONE_TIME:
             # Never wraps to "next year" like next_event_occurrence() does
             # below - a one-time event simply has no next year. None once
@@ -272,6 +284,38 @@ class AnnualsTypeCalendar(CalendarEntity):
                 if interval_rule(entry.data) is not None:
                     for occurrence, _step in interval_occurrences_between(entry.data, start, end):
                         events.append(self._calendar_event(entry, occurrence))
+                    continue
+                data = entry.data
+                if data[CONF_EVENT_TYPE] == TYPE_ONE_TIME:
+                    # By its whole span, not its first day: a trip that began
+                    # last week is still in a range that starts today.
+                    occurrence, last_day = one_time_span(
+                        data[CONF_YEAR], data[CONF_MONTH], data[CONF_DAY], data.get(CONF_END_DATE)
+                    )
+                    if occurrence <= end and last_day >= start:
+                        events.append(self._calendar_event(entry, occurrence))
+                    continue
+                if data[CONF_EVENT_TYPE] in LIBRARY_TYPES:
+                    # By the year each date is in, which is not always the
+                    # year it is resolved under: the end of a Christmas break
+                    # is filed under the year the break began, and an observed
+                    # New Year's Day can sit in the December before.
+                    years = tuple(range(start.year, end.year + 1))
+                    try:
+                        occurrences = holiday_occurrences_in_years(
+                            data[CONF_COUNTRY],
+                            data.get(CONF_SUBDIVISION),
+                            data[CONF_CATEGORY],
+                            data[CONF_HOLIDAY_KEY],
+                            years,
+                            data.get(CONF_HOLIDAY_OBSERVED, False),
+                            **holiday_span_kwargs(data),
+                        )
+                    except _LIBRARY_REFUSED:
+                        continue
+                    for occurrence in occurrences:
+                        if start <= occurrence <= end:
+                            events.append(self._calendar_event(entry, occurrence))
                     continue
                 for year in range(start.year, end.year + 1):
                     occurrence = self._occurrence_in_year_for_entry(entry, year)

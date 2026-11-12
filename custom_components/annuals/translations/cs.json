@@ -274,7 +274,9 @@
         "abort": {
             "hub_not_configurable": "Hub Annuals nemá vlastní nastavení – obsahuje pouze sdílené kalendáře.",
             "already_configured": "Hub Annuals již existuje.",
-            "invalid_import_row": "Tento řádek se nepodařilo importovat."
+            "invalid_import_row": "Tento řádek se nepodařilo importovat.",
+            "reconfigure_successful": "Událost byla aktualizována.",
+            "holiday_not_reconfigurable": "Datum této položky pochází z dat o svátcích a zde ho změnit nelze. Ikonu nebo názvy změníte přes **Nastavit**."
         }
     },
     "options": {
@@ -614,7 +616,6 @@
             "translations_exported": "Exportováno {count} překladů. [Stáhnout annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+klik pro stažení - obyčejné kliknutí zde nefunguje)\n\nNebo zkopírujte níže uvedené CSV:\n\n```\n{csv}\n```",
             "translations_imported": "Aktualizováno svátků: {updated}, přeskočeno řádků: {skipped}.",
             "no_translations_to_export": "Zatím nebyly napsány žádné názvy svátků – není co exportovat.",
-            "hub_not_configurable": "Hub Annuals nemá vlastní nastavení – obsahuje pouze sdílené kalendáře.",
             "import_started": "Import zahájen: {created} událostí zařazeno do fronty, {skipped} řádků přeskočeno (podrobnosti v protokolu).",
             "ics_import_started": "Import zahájen: {created} událostí vytvořeno, {updated} aktualizováno, {skipped} záznamů přeskočeno nebo vyloučeno.",
             "csv_exported": "Exportováno {count} událostí. [Stáhnout annuals_export.csv]({url}) (Ctrl/Cmd+klik pro stažení - obyčejné kliknutí zde nefunguje)\n\nNebo zkopírujte níže uvedené CSV:\n\n```\n{csv}\n```",

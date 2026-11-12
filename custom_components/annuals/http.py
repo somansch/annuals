@@ -27,7 +27,10 @@ class AnnualsExportCsvView(HomeAssistantView):
         hass: HomeAssistant = request.app["hass"]
         csv_text, _count = export_csv_text(hass)
         return web.Response(
-            body=csv_text.encode("utf-8"),
+            # With a byte order mark: without one a spreadsheet reads the
+            # file in the system's own code page, and every name with an
+            # accent in it comes out garbled. The import reads either.
+            body=csv_text.encode("utf-8-sig"),
             content_type="text/csv",
             charset="utf-8",
             headers={"Content-Disposition": 'attachment; filename="annuals_export.csv"'},
@@ -50,7 +53,10 @@ class AnnualsExportTranslationsView(HomeAssistantView):
         hass: HomeAssistant = request.app["hass"]
         csv_text, _count = translations_csv_text(hass)
         return web.Response(
-            body=csv_text.encode("utf-8"),
+            # With a byte order mark: without one a spreadsheet reads the
+            # file in the system's own code page, and every name with an
+            # accent in it comes out garbled. The import reads either.
+            body=csv_text.encode("utf-8-sig"),
             content_type="text/csv",
             charset="utf-8",
             headers={

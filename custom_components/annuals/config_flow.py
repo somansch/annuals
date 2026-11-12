@@ -96,13 +96,19 @@ from .dates import (
     library_calendar,
     market_names,
     holiday_break_blocks,
+    confirmed_name,
+    holiday_base,
     holiday_break_names,
+    holiday_days,
+    known_holiday_base,
     holiday_display_name,
     holiday_key_from_name,
     holiday_label,
+    holiday_name_on,
     holiday_occurrence_in_year,
     holiday_span_kwargs,
     next_holiday_occurrence,
+    split_holiday_names,
     parse_iso_date,
     subdivision_name,
     time_text,
@@ -366,6 +372,10 @@ def _nth_option(value: int | str | None) -> str | None:
     """
     if _blank(value):
         return None
+    # Already the option: a form shown again after an error is filled from
+    # what was submitted, which is the dropdown's own word and not a number.
+    if value == NTH_LAST_OPTION:
+        return NTH_LAST_OPTION
     return NTH_LAST_OPTION if int(value) == NTH_LAST else str(value)
 
 
@@ -507,8 +517,12 @@ def _event_schema(
             **(_rule_fields(defaults) if group == GROUP_CUSTOM else {}),
             # Native icon picker (searchable MDI grid) instead of a plain
             # text field - still stores/returns a plain "mdi:..." string.
+            # No default= - the same reason as the year: an emptied picker is
+            # left out of the payload, and a default would put the stored
+            # icon straight back, so an icon once set could never be removed.
             vol.Optional(
-                CONF_ICON, default=defaults.get(CONF_ICON, "")
+                CONF_ICON,
+                description={"suggested_value": defaults.get(CONF_ICON) or None},
             ): selector({"icon": {}}),
             vol.Optional(
                 CONF_VIP, default=defaults.get(CONF_VIP, False)
@@ -652,7 +666,7 @@ def _validate_and_normalise(user_input: dict) -> tuple[dict | None, dict[str, st
         CONF_DAY: day,
         CONF_MONTH: month,
         CONF_YEAR: year,
-        CONF_ICON: user_input.get(CONF_ICON, "").strip(),
+        CONF_ICON: (user_input.get(CONF_ICON) or "").strip(),
         CONF_VIP: bool(user_input.get(CONF_VIP, False)),
         CONF_DECEASED: bool(user_input.get(CONF_DECEASED, False))
         and user_input[CONF_EVENT_TYPE] in DECEASED_TYPES,
@@ -684,6 +698,38 @@ def _csv_schema() -> vol.Schema:
 
 _CSV_TRUE_VALUES = {"1", "true", "yes", "y", "x"}
 
+# What a spreadsheet may put between the cells besides a comma: a semicolon
+# wherever the comma is the decimal mark, and a tab.
+_CSV_DELIMITERS = (",", ";", "\t")
+
+
+def _csv_reader(text: str) -> csv.DictReader:
+    """A reader for one of our CSV files, whatever separates its cells.
+
+    Decided on the header row, whose cells are plain column names: whichever
+    of the candidates it holds most of is the separator. A file saved by a
+    spreadsheet set to German or French uses semicolons, and read with commas
+    its whole header is one unknown column.
+    """
+    header = next((line for line in text.splitlines() if line.strip()), "")
+    delimiter = max(_CSV_DELIMITERS, key=header.count)
+    return csv.DictReader(io.StringIO(text), delimiter=delimiter)
+
+
+def _csv_cells(raw: dict) -> dict[str, str]:
+    """One row as {column: text}, lower-cased and trimmed.
+
+    A row with more cells than the header has columns keeps the surplus in a
+    list under the key None, and one with fewer has None for the missing
+    ones. Neither is a reason to give the row up, let alone the file: what
+    has no column is dropped and what is missing reads as empty.
+    """
+    return {
+        key.strip().lower(): (value or "").strip() if isinstance(value, str) or value is None else ""
+        for key, value in raw.items()
+        if isinstance(key, str)
+    }
+
 
 def _parse_csv_rows(text: str) -> tuple[list[dict], list[str]]:
     """Parse CSV text into validated event data dicts, plus per-line errors.
@@ -700,11 +746,11 @@ def _parse_csv_rows(text: str) -> tuple[list[dict], list[str]]:
     never CSV-imported (see EVENT_TYPES) - not worth rejecting the column
     if present, just meaningless for those rows.
     """
-    reader = csv.DictReader(io.StringIO(text))
+    reader = _csv_reader(text)
     if not reader.fieldnames:
         return [], ["file has no header row"]
 
-    fields = {f.strip().lower() for f in reader.fieldnames}
+    fields = {f.strip().lower() for f in reader.fieldnames if isinstance(f, str)}
     if not _CSV_REQUIRED_COLUMNS.issubset(fields):
         missing = ", ".join(sorted(_CSV_REQUIRED_COLUMNS - fields))
         return [], [f"missing required column(s): {missing}"]
@@ -712,7 +758,7 @@ def _parse_csv_rows(text: str) -> tuple[list[dict], list[str]]:
     rows: list[dict] = []
     errors: list[str] = []
     for line_no, raw in enumerate(reader, start=2):  # line 1 is the header
-        row = {(k or "").strip().lower(): (v or "").strip() for k, v in raw.items()}
+        row = _csv_cells(raw)
 
         name = row.get("name", "")
         event_type = _CSV_TYPE_LOOKUP.get(row.get("type", "").lower())
@@ -1027,6 +1073,20 @@ def _parse_vcard_bday(raw: str) -> tuple[int, int, int | None] | None:
     return None
 
 
+def _vcard_text(value) -> str:
+    """One component of a vCard's structured name as text.
+
+    A component holding a comma is a list of values - "N:Miller;Anna,Maria"
+    is two given names - and the parser hands exactly that over: a list
+    where every other card has a string. Joined with a space, which is how
+    the names are written out; taken for a string, it stopped the import of
+    the whole file.
+    """
+    if isinstance(value, (list, tuple)):
+        return " ".join(str(part).strip() for part in value if str(part).strip())
+    return str(value or "").strip()
+
+
 def _vcard_name_parts(vcard, fn: str) -> tuple[str, str]:
     """Prefer the structured N property (Family;Given;Additional;...) - a
     real split, not a guess. Falls back to splitting FN on the last space
@@ -1034,8 +1094,10 @@ def _vcard_name_parts(vcard, fn: str) -> tuple[str, str]:
     """
     if hasattr(vcard, "n"):
         name = vcard.n.value
-        given = " ".join(p for p in (name.given, name.additional) if p).strip()
-        family = (name.family or "").strip()
+        given = " ".join(
+            part for part in (_vcard_text(name.given), _vcard_text(name.additional)) if part
+        )
+        family = _vcard_text(name.family)
         if given or family:
             return given, family
     return _split_name(fn)
@@ -1302,6 +1364,31 @@ def _find_import_duplicate(
     return exact_name_match
 
 
+# What a calendar or contact import knows about an event - and so all that
+# an update from one may change on an entry that exists (see
+# AnnualsOptionsFlow.async_step_import_review).
+_IMPORT_REVIEW_KEYS = (
+    CONF_EVENT_NAME,
+    CONF_LAST_NAME,
+    CONF_EVENT_TYPE,
+    CONF_DAY,
+    CONF_MONTH,
+    CONF_YEAR,
+)
+
+
+def _keep_import_source(entry: ConfigEntry, data: dict) -> None:
+    """Carry an entry's import marker over to the data an edit rebuilt.
+
+    _validate_and_normalise builds an event from the form's fields alone, and
+    where an entry came from is not one of them - so correcting a name in an
+    imported birthday took it out of what "Remove calendar-imported events"
+    finds, without a word.
+    """
+    if CONF_IMPORT_SOURCE in entry.data:
+        data[CONF_IMPORT_SOURCE] = entry.data[CONF_IMPORT_SOURCE]
+
+
 def _ics_force_new_key(index: int, existing_full: str) -> str:
     return f'{index + 1}. Create as a new entry instead of updating "{existing_full}"'
 
@@ -1347,7 +1434,14 @@ def _import_unique_id(data: dict) -> str:
     """
     if data[CONF_EVENT_TYPE] in LIBRARY_TYPES:
         subdivision_key = (data.get(CONF_SUBDIVISION) or "").casefold()
-        holiday_key = (data.get(CONF_HOLIDAY_KEY) or "").casefold()
+        # Without an estimate note in the country's own language, so that an
+        # entry imported in a year the date was estimated and a row from a
+        # year it is announced are one holiday (see dates.holiday_base). From
+        # what is already known only: this runs on the event loop, and the
+        # labels are looked up at start-up and by the import itself.
+        holiday_key = known_holiday_base(
+            data.get(CONF_COUNTRY), data.get(CONF_HOLIDAY_KEY) or ""
+        ).casefold()
         base = (
             f"{data[CONF_EVENT_TYPE]}:{data[CONF_COUNTRY]}:{subdivision_key}:"
             f"{data[CONF_CATEGORY]}:{holiday_key}"
@@ -1456,7 +1550,11 @@ def _country_supports_observed(country_code: str) -> bool:
     for category in cls.supported_categories or (_default_category(cls),):
         for year in range(this_year, this_year + _OBSERVED_CHECK_YEARS):
             calendar = _holiday_calendar(country_code, None, category, year, None)
-            if any(name != holiday_key_from_name(name) for name in calendar.values()):
+            if any(
+                part != holiday_key_from_name(part)
+                for name in calendar.values()
+                for part in split_holiday_names(name)
+            ):
                 return True
     return False
 
@@ -1744,8 +1842,10 @@ def _build_holiday_rows(
     either, since it includes the category. So holidays are first resolved
     per category (for the multi-day collapsing above), then merged across
     every selected category *by date* - each calendar date ends up with only
-    one row - since the date, not the name, is what actually identifies "the
-    same holiday" across categories. "public" always wins that merge over
+    one category's rows - since the date, not the name, is what actually
+    identifies "the same holiday" across categories. Within one category a
+    date can hold two holidays that merely coincide this year (see
+    dates.holiday_days), and those both get their row. "public" always wins that merge over
     any other category, since it's the most broadly meaningful
     classification when a date qualifies as both; a tie between two
     non-public categories keeps whichever was selected first. (Two
@@ -1775,8 +1875,9 @@ def _build_holiday_rows(
     # Read in the event loop before this ran (translations aren't reachable
     # from an executor), or English when this is called directly.
     span_labels = span_labels or {SPAN_START: "start", SPAN_END: "end", SPAN_DAY: "day {day}"}
-    # occurrence date -> (category, holiday_key, display_name)
-    chosen: dict[date, tuple[str, str, str]] = {}
+    # occurrence date -> the rows standing on it, all of one category, each
+    # (category, holiday_key, display_name)
+    chosen: dict[date, list[tuple[str, str, str]]] = {}
     # (category, holiday_key) -> display_name, for break categories only -
     # kept out of `chosen` because that merge is by *date*, and a break's
     # first day coinciding with a statutory holiday (Christmas Eve is the
@@ -1785,12 +1886,9 @@ def _build_holiday_rows(
     breaks: dict[tuple[str, str], str] = {}
 
     for category in categories:
-        default_cal = _holiday_calendar(country, subdivision, category, year, None)
-        display_cal = (
-            _holiday_calendar(country, subdivision, category, year, language)
-            if language
-            else default_cal
-        )
+        # One pair per holiday, not per date: two holidays sharing a date
+        # this year are two rows (see dates.holiday_days).
+        days = holiday_days(country, subdivision, category, year)
 
         # Picking the chronologically earliest occurrence per key is right
         # for multi-day category runs (see docstring), but wrong for a
@@ -1801,30 +1899,46 @@ def _build_holiday_rows(
         # never-updated CONF_EVENT_NAME. The plain (unsuffixed) occurrence
         # always wins when both exist, regardless of date order; "earliest"
         # only decides ties between two occurrences of the same suffix-ness.
-        earliest_by_key: dict[str, date] = {}
-        for occurrence, default_name in default_cal.items():
-            key = holiday_key_from_name(default_name)
-            is_plain = default_name == key
+        # key -> (occurrence, whether it is the plain one, its default name)
+        earliest_by_key: dict[str, tuple[date, bool, str]] = {}
+        for occurrence, default_name in days:
+            # Without the note that the date is an estimate, in whatever
+            # language the country writes it (see dates.holiday_base): the
+            # same holiday must get the same key in a year its date is
+            # announced and in one it is still calculated.
+            key = holiday_base(country, default_name)
+            is_plain = confirmed_name(country, default_name) == key
             current = earliest_by_key.get(key)
             if current is None:
-                earliest_by_key[key] = occurrence
+                earliest_by_key[key] = (occurrence, is_plain, default_name)
                 continue
-            current_is_plain = default_cal[current] == key
+            current_day, current_is_plain, _name = current
             if is_plain and not current_is_plain:
-                earliest_by_key[key] = occurrence
-            elif is_plain == current_is_plain and occurrence < current:
-                earliest_by_key[key] = occurrence
+                earliest_by_key[key] = (occurrence, is_plain, default_name)
+            elif is_plain == current_is_plain and occurrence < current_day:
+                earliest_by_key[key] = (occurrence, is_plain, default_name)
 
         is_break_category = _category_has_breaks(country, category, subdivision)
-        for key, occurrence in earliest_by_key.items():
-            default_name = default_cal[occurrence]
-            display_name = display_cal.get(occurrence, default_name)
+        for key, (occurrence, _is_plain, default_name) in earliest_by_key.items():
+            display_name = confirmed_name(
+                country,
+                (
+                    holiday_name_on(country, subdivision, category, key, year, occurrence, language)
+                    if language
+                    else None
+                )
+                or default_name,
+                language,
+            )
             if is_break_category:
                 breaks[(category, key)] = display_name
                 continue
-            existing = chosen.get(occurrence)
-            if existing is None or (category == "public" and existing[0] != "public"):
-                chosen[occurrence] = (category, key, display_name)
+            standing = chosen.get(occurrence)
+            if not standing or (category == "public" and standing[0][0] != "public"):
+                chosen[occurrence] = [(category, key, display_name)]
+            elif standing[0][0] == category:
+                # A second holiday of this category on the same date.
+                standing.append((category, key, display_name))
 
     # Which of these the whole country observes anyway, rather than this one
     # region. The country-level calendar (no subdiv) is exactly that list;
@@ -1843,9 +1957,9 @@ def _build_holiday_rows(
     nationwide_keys: set[str] = set()
     if subdivision:
         for category in categories:
-            country_cal = _holiday_calendar(country, None, category, year, None)
             nationwide_keys.update(
-                holiday_key_from_name(name).casefold() for name in country_cal.values()
+                holiday_base(country, name).casefold()
+                for _day, name in holiday_days(country, None, category, year)
             )
 
     def _common(category: str, key: str) -> dict:
@@ -1907,7 +2021,9 @@ def _build_holiday_rows(
                     rows.append(_break_row(SPAN_DAY, offset))
 
     market_name = market_names().get(country) if is_market(country) else None
-    for category, key, display_name in chosen.values():
+    for category, key, display_name in (
+        row for standing in chosen.values() for row in standing
+    ):
         common = _common(category, key)
         if market_name:
             # What the day is for the market, as the entry's own name (see
@@ -2095,7 +2211,16 @@ class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
         if CONF_IMPORT_SOURCE in import_data:
             data[CONF_IMPORT_SOURCE] = import_data[CONF_IMPORT_SOURCE]
 
-        await self.async_set_unique_id(_import_unique_id(data))
+        await self.async_set_unique_id(self._import_identity(data))
+        if data[CONF_EVENT_TYPE] in LIBRARY_TYPES:
+            # A holiday row knows neither an icon nor a VIP flag - it always
+            # arrives with none - so importing a country again, to pick up a
+            # holiday that is new, must not take those off the entries that
+            # are already there.
+            for entry in self._async_current_entries(include_ignore=False):
+                if entry.unique_id == self.unique_id:
+                    data[CONF_ICON] = data[CONF_ICON] or entry.data.get(CONF_ICON, "")
+                    data[CONF_VIP] = data[CONF_VIP] or bool(entry.data.get(CONF_VIP, False))
         title = await _entry_title(self.hass, data)
         # An update leaves an entry's title alone, which is right where the
         # title is the name and the name has not changed. A stock exchange
@@ -2109,6 +2234,32 @@ class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
         self._abort_if_unique_id_configured(updates=data, reload_on_update=True)
 
         return self.async_create_entry(title=title, data=data)
+
+    def _import_identity(self, data: dict) -> str:
+        """The unique id an imported row goes under.
+
+        _import_unique_id leaves the last name out on purpose, so a row that
+        gains one later still updates its entry. That also made one entry of
+        two people who share a first name and a day - Anna Miller and Anna
+        Smith, both born on the 3rd of May - the second overwriting the
+        first. Where the entry already standing under the id carries a
+        *different* last name, the row is someone else and gets an id with
+        its own last name in it; an entry with no last name, or the same
+        one, is still the same person.
+        """
+        unique_id = _import_unique_id(data)
+        if data[CONF_EVENT_TYPE] in LIBRARY_TYPES:
+            return unique_id
+        last_name = (data.get(CONF_LAST_NAME) or "").strip().casefold()
+        if not last_name:
+            return unique_id
+        for entry in self._async_current_entries(include_ignore=False):
+            if entry.unique_id != unique_id:
+                continue
+            other = (entry.data.get(CONF_LAST_NAME) or "").strip().casefold()
+            if other and other != last_name:
+                return f"{unique_id}:{last_name}"
+        return unique_id
 
     async def async_step_hub(self, user_input=None):
         """Create the shared hub entry - from the first "Add Integration"
@@ -2124,6 +2275,11 @@ class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
         entry = self._get_reconfigure_entry()
         if entry.data.get(CONF_HUB):
             return self.async_abort(reason="hub_not_configurable")
+        # A holiday or a market day has no day, month or year of its own (see
+        # dates.py), and the yearly form would store some on it. What can be
+        # changed on one is behind Configure - see async_step_holiday_menu.
+        if entry.data.get(CONF_EVENT_TYPE) in LIBRARY_TYPES:
+            return self.async_abort(reason="holiday_not_reconfigurable")
 
         # No menu when editing: this event has already chosen its shape, so
         # it goes straight to that shape's form. Which also means the type
@@ -2147,6 +2303,7 @@ class AnnualsConfigFlow(ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             data, errors = _validate_and_normalise(user_input)
             if data is not None:
+                _keep_import_source(entry, data)
                 title = await _entry_title(self.hass, data)
                 return self.async_update_reload_and_abort(entry, title=title, data=data)
 
@@ -2205,6 +2362,7 @@ class AnnualsOptionsFlow(OptionsFlow):
         if user_input is not None:
             data, errors = _validate_and_normalise(user_input)
             if data is not None:
+                _keep_import_source(entry, data)
                 title = await _entry_title(self.hass, data)
                 self.hass.config_entries.async_update_entry(entry, title=title, data=data)
                 self.hass.config_entries.async_schedule_reload(entry.entry_id)
@@ -2521,7 +2679,13 @@ class AnnualsOptionsFlow(OptionsFlow):
                 row["month"] = int(month_raw) if month_raw is not None else row["month"]
                 year_raw = user_input.get(keys["year"])
                 row["year"] = int(year_raw) if year_raw not in (None, "") else None
-                row["include"] = bool(user_input.get(keys["include"], True))
+                # Under the label the box was shown with: on a possible
+                # duplicate that is the plain one with the warning appended
+                # (see below), and read under the plain one alone an unticked
+                # box was never found - the row was imported regardless.
+                row["include"] = bool(
+                    user_input.get(row.get("include_key") or keys["include"], True)
+                )
                 if self._import_row_type_mode:
                     row["event_type"] = user_input.get(keys["type"], row["event_type"])
                 if row.get("duplicate_of"):
@@ -2564,8 +2728,18 @@ class AnnualsOptionsFlow(OptionsFlow):
                 if duplicate_entry_id and not row.get("force_new"):
                     entry = self.hass.config_entries.async_get_entry(duplicate_entry_id)
                     if entry is not None:
-                        title = await _entry_title(self.hass, data)
-                        self.hass.config_entries.async_update_entry(entry, title=title, data=data)
+                        # Only what the file knows about: its name, type and
+                        # date. The icon, the VIP flag, the linked person and
+                        # where the entry came from are not in a calendar or
+                        # a contact, and writing the row over the whole entry
+                        # reset every one of them.
+                        merged = {**entry.data, **{key: data[key] for key in _IMPORT_REVIEW_KEYS}}
+                        # A file that does not know the year is no reason to
+                        # forget one that was known.
+                        if data.get(CONF_YEAR) is None and entry.data.get(CONF_YEAR):
+                            merged[CONF_YEAR] = entry.data[CONF_YEAR]
+                        title = await _entry_title(self.hass, merged)
+                        self.hass.config_entries.async_update_entry(entry, title=title, data=merged)
                         self.hass.config_entries.async_schedule_reload(entry.entry_id)
                         updated += 1
                         continue
@@ -2641,6 +2815,7 @@ class AnnualsOptionsFlow(OptionsFlow):
                 row.pop("duplicate_of_label", None)
             legend_lines.append(line)
 
+            row["include_key"] = include_label
             schema_dict[
                 vol.Optional(include_label, default=row.get("include", True))
             ] = selector({"boolean": {}})
@@ -3331,7 +3506,11 @@ class AnnualsOptionsFlow(OptionsFlow):
 
         schema = vol.Schema(
             {
-                vol.Optional(CONF_ICON, default=entry.data.get(CONF_ICON, "")): selector({"icon": {}})
+                # No default= - see the icon field in _event_schema.
+                vol.Optional(
+                    CONF_ICON,
+                    description={"suggested_value": entry.data.get(CONF_ICON) or None},
+                ): selector({"icon": {}})
             }
         )
         return self.async_show_form(
@@ -3501,7 +3680,7 @@ class AnnualsOptionsFlow(OptionsFlow):
                 text = await self.hass.async_add_executor_job(
                     _read_uploaded_text, self.hass, user_input["csv_file"]
                 )
-                rows = list(csv.DictReader(io.StringIO(text)))
+                rows = [_csv_cells(raw) for raw in _csv_reader(text)]
             # ValueError covers a stale upload id: process_uploaded_file
             # deletes the file once it has been read, so re-submitting the same
             # form - after a "no valid rows" error, or after a restart - hands
@@ -3512,10 +3691,14 @@ class AnnualsOptionsFlow(OptionsFlow):
             except (OSError, ValueError, csv.Error):
                 errors["base"] = "invalid_csv"
             else:
-                by_identity: dict[tuple, ConfigEntry] = {}
+                # Every entry of an identity, not one of them: the parts of a
+                # multi-day break - its start, its end, each of its days -
+                # share one row in the file (see helpers.translations_csv_text),
+                # and a name written there is the name of all of them.
+                by_identity: dict[tuple, list[ConfigEntry]] = {}
                 for entry in self.hass.config_entries.async_entries(DOMAIN):
                     if entry.data.get(CONF_EVENT_TYPE) in LIBRARY_TYPES:
-                        by_identity[holiday_identity(entry.data)] = entry
+                        by_identity.setdefault(holiday_identity(entry.data), []).append(entry)
 
                 # Collected per entry first, so an entry with several
                 # languages in the file is written once instead of once per
@@ -3542,16 +3725,17 @@ class AnnualsOptionsFlow(OptionsFlow):
                             in ("1", "true", "True", "yes", "x"),
                         }
                     )
-                    entry = by_identity.get(identity)
-                    if entry is None or (
-                        status and not name and entry.data.get(CONF_EVENT_TYPE) != TYPE_MARKET
+                    matched = by_identity.get(identity) or []
+                    if not matched or (
+                        status and not name and matched[0].data.get(CONF_EVENT_TYPE) != TYPE_MARKET
                     ):
                         unmatched += 1
                         continue
-                    if name:
-                        updates.setdefault(entry.entry_id, {})[language] = name
-                    if status and entry.data.get(CONF_EVENT_TYPE) == TYPE_MARKET:
-                        status_updates.setdefault(entry.entry_id, {})[language] = status
+                    for entry in matched:
+                        if name:
+                            updates.setdefault(entry.entry_id, {})[language] = name
+                        if status and entry.data.get(CONF_EVENT_TYPE) == TYPE_MARKET:
+                            status_updates.setdefault(entry.entry_id, {})[language] = status
 
                 if not updates and not status_updates:
                     errors["base"] = "no_valid_rows"

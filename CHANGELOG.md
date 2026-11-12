@@ -2,6 +2,72 @@
 
 All notable changes to this integration are documented here.
 
+## v3.5.2
+
+A release of corrections: a review of the whole integration, and everything it found.
+
+### Added
+- **`previous_date` on holidays and stock exchange days.** The date of the last occurrence before today, `null` before the first. A holiday stores no day and month, and one that moves was not on this year's day a year ago - this is what the card's **Days in the past** now counts back from.
+- **Rows can be reached from the keyboard.** A row that does something on a click is in the tab order, shows where the focus is, and runs its tap action on Enter or Space.
+- **CSV files with semicolons or tabs import as they are.** A spreadsheet set to a language that writes the decimal mark as a comma saves its "CSV" with semicolons; read with commas, the whole header was one unknown column. The separator is now taken from the header row - for the events import, the translations import and the `annuals.import_csv` action alike.
+
+### Fixed
+
+**Holidays**
+- **Two holidays on one date no longer lose that year.** The `holidays` library keeps one value per date, so in a year Norway's Whit Monday lands on Constitution Day, the 17th of May reads *Andre pinsedag; Grunnlovsdag*. Neither holiday equalled that, so both skipped 2027 and counted down to 2028. Every lookup now reads such a value as the holidays it holds, an import in such a year creates one entry for each, and each keeps its own name in every language.
+- **A holiday whose date is still an estimate is found in the country's own language.** The library marks a calculated date with a note - *(estimated)* in English, *(perkiraan)* in Indonesian, *(تقديري)* in Arabic, and so on for every language a calendar comes in. Only the English one was understood. Indonesia's Eid, imported in a year its date was announced, had no date at all in the years it is still calculated, which is every year after the current one: its sensor read *unknown* from the day after the holiday until the library caught up. The note is now read off the library for each country and language.
+- **A holiday that falls twice in one year keeps both dates.** A holiday of the lunar calendar comes round every 354 days - Indonesia's Isra Mikraj is on January 5 and again on December 26, 2027. Only the first was taken, so after January the countdown went straight to the year after. The sensor, the calendar and the card's navigation now know every occurrence.
+- **The observed variant of an estimated holiday follows its shifted day.** *Eid al-Adha (observed, estimated)* was taken for a holiday of its own rather than for the day *Eid al-Adha* is observed on.
+- **The Holiday calendar lists what a range holds.** A range was asked year by year for each holiday's date in that year, which dropped a date filed under a neighboring year: an observed New Year's Day on December 31, and the end of a school break that began before New Year.
+- **Importing a country again keeps the icon a holiday was given.** The import reset it, along with the VIP flag.
+- **Reconfigure on a holiday no longer opens the yearly-event form.** That form would have stored a day, a month and a type on an entry that has none. It now says where a holiday is changed: **Configure**.
+- **One holiday the library no longer knows does not empty the calendar.** The library drops and renames regions and categories between releases. An entry it refused raised through the Holiday calendar and took every other holiday with it; such an entry now has no date, and says so once in the log.
+- **The start-up merge leaves two holidays of one category alone.** Entries sharing a date across categories are folded into one; two of the same category on one date are two holidays that coincide that year.
+
+**Importing and editing**
+- **Unticking "Import this entry" on a possible duplicate is respected.** The box is shown under a label with the warning appended and was read under the plain one, so an unticked row was imported anyway.
+- **An update from a calendar or contact file changes what the file knows.** It used to replace the whole entry - the icon, the VIP flag, the linked person and a known year of birth went with it. Name, type and date are updated now, and a year the file does not carry leaves the stored one alone.
+- **Two people who share a first name and a day are two entries.** Anna Miller and Anna Smith, both born on May 3, were one identity, and the second overwrote the first.
+- **A CSV row with a cell too many no longer stops the import.** The row is read without the surplus cell; before, the whole file ended in "Unknown error".
+- **A contact whose name holds a comma imports.** A vCard writes several given or family names as a comma-separated list, which stopped the whole file.
+- **An icon can be taken off again.** Emptying the picker put the stored icon straight back - on events and on holidays.
+- **The custom-event form survives an error with "Last" chosen.** Shown again after a validation error, it failed on the rule dropdown's own value.
+- **Editing an imported event keeps it an imported one.** Correcting a name took the entry out of what *Remove calendar-imported events* finds.
+- **A translations file reaches every part of a school break.** The file holds one row per holiday; only one of the break's entries - its start, its end or one of its days - received the name.
+- **Reconfigure says that it worked.** The closing text was missing in every language.
+
+**Reminder blueprint**
+- **A threshold of 0 fires once for a multi-day event.** The sensor holds at 0 for as long as the event runs, and the reminder about its start came every day of it.
+- **The to-do item for an event's end is due on the day it ends**, not on the day it began.
+
+**Dashboard card**
+- **Days in the past is right for holidays.** Counted from a month and day a holiday does not have, every one of them landed on February 28: with a long window each holiday read *8 months ago*, and with any window all of them turned up as past in the first week of March - while a holiday that really was yesterday never did.
+- **Paging to another year puts holidays on their real days.** A holiday used to sit on its next date's month and day in every year, which is right for Christmas and weeks out for Easter - including this year's Easter once it had passed. The card now asks the integration for the year on screen.
+- **The search looks through every event.** It filtered the rows already cut down to **Number of events**, so a card of five rows could only find something among those five.
+- **`--annuals-card-title-size` works from a theme.** The card set the variable to itself, which is no value at all.
+- **A slow click is still a click.** Without a hold action, a press of more than half a second ran nothing.
+- **The card is not redrawn every five minutes.** The poll for embedded calendars and to-do lists drew the card again whatever came back, which put a scrolled list back to its top. It now redraws when something changed.
+- **Today is the day Home Assistant has.** Every countdown comes from a sensor that counts from the server's day; the card took its own "today" from the browser, and in another time zone the two disagree for a few hours each night.
+- **A one-time event still ahead is never "3 days ago".** With a past window, an event set for the 9th of next November was counted back like a yearly one.
+- **A finished appointment leaves the Timeline on its own**, as it does the list, and still does after the dashboard re-laid its columns.
+- **An empty item in the column list no longer stops the card.**
+- **A name with a `$` in it is written as it is** in the Timeline sentence.
+- **A custom text column keeps its `{date}` and `{when}`** in the rows that follow their day under a Date block.
+- **A badge keeps a place on a card with default columns** when its stored target was a column the card no longer has.
+- **The occurrence number is written as text.**
+- **A card update that failed to load is fetched again**, under an address of its own.
+
+**Elsewhere**
+- **A one-time event that ended while Home Assistant was off is removed at start**, rather than at the next midnight.
+- **A deleted hub comes back with the next event**, not only after a restart.
+- **`deceased` is `false` on holidays and stock exchange days**, as the documentation has always said, rather than absent.
+
+### Changed
+- **Home Assistant 2024.12 or newer.** The forms have used helpers from that release for a while; the minimum is now stated, and HACS offers this version only where it runs.
+- **Stored holidays are brought onto one identity at start.** An entry imported in a year its date was estimated loses the note from its stored key, and an entry named *... (observed, estimated)* becomes the observed variant of its holiday. Where that leaves two entries for one holiday, they are merged, and holiday names typed into either are kept.
+- **The CSV downloads start with a byte order mark**, so a spreadsheet opens them with accented names intact. The import reads files with or without one.
+- **Four switches that did nothing are gone from the card's YAML** - `show_icon`, `show_name`, `show_type`, `show_when` - the next time a card is saved. A column is shown by being in the column list.
+
 ## v3.5.1
 
 ### Added

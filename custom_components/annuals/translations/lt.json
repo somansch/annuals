@@ -274,7 +274,9 @@
         "abort": {
             "hub_not_configurable": "Annuals hub neturi savo nustatymų - jis tiesiog saugo bendrus kalendorius.",
             "already_configured": "Annuals hub jau yra.",
-            "invalid_import_row": "Šios eilutės nepavyko importuoti."
+            "invalid_import_row": "Šios eilutės nepavyko importuoti.",
+            "reconfigure_successful": "Įvykis atnaujintas.",
+            "holiday_not_reconfigurable": "Šio įrašo data gaunama iš švenčių duomenų ir čia jos pakeisti negalima. Piktogramą ar pavadinimus pakeiskite per **Konfigūruoti**."
         }
     },
     "options": {
@@ -614,7 +616,6 @@
             "translations_exported": "Eksportuota {count} vertimų. [Atsisiųsti annuals_holiday_translations.csv]({url}) (Spauskite Ctrl/Cmd + paspaudimą - paprastas paspaudimas čia neveiks)\n\nArba nukopijuokite CSV žemiau:\n\n```\n{csv}\n```",
             "translations_imported": "Atnaujinta {updated} švenčių, praleista {skipped} eilučių.",
             "no_translations_to_export": "Šventių pavadinimų dar nebuvo įrašyta - nėra ką eksportuoti.",
-            "hub_not_configurable": "Annuals hub neturi savo nustatymų - jis tiesiog saugo bendrus kalendorius.",
             "import_started": "Importas pradėtas: {created} įvykiai(-ių) eilėje, praleista {skipped} eilučių (žurnale rasite detales).",
             "ics_import_started": "Importas pradėtas: sukurta {created} įvykių, atnaujinta {updated}, praleista arba atmesta {skipped} įrašų.",
             "csv_exported": "Eksportuota {count} įvykių. [Atsisiųsti annuals_export.csv]({url}) (Spauskite Ctrl/Cmd + paspaudimą - paprastas paspaudimas čia neveiks)\n\nArba nukopijuokite CSV žemiau:\n\n```\n{csv}\n```",

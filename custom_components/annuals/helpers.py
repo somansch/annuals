@@ -54,7 +54,12 @@ from .const import (
     SPAN_START,
     LIBRARY_TYPES,
 )
-from .dates import market_reason, holiday_occurrence_in_year, holiday_span_kwargs
+from .dates import (
+    holiday_occurrence_in_year,
+    holiday_span_kwargs,
+    known_holiday_base,
+    market_reason,
+)
 
 
 def ui_language(library_code: str | None) -> str | None:
@@ -344,7 +349,13 @@ def holiday_identity(data: dict) -> tuple[str, str, str, str, bool]:
         (data.get(CONF_COUNTRY) or "").strip().upper(),
         (data.get(CONF_SUBDIVISION) or "").strip().upper(),
         (data.get(CONF_CATEGORY) or "").strip().lower(),
-        (data.get(CONF_HOLIDAY_KEY) or "").strip().casefold(),
+        # Without an estimate note in the country's own language (see
+        # dates.holiday_base), so a file written while a key still carried
+        # one finds the entry it was written for.
+        known_holiday_base(
+            (data.get(CONF_COUNTRY) or "").strip().upper(),
+            (data.get(CONF_HOLIDAY_KEY) or "").strip(),
+        ).casefold(),
         bool(data.get(CONF_HOLIDAY_OBSERVED)),
     )
 

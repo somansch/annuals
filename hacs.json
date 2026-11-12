@@ -2,5 +2,6 @@
   "name": "Annuals",
   "render_readme": true,
   "zip_release": true,
-  "filename": "annuals.zip"
+  "filename": "annuals.zip",
+  "homeassistant": "2024.12.0"
 }

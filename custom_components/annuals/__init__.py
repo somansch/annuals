@@ -35,6 +35,7 @@ from .const import (
     CONF_HOLIDAY_SPAN,
     CONF_SUBDIVISION,
     CONF_HUB,
+    CONF_LANGUAGE,
     CONF_MONTH,
     CONF_NAME_TRANSLATIONS,
     CONF_YEAR,
@@ -46,7 +47,17 @@ from .const import (
     LIBRARY_TYPES,
     TYPE_ONE_TIME,
 )
-from .dates import _holiday_calendar, holiday_key_from_name, one_time_span
+from .dates import (
+    holiday_base,
+    holiday_days,
+    holiday_key_from_name,
+    known_confirmed_name,
+    known_holiday_base,
+    warm_estimate_labels,
+    holiday_occurrences_in_years,
+    holiday_span_kwargs,
+    one_time_span,
+)
 from .helpers import (
     event_title,
     CATEGORY_PUBLIC,
@@ -173,16 +184,95 @@ def websocket_card_version(
     connection.send_result(msg["id"], {"version": hass.data.get(CARD_VERSION_DATA) or 0})
 
 
+# How many years one request may ask for - a period on the card touches two
+# at most (a week across New Year), so this is room to spare rather than a
+# limit anyone meets.
+_HOLIDAY_DATES_MAX_YEARS = 6
+
+
+def _holiday_dates_by_entity(entries: list[tuple[str, dict]], years: tuple[int, ...]) -> dict:
+    """Each holiday sensor's dates within the given years - blocking (it
+    builds holiday calendars), so it runs in an executor."""
+    result: dict[str, list[str]] = {}
+    for entity_id, data in entries:
+        try:
+            found = holiday_occurrences_in_years(
+                data.get(CONF_COUNTRY),
+                data.get(CONF_SUBDIVISION),
+                data.get(CONF_CATEGORY),
+                data.get(CONF_HOLIDAY_KEY),
+                years,
+                bool(data.get(CONF_HOLIDAY_OBSERVED)),
+                **holiday_span_kwargs(data),
+            )
+        except (KeyError, NotImplementedError, ValueError):
+            # A country, region or category the library has since dropped -
+            # see helpers.holiday_date. That sensor has no date either.
+            found = []
+        result[entity_id] = [occurrence.isoformat() for occurrence in found]
+    return result
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): f"{DOMAIN}/holiday_dates",
+        vol.Required("years"): vol.All(
+            [vol.All(int, vol.Range(min=1900, max=2200))],
+            vol.Length(min=1, max=_HOLIDAY_DATES_MAX_YEARS),
+        ),
+    }
+)
+@websocket_api.async_response
+async def websocket_holiday_dates(
+    hass: HomeAssistant, connection: websocket_api.ActiveConnection, msg: dict
+) -> None:
+    """Where every holiday and market day falls in the given years, by
+    entity id - what the card asks when its calendar navigation shows a
+    period outside the one the sensors' own next_date answers for.
+
+    A holiday sensor carries its next date and its last one, and no rule the
+    card could work any other year out from: Easter is not on the same day
+    twice. The card used to put a holiday on its next date's month and day in
+    every year, which is right for Christmas and weeks out for anything that
+    moves.
+    """
+    years = tuple(sorted(set(msg["years"])))
+    entries = [
+        (sensor.entity_id, dict(sensor.event_data))
+        for sensor in list(hass.data.get(DOMAIN, {}).get(DATA_SENSORS, ()))
+        if sensor.event_data.get(CONF_EVENT_TYPE) in LIBRARY_TYPES
+    ]
+    dates = await hass.async_add_executor_job(_holiday_dates_by_entity, entries, years)
+    connection.send_result(msg["id"], {"years": list(years), "dates": dates})
+
+
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Register the bundled Lovelace card once at startup."""
     hass.data.setdefault(DOMAIN, {})
     websocket_api.async_register_command(hass, websocket_card_version)
+    websocket_api.async_register_command(hass, websocket_holiday_dates)
 
     # Before any entry is set up, so nothing is loaded that is about to be
     # removed, and so the entries the platforms then see are the ones that
     # survive.
+    #
+    # First of all the notes each country's calendar marks an estimated date
+    # with (see dates._estimate_labels): the identity the migrations compare
+    # is read off them, on the event loop, where nothing may be looked up.
+    await hass.async_add_executor_job(
+        warm_estimate_labels,
+        {
+            (entry.data.get(CONF_COUNTRY), entry.data.get(CONF_LANGUAGE))
+            for entry in hass.config_entries.async_entries(DOMAIN)
+            if entry.data.get(CONF_EVENT_TYPE) in LIBRARY_TYPES
+        },
+    )
     await _async_migrate_holiday_keys(hass)
     await _async_merge_holiday_categories(hass)
+    # A one-time event that ended while Home Assistant was not running - over
+    # a night it was switched off, or restarting at midnight - used to stay
+    # until the next midnight came round, counting days below zero.
+    await _async_purge_expired_one_time_events(hass)
 
     # A few seconds of slack after midnight, not exactly on it, so this
     # doesn't race the moment the date actually rolls over. functools.partial
@@ -232,6 +322,27 @@ async def _async_migrate_holiday_keys(hass: HomeAssistant) -> None:
     # Imported here rather than at module level: config_flow pulls in the
     # calendar and vCard parsers, which nothing else at startup needs.
     from .config_flow import _import_unique_id
+
+    # A key stored with a note in it. Until the notes each country writes in
+    # its own language were understood (see dates._estimate_labels), a
+    # holiday imported in a year its date was estimated was stored under
+    # "Hari Raya Idul Fitri (perkiraan)", and the day one was shifted to
+    # became a holiday of its own, "Eid al-Adha (observed, estimated)". The
+    # key becomes the holiday's, and an entry whose key named the shifted
+    # day becomes what it always was: the observed variant.
+    for entry in hass.config_entries.async_entries(DOMAIN):
+        data = entry.data
+        if data.get(CONF_EVENT_TYPE) not in LIBRARY_TYPES:
+            continue
+        key = data.get(CONF_HOLIDAY_KEY) or ""
+        confirmed = known_confirmed_name(data.get(CONF_COUNTRY), key)
+        base = holiday_key_from_name(confirmed)
+        if not base or base == key:
+            continue
+        new_data = {**data, CONF_HOLIDAY_KEY: base}
+        if confirmed != base and not data.get(CONF_HOLIDAY_SPAN):
+            new_data[CONF_HOLIDAY_OBSERVED] = True
+        hass.config_entries.async_update_entry(entry, data=new_data)
 
     by_id: dict[str, list] = {}
     for entry in hass.config_entries.async_entries(DOMAIN):
@@ -330,8 +441,18 @@ async def _async_merge_holiday_categories(hass: HomeAssistant) -> None:
         entries.sort(key=lambda entry: entry.data.get(CONF_CATEGORY) != CATEGORY_PUBLIC)
         # Whoever leads now speaks for the date: a public entry if there is
         # one, otherwise the oldest of two categories that neither outrank.
-        keep, losers = entries[0], entries[1:]
-        await _async_absorb(hass, keep, losers, "the same date, already imported")
+        #
+        # Only entries of another category give way. Two of the same one on
+        # a date are two holidays that coincide this year - Norway's Whit
+        # Monday on Constitution Day - and neither is a copy of the other.
+        keep = entries[0]
+        losers = [
+            entry
+            for entry in entries[1:]
+            if entry.data.get(CONF_CATEGORY) != keep.data.get(CONF_CATEGORY)
+        ]
+        if losers:
+            await _async_absorb(hass, keep, losers, "the same date, already imported")
 
 
 def _holiday_dates(groups: dict, year: int) -> dict:
@@ -512,7 +633,14 @@ async def _async_migrate_holiday_name(hass: HomeAssistant, config_entry: ConfigE
     # CONF_HOLIDAY_SUFFIX), which this has no business rewording.
     if data.get(CONF_HOLIDAY_SPAN):
         return
-    base_name = holiday_key_from_name(data[CONF_EVENT_NAME])
+    # The estimate note goes too, in the language the name was imported in
+    # (see dates.confirmed_name) - a date that was calculated in the import
+    # year is announced in a later one, and the stored name is for all of them.
+    base_name = holiday_key_from_name(
+        known_confirmed_name(
+            data.get(CONF_COUNTRY), data[CONF_EVENT_NAME], data.get(CONF_LANGUAGE)
+        )
+    )
     correct_name = f"{base_name} (observed)" if data.get(CONF_HOLIDAY_OBSERVED, False) else base_name
     if correct_name == data[CONF_EVENT_NAME]:
         return
@@ -527,8 +655,10 @@ def _nationwide_holiday_keys(country: str, category: str) -> set[str]:
     calendar with no subdivision. Blocking (the holidays library reads its
     own data files), so only ever called from an executor.
     """
-    calendar = _holiday_calendar(country, None, category, date.today().year, None)
-    return {holiday_key_from_name(name) for name in calendar.values()}
+    return {
+        holiday_base(country, name)
+        for _day, name in holiday_days(country, None, category, date.today().year)
+    }
 
 
 async def _async_migrate_holiday_regions(hass: HomeAssistant) -> None:
@@ -571,7 +701,8 @@ async def _async_migrate_holiday_regions(hass: HomeAssistant) -> None:
             nationwide[cache_key] = await hass.async_add_executor_job(
                 _nationwide_holiday_keys, *cache_key
             )
-        return None if data.get(CONF_HOLIDAY_KEY) in nationwide[cache_key] else subdivision
+        key = known_holiday_base(data.get(CONF_COUNTRY), data.get(CONF_HOLIDAY_KEY) or "")
+        return None if key in nationwide[cache_key] else subdivision
 
     # Grouped by where each entry *belongs*, not where it currently sits, so
     # one pass catches both jobs at once: several regions' copies of one
@@ -655,6 +786,12 @@ async def async_remove_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> 
     ours to take back out rather than leave standing in somebody's list. It comes
     back by itself on the next start if an event is added again.
     """
+    if config_entry.data.get(CONF_HUB):
+        # The hub is made once per run (see _async_ensure_hub), and the mark
+        # that says so outlived the hub: deleted, it did not come back with
+        # the next event set up, only with the next restart.
+        hass.data.get(DOMAIN, {}).pop(_HUB_FLOW_STARTED, None)
+
     if hass.config_entries.async_entries(DOMAIN):
         return
 

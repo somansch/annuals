@@ -274,7 +274,9 @@
         "abort": {
             "hub_not_configurable": "The Annuals hub has no settings of its own - it just holds the shared calendars.",
             "already_configured": "The Annuals hub already exists.",
-            "invalid_import_row": "This row could not be imported."
+            "invalid_import_row": "This row could not be imported.",
+            "reconfigure_successful": "The event has been updated.",
+            "holiday_not_reconfigurable": "This entry's date comes from the holiday data and cannot be changed here. Use **Configure** to change its icon or its names."
         }
     },
     "options": {
@@ -614,7 +616,6 @@
             "translations_exported": "{count} translation(s) exported. [Download annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+click to download - a plain click won't work here)\n\nOr copy the CSV below:\n\n```\n{csv}\n```",
             "translations_imported": "{updated} holiday(s) updated, {skipped} row(s) skipped.",
             "no_translations_to_export": "No holiday names have been written yet - there is nothing to export.",
-            "hub_not_configurable": "The Annuals hub has no settings of its own - it just holds the shared calendars.",
             "import_started": "Import started: {created} event(s) queued, {skipped} row(s) skipped (see the log for details).",
             "ics_import_started": "Import started: {created} event(s) created, {updated} updated, {skipped} entry/entries skipped or excluded.",
             "csv_exported": "{count} event(s) exported. [Download annuals_export.csv]({url}) (Ctrl/Cmd+click to download - a plain click won't work here)\n\nOr copy the CSV below:\n\n```\n{csv}\n```",

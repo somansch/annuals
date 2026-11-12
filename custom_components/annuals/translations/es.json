@@ -274,7 +274,9 @@
         "abort": {
             "hub_not_configurable": "El concentrador Annuals no tiene ajustes propios: solo contiene los calendarios compartidos.",
             "already_configured": "El concentrador Annuals ya existe.",
-            "invalid_import_row": "No se pudo importar esta fila."
+            "invalid_import_row": "No se pudo importar esta fila.",
+            "reconfigure_successful": "El evento se ha actualizado.",
+            "holiday_not_reconfigurable": "La fecha de esta entrada procede de los datos de festivos y no se puede cambiar aquí. Usa **Configurar** para cambiar su icono o sus nombres."
         }
     },
     "options": {
@@ -614,7 +616,6 @@
             "translations_exported": "{count} traducción(es) exportado(s). [Descargar annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+clic para descargar - un clic normal no funciona aquí)\n\nO copia el CSV de abajo:\n\n```\n{csv}\n```",
             "translations_imported": "{updated} festivo(s) actualizado(s), {skipped} fila(s) omitida(s).",
             "no_translations_to_export": "Todavía no se ha escrito ningún nombre de festivo: no hay nada que exportar.",
-            "hub_not_configurable": "El concentrador Annuals no tiene ajustes propios: solo contiene los calendarios compartidos.",
             "import_started": "Importación iniciada: {created} evento(s) en cola, {skipped} fila(s) omitida(s) (consulta el registro para más detalles).",
             "ics_import_started": "Importación iniciada: {created} evento(s) creado(s), {updated} actualizado(s), {skipped} entrada(s) omitida(s) o excluida(s).",
             "csv_exported": "{count} evento(s) exportado(s). [Descargar annuals_export.csv]({url}) (Ctrl/Cmd+clic para descargar - un clic normal no funciona aquí)\n\nO copia el CSV de abajo:\n\n```\n{csv}\n```",

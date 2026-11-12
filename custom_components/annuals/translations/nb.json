@@ -274,7 +274,9 @@
         "abort": {
             "hub_not_configurable": "Annuals-huben har ingen egne innstillinger - den inneholder bare de delte kalendrene.",
             "already_configured": "Annuals-huben finnes allerede.",
-            "invalid_import_row": "Denne raden kunne ikke importeres."
+            "invalid_import_row": "Denne raden kunne ikke importeres.",
+            "reconfigure_successful": "Hendelsen er oppdatert.",
+            "holiday_not_reconfigurable": "Datoen for denne oppføringen kommer fra helligdagsdataene og kan ikke endres her. Bruk **Konfigurer** for å endre ikonet eller navnene."
         }
     },
     "options": {
@@ -614,7 +616,6 @@
             "translations_exported": "{count} oversettelse(r) eksportert. [Last ned annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+klikk for å laste ned - et vanlig klikk fungerer ikke her)\n\nEller kopier CSV-en under:\n\n```\n{csv}\n```",
             "translations_imported": "{updated} helligdag(er) oppdatert, {skipped} rad(er) hoppet over.",
             "no_translations_to_export": "Ingen helligdagsnavn er skrevet ennå – det er ingenting å eksportere.",
-            "hub_not_configurable": "Annuals-huben har ingen egne innstillinger - den inneholder bare de delte kalendrene.",
             "import_started": "Import startet: {created} hendelse(r) i kø, {skipped} rad(er) hoppet over (se loggen for detaljer).",
             "ics_import_started": "Import startet: {created} hendelse(r) opprettet, {updated} oppdatert, {skipped} oppføring(er) hoppet over eller ekskludert.",
             "csv_exported": "{count} hendelse(r) eksportert. [Last ned annuals_export.csv]({url}) (Ctrl/Cmd+klikk for å laste ned - et vanlig klikk fungerer ikke her)\n\nEller kopier CSV-en under:\n\n```\n{csv}\n```",

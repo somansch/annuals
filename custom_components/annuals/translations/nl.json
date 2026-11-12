@@ -274,7 +274,9 @@
         "abort": {
             "hub_not_configurable": "De Annuals-hub heeft geen eigen instellingen - hij bevat alleen de gedeelde kalenders.",
             "already_configured": "De Annuals-hub bestaat al.",
-            "invalid_import_row": "Deze rij kon niet worden geïmporteerd."
+            "invalid_import_row": "Deze rij kon niet worden geïmporteerd.",
+            "reconfigure_successful": "Het evenement is bijgewerkt.",
+            "holiday_not_reconfigurable": "De datum van dit item komt uit de feestdagengegevens en kan hier niet worden gewijzigd. Gebruik **Configureer** om het icoon of de namen te wijzigen."
         }
     },
     "options": {
@@ -614,7 +616,6 @@
             "translations_exported": "{count} vertaling(en) geëxporteerd. [annuals_holiday_translations.csv downloaden]({url}) (Ctrl/Cmd+klik om te downloaden - een gewone klik werkt hier niet)\n\nOf kopieer de CSV hieronder:\n\n```\n{csv}\n```",
             "translations_imported": "{updated} feestdag(en) bijgewerkt, {skipped} rij(en) overgeslagen.",
             "no_translations_to_export": "Er zijn nog geen feestdagnamen geschreven – er valt niets te exporteren.",
-            "hub_not_configurable": "De Annuals-hub heeft geen eigen instellingen - hij bevat alleen de gedeelde kalenders.",
             "import_started": "Import gestart: {created} evenement(en) in de wachtrij, {skipped} rij(en) overgeslagen (zie het logboek voor details).",
             "ics_import_started": "Import gestart: {created} evenement(en) aangemaakt, {updated} bijgewerkt, {skipped} item(s) overgeslagen of uitgesloten.",
             "csv_exported": "{count} evenement(en) geëxporteerd. [annuals_export.csv downloaden]({url}) (Ctrl/Cmd+klik om te downloaden - een gewone klik werkt hier niet)\n\nOf kopieer de CSV hieronder:\n\n```\n{csv}\n```",

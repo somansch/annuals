@@ -11903,8 +11903,12 @@
       moveKey(c.font_style, "title", "name");
       moveKey(c.font_style, "subtitle", "type");
     }
-    moveKey(c, "show_subtitle", "show_type");
     moveKey(c, "show_subtitle_country", "show_type_country");
+    // Four switches from before the columns existed, and the older name of
+    // one of them. Nothing has read them since - a column is shown by being
+    // in the list (see columns) - so they are taken out of the YAML rather
+    // than kept as settings that do nothing.
+    for (const key of ["show_icon", "show_name", "show_type", "show_when", "show_subtitle"]) delete c[key];
     // "Also color the text" used to be one switch per icon category, back
     // when the text could only follow an icon's color. It now follows the
     // row's resolved color (see rowColor), which is one value per row, so
@@ -11980,7 +11984,10 @@
       c.row_color_override = all;
     }
     if (Array.isArray(c.columns)) {
-      c.columns = c.columns.map((col) => (col.type === "subtitle" ? { ...col, type: "type" } : col));
+      // `col &&`: a list written by hand can hold an empty item ("- "),
+      // which arrives as null - and reading its type stopped the whole card
+      // with a configuration error instead of leaving that one column out.
+      c.columns = c.columns.map((col) => (col && col.type === "subtitle" ? { ...col, type: "type" } : col));
     }
     return c;
   }
@@ -12214,11 +12221,7 @@
       highlight_today: true,
       highlight_soon: false,
       font_size_title: "",
-      show_icon: true,
-      show_name: true,
-      show_type: true,
       show_badge: true,
-      show_when: true,
       // Tapping the countdown ("in 2 days") swaps it for the event's actual
       // date, and tapping again swaps back - mirrors how Home Assistant's
       // own activity feed toggles a relative time for an exact one. Off by
@@ -12943,6 +12946,10 @@
         // yearly roll-over, so it points at *next* year's date once this
         // year's has passed, exactly like `days` does.
         nextDate: state.attributes.next_date,
+        // Holidays and market days only: the last time it was (see
+        // sensor.py). They carry no day and month, so this is all there is
+        // to say how long ago that was - see daysSincePrevOccurrence.
+        previousDate: state.attributes.previous_date,
         occurrence:
           state.attributes.occurrence_number == null ? null : state.attributes.occurrence_number,
         vip: state.attributes.vip === true,
@@ -13040,6 +13047,57 @@
       endTime: end,
       timeSortKey: start.getHours() * 60 + start.getMinutes(),
     };
+  }
+
+  // Home Assistant's own time zone, as the last hass object handed to any
+  // card on the page had it. One page talks to one Home Assistant.
+  let serverZone = "";
+  let serverDayFormat = null;
+  function rememberServerZone(hass) {
+    const zone = (hass && hass.config && hass.config.time_zone) || "";
+    if (zone === serverZone) return;
+    serverZone = zone;
+    serverDayFormat = null;
+  }
+
+  // Today as Home Assistant counts it, as local midnight of that calendar
+  // day. Every countdown on the card comes from a sensor that counts from
+  // the server's day (see sensor.py), so the card's own "today" has to be
+  // that same day - on a browser in another time zone it is, for a few
+  // hours each night, a different one, and a row placed from the browser's
+  // day then disagreed with its own sensor by one. Where the two zones are
+  // the same, which is nearly always, this is plain local midnight.
+  function serverToday() {
+    const now = new Date();
+    if (serverZone) {
+      try {
+        if (!serverDayFormat) {
+          serverDayFormat = new Intl.DateTimeFormat("en-CA", {
+            timeZone: serverZone,
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          });
+        }
+        const parts = {};
+        for (const part of serverDayFormat.formatToParts(now)) parts[part.type] = Number(part.value);
+        if (parts.year && parts.month && parts.day) return new Date(parts.year, parts.month - 1, parts.day);
+      } catch (err) {
+        // A zone this browser does not know - its own day is the best there is.
+      }
+    }
+    now.setHours(0, 0, 0, 0);
+    return now;
+  }
+
+  // Whether two fetched lists say the same thing - what decides if a poll's
+  // answer is worth drawing the card again for.
+  function sameData(a, b) {
+    try {
+      return JSON.stringify(a) === JSON.stringify(b);
+    } catch (err) {
+      return false;
+    }
   }
 
   // Local calendar day as "YYYY-MM-DD" - the anchor every day count below
@@ -13571,6 +13629,16 @@
       const rule = intervalRule(e);
       const previous = addInterval(rule.start, rule.count, rule.unit, steps - 1);
       return Math.round((today0 - previous) / 86400000);
+    }
+    // A holiday or a market day has no stored day and month: its sensor
+    // reports the last time it was, and counts from that. Worked out from
+    // the missing month and day instead, every one of them landed on the
+    // 28th of February (see occurrenceDate) - "8 months ago" beside each
+    // holiday on a card with a long window, and for the first week of March
+    // on any card. Without the attribute it is simply not recent.
+    if (!e.month || !e.day) {
+      if (typeof e.previousDate !== "string") return Number.POSITIVE_INFINITY;
+      return Math.round((today0 - isoToDate(e.previousDate)) / 86400000);
     }
     const thisYear = eventOccurrenceDate(e, today0.getFullYear());
     thisYear.setHours(0, 0, 0, 0);
@@ -14378,6 +14446,10 @@
     }
     .row.has-action:hover {
       background: var(--secondary-background-color, rgba(0, 0, 0, 0.04));
+    }
+    .row.has-action:focus-visible {
+      outline: 2px solid var(--primary-color);
+      outline-offset: -2px;
     }
     .row.highlight-today {
       background: color-mix(
@@ -15803,8 +15875,12 @@
     todo: "show_todo_badge",
   };
   function hasColumnType(config, type) {
-    const columns = config && config.columns;
-    return Array.isArray(columns) && columns.some((col) => col && col.type === type);
+    // No list of its own means the default one, which has an icon column -
+    // asked of the stored list alone, a card on its default columns was
+    // taken to have neither column and its badges kept a target it no
+    // longer had a column for.
+    const columns = config && Array.isArray(config.columns) ? config.columns : DEFAULT_COLUMNS;
+    return columns.some((col) => col && col.type === type);
   }
   function badgeTargets(config, badge) {
     const targets = {
@@ -15976,6 +16052,7 @@
     }
 
     set hass(hass) {
+      rememberServerZone(hass);
       // See eventsSignature() above - re-render only on the first hass
       // (nothing built yet), a language change (translations depend on
       // it), or an actual change to one of this card's own entities;
@@ -16103,7 +16180,12 @@
       // the list back to stale data - only the most recently started fetch
       // is allowed to actually update anything.
       if (fetchId !== this._externalFetchId) return;
-      this._externalEvents = results.flat();
+      const events = results.flat();
+      // The poll asks every five minutes and nearly always gets what it
+      // already has. Drawing the card again for that put the list back to
+      // its top and closed whatever was open on it.
+      if (sameData(events, this._externalEvents)) return;
+      this._externalEvents = events;
       this._render();
     }
 
@@ -16155,7 +16237,9 @@
         })
       );
       if (fetchId !== this._todoFetchId) return;
-      this._todoItems = results.flat();
+      const items = results.flat();
+      if (sameData(items, this._todoItems)) return;
+      this._todoItems = items;
       this._render();
     }
 
@@ -16265,6 +16349,11 @@
       // the trip's start for all of them alike - which had the end row of a
       // running trip counting back from the departure it is five days after.
       if (e.isExternal || e.multiDayPart) return e.days < 0 && e.days >= -pastWindow;
+      // A one-time event happens once, and it is still ahead: there is no
+      // earlier occurrence to have been recent. Counted back like a yearly
+      // event, one set for the 9th of next November read "3 days ago" on
+      // the 12th of this one.
+      if (e.type === "one_time") return false;
       const since = daysSincePrevOccurrence(e, now);
       return since > 0 && since <= pastWindow;
     }
@@ -16272,9 +16361,7 @@
     // ---- Calendar navigation (see calendar_nav in defaultConfig) ----
 
     _navToday() {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      return today;
+      return serverToday();
     }
 
     _navModeCurrent() {
@@ -16432,7 +16519,7 @@
     // it is noise until they leave the year, where it is the point.
     _navLabel(range) {
       const locale = this._locale();
-      const thisYear = new Date().getFullYear();
+      const thisYear = serverToday().getFullYear();
       const sameYear = range.start.getFullYear() === thisYear && range.end.getFullYear() === thisYear;
       const year = sameYear ? {} : { year: "numeric" };
       if (range.mode === "month") {
@@ -17160,10 +17247,12 @@
     // is coming. A one-time event, an embedded calendar's entry and every
     // day of a trip already know their date; a yearly event is put on its
     // day in each year the period touches - a week can straddle New Year -
-    // with the sensor's own next_date trusted in its year, which is what
-    // keeps a moveable holiday exact there. In any other year a holiday
-    // sits on the same month and day, which is right for Christmas and a
-    // few weeks out for Easter; the sensor carries no other year's date.
+    // with the sensor's own next_date trusted in its year. A holiday has no
+    // day of its own to put in another year: Easter is not on the same day
+    // twice. Those dates are asked from the integration, a year at a time
+    // (see _holidayDatesIn); until the answer is in, and against an
+    // integration too old to give one, a holiday sits on its next date's
+    // month and day, which is right for Christmas and weeks out for Easter.
     //
     // Each row gets the same signed offsets the rest of the card reads:
     // days from today, daysSince once behind us, and how many occurrences
@@ -17172,8 +17261,12 @@
     // to-dos belong to.
     _navRows(all, range, strings) {
       const config = this._config;
-      const todayIso = localIsoDay(new Date());
+      const todayIso = localIsoDay(serverToday());
       const years = [...new Set([range.start.getFullYear(), range.end.getFullYear()])];
+      const holidayIds = all
+        .filter((e) => !e.isExternal && (!e.month || !e.day))
+        .map((e) => e.entityId)
+        .join(",");
       const inRange = (iso) => iso >= range.startIso && iso <= range.endIso;
       const rows = [];
       const place = (row, iso, extra) => {
@@ -17212,6 +17305,23 @@
         // is all it has, and that is where its day comes from.
         const month = e.month || (next ? Number(next[2]) : null);
         const day = e.day || (next ? Number(next[3]) : null);
+        if (!e.month || !e.day) {
+          for (const year of years) {
+            const known = this._holidayDatesIn(year, holidayIds);
+            let dates;
+            if (known && known[e.entityId]) dates = known[e.entityId];
+            else if (year === nextYear) dates = [e.nextDate];
+            else if (month && day) dates = [localIsoDay(occurrenceDate(month, day, year))];
+            else continue;
+            for (const iso of dates) {
+              if (!inRange(iso)) continue;
+              // Only the sensor's own next date is the row its to-dos
+              // belong to.
+              place(e, iso, iso === e.nextDate ? {} : { noTodos: true });
+            }
+          }
+          continue;
+        }
         for (const year of years) {
           let iso;
           if (year === nextYear) iso = e.nextDate;
@@ -17227,9 +17337,40 @@
       return rows;
     }
 
+    // Where every holiday and market day falls in one year, by entity id -
+    // asked from the integration (see websocket_holiday_dates in
+    // __init__.py) the first time a period in that year is on screen, and
+    // kept. Null until the answer is in, which draws the card again; null
+    // for good against an integration that does not know the command.
+    // `holidayIds` is part of the key, so an import or a removal asks anew.
+    _holidayDatesIn(year, holidayIds) {
+      if (!holidayIds) return null;
+      if (!this._holidayDates || this._holidayDates.ids !== holidayIds) {
+        this._holidayDates = { ids: holidayIds, years: new Map() };
+      }
+      const cache = this._holidayDates;
+      const known = cache.years.get(year);
+      if (known === undefined && this._hass && typeof this._hass.callWS === "function") {
+        cache.years.set(year, null);
+        this._hass.callWS({ type: "annuals/holiday_dates", years: [year] }).then(
+          (result) => {
+            cache.years.set(year, (result && result.dates) || {});
+            if (this._holidayDates === cache && this._hass && this._navPeriod()) this._render();
+          },
+          () => {
+            // Left at null: the month-and-day placement stays.
+          }
+        );
+      }
+      return known || null;
+    }
+
     _filteredEvents() {
       const config = this._config;
+      // The moment it is, for what ends at a time of day - and the day it
+      // is where Home Assistant is, for everything counted in days.
       const now = new Date();
+      const today = serverToday();
       const all = [...getEvents(this._hass), ...this._externalEvents].map((e) =>
         this._localizedEvent(e)
       );
@@ -17257,7 +17398,7 @@
         : expandMultiDay(
             all,
             config.multi_day_display || "start",
-            localIsoDay(now),
+            localIsoDay(today),
             t(this._hass, this._config)
           );
       let filtered = expanded.filter((e) => {
@@ -17441,7 +17582,7 @@
         };
       }
       const hero = filtered
-        .filter((e) => this._isRecent(e, now))
+        .filter((e) => this._isRecent(e, today))
         .map((e) => ({
           ...e,
           // Same branch as _isRecent above - an external event's own e.days,
@@ -17453,14 +17594,14 @@
               ? 0
               : e.isExternal || e.multiDayPart
                 ? -e.days
-                : daysSincePrevOccurrence(e, now),
+                : daysSincePrevOccurrence(e, today),
         }))
       // days_ahead only caps how far into the future upcoming events are
       // shown - applying it earlier (to `filtered`) would also cull recent
       // past events being considered for the hero section above, whose own
       // window is governed by days_past instead, not days_ahead.
       const upcoming = filtered
-        .filter((e) => e.days > 0 && !this._isRecent(e, now))
+        .filter((e) => e.days > 0 && !this._isRecent(e, today))
         .filter((e) => !config.days_ahead || config.days_ahead <= 0 || e.days <= config.days_ahead);
       return { hero, upcoming };
     }
@@ -17539,10 +17680,15 @@
     // then upcoming soonest-first), capped to config.count as a total across
     // the whole card - not just the "upcoming" portion, so a highlighted
     // today/recent-past event counts toward the same limit.
-    _visibleEvents() {
+    //
+    // `match` narrows the rows before that limit is applied, which is what a
+    // search needs: taken off the rows already cut down to the count, a card
+    // of five rows could only ever find something among those five.
+    _visibleEvents(match) {
       const { hero, upcoming } = this._filteredEvents();
       const sortKey = (e) => (e.daysSince !== undefined ? -e.daysSince : e.days);
-      return [...hero, ...upcoming]
+      const rows = [...hero, ...upcoming];
+      return (match ? rows.filter(match) : rows)
         .sort((a, b) => {
           const dayDiff = sortKey(a) - sortKey(b);
           if (dayDiff !== 0) return dayDiff;
@@ -17662,8 +17808,7 @@
     // recently-past rows: there next_date already points at next year's
     // occurrence rather than at the one the row is describing.
     _occurrenceDate(e) {
-      const target = new Date();
-      target.setHours(0, 0, 0, 0);
+      const target = serverToday();
       const isPast = e.daysSince !== undefined && e.daysSince > 0;
       const match = !isPast && typeof e.nextDate === "string"
         ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(e.nextDate)
@@ -17679,8 +17824,7 @@
     // Whether that day is today - which is not the same question as
     // "countdown is 0" for an event already under way.
     _occursToday(e) {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const today = serverToday();
       return this._occurrenceDate(e).getTime() === today.getTime();
     }
 
@@ -17688,8 +17832,7 @@
     // needs this, to pick its tense - "was" rather than "is" - which the
     // clamped countdown alone would get wrong for a trip already under way.
     _occurredAlready(e) {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const today = serverToday();
       return this._occurrenceDate(e).getTime() < today.getTime();
     }
 
@@ -17699,8 +17842,7 @@
     // trip started is not. Only that one row differs - for everything else
     // this is exactly e.days.
     _countdownText(e, strings) {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const today = serverToday();
       return this._relativeText(Math.round((this._occurrenceDate(e) - today) / 86400000), strings);
     }
 
@@ -18047,7 +18189,12 @@
           ? strings.timelineSentenceSimpleDeceased || "{possessive} {type} would have been {when}"
           : (readsAsPast ? strings.timelineSentenceSimplePast : strings.timelineSentenceSimple) || "{name} is {when}";
         appendTemplate(tmpl, (s) =>
-          s.replace("{name}", displayName).replace("{possessive}", possessive).replace("{type}", typeText)
+          // Through functions: a replacement given as a string has its own
+          // patterns, and a name holding "$&" or "$$" would be read as one.
+          s
+            .replace("{name}", () => displayName)
+            .replace("{possessive}", () => possessive)
+            .replace("{type}", () => typeText)
         );
         frag.appendChild(document.createTextNode(dateSuffix));
         return frag;
@@ -18062,7 +18209,10 @@
           "{possessive} {ordinal}{sup} {type} is {when}";
       const [before, after] = tmpl.split("{sup}");
       const fill = (s) =>
-        (s || "").replace("{possessive}", possessive).replace("{ordinal}", num).replace("{type}", typeText);
+        (s || "")
+          .replace("{possessive}", () => possessive)
+          .replace("{ordinal}", () => num)
+          .replace("{type}", () => typeText);
       appendTemplate(before, fill);
       if (sup) {
         const supEl = document.createElement("sup");
@@ -18686,6 +18836,11 @@
     // card being removed/replaced) doesn't leave an orphaned timer running
     // forever in the background.
     connectedCallback() {
+      // Back in the document - a dashboard re-laying its columns takes every
+      // card out and puts it straight back - with the timer that
+      // disconnectedCallback took down: nothing else would set it again
+      // before the next change to one of the card's entities.
+      if (this._hass && this._built && !this._finishedTimer) this._scheduleFinishedRefresh();
       if (this._externalPollTimer) return;
       this._externalPollTimer = window.setInterval(() => {
         if (this._hass) this._fetchExternalEvents();
@@ -19321,7 +19476,7 @@
         todos.length === 1
           ? (strings.todoCompleteConfirm || 'Mark "{item}" as completed?').replace(
               "{item}",
-              todos[0].summary || ""
+              () => todos[0].summary || ""
             )
           : (strings.todoCompleteConfirmMultiple || "Mark {count} to-do items as completed?").replace(
               "{count}",
@@ -19372,7 +19527,23 @@
         revealsOnClick ||
         (tapAction.action && tapAction.action !== "none") ||
         (holdAction.action && holdAction.action !== "none");
-      if (hasAction) div.classList.add("has-action");
+      if (hasAction) {
+        div.classList.add("has-action");
+        // In the tab order, and Enter or Space does what a click does. A
+        // row was a div with a click listener and nothing else - there was
+        // no way to it from the keyboard.
+        div.tabIndex = 0;
+        div.addEventListener("keydown", (ev) => {
+          if (ev.target !== div || (ev.key !== "Enter" && ev.key !== " ")) return;
+          ev.preventDefault();
+          div.click();
+        });
+        // Announced as a button where it holds none of its own; a button
+        // inside a button is not something a screen reader can make sense of.
+        queueMicrotask(() => {
+          if (!div.querySelector("button, a[href], input")) div.setAttribute("role", "button");
+        });
+      }
 
       let holdTimer = null;
       let holdFired = false;
@@ -19382,9 +19553,14 @@
           holdTimer = null;
         }
       };
+      const holds = !!holdAction.action && holdAction.action !== "none";
       div.addEventListener("pointerdown", (ev) => {
         if (ev.button !== 0) return;
         holdFired = false;
+        // Nothing to wait for without a hold action - and the wait used to
+        // swallow the click: a press of half a second ran the empty hold
+        // action and then counted as held, so the tap action never ran.
+        if (!holds) return;
         holdTimer = setTimeout(() => {
           holdFired = true;
           this._handleRowAction(holdAction, entityId);
@@ -19580,7 +19756,14 @@
         case "badge": {
           const slot = document.createElement("div");
           slot.className = "badge-slot";
-          if (showBadge) slot.innerHTML = `<span class="${badgeClass}">${badgeValue}</span>`;
+          if (showBadge) {
+            // As text: the number comes off a sensor's attribute, and a
+            // sensor under this card's prefix need not be one of ours.
+            const badge = document.createElement("span");
+            badge.className = badgeClass;
+            badge.textContent = String(badgeValue);
+            slot.appendChild(badge);
+          }
           return slot;
         }
         case "when": {
@@ -19775,10 +19958,12 @@
       }
 
       const card = this.shadowRoot.querySelector("ha-card");
-      card.style.setProperty(
-        "--annuals-card-title-size",
-        config.font_size_title || "var(--annuals-card-title-size, 1.2em)"
-      );
+      // Only where the card sets a size itself. Written as a reference to
+      // itself with a fallback - what stood here - a custom property is
+      // invalid, so the title took its 1.2em and a theme's
+      // --annuals-card-title-size was never reached.
+      if (config.font_size_title) card.style.setProperty("--annuals-card-title-size", config.font_size_title);
+      else card.style.removeProperty("--annuals-card-title-size");
       if (config.colors.today) card.style.setProperty("--annuals-status-today-color", config.colors.today);
       if (config.colors.soon) card.style.setProperty("--annuals-status-soon-color", config.colors.soon);
       if (config.colors.accent) card.style.setProperty("--annuals-status-accent-color", config.colors.accent);
@@ -19825,7 +20010,6 @@
       ]) {
         card.style.removeProperty(property);
       }
-      if (config.colors.icon) card.style.setProperty("--annuals-row-icon-color", config.colors.icon);
       if (config.accent_bar_width)
         card.style.setProperty("--annuals-row-accent-bar-width", config.accent_bar_width);
       if (config.colors.accent_bar)
@@ -20121,9 +20305,9 @@
       // What the search field holds narrows the list further, by the
       // names and type a row reads under (see _matchesSearch).
       const query = (this._searchText || "").trim().toLowerCase();
-      const combined = query
-        ? this._visibleEvents().filter((e) => this._matchesSearch(e, query, strings))
-        : this._visibleEvents();
+      const combined = this._visibleEvents(
+        query ? (e) => this._matchesSearch(e, query, strings) : null
+      );
       this._lastVisible = combined;
       if (!combined.length) {
         const empty = document.createElement("div");
@@ -20139,7 +20323,11 @@
         listEl.appendChild(empty);
       } else if (config.layout_style === "timeline") {
         listEl.appendChild(this._buildTimeline(combined, strings));
+        // The timeline hides what is over just as the list does (see
+        // _filteredEvents), and so needs the same timer to say when.
+        this._scheduleFinishedRefresh();
       } else {
+        this._scheduleFinishedRefresh();
         // Every row renders exactly one cell per configured column (see
         // _row), so the whole list can share one set of column tracks -
         // which is what actually makes the columns line up with each other
@@ -20216,6 +20404,11 @@
               // would hold three lines' worth of height under a row that
               // has one line of text.
               rowEl.querySelectorAll(".date-col, .when").forEach((cell) => {
+                // The columns, not a {date} or {when} written into a text
+                // column: those carry the same classes for their styling
+                // (see PLACEHOLDER_CLASSES), and a sentence with its date
+                // taken out is not the same sentence.
+                if (cell.closest(".text-col")) return;
                 cell.textContent = "";
                 cell.classList.add("day-repeat");
               });
@@ -20255,7 +20448,6 @@
         // lives in the day's first row (see _centerDayBlocks). Nothing to
         // centre in a list whose rows were not gathered into days.
         if (groupsDays) this._centerDayBlocks(listEl);
-        this._scheduleFinishedRefresh();
 
         if (this._listFolds(combined)) {
           const hidden = combined.length - this._foldAt;
@@ -22984,7 +23176,7 @@
 
     _syncBackgroundInputs() {
       const bg = this._config.background;
-      this._syncColorSwatch("color", bg.color || "", "var(--card-background-color)");
+      this._syncColorSwatch("color", bg.color || "", "var(--ha-card-background, var(--card-background-color))");
 
       const enabledToggle = this.shadowRoot.querySelector("input[data-bg-card-enabled]");
       if (enabledToggle) enabledToggle.checked = bg.enabled === true;
@@ -24215,7 +24407,8 @@
         this._syncColorSwatch(
           `${prefix}_label_background`,
           config.colors[`${prefix}_label_background`] || "",
-          "var(--card-background-color)"
+          // What the stylesheet draws the plate in: the card's own background.
+          "var(--ha-card-background, var(--card-background-color, #1c1c1c))"
         );
       }
       this._syncAccentBarFields();
@@ -27098,10 +27291,15 @@
   // class that is registered stays - the browser will not take another -
   // but everything it does is on its prototype, and that is what is handed
   // over: every method, getter and setter of the new class, and its static
-  // side (getConfigElement, getStubConfig). Neither class has a constructor
-  // or a field of its own; a card holds all its state from setConfig on,
-  // which is also why a redraw afterwards is a setConfig with what the
-  // card has, and its hass again.
+  // side (getConfigElement, getStubConfig). The constructor is the one thing
+  // that cannot be handed over: an element already on the page was built by
+  // the class it was registered with, and so was every element made after.
+  // The card has one - it attaches the shadow root and sets a few fields to
+  // their starting values - so a method must not count on a field a *later*
+  // version's constructor would have set: it reads such a field as possibly
+  // undefined, or sets it itself the first time it is needed. Everything
+  // else a card holds comes from setConfig on, which is also why a redraw
+  // afterwards is a setConfig with what the card has, and its hass again.
   const adopt = (into, from) => {
     for (const key of Reflect.ownKeys(from.prototype)) {
       if (key === "constructor") continue;

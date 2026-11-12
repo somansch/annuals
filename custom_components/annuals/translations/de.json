@@ -274,7 +274,9 @@
         "abort": {
             "hub_not_configurable": "Der Annuals-Hub hat keine eigenen Einstellungen – er hält nur die gemeinsamen Kalender.",
             "already_configured": "Der Annuals-Hub existiert bereits.",
-            "invalid_import_row": "Diese Zeile konnte nicht importiert werden."
+            "invalid_import_row": "Diese Zeile konnte nicht importiert werden.",
+            "reconfigure_successful": "Das Ereignis wurde aktualisiert.",
+            "holiday_not_reconfigurable": "Das Datum dieses Eintrags stammt aus den Feiertagsdaten und lässt sich hier nicht ändern. Icon und Namen änderst du über **Konfigurieren**."
         }
     },
     "options": {
@@ -614,7 +616,6 @@
             "translations_exported": "{count} Übersetzung(en) exportiert. [annuals_holiday_translations.csv herunterladen]({url}) (Strg/Cmd-Klick zum Herunterladen - ein einfacher Klick funktioniert hier nicht)\n\nOder kopiere die CSV unten:\n\n```\n{csv}\n```",
             "translations_imported": "{updated} Feiertag(e) aktualisiert, {skipped} Zeile(n) übersprungen.",
             "no_translations_to_export": "Es wurden noch keine Feiertagsnamen geschrieben - es gibt nichts zu exportieren.",
-            "hub_not_configurable": "Der Annuals-Hub hat keine eigenen Einstellungen – er hält nur die gemeinsamen Kalender.",
             "import_started": "Import gestartet: {created} Ereignis(se) werden angelegt, {skipped} Zeile(n) übersprungen (Details im Log).",
             "ics_import_started": "Import gestartet: {created} Ereignis(se) angelegt, {updated} aktualisiert, {skipped} Eintrag/Einträge übersprungen oder ausgeschlossen.",
             "csv_exported": "{count} Ereignis(se) exportiert. [annuals_export.csv herunterladen]({url}) (Strg/Cmd-Klick zum Herunterladen - ein einfacher Klick funktioniert hier nicht)\n\nOder kopiere die CSV unten:\n\n```\n{csv}\n```",

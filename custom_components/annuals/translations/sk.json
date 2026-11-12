@@ -274,7 +274,9 @@
         "abort": {
             "hub_not_configurable": "Centrum Annuals nemá vlastné nastavenia – iba zastrešuje zdieľané kalendáre.",
             "already_configured": "Centrum Annuals už existuje.",
-            "invalid_import_row": "Tento riadok sa nepodarilo importovať."
+            "invalid_import_row": "Tento riadok sa nepodarilo importovať.",
+            "reconfigure_successful": "Udalosť bola aktualizovaná.",
+            "holiday_not_reconfigurable": "Dátum tejto položky pochádza z údajov o sviatkoch a tu ho zmeniť nemožno. Ikonu alebo názvy zmeníte cez **Konfigurovať**."
         }
     },
     "options": {
@@ -614,7 +616,6 @@
             "translations_exported": "Exportovaných prekladov: {count}. [Stiahnuť annuals_holiday_translations.csv]({url}) (stiahnete kliknutím s Ctrl/Cmd – samotné kliknutie tu nefunguje)\n\nAlebo skopírujte CSV nižšie:\n\n```\n{csv}\n```",
             "translations_imported": "Aktualizovaných sviatkov: {updated}, preskočených riadkov: {skipped}.",
             "no_translations_to_export": "Zatiaľ nebol napísaný žiadny názov sviatku – nie je čo exportovať.",
-            "hub_not_configurable": "Centrum Annuals nemá vlastné nastavenia – iba zastrešuje zdieľané kalendáre.",
             "import_started": "Import sa začal: {created} udalostí zaradených do frontu, {skipped} riadkov preskočených (podrobnosti nájdete v denníku).",
             "ics_import_started": "Import sa začal: {created} udalostí vytvorených, {updated} aktualizovaných, {skipped} záznamov preskočených alebo vylúčených.",
             "csv_exported": "Exportovaných udalostí: {count}. [Stiahnuť annuals_export.csv]({url}) (stiahnete kliknutím s Ctrl/Cmd – samotné kliknutie tu nefunguje)\n\nAlebo skopírujte CSV nižšie:\n\n```\n{csv}\n```",

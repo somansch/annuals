@@ -309,6 +309,271 @@ def holiday_key_from_name(name: str) -> str:
     return name
 
 
+# The note a calendar appends while a holiday's date is still an estimate,
+# by (country, language) - see _estimate_labels. Kept beside the cache so
+# that code on the event loop can read what an executor has already looked
+# up, without looking anything up itself (see known_confirmed_name).
+_ESTIMATE_LABELS: dict[tuple[str, str | None], tuple[tuple[str, str, str, str], ...]] = {}
+
+
+def _label_frame(label: str) -> tuple[str, str] | None:
+    """What a label such as "%s (estimated)" puts before and after a name."""
+    if label.count("%s") != 1:
+        return None
+    before, after = label.split("%s")
+    return before, after
+
+
+def _estimate_labels(country: str, language: str | None = None) -> tuple[tuple[str, str, str, str], ...]:
+    """How this country's calendar marks an estimated date in `language`
+    (its own when None), and what the same name reads as without the mark -
+    as (before, after, plain before, plain after).
+
+    _NAME_SUFFIXES knows the English wording, which is one of many: the
+    library writes the note in the language the calendar is in, and a
+    calendar read without one is in the country's own. Indonesia's Eid is
+    "Hari Raya Idul Fitri" in a year its date is announced and "Hari Raya
+    Idul Fitri (perkiraan)" in every year it is still calculated - 71
+    countries have a wording of their own. Compared as two names, a holiday
+    imported in a confirmed year found no date in any estimated one, which
+    is every year after the current.
+
+    Two labels, the more specific first: an estimated *shifted* date
+    ("(observed, estimated)") reads as the shifted one, and an estimated
+    date as the name itself. Blocking - the library reads its translation
+    files - so this is only ever reached from an executor.
+    """
+    key = (country, language)
+    known = _ESTIMATE_LABELS.get(key)
+    if known is not None:
+        return known
+    found: list[tuple[str, str, str, str]] = []
+    try:
+        calendar = library_calendar(country, language=language) if language else library_calendar(country)
+        translate = getattr(calendar, "tr", None) or (lambda text: text)
+        observed = _label_frame(translate(getattr(calendar, "observed_label", "") or ""))
+        both = _label_frame(translate(getattr(calendar, "observed_estimated_label", "") or ""))
+        estimated = _label_frame(translate(getattr(calendar, "estimated_label", "") or ""))
+        if both and observed and both != observed:
+            found.append((*both, *observed))
+        if estimated and any(estimated):
+            found.append((*estimated, "", ""))
+    except Exception:  # noqa: BLE001 - a country or language the library
+        # refuses has no labels to learn; the English ones still apply.
+        found = []
+    _ESTIMATE_LABELS[key] = tuple(found)
+    return _ESTIMATE_LABELS[key]
+
+
+def _without_estimate(name: str, labels: tuple[tuple[str, str, str, str], ...]) -> str:
+    for before, after, plain_before, plain_after in labels:
+        if (
+            len(name) > len(before) + len(after)
+            and name.startswith(before)
+            and name.endswith(after)
+        ):
+            return f"{plain_before}{name[len(before): len(name) - len(after)]}{plain_after}"
+    return name
+
+
+def confirmed_name(country: str, name: str, language: str | None = None) -> str:
+    """A holiday's name without the note that its date is an estimate - in
+    the country's own language, or the one given. Blocking the first time a
+    country is asked about (see _estimate_labels)."""
+    return _without_estimate(name, _estimate_labels(country, language))
+
+
+def known_confirmed_name(country: str | None, name: str, language: str | None = None) -> str:
+    """confirmed_name for the event loop: answers from what is already
+    known and never reads a file. A country nobody has asked about yet is
+    answered with the name as it is - see warm_estimate_labels, which is what
+    makes sure the ones in use have been asked about."""
+    if not country:
+        return name
+    return _without_estimate(name, _ESTIMATE_LABELS.get((country, language), ()))
+
+
+def warm_estimate_labels(pairs) -> None:
+    """Look the labels up for every (country, language) given - blocking,
+    for an executor, once at start-up."""
+    for country, language in pairs:
+        if country:
+            _estimate_labels(country, language)
+            _estimate_labels(country, None)
+
+
+def holiday_base(country: str, name: str) -> str:
+    """A holiday's identity out of one of its names in the country's own
+    language: without the note that the date is an estimate, and without the
+    one that it was shifted. What CONF_HOLIDAY_KEY holds for anything
+    imported from now on, and what every stored key is compared as."""
+    return holiday_key_from_name(confirmed_name(country, name))
+
+
+def known_holiday_base(country: str | None, name: str) -> str:
+    """holiday_base for the event loop - see known_confirmed_name."""
+    return holiday_key_from_name(known_confirmed_name(country, name))
+
+
+def _is_holiday(country: str, name: str, holiday_key: str) -> bool:
+    """Whether a calendar's name is the holiday this key stands for."""
+    if holiday_key_from_name(name) == holiday_key:
+        return True
+    return holiday_base(country, name) == holiday_base(country, holiday_key)
+
+
+def _is_plain(country: str, name: str) -> bool:
+    """Whether a name stands for the holiday's literal date rather than a
+    shifted one. An estimated literal date is still the literal date."""
+    confirmed = confirmed_name(country, name)
+    return confirmed == holiday_key_from_name(confirmed)
+
+
+# What the `holidays` library puts between the names of two holidays that
+# fall on the same date. A calendar holds one value per date, so in a year
+# Norway's Whit Monday lands on Constitution Day, the 17th of May reads
+# "Andre pinsedag; Grunnlovsdag" - sorted, in whatever language was asked for.
+try:
+    from holidays.constants import HOLIDAY_NAME_DELIMITER
+except ImportError:  # pragma: no cover - older releases kept it elsewhere
+    HOLIDAY_NAME_DELIMITER = "; "
+
+
+def split_holiday_names(name: str) -> tuple[str, ...]:
+    """The holidays behind one calendar value - see HOLIDAY_NAME_DELIMITER."""
+    return tuple(part for part in name.split(HOLIDAY_NAME_DELIMITER) if part) or (name,)
+
+
+def _named_days(calendar: dict, holiday_key: str | None = None):
+    """A calendar as (date, name) pairs, one per holiday rather than one per
+    date - what every lookup by name below reads instead of the calendar's
+    own items.
+
+    Comparing a whole value against one holiday's key is what used to lose
+    both holidays in a year they shared a date: neither "Grunnlovsdag" nor
+    "Andre pinsedag" equals "Andre pinsedag; Grunnlovsdag", so each skipped
+    that year and counted down to the one after.
+
+    A key that itself contains the delimiter is an entry imported while its
+    names stood joined - holidays that always share their date, like the
+    Czech Republic's two on the 1st of January, stay one entry (see
+    holiday_days). It is matched against the names it is made of, and reads
+    as that joined name wherever they are all there.
+    """
+    wanted = (
+        set(split_holiday_names(holiday_key))
+        if holiday_key and HOLIDAY_NAME_DELIMITER in holiday_key
+        else None
+    )
+    for occurrence, name in calendar.items():
+        if HOLIDAY_NAME_DELIMITER not in name:
+            yield occurrence, name
+            continue
+        parts = split_holiday_names(name)
+        if wanted is None:
+            for part in parts:
+                yield occurrence, part
+            continue
+        if holiday_key_from_name(name) == holiday_key:
+            # Exactly as it was stored - whatever its parts look like.
+            yield occurrence, name
+            continue
+        mine = [part for part in parts if holiday_key_from_name(part) in wanted]
+        if len(mine) == len(wanted):
+            yield occurrence, HOLIDAY_NAME_DELIMITER.join(mine)
+
+
+# How far either side of a year holiday_days looks for a joined name's parts
+# standing on their own. Two holidays that only sometimes coincide are apart
+# again within a year or two; this is that with room to spare.
+_APART_YEARS = 3
+
+
+@lru_cache(maxsize=512)
+def holiday_days(
+    country: str, subdivision: str | None, category: str, year: int
+) -> tuple[tuple[date, str], ...]:
+    """One year's holidays for the import, as (date, default-language name)
+    pairs - one per holiday.
+
+    Names sharing a date are taken apart when any of them is also found on a
+    date of its own in the years around: those are different holidays that
+    happen to coincide this year, and importing them as one would create an
+    entry that only exists in such years. Names that are never apart are one
+    holiday for every purpose that matters here and stay one entry - which
+    also keeps the identity of the entries such an import has always made.
+    """
+    apart: set[str] | None = None
+    days: list[tuple[date, str]] = []
+    for occurrence, name in _holiday_calendar(country, subdivision, category, year, None).items():
+        if HOLIDAY_NAME_DELIMITER not in name:
+            days.append((occurrence, name))
+            continue
+        if apart is None:
+            apart = {
+                holiday_key_from_name(other)
+                for offset in range(-_APART_YEARS, _APART_YEARS + 1)
+                for other in _holiday_calendar(
+                    country, subdivision, category, year + offset, None
+                ).values()
+                if HOLIDAY_NAME_DELIMITER not in other
+            }
+        parts = split_holiday_names(name)
+        if any(holiday_key_from_name(part) in apart for part in parts):
+            days.extend((occurrence, part) for part in parts)
+        else:
+            days.append((occurrence, name))
+    return tuple(days)
+
+
+def holiday_name_on(
+    country: str,
+    subdivision: str | None,
+    category: str,
+    holiday_key: str,
+    year: int,
+    occurrence: date,
+    language: str | None,
+) -> str | None:
+    """What one holiday is called on a date, in `language` - None when that
+    date is not in the calendar.
+
+    The calendar's value for a date is every holiday on it joined together,
+    each language sorting the names its own way, so on a shared date the
+    position says nothing about which is which. The default-language value
+    does name this holiday by its key; where the requested language is
+    another, its name is read from a neighbouring year in which it stands
+    alone - and failing that the default-language name is used, which is
+    still this holiday rather than two.
+    """
+    name = _holiday_calendar(country, subdivision, category, year, language).get(occurrence)
+    if name is None or HOLIDAY_NAME_DELIMITER not in name or HOLIDAY_NAME_DELIMITER in holiday_key:
+        return name
+    default_cal = _holiday_calendar(country, subdivision, category, year, None)
+    wanted = next(
+        (
+            part
+            for part in split_holiday_names(default_cal.get(occurrence, ""))
+            if _is_holiday(country, part, holiday_key)
+        ),
+        None,
+    )
+    if wanted is None:
+        return name
+    if wanted in split_holiday_names(name):
+        return wanted
+    for offset in (1, -1, 2, -2, 3, -3):
+        other_default = _holiday_calendar(country, subdivision, category, year + offset, None)
+        other_local = _holiday_calendar(country, subdivision, category, year + offset, language)
+        for day, default_name in other_default.items():
+            if default_name != wanted:
+                continue
+            found = other_local.get(day)
+            if found and HOLIDAY_NAME_DELIMITER not in found:
+                return found
+    return wanted
+
+
 # The small words a market's name keeps lower-case (see market_names).
 _NAME_PARTICLES = {"de", "del", "di", "do", "y", "e", "of", "and", "the"}
 
@@ -388,8 +653,8 @@ def market_status(
     english = "en_US" if "en_US" in cls.supported_languages else None
     default_cal = _holiday_calendar(code, None, category, year, None)
     english_cal = _holiday_calendar(code, None, category, year, english) if english else default_cal
-    for day, name in default_cal.items():
-        if holiday_key_from_name(name) != holiday_key:
+    for day, name in _named_days(default_cal, holiday_key):
+        if not _is_holiday(code, name, holiday_key):
             continue
         match = _CLOSE_TIME.search(english_cal.get(day, name))
         if match is None:
@@ -529,11 +794,10 @@ def holiday_break_blocks(
     listed_any: set[date] = set()
     mine: list[date] = []
     for neighbour_year in years:
-        for occurrence, name in _holiday_calendar(
-            country, subdivision, category, neighbour_year, None
-        ).items():
-            listed_any.add(occurrence)
-            if holiday_key_from_name(name) == holiday_key:
+        calendar = _holiday_calendar(country, subdivision, category, neighbour_year, None)
+        listed_any.update(calendar)
+        for occurrence, name in _named_days(calendar, holiday_key):
+            if _is_holiday(country, name, holiday_key):
                 mine.append(occurrence)
     if not mine:
         return ()
@@ -667,7 +931,7 @@ def holiday_break_names(
     default_names = [
         holiday_key_from_name(name)
         for y in years
-        for name in _holiday_calendar(country, subdivision, category, y, None).values()
+        for _day, name in _named_days(_holiday_calendar(country, subdivision, category, y, None))
     ]
     shared_suffix = _shared_name_suffix(default_names)
     parts = _break_name_parts(holiday_key, shared_suffix)
@@ -720,7 +984,7 @@ def holiday_break_names(
     display_parts = parts
     if language:
         display_cal = _holiday_calendar(country, subdivision, category, year, language)
-        display_names = [holiday_key_from_name(name) for name in display_cal.values()]
+        display_names = [holiday_key_from_name(name) for _day, name in _named_days(display_cal)]
         localized = _localized_name(country, subdivision, category, holiday_key, year, language)
         if localized:
             split = _break_name_parts(localized, _shared_name_suffix(display_names))
@@ -763,12 +1027,13 @@ def _localized_name(
 ) -> str | None:
     """This holiday's own name in `language`, found via any date it falls on."""
     default_cal = _holiday_calendar(country, subdivision, category, year, None)
-    localized_cal = _holiday_calendar(country, subdivision, category, year, language)
-    for occurrence, name in sorted(default_cal.items()):
-        if holiday_key_from_name(name) == holiday_key:
-            found = localized_cal.get(occurrence)
+    for occurrence, name in sorted(_named_days(default_cal, holiday_key)):
+        if _is_holiday(country, name, holiday_key):
+            found = holiday_name_on(
+                country, subdivision, category, holiday_key, year, occurrence, language
+            )
             if found:
-                return holiday_key_from_name(found)
+                return holiday_key_from_name(confirmed_name(country, found, language))
     return None
 
 
@@ -866,72 +1131,116 @@ def holiday_occurrence_in_year(
             return target if target <= last else None
         return first
 
-    plain: date | None = None
-    for occurrence, name in _holiday_calendar(country, subdivision, category, year, None).items():
+    found = _holiday_dates_in_year(country, subdivision, category, holiday_key, year, observed)
+    return found[0] if found else None
+
+
+# Matching days closer together than this are one occurrence - the days of a
+# holiday that lasts several, or its shifted day beside the literal one. A
+# week apart or more is the holiday coming round again.
+_SAME_OCCURRENCE_DAYS = 6
+
+
+def _occurrence_starts(days) -> list[date]:
+    """The first day of each occurrence among these days (see above)."""
+    starts: list[date] = []
+    last: date | None = None
+    for day in sorted(set(days)):
+        if last is None or (day - last).days > _SAME_OCCURRENCE_DAYS:
+            starts.append(day)
+        last = day
+    return starts
+
+
+def _holiday_dates_in_year(
+    country: str,
+    subdivision: str | None,
+    category: str,
+    holiday_key: str,
+    year: int,
+    observed: bool,
+) -> list[date]:
+    """Every date a single-day holiday falls on in the year, in order.
+
+    Usually one. A holiday of the lunar calendar comes round every 354 days
+    and so lands twice in some years - Indonesia's Isra Mikraj on the 5th of
+    January and again on the 26th of December 2027 - and taking only the
+    earliest lost the second: once January had passed, the countdown went
+    straight to the year after.
+    """
+    # A key that itself names a shifted date - "Eid al-Adha (observed,
+    # estimated)", imported as a holiday of its own before that note was
+    # understood - goes on tracking the shifted date, which is what it did
+    # in the years it found one at all.
+    observed = observed or not _is_plain(country, holiday_key)
+    mine = [
+        (occurrence, name)
+        for occurrence, name in _named_days(
+            _holiday_calendar(country, subdivision, category, year, None), holiday_key
+        )
         # Only this year: a cached calendar can hold more years than it was
-        # built for (see the estimated-only branch below for why), and the
-        # earliest match would otherwise be taken from one of them.
-        if occurrence.year != year:
-            continue
-        if holiday_key_from_name(name) == holiday_key and name == holiday_key_from_name(name):
-            if plain is None or occurrence < plain:
-                plain = occurrence
+        # built for, and a match would otherwise be taken from one of them.
+        if occurrence.year == year and _is_holiday(country, name, holiday_key)
+    ]
+    plains = _occurrence_starts(
+        occurrence for occurrence, name in mine if _is_plain(country, name)
+    )
+    if not plains:
+        # No literal date at all this year - only ever a shifted one. There
+        # is nothing to anchor a shift on, so each occurrence is its first day.
+        return _occurrence_starts(occurrence for occurrence, _name in mine)
 
-    shifted: date | None = None
-    if plain is not None:
-        # A shift for *this* occurrence always lands within a handful of
-        # days of its own literal date (a weekend nudge, never a different
-        # year's holiday) - search the neighbouring years too, not just
-        # `year`'s own calendar dict, since the shift can cross a
-        # calendar-year boundary in either direction. New Year's Day is the
-        # case that needs this: when the *following* Jan 1 falls on a
-        # Saturday, the `holidays` library backs its observed shift up into
-        # December of the *previous* year - so e.g. year=2027's own
-        # calendar dict contains both 2027's literal Jan 1 (a Friday,
-        # unshifted) *and* the unrelated observed shift of 2028's Jan 1
-        # (Dec 31, 2027), while year=2028's dict never contains that shift
-        # at all (Dec 31 numerically belongs to 2027). Naively treating
-        # "the first suffixed entry found in this year's dict" as this
-        # occurrence's shift - the previous approach - would then either
-        # pair 2027's actual with a shift that isn't really its own, or
-        # miss 2028's real shift entirely. Filtering by proximity to
-        # `plain` instead of by which year's dict the entry happened to
-        # land in fixes both.
+    # A shift for an occurrence always lands within a handful of days of its
+    # own literal date (a weekend nudge, never a different year's holiday) -
+    # searched in the neighbouring years too, since the shift can cross a
+    # calendar-year boundary in either direction. New Year's Day is the case
+    # that needs this: when the *following* Jan 1 falls on a Saturday, the
+    # `holidays` library backs its observed shift up into December of the
+    # *previous* year - so year=2027's own calendar holds both 2027's literal
+    # Jan 1 and the unrelated observed shift of 2028's (Dec 31, 2027), while
+    # year=2028's never holds that shift at all. Going by proximity to the
+    # literal date instead of by which year's calendar an entry landed in
+    # gets both right.
+    shifted_days: list[date] = []
+    for neighbour_year in (year - 1, year, year + 1):
+        for occurrence, name in _named_days(
+            _holiday_calendar(country, subdivision, category, neighbour_year, None),
+            holiday_key,
+        ):
+            if _is_holiday(country, name, holiday_key) and not _is_plain(country, name):
+                shifted_days.append(occurrence)
+
+    found: list[date] = []
+    for plain in plains:
         best: tuple[int, date] | None = None
-        for neighbour_year in (year - 1, year, year + 1):
-            for occurrence, name in _holiday_calendar(
-                country, subdivision, category, neighbour_year, None
-            ).items():
-                if holiday_key_from_name(name) != holiday_key or name == holiday_key_from_name(name):
-                    continue
-                delta = abs((occurrence - plain).days)
-                if delta <= 6 and (best is None or delta < best[0]):
-                    best = (delta, occurrence)
-        if best is not None:
-            shifted = best[1]
-    else:
-        # Estimated-only holiday (lunar/Hijri) - the name is always
-        # suffixed, so there's no unsuffixed "plain" entry to anchor a
-        # proximity search on; just use whatever's in this year's dict.
-        #
-        # The year check is not redundant. A `holidays` calendar populates
-        # itself lazily: looking a date up that lies outside the years it
-        # was built for silently loads that year into it as well - and these
-        # objects are cached and shared (see _holiday_calendar), so one such
-        # lookup anywhere leaves every later reader looking at more years
-        # than it asked for. Taking the earliest match without checking then
-        # answers with the *previous* year's occurrence, which for a lunar
-        # holiday is a fortnight-sized error rather than a rounding one.
-        for occurrence, name in _holiday_calendar(country, subdivision, category, year, None).items():
-            if occurrence.year != year:
-                continue
-            if holiday_key_from_name(name) == holiday_key:
-                if shifted is None or occurrence < shifted:
-                    shifted = occurrence
+        for occurrence in shifted_days:
+            delta = abs((occurrence - plain).days)
+            if delta <= _SAME_OCCURRENCE_DAYS and (best is None or delta < best[0]):
+                best = (delta, occurrence)
+        found.append(best[1] if observed and best is not None else plain)
+    return found
 
-    if observed:
-        return shifted if shifted is not None else plain
-    return plain if plain is not None else shifted
+
+def _holiday_dates(
+    country: str,
+    subdivision: str | None,
+    category: str,
+    holiday_key: str,
+    year: int,
+    observed: bool,
+    span: str | None,
+    block: int,
+    day: int,
+) -> list[date]:
+    """One year's dates for any holiday entry: the one a break's part has,
+    or every occurrence of a single-day holiday."""
+    if span:
+        occurrence = holiday_occurrence_in_year(
+            country, subdivision, category, holiday_key, year, observed,
+            span=span, block=block, day=day,
+        )
+        return [occurrence] if occurrence is not None else []
+    return _holiday_dates_in_year(country, subdivision, category, holiday_key, year, observed)
 
 
 def next_holiday_occurrence(
@@ -959,13 +1268,73 @@ def next_holiday_occurrence(
     # straight to next Christmas.
     years = (today.year - 1,) if span else ()
     for year in (*years, today.year, today.year + 1, today.year + 2):
-        occurrence = holiday_occurrence_in_year(
-            country, subdivision, category, holiday_key, year, observed,
-            span=span, block=block, day=day,
-        )
-        if occurrence is not None and occurrence >= today:
-            return occurrence
+        for occurrence in _holiday_dates(
+            country, subdivision, category, holiday_key, year, observed, span, block, day
+        ):
+            if occurrence >= today:
+                return occurrence
     return None
+
+
+def previous_holiday_occurrence(
+    country: str,
+    subdivision: str | None,
+    category: str,
+    holiday_key: str,
+    today: date,
+    observed: bool = False,
+    *,
+    span: str | None = None,
+    block: int = 0,
+    day: int = 0,
+) -> date | None:
+    """The last occurrence of this holiday before today - what the card's
+    "days in the past" window counts back from.
+
+    A holiday entry stores no day or month to work that out from, and last
+    year's date is not this year's: Thanksgiving a year ago was not on the day
+    it is on now. None when the last three years hold none.
+    """
+    # One year ahead as well: a break's end is filed under the year the
+    # break starts in, and an observed New Year's Day can sit in the December
+    # before - either way a date before today found under a later year.
+    found: date | None = None
+    for year in range(today.year - 2, today.year + 2):
+        for occurrence in _holiday_dates(
+            country, subdivision, category, holiday_key, year, observed, span, block, day
+        ):
+            if occurrence < today and (found is None or occurrence > found):
+                found = occurrence
+    return found
+
+
+def holiday_occurrences_in_years(
+    country: str,
+    subdivision: str | None,
+    category: str,
+    holiday_key: str,
+    years: tuple[int, ...],
+    observed: bool = False,
+    *,
+    span: str | None = None,
+    block: int = 0,
+    day: int = 0,
+) -> list[date]:
+    """Every date this holiday falls on within the given calendar years.
+
+    By the calendar year the date is in, which is not always the year it is
+    resolved under (see previous_holiday_occurrence) - so the years either
+    side are resolved too and the dates sorted out afterwards.
+    """
+    wanted = set(years)
+    found: set[date] = set()
+    for year in sorted({y + offset for y in wanted for offset in (-1, 0, 1)}):
+        for occurrence in _holiday_dates(
+            country, subdivision, category, holiday_key, year, observed, span, block, day
+        ):
+            if occurrence.year in wanted:
+                found.add(occurrence)
+    return sorted(found)
 
 
 def holiday_display_name(
@@ -990,12 +1359,20 @@ def holiday_display_name(
     """
     calendar = _holiday_calendar(country, subdivision, category, year, language)
     name = calendar.get(occurrence)
-    if name is not None or holiday_key is None:
+    if holiday_key is None:
         return name
+    if name is not None:
+        # The one holiday asked for, where the date holds several (see
+        # holiday_name_on) - not both names on each of the two entries.
+        return holiday_name_on(
+            country, subdivision, category, holiday_key, year, occurrence, language
+        )
     default_cal = _holiday_calendar(country, subdivision, category, year, None)
-    for listed, default_name in sorted(default_cal.items()):
-        if holiday_key_from_name(default_name) == holiday_key:
-            return calendar.get(listed)
+    for listed, default_name in sorted(_named_days(default_cal, holiday_key)):
+        if _is_holiday(country, default_name, holiday_key):
+            return holiday_name_on(
+                country, subdivision, category, holiday_key, year, listed, language
+            )
     return None
 
 

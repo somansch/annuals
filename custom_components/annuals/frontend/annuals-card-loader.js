@@ -142,6 +142,10 @@
   // card's files. The import below moves it on.
   let running = Number(HERE.searchParams.get("v")) || 0;
   let updating = false;
+  // How often fetching a newer card has failed. Every further try needs an
+  // address of its own, for the reason given at the top of this file: a
+  // dynamic import that failed is remembered per URL.
+  let updateTries = 0;
   let askTimer = null;
   let asked = 0;
   // The websocket is back long before the integrations are: measured, the
@@ -178,7 +182,14 @@
       const url = new URL(`./${TAG}.js`, HERE);
       url.search = "";
       url.searchParams.set("v", String(served));
-      await import(url.href);
+      if (updateTries > 0) url.searchParams.set("retry", String(updateTries));
+      try {
+        await import(url.href);
+      } catch (err) {
+        updateTries += 1;
+        throw err;
+      }
+      updateTries = 0;
       running = served;
       console.info(`${TAG}: updated to the card served now (${served})`);
     } catch (err) {

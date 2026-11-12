@@ -66,11 +66,13 @@ from .dates import (
     interval_occurrence,
     interval_rule,
     is_important,
+    known_confirmed_name,
     next_event_occurrence,
     next_holiday_occurrence,
     occurrence_number,
     one_time_span,
     parse_thresholds,
+    previous_holiday_occurrence,
     subdivision_name,
     weekday_rule,
 )
@@ -118,7 +120,11 @@ class AnnualEventSensor(SensorEntity):
             # taking it apart and back together here would only risk
             # doubling it or silently rewording it later.
             if not data.get(CONF_HOLIDAY_SPAN):
-                base_name = holiday_key_from_name(name)
+                # And without the note that the date is an estimate, in the
+                # language the name was imported in (see dates.confirmed_name).
+                base_name = holiday_key_from_name(
+                    known_confirmed_name(data.get(CONF_COUNTRY), name, data.get(CONF_LANGUAGE))
+                )
                 name = (
                     f"{base_name} (observed)"
                     if data.get(CONF_HOLIDAY_OBSERVED, False)
@@ -131,6 +137,9 @@ class AnnualEventSensor(SensorEntity):
         # stay exactly as before for existing entries; only the "last_name"/
         # "full_name" attributes (see _update_state) are new.
         self._last_name: str = data.get(CONF_LAST_NAME) or ""
+        # Whether the holidays library has already been reported as having
+        # no data for this entry (see _update_holiday_state) - said once.
+        self._library_refused = False
 
         # A stock exchange's day is named for what it is to the market (see
         # CONF_MARKET_STATUS) - "New York Stock Exchange closed" - and the
@@ -169,6 +178,12 @@ class AnnualEventSensor(SensorEntity):
         # never happen synchronously here in __init__, on the event loop.
         if event_type not in LIBRARY_TYPES:
             self._update_state()
+
+    @property
+    def event_data(self) -> dict:
+        """The stored event this sensor stands for - read by the websocket
+        command that resolves holiday dates for the card (see __init__.py)."""
+        return self._config_entry.data
 
     def _update_state(self) -> None:
         data = self._config_entry.data
@@ -321,9 +336,25 @@ class AnnualEventSensor(SensorEntity):
 
         spans = holiday_span_kwargs(data)
 
-        occurrence = next_holiday_occurrence(
-            country, subdivision, category, holiday_key, today, observed, **spans
-        )
+        try:
+            occurrence = next_holiday_occurrence(
+                country, subdivision, category, holiday_key, today, observed, **spans
+            )
+            previous = previous_holiday_occurrence(
+                country, subdivision, category, holiday_key, today, observed, **spans
+            )
+        except (KeyError, NotImplementedError, ValueError) as err:
+            # A country, region or category the library no longer has - it
+            # drops and renames them between releases. The sensor is then
+            # without a date, which is what it reports, rather than failing
+            # every update with a traceback.
+            if not self._library_refused:
+                self._library_refused = True
+                _LOGGER.warning(
+                    "Annuals: the holidays library has no data for %s (%s, %s, %s): %s",
+                    self._name, country, subdivision or "-", category, err,
+                )
+            occurrence = previous = None
         name = self._name
         if occurrence is not None:
             resolved = None
@@ -387,6 +418,11 @@ class AnnualEventSensor(SensorEntity):
             ),
             "reason": market_reason(name) if data[CONF_EVENT_TYPE] == TYPE_MARKET else None,
             "next_date": occurrence.isoformat() if occurrence is not None else None,
+            # The last time it was, which is what the card's "days in the
+            # past" window counts back from - there is no stored day and
+            # month to work it out from, and a moveable holiday was not on
+            # this year's day a year ago. None before its first occurrence.
+            "previous_date": previous.isoformat() if previous is not None else None,
             "occurrence_number": None,
             "country": country,
             "subdivision": subdivision,
@@ -404,6 +440,9 @@ class AnnualEventSensor(SensorEntity):
             "break_part": spans["span"],
             "holiday_key": holiday_key,
             "vip": bool(data.get(CONF_VIP, False)),
+            # Never set on a holiday (see CONF_DECEASED) - there so that a
+            # template can read it on every Annuals sensor alike.
+            "deceased": False,
             "important": False,
             "observed": observed,
             "name_translations": translations,

@@ -274,7 +274,9 @@
         "abort": {
             "hub_not_configurable": "L'hub Annuals non ha impostazioni proprie: contiene solo i calendari condivisi.",
             "already_configured": "L'hub Annuals esiste già.",
-            "invalid_import_row": "Non è stato possibile importare questa riga."
+            "invalid_import_row": "Non è stato possibile importare questa riga.",
+            "reconfigure_successful": "L'evento è stato aggiornato.",
+            "holiday_not_reconfigurable": "La data di questa voce proviene dai dati delle festività e non può essere modificata qui. Usa **Configura** per cambiarne l'icona o i nomi."
         }
     },
     "options": {
@@ -614,7 +616,6 @@
             "translations_exported": "{count} traduzione/i esportato/i. [Scarica annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+clic per scaricare - un clic semplice qui non funziona)\n\nOppure copia il CSV qui sotto:\n\n```\n{csv}\n```",
             "translations_imported": "{updated} festività aggiornate, {skipped} righe saltate.",
             "no_translations_to_export": "Non è ancora stato scritto alcun nome di festività: non c'è nulla da esportare.",
-            "hub_not_configurable": "L'hub Annuals non ha impostazioni proprie: contiene solo i calendari condivisi.",
             "import_started": "Importazione avviata: {created} evento/i in coda, {skipped} riga/righe ignorate (vedi il registro per i dettagli).",
             "ics_import_started": "Importazione avviata: {created} evento/i creato/i, {updated} aggiornato/i, {skipped} voce/i ignorata/e o esclusa/e.",
             "csv_exported": "{count} evento/i esportato/i. [Scarica annuals_export.csv]({url}) (Ctrl/Cmd+clic per scaricare - un clic semplice qui non funziona)\n\nOppure copia il CSV qui sotto:\n\n```\n{csv}\n```",

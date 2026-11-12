@@ -274,7 +274,9 @@
         "abort": {
             "hub_not_configurable": "Centrum Annuals nie ma własnych ustawień – zawiera tylko wspólne kalendarze.",
             "already_configured": "Centrum Annuals już istnieje.",
-            "invalid_import_row": "Tego wiersza nie udało się zaimportować."
+            "invalid_import_row": "Tego wiersza nie udało się zaimportować.",
+            "reconfigure_successful": "Wydarzenie zostało zaktualizowane.",
+            "holiday_not_reconfigurable": "Data tego wpisu pochodzi z danych o świętach i nie można jej tutaj zmienić. Ikonę lub nazwy zmienisz przez **Konfiguruj**."
         }
     },
     "options": {
@@ -614,7 +616,6 @@
             "translations_exported": "Wyeksportowano {count} tłumaczeń. [Pobierz annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+klik, aby pobrać - zwykłe kliknięcie tu nie zadziała)\n\nLub skopiuj poniższy CSV:\n\n```\n{csv}\n```",
             "translations_imported": "Zaktualizowano świąt: {updated}, pominięto wierszy: {skipped}.",
             "no_translations_to_export": "Nie zapisano jeszcze żadnych nazw świąt – nie ma czego eksportować.",
-            "hub_not_configurable": "Centrum Annuals nie ma własnych ustawień – zawiera tylko wspólne kalendarze.",
             "import_started": "Import rozpoczęty: {created} wydarzenie(a) w kolejce, {skipped} wiersz(y) pominięto (szczegóły w dzienniku).",
             "ics_import_started": "Import rozpoczęty: {created} wydarzenie(a) utworzono, {updated} zaktualizowano, {skipped} wpis(y) pominięto lub wykluczono.",
             "csv_exported": "Wyeksportowano {count} wydarzeń. [Pobierz annuals_export.csv]({url}) (Ctrl/Cmd+klik, aby pobrać - zwykłe kliknięcie tu nie zadziała)\n\nLub skopiuj poniższy CSV:\n\n```\n{csv}\n```",

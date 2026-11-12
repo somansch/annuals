@@ -274,7 +274,9 @@
         "abort": {
             "hub_not_configurable": "Annuals-huben har inga egna inställningar - den innehåller bara de delade kalendrarna.",
             "already_configured": "Annuals-huben finns redan.",
-            "invalid_import_row": "Den här raden kunde inte importeras."
+            "invalid_import_row": "Den här raden kunde inte importeras.",
+            "reconfigure_successful": "Händelsen har uppdaterats.",
+            "holiday_not_reconfigurable": "Datumet för den här posten kommer från helgdagsdatan och kan inte ändras här. Använd **Konfigurera** för att ändra ikonen eller namnen."
         }
     },
     "options": {
@@ -614,7 +616,6 @@
             "translations_exported": "{count} översättning(ar) exporterade. [Ladda ner annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+klick för att ladda ner - ett vanligt klick fungerar inte här)\n\nEller kopiera CSV:n nedan:\n\n```\n{csv}\n```",
             "translations_imported": "{updated} helgdag(ar) uppdaterade, {skipped} rad(er) överhoppade.",
             "no_translations_to_export": "Inga helgdagsnamn har skrivits ännu – det finns inget att exportera.",
-            "hub_not_configurable": "Annuals-huben har inga egna inställningar - den innehåller bara de delade kalendrarna.",
             "import_started": "Import startad: {created} händelse(r) i kö, {skipped} rad(er) överhoppade (se loggen för detaljer).",
             "ics_import_started": "Import startad: {created} händelse(r) skapade, {updated} uppdaterade, {skipped} post(er) överhoppade eller uteslutna.",
             "csv_exported": "{count} händelse(r) exporterade. [Ladda ner annuals_export.csv]({url}) (Ctrl/Cmd+klick för att ladda ner - ett vanligt klick fungerar inte här)\n\nEller kopiera CSV:n nedan:\n\n```\n{csv}\n```",

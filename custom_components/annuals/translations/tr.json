@@ -274,7 +274,9 @@
         "abort": {
             "hub_not_configurable": "Annuals merkezinin kendine ait ayarları yoktur - yalnızca paylaşılan takvimleri içerir.",
             "already_configured": "Annuals merkezi zaten mevcut.",
-            "invalid_import_row": "Bu satır içe aktarılamadı."
+            "invalid_import_row": "Bu satır içe aktarılamadı.",
+            "reconfigure_successful": "Etkinlik güncellendi.",
+            "holiday_not_reconfigurable": "Bu girdinin tarihi tatil verilerinden gelir ve burada değiştirilemez. Simgesini veya adlarını değiştirmek için **Yapılandır**'ı kullanın."
         }
     },
     "options": {
@@ -614,7 +616,6 @@
             "translations_exported": "{count} çeviri dışa aktarıldı. [annuals_holiday_translations.csv dosyasını indir]({url}) (indirmek için Ctrl/Cmd+tıklayın - normal tıklama burada işe yaramaz)\n\nVeya aşağıdaki CSV'yi kopyalayın:\n\n```\n{csv}\n```",
             "translations_imported": "{updated} tatil güncellendi, {skipped} satır atlandı.",
             "no_translations_to_export": "Henüz hiçbir tatil adı yazılmadı – dışa aktarılacak bir şey yok.",
-            "hub_not_configurable": "Annuals merkezinin kendine ait ayarları yoktur - yalnızca paylaşılan takvimleri içerir.",
             "import_started": "İçe aktarma başladı: {created} etkinlik kuyruğa alındı, {skipped} satır atlandı (ayrıntılar için günlüğe bakın).",
             "ics_import_started": "İçe aktarma başladı: {created} etkinlik oluşturuldu, {updated} güncellendi, {skipped} giriş atlandı veya hariç tutuldu.",
             "csv_exported": "{count} etkinlik dışa aktarıldı. [annuals_export.csv dosyasını indir]({url}) (indirmek için Ctrl/Cmd+tıklayın - normal tıklama burada işe yaramaz)\n\nVeya aşağıdaki CSV'yi kopyalayın:\n\n```\n{csv}\n```",

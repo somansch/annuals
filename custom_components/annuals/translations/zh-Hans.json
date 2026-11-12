@@ -274,7 +274,9 @@
         "abort": {
             "hub_not_configurable": "Annuals 中心没有自身设置 —— 它只保存共享日历。",
             "already_configured": "Annuals 中心已存在。",
-            "invalid_import_row": "此行无法导入。"
+            "invalid_import_row": "此行无法导入。",
+            "reconfigure_successful": "事件已更新。",
+            "holiday_not_reconfigurable": "此条目的日期来自节日数据，无法在此更改。请使用**配置**更改其图标或名称。"
         }
     },
     "options": {
@@ -614,7 +616,6 @@
             "translations_exported": "已导出 {count} 条翻译。[下载 annuals_holiday_translations.csv]({url})（按住 Ctrl/Cmd 点击以下载 - 普通点击在此处无效）\n\n或复制下方的 CSV：\n\n```\n{csv}\n```",
             "translations_imported": "已更新 {updated} 个节假日，跳过 {skipped} 行。",
             "no_translations_to_export": "尚未填写任何节假日名称——没有可导出的内容。",
-            "hub_not_configurable": "Annuals 中心没有自身设置 —— 它只保存共享日历。",
             "import_started": "导入已开始：{created} 个事件已加入队列，{skipped} 行被跳过（详情见日志）。",
             "ics_import_started": "导入已开始：已创建 {created} 个事件，更新 {updated} 个，跳过或排除 {skipped} 个条目。",
             "csv_exported": "已导出 {count} 个事件。[下载 annuals_export.csv]({url})（按住 Ctrl/Cmd 点击以下载 - 普通点击在此处无效）\n\n或复制下方的 CSV：\n\n```\n{csv}\n```",

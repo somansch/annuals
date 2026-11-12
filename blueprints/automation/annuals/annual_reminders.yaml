@@ -577,6 +577,13 @@ action:
                     # else, which is what keeps the whole block below a
                     # no-op for every other event.
                     end_days: "{{ state_attr(ent, 'days_until_end') }}"
+                    # A multi-day event that began before today. Its sensor
+                    # stays at 0 for as long as it runs (see sensor.py), so a
+                    # "0" threshold would otherwise remind about the start on
+                    # every one of its days rather than on the first.
+                    already_running: >-
+                      {{ state_attr(ent, 'in_progress') | bool(false)
+                         and state_attr(ent, 'next_date') != now().date().isoformat() }}
                     # Does the *end* fall on one of the thresholds today,
                     # and was the end asked for? Kept apart from the start
                     # check so that a threshold matching both (a two-day
@@ -585,7 +592,7 @@ action:
                       {{ end_days is not none and 'end' in multi_day_parts
                          and end_days in reminder_days_list }}
                     start_due: >-
-                      {{ days_until in reminder_days_list
+                      {{ days_until in reminder_days_list and not already_running
                          and (end_days is none or 'start' in multi_day_parts) }}
                 - condition: template
                   value_template: "{{ (start_due or end_due) and filter_match }}"
@@ -665,8 +672,12 @@ action:
                             # date), combined with "Notification time" above
                             # for the time portion - so the to-do item is due
                             # exactly when the event happens, at whatever
-                            # time of day the daily check itself runs.
-                            due_datetime: "{{ state_attr(ent, 'next_date') ~ ' ' ~ notify_time }}"
+                            # time of day the daily check itself runs. The
+                            # item about a multi-day event's end is due on the
+                            # day it ends, not the day it began.
+                            due_datetime: >-
+                              {{ (state_attr(ent, 'end_date') if end_due and not start_due
+                                  else state_attr(ent, 'next_date')) ~ ' ' ~ notify_time }}
                 # Every channel below is additionally gated on `not
                 # todo_already_done` - once you've checked an event's to-do
                 # off, it's resolved; there's no point still pushing/
