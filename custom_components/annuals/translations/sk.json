@@ -46,7 +46,7 @@
         },
         "holiday_category": {
             "options": {
-                "public": "Štátny/Verejný sviatok",
+                "public": "Štátny sviatok",
                 "bank": "Bankový sviatok",
                 "government": "Vládny sviatok",
                 "school": "Školské prázdniny",
@@ -58,7 +58,7 @@
                 "workday": "Pracovný deň",
                 "catholic": "Katolícky",
                 "christian": "Kresťanský",
-                "orthodox": "Ortodoxný",
+                "orthodox": "Pravoslávny",
                 "hebrew": "Židovský",
                 "islamic": "Islamský",
                 "hindu": "Hinduistický",
@@ -122,7 +122,7 @@
         "step": {
             "user": {
                 "title": "Pridať udalosť",
-                "description": "O aký druh udalosti ide?\n\n**Ročné** zahŕňa narodeniny, výročie, meniny, výročie svadby, spomienku, narodeniny domáceho maznáčika a pracovné výročie. **Jednorazová** je jediný dátum, ktorý sa po uplynutí sám vymaže. **Vlastná** je vaša vlastná ročná udalosť – v konkrétny deň alebo podľa pravidla.",
+                "description": "O aký druh udalosti ide?\n\n**Ročný dátum** zahŕňa narodeniny, výročie, meniny, výročie svadby, spomienku, narodeniny domáceho maznáčika a pracovné výročie. **Jednorazová** je jediný dátum, ktorý sa po uplynutí sám vymaže. **Vlastná** je vaša vlastná ročná udalosť – v konkrétny deň alebo podľa pravidla.",
                 "menu_options": {
                     "recurring": "{icon_recurring} Ročný dátum pre niekoho",
                     "one_time": "{icon_one_time} Jednorazová udalosť",
@@ -145,13 +145,13 @@
                     "deceased": "Zomrel(a)"
                 },
                 "data_description": {
-                    "person": "Osoba v Home Assistante, ktorej fotka zastupuje túto udalosť – na karte dashboardu a v oznámení pripomienky.",
+                    "person": "Osoba v Home Assistante, ktorej fotka zastupuje túto udalosť – na karte panela a v oznámení pripomienky.",
                     "deceased": "Narodeniny, Meniny, Narodeniny domáceho maznáčika a Výročie svadby - Osoba zomrela: deň zostane a je označený, karta hovorí, čo by bol, a vaše automatizácie ho rozlíšia. Pri ostatných typoch bez účinku."
                 }
             },
             "one_time": {
                 "title": "Pridať jednorazovú udalosť",
-                "description": "Jediný dátum, do ktorého sa odpočítava. Nikdy sa neopakuje, preto je rok povinný, a záznam sa automaticky vymaže o polnoci po jeho skončení.\n\nS dátumom ukončenia z nej bude viacdňová udalosť – cesta, konferencia, pobyt.",
+                "description": "Jediný dátum, do ktorého sa odpočítava. Nikdy sa neopakuje, preto je rok povinný, a záznam sa automaticky vymaže o polnoci po jeho skončení.\n\nS dátumom ukončenia z neho bude viacdňová udalosť – cesta, konferencia, pobyt.",
                 "data": {
                     "name": "Meno",
                     "last_name": "Priezvisko (voliteľné)",
@@ -166,7 +166,7 @@
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "O koľkej sa v ten deň začína. Záznam v kalendári má potom čas a karta dashboardu ho zobrazí.",
+                    "time": "O koľkej sa v ten deň začína. Záznam v kalendári má potom čas a karta panela ho zobrazí.",
                     "end_time": "O koľkej sa končí – v deň konca, ak je zadaný, inak v ten istý deň. Vyžaduje čas začiatku; prázdny znamená hodinový záznam v kalendári."
                 }
             },
@@ -209,7 +209,7 @@
                     "deceased": "Zomrel(a)"
                 },
                 "data_description": {
-                    "person": "Osoba v Home Assistante, ktorej fotka zastupuje túto udalosť – na karte dashboardu a v oznámení pripomienky.",
+                    "person": "Osoba v Home Assistante, ktorej fotka zastupuje túto udalosť – na karte panela a v oznámení pripomienky.",
                     "deceased": "Osoba zomrela: deň zostane a je označený, karta hovorí, čo by bol, a vaše automatizácie ho rozlíšia."
                 }
             },
@@ -230,7 +230,7 @@
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "O koľkej sa v ten deň začína. Záznam v kalendári má potom čas a karta dashboardu ho zobrazí.",
+                    "time": "O koľkej sa v ten deň začína. Záznam v kalendári má potom čas a karta panela ho zobrazí.",
                     "end_time": "O koľkej sa končí – v deň konca, ak je zadaný, inak v ten istý deň. Vyžaduje čas začiatku; prázdny znamená hodinový záznam v kalendári."
                 }
             },
@@ -297,7 +297,7 @@
                     "deceased": "Zomrel(a)"
                 },
                 "data_description": {
-                    "person": "Osoba v Home Assistante, ktorej fotka zastupuje túto udalosť – na karte dashboardu a v oznámení pripomienky.",
+                    "person": "Osoba v Home Assistante, ktorej fotka zastupuje túto udalosť – na karte panela a v oznámení pripomienky.",
                     "deceased": "Osoba zomrela: deň zostane a je označený, karta hovorí, čo by bol, a vaše automatizácie ho rozlíšia."
                 }
             },
@@ -318,7 +318,7 @@
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "O koľkej sa v ten deň začína. Záznam v kalendári má potom čas a karta dashboardu ho zobrazí.",
+                    "time": "O koľkej sa v ten deň začína. Záznam v kalendári má potom čas a karta panela ho zobrazí.",
                     "end_time": "O koľkej sa končí – v deň konca, ak je zadaný, inak v ten istý deň. Vyžaduje čas začiatku; prázdny znamená hodinový záznam v kalendári."
                 }
             },
@@ -399,11 +399,11 @@
             },
             "remove_ics_imports": {
                 "title": "Odstrániť udalosti importované z ICS",
-                "description": "Predchádzajúci import ICS vytvoril {count} udalostí. Kliknutím na OK ich všetky odstránite – záznamy, ktoré import ICS iba aktualizoval (a nevytvoril), zostanú nedotknuté, rovnako ako ručne pridané udalosti a udalosti importované z CSV alebo vCard."
+                "description": "Udalosti vytvorené predchádzajúcim importom ICS: {count}. Kliknutím na OK ich všetky odstránite – záznamy, ktoré import ICS iba aktualizoval (a nevytvoril), zostanú nedotknuté, rovnako ako ručne pridané udalosti a udalosti importované z CSV alebo vCard."
             },
             "remove_vcard_imports": {
                 "title": "Odstrániť udalosti importované z vCard",
-                "description": "Predchádzajúci import vCard vytvoril {count} udalostí. Kliknutím na OK ich všetky odstránite – záznamy, ktoré import vCard iba aktualizoval (a nevytvoril), zostanú nedotknuté, rovnako ako ručne pridané udalosti a udalosti importované z CSV alebo ICS."
+                "description": "Udalosti vytvorené predchádzajúcim importom vCard: {count}. Kliknutím na OK ich všetky odstránite – záznamy, ktoré import vCard iba aktualizoval (a nevytvoril), zostanú nedotknuté, rovnako ako ručne pridané udalosti a udalosti importované z CSV alebo ICS."
             },
             "holiday_menu": {
                 "title": "Sviatok",
@@ -451,7 +451,7 @@
                 }
             },
             "hub_menu": {
-                "title": "Annuals Nastavenia",
+                "title": "Nastavenia Annuals",
                 "menu_options": {
                     "annual_settings": "{icon_annual_settings} Nastavenia výročí",
                     "import_events": "{icon_import_events} Importovať udalosti",
@@ -540,7 +540,7 @@
             },
             "remove_holidays": {
                 "title": "Odstrániť importované sviatky",
-                "description": "Momentálne je importovaných {total} sviatkových udalostí. Začiarknutím poľa nižšie odstránite všetky, alebo ho nechajte nezačiarknuté a vyberte jednu dávku. Ručne pridané udalosti zostanú vždy nedotknuté.",
+                "description": "Momentálne importované sviatkové udalosti: {total}. Začiarknutím poľa nižšie odstránite všetky, alebo ho nechajte nezačiarknuté a vyberte jednu dávku. Ručne pridané udalosti zostanú vždy nedotknuté.",
                 "data": {
                     "remove_all": "Odstrániť všetky importované sviatky",
                     "batch": "Dávka na odstránenie"
@@ -573,7 +573,7 @@
                     },
                     "todo": {
                         "name": "📍 Zoznamy úloh",
-                        "description": "Otvorené položky v týchto zoznamoch označia udalosť: každý senzor udalosti potom nesie atribút „todo“ – true, kým je k nej priradená aspoň jedna stále otvorená položka, inak false – pre vaše vlastné automatizácie, šablóny a nástenky. Položka sa priraďuje najprv podľa dátumu splatnosti, potom podľa toho, či jej vlastný text pomenúva udalosť (celé meno, meno, typ, poradové číslo); položka, ktorá rovnako dobre sedí na dve udalosti, zostane nepriradená. Ak necháte prázdne, funkcia sa vypne. Nesúvisí s vlastným nastavením zoznamu úloh na karte nástenky.",
+                        "description": "Otvorené položky v týchto zoznamoch označia udalosť: každý senzor udalosti potom nesie atribút „todo“ – true, kým je k nej priradená aspoň jedna stále otvorená položka, inak false – pre vaše vlastné automatizácie, šablóny a panely. Položka sa priraďuje najprv podľa dátumu splatnosti, potom podľa toho, či jej vlastný text pomenúva udalosť (celé meno, meno, typ, poradové číslo); položka, ktorá rovnako dobre sedí na dve udalosti, zostane nepriradená. Ak necháte prázdne, funkcia sa vypne. Nesúvisí s vlastným nastavením zoznamu úloh na karte panela.",
                         "data": {
                             "todo_lists": "Zoznamy úloh"
                         }
@@ -582,7 +582,7 @@
             },
             "delete_all": {
                 "title": "Odstrániť všetky údaje Annuals",
-                "description": "Týmto natrvalo odstránite všetkých {count} udalostí, zdieľané kalendáre aj samotné centrum Annuals – celú integráciu a všetko, čo vytvorila. Túto akciu nie je možné vrátiť späť. Potvrďte kliknutím na OK."
+                "description": "Týmto natrvalo odstránite všetky udalosti (spolu {count}), zdieľané kalendáre aj samotné centrum Annuals – celú integráciu a všetko, čo vytvorila. Túto akciu nie je možné vrátiť späť. Potvrďte kliknutím na OK."
             }
         },
         "error": {
@@ -616,19 +616,19 @@
             "translations_exported": "Exportovaných prekladov: {count}. [Stiahnuť annuals_holiday_translations.csv]({url}) (stiahnete kliknutím s Ctrl/Cmd – samotné kliknutie tu nefunguje)\n\nAlebo skopírujte CSV nižšie:\n\n```\n{csv}\n```",
             "translations_imported": "Aktualizovaných sviatkov: {updated}, preskočených riadkov: {skipped}.",
             "no_translations_to_export": "Zatiaľ nebol napísaný žiadny názov sviatku – nie je čo exportovať.",
-            "import_started": "Import sa začal: {created} udalostí zaradených do frontu, {skipped} riadkov preskočených (podrobnosti nájdete v denníku).",
-            "ics_import_started": "Import sa začal: {created} udalostí vytvorených, {updated} aktualizovaných, {skipped} záznamov preskočených alebo vylúčených.",
+            "import_started": "Import sa začal – udalosti zaradené do frontu: {created}, preskočené riadky: {skipped} (podrobnosti nájdete v denníku).",
+            "ics_import_started": "Import sa začal – vytvorené udalosti: {created}, aktualizované: {updated}, preskočené alebo vylúčené záznamy: {skipped}.",
             "csv_exported": "Exportovaných udalostí: {count}. [Stiahnuť annuals_export.csv]({url}) (stiahnete kliknutím s Ctrl/Cmd – samotné kliknutie tu nefunguje)\n\nAlebo skopírujte CSV nižšie:\n\n```\n{csv}\n```",
             "no_events_to_export": "Zatiaľ nie je čo exportovať – najprv nejaké udalosti pridajte.",
             "deleted_all": "Všetky udalosti, kalendáre a centrum Annuals boli odstránené.",
-            "holiday_import_started": "Import sa začal: {count} sviatkových udalostí zaradených do frontu pre {country} ({new} nových, {updated} aktualizovaných).",
+            "holiday_import_started": "Import sa začal – sviatkové udalosti zaradené do frontu pre {country}: {count} (nové: {new}, aktualizované: {updated}).",
             "no_holidays_imported": "Zatiaľ neboli importované žiadne sviatky.",
             "holidays_removed": "Odstránených sviatkových udalostí: {count}.",
             "no_ics_imports": "Nenašli sa žiadne udalosti vytvorené importom ICS.",
             "ics_imports_removed": "Odstránených udalostí importovaných z ICS: {count}.",
             "no_vcard_imports": "Nenašli sa žiadne udalosti vytvorené importom vCard.",
             "vcard_imports_removed": "Odstránených udalostí importovaných z vCard: {count}.",
-            "market_import_started": "Import spustený: {count} dní zaradených pre {country} ({new} nových, {updated} aktualizovaných).",
+            "market_import_started": "Import sa začal – dni zaradené do frontu pre {country}: {count} (nové: {new}, aktualizované: {updated}).",
             "no_markets_imported": "Zatiaľ neboli importované žiadne burzové dni.",
             "markets_removed": "Odstránené burzové dni: {count}."
         }

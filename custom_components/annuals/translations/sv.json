@@ -20,7 +20,7 @@
                 "name_day": "Namnsdag",
                 "wedding_anniversary": "Bröllopsdag",
                 "memorial": "Dödsdag",
-                "pet_birthday": "Husdjurets födelsedag",
+                "pet_birthday": "Husdjursfödelsedag",
                 "work_anniversary": "Arbetsjubileum",
                 "custom": "Anpassad",
                 "one_time": "Engångshändelse",
@@ -122,7 +122,7 @@
         "step": {
             "user": {
                 "title": "Lägg till händelse",
-                "description": "Vilken sorts händelse är detta?\n\n**Årlig** omfattar födelsedag, årsdag, namnsdag, bröllopsdag, dödsdag, husdjurets födelsedag och arbetsjubileum. **Engångs** är ett enda datum, som raderar sig självt när det har passerat. **Anpassad** är ditt eget årliga datum – på en bestämd dag eller enligt en regel.",
+                "description": "Vilken sorts händelse är detta?\n\n**Årlig** omfattar födelsedag, årsdag, namnsdag, bröllopsdag, dödsdag, husdjursfödelsedag och arbetsjubileum. **Engångs** är ett enda datum, som raderar sig självt när det har passerat. **Anpassad** är ditt eget årliga datum – på en bestämd dag eller enligt en regel.",
                 "menu_options": {
                     "recurring": "{icon_recurring} Ett årligt datum för någon",
                     "one_time": "{icon_one_time} En engångshändelse",
@@ -145,8 +145,8 @@
                 },
                 "description": "Varje händelse får en egen post, som du senare kan hitta och redigera under Inställningar → Enheter och tjänster → Annuals genom att söka på namnet.",
                 "data_description": {
-                    "person": "En person i Home Assistant vars bild står för den här händelsen – på kortet i instrumentpanelen och i påminnelsens avisering.",
-                    "deceased": "Födelsedag, Namnsdag, Husdjurets födelsedag och Bröllopsdag - Personen har avlidit: dagen behålls och markeras, kortet säger vad den skulle ha varit och dina automationer kan skilja den åt. Utan verkan på övriga typer."
+                    "person": "En person i Home Assistant vars bild står för den här händelsen – på kortet i kontrollpanelen och i påminnelsens avisering.",
+                    "deceased": "Födelsedag, Namnsdag, Husdjursfödelsedag och Bröllopsdag - Personen har avlidit: dagen behålls och markeras, kortet säger vad den skulle ha varit och dina automatiseringar kan urskilja den. Utan verkan på övriga typer."
                 }
             },
             "one_time": {
@@ -166,7 +166,7 @@
                 },
                 "description": "Ett enda datum att räkna ned till. Det upprepas aldrig, så året är obligatoriskt, och posten raderas automatiskt vid midnatt efter att det har passerat.\n\nMed ett slutdatum blir det en flerdagshändelse – en resa, en konferens, en vistelse.",
                 "data_description": {
-                    "time": "När den börjar den dagen. Kalenderposten får då en tid, och kortet i instrumentpanelen visar den.",
+                    "time": "När den börjar den dagen. Kalenderposten får då en tid, och kortet i kontrollpanelen visar den.",
                     "end_time": "När den slutar – på slutdatumet om det finns ett, annars samma dag. Kräver en starttid; lämnad tom är kalenderposten en timme lång."
                 }
             },
@@ -209,8 +209,8 @@
                     "deceased": "Avliden"
                 },
                 "data_description": {
-                    "person": "En person i Home Assistant vars bild står för den här händelsen – på kortet i instrumentpanelen och i påminnelsens avisering.",
-                    "deceased": "Personen har avlidit: dagen behålls och markeras, kortet säger vad den skulle ha varit och dina automationer kan skilja den åt."
+                    "person": "En person i Home Assistant vars bild står för den här händelsen – på kortet i kontrollpanelen och i påminnelsens avisering.",
+                    "deceased": "Personen har avlidit: dagen behålls och markeras, kortet säger vad den skulle ha varit och dina automatiseringar kan urskilja den."
                 }
             },
             "reconfigure_one_time": {
@@ -230,7 +230,7 @@
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "När den börjar den dagen. Kalenderposten får då en tid, och kortet i instrumentpanelen visar den.",
+                    "time": "När den börjar den dagen. Kalenderposten får då en tid, och kortet i kontrollpanelen visar den.",
                     "end_time": "När den slutar – på slutdatumet om det finns ett, annars samma dag. Kräver en starttid; lämnad tom är kalenderposten en timme lång."
                 }
             },
@@ -276,14 +276,14 @@
             "already_configured": "Annuals-huben finns redan.",
             "invalid_import_row": "Den här raden kunde inte importeras.",
             "reconfigure_successful": "Händelsen har uppdaterats.",
-            "holiday_not_reconfigurable": "Datumet för den här posten kommer från helgdagsdatan och kan inte ändras här. Använd **Konfigurera** för att ändra ikonen eller namnen."
+            "holiday_not_reconfigurable": "Datumet för den här posten kommer från helgdagsdatabasen och kan inte ändras här. Använd **Konfigurera** för att ändra ikonen eller namnen."
         }
     },
     "options": {
         "step": {
             "import_csv": {
                 "title": "Importera händelser från CSV",
-                "description": "Kolumner: name, type, day, month, year (valfritt, krävs för one_time), icon (valfritt), vip (valfritt), last_name (valfritt). \"type\" måste vara en av dessa engelska nycklar: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (alltid på engelska, oavsett språkinställning). \"vip\" accepterar 1/true/yes/y/x (skiftlägesokänsligt); lämna tomt eller utelämna kolumnen för en icke-VIP-händelse. Behåll alla kolumner även när ett värde är tomt - en rad utan avslutande kommatecken förskjuter efterföljande värden ett steg åt vänster. Ogiltiga rader hoppas över och loggas.\n\nExempel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamiljesemester,one_time,15,7,2026,mdi:airplane,,\n```",
+                "description": "Kolumner: name, type, day, month, year (valfritt, krävs för one_time), icon (valfritt), vip (valfritt), last_name (valfritt). `type` måste vara en av dessa engelska nycklar: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (alltid på engelska, oavsett språkinställning). `vip` accepterar 1/true/yes/y/x (skiftlägesokänsligt); lämna tomt eller utelämna kolumnen för en icke-VIP-händelse. Behåll alla kolumner även när ett värde är tomt - en rad utan avslutande kommatecken förskjuter efterföljande värden ett steg åt vänster. Ogiltiga rader hoppas över och loggas.\n\nExempel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamiljesemester,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "CSV-fil"
                 }
@@ -328,7 +328,7 @@
             },
             "import_review": {
                 "title": "Importera från {source_label} - granskning ({page}/{total_pages})",
-                "description": "{legend}\n\nKontrollera den föreslagna för-/efternamnsuppdelningen nedan och korrigera det som är fel - även själva födelsedagen går att redigera - eller avmarkera en post för att utesluta den helt. En möjlig dubblett flaggas med den befintliga postens namn; lämna \"skapa som ny\" avmarkerad för att i stället uppdatera den posten, i stället för att lägga till en andra. Fältetiketterna här visas endast på engelska, oavsett språkinställning.",
+                "description": "{legend}\n\nKontrollera den föreslagna för-/efternamnsuppdelningen nedan och korrigera det som är fel - även själva födelsedagen går att redigera - eller avmarkera en post för att utesluta den helt. En möjlig dubblett flaggas med den befintliga postens namn; lämna \"skapa som ny\" avmarkerad för att uppdatera den posten i stället för att lägga till en andra. Fältetiketterna här visas endast på engelska, oavsett språkinställning.",
                 "data": {
                     "go_back": "Gå tillbaka till föregående sida"
                 }
@@ -381,15 +381,15 @@
             },
             "import_translations": {
                 "title": "Importera översättningar",
-                "description": "Ladda upp en CSV med översättningar. Kolumner: `country,subdivision,category,holiday_key,observed,language,name,status`. Rader matchas mot helgdagar på land, underindelning, kategori, helgdagsnyckel och observed-flagga – inte på post-id, så en fil som exporterats innan ett land importeras om gäller fortfarande. Rader vars helgdag saknas hoppas över och räknas. För en börsdag är `name` anledningen och `status` dess eget namn; lämna `status` tomt för helgdagar.",
+                "description": "Ladda upp en CSV med översättningar. Kolumner: `country,subdivision,category,holiday_key,observed,language,name,status`. Rader matchas mot helgdagar på land, delregion, kategori, helgdagsnyckel och observed-flagga – inte på post-id, så en fil som exporterats innan ett land importeras om gäller fortfarande. Rader vars helgdag saknas hoppas över och räknas. För en börsdag är `name` anledningen och `status` dess eget namn; lämna `status` tomt för helgdagar.",
                 "data": {
                     "csv_file": "CSV"
                 }
             },
             "hub_menu": {
-                "title": "Annuals Inställningar",
+                "title": "Annuals-inställningar",
                 "menu_options": {
-                    "annual_settings": "{icon_annual_settings} Annual Inställningar",
+                    "annual_settings": "{icon_annual_settings} Annual-inställningar",
                     "import_events": "{icon_import_events} Importera händelser",
                     "export_csv": "{icon_export_csv} Exportera händelser till CSV",
                     "holiday_translations": "{icon_holiday_translations} Översättningar av helgdagar",
@@ -449,14 +449,14 @@
             },
             "import_holidays_options": {
                 "title": "Importera helgdagar - {country}",
-                "description": "Lämna delregionen tom för endast nationella helgdagar - ett län/provins lägger till sina egna regionala helgdagar. Kategorier och språk beror på vad detta lands helgdagsdata tillhandahåller.{breaks}",
+                "description": "Lämna delregionen tom för endast nationella helgdagar - en delstat/provins lägger till sina egna regionala helgdagar. Kategorier och språk beror på vad detta lands helgdagsdata tillhandahåller.{breaks}",
                 "data": {
                     "include_actual": "Importera det faktiska datumet",
-                    "include_observed": "Importera det observerade (flyttade) datumet",
+                    "include_observed": "Importera det flyttade datumet",
                     "break_start": "Importera lovets första dag",
                     "break_end": "Importera lovets sista dag",
                     "break_days": "Importera varje lovdag",
-                    "subdivision": "Delregion (län/provins, valfritt)",
+                    "subdivision": "Delregion (delstat/provins, valfritt)",
                     "categories": "Kategorier",
                     "language": "Språk för helgdagsnamn"
                 },
@@ -464,7 +464,7 @@
                     "break_start": "Skollov anges bara med skoldagar, så lovet börjar tidigare - här räknas det bakåt över helgen och angränsande helgdagar till den första verkligt lediga dagen.",
                     "break_end": "Samma sak åt andra hållet: den sista lediga dagen, inte den sist angivna.",
                     "break_days": "En händelse per lovdag. Enbart sommarlovet ger över fyrtio.",
-                    "include_observed": "Detta lands helgdagar flyttas ibland till en närliggande vardag när de infaller på en helg (t.ex. observerad fredagen innan eller måndagen efter) - importera även detta flyttade datum som en separat händelse."
+                    "include_observed": "Detta lands helgdagar flyttas ibland till en närliggande vardag när de infaller på en helg (t.ex. firas fredagen innan eller måndagen efter) - importera även detta flyttade datum som en separat händelse."
                 }
             },
             "import_holidays_select": {
@@ -491,27 +491,27 @@
                 }
             },
             "annual_settings": {
-                "title": "Annual Inställningar",
+                "title": "Annual-inställningar",
                 "sections": {
                     "important_events": {
                         "name": "❗ Viktiga händelser",
-                        "description": "Kommaseparerade jubileumsnummer som automatiskt markerar en händelse av den typen som \"Important\", t.ex. \"18,21,30,40,50\". Lämna ett fält tomt för att inaktivera detta för den typen.",
+                        "description": "Kommaseparerade ordningsnummer som automatiskt markerar en händelse av den typen som \"Important\", t.ex. \"18,21,30,40,50\". Lämna ett fält tomt för att inaktivera detta för den typen.",
                         "data": {
                             "important_thresholds_birthday": "Födelsedag",
                             "important_thresholds_anniversary": "Årsdag",
                             "important_thresholds_name_day": "Namnsdag",
                             "important_thresholds_wedding_anniversary": "Bröllopsdag",
                             "important_thresholds_memorial": "Dödsdag",
-                            "important_thresholds_pet_birthday": "Husdjurets födelsedag",
+                            "important_thresholds_pet_birthday": "Husdjursfödelsedag",
                             "important_thresholds_work_anniversary": "Arbetsjubileum",
                             "important_thresholds_custom": "Anpassad"
                         }
                     },
                     "todo": {
-                        "name": "📍 Uppgiftslistor",
-                        "description": "Öppna uppgifter på dessa listor märker en händelse: varje händelsesensor får då ett attribut ”todo” - sant så länge minst en ännu öppen uppgift är matchad till den, annars falskt - för dina egna automationer, mallar och instrumentpaneler. Matchningen sker först på förfallodatum och därefter på om uppgiftens text nämner händelsen (fullständigt namn, namn, typ, ordningsnummer); en uppgift som passar två händelser lika bra lämnas omatchad. Lämna tomt för att stänga av. Fristående från kortets egen inställning med samma namn.",
+                        "name": "📍 Att-göra-listor",
+                        "description": "Öppna uppgifter på dessa listor märker en händelse: varje händelsesensor får då ett attribut ”todo” - sant så länge minst en ännu öppen uppgift är matchad till den, annars falskt - för dina egna automatiseringar, mallar och kontrollpaneler. Matchningen sker först på förfallodatum och därefter på om uppgiftens text nämner händelsen (fullständigt namn, namn, typ, ordningsnummer); en uppgift som passar två händelser lika bra lämnas omatchad. Lämna tomt för att stänga av. Fristående från kortets egen inställning med samma namn.",
                         "data": {
-                            "todo_lists": "Uppgiftslistor"
+                            "todo_lists": "Att-göra-listor"
                         }
                     }
                 }
@@ -536,8 +536,8 @@
                     "deceased": "Avliden"
                 },
                 "data_description": {
-                    "person": "En person i Home Assistant vars bild står för den här händelsen – på kortet i instrumentpanelen och i påminnelsens avisering.",
-                    "deceased": "Personen har avlidit: dagen behålls och markeras, kortet säger vad den skulle ha varit och dina automationer kan skilja den åt."
+                    "person": "En person i Home Assistant vars bild står för den här händelsen – på kortet i kontrollpanelen och i påminnelsens avisering.",
+                    "deceased": "Personen har avlidit: dagen behålls och markeras, kortet säger vad den skulle ha varit och dina automatiseringar kan urskilja den."
                 }
             },
             "edit_one_time": {
@@ -557,7 +557,7 @@
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "När den börjar den dagen. Kalenderposten får då en tid, och kortet i instrumentpanelen visar den.",
+                    "time": "När den börjar den dagen. Kalenderposten får då en tid, och kortet i kontrollpanelen visar den.",
                     "end_time": "När den slutar – på slutdatumet om det finns ett, annars samma dag. Kräver en starttid; lämnad tom är kalenderposten en timme lång."
                 }
             },
@@ -636,31 +636,31 @@
     "entity": {
         "sensor": {
             "birthday": {
-                "name": "{name}s födelsedag",
+                "name": "Födelsedag {name}",
                 "unit_of_measurement": "dagar"
             },
             "anniversary": {
-                "name": "{name}s årsdag",
+                "name": "Årsdag {name}",
                 "unit_of_measurement": "dagar"
             },
             "name_day": {
-                "name": "{name}s namnsdag",
+                "name": "Namnsdag {name}",
                 "unit_of_measurement": "dagar"
             },
             "wedding_anniversary": {
-                "name": "{name}s bröllopsdag",
+                "name": "Bröllopsdag {name}",
                 "unit_of_measurement": "dagar"
             },
             "memorial": {
-                "name": "{name}s dödsdag",
+                "name": "Dödsdag {name}",
                 "unit_of_measurement": "dagar"
             },
             "pet_birthday": {
-                "name": "{name}s födelsedag",
+                "name": "Födelsedag {name}",
                 "unit_of_measurement": "dagar"
             },
             "work_anniversary": {
-                "name": "{name}s arbetsjubileum",
+                "name": "Arbetsjubileum {name}",
                 "unit_of_measurement": "dagar"
             },
             "custom": {
@@ -697,7 +697,7 @@
                 "name": "Dödsdagar"
             },
             "pet_birthday": {
-                "name": "Husdjurs födelsedagar"
+                "name": "Husdjurens födelsedagar"
             },
             "work_anniversary": {
                 "name": "Arbetsjubileer"

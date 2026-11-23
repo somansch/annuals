@@ -2642,7 +2642,7 @@ class AnnualsOptionsFlow(OptionsFlow):
         # translation-lookup key - strings.json has no way to express N
         # per-index labels for an arbitrarily long, dynamically parsed list,
         # and HA's flow forms show a field's raw schema key verbatim when no
-        # translation string matches it (same trick as _HUB_TITLE_WORD in
+        # translation string matches it (same trick as _HUB_TITLE in
         # helpers.py, used there for the same "can't route through
         # strings.json" reason). English-only by construction - see README.
         return {

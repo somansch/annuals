@@ -10,7 +10,7 @@
         },
         "holiday_breaks": {
             "options": {
-                "note": "Los periodos de varios días, como las vacaciones escolares, se reconstruyen como vacaciones completas: elige abajo qué partes importar."
+                "note": "Los períodos de varios días, como las vacaciones escolares, se reconstruyen como vacaciones completas: elige abajo qué partes importar."
             }
         },
         "event_type": {
@@ -46,14 +46,14 @@
         },
         "holiday_category": {
             "options": {
-                "public": "Festivo oficial",
+                "public": "Oficial",
                 "bank": "Bancario",
-                "government": "Administración pública",
+                "government": "Administrativo",
                 "school": "Vacaciones escolares",
                 "optional": "Opcional",
                 "optional_women": "Opcional (mujeres)",
                 "unofficial": "No oficial",
-                "half_day": "Medio día",
+                "half_day": "Media jornada",
                 "armed_forces": "Fuerzas armadas",
                 "workday": "Día laborable",
                 "catholic": "Católico",
@@ -65,15 +65,15 @@
                 "buddhist": "Budista",
                 "de_facto": "De facto",
                 "protestant": "Protestante",
-                "sabian": "Sabea",
+                "sabian": "Sabeo",
                 "yazidi": "Yazidí",
-                "albanian": "Albanesa",
-                "armenian": "Armenia",
-                "bosnian": "Bosnia",
+                "albanian": "Albanés",
+                "armenian": "Armenio",
+                "bosnian": "Bosnio",
                 "roma": "Romaní",
-                "serbian": "Serbia",
-                "turkish": "Turca",
-                "vlach": "Valaca"
+                "serbian": "Serbio",
+                "turkish": "Turco",
+                "vlach": "Valaco"
             }
         },
         "nth": {
@@ -145,7 +145,7 @@
                 },
                 "description": "Cada evento obtiene su propia entrada, que luego puedes encontrar y editar desde Ajustes → Dispositivos y servicios → Annuals buscando su nombre.",
                 "data_description": {
-                    "person": "Una persona en Home Assistant cuya foto representa este evento: en la tarjeta del panel y en la notificación del recordatorio.",
+                    "person": "Una persona en Home Assistant cuya foto representa este evento: en la tarjeta del panel de control y en la notificación del recordatorio.",
                     "deceased": "Cumpleaños, Onomástica, Cumpleaños de mascota y Aniversario de boda - La persona ha fallecido: el día se conserva y se marca, la tarjeta dice lo que habría sido y tus automatizaciones pueden distinguirlo. Sin efecto en los demás tipos."
                 }
             },
@@ -166,7 +166,7 @@
                 },
                 "description": "Una única fecha para la que hacer una cuenta atrás. No se repite nunca, por lo que el año es obligatorio, y la entrada se elimina automáticamente a la medianoche siguiente a su fin.\n\nCon una fecha de fin se convierte en un evento de varios días: un viaje, un congreso, una estancia.",
                 "data_description": {
-                    "time": "A qué hora empieza ese día. La entrada del calendario tiene entonces una hora, y la tarjeta del panel la muestra.",
+                    "time": "A qué hora empieza ese día. La entrada del calendario tiene entonces una hora, y la tarjeta del panel de control la muestra.",
                     "end_time": "A qué hora termina: en la fecha de fin si la hay, si no el mismo día. Necesita una hora de inicio; vacía, la entrada del calendario dura una hora."
                 }
             },
@@ -188,7 +188,7 @@
                 },
                 "description": "Tu propia fecha anual, para todo lo que los demás tipos no describen.\n\nPuede seguir una **regla** en lugar de un día concreto: el Día de la Madre es el segundo domingo de mayo y el Día del Padre en Australia el primer domingo de septiembre. Rellena los dos campos de abajo; el **Mes** de arriba indica a qué mes se aplica la regla y el **Día** deja de usarse. Déjalos vacíos para una fecha fija.",
                 "data_description": {
-                    "interval": "Junto con la unidad de al lado: cada 6 meses, cada 2 años. Se cuenta desde la fecha de arriba, que entonces necesita su año. Deje ambos vacíos para una vez al año.",
+                    "interval": "Junto con la unidad de al lado: cada 6 meses, cada 2 años. Se cuenta desde la fecha de arriba, que entonces necesita su año. Deja ambos vacíos para una vez al año.",
                     "nth": "Primero, segundo, tercero, cuarto o el último del mes.",
                     "weekday": "Configúralo junto con el campo de arriba, o deja ambos vacíos."
                 }
@@ -209,7 +209,7 @@
                     "deceased": "Fallecido/a"
                 },
                 "data_description": {
-                    "person": "Una persona en Home Assistant cuya foto representa este evento: en la tarjeta del panel y en la notificación del recordatorio.",
+                    "person": "Una persona en Home Assistant cuya foto representa este evento: en la tarjeta del panel de control y en la notificación del recordatorio.",
                     "deceased": "La persona ha fallecido: el día se conserva y se marca, la tarjeta dice lo que habría sido y tus automatizaciones pueden distinguirlo."
                 }
             },
@@ -230,7 +230,7 @@
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "A qué hora empieza ese día. La entrada del calendario tiene entonces una hora, y la tarjeta del panel la muestra.",
+                    "time": "A qué hora empieza ese día. La entrada del calendario tiene entonces una hora, y la tarjeta del panel de control la muestra.",
                     "end_time": "A qué hora termina: en la fecha de fin si la hay, si no el mismo día. Necesita una hora de inicio; vacía, la entrada del calendario dura una hora."
                 }
             },
@@ -252,7 +252,7 @@
                     "weekday": "Día de la semana"
                 },
                 "data_description": {
-                    "interval": "Junto con la unidad de al lado: cada 6 meses, cada 2 años. Se cuenta desde la fecha de arriba, que entonces necesita su año. Deje ambos vacíos para una vez al año.",
+                    "interval": "Junto con la unidad de al lado: cada 6 meses, cada 2 años. Se cuenta desde la fecha de arriba, que entonces necesita su año. Deja ambos vacíos para una vez al año.",
                     "nth": "Primero, segundo, tercero, cuarto o el último del mes.",
                     "weekday": "Configúralo junto con el campo de arriba, o deja ambos vacíos."
                 }
@@ -260,7 +260,7 @@
         },
         "error": {
             "name_required": "Introduce un nombre.",
-            "end_date_one_time_only": "Solo se puede establecer una fecha de fin en un evento único.",
+            "end_date_one_time_only": "Solo se puede establecer una fecha de fin en un evento puntual.",
             "end_date_before_start": "La fecha de fin debe ser posterior a la de inicio.",
             "invalid_date": "Esta combinación de día/mes/año no es una fecha válida.",
             "year_required": "Los eventos puntuales requieren un año.",
@@ -283,7 +283,7 @@
         "step": {
             "import_csv": {
                 "title": "Importar eventos desde CSV",
-                "description": "Columnas: name, type, day, month, year (opcional, obligatorio para one_time), icon (opcional), vip (opcional), last_name (opcional). «type» debe ser una de estas claves en inglés: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (siempre en inglés, sin importar tu idioma). «vip» acepta 1/true/yes/y/x (sin distinguir mayúsculas/minúsculas); déjalo vacío u omite la columna para un evento que no sea VIP. Mantén todas las columnas aunque un valor esté vacío: una fila sin la coma final desplaza los valores siguientes hacia la izquierda. Las filas no válidas se omiten y quedan registradas.\n\nEjemplo:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nVacaciones familiares,one_time,15,7,2026,mdi:airplane,,\n```",
+                "description": "Columnas: name, type, day, month, year (opcional, obligatorio para one_time), icon (opcional), vip (opcional), last_name (opcional). `type` debe ser una de estas claves en inglés: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (siempre en inglés, sin importar tu idioma). `vip` acepta 1/true/yes/y/x (sin distinguir mayúsculas/minúsculas); déjalo vacío u omite la columna para un evento que no sea VIP. Mantén todas las columnas aunque un valor esté vacío: una fila sin la coma final desplaza los valores siguientes hacia la izquierda. Las filas no válidas se omiten y quedan registradas.\n\nEjemplo:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nVacaciones familiares,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "Archivo CSV"
                 }
@@ -387,9 +387,9 @@
                 }
             },
             "hub_menu": {
-                "title": "Annuals Ajustes",
+                "title": "Ajustes de Annuals",
                 "menu_options": {
-                    "annual_settings": "{icon_annual_settings} Annual Ajustes",
+                    "annual_settings": "{icon_annual_settings} Ajustes de Annual",
                     "import_events": "{icon_import_events} Importar eventos",
                     "export_csv": "{icon_export_csv} Exportar eventos a CSV",
                     "holiday_translations": "{icon_holiday_translations} Traducciones de festivos",
@@ -452,7 +452,7 @@
                 "description": "Deja la subdivisión vacía para solo festivos nacionales - una comunidad/provincia añade sus propios festivos regionales. Las categorías y el idioma dependen de lo que ofrezcan los datos de festivos de ese país.{breaks}",
                 "data": {
                     "include_actual": "Importar la fecha real",
-                    "include_observed": "Importar la fecha observada (trasladada)",
+                    "include_observed": "Importar la fecha trasladada",
                     "break_start": "Importar el primer día de las vacaciones",
                     "break_end": "Importar el último día de las vacaciones",
                     "break_days": "Importar cada día de las vacaciones",
@@ -464,7 +464,7 @@
                     "break_start": "Las vacaciones escolares solo incluyen días lectivos, así que empiezan antes: se retrocede por el fin de semana y los festivos contiguos hasta el primer día realmente libre.",
                     "break_end": "Lo mismo al revés: el último día libre, no el último indicado.",
                     "break_days": "Un evento por cada día de vacaciones. Solo las de verano ya suponen más de cuarenta.",
-                    "include_observed": "Los festivos de este país a veces se trasladan a un día laborable cercano cuando caen en fin de semana (p. ej. observado el viernes anterior o el lunes siguiente) - importa también esa fecha trasladada como un evento separado."
+                    "include_observed": "Los festivos de este país a veces se trasladan a un día laborable cercano cuando caen en fin de semana (p. ej. al viernes anterior o al lunes siguiente) - importa también esa fecha trasladada como un evento separado."
                 }
             },
             "import_holidays_select": {
@@ -491,11 +491,11 @@
                 }
             },
             "annual_settings": {
-                "title": "Annual Ajustes",
+                "title": "Ajustes de Annual",
                 "sections": {
                     "important_events": {
                         "name": "❗ Eventos importantes",
-                        "description": "Números de aniversario separados por comas que marcan automáticamente un evento de ese tipo como «Important», por ejemplo «18,21,30,40,50». Deja un campo vacío para desactivar esto en ese tipo.",
+                        "description": "Números de ocurrencia separados por comas que marcan automáticamente un evento de ese tipo como «Important», por ejemplo «18,21,30,40,50». Deja un campo vacío para desactivar esto en ese tipo.",
                         "data": {
                             "important_thresholds_birthday": "Cumpleaños",
                             "important_thresholds_anniversary": "Aniversario",
@@ -508,10 +508,10 @@
                         }
                     },
                     "todo": {
-                        "name": "📍 Listas de tareas",
-                        "description": "Las tareas pendientes de estas listas marcan un evento: cada sensor de evento tendrá entonces un atributo «todo» - verdadero mientras tenga asociada al menos una tarea aún pendiente, falso en caso contrario - para tus propias automatizaciones, plantillas y paneles. La asociación se hace primero por la fecha de vencimiento y después por si el texto de la tarea menciona el evento (nombre completo, nombre, tipo, número de ocurrencia); una tarea que encaja igual de bien en dos eventos queda sin asociar. Déjalo vacío para desactivarlo. Independiente del ajuste del mismo nombre de la tarjeta del panel.",
+                        "name": "📍 Listas de tareas pendientes",
+                        "description": "Las tareas pendientes de estas listas marcan un evento: cada sensor de evento tendrá entonces un atributo «todo» - true mientras tenga asociada al menos una tarea aún pendiente, false en caso contrario - para tus propias automatizaciones, plantillas y paneles de control. La asociación se hace primero por la fecha de vencimiento y después por si el texto de la tarea menciona el evento (nombre completo, nombre, tipo, número de ocurrencia); una tarea que encaja igual de bien en dos eventos queda sin asociar. Déjalo vacío para desactivarlo. Independiente del ajuste del mismo nombre de la tarjeta del panel de control.",
                         "data": {
-                            "todo_lists": "Listas de tareas"
+                            "todo_lists": "Listas de tareas pendientes"
                         }
                     }
                 }
@@ -536,7 +536,7 @@
                     "deceased": "Fallecido/a"
                 },
                 "data_description": {
-                    "person": "Una persona en Home Assistant cuya foto representa este evento: en la tarjeta del panel y en la notificación del recordatorio.",
+                    "person": "Una persona en Home Assistant cuya foto representa este evento: en la tarjeta del panel de control y en la notificación del recordatorio.",
                     "deceased": "La persona ha fallecido: el día se conserva y se marca, la tarjeta dice lo que habría sido y tus automatizaciones pueden distinguirlo."
                 }
             },
@@ -557,7 +557,7 @@
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "A qué hora empieza ese día. La entrada del calendario tiene entonces una hora, y la tarjeta del panel la muestra.",
+                    "time": "A qué hora empieza ese día. La entrada del calendario tiene entonces una hora, y la tarjeta del panel de control la muestra.",
                     "end_time": "A qué hora termina: en la fecha de fin si la hay, si no el mismo día. Necesita una hora de inicio; vacía, la entrada del calendario dura una hora."
                 }
             },
@@ -579,7 +579,7 @@
                     "weekday": "Día de la semana"
                 },
                 "data_description": {
-                    "interval": "Junto con la unidad de al lado: cada 6 meses, cada 2 años. Se cuenta desde la fecha de arriba, que entonces necesita su año. Deje ambos vacíos para una vez al año.",
+                    "interval": "Junto con la unidad de al lado: cada 6 meses, cada 2 años. Se cuenta desde la fecha de arriba, que entonces necesita su año. Deja ambos vacíos para una vez al año.",
                     "nth": "Primero, segundo, tercero, cuarto o el último del mes.",
                     "weekday": "Configúralo junto con el campo de arriba, o deja ambos vacíos."
                 }
@@ -587,7 +587,7 @@
         },
         "error": {
             "name_required": "Introduce un nombre.",
-            "end_date_one_time_only": "Solo se puede establecer una fecha de fin en un evento único.",
+            "end_date_one_time_only": "Solo se puede establecer una fecha de fin en un evento puntual.",
             "end_date_before_start": "La fecha de fin debe ser posterior a la de inicio.",
             "invalid_date": "Esta combinación de día/mes/año no es una fecha válida.",
             "year_required": "Los eventos puntuales requieren un año.",
@@ -613,7 +613,7 @@
             "no_market_batch_selected": "Marca «Eliminar todos los días bursátiles importados» o elige una bolsa que eliminar."
         },
         "abort": {
-            "translations_exported": "{count} traducción(es) exportado(s). [Descargar annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+clic para descargar - un clic normal no funciona aquí)\n\nO copia el CSV de abajo:\n\n```\n{csv}\n```",
+            "translations_exported": "{count} traducción(es) exportada(s). [Descargar annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+clic para descargar - un clic normal no funciona aquí)\n\nO copia el CSV de abajo:\n\n```\n{csv}\n```",
             "translations_imported": "{updated} festivo(s) actualizado(s), {skipped} fila(s) omitida(s).",
             "no_translations_to_export": "Todavía no se ha escrito ningún nombre de festivo: no hay nada que exportar.",
             "import_started": "Importación iniciada: {created} evento(s) en cola, {skipped} fila(s) omitida(s) (consulta el registro para más detalles).",
@@ -621,7 +621,7 @@
             "csv_exported": "{count} evento(s) exportado(s). [Descargar annuals_export.csv]({url}) (Ctrl/Cmd+clic para descargar - un clic normal no funciona aquí)\n\nO copia el CSV de abajo:\n\n```\n{csv}\n```",
             "no_events_to_export": "Todavía no hay eventos para exportar.",
             "deleted_all": "Se han eliminado todos los eventos, calendarios y el concentrador de Annuals.",
-            "holiday_import_started": "Importación iniciada: {count} evento(s) festivo(s) en cola para {country} ({new} nuevos, {updated} actualizados).",
+            "holiday_import_started": "Importación iniciada: {count} festivo(s) en cola para {country} ({new} nuevos, {updated} actualizados).",
             "no_holidays_imported": "Todavía no se ha importado ningún festivo.",
             "holidays_removed": "{count} festivo(s) eliminado(s).",
             "no_ics_imports": "No se encontraron eventos creados por una importación ICS.",

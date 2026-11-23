@@ -10,7 +10,7 @@
         },
         "holiday_breaks": {
             "options": {
-                "note": "Flerdagersferier som skoleferier settes sammen igjen til hele ferier - velg nedenfor hvilke deler av dem som skal importeres."
+                "note": "Flerdagsferier som skoleferier settes sammen igjen til hele ferier - velg nedenfor hvilke deler av dem som skal importeres."
             }
         },
         "event_type": {
@@ -20,7 +20,7 @@
                 "name_day": "Navnedag",
                 "wedding_anniversary": "Bryllupsdag",
                 "memorial": "Minnedag",
-                "pet_birthday": "Kjæledyrs bursdag",
+                "pet_birthday": "Kjæledyrbursdag",
                 "work_anniversary": "Arbeidsjubileum",
                 "custom": "Egendefinert",
                 "one_time": "Engangshendelse",
@@ -49,7 +49,7 @@
                 "public": "Offentlig",
                 "bank": "Bankfridag",
                 "government": "Myndigheter",
-                "school": "Skolefri",
+                "school": "Skoleferie",
                 "optional": "Valgfri",
                 "optional_women": "Valgfri (kvinner)",
                 "unofficial": "Uoffisiell",
@@ -112,7 +112,7 @@
         "market_status": {
             "options": {
                 "closed": "{market} stengt",
-                "closes_at": "{market} stengt fra {time}",
+                "closes_at": "{market} stenger kl. {time}",
                 "closes_early": "{market} stenger tidligere",
                 "no_settlement": "{market} uten oppgjør"
             }
@@ -122,7 +122,7 @@
         "step": {
             "user": {
                 "title": "Legg til hendelse",
-                "description": "Hva slags hendelse er dette?\n\n**Årlig** dekker bursdag, jubileum, navnedag, bryllupsdag, minnedag, kjæledyrs bursdag og arbeidsjubileum. **Engangs** er én enkelt dato, som sletter seg selv når den er over. **Egendefinert** er din egen årlige dato – på en bestemt dag eller etter en regel.",
+                "description": "Hva slags hendelse er dette?\n\n**Årlig** dekker bursdag, jubileum, navnedag, bryllupsdag, minnedag, kjæledyrbursdag og arbeidsjubileum. **Engangshendelse** er én enkelt dato, som sletter seg selv når den er over. **Egendefinert** er din egen årlige dato – på en bestemt dag eller etter en regel.",
                 "menu_options": {
                     "recurring": "{icon_recurring} En årlig dato for noen",
                     "one_time": "{icon_one_time} En engangshendelse",
@@ -146,7 +146,7 @@
                 "description": "Hver hendelse får sin egen oppføring, som du senere kan finne og redigere under Innstillinger → Enheter og tjenester → Annuals ved å søke på navnet.",
                 "data_description": {
                     "person": "En person i Home Assistant hvis bilde står for denne hendelsen – på dashbordkortet og i påminnelsens varsel.",
-                    "deceased": "Bursdag, Navnedag, Kjæledyrs bursdag og Bryllupsdag - Personen er død: dagen beholdes og merkes, kortet sier hva den ville ha vært, og automasjonene dine kan skille den ut. Uten virkning på de andre typene."
+                    "deceased": "Bursdag, Navnedag, Kjæledyrbursdag og Bryllupsdag - Personen er død: dagen beholdes og merkes, kortet sier hva den ville ha vært, og automasjonene dine kan skille den ut. Uten virkning på de andre typene."
                 }
             },
             "one_time": {
@@ -158,13 +158,13 @@
                     "day": "Dag",
                     "month": "Måned",
                     "year": "År",
-                    "end_date": "Sluttdato (valgfritt – gjør den til en flerdagershendelse)",
+                    "end_date": "Sluttdato (valgfritt – gjør den til en flerdagshendelse)",
                     "time": "Klokkeslett (valgfritt)",
                     "end_time": "Sluttid (valgfritt)",
                     "icon": "Overstyr ikon (valgfritt)",
                     "vip": "VIP Annual"
                 },
-                "description": "Én enkelt dato å telle ned til. Den gjentas aldri, så året er påkrevd, og oppføringen slettes automatisk ved midnatt etter at den er over.\n\nGi den en sluttdato, så blir det en flerdagershendelse – en reise, en konferanse, et opphold.",
+                "description": "Én enkelt dato å telle ned til. Den gjentas aldri, så året er påkrevd, og oppføringen slettes automatisk ved midnatt etter at den er over.\n\nGi den en sluttdato, så blir det en flerdagshendelse – en reise, en konferanse, et opphold.",
                 "data_description": {
                     "time": "Når den begynner den dagen. Kalenderoppføringen får da et klokkeslett, og dashbordkortet viser det.",
                     "end_time": "Når den slutter – på sluttdatoen om det finnes en, ellers samme dag. Trenger en starttid; står den tom, varer kalenderoppføringen en time."
@@ -215,7 +215,7 @@
             },
             "reconfigure_one_time": {
                 "title": "Rediger engangshendelse",
-                "description": "Endre et hvilket som helst felt under og send inn for å oppdatere denne hendelsen.\n\nEn sluttdato gjør den til en flerdagershendelse; tømmes den, blir det igjen én dag.",
+                "description": "Endre et hvilket som helst felt under og send inn for å oppdatere denne hendelsen.\n\nEn sluttdato gjør den til en flerdagshendelse; tømmes den, blir det igjen én dag.",
                 "data": {
                     "name": "Navn",
                     "last_name": "Etternavn (valgfritt)",
@@ -223,7 +223,7 @@
                     "day": "Dag",
                     "month": "Måned",
                     "year": "År",
-                    "end_date": "Sluttdato (valgfritt – gjør den til en flerdagershendelse)",
+                    "end_date": "Sluttdato (valgfritt – gjør den til en flerdagshendelse)",
                     "time": "Klokkeslett (valgfritt)",
                     "end_time": "Sluttid (valgfritt)",
                     "icon": "Overstyr ikon (valgfritt)",
@@ -283,7 +283,7 @@
         "step": {
             "import_csv": {
                 "title": "Importer hendelser fra CSV",
-                "description": "Kolonner: name, type, day, month, year (valgfritt, påkrevd for one_time), icon (valgfritt), vip (valgfritt), last_name (valgfritt). «type» må være en av disse engelske nøklene: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (alltid på engelsk, uansett språkinnstilling). «vip» godtar 1/true/yes/y/x (ikke versalfølsomt); la stå tomt eller utelat kolonnen for en ikke-VIP-hendelse. Behold alle kolonner selv når en verdi er tom - en rad uten avsluttende komma forskyver de neste verdiene ett hakk til venstre. Ugyldige rader hoppes over og logges.\n\nEksempel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamilieferie,one_time,15,7,2026,mdi:airplane,,\n```",
+                "description": "Kolonner: name, type, day, month, year (valgfritt, påkrevd for one_time), icon (valgfritt), vip (valgfritt), last_name (valgfritt). `type` må være en av disse engelske nøklene: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (alltid på engelsk, uansett språkinnstilling). `vip` godtar 1/true/yes/y/x (ikke versalfølsomt); la stå tomt eller utelat kolonnen for en ikke-VIP-hendelse. Behold alle kolonner selv når en verdi er tom - en rad uten avsluttende komma forskyver de neste verdiene ett hakk til venstre. Ugyldige rader hoppes over og logges.\n\nEksempel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamilieferie,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "CSV-fil"
                 }
@@ -297,7 +297,7 @@
             },
             "import_vcard_menu": {
                 "title": "Importer hendelser fra vCard",
-                "description": "En kontakts bursdag og de andre datoene (jubileer, egendefinerte datoer) går gjennom separate grener, siden bare bursdager deler én felles hendelsestype for hele importen - hver andre dato får sin egen type tildelt under gjennomgangen.",
+                "description": "En kontakts bursdag og de andre datoene (jubileer, egendefinerte datoer) går gjennom separate grener, siden bare bursdager deler én felles hendelsestype for hele importen - alle andre datoer får tildelt sin egen type under gjennomgangen.",
                 "menu_options": {
                     "import_vcard": "Importer bursdager",
                     "import_vcard_other_dates": "Importer andre datoer (jubileer, ...)"
@@ -328,18 +328,18 @@
             },
             "import_review": {
                 "title": "Import fra {source_label} - gjennomgang ({page}/{total_pages})",
-                "description": "{legend}\n\nSjekk den foreslåtte for-/etternavn-delingen under og korriger det som er feil - selve bursdagen kan også redigeres - eller fjern haken på en oppføring for å utelate den helt. En mulig duplikat merkes med navnet på den eksisterende oppføringen; la «opprett som ny» stå ukrysset for å oppdatere den eksisterende oppføringen i stedet for å legge til en ny. Feltnavnene her vises kun på engelsk, uansett språkinnstilling.",
+                "description": "{legend}\n\nSjekk den foreslåtte for-/etternavn-delingen under og korriger det som er feil - selve bursdagen kan også redigeres - eller fjern haken på en oppføring for å utelate den helt. Et mulig duplikat merkes med navnet på den eksisterende oppføringen; la «opprett som ny» stå uavkrysset for å oppdatere den eksisterende oppføringen i stedet for å legge til en ny. Feltnavnene her vises kun på engelsk, uansett språkinnstilling.",
                 "data": {
                     "go_back": "Gå tilbake til forrige side"
                 }
             },
             "remove_ics_imports": {
                 "title": "Fjern ICS-importerte hendelser",
-                "description": "{count} hendelse(r) ble opprettet av en tidligere ICS-import. Klikk OK for å fjerne alle - oppføringer som en ICS-import bare har oppdatert (i stedet for å opprette), påvirkes aldri, og heller ikke manuelt lagt til, CSV- eller vCard-importerte hendelser."
+                "description": "{count} hendelse(r) ble opprettet av en tidligere ICS-import. Klikk OK for å fjerne alle - oppføringer som en ICS-import bare har oppdatert (i stedet for å opprette), påvirkes aldri, og heller ikke hendelser som er lagt til manuelt eller importert fra CSV eller vCard."
             },
             "remove_vcard_imports": {
                 "title": "Fjern vCard-importerte hendelser",
-                "description": "{count} hendelse(r) ble opprettet av en tidligere vCard-import. Klikk OK for å fjerne alle - oppføringer som en vCard-import bare har oppdatert (i stedet for å opprette), påvirkes aldri, og heller ikke manuelt lagt til, CSV- eller ICS-importerte hendelser."
+                "description": "{count} hendelse(r) ble opprettet av en tidligere vCard-import. Klikk OK for å fjerne alle - oppføringer som en vCard-import bare har oppdatert (i stedet for å opprette), påvirkes aldri, og heller ikke hendelser som er lagt til manuelt eller importert fra CSV eller ICS."
             },
             "holiday_menu": {
                 "title": "Helligdag",
@@ -381,15 +381,15 @@
             },
             "import_translations": {
                 "title": "Importer oversettelser",
-                "description": "Last opp en CSV med oversettelser. Kolonner: `country,subdivision,category,holiday_key,observed,language,name,status`. Rader kobles til helligdager på land, underinndeling, kategori, helligdagsnøkkel og observed-flagg – ikke på oppførings-id, så en fil eksportert før et land importeres på nytt gjelder fortsatt. Rader hvis helligdag ikke finnes, hoppes over og telles. For en børsdag er `name` anledningen og `status` dens eget navn; la `status` stå tomt for helligdager.",
+                "description": "Last opp en CSV med oversettelser. Kolonner: `country,subdivision,category,holiday_key,observed,language,name,status`. Rader kobles til helligdager på land, delregion, kategori, helligdagsnøkkel og observed-flagg – ikke på oppførings-id, så en fil eksportert før et land importeres på nytt gjelder fortsatt. Rader hvis helligdag ikke finnes, hoppes over og telles. For en børsdag er `name` anledningen og `status` dens eget navn; la `status` stå tomt for helligdager.",
                 "data": {
                     "csv_file": "CSV"
                 }
             },
             "hub_menu": {
-                "title": "Annuals Innstillinger",
+                "title": "Annuals-innstillinger",
                 "menu_options": {
-                    "annual_settings": "{icon_annual_settings} Annual Innstillinger",
+                    "annual_settings": "{icon_annual_settings} Annual-innstillinger",
                     "import_events": "{icon_import_events} Importer hendelser",
                     "export_csv": "{icon_export_csv} Eksporter hendelser til CSV",
                     "holiday_translations": "{icon_holiday_translations} Oversettelser av helligdager",
@@ -449,14 +449,14 @@
             },
             "import_holidays_options": {
                 "title": "Importer helligdager - {country}",
-                "description": "La delregionen stå tom for kun nasjonale helligdager - et fylke/provins legger til sine egne regionale helligdager. Kategorier og språk avhenger av hva dette landets helligdagsdata gir.{breaks}",
+                "description": "La delregionen stå tom for kun nasjonale helligdager - en delstat/provins legger til sine egne regionale helligdager. Kategorier og språk avhenger av hva dette landets helligdagsdata gir.{breaks}",
                 "data": {
                     "include_actual": "Importer den faktiske datoen",
-                    "include_observed": "Importer den observerte (flyttede) datoen",
+                    "include_observed": "Importer den flyttede datoen",
                     "break_start": "Importer feriens første dag",
                     "break_end": "Importer feriens siste dag",
                     "break_days": "Importer hver feriedag",
-                    "subdivision": "Delregion (fylke/provins, valgfritt)",
+                    "subdivision": "Delregion (delstat/provins, valgfritt)",
                     "categories": "Kategorier",
                     "language": "Språk for helligdagsnavn"
                 },
@@ -464,7 +464,7 @@
                     "break_start": "Skoleferier er bare oppført med skoledager, så ferien begynner tidligere - her regnes det tilbake over helgen og tilstøtende helligdager til den første virkelig frie dagen.",
                     "break_end": "Det samme motsatt vei: den siste frie dagen, ikke den sist oppførte.",
                     "break_days": "Én hendelse per feriedag. Sommerferien alene gir over førti.",
-                    "include_observed": "Helligdager i dette landet blir noen ganger flyttet til en nærliggende ukedag når de faller i helgen (f.eks. observert fredagen før eller mandagen etter) - importer også denne flyttede datoen som en egen hendelse."
+                    "include_observed": "Helligdager i dette landet blir noen ganger flyttet til en nærliggende ukedag når de faller i helgen (f.eks. til fredagen før eller mandagen etter) - importer også denne flyttede datoen som en egen hendelse."
                 }
             },
             "import_holidays_select": {
@@ -476,7 +476,7 @@
             },
             "remove_holidays": {
                 "title": "Fjern importerte helligdager",
-                "description": "{total} helligdag(er) er for øyeblikket importert. Kryss av boksen under for å fjerne alle, eller la den stå ukrysset og velg en gruppe i stedet. Manuelt lagt til hendelser blir aldri påvirket.",
+                "description": "{total} helligdag(er) er for øyeblikket importert. Kryss av boksen under for å fjerne alle, eller la den stå uavkrysset og velg en gruppe i stedet. Hendelser som er lagt til manuelt, blir aldri påvirket.",
                 "data": {
                     "remove_all": "Fjern alle importerte helligdager",
                     "batch": "Gruppe som skal fjernes"
@@ -484,14 +484,14 @@
             },
             "remove_markets": {
                 "title": "Fjern importerte børsdager",
-                "description": "{total} børsdag(er) importert. Kryss av i feltet nedenfor for å fjerne alle, eller la det stå og velg én eller flere børser. Ingenting annet berøres.",
+                "description": "{total} børsdag(er) importert. Kryss av i feltet nedenfor for å fjerne alle, eller la det stå uavkrysset og velg én eller flere børser. Ingenting annet berøres.",
                 "data": {
                     "remove_all": "Fjern alle importerte børsdager",
                     "batch": "Børser som skal fjernes"
                 }
             },
             "annual_settings": {
-                "title": "Annual Innstillinger",
+                "title": "Annual-innstillinger",
                 "sections": {
                     "important_events": {
                         "name": "❗ Viktige hendelser",
@@ -502,16 +502,16 @@
                             "important_thresholds_name_day": "Navnedag",
                             "important_thresholds_wedding_anniversary": "Bryllupsdag",
                             "important_thresholds_memorial": "Minnedag",
-                            "important_thresholds_pet_birthday": "Kjæledyrs bursdag",
+                            "important_thresholds_pet_birthday": "Kjæledyrbursdag",
                             "important_thresholds_work_anniversary": "Arbeidsjubileum",
                             "important_thresholds_custom": "Egendefinert"
                         }
                     },
                     "todo": {
-                        "name": "📍 Oppgavelister",
-                        "description": "Åpne oppgaver på disse listene merker en hendelse: hver hendelsessensor får da et attributt «todo» - sant så lenge minst én ennå åpen oppgave er tilordnet den, ellers usant - til dine egne automasjoner, maler og dashbord. Tilordningen skjer først etter forfallsdato og deretter etter om oppgavens tekst nevner hendelsen (fullt navn, navn, type, nummer i rekken); en oppgave som passer like godt til to hendelser forblir utilordnet. La stå tom for å slå av. Uavhengig av dashbordkortets egen innstilling med samme navn.",
+                        "name": "📍 Gjøremålslister",
+                        "description": "Åpne gjøremål på disse listene merker en hendelse: hver hendelsessensor får da et attributt «todo» - sant så lenge minst ett ennå åpent gjøremål er tilordnet den, ellers usant - til dine egne automasjoner, maler og dashbord. Tilordningen skjer først etter forfallsdato og deretter etter om gjøremålets tekst nevner hendelsen (fullt navn, navn, type, nummer i rekken); et gjøremål som passer like godt til to hendelser forblir utilordnet. La stå tom for å slå av. Uavhengig av dashbordkortets egen innstilling med samme navn.",
                         "data": {
-                            "todo_lists": "Oppgavelister"
+                            "todo_lists": "Gjøremålslister"
                         }
                     }
                 }
@@ -542,7 +542,7 @@
             },
             "edit_one_time": {
                 "title": "Rediger engangshendelse",
-                "description": "Endre et hvilket som helst felt under og send inn for å oppdatere denne hendelsen.\n\nEn sluttdato gjør den til en flerdagershendelse; tømmes den, blir det igjen én dag.",
+                "description": "Endre et hvilket som helst felt under og send inn for å oppdatere denne hendelsen.\n\nEn sluttdato gjør den til en flerdagshendelse; tømmes den, blir det igjen én dag.",
                 "data": {
                     "name": "Navn",
                     "last_name": "Etternavn (valgfritt)",
@@ -550,7 +550,7 @@
                     "day": "Dag",
                     "month": "Måned",
                     "year": "År",
-                    "end_date": "Sluttdato (valgfritt – gjør den til en flerdagershendelse)",
+                    "end_date": "Sluttdato (valgfritt – gjør den til en flerdagshendelse)",
                     "time": "Klokkeslett (valgfritt)",
                     "end_time": "Sluttid (valgfritt)",
                     "icon": "Overstyr ikon (valgfritt)",
@@ -592,12 +592,12 @@
             "invalid_date": "Denne kombinasjonen av dag/måned/år er ikke en gyldig dato.",
             "year_required": "Engangshendelser krever et år.",
             "invalid_csv": "Kunne ikke lese denne filen som CSV. Sjekk koding og format.",
-            "no_valid_rows": "Fant ingen gyldige rader i denne filen. Se loggen for detaljer om hoppede rader.",
+            "no_valid_rows": "Fant ingen gyldige rader i denne filen. Se loggen for detaljer om rader som ble hoppet over.",
             "invalid_ics": "Kunne ikke lese denne filen som en ICS-kalender. Sjekk formatet.",
-            "no_valid_entries": "Fant ingen brukbare heldagsoppføringer i denne filen. Se loggen for detaljer om hoppede oppføringer.",
+            "no_valid_entries": "Fant ingen brukbare heldagsoppføringer i denne filen. Se loggen for detaljer om oppføringer som ble hoppet over.",
             "invalid_vcard": "Kunne ikke lese denne filen som en vCard. Sjekk formatet.",
-            "no_valid_vcard_entries": "Fant ingen kontakter med en brukbar bursdag i denne filen. Se loggen for detaljer om hoppede oppføringer.",
-            "no_valid_vcard_dates": "Fant ingen jubileer eller andre datoer (bortsett fra bursdager) i denne filen. Se loggen for detaljer om hoppede oppføringer.",
+            "no_valid_vcard_entries": "Fant ingen kontakter med en brukbar bursdag i denne filen. Se loggen for detaljer om oppføringer som ble hoppet over.",
+            "no_valid_vcard_dates": "Fant ingen jubileer eller andre datoer (bortsett fra bursdager) i denne filen. Se loggen for detaljer om oppføringer som ble hoppet over.",
             "no_batch_selected": "Kryss av for «Fjern alle importerte helligdager», eller velg en gruppe.",
             "rule_needs_both": "En gjentakelsesregel krever begge feltene – eller ingen av dem.",
             "interval_needs_both": "Et gjentakelsesintervall trenger begge feltene, eller ingen.",
@@ -636,31 +636,31 @@
     "entity": {
         "sensor": {
             "birthday": {
-                "name": "{name}s bursdag",
+                "name": "Bursdagen til {name}",
                 "unit_of_measurement": "dager"
             },
             "anniversary": {
-                "name": "{name}s jubileum",
+                "name": "Jubileet til {name}",
                 "unit_of_measurement": "dager"
             },
             "name_day": {
-                "name": "{name}s navnedag",
+                "name": "Navnedagen til {name}",
                 "unit_of_measurement": "dager"
             },
             "wedding_anniversary": {
-                "name": "{name}s bryllupsdag",
+                "name": "Bryllupsdagen til {name}",
                 "unit_of_measurement": "dager"
             },
             "memorial": {
-                "name": "{name}s minnedag",
+                "name": "Minnedagen for {name}",
                 "unit_of_measurement": "dager"
             },
             "pet_birthday": {
-                "name": "{name}s bursdag",
+                "name": "Bursdagen til {name}",
                 "unit_of_measurement": "dager"
             },
             "work_anniversary": {
-                "name": "{name}s arbeidsjubileum",
+                "name": "Arbeidsjubileet til {name}",
                 "unit_of_measurement": "dager"
             },
             "custom": {
@@ -697,7 +697,7 @@
                 "name": "Minnedager"
             },
             "pet_birthday": {
-                "name": "Kjæledyrs bursdager"
+                "name": "Kjæledyrbursdager"
             },
             "work_anniversary": {
                 "name": "Arbeidsjubileer"

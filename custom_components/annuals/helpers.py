@@ -526,20 +526,44 @@ _REMINDER_STRINGS: dict[str, dict[str, str]] = {
     "de": {"today": "Heute", "tomorrow": "Morgen", "in_days": "in {days} Tagen", "today_deceased": "Wäre heute gewesen", "tomorrow_deceased": "Wäre morgen gewesen", "in_days_deceased": "Wäre in {days} Tagen gewesen"},
     "fr": {"today": "Aujourd'hui", "tomorrow": "Demain", "in_days": "dans {days} jours", "today_deceased": "Aurait été aujourd'hui", "tomorrow_deceased": "Aurait été demain", "in_days_deceased": "Aurait été dans {days} jours"},
     "nl": {"today": "Vandaag", "tomorrow": "Morgen", "in_days": "over {days} dagen", "today_deceased": "Zou vandaag zijn geweest", "tomorrow_deceased": "Zou morgen zijn geweest", "in_days_deceased": "Zou over {days} dagen zijn geweest"},
-    "pl": {"today": "Dzisiaj", "tomorrow": "Jutro", "in_days": "za {days} dni", "today_deceased": "Przypadałyby dzisiaj", "tomorrow_deceased": "Przypadałyby jutro", "in_days_deceased": "Przypadałyby za {days} dni"},
+    "pl": {"today": "Dzisiaj", "tomorrow": "Jutro", "in_days": "za {days} dni", "today_deceased": "Byłoby to dzisiaj", "tomorrow_deceased": "Byłoby to jutro", "in_days_deceased": "Byłoby to za {days} dni"},
     "es": {"today": "Hoy", "tomorrow": "Mañana", "in_days": "en {days} días", "today_deceased": "Habría sido hoy", "tomorrow_deceased": "Habría sido mañana", "in_days_deceased": "Habría sido en {days} días"},
     "it": {"today": "Oggi", "tomorrow": "Domani", "in_days": "tra {days} giorni", "today_deceased": "Sarebbe stato oggi", "tomorrow_deceased": "Sarebbe stato domani", "in_days_deceased": "Sarebbe stato tra {days} giorni"},
     "pt-BR": {"today": "Hoje", "tomorrow": "Amanhã", "in_days": "em {days} dias", "today_deceased": "Teria sido hoje", "tomorrow_deceased": "Teria sido amanhã", "in_days_deceased": "Teria sido em {days} dias"},
-    "ru": {"today": "Сегодня", "tomorrow": "Завтра", "in_days": "через {days} дн.", "today_deceased": "Был бы сегодня", "tomorrow_deceased": "Был бы завтра", "in_days_deceased": "Был бы через {days} дн."},
+    "ru": {"today": "Сегодня", "tomorrow": "Завтра", "in_days": "через {days} дн.", "today_deceased": "Было бы сегодня", "tomorrow_deceased": "Было бы завтра", "in_days_deceased": "Было бы через {days} дн."},
     "sv": {"today": "Idag", "tomorrow": "Imorgon", "in_days": "om {days} dagar", "today_deceased": "Skulle ha varit idag", "tomorrow_deceased": "Skulle ha varit imorgon", "in_days_deceased": "Skulle ha varit om {days} dagar"},
     "zh-Hans": {"today": "今天", "tomorrow": "明天", "in_days": "{days} 天后", "today_deceased": "本应是今天", "tomorrow_deceased": "本应是明天", "in_days_deceased": "本应是 {days} 天后"},
-    "cs": {"today": "Dnes", "tomorrow": "Zítra", "in_days": "za {days} dní", "today_deceased": "Byly by dnes", "tomorrow_deceased": "Byly by zítra", "in_days_deceased": "Byly by za {days} dní"},
+    "cs": {"today": "Dnes", "tomorrow": "Zítra", "in_days": "za {days} dní", "in_days_few": "za {days} dny", "today_deceased": "Bylo by to dnes", "tomorrow_deceased": "Bylo by to zítra", "in_days_deceased": "Bylo by to za {days} dní", "in_days_few_deceased": "Bylo by to za {days} dny", "plural": "few_2_4"},
     "nb": {"today": "I dag", "tomorrow": "I morgen", "in_days": "om {days} dager", "today_deceased": "Ville ha vært i dag", "tomorrow_deceased": "Ville ha vært i morgen", "in_days_deceased": "Ville ha vært om {days} dager"},
     "da": {"today": "I dag", "tomorrow": "I morgen", "in_days": "om {days} dage", "today_deceased": "Ville have været i dag", "tomorrow_deceased": "Ville have været i morgen", "in_days_deceased": "Ville have været om {days} dage"},
     "tr": {"today": "Bugün", "tomorrow": "Yarın", "in_days": "{days} gün sonra", "today_deceased": "Bugün olacaktı", "tomorrow_deceased": "Yarın olacaktı", "in_days_deceased": "{days} gün sonra olacaktı"},
-    "sk": {"today": "Dnes", "tomorrow": "Zajtra", "in_days": "o {days} dní", "today_deceased": "Boli by dnes", "tomorrow_deceased": "Boli by zajtra", "in_days_deceased": "Boli by o {days} dní"},
-    "lt": {"today": "Šiandien", "tomorrow": "Rytoj", "in_days": "po {days} dienų", "today_deceased": "Būtų buvęs šiandien", "tomorrow_deceased": "Būtų buvęs rytoj", "in_days_deceased": "Būtų buvęs po {days} dienų"},
+    "sk": {"today": "Dnes", "tomorrow": "Zajtra", "in_days": "o {days} dní", "in_days_few": "o {days} dni", "today_deceased": "Bolo by to dnes", "tomorrow_deceased": "Bolo by to zajtra", "in_days_deceased": "Bolo by to o {days} dní", "in_days_few_deceased": "Bolo by to o {days} dni", "plural": "few_2_4"},
+    "lt": {"today": "Šiandien", "tomorrow": "Rytoj", "in_days": "po {days} dienų", "in_days_one": "po {days} dienos", "today_deceased": "Būtų šiandien", "tomorrow_deceased": "Būtų rytoj", "in_days_deceased": "Būtų po {days} dienų", "in_days_one_deceased": "Būtų po {days} dienos", "plural": "one_x1"},
 }
+
+
+def reminder_in_days(strings: dict[str, str], days: int, deceased: bool = False) -> str:
+    """The "in N days" phrase of a reminder, in the form the number takes.
+
+    Most languages have one form for every number from 2 on. Those that do
+    not name their rule under "plural" and bring the extra form along:
+    "few_2_4" (Czech, Slovak: 2 to 4 take "in_days_few") and "one_x1"
+    (Lithuanian: 21, 31, 41 ... take "in_days_one"; 11 does not).
+    """
+    form = "in_days"
+    rule = strings.get("plural")
+    if rule == "few_2_4" and 2 <= days <= 4:
+        form = "in_days_few"
+    elif rule == "one_x1" and days % 10 == 1 and days % 100 != 11:
+        form = "in_days_one"
+    suffix = "_deceased" if deceased else ""
+    template = (
+        strings.get(form + suffix)
+        or strings.get("in_days" + suffix)
+        or strings.get(form)
+        or strings.get("in_days", "in {days} days")
+    )
+    return template.format(days=days)
 
 
 async def async_reminder_strings(hass: HomeAssistant) -> dict[str, str]:
@@ -554,31 +578,33 @@ async def async_reminder_strings(hass: HomeAssistant) -> dict[str, str]:
     return _REMINDER_STRINGS.get(hass.config.language, _REMINDER_STRINGS["en"])
 
 
-# The hub entry's title ("Annuals Settings") deliberately keeps "Annuals"
-# untranslated (it's the product name) with only the second word localized.
-# That single word isn't a config-flow-rendered string, so it lives here as a
-# small code-side table instead of in translations/<lang>.json - there's no
-# HA translation category for a plain config-entry title.
-_HUB_TITLE_WORD = {
-    "de": "Einstellungen",
-    "fr": "Paramètres",
-    "nl": "Instellingen",
-    "pl": "Ustawienia",
-    "es": "Ajustes",
-    "it": "Impostazioni",
-    "pt-BR": "Configurações",
-    "ru": "Настройки",
-    "sv": "Inställningar",
-    "zh-Hans": "设置",
-    "cs": "Nastavení",
-    "nb": "Innstillinger",
-    "da": "Indstillinger",
-    "tr": "Ayarları",
-    "sk": "Nastavenia",
-    "lt": "Nustatymai",
+# The hub entry's title ("Annuals Settings") keeps "Annuals" untranslated
+# (it's the product name) and puts the language's word for "settings" where
+# that language puts it: before the name, after it, joined by a hyphen.
+# A config-entry title isn't a config-flow-rendered string, so it lives here
+# as a small code-side table instead of in translations/<lang>.json - there's
+# no HA translation category for a plain config-entry title. Each one is the
+# same text as that language's options.step.hub_menu.title.
+_HUB_TITLE = {
+    "de": "Annuals-Einstellungen",
+    "fr": "Paramètres Annuals",
+    "nl": "Annuals-instellingen",
+    "pl": "Ustawienia Annuals",
+    "es": "Ajustes de Annuals",
+    "it": "Impostazioni di Annuals",
+    "pt-BR": "Configurações do Annuals",
+    "ru": "Настройки Annuals",
+    "sv": "Annuals-inställningar",
+    "zh-Hans": "Annuals 设置",
+    "cs": "Nastavení Annuals",
+    "nb": "Annuals-innstillinger",
+    "da": "Annuals Indstillinger",
+    "tr": "Annuals Ayarları",
+    "sk": "Nastavenia Annuals",
+    "lt": "Annuals nustatymai",
 }
 
 
 def hub_title(hass: HomeAssistant) -> str:
-    """The Annuals hub entry's title, e.g. "Annuals Settings" / "Annuals Einstellungen"."""
-    return f"Annuals {_HUB_TITLE_WORD.get(hass.config.language, 'Settings')}"
+    """The Annuals hub entry's title, e.g. "Annuals Settings" / "Annuals-Einstellungen"."""
+    return _HUB_TITLE.get(hass.config.language, "Annuals Settings")

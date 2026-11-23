@@ -2,6 +2,25 @@
 
 All notable changes to this integration are documented here.
 
+## v3.5.3
+
+A release for the translations: every text of the 16 languages besides English was read by a reviewer for that language, and what was found is corrected - about 1,450 texts in the card and the integration.
+
+### Changed
+- **The wording of all 16 translations.** Mistranslations, grammar, one thing called by two names, and words Home Assistant's own interface writes differently. Among them: a moved holiday date was "watched" rather than "observed" in six languages; an entity was called a device in Danish and Norwegian; four of the card's texts were Swedish in the Norwegian translation and Spanish in the Brazilian Portuguese one; holiday categories did not agree with the word for holiday in Spanish, French, Italian, Portuguese, Russian and Czech; fixed texts with a count were wrong for part of the numbers in Polish, Czech, Slovak, Lithuanian and Russian. Dashboard, blueprint, entity, to-do list and theme now use the words Home Assistant itself shows in each language. **Important**, **VIP Annual** and **Timeline** stay as they are in every language: they are names.
+- **Sensor names that are right for every name.** In Czech, Danish, French, Lithuanian, Norwegian, Polish, Russian and Swedish the name of an event's sensor attached an ending to the person's name, or needed a case the name does not have. They now put the type first - the way German always did. The names shown for existing sensors change with it; their entity ids do not.
+- **The title of the settings entry follows the language.** It was "Annuals" and the language's word for settings, in that order, whatever the language; it is now what that language's own dialog calls it. The entry is renamed at the next start.
+- **The unit of the sensors in Russian and Czech** is an abbreviation now, because no word for "days" fits every number there.
+
+### Fixed
+- **The Timeline's sentence is grammatical in more languages.** An article and an ordinal that follow the gender of the event's type in French, Spanish, Italian and Brazilian Portuguese; the elision in French and the article before 8 and 11 in Italian; a gendered ordinal in Russian; the possessive in Dutch and Swedish; the form for someone who has died in Polish, Czech, Slovak, Lithuanian and Russian.
+- **The right plural in "in N days".** Czech and Slovak have a form of their own for 2 to 4, Lithuanian one for 21, 31 and so on - on the card and in the sensors' `reminder_message`.
+- **Turkish types keep their letter.** Inside the Timeline's sentence a type that begins with a dotted capital I came out with a stray dot above the small letter.
+- **Buddhist holidays have their category on the card.** The integration offers it; the card had no word for it and showed the raw key in English.
+- **Three help texts point to where the row columns are**: Layout -> List view. They named a group that no longer exists.
+- **The example in the holiday type's help text** is what the card writes in that language, not the English one.
+- **`type` and `vip` are marked as code** in the CSV import's description in every language, as in English.
+
 ## v3.5.2
 
 A release of corrections: a review of the whole integration, and everything it found.

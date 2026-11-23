@@ -65,15 +65,15 @@
                 "buddhist": "Budista",
                 "de_facto": "De facto",
                 "protestant": "Protestante",
-                "sabian": "Sabeana",
+                "sabian": "Sabeu",
                 "yazidi": "Yazidi",
-                "albanian": "Albanesa",
-                "armenian": "Armênia",
-                "bosnian": "Bósnia",
+                "albanian": "Albanês",
+                "armenian": "Armênio",
+                "bosnian": "Bósnio",
                 "roma": "Romani",
-                "serbian": "Sérvia",
-                "turkish": "Turca",
-                "vlach": "Valáquia"
+                "serbian": "Sérvio",
+                "turkish": "Turco",
+                "vlach": "Valaco"
             }
         },
         "nth": {
@@ -145,7 +145,7 @@
                 },
                 "description": "Cada evento recebe sua própria entrada, que você pode encontrar e editar depois em Configurações → Dispositivos e serviços → Annuals pesquisando pelo nome.",
                 "data_description": {
-                    "person": "Uma pessoa no Home Assistant cuja foto representa este evento: no cartão do painel e na notificação do lembrete.",
+                    "person": "Uma pessoa no Home Assistant cuja foto representa este evento: no cartão do dashboard e na notificação do lembrete.",
                     "deceased": "Aniversário, Dia do nome, Aniversário de animal de estimação e Aniversário de casamento - A pessoa faleceu: o dia é mantido e marcado, o cartão diz o que teria sido e suas automações podem distingui-lo. Sem efeito nos outros tipos."
                 }
             },
@@ -166,7 +166,7 @@
                 },
                 "description": "Uma única data para a qual fazer a contagem regressiva. Ela nunca se repete, por isso o ano é obrigatório, e a entrada é excluída automaticamente na meia-noite seguinte ao seu término.\n\nCom uma data de término vira um evento de vários dias: uma viagem, um congresso, uma estadia.",
                 "data_description": {
-                    "time": "A que horas começa nesse dia. A entrada do calendário passa a ter um horário, e o cartão do painel o mostra.",
+                    "time": "A que horas começa nesse dia. A entrada do calendário passa a ter um horário, e o cartão do dashboard o mostra.",
                     "end_time": "A que horas termina: na data de término, se houver, senão no mesmo dia. Precisa de uma hora de início; vazio, a entrada do calendário dura uma hora."
                 }
             },
@@ -209,7 +209,7 @@
                     "deceased": "Falecido(a)"
                 },
                 "data_description": {
-                    "person": "Uma pessoa no Home Assistant cuja foto representa este evento: no cartão do painel e na notificação do lembrete.",
+                    "person": "Uma pessoa no Home Assistant cuja foto representa este evento: no cartão do dashboard e na notificação do lembrete.",
                     "deceased": "A pessoa faleceu: o dia é mantido e marcado, o cartão diz o que teria sido e suas automações podem distingui-lo."
                 }
             },
@@ -230,13 +230,13 @@
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "A que horas começa nesse dia. A entrada do calendário passa a ter um horário, e o cartão do painel o mostra.",
+                    "time": "A que horas começa nesse dia. A entrada do calendário passa a ter um horário, e o cartão do dashboard o mostra.",
                     "end_time": "A que horas termina: na data de término, se houver, senão no mesmo dia. Precisa de uma hora de início; vazio, a entrada do calendário dura uma hora."
                 }
             },
             "reconfigure_custom": {
                 "title": "Editar evento personalizado",
-                "description": "Altere qualquer campo abaixo e envie para atualizar este evento.\n\nEla pode seguir uma **regra** em vez de um dia fixo – *o segundo domingo de maio*. Preencha os dois campos abaixo; o **Mês** acima indica a que mês a regra se aplica e o **Dia** deixa de ser usado. Ao limpá-los, o evento volta para esse dia.",
+                "description": "Altere qualquer campo abaixo e envie para atualizar este evento.\n\nEle pode seguir uma **regra** em vez de um dia fixo – *o segundo domingo de maio*. Preencha os dois campos abaixo; o **Mês** acima indica a que mês a regra se aplica e o **Dia** deixa de ser usado. Ao limpá-los, o evento volta para esse dia.",
                 "data": {
                     "name": "Nome",
                     "last_name": "Sobrenome (opcional)",
@@ -283,7 +283,7 @@
         "step": {
             "import_csv": {
                 "title": "Importar eventos de um CSV",
-                "description": "Colunas: name, type, day, month, year (opcional, obrigatório para one_time), icon (opcional), vip (opcional), last_name (opcional). \"type\" deve ser uma destas chaves em inglês: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (sempre em inglês, independente do seu idioma). \"vip\" aceita 1/true/yes/y/x (sem diferenciar maiúsculas/minúsculas); deixe vazio ou omita a coluna para um evento que não seja VIP. Mantenha todas as colunas mesmo quando um valor estiver vazio - uma linha sem a vírgula final desloca os valores seguintes para a esquerda. Linhas inválidas são ignoradas e registradas.\n\nExemplo:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFérias em família,one_time,15,7,2026,mdi:airplane,,\n```",
+                "description": "Colunas: name, type, day, month, year (opcional, obrigatório para one_time), icon (opcional), vip (opcional), last_name (opcional). `type` deve ser uma destas chaves em inglês: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (sempre em inglês, independentemente do seu idioma). `vip` aceita 1/true/yes/y/x (sem diferenciar maiúsculas/minúsculas); deixe vazio ou omita a coluna para um evento que não seja VIP. Mantenha todas as colunas mesmo quando um valor estiver vazio - uma linha sem a vírgula final desloca os valores seguintes para a esquerda. Linhas inválidas são ignoradas e registradas.\n\nExemplo:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFérias em família,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "Arquivo CSV"
                 }
@@ -312,7 +312,7 @@
             },
             "import_vcard_other_dates": {
                 "title": "Importar outras datas de um vCard",
-                "description": "Envie um arquivo .vcf. Lê todas as datas além do aniversário: o campo padrão \"Data comemorativa\" (Anniversary), além de qualquer data com rótulo personalizado que o seu aplicativo de contatos permite adicionar por contato (por exemplo, \"Aniversário\", \"Outro\" ou um rótulo digitado por você). Diferente dos aniversários, essas datas não são todas do mesmo tipo de evento - as próximas etapas permitem revisar cada uma, com seu rótulo detectado exibido como referência, e atribuir o tipo de evento correto individualmente.",
+                "description": "Envie um arquivo .vcf. Lê todas as datas além do aniversário: o campo padrão \"Data comemorativa\" (Anniversary), além de qualquer data com rótulo personalizado que o seu aplicativo de contatos permite adicionar por contato (por exemplo, \"Data comemorativa\", \"Outro\" ou um rótulo digitado por você). Diferente dos aniversários, essas datas não são todas do mesmo tipo de evento - as próximas etapas permitem revisar cada uma, com seu rótulo detectado exibido como referência, e atribuir o tipo de evento correto individualmente.",
                 "data": {
                     "vcard_file": "Arquivo vCard"
                 }
@@ -351,7 +351,7 @@
             },
             "holiday_settings": {
                 "title": "Configurações do feriado",
-                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nData, tipo e região vêm do banco de feriados e não podem ser editados aqui.",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nData, tipo e região vêm do banco de dados de feriados e não podem ser editados aqui.",
                 "data": {
                     "icon": "Ícone"
                 }
@@ -365,7 +365,7 @@
             },
             "holiday_name_edit": {
                 "title": "Nome do feriado",
-                "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nPreenchido com o que é exibido atualmente. Deixe vazio para voltar ao banco de feriados.",
+                "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\nPreenchido com o que é exibido atualmente. Deixe vazio para voltar ao banco de dados de feriados.",
                 "data": {
                     "name": "Nome",
                     "reason": "Motivo"
@@ -387,9 +387,9 @@
                 }
             },
             "hub_menu": {
-                "title": "Annuals Configurações",
+                "title": "Configurações do Annuals",
                 "menu_options": {
-                    "annual_settings": "{icon_annual_settings} Annual Configurações",
+                    "annual_settings": "{icon_annual_settings} Configurações de Annual",
                     "import_events": "{icon_import_events} Importar eventos",
                     "export_csv": "{icon_export_csv} Exportar eventos para CSV",
                     "holiday_translations": "{icon_holiday_translations} Traduções de feriados",
@@ -491,7 +491,7 @@
                 }
             },
             "annual_settings": {
-                "title": "Annual Configurações",
+                "title": "Configurações de Annual",
                 "sections": {
                     "important_events": {
                         "name": "❗ Eventos importantes",
@@ -509,7 +509,7 @@
                     },
                     "todo": {
                         "name": "📍 Listas de tarefas",
-                        "description": "As tarefas em aberto destas listas sinalizam um evento: cada sensor de evento passa a ter um atributo \"todo\" - verdadeiro enquanto houver ao menos uma tarefa ainda em aberto associada a ele, falso caso contrário - para suas próprias automações, templates e painéis. A associação é feita primeiro pela data de vencimento e depois pelo fato de o texto da tarefa mencionar o evento (nome completo, nome, tipo, número da ocorrência); uma tarefa que serve igualmente bem a dois eventos fica sem associação. Deixe vazio para desativar. Independente da configuração de mesmo nome do cartão do painel.",
+                        "description": "As tarefas em aberto destas listas sinalizam um evento: cada sensor de evento passa a ter um atributo \"todo\" - verdadeiro enquanto houver ao menos uma tarefa ainda em aberto associada a ele, falso caso contrário - para suas próprias automações, templates e dashboards. A associação é feita primeiro pela data de vencimento e depois pelo fato de o texto da tarefa mencionar o evento (nome completo, nome, tipo, número da ocorrência); uma tarefa que serve igualmente bem a dois eventos fica sem associação. Deixe vazio para desativar. Independente da configuração de mesmo nome do cartão do dashboard.",
                         "data": {
                             "todo_lists": "Listas de tarefas"
                         }
@@ -536,7 +536,7 @@
                     "deceased": "Falecido(a)"
                 },
                 "data_description": {
-                    "person": "Uma pessoa no Home Assistant cuja foto representa este evento: no cartão do painel e na notificação do lembrete.",
+                    "person": "Uma pessoa no Home Assistant cuja foto representa este evento: no cartão do dashboard e na notificação do lembrete.",
                     "deceased": "A pessoa faleceu: o dia é mantido e marcado, o cartão diz o que teria sido e suas automações podem distingui-lo."
                 }
             },
@@ -557,13 +557,13 @@
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "A que horas começa nesse dia. A entrada do calendário passa a ter um horário, e o cartão do painel o mostra.",
+                    "time": "A que horas começa nesse dia. A entrada do calendário passa a ter um horário, e o cartão do dashboard o mostra.",
                     "end_time": "A que horas termina: na data de término, se houver, senão no mesmo dia. Precisa de uma hora de início; vazio, a entrada do calendário dura uma hora."
                 }
             },
             "edit_custom": {
                 "title": "Editar evento personalizado",
-                "description": "Altere qualquer campo abaixo e envie para atualizar este evento.\n\nEla pode seguir uma **regra** em vez de um dia fixo – *o segundo domingo de maio*. Preencha os dois campos abaixo; o **Mês** acima indica a que mês a regra se aplica e o **Dia** deixa de ser usado. Ao limpá-los, o evento volta para esse dia.",
+                "description": "Altere qualquer campo abaixo e envie para atualizar este evento.\n\nEle pode seguir uma **regra** em vez de um dia fixo – *o segundo domingo de maio*. Preencha os dois campos abaixo; o **Mês** acima indica a que mês a regra se aplica e o **Dia** deixa de ser usado. Ao limpá-los, o evento volta para esse dia.",
                 "data": {
                     "name": "Nome",
                     "last_name": "Sobrenome (opcional)",
@@ -613,7 +613,7 @@
             "no_market_batch_selected": "Marque \"Remover todos os dias da bolsa importados\" ou escolha uma bolsa para remover."
         },
         "abort": {
-            "translations_exported": "{count} tradução(ões) exportado(s). [Baixar annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+clique para baixar - um clique simples não funciona aqui)\n\nOu copie o CSV abaixo:\n\n```\n{csv}\n```",
+            "translations_exported": "{count} tradução(ões) exportada(s). [Baixar annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+clique para baixar - um clique simples não funciona aqui)\n\nOu copie o CSV abaixo:\n\n```\n{csv}\n```",
             "translations_imported": "{updated} feriado(s) atualizado(s), {skipped} linha(s) ignorada(s).",
             "no_translations_to_export": "Nenhum nome de feriado foi escrito ainda – não há nada para exportar.",
             "import_started": "Importação iniciada: {created} evento(s) na fila, {skipped} linha(s) ignorada(s) (veja o log para detalhes).",

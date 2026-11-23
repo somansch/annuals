@@ -10,7 +10,7 @@
         },
         "holiday_breaks": {
             "options": {
-                "note": "Wielodniowe ferie, takie jak ferie szkolne, są z powrotem łączone w całe ferie - poniżej można wybrać, które ich części zaimportować."
+                "note": "Wielodniowe przerwy, takie jak ferie szkolne, są z powrotem łączone w całość - poniżej można wybrać, które ich części zaimportować."
             }
         },
         "event_type": {
@@ -49,12 +49,12 @@
                 "public": "Państwowe",
                 "bank": "Bankowe",
                 "government": "Urzędowe",
-                "school": "Ferie szkolne",
+                "school": "Szkolne",
                 "optional": "Opcjonalne",
                 "optional_women": "Opcjonalne (dla kobiet)",
                 "unofficial": "Nieoficjalne",
                 "half_day": "Pół dnia",
-                "armed_forces": "Siły zbrojne",
+                "armed_forces": "Wojskowe",
                 "workday": "Dzień roboczy",
                 "catholic": "Katolickie",
                 "christian": "Chrześcijańskie",
@@ -122,7 +122,7 @@
         "step": {
             "user": {
                 "title": "Dodaj wydarzenie",
-                "description": "Jakiego rodzaju jest to wydarzenie?\n\n**Coroczne** obejmuje urodziny, rocznicę, imieniny, rocznicę ślubu, rocznicę śmierci, urodziny zwierzaka i jubileusz pracy. **Jednorazowe** to pojedyncza data, która usuwa się sama po upływie. **Inne** to twoja własna coroczna data – w konkretnym dniu albo według reguły.",
+                "description": "Jakiego rodzaju jest to wydarzenie?\n\n**Coroczne** obejmuje urodziny, rocznicę, imieniny, rocznicę ślubu, rocznicę śmierci, urodziny zwierzaka i jubileusz pracy. **Jednorazowe** to pojedyncza data, która po upływie terminu sama się usuwa. **Inne** to twoja własna coroczna data – w konkretnym dniu albo według reguły.",
                 "menu_options": {
                     "recurring": "{icon_recurring} Coroczna data dla kogoś",
                     "one_time": "{icon_one_time} Wydarzenie jednorazowe",
@@ -167,7 +167,7 @@
                 "description": "Pojedyncza data, do której trwa odliczanie. Nigdy się nie powtarza, dlatego rok jest wymagany, a wpis usuwa się automatycznie o północy po jej upływie.\n\nZ datą zakończenia staje się wydarzeniem wielodniowym – podróż, konferencja, pobyt.",
                 "data_description": {
                     "time": "O której zaczyna się tego dnia. Wpis w kalendarzu ma wtedy godzinę, a karta panelu ją pokazuje.",
-                    "end_time": "O której się kończy – w dniu zakończenia, jeśli jest, w przeciwnym razie tego samego dnia. Wymaga godziny rozpoczęcia; pozostawiony pusty wpis w kalendarzu trwa godzinę."
+                    "end_time": "O której się kończy – w dniu zakończenia, jeśli jest, w przeciwnym razie tego samego dnia. Wymaga godziny rozpoczęcia; gdy pole jest puste, wpis w kalendarzu trwa godzinę."
                 }
             },
             "custom": {
@@ -188,7 +188,7 @@
                 },
                 "description": "Twoja własna coroczna data, na wszystko, czego nie opisują pozostałe typy.\n\nZamiast na konkretnym dniu może opierać się na **regule**: Dzień Matki wypada w drugą niedzielę maja, a Dzień Ojca w Australii w pierwszą niedzielę września. Wypełnij dwa pola poniżej – **Miesiąc** powyżej wskazuje, którego miesiąca dotyczy reguła, a **Dzień** nie jest wtedy używany. Zostaw je puste, aby data była stała.",
                 "data_description": {
-                    "interval": "Razem z jednostką obok – co 6 miesięcy, co 2 lata. Liczone od daty powyżej, która wtedy potrzebuje roku. Zostaw oba puste dla raz w roku.",
+                    "interval": "Razem z jednostką obok – co 6 miesięcy, co 2 lata. Liczone od daty powyżej, która wtedy potrzebuje roku. Zostaw oba puste, aby powtarzało się raz w roku.",
                     "nth": "Pierwszy, drugi, trzeci, czwarty albo ostatni w miesiącu.",
                     "weekday": "Ustaw razem z polem powyżej albo zostaw oba puste."
                 }
@@ -231,7 +231,7 @@
                 },
                 "data_description": {
                     "time": "O której zaczyna się tego dnia. Wpis w kalendarzu ma wtedy godzinę, a karta panelu ją pokazuje.",
-                    "end_time": "O której się kończy – w dniu zakończenia, jeśli jest, w przeciwnym razie tego samego dnia. Wymaga godziny rozpoczęcia; pozostawiony pusty wpis w kalendarzu trwa godzinę."
+                    "end_time": "O której się kończy – w dniu zakończenia, jeśli jest, w przeciwnym razie tego samego dnia. Wymaga godziny rozpoczęcia; gdy pole jest puste, wpis w kalendarzu trwa godzinę."
                 }
             },
             "reconfigure_custom": {
@@ -252,7 +252,7 @@
                     "weekday": "Dzień tygodnia"
                 },
                 "data_description": {
-                    "interval": "Razem z jednostką obok – co 6 miesięcy, co 2 lata. Liczone od daty powyżej, która wtedy potrzebuje roku. Zostaw oba puste dla raz w roku.",
+                    "interval": "Razem z jednostką obok – co 6 miesięcy, co 2 lata. Liczone od daty powyżej, która wtedy potrzebuje roku. Zostaw oba puste, aby powtarzało się raz w roku.",
                     "nth": "Pierwszy, drugi, trzeci, czwarty albo ostatni w miesiącu.",
                     "weekday": "Ustaw razem z polem powyżej albo zostaw oba puste."
                 }
@@ -283,7 +283,7 @@
         "step": {
             "import_csv": {
                 "title": "Importuj wydarzenia z pliku CSV",
-                "description": "Kolumny: name, type, day, month, year (opcjonalnie, wymagane dla one_time), icon (opcjonalnie), vip (opcjonalnie), last_name (opcjonalnie). „type” musi być jednym z następujących angielskich kluczy: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (zawsze po angielsku, niezależnie od ustawień języka). „vip” akceptuje 1/true/yes/y/x (wielkość liter nie ma znaczenia); pozostaw puste lub pomiń kolumnę dla wydarzenia bez statusu VIP. Zachowaj każdą kolumnę, nawet jeśli wartość jest pusta – wiersz bez przecinka na końcu przesuwa kolejne wartości w lewo. Nieprawidłowe wiersze są pomijane i zapisywane w dzienniku.\n\nPrzykład:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nWakacje rodzinne,one_time,15,7,2026,mdi:airplane,,\n```",
+                "description": "Kolumny: name, type, day, month, year (opcjonalnie, wymagane dla one_time), icon (opcjonalnie), vip (opcjonalnie), last_name (opcjonalnie). `type` musi być jednym z następujących angielskich kluczy: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (zawsze po angielsku, niezależnie od ustawień języka). `vip` akceptuje 1/true/yes/y/x (wielkość liter nie ma znaczenia); pozostaw puste lub pomiń kolumnę dla wydarzenia bez statusu VIP. Zachowaj każdą kolumnę, nawet jeśli wartość jest pusta – wiersz bez przecinka na końcu przesuwa kolejne wartości w lewo. Nieprawidłowe wiersze są pomijane i zapisywane w dzienniku.\n\nPrzykład:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nWakacje rodzinne,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "Plik CSV"
                 }
@@ -335,11 +335,11 @@
             },
             "remove_ics_imports": {
                 "title": "Usuń wydarzenia zaimportowane z ICS",
-                "description": "{count} wydarzenie(a) zostało utworzonych przez wcześniejszy import ICS. Kliknij OK, aby usunąć je wszystkie – wpisy, które import ICS tylko zaktualizował (a nie utworzył), nigdy nie są objęte, podobnie jak wydarzenia dodane ręcznie oraz zaimportowane z CSV lub vCard."
+                "description": "Wydarzenia utworzone przez wcześniejszy import ICS: {count}. Kliknij OK, aby usunąć je wszystkie – wpisy, które import ICS tylko zaktualizował (a nie utworzył), nigdy nie są objęte, podobnie jak wydarzenia dodane ręcznie oraz zaimportowane z CSV lub vCard."
             },
             "remove_vcard_imports": {
                 "title": "Usuń wydarzenia zaimportowane z vCard",
-                "description": "{count} wydarzenie(a) zostało utworzonych przez wcześniejszy import vCard. Kliknij OK, aby usunąć je wszystkie – wpisy, które import vCard tylko zaktualizował (a nie utworzył), nigdy nie są objęte, podobnie jak wydarzenia dodane ręcznie oraz zaimportowane z CSV lub ICS."
+                "description": "Wydarzenia utworzone przez wcześniejszy import vCard: {count}. Kliknij OK, aby usunąć je wszystkie – wpisy, które import vCard tylko zaktualizował (a nie utworzył), nigdy nie są objęte, podobnie jak wydarzenia dodane ręcznie oraz zaimportowane z CSV lub ICS."
             },
             "holiday_menu": {
                 "title": "Święto",
@@ -373,7 +373,7 @@
             },
             "holiday_translations": {
                 "title": "🌐 Tłumaczenia świąt",
-                "description": "Eksportuj i importuj nazwy świąt, które sam(a) napisałeś/napisałaś.",
+                "description": "Eksportuj i importuj nazwy świąt wpisane samodzielnie.",
                 "menu_options": {
                     "export_translations": "📤 Eksportuj tłumaczenia",
                     "import_translations": "📥 Importuj tłumaczenia"
@@ -387,9 +387,9 @@
                 }
             },
             "hub_menu": {
-                "title": "Annuals Ustawienia",
+                "title": "Ustawienia Annuals",
                 "menu_options": {
-                    "annual_settings": "{icon_annual_settings} Annual Ustawienia",
+                    "annual_settings": "{icon_annual_settings} Ustawienia Annual",
                     "import_events": "{icon_import_events} Importuj wydarzenia",
                     "export_csv": "{icon_export_csv} Eksportuj wydarzenia do CSV",
                     "holiday_translations": "{icon_holiday_translations} Tłumaczenia świąt",
@@ -461,7 +461,7 @@
                     "language": "Język nazw świąt"
                 },
                 "data_description": {
-                    "break_start": "Ferie szkolne zawierają tylko dni nauki, więc zaczynają się wcześniej - liczenie cofa się przez weekend i sąsiednie święta do pierwszego naprawdę wolnego dnia.",
+                    "break_start": "Ferie szkolne są zapisane tylko jako dni szkolne, więc w rzeczywistości zaczynają się wcześniej - liczenie cofa się przez weekend i sąsiednie święta do pierwszego naprawdę wolnego dnia.",
                     "break_end": "To samo w drugą stronę: ostatni wolny dzień, a nie ostatni wymieniony.",
                     "break_days": "Jedno wydarzenie na każdy dzień ferii. Same wakacje letnie dają ich ponad czterdzieści.",
                     "include_observed": "Święta tego kraju są czasem przenoszone na najbliższy dzień roboczy, gdy wypadają w weekend (np. na poprzedzający piątek lub następny poniedziałek) - zaimportuj też tę przeniesioną datę jako osobne wydarzenie."
@@ -476,7 +476,7 @@
             },
             "remove_holidays": {
                 "title": "Usuń zaimportowane święta",
-                "description": "Obecnie zaimportowano {total} święto(a). Zaznacz pole poniżej, aby usunąć wszystkie, lub pozostaw je odznaczone i wybierz zamiast tego jedną partię. Ręcznie dodane wydarzenia nigdy nie są tym objęte.",
+                "description": "Zaimportowane święta: {total}. Zaznacz pole poniżej, aby usunąć wszystkie, lub pozostaw je odznaczone i wybierz zamiast tego jedną partię. Ręcznie dodane wydarzenia nigdy nie są tym objęte.",
                 "data": {
                     "remove_all": "Usuń wszystkie zaimportowane święta",
                     "batch": "Partia do usunięcia"
@@ -491,11 +491,11 @@
                 }
             },
             "annual_settings": {
-                "title": "Annual Ustawienia",
+                "title": "Ustawienia Annual",
                 "sections": {
                     "important_events": {
                         "name": "❗ Wydarzenia ważne",
-                        "description": "Rozdzielone przecinkami numery rocznic, przy których wydarzenie tego typu zostanie automatycznie oznaczone jako „Important”, np. „18,21,30,40,50”. Pozostaw pole puste, aby wyłączyć to dla danego typu.",
+                        "description": "Rozdzielone przecinkami numery wystąpień, przy których wydarzenie tego typu zostanie automatycznie oznaczone jako „Important”, np. „18,21,30,40,50”. Pozostaw pole puste, aby wyłączyć to dla danego typu.",
                         "data": {
                             "important_thresholds_birthday": "Urodziny",
                             "important_thresholds_anniversary": "Rocznica",
@@ -509,7 +509,7 @@
                     },
                     "todo": {
                         "name": "📍 Listy zadań",
-                        "description": "Otwarte pozycje na tych listach oznaczają wydarzenie: każdy sensor wydarzenia otrzyma wtedy atrybut „todo” - true, dopóki przypisana jest do niego co najmniej jedna wciąż otwarta pozycja, w przeciwnym razie false - do własnych automatyzacji, szablonów i pulpitów. Dopasowanie następuje najpierw po terminie, a potem po tym, czy treść zadania wymienia wydarzenie (pełne imię, imię, typ, numer wystąpienia); zadanie pasujące równie dobrze do dwóch wydarzeń pozostaje nieprzypisane. Pozostaw puste, aby wyłączyć. Niezależne od ustawienia o tej samej nazwie w karcie pulpitu.",
+                        "description": "Otwarte pozycje na tych listach oznaczają wydarzenie: każdy sensor wydarzenia otrzyma wtedy atrybut „todo” - true, dopóki przypisana jest do niego co najmniej jedna wciąż otwarta pozycja, w przeciwnym razie false - do własnych automatyzacji, szablonów i paneli. Dopasowanie następuje najpierw po terminie, a potem po tym, czy treść zadania wymienia wydarzenie (pełne imię i nazwisko, imię, typ, numer wystąpienia); zadanie pasujące równie dobrze do dwóch wydarzeń pozostaje nieprzypisane. Pozostaw puste, aby wyłączyć. Niezależne od ustawienia o tej samej nazwie w karcie panelu.",
                         "data": {
                             "todo_lists": "Listy zadań"
                         }
@@ -518,7 +518,7 @@
             },
             "delete_all": {
                 "title": "Usuń wszystkie dane Annuals",
-                "description": "To trwale usuwa wszystkie {count} wydarzenie(a), wspólne kalendarze i samo centrum Annuals – całą integrację i wszystko, co utworzyła. Tej operacji nie można cofnąć. Kliknij „OK”, aby potwierdzić."
+                "description": "To trwale usuwa wszystkie wydarzenia ({count}), wspólne kalendarze i samo centrum Annuals – całą integrację i wszystko, co utworzyła. Tej operacji nie można cofnąć. Kliknij „OK”, aby potwierdzić."
             },
             "edit_recurring": {
                 "title": "Edytuj wydarzenie",
@@ -558,7 +558,7 @@
                 },
                 "data_description": {
                     "time": "O której zaczyna się tego dnia. Wpis w kalendarzu ma wtedy godzinę, a karta panelu ją pokazuje.",
-                    "end_time": "O której się kończy – w dniu zakończenia, jeśli jest, w przeciwnym razie tego samego dnia. Wymaga godziny rozpoczęcia; pozostawiony pusty wpis w kalendarzu trwa godzinę."
+                    "end_time": "O której się kończy – w dniu zakończenia, jeśli jest, w przeciwnym razie tego samego dnia. Wymaga godziny rozpoczęcia; gdy pole jest puste, wpis w kalendarzu trwa godzinę."
                 }
             },
             "edit_custom": {
@@ -579,7 +579,7 @@
                     "weekday": "Dzień tygodnia"
                 },
                 "data_description": {
-                    "interval": "Razem z jednostką obok – co 6 miesięcy, co 2 lata. Liczone od daty powyżej, która wtedy potrzebuje roku. Zostaw oba puste dla raz w roku.",
+                    "interval": "Razem z jednostką obok – co 6 miesięcy, co 2 lata. Liczone od daty powyżej, która wtedy potrzebuje roku. Zostaw oba puste, aby powtarzało się raz w roku.",
                     "nth": "Pierwszy, drugi, trzeci, czwarty albo ostatni w miesiącu.",
                     "weekday": "Ustaw razem z polem powyżej albo zostaw oba puste."
                 }
@@ -606,29 +606,29 @@
             "end_time_needs_time": "Godzina zakończenia wymaga godziny rozpoczęcia.",
             "end_time_before_start": "Godzina zakończenia musi być późniejsza niż godzina rozpoczęcia.",
             "no_holiday_selected": "Zaznacz co najmniej jedno święto.",
-            "category_needs_region": "{category} nie ma świąt dla {where} w roku {year} - mają je tylko te regiony: {regions}. Wybierz jeden z nich w polu „Region” albo pomiń {category}.",
-            "category_empty": "{category} nie ma świąt dla {where} w roku {year}. Pomiń tę kategorię, aby zaimportować pozostałe.",
+            "category_needs_region": "W kategorii „{category}” nie ma świąt dla {where} w roku {year} - mają je tylko te regiony: {regions}. Wybierz jeden z nich w polu „Region” albo pomiń kategorię „{category}”.",
+            "category_empty": "W kategorii „{category}” nie ma świąt dla {where} w roku {year}. Pomiń tę kategorię, aby zaimportować pozostałe.",
             "no_market_day_selected": "Zaznacz co najmniej jeden dzień.",
-            "market_category_empty": "{category} nie ma dni dla {where} w roku {year}. Pomiń tę kategorię, aby zaimportować pozostałe.",
+            "market_category_empty": "W kategorii „{category}” nie ma dni dla {where} w roku {year}. Pomiń tę kategorię, aby zaimportować pozostałe.",
             "no_market_batch_selected": "Zaznacz „Usuń wszystkie zaimportowane dni giełdowe” lub wybierz giełdę do usunięcia."
         },
         "abort": {
-            "translations_exported": "Wyeksportowano {count} tłumaczeń. [Pobierz annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+klik, aby pobrać - zwykłe kliknięcie tu nie zadziała)\n\nLub skopiuj poniższy CSV:\n\n```\n{csv}\n```",
+            "translations_exported": "Wyeksportowane tłumaczenia: {count}. [Pobierz annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+klik, aby pobrać - zwykłe kliknięcie tu nie zadziała)\n\nLub skopiuj poniższy CSV:\n\n```\n{csv}\n```",
             "translations_imported": "Zaktualizowano świąt: {updated}, pominięto wierszy: {skipped}.",
             "no_translations_to_export": "Nie zapisano jeszcze żadnych nazw świąt – nie ma czego eksportować.",
-            "import_started": "Import rozpoczęty: {created} wydarzenie(a) w kolejce, {skipped} wiersz(y) pominięto (szczegóły w dzienniku).",
-            "ics_import_started": "Import rozpoczęty: {created} wydarzenie(a) utworzono, {updated} zaktualizowano, {skipped} wpis(y) pominięto lub wykluczono.",
-            "csv_exported": "Wyeksportowano {count} wydarzeń. [Pobierz annuals_export.csv]({url}) (Ctrl/Cmd+klik, aby pobrać - zwykłe kliknięcie tu nie zadziała)\n\nLub skopiuj poniższy CSV:\n\n```\n{csv}\n```",
+            "import_started": "Import rozpoczęty – wydarzenia w kolejce: {created}, pominięte wiersze: {skipped} (szczegóły w dzienniku).",
+            "ics_import_started": "Import rozpoczęty – utworzone wydarzenia: {created}, zaktualizowane: {updated}, pominięte lub wykluczone wpisy: {skipped}.",
+            "csv_exported": "Wyeksportowane wydarzenia: {count}. [Pobierz annuals_export.csv]({url}) (Ctrl/Cmd+klik, aby pobrać - zwykłe kliknięcie tu nie zadziała)\n\nLub skopiuj poniższy CSV:\n\n```\n{csv}\n```",
             "no_events_to_export": "Nie ma jeszcze żadnych wydarzeń do wyeksportowania.",
             "deleted_all": "Wszystkie wydarzenia, kalendarze i centrum Annuals zostały usunięte.",
-            "holiday_import_started": "Rozpoczęto import: {count} wydarzeń świątecznych w kolejce dla {country} ({new} nowych, {updated} zaktualizowanych).",
+            "holiday_import_started": "Import rozpoczęty. {country} – święta w kolejce: {count} (nowe: {new}, zaktualizowane: {updated}).",
             "no_holidays_imported": "Nie zaimportowano jeszcze żadnych świąt.",
-            "holidays_removed": "{count} święto(a) usunięto.",
+            "holidays_removed": "Usunięto święta: {count}.",
             "no_ics_imports": "Nie znaleziono żadnych wydarzeń utworzonych przez import ICS.",
-            "ics_imports_removed": "{count} wydarzenie(a) zaimportowane z ICS usunięto.",
+            "ics_imports_removed": "Usunięto wydarzenia zaimportowane z ICS: {count}.",
             "no_vcard_imports": "Nie znaleziono żadnych wydarzeń utworzonych przez import vCard.",
-            "vcard_imports_removed": "{count} wydarzenie(a) zaimportowane z vCard usunięto.",
-            "market_import_started": "Import rozpoczęty: {count} dni w kolejce dla {country} ({new} nowych, {updated} zaktualizowanych).",
+            "vcard_imports_removed": "Usunięto wydarzenia zaimportowane z vCard: {count}.",
+            "market_import_started": "Import rozpoczęty. {country} – dni w kolejce: {count} (nowe: {new}, zaktualizowane: {updated}).",
             "no_markets_imported": "Nie zaimportowano jeszcze żadnych dni giełdowych.",
             "markets_removed": "Usunięto dni giełdowe: {count}."
         }
@@ -636,31 +636,31 @@
     "entity": {
         "sensor": {
             "birthday": {
-                "name": "Urodziny {name}",
+                "name": "Urodziny: {name}",
                 "unit_of_measurement": "dni"
             },
             "anniversary": {
-                "name": "Rocznica {name}",
+                "name": "Rocznica: {name}",
                 "unit_of_measurement": "dni"
             },
             "name_day": {
-                "name": "Imieniny {name}",
+                "name": "Imieniny: {name}",
                 "unit_of_measurement": "dni"
             },
             "wedding_anniversary": {
-                "name": "Rocznica ślubu {name}",
+                "name": "Rocznica ślubu: {name}",
                 "unit_of_measurement": "dni"
             },
             "memorial": {
-                "name": "Rocznica śmierci {name}",
+                "name": "Rocznica śmierci: {name}",
                 "unit_of_measurement": "dni"
             },
             "pet_birthday": {
-                "name": "Urodziny zwierzaka {name}",
+                "name": "Urodziny zwierzaka: {name}",
                 "unit_of_measurement": "dni"
             },
             "work_anniversary": {
-                "name": "Jubileusz pracy {name}",
+                "name": "Jubileusz pracy: {name}",
                 "unit_of_measurement": "dni"
             },
             "custom": {
@@ -703,7 +703,7 @@
                 "name": "Jubileusze pracy"
             },
             "custom": {
-                "name": "Wydarzenia niestandardowe"
+                "name": "Inne wydarzenia"
             },
             "one_time": {
                 "name": "Wydarzenia jednorazowe"

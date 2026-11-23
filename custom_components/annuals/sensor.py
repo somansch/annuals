@@ -76,7 +76,7 @@ from .dates import (
     subdivision_name,
     weekday_rule,
 )
-from .helpers import holiday_span_suffix, ui_language
+from .helpers import holiday_span_suffix, reminder_in_days, ui_language
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -507,7 +507,7 @@ class AnnualEventSensor(SensorEntity):
             return strings.get("today" + suffix, strings.get("today", "Today"))
         if days == 1:
             return strings.get("tomorrow" + suffix, strings.get("tomorrow", "Tomorrow"))
-        return strings.get("in_days" + suffix, strings.get("in_days", "in {days} days")).format(days=days)
+        return reminder_in_days(strings, days, deceased)
 
     def _has_open_todo(self) -> bool:
         """Whether an open to-do item is currently matched to this event.

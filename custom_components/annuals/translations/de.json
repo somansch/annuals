@@ -47,7 +47,7 @@
         "holiday_category": {
             "options": {
                 "public": "Gesetzlich",
-                "bank": "Bankfeiertag",
+                "bank": "Banken",
                 "government": "Behörden",
                 "school": "Schulferien",
                 "optional": "Optional",
@@ -73,7 +73,7 @@
                 "roma": "Roma",
                 "serbian": "Serbisch",
                 "turkish": "Türkisch",
-                "vlach": "Vlachisch"
+                "vlach": "Walachisch"
             }
         },
         "nth": {
@@ -122,7 +122,7 @@
         "step": {
             "user": {
                 "title": "Ereignis hinzufügen",
-                "description": "Um welche Art von Ereignis geht es?\n\n**Jährlich** umfasst Geburtstag, Jahrestag, Namenstag, Hochzeitstag, Gedenktag, Haustier-Geburtstag und Arbeitsjubiläum. **Einmalig** ist ein einzelnes Datum, das sich nach Ablauf selbst löscht. **Frei wählbar** ist dein eigenes jährliches Ereignis, an einem Tag oder nach einer Regel.",
+                "description": "Um welche Art von Ereignis geht es?\n\n**Jährlich** umfasst Geburtstag, Jahrestag, Namenstag, Hochzeitstag, Todestag, Tiergeburtstag und Firmenjubiläum. **Einmalig** ist ein einzelnes Datum, das sich nach Ablauf selbst löscht. **Frei wählbar** ist dein eigenes jährliches Ereignis, an einem Tag oder nach einer Regel.",
                 "menu_options": {
                     "recurring": "{icon_recurring} Ein jährliches Ereignis für jemanden",
                     "one_time": "{icon_one_time} Ein einmaliges Ereignis",
@@ -146,12 +146,12 @@
                 },
                 "data_description": {
                     "person": "Eine Person in Home Assistant, deren Bild für dieses Ereignis steht – auf der Dashboard-Karte und in der Benachrichtigung der Erinnerung.",
-                    "deceased": "Geburtstag, Namenstag, Tiergeburtstag und Hochzeitstag - Die Person ist verstorben: Der Tag bleibt und wird markiert, die Karte sagt, was er gewesen wäre, und deine Automatisierungen können ihn unterscheiden. Bei den anderen Typen ohne Wirkung."
+                    "deceased": "Geburtstag, Namenstag, Tiergeburtstag und Hochzeitstag - Die Person ist verstorben: Der Tag bleibt und wird markiert, die Karte sagt, was er gewesen wäre, und deine Automationen können ihn unterscheiden. Bei den anderen Typen ohne Wirkung."
                 }
             },
             "one_time": {
                 "title": "Einmaliges Ereignis hinzufügen",
-                "description": "Ein einzelnes Datum, auf das heruntergezählt wird. Es wiederholt sich nie, deshalb ist das Jahr Pflicht, und der Eintrag wird in der Mitternacht nach dem Ereignis automatisch gelöscht.\n\nMit einem Enddatum wird daraus ein mehrtägiges Ereignis – eine Reise, eine Konferenz, ein Aufenthalt.",
+                "description": "Ein einzelnes Datum, auf das heruntergezählt wird. Es wiederholt sich nie, deshalb ist das Jahr Pflicht, und der Eintrag wird um Mitternacht nach dem Ereignis automatisch gelöscht.\n\nMit einem Enddatum wird daraus ein mehrtägiges Ereignis – eine Reise, eine Konferenz, ein Aufenthalt.",
                 "data": {
                     "name": "Name",
                     "last_name": "Nachname (optional)",
@@ -172,7 +172,7 @@
             },
             "custom": {
                 "title": "Frei wählbares Ereignis hinzufügen",
-                "description": "Dein eigenes jährliches Ereignis, für alles, was die anderen Typen nicht beschreiben.\n\nEr kann statt auf einem Tag auf einer **Regel** liegen: Der Muttertag ist der zweite Sonntag im Mai, der Vatertag in Australien der erste Sonntag im September. Fülle die beiden Felder unten aus – der **Monat** darüber sagt, für welchen Monat die Regel gilt, der **Tag** wird dann nicht verwendet. Beide leer lassen ergibt ein festes Datum.",
+                "description": "Dein eigenes jährliches Ereignis, für alles, was die anderen Typen nicht beschreiben.\n\nEs kann statt auf einem Tag auf einer **Regel** liegen: Der Muttertag ist der zweite Sonntag im Mai, der Vatertag in Australien der erste Sonntag im September. Fülle die beiden Felder unten aus – der **Monat** darüber sagt, für welchen Monat die Regel gilt, der **Tag** wird dann nicht verwendet. Beide leer lassen ergibt ein festes Datum.",
                 "data": {
                     "name": "Name",
                     "last_name": "Nachname (optional)",
@@ -210,7 +210,7 @@
                 },
                 "data_description": {
                     "person": "Eine Person in Home Assistant, deren Bild für dieses Ereignis steht – auf der Dashboard-Karte und in der Benachrichtigung der Erinnerung.",
-                    "deceased": "Die Person ist verstorben: Der Tag bleibt und wird markiert, die Karte sagt, was er gewesen wäre, und deine Automatisierungen können ihn unterscheiden."
+                    "deceased": "Die Person ist verstorben: Der Tag bleibt und wird markiert, die Karte sagt, was er gewesen wäre, und deine Automationen können ihn unterscheiden."
                 }
             },
             "reconfigure_one_time": {
@@ -236,7 +236,7 @@
             },
             "reconfigure_custom": {
                 "title": "Frei wählbares Ereignis bearbeiten",
-                "description": "Ändere ein beliebiges Feld unten und speichere, um dieses Ereignis zu aktualisieren.\n\nEr kann statt auf einem Tag auf einer **Regel** liegen – *der zweite Sonntag im Mai*. Fülle die beiden Felder unten aus; der **Monat** darüber sagt, für welchen Monat die Regel gilt, der **Tag** wird dann nicht verwendet. Leerst du sie, liegt das Ereignis wieder auf diesem Tag.",
+                "description": "Ändere ein beliebiges Feld unten und speichere, um dieses Ereignis zu aktualisieren.\n\nEs kann statt auf einem Tag auf einer **Regel** liegen – *der zweite Sonntag im Mai*. Fülle die beiden Felder unten aus; der **Monat** darüber sagt, für welchen Monat die Regel gilt, der **Tag** wird dann nicht verwendet. Leerst du sie, liegt das Ereignis wieder auf diesem Tag.",
                 "data": {
                     "name": "Name",
                     "last_name": "Nachname (optional)",
@@ -283,24 +283,24 @@
         "step": {
             "import_csv": {
                 "title": "Ereignisse aus CSV importieren",
-                "description": "Spalten: name, type, day, month, year (optional), icon (optional), vip (optional), last_name (optional). Bei „type“ ist ausschließlich einer der folgenden englischen Schlüssel gültig: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (unabhängig von deiner Spracheinstellung). Bei one_time ist year zwingend erforderlich. „vip“ akzeptiert 1/true/yes/y/x (Groß-/Kleinschreibung egal); leer lassen oder Spalte weglassen für ein nicht-VIP-Ereignis. Jede Spalte muss auch bei einem leeren Wert erhalten bleiben - fehlt ein Komma am Zeilenende, rutschen die folgenden Werte nach links. Ungültige Zeilen werden übersprungen und protokolliert.\n\nBeispiel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamilienurlaub,one_time,15,7,2026,mdi:airplane,,\n```",
+                "description": "Spalten: name, type, day, month, year (optional), icon (optional), vip (optional), last_name (optional). Bei `type` ist ausschließlich einer der folgenden englischen Schlüssel gültig: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (unabhängig von deiner Spracheinstellung). Bei one_time ist year zwingend erforderlich. `vip` akzeptiert 1/true/yes/y/x (Groß-/Kleinschreibung egal); leer lassen oder Spalte weglassen für ein Nicht-VIP-Ereignis. Jede Spalte muss auch bei einem leeren Wert erhalten bleiben - fehlt ein Komma am Zeilenende, rutschen die folgenden Werte nach links. Ungültige Zeilen werden übersprungen und protokolliert.\n\nBeispiel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamilienurlaub,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "CSV-Datei"
                 }
             },
             "import_ics": {
                 "title": "Ereignisse aus ICS-Kalender importieren",
-                "description": "Lade eine .ics-Kalenderdatei hoch - typischerweise ein exportierter Kalender. Es werden nur ganztägige Einträge ohne Wiederholungs-Override gelesen; Einträge mit Uhrzeit werden übersprungen. In den nächsten Schritten kannst du den vorgeschlagenen Vor-/Nachnamen-Split prüfen und korrigieren (und bei Bedarf für alle auf einmal vertauschen), bevor irgendetwas importiert wird.",
+                "description": "Lade eine .ics-Kalenderdatei hoch - typischerweise ein exportierter Kalender. Es werden nur ganztägige Einträge gelesen, die keine Ausnahme einer Wiederholung sind; Einträge mit Uhrzeit werden übersprungen. In den nächsten Schritten kannst du die vorgeschlagene Aufteilung in Vor- und Nachname prüfen und korrigieren (und bei Bedarf für alle auf einmal vertauschen), bevor irgendetwas importiert wird.",
                 "data": {
                     "ics_file": "ICS-Datei"
                 }
             },
             "import_vcard_menu": {
                 "title": "Ereignisse aus vCard importieren",
-                "description": "Der Geburtstag eines Kontakts und dessen weitere Termine (Jubiläen, individuelle Termine) laufen über getrennte Zweige, da nur Geburtstage einen einzigen Ereignistyp für den gesamten Import teilen - jedem weiteren Termin wird bei der Prüfung ein eigener Typ zugewiesen.",
+                "description": "Der Geburtstag eines Kontakts und dessen weitere Termine (Jahrestage, individuelle Termine) laufen über getrennte Zweige, da nur Geburtstage einen einzigen Ereignistyp für den gesamten Import teilen - jedem weiteren Termin wird bei der Prüfung ein eigener Typ zugewiesen.",
                 "menu_options": {
                     "import_vcard": "Geburtstage importieren",
-                    "import_vcard_other_dates": "Weitere Termine importieren (Jubiläen, ...)"
+                    "import_vcard_other_dates": "Weitere Termine importieren (Jahrestage, ...)"
                 }
             },
             "import_vcard": {
@@ -312,7 +312,7 @@
             },
             "import_vcard_other_dates": {
                 "title": "Weitere Termine aus vCard importieren",
-                "description": "Lade eine .vcf-Datei hoch. Liest jeden Termin außer dem Geburtstag: das Standardfeld „Jubiläum“ (Anniversary), plus jeden individuell beschrifteten Termin, den deine Kontakte-App pro Kontakt erlaubt (z. B. „Anniversary“, „Other“, oder eine selbst eingegebene Beschriftung). Anders als Geburtstage sind das nicht alles Ereignisse desselben Typs - in den nächsten Schritten kannst du jeden Eintrag prüfen, samt erkannter Beschriftung zur Orientierung, und ihm einzeln den passenden Ereignistyp zuweisen.",
+                "description": "Lade eine .vcf-Datei hoch. Liest jeden Termin außer dem Geburtstag: das Standardfeld „Jahrestag“ (Anniversary), plus jeden individuell beschrifteten Termin, den deine Kontakte-App pro Kontakt erlaubt (z. B. „Anniversary“, „Other“, oder eine selbst eingegebene Beschriftung). Anders als Geburtstage sind das nicht alles Ereignisse desselben Typs - in den nächsten Schritten kannst du jeden Eintrag prüfen, samt erkannter Beschriftung zur Orientierung, und ihm einzeln den passenden Ereignistyp zuweisen.",
                 "data": {
                     "vcard_file": "vCard-Datei"
                 }
@@ -328,7 +328,7 @@
             },
             "import_review": {
                 "title": "{source_label}-Import - Prüfung ({page}/{total_pages})",
-                "description": "{legend}\n\nPrüfe den vorgeschlagenen Vor-/Nachnamen-Split unten und korrigiere, was nicht passt - auch der Geburtstag selbst ist editierbar - oder deaktiviere einen Eintrag, um ihn ganz auszulassen. Ein möglicher Duplikat-Treffer wird mit dem Namen des bestehenden Eintrags gekennzeichnet; lasse „Als neuen Eintrag anlegen“ deaktiviert, um diesen bestehenden Eintrag zu aktualisieren, statt einen zweiten anzulegen. Die Feldbeschriftungen hier werden unabhängig von deiner Spracheinstellung nur auf Englisch angezeigt.",
+                "description": "{legend}\n\nPrüfe die vorgeschlagene Aufteilung in Vor- und Nachname unten und korrigiere, was nicht passt - auch der Geburtstag selbst lässt sich ändern - oder deaktiviere einen Eintrag, um ihn ganz auszulassen. Ein mögliches Duplikat wird mit dem Namen des bestehenden Eintrags gekennzeichnet; lasse „Als neuen Eintrag anlegen“ deaktiviert, um diesen bestehenden Eintrag zu aktualisieren, statt einen zweiten anzulegen. Die Feldbeschriftungen hier werden unabhängig von deiner Spracheinstellung nur auf Englisch angezeigt.",
                 "data": {
                     "go_back": "Zurück zur vorherigen Seite"
                 }
@@ -350,7 +350,7 @@
                 }
             },
             "holiday_settings": {
-                "title": "Feiertag-Einstellungen",
+                "title": "Feiertagseinstellungen",
                 "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\nDatum, Typ und Region stammen aus der Feiertagsdatenbank und sind hier nicht änderbar.",
                 "data": {
                     "icon": "Icon"
@@ -387,9 +387,9 @@
                 }
             },
             "hub_menu": {
-                "title": "Annuals Einstellungen",
+                "title": "Annuals-Einstellungen",
                 "menu_options": {
-                    "annual_settings": "{icon_annual_settings} Annual Einstellung",
+                    "annual_settings": "{icon_annual_settings} Annual-Einstellungen",
                     "import_events": "{icon_import_events} Ereignisse importieren",
                     "export_csv": "{icon_export_csv} Ereignisse als CSV exportieren",
                     "holiday_translations": "{icon_holiday_translations} Feiertags-Übersetzungen",
@@ -420,7 +420,7 @@
             },
             "import_holidays": {
                 "title": "Feiertage importieren",
-                "description": "Wähle ein Land, um dessen Feiertage als Ereignisse zu importieren. Ein erneuter Import für dasselbe Land (und dieselbe Subdivision) aktualisiert bestehende Einträge, statt sie zu duplizieren - vor dem Import siehst du alle Feiertage und wählst die gewünschten aus.",
+                "description": "Wähle ein Land, um dessen Feiertage als Ereignisse zu importieren. Ein erneuter Import für dasselbe Land (und dasselbe Bundesland bzw. dieselbe Provinz) aktualisiert bestehende Einträge, statt sie zu duplizieren - vor dem Import siehst du alle Feiertage und wählst die gewünschten aus.",
                 "data": {
                     "country": "Land"
                 }
@@ -442,7 +442,7 @@
             },
             "import_markets_select": {
                 "title": "Börsentage importieren - {country}: auswählen",
-                "description": "{count} Tag(e) gefunden, jeweils mit dem nächsten Datum. Importiert werden nur die angehakten.\n\nEin Tag, der schon in Annuals ist, bleibt beim Abhaken unverändert - entfernen lassen sich Tage unter **Ereignisse entfernen → Börsen**.",
+                "description": "{count} Tag(e) gefunden, jeweils mit dem nächsten Datum. Importiert werden nur die angehakten.\n\nEin Tag, der schon in Annuals ist, bleibt unverändert, wenn du seinen Haken entfernst - entfernen lassen sich Tage unter **Ereignisse entfernen → Börsen**.",
                 "data": {
                     "holidays": "Tage"
                 }
@@ -469,7 +469,7 @@
             },
             "import_holidays_select": {
                 "title": "Feiertage importieren - {country}: auswählen",
-                "description": "{count} Feiertag(e) gefunden, jeweils mit dem nächsten Datum. Importiert werden nur die angehakten.\n\nEin Feiertag, der schon in Annuals ist, bleibt beim Abhaken unverändert - entfernen lassen sich Feiertage unter **Ereignisse entfernen → Feiertage**.",
+                "description": "{count} Feiertag(e) gefunden, jeweils mit dem nächsten Datum. Importiert werden nur die angehakten.\n\nEin Feiertag, der schon in Annuals ist, bleibt unverändert, wenn du seinen Haken entfernst - entfernen lassen sich Feiertage unter **Ereignisse entfernen → Feiertage**.",
                 "data": {
                     "holidays": "Feiertage"
                 }
@@ -491,10 +491,10 @@
                 }
             },
             "annual_settings": {
-                "title": "Annual Einstellung",
+                "title": "Annual-Einstellungen",
                 "sections": {
                     "important_events": {
-                        "name": "❗ Important Events",
+                        "name": "❗ Important-Ereignisse",
                         "description": "Kommagetrennte Jubiläumszahlen, bei denen ein Ereignis dieses Typs automatisch als „Important“ markiert wird, z. B. „18,21,30,40,50“. Ein Feld leer lassen, um dies für diesen Typ zu deaktivieren.",
                         "data": {
                             "important_thresholds_birthday": "Geburtstag",
@@ -509,7 +509,7 @@
                     },
                     "todo": {
                         "name": "📍 To-do-Listen",
-                        "description": "Offene Einträge auf diesen Listen markieren ein Ereignis: Jeder Ereignis-Sensor erhält dann ein Attribut \"todo\" - true, solange ihm mindestens ein noch offener Eintrag zugeordnet ist, sonst false - für eigene Automationen, Templates und Dashboards. Die Zuordnung erfolgt zuerst über das Fälligkeitsdatum, dann darüber, ob der Eintragstext das Ereignis nennt (vollständiger Name, Name, Typ, Nummer der Wiederholung); ein Eintrag, der zu zwei Ereignissen gleich gut passt, bleibt unzugeordnet. Leer lassen, um die Funktion abzuschalten. Unabhängig von der gleichnamigen Einstellung der Dashboard-Karte.",
+                        "description": "Offene Einträge auf diesen Listen markieren ein Ereignis: Jeder Ereignis-Sensor erhält dann ein Attribut \"todo\" - true, solange ihm mindestens ein noch offener Eintrag zugeordnet ist, sonst false - für eigene Automationen, Templates und Dashboards. Die Zuordnung erfolgt zuerst über das Fälligkeitsdatum, dann darüber, ob der Eintragstext das Ereignis nennt (vollständiger Name, Name, Typ, Jubiläumszahl); ein Eintrag, der zu zwei Ereignissen gleich gut passt, bleibt unzugeordnet. Leer lassen, um die Funktion abzuschalten. Unabhängig von der gleichnamigen Einstellung der Dashboard-Karte.",
                         "data": {
                             "todo_lists": "To-do-Listen"
                         }
@@ -537,7 +537,7 @@
                 },
                 "data_description": {
                     "person": "Eine Person in Home Assistant, deren Bild für dieses Ereignis steht – auf der Dashboard-Karte und in der Benachrichtigung der Erinnerung.",
-                    "deceased": "Die Person ist verstorben: Der Tag bleibt und wird markiert, die Karte sagt, was er gewesen wäre, und deine Automatisierungen können ihn unterscheiden."
+                    "deceased": "Die Person ist verstorben: Der Tag bleibt und wird markiert, die Karte sagt, was er gewesen wäre, und deine Automationen können ihn unterscheiden."
                 }
             },
             "edit_one_time": {
@@ -563,7 +563,7 @@
             },
             "edit_custom": {
                 "title": "Frei wählbares Ereignis bearbeiten",
-                "description": "Ändere ein beliebiges Feld unten und speichere, um dieses Ereignis zu aktualisieren.\n\nEr kann statt auf einem Tag auf einer **Regel** liegen – *der zweite Sonntag im Mai*. Fülle die beiden Felder unten aus; der **Monat** darüber sagt, für welchen Monat die Regel gilt, der **Tag** wird dann nicht verwendet. Leerst du sie, liegt das Ereignis wieder auf diesem Tag.",
+                "description": "Ändere ein beliebiges Feld unten und speichere, um dieses Ereignis zu aktualisieren.\n\nEs kann statt auf einem Tag auf einer **Regel** liegen – *der zweite Sonntag im Mai*. Fülle die beiden Felder unten aus; der **Monat** darüber sagt, für welchen Monat die Regel gilt, der **Tag** wird dann nicht verwendet. Leerst du sie, liegt das Ereignis wieder auf diesem Tag.",
                 "data": {
                     "name": "Name",
                     "last_name": "Nachname (optional)",
@@ -597,7 +597,7 @@
             "no_valid_entries": "Keine verwertbaren ganztägigen Einträge in dieser Datei gefunden. Details zu übersprungenen Einträgen stehen im Log.",
             "invalid_vcard": "Diese Datei konnte nicht als vCard gelesen werden. Prüfe das Format.",
             "no_valid_vcard_entries": "Keine Kontakte mit verwertbarem Geburtsdatum in dieser Datei gefunden. Details zu übersprungenen Einträgen stehen im Log.",
-            "no_valid_vcard_dates": "Keine Jubiläen oder weiteren Termine (außer Geburtstagen) in dieser Datei gefunden. Details zu übersprungenen Einträgen stehen im Log.",
+            "no_valid_vcard_dates": "Keine Jahrestage oder weiteren Termine (außer Geburtstagen) in dieser Datei gefunden. Details zu übersprungenen Einträgen stehen im Log.",
             "no_batch_selected": "Aktiviere \"Alle importierten Feiertage entfernen\" oder wähle einen Import aus.",
             "rule_needs_both": "Eine wiederkehrende Regel braucht beide Felder – oder keines.",
             "interval_needs_both": "Ein Wiederholungsintervall braucht beide Felder – oder keines.",
@@ -628,7 +628,7 @@
             "ics_imports_removed": "{count} ICS-importierte(s) Ereignis(se) entfernt.",
             "no_vcard_imports": "Es wurden keine durch einen vCard-Import angelegten Ereignisse gefunden.",
             "vcard_imports_removed": "{count} vCard-importierte(s) Ereignis(se) entfernt.",
-            "market_import_started": "Import gestartet: {count} Tag(e) für {country} eingereiht ({new} neu, {updated} aktualisiert).",
+            "market_import_started": "Import gestartet: {count} Tag(e) für {country} werden angelegt ({new} neu, {updated} aktualisiert).",
             "no_markets_imported": "Es wurden noch keine Börsentage importiert.",
             "markets_removed": "{count} Börsentag(e) entfernt."
         }

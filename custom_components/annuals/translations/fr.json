@@ -19,7 +19,7 @@
                 "anniversary": "Date commémorative",
                 "name_day": "Fête",
                 "wedding_anniversary": "Anniversaire de mariage",
-                "memorial": "Commémoration",
+                "memorial": "Anniversaire de décès",
                 "pet_birthday": "Anniversaire d'animal",
                 "work_anniversary": "Anniversaire professionnel",
                 "custom": "Personnalisé",
@@ -48,14 +48,14 @@
             "options": {
                 "public": "Officiel",
                 "bank": "Bancaire",
-                "government": "Administration",
+                "government": "Administratif",
                 "school": "Vacances scolaires",
                 "optional": "Optionnel",
                 "optional_women": "Optionnel (femmes)",
                 "unofficial": "Non officiel",
                 "half_day": "Demi-journée",
                 "armed_forces": "Forces armées",
-                "workday": "Jour ouvré",
+                "workday": "Jour travaillé",
                 "catholic": "Catholique",
                 "christian": "Chrétien",
                 "orthodox": "Orthodoxe",
@@ -65,14 +65,14 @@
                 "buddhist": "Bouddhiste",
                 "de_facto": "De facto",
                 "protestant": "Protestant",
-                "sabian": "Sabéenne",
-                "yazidi": "Yézidie",
-                "albanian": "Albanaise",
-                "armenian": "Arménienne",
+                "sabian": "Sabéen",
+                "yazidi": "Yézidi",
+                "albanian": "Albanais",
+                "armenian": "Arménien",
                 "bosnian": "Bosniaque",
                 "roma": "Rom",
                 "serbian": "Serbe",
-                "turkish": "Turque",
+                "turkish": "Turc",
                 "vlach": "Valaque"
             }
         },
@@ -122,7 +122,7 @@
         "step": {
             "user": {
                 "title": "Ajouter un événement",
-                "description": "De quel type d'événement s'agit-il ?\n\n**Annuel** couvre anniversaire, date commémorative, fête, anniversaire de mariage, commémoration, anniversaire d'animal et anniversaire professionnel. **Ponctuel** est une date unique, qui se supprime d'elle-même une fois passée. **Personnalisé** est votre propre date annuelle, à un jour donné ou selon une règle.",
+                "description": "De quel type d'événement s'agit-il ?\n\n**Annuel** couvre anniversaire, date commémorative, fête, anniversaire de mariage, anniversaire de décès, anniversaire d'animal et anniversaire professionnel. **Ponctuel** est une date unique, qui se supprime d'elle-même une fois passée. **Personnalisé** est votre propre date annuelle, à un jour donné ou selon une règle.",
                 "menu_options": {
                     "recurring": "{icon_recurring} Une date annuelle pour quelqu'un",
                     "one_time": "{icon_one_time} Un événement ponctuel",
@@ -158,7 +158,7 @@
                     "day": "Jour",
                     "month": "Mois",
                     "year": "Année",
-                    "end_date": "Date de fin (facultatif – en fait un événement sur plusieurs jours)",
+                    "end_date": "Date de fin (optionnel – en fait un événement sur plusieurs jours)",
                     "time": "Heure (optionnel)",
                     "end_time": "Heure de fin (optionnel)",
                     "icon": "Icône personnalisée (optionnel)",
@@ -223,7 +223,7 @@
                     "day": "Jour",
                     "month": "Mois",
                     "year": "Année",
-                    "end_date": "Date de fin (facultatif – en fait un événement sur plusieurs jours)",
+                    "end_date": "Date de fin (optionnel – en fait un événement sur plusieurs jours)",
                     "time": "Heure (optionnel)",
                     "end_time": "Heure de fin (optionnel)",
                     "icon": "Icône personnalisée (optionnel)",
@@ -260,7 +260,7 @@
         },
         "error": {
             "name_required": "Veuillez saisir un nom.",
-            "end_date_one_time_only": "Une date de fin ne peut être définie que sur un événement unique.",
+            "end_date_one_time_only": "Une date de fin ne peut être définie que sur un événement ponctuel.",
             "end_date_before_start": "La date de fin doit être postérieure à la date de début.",
             "invalid_date": "Cette combinaison jour/mois/année n'est pas une date valide.",
             "year_required": "Les événements ponctuels nécessitent une année.",
@@ -283,14 +283,14 @@
         "step": {
             "import_csv": {
                 "title": "Importer des événements depuis un CSV",
-                "description": "Colonnes : name, type, day, month, year (optionnel, obligatoire pour one_time), icon (optionnel), vip (optionnel), last_name (optionnel). « type » doit être l'une des clés anglaises suivantes : birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (toujours en anglais, quel que soit votre paramètre de langue). « vip » accepte 1/true/yes/y/x (peu importe la casse) ; laissez vide ou omettez la colonne pour un événement non-VIP. Conservez toutes les colonnes même si une valeur est vide - une ligne sans virgule finale décale les valeurs suivantes vers la gauche. Les lignes invalides sont ignorées et journalisées.\n\nExemple :\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nVacances en famille,one_time,15,7,2026,mdi:airplane,,\n```",
+                "description": "Colonnes : name, type, day, month, year (optionnel, obligatoire pour one_time), icon (optionnel), vip (optionnel), last_name (optionnel). `type` doit être l'une des clés anglaises suivantes : birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (toujours en anglais, quel que soit votre paramètre de langue). `vip` accepte 1/true/yes/y/x (peu importe la casse) ; laissez vide ou omettez la colonne pour un événement non-VIP. Conservez toutes les colonnes même si une valeur est vide - une ligne sans virgule finale décale les valeurs suivantes vers la gauche. Les lignes invalides sont ignorées et journalisées.\n\nExemple :\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nVacances en famille,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "Fichier CSV"
                 }
             },
             "import_ics": {
                 "title": "Importer des événements depuis un calendrier ICS",
-                "description": "Envoyez un fichier de calendrier .ics - généralement un calendrier exporté. Seules les entrées sur la journée entière et sans override de récurrence sont lues ; les entrées avec horaire sont ignorées. Les étapes suivantes vous permettent de vérifier et de corriger la séparation prénom/nom proposée (et d'inverser prénom/nom pour tout le monde en une fois) avant tout import.",
+                "description": "Téléversez un fichier de calendrier .ics - généralement un calendrier exporté. Seules les entrées sur la journée entière qui ne sont pas des exceptions de récurrence sont lues ; les entrées avec horaire sont ignorées. Les étapes suivantes vous permettent de vérifier et de corriger la séparation prénom/nom proposée (et d'inverser prénom/nom pour tout le monde en une fois) avant tout import.",
                 "data": {
                     "ics_file": "Fichier ICS"
                 }
@@ -305,14 +305,14 @@
             },
             "import_vcard": {
                 "title": "Importer des anniversaires depuis une vCard",
-                "description": "Envoyez un fichier .vcf - généralement des contacts exportés. Seules les entrées avec un anniversaire renseigné sont lues. Le prénom/nom provient des champs de nom structurés du contact, pas d'une supposition, et un anniversaire sans année renseignée (façon propre à vCard de l'exprimer) est conservé comme inconnu plutôt qu'inventé. Les étapes suivantes vous permettent de vérifier et de corriger chaque entrée (et d'inverser prénom/nom pour tout le monde en une fois) avant tout import.",
+                "description": "Téléversez un fichier .vcf - généralement des contacts exportés. Seules les entrées avec un anniversaire renseigné sont lues. Le prénom/nom provient des champs de nom structurés du contact, pas d'une supposition, et un anniversaire sans année renseignée (façon propre à vCard de l'exprimer) est conservé comme inconnu plutôt qu'inventé. Les étapes suivantes vous permettent de vérifier et de corriger chaque entrée (et d'inverser prénom/nom pour tout le monde en une fois) avant tout import.",
                 "data": {
                     "vcard_file": "Fichier vCard"
                 }
             },
             "import_vcard_other_dates": {
                 "title": "Importer d'autres dates depuis une vCard",
-                "description": "Envoyez un fichier .vcf. Toutes les dates autres que l'anniversaire sont lues : le champ standard « Date commémorative », ainsi que toute date à étiquette personnalisée que votre application de contacts permet d'ajouter par contact (par ex. « Anniversaire de mariage », « Autre », ou une étiquette saisie par vous-même). Contrairement aux anniversaires, ces dates ne sont pas toutes du même type d'événement - les étapes suivantes vous permettent de vérifier chacune d'elles, avec son étiquette détectée affichée pour contexte, et de lui attribuer individuellement le bon type d'événement.",
+                "description": "Téléversez un fichier .vcf. Toutes les dates autres que l'anniversaire sont lues : le champ standard « Date commémorative », ainsi que toute date à étiquette personnalisée que votre application de contacts permet d'ajouter par contact (par ex. « Anniversaire de mariage », « Autre », ou une étiquette saisie par vous-même). Contrairement aux anniversaires, ces dates ne sont pas toutes du même type d'événement - les étapes suivantes vous permettent de vérifier chacune d'elles, avec son étiquette détectée affichée pour contexte, et de lui attribuer individuellement le bon type d'événement.",
                 "data": {
                     "vcard_file": "Fichier vCard"
                 }
@@ -387,9 +387,9 @@
                 }
             },
             "hub_menu": {
-                "title": "Annuals Paramètres",
+                "title": "Paramètres Annuals",
                 "menu_options": {
-                    "annual_settings": "{icon_annual_settings} Annual Paramètres",
+                    "annual_settings": "{icon_annual_settings} Paramètres Annual",
                     "import_events": "{icon_import_events} Importer des événements",
                     "export_csv": "{icon_export_csv} Exporter les événements en CSV",
                     "holiday_translations": "{icon_holiday_translations} Traductions des jours fériés",
@@ -491,7 +491,7 @@
                 }
             },
             "annual_settings": {
-                "title": "Annual Paramètres",
+                "title": "Paramètres Annual",
                 "sections": {
                     "important_events": {
                         "name": "❗ Événements importants",
@@ -501,7 +501,7 @@
                             "important_thresholds_anniversary": "Date commémorative",
                             "important_thresholds_name_day": "Fête",
                             "important_thresholds_wedding_anniversary": "Anniversaire de mariage",
-                            "important_thresholds_memorial": "Commémoration",
+                            "important_thresholds_memorial": "Anniversaire de décès",
                             "important_thresholds_pet_birthday": "Anniversaire d'animal",
                             "important_thresholds_work_anniversary": "Anniversaire professionnel",
                             "important_thresholds_custom": "Personnalisé"
@@ -550,7 +550,7 @@
                     "day": "Jour",
                     "month": "Mois",
                     "year": "Année",
-                    "end_date": "Date de fin (facultatif – en fait un événement sur plusieurs jours)",
+                    "end_date": "Date de fin (optionnel – en fait un événement sur plusieurs jours)",
                     "time": "Heure (optionnel)",
                     "end_time": "Heure de fin (optionnel)",
                     "icon": "Icône personnalisée (optionnel)",
@@ -587,7 +587,7 @@
         },
         "error": {
             "name_required": "Veuillez saisir un nom.",
-            "end_date_one_time_only": "Une date de fin ne peut être définie que sur un événement unique.",
+            "end_date_one_time_only": "Une date de fin ne peut être définie que sur un événement ponctuel.",
             "end_date_before_start": "La date de fin doit être postérieure à la date de début.",
             "invalid_date": "Cette combinaison jour/mois/année n'est pas une date valide.",
             "year_required": "Les événements ponctuels nécessitent une année.",
@@ -613,7 +613,7 @@
             "no_market_batch_selected": "Cochez « Supprimer tous les jours de bourse importés », ou choisissez une bourse à supprimer."
         },
         "abort": {
-            "translations_exported": "{count} traduction(s) exporté(s). [Télécharger annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+clic pour télécharger - un simple clic ne fonctionne pas ici)\n\nOu copiez le CSV ci-dessous :\n\n```\n{csv}\n```",
+            "translations_exported": "{count} traduction(s) exportée(s). [Télécharger annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+clic pour télécharger - un simple clic ne fonctionne pas ici)\n\nOu copiez le CSV ci-dessous :\n\n```\n{csv}\n```",
             "translations_imported": "{updated} jour(s) férié(s) mis à jour, {skipped} ligne(s) ignorée(s).",
             "no_translations_to_export": "Aucun nom de jour férié n'a encore été écrit – il n'y a rien à exporter.",
             "import_started": "Import démarré : {created} événement(s) en cours d'ajout, {skipped} ligne(s) ignorée(s) (voir le journal pour le détail).",
@@ -621,14 +621,14 @@
             "csv_exported": "{count} événement(s) exporté(s). [Télécharger annuals_export.csv]({url}) (Ctrl/Cmd+clic pour télécharger - un simple clic ne fonctionne pas ici)\n\nOu copiez le CSV ci-dessous :\n\n```\n{csv}\n```",
             "no_events_to_export": "Aucun événement à exporter pour le moment.",
             "deleted_all": "Tous les événements, calendriers et le hub Annuals ont été supprimés.",
-            "holiday_import_started": "Importation démarrée : {count} événement(s) de jour férié en file d'attente pour {country} ({new} nouveaux, {updated} mis à jour).",
+            "holiday_import_started": "Import démarré : {count} événement(s) de jour férié en file d'attente pour {country} ({new} nouveau(x), {updated} mis à jour).",
             "no_holidays_imported": "Aucun jour férié n'a encore été importé.",
             "holidays_removed": "{count} jour(s) férié(s) supprimé(s).",
             "no_ics_imports": "Aucun événement importé depuis ICS n'a été trouvé.",
             "ics_imports_removed": "{count} événement(s) importé(s) depuis ICS supprimé(s).",
             "no_vcard_imports": "Aucun événement importé depuis vCard n'a été trouvé.",
             "vcard_imports_removed": "{count} événement(s) importé(s) depuis vCard supprimé(s).",
-            "market_import_started": "Import lancé : {count} jour(s) en file pour {country} ({new} nouveau(x), {updated} mis à jour).",
+            "market_import_started": "Import démarré : {count} jour(s) en file d'attente pour {country} ({new} nouveau(x), {updated} mis à jour).",
             "no_markets_imported": "Aucun jour de bourse n'a encore été importé.",
             "markets_removed": "{count} jour(s) de bourse supprimé(s)."
         }
@@ -636,31 +636,31 @@
     "entity": {
         "sensor": {
             "birthday": {
-                "name": "Anniversaire de {name}",
+                "name": "Anniversaire {name}",
                 "unit_of_measurement": "jours"
             },
             "anniversary": {
-                "name": "Date commémorative de {name}",
+                "name": "Date commémorative {name}",
                 "unit_of_measurement": "jours"
             },
             "name_day": {
-                "name": "Fête de {name}",
+                "name": "Fête {name}",
                 "unit_of_measurement": "jours"
             },
             "wedding_anniversary": {
-                "name": "Anniversaire de mariage de {name}",
+                "name": "Anniversaire de mariage {name}",
                 "unit_of_measurement": "jours"
             },
             "memorial": {
-                "name": "Commémoration de {name}",
+                "name": "Anniversaire de décès {name}",
                 "unit_of_measurement": "jours"
             },
             "pet_birthday": {
-                "name": "Anniversaire de {name}",
+                "name": "Anniversaire {name}",
                 "unit_of_measurement": "jours"
             },
             "work_anniversary": {
-                "name": "Anniversaire professionnel de {name}",
+                "name": "Anniversaire professionnel {name}",
                 "unit_of_measurement": "jours"
             },
             "custom": {
@@ -694,7 +694,7 @@
                 "name": "Anniversaires de mariage"
             },
             "memorial": {
-                "name": "Commémorations"
+                "name": "Anniversaires de décès"
             },
             "pet_birthday": {
                 "name": "Anniversaires d'animaux"

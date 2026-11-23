@@ -55,7 +55,7 @@
                 "unofficial": "Uofficiel",
                 "half_day": "Halv dag",
                 "armed_forces": "Forsvaret",
-                "workday": "Hverdag",
+                "workday": "Arbejdsdag",
                 "catholic": "Katolsk",
                 "christian": "Kristen",
                 "orthodox": "Ortodoks",
@@ -122,7 +122,7 @@
         "step": {
             "user": {
                 "title": "Tilføj begivenhed",
-                "description": "Hvilken slags begivenhed er det?\n\n**Årlig** dækker fødselsdag, mærkedag, navnedag, bryllupsdag, mindedag, kæledyrs fødselsdag og jubilæum på arbejdet. **Engangs** er en enkelt dato, som sletter sig selv, når den er overstået. **Tilpasset** er din egen årlige dato – på en bestemt dag eller efter en regel.",
+                "description": "Hvilken slags begivenhed er det?\n\n**Årlig** dækker fødselsdag, mærkedag, navnedag, bryllupsdag, mindedag, kæledyrs fødselsdag og jubilæum på arbejdet. **Engangsbegivenhed** er en enkelt dato, som sletter sig selv, når den er overstået. **Tilpasset** er din egen årlige dato – på en bestemt dag eller efter en regel.",
                 "menu_options": {
                     "recurring": "{icon_recurring} En årlig dato for nogen",
                     "one_time": "{icon_one_time} En engangsbegivenhed",
@@ -145,7 +145,7 @@
                 },
                 "description": "Hver begivenhed får sin egen post, som du senere kan finde og redigere under Indstillinger → Enheder og tjenester → Annuals ved at søge på navnet.",
                 "data_description": {
-                    "person": "En person i Home Assistant, hvis billede står for denne begivenhed – på dashboardkortet og i påmindelsens notifikation.",
+                    "person": "En person i Home Assistant, hvis billede står for denne begivenhed – på kortet i betjeningspanelet og i påmindelsens notifikation.",
                     "deceased": "Fødselsdag, Navnedag, Kæledyrs fødselsdag og Bryllupsdag - Personen er død: dagen beholdes og markeres, kortet siger, hvad den ville have været, og dine automatiseringer kan kende den fra andre. Uden virkning på de andre typer."
                 }
             },
@@ -158,15 +158,15 @@
                     "day": "Dag",
                     "month": "Måned",
                     "year": "År",
-                    "end_date": "Slutdato (valgfrit – gør den til en flerdagsbegivenhed)",
-                    "time": "Tidspunkt (valgfri)",
-                    "end_time": "Sluttidspunkt (valgfri)",
+                    "end_date": "Slutdato (valgfri – gør den til en flerdagsbegivenhed)",
+                    "time": "Tidspunkt (valgfrit)",
+                    "end_time": "Sluttidspunkt (valgfrit)",
                     "icon": "Tilsidesæt ikon (valgfrit)",
                     "vip": "VIP Annual"
                 },
-                "description": "En enkelt dato at tælle ned til. Den gentages aldrig, så året er påkrævet, og posten slettes automatisk ved midnat efter, den er overstået.\n\nGiv den en slutdato, så bliver det en flerdagsbegivenhed – en rejse, en konference, et ophold.",
+                "description": "En enkelt dato at tælle ned til. Den gentages aldrig, så året er påkrævet, og posten slettes automatisk ved midnat, efter den er overstået.\n\nGiv den en slutdato, så bliver det en flerdagsbegivenhed – en rejse, en konference, et ophold.",
                 "data_description": {
-                    "time": "Hvornår den begynder den dag. Kalenderposten får så et tidspunkt, og dashboardkortet viser det.",
+                    "time": "Hvornår den begynder den dag. Kalenderposten får så et tidspunkt, og kortet i betjeningspanelet viser det.",
                     "end_time": "Hvornår den slutter – på slutdatoen, hvis der er en, ellers samme dag. Kræver et starttidspunkt; tom betyder, at kalenderposten varer en time."
                 }
             },
@@ -209,7 +209,7 @@
                     "deceased": "Afdød"
                 },
                 "data_description": {
-                    "person": "En person i Home Assistant, hvis billede står for denne begivenhed – på dashboardkortet og i påmindelsens notifikation.",
+                    "person": "En person i Home Assistant, hvis billede står for denne begivenhed – på kortet i betjeningspanelet og i påmindelsens notifikation.",
                     "deceased": "Personen er død: dagen beholdes og markeres, kortet siger, hvad den ville have været, og dine automatiseringer kan kende den fra andre."
                 }
             },
@@ -223,14 +223,14 @@
                     "day": "Dag",
                     "month": "Måned",
                     "year": "År",
-                    "end_date": "Slutdato (valgfrit – gør den til en flerdagsbegivenhed)",
-                    "time": "Tidspunkt (valgfri)",
-                    "end_time": "Sluttidspunkt (valgfri)",
+                    "end_date": "Slutdato (valgfri – gør den til en flerdagsbegivenhed)",
+                    "time": "Tidspunkt (valgfrit)",
+                    "end_time": "Sluttidspunkt (valgfrit)",
                     "icon": "Tilsidesæt ikon (valgfrit)",
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "Hvornår den begynder den dag. Kalenderposten får så et tidspunkt, og dashboardkortet viser det.",
+                    "time": "Hvornår den begynder den dag. Kalenderposten får så et tidspunkt, og kortet i betjeningspanelet viser det.",
                     "end_time": "Hvornår den slutter – på slutdatoen, hvis der er en, ellers samme dag. Kræver et starttidspunkt; tom betyder, at kalenderposten varer en time."
                 }
             },
@@ -283,7 +283,7 @@
         "step": {
             "import_csv": {
                 "title": "Importer begivenheder fra CSV",
-                "description": "Kolonner: name, type, day, month, year (valgfrit, påkrævet for one_time), icon (valgfrit), vip (valgfrit), last_name (valgfrit). \"type\" skal være en af følgende engelske nøgler: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (altid på engelsk, uanset dit sprogvalg). \"vip\" accepterer 1/true/yes/y/x (der skelnes ikke mellem store/små bogstaver); lad stå tomt eller undlad kolonnen for en ikke-VIP-begivenhed. Behold alle kolonner, selv når en værdi er tom - en række uden afsluttende komma rykker de følgende værdier et trin til venstre. Ugyldige rækker springes over og logges.\n\nEksempel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamilieferie,one_time,15,7,2026,mdi:airplane,,\n```",
+                "description": "Kolonner: name, type, day, month, year (valgfrit, påkrævet for one_time), icon (valgfrit), vip (valgfrit), last_name (valgfrit). `type` skal være en af følgende engelske nøgler: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (altid på engelsk, uanset dit sprogvalg). `vip` accepterer 1/true/yes/y/x (der skelnes ikke mellem store/små bogstaver); lad stå tomt eller undlad kolonnen for en ikke-VIP-begivenhed. Behold alle kolonner, selv når en værdi er tom - en række uden afsluttende komma rykker de følgende værdier et trin til venstre. Ugyldige rækker springes over og logges.\n\nEksempel:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamilieferie,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "CSV-fil"
                 }
@@ -312,7 +312,7 @@
             },
             "import_vcard_other_dates": {
                 "title": "Importer øvrige datoer fra vCard",
-                "description": "Upload en .vcf-fil. Læser alle datoer ud over fødselsdagen: standardfeltet \"Jubilæum\", samt enhver tilpasset mærket dato, som din kontakt-app lader dig tilføje pr. kontakt (f.eks. \"Jubilæum\", \"Andet\" eller en selvvalgt mærkat). I modsætning til fødselsdage er disse ikke alle af samme type begivenhed - de næste trin lader dig gennemgå hver enkelt, med dens registrerede mærkat vist som kontekst, og tildele den korrekte begivenhedstype individuelt.",
+                "description": "Upload en .vcf-fil. Læser alle datoer ud over fødselsdagen: standardfeltet \"Mærkedag\", samt enhver tilpasset mærket dato, som din kontakt-app lader dig tilføje pr. kontakt (f.eks. \"Mærkedag\", \"Andet\" eller en selvvalgt mærkat). I modsætning til fødselsdage er disse ikke alle af samme type begivenhed - de næste trin lader dig gennemgå hver enkelt, med dens registrerede mærkat vist som kontekst, og tildele den korrekte begivenhedstype individuelt.",
                 "data": {
                     "vcard_file": "vCard-fil"
                 }
@@ -373,14 +373,14 @@
             },
             "holiday_translations": {
                 "title": "🌐 Oversættelser af helligdage",
-                "description": "Eksportér og importér de helligdagsnavne, du selv har skrevet.",
+                "description": "Eksporter og importer de helligdagsnavne, du selv har skrevet.",
                 "menu_options": {
-                    "export_translations": "📤 Eksportér oversættelser",
-                    "import_translations": "📥 Importér oversættelser"
+                    "export_translations": "📤 Eksporter oversættelser",
+                    "import_translations": "📥 Importer oversættelser"
                 }
             },
             "import_translations": {
-                "title": "Importér oversættelser",
+                "title": "Importer oversættelser",
                 "description": "Upload en CSV med oversættelser. Kolonner: `country,subdivision,category,holiday_key,observed,language,name,status`. Rækker matches til helligdage på land, region, kategori, helligdagsnøgle og observed-flag – ikke på post-id, så en fil, der er eksporteret før et land genimporteres, gælder stadig. Rækker, hvis helligdag ikke findes, springes over og tælles. For en børsdag er `name` anledningen og `status` dens eget navn; lad `status` stå tomt for helligdage.",
                 "data": {
                     "csv_file": "CSV"
@@ -452,11 +452,11 @@
                 "description": "Lad delregionen stå tom for kun landsdækkende helligdage - en region/provins tilføjer sine egne regionale helligdage. Kategorier og sprog afhænger af, hvad dette lands helligdagsdata tilbyder.{breaks}",
                 "data": {
                     "include_actual": "Importer den faktiske dato",
-                    "include_observed": "Importer den erstattede (flyttede) dato",
+                    "include_observed": "Importer den flyttede dato",
                     "break_start": "Importer feriens første dag",
                     "break_end": "Importer feriens sidste dag",
                     "break_days": "Importer hver feriedag",
-                    "subdivision": "Delregion (region/provins, valgfrit)",
+                    "subdivision": "Delregion (region/provins, valgfri)",
                     "categories": "Kategorier",
                     "language": "Sprog for helligdagsnavne"
                 },
@@ -464,7 +464,7 @@
                     "break_start": "Skoleferier er kun angivet med skoledage, så ferien begynder tidligere - her regnes der tilbage over weekenden og tilstødende helligdage til den første rigtigt frie dag.",
                     "break_end": "Det samme den anden vej: den sidste frie dag, ikke den sidst angivne.",
                     "break_days": "Én begivenhed per feriedag. Alene sommerferien giver over fyrre.",
-                    "include_observed": "Dette lands helligdage bliver nogle gange rykket til en nærliggende hverdag, hvis de falder i en weekend (f.eks. erstattet af fredagen før eller mandagen efter) - importer også denne erstattede dato som en separat begivenhed."
+                    "include_observed": "Dette lands helligdage bliver nogle gange rykket til en nærliggende hverdag, hvis de falder i en weekend (f.eks. flyttet til fredagen før eller mandagen efter) - importer også denne flyttede dato som en separat begivenhed."
                 }
             },
             "import_holidays_select": {
@@ -495,7 +495,7 @@
                 "sections": {
                     "important_events": {
                         "name": "❗ Vigtige begivenheder",
-                        "description": "Kommaseparerede jubilæumstal, som automatisk markerer en begivenhed af den type som \"Important\", f.eks. \"18,21,30,40,50\". Lad et felt stå tomt for at deaktivere dette for den type.",
+                        "description": "Kommaseparerede jubilæumsnumre, som automatisk markerer en begivenhed af den type som \"Important\", f.eks. \"18,21,30,40,50\". Lad et felt stå tomt for at deaktivere dette for den type.",
                         "data": {
                             "important_thresholds_birthday": "Fødselsdag",
                             "important_thresholds_anniversary": "Mærkedag",
@@ -508,10 +508,10 @@
                         }
                     },
                     "todo": {
-                        "name": "📍 Opgavelister",
-                        "description": "Åbne opgaver på disse lister markerer en begivenhed: hver begivenhedssensor får så et attribut «todo» - sandt så længe mindst én stadig åben opgave er tilknyttet den, ellers falsk - til dine egne automatiseringer, skabeloner og dashboards. Tilknytningen sker først via forfaldsdatoen og derefter via, om opgavens tekst nævner begivenheden (fulde navn, navn, type, nummer i rækken); en opgave, der passer lige godt til to begivenheder, forbliver utilknyttet. Lad stå tom for at slå fra. Uafhængigt af dashboardkortets egen indstilling af samme navn.",
+                        "name": "📍 Huskelister",
+                        "description": "Åbne opgaver på disse lister markerer en begivenhed: hver begivenhedssensor får så et attribut \"todo\" - sandt så længe mindst én stadig åben opgave er tilknyttet den, ellers falsk - til dine egne automatiseringer, skabeloner og betjeningspaneler. Tilknytningen sker først via forfaldsdatoen og derefter via, om opgavens tekst nævner begivenheden (fuldt navn, navn, type, jubilæumsnummer); en opgave, der passer lige godt til to begivenheder, forbliver utilknyttet. Lad stå tom for at slå fra. Uafhængigt af indstillingen af samme navn i kortet på betjeningspanelet.",
                         "data": {
-                            "todo_lists": "Opgavelister"
+                            "todo_lists": "Huskelister"
                         }
                     }
                 }
@@ -536,7 +536,7 @@
                     "deceased": "Afdød"
                 },
                 "data_description": {
-                    "person": "En person i Home Assistant, hvis billede står for denne begivenhed – på dashboardkortet og i påmindelsens notifikation.",
+                    "person": "En person i Home Assistant, hvis billede står for denne begivenhed – på kortet i betjeningspanelet og i påmindelsens notifikation.",
                     "deceased": "Personen er død: dagen beholdes og markeres, kortet siger, hvad den ville have været, og dine automatiseringer kan kende den fra andre."
                 }
             },
@@ -550,14 +550,14 @@
                     "day": "Dag",
                     "month": "Måned",
                     "year": "År",
-                    "end_date": "Slutdato (valgfrit – gør den til en flerdagsbegivenhed)",
-                    "time": "Tidspunkt (valgfri)",
-                    "end_time": "Sluttidspunkt (valgfri)",
+                    "end_date": "Slutdato (valgfri – gør den til en flerdagsbegivenhed)",
+                    "time": "Tidspunkt (valgfrit)",
+                    "end_time": "Sluttidspunkt (valgfrit)",
                     "icon": "Tilsidesæt ikon (valgfrit)",
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "Hvornår den begynder den dag. Kalenderposten får så et tidspunkt, og dashboardkortet viser det.",
+                    "time": "Hvornår den begynder den dag. Kalenderposten får så et tidspunkt, og kortet i betjeningspanelet viser det.",
                     "end_time": "Hvornår den slutter – på slutdatoen, hvis der er en, ellers samme dag. Kræver et starttidspunkt; tom betyder, at kalenderposten varer en time."
                 }
             },
@@ -592,12 +592,12 @@
             "invalid_date": "Denne kombination af dag/måned/år er ikke en gyldig dato.",
             "year_required": "Engangsbegivenheder kræver et år.",
             "invalid_csv": "Kunne ikke læse denne fil som CSV. Tjek kodning og format.",
-            "no_valid_rows": "Ingen gyldige rækker fundet i denne fil. Se loggen for detaljer om sprungede rækker.",
+            "no_valid_rows": "Ingen gyldige rækker fundet i denne fil. Se loggen for detaljer om oversprungne rækker.",
             "invalid_ics": "Kunne ikke læse denne fil som en ICS-kalender. Tjek formatet.",
-            "no_valid_entries": "Ingen brugbare heldags-poster fundet i denne fil. Se loggen for detaljer om sprungede poster.",
+            "no_valid_entries": "Ingen brugbare heldags-poster fundet i denne fil. Se loggen for detaljer om oversprungne poster.",
             "invalid_vcard": "Kunne ikke læse denne fil som en vCard. Tjek formatet.",
-            "no_valid_vcard_entries": "Ingen kontakter med en brugbar fødselsdag fundet i denne fil. Se loggen for detaljer om sprungede poster.",
-            "no_valid_vcard_dates": "Ingen mærkedage eller øvrige datoer (ud over fødselsdage) fundet i denne fil. Se loggen for detaljer om sprungede poster.",
+            "no_valid_vcard_entries": "Ingen kontakter med en brugbar fødselsdag fundet i denne fil. Se loggen for detaljer om oversprungne poster.",
+            "no_valid_vcard_dates": "Ingen mærkedage eller øvrige datoer (ud over fødselsdage) fundet i denne fil. Se loggen for detaljer om oversprungne poster.",
             "no_batch_selected": "Markér \"Fjern alle importerede helligdage\", eller vælg en gruppe.",
             "rule_needs_both": "En gentagelsesregel kræver begge felter – eller ingen af dem.",
             "interval_needs_both": "Et gentagelsesinterval kræver begge felter, eller ingen.",
@@ -636,31 +636,31 @@
     "entity": {
         "sensor": {
             "birthday": {
-                "name": "{name}s fødselsdag",
+                "name": "Fødselsdag {name}",
                 "unit_of_measurement": "dage"
             },
             "anniversary": {
-                "name": "{name}s mærkedag",
+                "name": "Mærkedag {name}",
                 "unit_of_measurement": "dage"
             },
             "name_day": {
-                "name": "{name}s navnedag",
+                "name": "Navnedag {name}",
                 "unit_of_measurement": "dage"
             },
             "wedding_anniversary": {
-                "name": "{name}s bryllupsdag",
+                "name": "Bryllupsdag {name}",
                 "unit_of_measurement": "dage"
             },
             "memorial": {
-                "name": "{name}s mindedag",
+                "name": "Mindedag {name}",
                 "unit_of_measurement": "dage"
             },
             "pet_birthday": {
-                "name": "{name}s fødselsdag",
+                "name": "Fødselsdag {name}",
                 "unit_of_measurement": "dage"
             },
             "work_anniversary": {
-                "name": "{name}s jubilæum på arbejdet",
+                "name": "Jubilæum på arbejdet {name}",
                 "unit_of_measurement": "dage"
             },
             "custom": {

@@ -52,7 +52,7 @@
                 "school": "Okul tatili",
                 "optional": "İsteğe bağlı",
                 "optional_women": "İsteğe bağlı (kadınlar)",
-                "unofficial": "Gayri resmi",
+                "unofficial": "Gayriresmi",
                 "half_day": "Yarım gün",
                 "armed_forces": "Silahlı kuvvetler",
                 "workday": "İş günü",
@@ -114,7 +114,7 @@
                 "closed": "{market} kapalı",
                 "closes_at": "{market} {time} itibarıyla kapalı",
                 "closes_early": "{market} erken kapanıyor",
-                "no_settlement": "{market} takas yok"
+                "no_settlement": "{market}: takas yok"
             }
         }
     },
@@ -145,7 +145,7 @@
                 },
                 "description": "Her etkinlik kendi girişini alır; daha sonra Ayarlar → Cihazlar ve hizmetler → Annuals bölümünden adını arayarak bulup düzenleyebilirsiniz.",
                 "data_description": {
-                    "person": "Home Assistant'ta fotoğrafı bu etkinliği temsil eden bir kişi – panel kartında ve hatırlatıcının bildiriminde.",
+                    "person": "Home Assistant'ta fotoğrafı bu etkinliği temsil eden bir kişi – gösterge paneli kartında ve hatırlatıcının bildiriminde.",
                     "deceased": "Doğum günü, İsim günü, Evcil hayvan doğum günü ve Evlilik yıl dönümü - Kişi vefat etti: gün korunur ve işaretlenir, kart o günün ne olacağını söyler ve otomasyonlarınız onu ayırt edebilir. Diğer türlerde etkisi yoktur."
                 }
             },
@@ -166,7 +166,7 @@
                 },
                 "description": "Geri sayım yapılacak tek bir tarih. Hiç tekrarlanmaz, bu yüzden yıl zorunludur ve giriş, bittikten sonraki gece yarısı otomatik olarak silinir.\n\nBitiş tarihi verirseniz çok günlü bir etkinliğe dönüşür: bir seyahat, bir konferans, bir konaklama.",
                 "data_description": {
-                    "time": "O gün ne zaman başladığı. Takvim girişi o zaman bir saat taşır ve panel kartı bunu gösterir.",
+                    "time": "O gün ne zaman başladığı. Takvim girişi o zaman bir saat taşır ve gösterge paneli kartı bunu gösterir.",
                     "end_time": "Ne zaman bittiği – varsa bitiş tarihinde, yoksa aynı gün. Başlangıç saati gerekir; boş bırakılırsa takvim girişi bir saat sürer."
                 }
             },
@@ -209,7 +209,7 @@
                     "deceased": "Vefat etti"
                 },
                 "data_description": {
-                    "person": "Home Assistant'ta fotoğrafı bu etkinliği temsil eden bir kişi – panel kartında ve hatırlatıcının bildiriminde.",
+                    "person": "Home Assistant'ta fotoğrafı bu etkinliği temsil eden bir kişi – gösterge paneli kartında ve hatırlatıcının bildiriminde.",
                     "deceased": "Kişi vefat etti: gün korunur ve işaretlenir, kart o günün ne olacağını söyler ve otomasyonlarınız onu ayırt edebilir."
                 }
             },
@@ -230,7 +230,7 @@
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "O gün ne zaman başladığı. Takvim girişi o zaman bir saat taşır ve panel kartı bunu gösterir.",
+                    "time": "O gün ne zaman başladığı. Takvim girişi o zaman bir saat taşır ve gösterge paneli kartı bunu gösterir.",
                     "end_time": "Ne zaman bittiği – varsa bitiş tarihinde, yoksa aynı gün. Başlangıç saati gerekir; boş bırakılırsa takvim girişi bir saat sürer."
                 }
             },
@@ -276,21 +276,21 @@
             "already_configured": "Annuals merkezi zaten mevcut.",
             "invalid_import_row": "Bu satır içe aktarılamadı.",
             "reconfigure_successful": "Etkinlik güncellendi.",
-            "holiday_not_reconfigurable": "Bu girdinin tarihi tatil verilerinden gelir ve burada değiştirilemez. Simgesini veya adlarını değiştirmek için **Yapılandır**'ı kullanın."
+            "holiday_not_reconfigurable": "Bu girişin tarihi tatil verilerinden gelir ve burada değiştirilemez. Simgesini veya adlarını değiştirmek için **Yapılandır**'ı kullanın."
         }
     },
     "options": {
         "step": {
             "import_csv": {
                 "title": "CSV'den etkinlik içe aktar",
-                "description": "Sütunlar: name, type, day, month, year (isteğe bağlı, one_time için zorunlu), icon (isteğe bağlı), vip (isteğe bağlı), last_name (isteğe bağlı). \"type\" şu İngilizce anahtarlardan biri olmalıdır: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (dil ayarınızdan bağımsız olarak her zaman İngilizce). \"vip\" 1/true/yes/y/x değerlerini kabul eder (büyük/küçük harf duyarlı değildir); VIP olmayan bir etkinlik için boş bırakın veya sütunu atlayın. Bir değer boş olsa bile her sütunu koruyun - sonundaki virgülü eksik bir satır, sonraki değerleri sola kaydırır. Geçersiz satırlar atlanır ve günlüğe kaydedilir.\n\nÖrnek:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nAile Tatili,one_time,15,7,2026,mdi:airplane,,\n```",
+                "description": "Sütunlar: name, type, day, month, year (isteğe bağlı, one_time için zorunlu), icon (isteğe bağlı), vip (isteğe bağlı), last_name (isteğe bağlı). `type` şu İngilizce anahtarlardan biri olmalıdır: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (dil ayarınızdan bağımsız olarak her zaman İngilizce). `vip` 1/true/yes/y/x değerlerini kabul eder (büyük/küçük harf duyarlı değildir); VIP olmayan bir etkinlik için boş bırakın veya sütunu atlayın. Bir değer boş olsa bile her sütunu koruyun - sonundaki virgülü eksik bir satır, sonraki değerleri sola kaydırır. Geçersiz satırlar atlanır ve günlüğe kaydedilir.\n\nÖrnek:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nAile Tatili,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "CSV dosyası"
                 }
             },
             "import_ics": {
                 "title": "ICS takviminden etkinlik içe aktar",
-                "description": "Bir .ics takvim dosyası yükleyin - genellikle dışa aktarılmış bir takvim. Yalnızca tüm gün süren ve yinelenme geçersiz kılması içermeyen girişler okunur; saat belirtilen etkinlikler atlanır. Sonraki adımlar, herhangi bir şey içe aktarılmadan önce önerilen ad/soyad bölünmesini gözden geçirip düzeltmenize (ve herkes için ad/soyadı tek seferde değiştirmenize) olanak tanır.",
+                "description": "Bir .ics takvim dosyası yükleyin - genellikle dışa aktarılmış bir takvim. Yalnızca tüm gün süren ve yinelenme geçersiz kılması içermeyen girişler okunur; saat belirtilen etkinlikler atlanır. Sonraki adımlar, herhangi bir şey içe aktarılmadan önce önerilen ad/soyad bölünmesini gözden geçirip düzeltmenize (ve herkes için ad ile soyadın yerini tek seferde değiştirmenize) olanak tanır.",
                 "data": {
                     "ics_file": "ICS dosyası"
                 }
@@ -305,7 +305,7 @@
             },
             "import_vcard": {
                 "title": "vCard'dan doğum günlerini içe aktar",
-                "description": "Bir .vcf dosyası yükleyin - genellikle dışa aktarılmış kişiler. Yalnızca doğum günü ayarlanmış girişler okunur. Ad/soyad bir tahminden değil, kişinin yapılandırılmış ad alanlarından alınır ve yılı belirtilmemiş bir doğum günü (vCard'ın bunu ifade etme biçimi) uydurulmak yerine bilinmiyor olarak tutulur. Sonraki adımlar, herhangi bir şey içe aktarılmadan önce her şeyi gözden geçirip düzeltmenize (ve herkes için ad/soyadı tek seferde değiştirmenize) olanak tanır.",
+                "description": "Bir .vcf dosyası yükleyin - genellikle dışa aktarılmış kişiler. Yalnızca doğum günü ayarlanmış girişler okunur. Ad/soyad bir tahminden değil, kişinin yapılandırılmış ad alanlarından alınır ve yılı belirtilmemiş bir doğum günü (vCard'ın bunu ifade etme biçimi) uydurulmak yerine bilinmiyor olarak tutulur. Sonraki adımlar, herhangi bir şey içe aktarılmadan önce her şeyi gözden geçirip düzeltmenize (ve herkes için ad ile soyadın yerini tek seferde değiştirmenize) olanak tanır.",
                 "data": {
                     "vcard_file": "vCard dosyası"
                 }
@@ -321,7 +321,7 @@
                 "title": "{source_label} içe aktarımı - ayarlar",
                 "description": "Bunlar dosyada bulunan her girişe uygulanır. Bir sonraki adımda tek tek girişleri gözden geçirip düzenleyebileceksiniz.",
                 "data": {
-                    "swap_names": "Tüm girişler için ad/soyadı değiştir",
+                    "swap_names": "Tüm girişler için ad ile soyadın yerini değiştir",
                     "use_description_year": "Bulunduğunda, her girişin başlangıç tarihi yerine açıklamasında bulunan yılı kullan (örn. \"geb. 1985\")",
                     "type": "Etkinlik türü"
                 }
@@ -335,14 +335,14 @@
             },
             "remove_ics_imports": {
                 "title": "ICS ile içe aktarılan etkinlikleri kaldır",
-                "description": "{count} etkinlik önceki bir ICS içe aktarımıyla oluşturuldu. Hepsini kaldırmak için OK'a tıklayın - bir ICS içe aktarımının yalnızca güncellediği (oluşturmadığı) girişler bundan asla etkilenmez; manuel olarak eklenen, CSV veya vCard ile içe aktarılan etkinlikler de etkilenmez."
+                "description": "{count} etkinlik önceki bir ICS içe aktarımıyla oluşturuldu. Hepsini kaldırmak için Tamam'a tıklayın - bir ICS içe aktarımının yalnızca güncellediği (oluşturmadığı) girişler bundan asla etkilenmez; manuel olarak eklenen, CSV veya vCard ile içe aktarılan etkinlikler de etkilenmez."
             },
             "remove_vcard_imports": {
                 "title": "vCard ile içe aktarılan etkinlikleri kaldır",
-                "description": "{count} etkinlik önceki bir vCard içe aktarımıyla oluşturuldu. Hepsini kaldırmak için OK'a tıklayın - bir vCard içe aktarımının yalnızca güncellediği (oluşturmadığı) girişler bundan asla etkilenmez; manuel olarak eklenen, CSV veya ICS ile içe aktarılan etkinlikler de etkilenmez."
+                "description": "{count} etkinlik önceki bir vCard içe aktarımıyla oluşturuldu. Hepsini kaldırmak için Tamam'a tıklayın - bir vCard içe aktarımının yalnızca güncellediği (oluşturmadığı) girişler bundan asla etkilenmez; manuel olarak eklenen, CSV veya ICS ile içe aktarılan etkinlikler de etkilenmez."
             },
             "holiday_menu": {
-                "title": "Resmî tatil",
+                "title": "Tatil",
                 "description": "**{name}**\n\n{type} · {date} · {region} · {category}",
                 "menu_options": {
                     "holiday_settings": "⚙️ Ayarlar",
@@ -464,7 +464,7 @@
                     "break_start": "Okul tatillerinde yalnızca okul günleri yer alır, dolayısıyla tatil daha erken başlar - hafta sonu ve bitişik resmi tatiller geriye doğru sayılarak gerçekten tatil olan ilk güne ulaşılır.",
                     "break_end": "Aynısı ters yönde: son tatil günü, listelenen son gün değil.",
                     "break_days": "Tatilin her günü için bir etkinlik. Tek başına yaz tatili kırktan fazla eder.",
-                    "include_observed": "Bu ülkenin tatilleri hafta sonuna denk geldiğinde bazen yakın bir iş gününe kaydırılır (örn. önceki Cuma veya sonraki Pazartesi) - bu kaydırılmış tarihi de ayrı bir etkinlik olarak içe aktarın."
+                    "include_observed": "Bu ülkenin tatilleri hafta sonuna denk geldiğinde bazen yakın bir iş gününe kaydırılır (örn. önceki cuma veya sonraki pazartesi) - bu kaydırılmış tarihi de ayrı bir etkinlik olarak içe aktarın."
                 }
             },
             "import_holidays_select": {
@@ -495,7 +495,7 @@
                 "sections": {
                     "important_events": {
                         "name": "❗ Önemli etkinlikler",
-                        "description": "O etkinlik türü için bir etkinliği otomatik olarak \"Important\" olarak işaretleyen, virgülle ayrılmış yıl dönümü sayıları, örn. \"18,21,30,40,50\". O tür için bunu devre dışı bırakmak üzere bir alanı boş bırakın.",
+                        "description": "O etkinlik türü için bir etkinliği otomatik olarak \"Important\" olarak işaretleyen, virgülle ayrılmış tekrar numaraları, örn. \"18,21,30,40,50\". O tür için bunu devre dışı bırakmak üzere bir alanı boş bırakın.",
                         "data": {
                             "important_thresholds_birthday": "Doğum günü",
                             "important_thresholds_anniversary": "Yıl dönümü",
@@ -508,17 +508,17 @@
                         }
                     },
                     "todo": {
-                        "name": "📍 Yapılacak listeleri",
-                        "description": "Bu listelerdeki açık öğeler bir etkinliği işaretler: her etkinlik sensörü böylece bir «todo» özniteliği taşır - kendisine hâlâ açık en az bir öğe eşleştirildiği sürece true, aksi hâlde false - kendi otomasyonlarınız, şablonlarınız ve panolarınız için. Eşleştirme önce bitiş tarihine, sonra öğenin metninin etkinliği anıp anmadığına göre yapılır (tam ad, ad, tür, kaçıncı olduğu); iki etkinliğe aynı ölçüde uyan bir öğe eşleştirilmeden bırakılır. Kapatmak için boş bırakın. Pano kartındaki aynı adlı ayardan bağımsızdır.",
+                        "name": "📍 Yapılacaklar listeleri",
+                        "description": "Bu listelerdeki açık öğeler bir etkinliği işaretler: her etkinlik sensörü böylece bir \"todo\" özniteliği taşır - kendisine hâlâ açık en az bir öğe eşleştirildiği sürece true, aksi hâlde false - kendi otomasyonlarınız, şablonlarınız ve gösterge panelleriniz için. Eşleştirme önce son tarihe, sonra öğenin metninin etkinliği anıp anmadığına göre yapılır (tam ad, ad, tür, kaçıncı olduğu); iki etkinliğe aynı ölçüde uyan bir öğe eşleştirilmeden bırakılır. Kapatmak için boş bırakın. Gösterge paneli kartındaki aynı adlı ayardan bağımsızdır.",
                         "data": {
-                            "todo_lists": "Yapılacak listeleri"
+                            "todo_lists": "Yapılacaklar listeleri"
                         }
                     }
                 }
             },
             "delete_all": {
                 "title": "Tüm Annuals verilerini sil",
-                "description": "Bu işlem, {count} etkinliği, paylaşılan takvimleri ve Annuals merkezinin kendisini - yani tüm entegrasyonu ve oluşturduğu her şeyi - kalıcı olarak siler. Bu işlem geri alınamaz. Onaylamak için \"OK\"a tıklayın."
+                "description": "Bu işlem, {count} etkinliği, paylaşılan takvimleri ve Annuals merkezinin kendisini - yani tüm entegrasyonu ve oluşturduğu her şeyi - kalıcı olarak siler. Bu işlem geri alınamaz. Onaylamak için \"Tamam\"a tıklayın."
             },
             "edit_recurring": {
                 "title": "Etkinliği düzenle",
@@ -536,7 +536,7 @@
                     "deceased": "Vefat etti"
                 },
                 "data_description": {
-                    "person": "Home Assistant'ta fotoğrafı bu etkinliği temsil eden bir kişi – panel kartında ve hatırlatıcının bildiriminde.",
+                    "person": "Home Assistant'ta fotoğrafı bu etkinliği temsil eden bir kişi – gösterge paneli kartında ve hatırlatıcının bildiriminde.",
                     "deceased": "Kişi vefat etti: gün korunur ve işaretlenir, kart o günün ne olacağını söyler ve otomasyonlarınız onu ayırt edebilir."
                 }
             },
@@ -557,7 +557,7 @@
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "O gün ne zaman başladığı. Takvim girişi o zaman bir saat taşır ve panel kartı bunu gösterir.",
+                    "time": "O gün ne zaman başladığı. Takvim girişi o zaman bir saat taşır ve gösterge paneli kartı bunu gösterir.",
                     "end_time": "Ne zaman bittiği – varsa bitiş tarihinde, yoksa aynı gün. Başlangıç saati gerekir; boş bırakılırsa takvim girişi bir saat sürer."
                 }
             },
@@ -621,7 +621,7 @@
             "csv_exported": "{count} etkinlik dışa aktarıldı. [annuals_export.csv dosyasını indir]({url}) (indirmek için Ctrl/Cmd+tıklayın - normal tıklama burada işe yaramaz)\n\nVeya aşağıdaki CSV'yi kopyalayın:\n\n```\n{csv}\n```",
             "no_events_to_export": "Henüz dışa aktarılacak bir etkinlik yok.",
             "deleted_all": "Tüm Annuals etkinlikleri, takvimleri ve merkezi kaldırıldı.",
-            "holiday_import_started": "İçe aktarma başladı: {country} için {count} tatil etkinliği sıraya alındı ({new} yeni, {updated} güncellendi).",
+            "holiday_import_started": "İçe aktarma başladı: {country} için {count} tatil etkinliği kuyruğa alındı ({new} yeni, {updated} güncellendi).",
             "no_holidays_imported": "Henüz hiç tatil içe aktarılmadı.",
             "holidays_removed": "{count} tatil kaldırıldı.",
             "no_ics_imports": "ICS ile içe aktarılarak oluşturulan hiçbir etkinlik bulunamadı.",

@@ -52,7 +52,7 @@
                 "school": "Schoolvakantie",
                 "optional": "Optioneel",
                 "optional_women": "Optioneel (vrouwen)",
-                "unofficial": "Niet-officieel",
+                "unofficial": "Onofficieel",
                 "half_day": "Halve dag",
                 "armed_forces": "Krijgsmacht",
                 "workday": "Werkdag",
@@ -166,8 +166,8 @@
                 },
                 "description": "Eén datum om naar af te tellen. Hij komt nooit terug, dus het jaar is verplicht, en het item wordt automatisch verwijderd om middernacht nadat hij voorbij is.\n\nMet een einddatum wordt het een meerdaags evenement – een reis, een congres, een verblijf.",
                 "data_description": {
-                    "time": "Wanneer het die dag begint. De agenda-afspraak krijgt dan een tijd, en de dashboardkaart toont die.",
-                    "end_time": "Wanneer het eindigt – op de einddatum als die er is, anders dezelfde dag. Heeft een begintijd nodig; leeg gelaten duurt de agenda-afspraak een uur."
+                    "time": "Wanneer het die dag begint. Het kalenderitem krijgt dan een tijd, en de dashboardkaart toont die.",
+                    "end_time": "Wanneer het eindigt – op de einddatum als die er is, anders dezelfde dag. Heeft een begintijd nodig; leeg gelaten duurt het kalenderitem een uur."
                 }
             },
             "custom": {
@@ -230,8 +230,8 @@
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "Wanneer het die dag begint. De agenda-afspraak krijgt dan een tijd, en de dashboardkaart toont die.",
-                    "end_time": "Wanneer het eindigt – op de einddatum als die er is, anders dezelfde dag. Heeft een begintijd nodig; leeg gelaten duurt de agenda-afspraak een uur."
+                    "time": "Wanneer het die dag begint. Het kalenderitem krijgt dan een tijd, en de dashboardkaart toont die.",
+                    "end_time": "Wanneer het eindigt – op de einddatum als die er is, anders dezelfde dag. Heeft een begintijd nodig; leeg gelaten duurt het kalenderitem een uur."
                 }
             },
             "reconfigure_custom": {
@@ -276,14 +276,14 @@
             "already_configured": "De Annuals-hub bestaat al.",
             "invalid_import_row": "Deze rij kon niet worden geïmporteerd.",
             "reconfigure_successful": "Het evenement is bijgewerkt.",
-            "holiday_not_reconfigurable": "De datum van dit item komt uit de feestdagengegevens en kan hier niet worden gewijzigd. Gebruik **Configureer** om het icoon of de namen te wijzigen."
+            "holiday_not_reconfigurable": "De datum van dit item komt uit de feestdagengegevens en kan hier niet worden gewijzigd. Gebruik **Configureren** om het icoon of de namen te wijzigen."
         }
     },
     "options": {
         "step": {
             "import_csv": {
                 "title": "Evenementen importeren vanuit CSV",
-                "description": "Kolommen: name, type, day, month, year (optioneel, verplicht voor one_time), icon (optioneel), vip (optioneel), last_name (optioneel). „type” moet een van de volgende Engelse sleutels zijn: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (altijd in het Engels, ongeacht je taalinstelling). „vip” accepteert 1/true/yes/y/x (hoofdlettergevoeligheid maakt niet uit); laat leeg of laat de kolom weg voor een niet-VIP-evenement. Houd elke kolom aan, ook als een waarde leeg is - een rij zonder komma aan het einde schuift de volgende waarden naar links. Ongeldige rijen worden overgeslagen en gelogd.\n\nVoorbeeld:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamilievakantie,one_time,15,7,2026,mdi:airplane,,\n```",
+                "description": "Kolommen: name, type, day, month, year (optioneel, verplicht voor one_time), icon (optioneel), vip (optioneel), last_name (optioneel). `type` moet een van de volgende Engelse sleutels zijn: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (altijd in het Engels, ongeacht je taalinstelling). `vip` accepteert 1/true/yes/y/x (niet hoofdlettergevoelig); laat leeg of laat de kolom weg voor een niet-VIP-evenement. Houd elke kolom aan, ook als een waarde leeg is - een rij zonder komma aan het einde schuift de volgende waarden naar links. Ongeldige rijen worden overgeslagen en gelogd.\n\nVoorbeeld:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamilievakantie,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "CSV-bestand"
                 }
@@ -381,15 +381,15 @@
             },
             "import_translations": {
                 "title": "Vertalingen importeren",
-                "description": "Upload een CSV met vertalingen. Kolommen: `country,subdivision,category,holiday_key,observed,language,name,status`. Rijen worden aan feestdagen gekoppeld op land, onderverdeling, categorie, feestdagsleutel en observed-vlag – niet op item-id, dus een bestand dat is geëxporteerd voordat een land opnieuw werd geïmporteerd, blijft geldig. Rijen waarvan de feestdag ontbreekt, worden overgeslagen en geteld. Bij een beursdag is `name` de reden en `status` de eigen naam; laat `status` leeg voor feestdagen.",
+                "description": "Upload een CSV met vertalingen. Kolommen: `country,subdivision,category,holiday_key,observed,language,name,status`. Rijen worden aan feestdagen gekoppeld op land, regio, categorie, feestdagsleutel en observed-vlag – niet op item-id, dus een bestand dat is geëxporteerd voordat een land opnieuw werd geïmporteerd, blijft geldig. Rijen waarvan de feestdag ontbreekt, worden overgeslagen en geteld. Bij een beursdag is `name` de reden en `status` de eigen naam; laat `status` leeg voor feestdagen.",
                 "data": {
                     "csv_file": "CSV"
                 }
             },
             "hub_menu": {
-                "title": "Annuals Instellingen",
+                "title": "Annuals-instellingen",
                 "menu_options": {
-                    "annual_settings": "{icon_annual_settings} Annual Instellingen",
+                    "annual_settings": "{icon_annual_settings} Annual-instellingen",
                     "import_events": "{icon_import_events} Evenementen importeren",
                     "export_csv": "{icon_export_csv} Evenementen exporteren naar CSV",
                     "holiday_translations": "{icon_holiday_translations} Vertalingen van feestdagen",
@@ -420,7 +420,7 @@
             },
             "import_holidays": {
                 "title": "Feestdagen importeren",
-                "description": "Kies een land om de feestdagen ervan als evenementen te importeren. Dit later opnieuw uitvoeren voor hetzelfde land (en dezelfde subdivisie) werkt bestaande items bij in plaats van ze te dupliceren - voordat er iets wordt geïmporteerd, zie je alle feestdagen en kies je de gewenste.",
+                "description": "Kies een land om de feestdagen ervan als evenementen te importeren. Dit later opnieuw uitvoeren voor hetzelfde land (en dezelfde regio) werkt bestaande items bij in plaats van ze te dupliceren - voordat er iets wordt geïmporteerd, zie je alle feestdagen en kies je de gewenste.",
                 "data": {
                     "country": "Land"
                 }
@@ -449,14 +449,14 @@
             },
             "import_holidays_options": {
                 "title": "Feestdagen importeren - {country}",
-                "description": "Laat de subdivisie leeg voor alleen landelijke feestdagen - een provincie voegt eigen regionale feestdagen toe. Categorieën en taal hangen af van wat de feestdaggegevens van dit land bieden.{breaks}",
+                "description": "Laat de regio leeg voor alleen landelijke feestdagen - een deelstaat/provincie voegt eigen regionale feestdagen toe. Categorieën en taal hangen af van wat de feestdaggegevens van dit land bieden.{breaks}",
                 "data": {
                     "include_actual": "Werkelijke datum importeren",
-                    "include_observed": "Waargenomen (verschoven) datum importeren",
+                    "include_observed": "Vervangende (verschoven) datum importeren",
                     "break_start": "Eerste vakantiedag importeren",
                     "break_end": "Laatste vakantiedag importeren",
                     "break_days": "Elke vakantiedag importeren",
-                    "subdivision": "Subdivisie (provincie, optioneel)",
+                    "subdivision": "Regio (deelstaat/provincie, optioneel)",
                     "categories": "Categorieën",
                     "language": "Taal voor feestdagnamen"
                 },
@@ -464,7 +464,7 @@
                     "break_start": "Schoolvakanties bevatten alleen schooldagen, dus de vakantie begint eerder - er wordt teruggerekend over het weekend en aangrenzende feestdagen tot de eerste echt vrije dag.",
                     "break_end": "Hetzelfde andersom: de laatste vrije dag, niet de laatst vermelde.",
                     "break_days": "Eén evenement per vakantiedag. Alleen de zomervakantie levert er al meer dan veertig op.",
-                    "include_observed": "Feestdagen van dit land worden soms verschoven naar een nabije werkdag als ze in het weekend vallen (bijv. waargenomen op de vrijdag ervoor of de maandag erna) - importeer deze verschoven datum ook als apart evenement."
+                    "include_observed": "Feestdagen van dit land worden soms verschoven naar een nabije werkdag als ze in het weekend vallen (bijv. gevierd op de vrijdag ervoor of de maandag erna) - importeer deze verschoven datum ook als apart evenement."
                 }
             },
             "import_holidays_select": {
@@ -491,11 +491,11 @@
                 }
             },
             "annual_settings": {
-                "title": "Annual Instellingen",
+                "title": "Annual-instellingen",
                 "sections": {
                     "important_events": {
                         "name": "❗ Belangrijke evenementen",
-                        "description": "Kommagescheiden lijst van jubileumgetallen waarbij een evenement van dat type automatisch als „Important” wordt gemarkeerd, bijv. „18,21,30,40,50”. Laat een veld leeg om dit voor dat type uit te schakelen.",
+                        "description": "Kommagescheiden lijst van jubileumnummers waarbij een evenement van dat type automatisch als „Important” wordt gemarkeerd, bijv. „18,21,30,40,50”. Laat een veld leeg om dit voor dat type uit te schakelen.",
                         "data": {
                             "important_thresholds_birthday": "Verjaardag",
                             "important_thresholds_anniversary": "Jaardag",
@@ -509,7 +509,7 @@
                     },
                     "todo": {
                         "name": "📍 Takenlijsten",
-                        "description": "Openstaande taken op deze lijsten markeren een evenement: elke evenementsensor krijgt dan een attribuut \"todo\" - true zolang er minstens één nog openstaande taak aan gekoppeld is, anders false - voor je eigen automatiseringen, templates en dashboards. Koppeling gebeurt eerst op vervaldatum en daarna op de vraag of de tekst van de taak het evenement noemt (volledige naam, naam, type, volgnummer); een taak die even goed bij twee evenementen past blijft ongekoppeld. Laat leeg om dit uit te schakelen. Los van de gelijknamige instelling van de dashboardkaart.",
+                        "description": "Openstaande taken op deze lijsten markeren een evenement: elke evenementsensor krijgt dan een attribuut \"todo\" - true zolang er minstens één nog openstaande taak aan gekoppeld is, anders false - voor je eigen automatiseringen, templates en dashboards. Koppeling gebeurt eerst op vervaldatum en daarna op de vraag of de tekst van de taak het evenement noemt (volledige naam, naam, type, jubileumnummer); een taak die even goed bij twee evenementen past blijft ongekoppeld. Laat leeg om dit uit te schakelen. Los van de gelijknamige instelling van de dashboardkaart.",
                         "data": {
                             "todo_lists": "Takenlijsten"
                         }
@@ -557,8 +557,8 @@
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "Wanneer het die dag begint. De agenda-afspraak krijgt dan een tijd, en de dashboardkaart toont die.",
-                    "end_time": "Wanneer het eindigt – op de einddatum als die er is, anders dezelfde dag. Heeft een begintijd nodig; leeg gelaten duurt de agenda-afspraak een uur."
+                    "time": "Wanneer het die dag begint. Het kalenderitem krijgt dan een tijd, en de dashboardkaart toont die.",
+                    "end_time": "Wanneer het eindigt – op de einddatum als die er is, anders dezelfde dag. Heeft een begintijd nodig; leeg gelaten duurt het kalenderitem een uur."
                 }
             },
             "edit_custom": {
@@ -606,7 +606,7 @@
             "end_time_needs_time": "Een eindtijd heeft een begintijd nodig.",
             "end_time_before_start": "De eindtijd moet na de begintijd liggen.",
             "no_holiday_selected": "Vink minstens één feestdag aan.",
-            "category_needs_region": "{category} heeft geen feestdagen voor {where} in {year} - alleen deze regio's hebben er: {regions}. Kies er een onder \"Subdivisie\", of laat {category} weg.",
+            "category_needs_region": "{category} heeft geen feestdagen voor {where} in {year} - alleen deze regio's hebben er: {regions}. Kies er een onder \"Regio\", of laat {category} weg.",
             "category_empty": "{category} heeft geen feestdagen voor {where} in {year}. Laat de categorie weg om de andere te importeren.",
             "no_market_day_selected": "Vink minstens één dag aan.",
             "market_category_empty": "{category} heeft geen dagen voor {where} in {year}. Laat de categorie weg om de andere te importeren.",

@@ -23,7 +23,7 @@
                 "pet_birthday": "Compleanno animale",
                 "work_anniversary": "Anniversario lavorativo",
                 "custom": "Personalizzato",
-                "one_time": "Evento occasionale",
+                "one_time": "Evento unico",
                 "holiday": "Festività",
                 "market": "Borsa"
             }
@@ -46,7 +46,7 @@
         },
         "holiday_category": {
             "options": {
-                "public": "Festività nazionale",
+                "public": "Pubblica",
                 "bank": "Bancaria",
                 "government": "Amministrazione pubblica",
                 "school": "Vacanze scolastiche",
@@ -122,10 +122,10 @@
         "step": {
             "user": {
                 "title": "Aggiungi evento",
-                "description": "Di che tipo di evento si tratta?\n\n**Annuale** comprende compleanno, anniversario, onomastico, anniversario di matrimonio, anniversario della morte, compleanno animale e anniversario lavorativo. **Occasionale** è una data singola, che si elimina da sola una volta passata. **Personalizzato** è la tua data annuale, in un giorno preciso o secondo una regola.",
+                "description": "Di che tipo di evento si tratta?\n\n**Annuale** comprende compleanno, anniversario, onomastico, anniversario di matrimonio, anniversario della morte, compleanno animale e anniversario lavorativo. **Unico** è una data singola, che si elimina da sola una volta passata. **Personalizzato** è la tua data annuale, in un giorno preciso o secondo una regola.",
                 "menu_options": {
                     "recurring": "{icon_recurring} Una data annuale di qualcuno",
-                    "one_time": "{icon_one_time} Un evento occasionale",
+                    "one_time": "{icon_one_time} Un evento unico",
                     "custom": "{icon_custom} Un evento personalizzato"
                 }
             },
@@ -145,12 +145,12 @@
                 },
                 "description": "Ogni evento ottiene una propria voce, che puoi trovare e modificare in seguito da Impostazioni → Dispositivi e servizi → Annuals cercandone il nome.",
                 "data_description": {
-                    "person": "Una persona in Home Assistant la cui foto rappresenta questo evento: sulla scheda della dashboard e nella notifica del promemoria.",
+                    "person": "Una persona in Home Assistant la cui foto rappresenta questo evento: sulla scheda della plancia e nella notifica del promemoria.",
                     "deceased": "Compleanno, Onomastico, Compleanno animale e Anniversario di matrimonio - La persona è deceduta: il giorno resta e viene contrassegnato, la scheda dice cosa sarebbe stato e le tue automazioni possono distinguerlo. Senza effetto sugli altri tipi."
                 }
             },
             "one_time": {
-                "title": "Aggiungi un evento occasionale",
+                "title": "Aggiungi un evento unico",
                 "data": {
                     "name": "Nome",
                     "last_name": "Cognome (opzionale)",
@@ -166,7 +166,7 @@
                 },
                 "description": "Una data singola verso cui fare il conto alla rovescia. Non si ripete mai, quindi l'anno è obbligatorio, e la voce viene eliminata automaticamente alla mezzanotte successiva alla sua fine.\n\nCon una data di fine diventa un evento di più giorni: un viaggio, un congresso, un soggiorno.",
                 "data_description": {
-                    "time": "A che ora inizia quel giorno. La voce del calendario ha allora un orario, e la scheda della dashboard lo mostra.",
+                    "time": "A che ora inizia quel giorno. La voce del calendario ha allora un orario, e la scheda della plancia lo mostra.",
                     "end_time": "A che ora finisce: nella data di fine se c'è, altrimenti lo stesso giorno. Richiede un'ora di inizio; lasciata vuota, la voce del calendario dura un'ora."
                 }
             },
@@ -209,12 +209,12 @@
                     "deceased": "Deceduto/a"
                 },
                 "data_description": {
-                    "person": "Una persona in Home Assistant la cui foto rappresenta questo evento: sulla scheda della dashboard e nella notifica del promemoria.",
+                    "person": "Una persona in Home Assistant la cui foto rappresenta questo evento: sulla scheda della plancia e nella notifica del promemoria.",
                     "deceased": "La persona è deceduta: il giorno resta e viene contrassegnato, la scheda dice cosa sarebbe stato e le tue automazioni possono distinguerlo."
                 }
             },
             "reconfigure_one_time": {
-                "title": "Modifica evento occasionale",
+                "title": "Modifica evento unico",
                 "description": "Modifica un campo qualsiasi qui sotto e invia per aggiornare questo evento.\n\nUna data di fine lo rende un evento di più giorni; cancellandola torna a essere di un giorno solo.",
                 "data": {
                     "name": "Nome",
@@ -230,7 +230,7 @@
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "A che ora inizia quel giorno. La voce del calendario ha allora un orario, e la scheda della dashboard lo mostra.",
+                    "time": "A che ora inizia quel giorno. La voce del calendario ha allora un orario, e la scheda della plancia lo mostra.",
                     "end_time": "A che ora finisce: nella data di fine se c'è, altrimenti lo stesso giorno. Richiede un'ora di inizio; lasciata vuota, la voce del calendario dura un'ora."
                 }
             },
@@ -260,10 +260,10 @@
         },
         "error": {
             "name_required": "Inserisci un nome.",
-            "end_date_one_time_only": "Una data di fine può essere impostata solo su un evento singolo.",
+            "end_date_one_time_only": "Una data di fine può essere impostata solo su un evento unico.",
             "end_date_before_start": "La data di fine deve essere successiva a quella di inizio.",
             "invalid_date": "Questa combinazione di giorno/mese/anno non è una data valida.",
-            "year_required": "Gli eventi occasionali richiedono un anno.",
+            "year_required": "Gli eventi unici richiedono un anno.",
             "rule_needs_both": "Una regola di ricorrenza richiede entrambi i campi, o nessuno.",
             "interval_needs_both": "Un intervallo di ripetizione richiede entrambi i campi, o nessuno.",
             "interval_needs_year": "Un intervallo di ripetizione si conta dalla data sopra, quindi serve l'anno.",
@@ -283,7 +283,7 @@
         "step": {
             "import_csv": {
                 "title": "Importa eventi da CSV",
-                "description": "Colonne: name, type, day, month, year (opzionale, obbligatorio per one_time), icon (opzionale), vip (opzionale), last_name (opzionale). «type» deve essere una di queste chiavi inglesi: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (sempre in inglese, indipendentemente dalla lingua impostata). «vip» accetta 1/true/yes/y/x (senza distinzione tra maiuscole e minuscole); lascia vuoto oppure ometti la colonna per un evento non VIP. Mantieni ogni colonna anche se un valore è vuoto - una riga senza virgola finale sposta a sinistra i valori successivi. Le righe non valide vengono ignorate e registrate.\n\nEsempio:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nVacanza in famiglia,one_time,15,7,2026,mdi:airplane,,\n```",
+                "description": "Colonne: name, type, day, month, year (opzionale, obbligatorio per one_time), icon (opzionale), vip (opzionale), last_name (opzionale). `type` deve essere una di queste chiavi inglesi: birthday, anniversary, name_day, wedding_anniversary, memorial, pet_birthday, work_anniversary, custom, one_time (sempre in inglese, indipendentemente dalla lingua impostata). `vip` accetta 1/true/yes/y/x (senza distinzione tra maiuscole e minuscole); lascia vuoto oppure ometti la colonna per un evento non VIP. Mantieni ogni colonna anche se un valore è vuoto - una riga senza virgola finale sposta a sinistra i valori successivi. Le righe non valide vengono ignorate e registrate.\n\nEsempio:\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nVacanza in famiglia,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "File CSV"
                 }
@@ -335,11 +335,11 @@
             },
             "remove_ics_imports": {
                 "title": "Rimuovi eventi importati da ICS",
-                "description": "{count} evento/i sono stati creati da una precedente importazione ICS. Fai clic su OK per rimuoverli tutti - le voci che un'importazione ICS ha solo aggiornato (invece di creare) non vengono mai interessate, così come gli eventi aggiunti manualmente o importati da CSV o vCard."
+                "description": "Eventi creati da una precedente importazione ICS: {count}. Fai clic su OK per rimuoverli tutti - le voci che un'importazione ICS ha solo aggiornato (invece di creare) non vengono mai interessate, così come gli eventi aggiunti manualmente o importati da CSV o vCard."
             },
             "remove_vcard_imports": {
                 "title": "Rimuovi eventi importati da vCard",
-                "description": "{count} evento/i sono stati creati da una precedente importazione vCard. Fai clic su OK per rimuoverli tutti - le voci che un'importazione vCard ha solo aggiornato (invece di creare) non vengono mai interessate, così come gli eventi aggiunti manualmente o importati da CSV o ICS."
+                "description": "Eventi creati da una precedente importazione vCard: {count}. Fai clic su OK per rimuoverli tutti - le voci che un'importazione vCard ha solo aggiornato (invece di creare) non vengono mai interessate, così come gli eventi aggiunti manualmente o importati da CSV o ICS."
             },
             "holiday_menu": {
                 "title": "Festività",
@@ -387,9 +387,9 @@
                 }
             },
             "hub_menu": {
-                "title": "Annuals Impostazioni",
+                "title": "Impostazioni di Annuals",
                 "menu_options": {
-                    "annual_settings": "{icon_annual_settings} Annual Impostazioni",
+                    "annual_settings": "{icon_annual_settings} Impostazioni Annual",
                     "import_events": "{icon_import_events} Importa eventi",
                     "export_csv": "{icon_export_csv} Esporta eventi in CSV",
                     "holiday_translations": "{icon_holiday_translations} Traduzioni delle festività",
@@ -442,7 +442,7 @@
             },
             "import_markets_select": {
                 "title": "Importa giorni di borsa - {country}: scegli",
-                "description": "Trovati {count} giorni, ognuno con la sua prossima data. Vengono importati solo quelli selezionati.\n\nDeselezionare un giorno già presente in Annuals lo lascia com'è - per rimuovere giorni usa **Rimuovi eventi → Borse**.",
+                "description": "Giorni trovati: {count}, ognuno con la sua prossima data. Vengono importati solo quelli selezionati.\n\nDeselezionare un giorno già presente in Annuals lo lascia com'è - per rimuovere giorni usa **Rimuovi eventi → Borse**.",
                 "data": {
                     "holidays": "Giorni"
                 }
@@ -464,12 +464,12 @@
                     "break_start": "Le vacanze scolastiche elencano solo i giorni di scuola, quindi iniziano prima: si risale il fine settimana e le festività adiacenti fino al primo giorno davvero libero.",
                     "break_end": "Lo stesso al contrario: l'ultimo giorno libero, non l'ultimo elencato.",
                     "break_days": "Un evento per ogni giorno di vacanza. Le sole vacanze estive ne producono oltre quaranta.",
-                    "include_observed": "Le festività di questo paese vengono a volte spostate a un giorno feriale vicino quando cadono di weekend (es. osservata il venerdì precedente o il lunedì successivo) - importa anche questa data spostata come evento separato."
+                    "include_observed": "Le festività di questo paese vengono a volte spostate a un giorno feriale vicino quando cadono nel fine settimana (es. osservata il venerdì precedente o il lunedì successivo) - importa anche questa data spostata come evento separato."
                 }
             },
             "import_holidays_select": {
                 "title": "Importa festività - {country}: scegli",
-                "description": "Trovate {count} festività, ognuna con la sua prossima data. Vengono importate solo quelle selezionate.\n\nDeselezionare una festività già presente in Annuals la lascia com'è - per rimuovere festività usa **Rimuovi eventi → Festività**.",
+                "description": "Festività trovate: {count}, ognuna con la sua prossima data. Vengono importate solo quelle selezionate.\n\nDeselezionare una festività già presente in Annuals la lascia com'è - per rimuovere festività usa **Rimuovi eventi → Festività**.",
                 "data": {
                     "holidays": "Festività"
                 }
@@ -491,7 +491,7 @@
                 }
             },
             "annual_settings": {
-                "title": "Annual Impostazioni",
+                "title": "Impostazioni Annual",
                 "sections": {
                     "important_events": {
                         "name": "❗ Eventi importanti",
@@ -508,17 +508,17 @@
                         }
                     },
                     "todo": {
-                        "name": "📍 Elenchi attività",
-                        "description": "Le attività aperte di questi elenchi contrassegnano un evento: ogni sensore evento riceve allora un attributo «todo» - vero finché gli è abbinata almeno un'attività ancora aperta, falso altrimenti - per le tue automazioni, i tuoi template e le tue dashboard. L'abbinamento avviene prima per data di scadenza e poi in base al fatto che il testo dell'attività nomini l'evento (nome completo, nome, tipo, numero dell'occorrenza); un'attività che si adatta ugualmente bene a due eventi resta non abbinata. Lascia vuoto per disattivare. Indipendente dall'omonima impostazione della scheda della dashboard.",
+                        "name": "📍 Liste di attività",
+                        "description": "Le attività aperte di queste liste contrassegnano un evento: ogni sensore evento riceve allora un attributo «todo» - true finché gli è abbinata almeno un'attività ancora aperta, false altrimenti - per le tue automazioni, i tuoi template e le tue plance. L'abbinamento avviene prima per data di scadenza e poi in base al fatto che il testo dell'attività nomini l'evento (nome completo, nome, tipo, numero dell'occorrenza); un'attività che si adatta ugualmente bene a due eventi resta non abbinata. Lascia vuoto per disattivare. Indipendente dall'omonima impostazione della scheda della plancia.",
                         "data": {
-                            "todo_lists": "Elenchi attività"
+                            "todo_lists": "Liste di attività"
                         }
                     }
                 }
             },
             "delete_all": {
                 "title": "Elimina tutti i dati di Annuals",
-                "description": "Questa azione elimina definitivamente tutti i {count} evento/i, i calendari condivisi e l'hub Annuals stesso - l'intera integrazione e tutto ciò che ha creato. Non può essere annullata. Fai clic su «OK» per confermare."
+                "description": "Questa azione elimina definitivamente tutti gli eventi ({count}), i calendari condivisi e l'hub Annuals stesso - l'intera integrazione e tutto ciò che ha creato. Non può essere annullata. Fai clic su «OK» per confermare."
             },
             "edit_recurring": {
                 "title": "Modifica evento",
@@ -536,12 +536,12 @@
                     "deceased": "Deceduto/a"
                 },
                 "data_description": {
-                    "person": "Una persona in Home Assistant la cui foto rappresenta questo evento: sulla scheda della dashboard e nella notifica del promemoria.",
+                    "person": "Una persona in Home Assistant la cui foto rappresenta questo evento: sulla scheda della plancia e nella notifica del promemoria.",
                     "deceased": "La persona è deceduta: il giorno resta e viene contrassegnato, la scheda dice cosa sarebbe stato e le tue automazioni possono distinguerlo."
                 }
             },
             "edit_one_time": {
-                "title": "Modifica evento occasionale",
+                "title": "Modifica evento unico",
                 "description": "Modifica un campo qualsiasi qui sotto e invia per aggiornare questo evento.\n\nUna data di fine lo rende un evento di più giorni; cancellandola torna a essere di un giorno solo.",
                 "data": {
                     "name": "Nome",
@@ -557,7 +557,7 @@
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "A che ora inizia quel giorno. La voce del calendario ha allora un orario, e la scheda della dashboard lo mostra.",
+                    "time": "A che ora inizia quel giorno. La voce del calendario ha allora un orario, e la scheda della plancia lo mostra.",
                     "end_time": "A che ora finisce: nella data di fine se c'è, altrimenti lo stesso giorno. Richiede un'ora di inizio; lasciata vuota, la voce del calendario dura un'ora."
                 }
             },
@@ -587,10 +587,10 @@
         },
         "error": {
             "name_required": "Inserisci un nome.",
-            "end_date_one_time_only": "Una data di fine può essere impostata solo su un evento singolo.",
+            "end_date_one_time_only": "Una data di fine può essere impostata solo su un evento unico.",
             "end_date_before_start": "La data di fine deve essere successiva a quella di inizio.",
             "invalid_date": "Questa combinazione di giorno/mese/anno non è una data valida.",
-            "year_required": "Gli eventi occasionali richiedono un anno.",
+            "year_required": "Gli eventi unici richiedono un anno.",
             "invalid_csv": "Impossibile leggere questo file come CSV. Controlla la codifica e il formato.",
             "no_valid_rows": "Nessuna riga valida trovata in questo file. Controlla il registro per i dettagli sulle righe ignorate.",
             "invalid_ics": "Impossibile leggere questo file come calendario ICS. Controlla il formato.",
@@ -613,7 +613,7 @@
             "no_market_batch_selected": "Seleziona «Rimuovi tutti i giorni di borsa importati» oppure scegli una borsa da rimuovere."
         },
         "abort": {
-            "translations_exported": "{count} traduzione/i esportato/i. [Scarica annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+clic per scaricare - un clic semplice qui non funziona)\n\nOppure copia il CSV qui sotto:\n\n```\n{csv}\n```",
+            "translations_exported": "{count} traduzione/i esportata/e. [Scarica annuals_holiday_translations.csv]({url}) (Ctrl/Cmd+clic per scaricare - un clic semplice qui non funziona)\n\nOppure copia il CSV qui sotto:\n\n```\n{csv}\n```",
             "translations_imported": "{updated} festività aggiornate, {skipped} righe saltate.",
             "no_translations_to_export": "Non è ancora stato scritto alcun nome di festività: non c'è nulla da esportare.",
             "import_started": "Importazione avviata: {created} evento/i in coda, {skipped} riga/righe ignorate (vedi il registro per i dettagli).",
@@ -623,14 +623,14 @@
             "deleted_all": "Tutti gli eventi, i calendari e l'hub di Annuals sono stati rimossi.",
             "holiday_import_started": "Importazione avviata: {count} evento/i festivo/i in coda per {country} ({new} nuovi, {updated} aggiornati).",
             "no_holidays_imported": "Non è stata ancora importata alcuna festività.",
-            "holidays_removed": "{count} festività rimosse.",
+            "holidays_removed": "Festività rimosse: {count}.",
             "no_ics_imports": "Non è stato trovato alcun evento creato da un'importazione ICS.",
             "ics_imports_removed": "{count} evento/i importato/i da ICS rimosso/i.",
             "no_vcard_imports": "Non è stato trovato alcun evento creato da un'importazione vCard.",
             "vcard_imports_removed": "{count} evento/i importato/i da vCard rimosso/i.",
-            "market_import_started": "Importazione avviata: {count} giorni in coda per {country} ({new} nuovi, {updated} aggiornati).",
+            "market_import_started": "Importazione avviata: {count} giorno/i in coda per {country} ({new} nuovi, {updated} aggiornati).",
             "no_markets_imported": "Non è ancora stato importato alcun giorno di borsa.",
-            "markets_removed": "{count} giorni di borsa rimossi."
+            "markets_removed": "Giorni di borsa rimossi: {count}."
         }
     },
     "entity": {
@@ -697,7 +697,7 @@
                 "name": "Anniversari della morte"
             },
             "pet_birthday": {
-                "name": "Compleanni animali"
+                "name": "Compleanni degli animali"
             },
             "work_anniversary": {
                 "name": "Anniversari lavorativi"
@@ -706,7 +706,7 @@
                 "name": "Eventi personalizzati"
             },
             "one_time": {
-                "name": "Eventi occasionali"
+                "name": "Eventi unici"
             },
             "holiday": {
                 "name": "Festività"

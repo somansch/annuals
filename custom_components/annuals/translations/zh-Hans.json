@@ -63,7 +63,7 @@
                 "islamic": "伊斯兰教",
                 "hindu": "印度教",
                 "buddhist": "佛教",
-                "de_facto": "事实上",
+                "de_facto": "约定俗成假日",
                 "protestant": "新教",
                 "sabian": "萨比教",
                 "yazidi": "雅兹迪教",
@@ -122,17 +122,17 @@
         "step": {
             "user": {
                 "title": "添加事件",
-                "description": "这是哪一类事件？\n\n**每年**包括生日、纪念日、命名日、结婚纪念日、忌日、宠物生日和工作纪念日。**单次**是一个日期，过期后会自动删除。**自定义**是你自己的每年日期，可以固定在某一天，也可以按规则计算。",
+                "description": "这是哪一类事件？\n\n**年度**包括生日、纪念日、命名日、结婚纪念日、忌日、宠物生日和工作纪念日。**单次**是一个日期，过期后会自动删除。**自定义**是你自己的年度日期，可以固定在某一天，也可以按规则计算。",
                 "menu_options": {
-                    "recurring": "{icon_recurring} 某人的每年日期",
+                    "recurring": "{icon_recurring} 某人的年度日期",
                     "one_time": "{icon_one_time} 单次事件",
                     "custom": "{icon_custom} 自定义事件"
                 }
             },
             "recurring": {
-                "title": "添加每年事件",
+                "title": "添加年度事件",
                 "data": {
-                    "name": "姓名",
+                    "name": "名称",
                     "last_name": "姓氏（可选）",
                     "person": "人员（可选）",
                     "type": "事件类型",
@@ -145,14 +145,14 @@
                 },
                 "description": "每个事件都会创建独立的条目，之后可以在“设置 → 设备与服务 → Annuals”中通过搜索名称找到并编辑。",
                 "data_description": {
-                    "person": "Home Assistant 中的一个人员，其照片代表此事件——显示在仪表板卡片和提醒通知中。",
-                    "deceased": "生日、命名日、宠物生日和结婚纪念日：此人已去世：这一天会保留并被标记，卡片会显示它本应是什么，自动化也能将其区分开。对其他类型无效。"
+                    "person": "Home Assistant 中的一个人员，其照片代表此事件——显示在仪表盘卡片和提醒通知中。",
+                    "deceased": "生日、命名日、宠物生日和结婚纪念日——此人已去世：这一天会保留并被标记，卡片会显示它本应是什么，自动化也能将其区分开。对其他类型无效。"
                 }
             },
             "one_time": {
                 "title": "添加单次事件",
                 "data": {
-                    "name": "姓名",
+                    "name": "名称",
                     "last_name": "姓氏（可选）",
                     "type": "事件类型",
                     "day": "日",
@@ -164,16 +164,16 @@
                     "icon": "自定义图标（可选）",
                     "vip": "VIP Annual"
                 },
-                "description": "一个用来倒计时的日期。它不会重复，因此年份是必填项；结束后的午夜，条目会被自动删除。\n\n填写结束日期即可变成多日事件——旅行、会议、住院等。",
+                "description": "一个用来倒计时的日期。它不会重复，因此年份是必填项；结束后的午夜，条目会被自动删除。\n\n填写结束日期即可变成多日事件——旅行、会议、小住等。",
                 "data_description": {
-                    "time": "当天开始的时间。日历条目随后带有时间，仪表板卡片也会显示。",
+                    "time": "当天开始的时间。日历条目随后带有时间，仪表盘卡片也会显示。",
                     "end_time": "结束的时间——有结束日期时在结束日期，否则在同一天。需要开始时间；留空则日历条目时长为一小时。"
                 }
             },
             "custom": {
                 "title": "添加自定义事件",
                 "data": {
-                    "name": "姓名",
+                    "name": "名称",
                     "last_name": "姓氏（可选）",
                     "type": "事件类型",
                     "day": "日",
@@ -186,7 +186,7 @@
                     "nth": "在当月的第几个",
                     "weekday": "星期几"
                 },
-                "description": "你自己的每年日期，用于其他类型无法描述的一切。\n\n它可以按**规则**计算，而不是固定在某一天：母亲节是五月的第二个星期日，澳大利亚的父亲节是九月的第一个星期日。填写下面两个字段，上面的**月份**决定规则适用于哪个月，此时**日**不再使用。两个字段留空即为固定日期。",
+                "description": "你自己的年度日期，用于其他类型无法描述的一切。\n\n它可以按**规则**计算，而不是固定在某一天：母亲节是五月的第二个星期日，澳大利亚的父亲节是九月的第一个星期日。填写下面两个字段，上面的**月份**决定规则适用于哪个月，此时**日**不再使用。两个字段留空即为固定日期。",
                 "data_description": {
                     "interval": "与旁边的单位一起使用：每 6 个月、每 2 年。从上面的日期起计算，因此需要填写年份。两者都留空表示每年一次。",
                     "nth": "当月的第一个、第二个、第三个、第四个或最后一个。",
@@ -197,7 +197,7 @@
                 "title": "编辑事件",
                 "description": "修改下方任意字段并提交以更新此事件。",
                 "data": {
-                    "name": "姓名",
+                    "name": "名称",
                     "last_name": "姓氏（可选）",
                     "person": "人员（可选）",
                     "type": "事件类型",
@@ -209,7 +209,7 @@
                     "deceased": "已去世"
                 },
                 "data_description": {
-                    "person": "Home Assistant 中的一个人员，其照片代表此事件——显示在仪表板卡片和提醒通知中。",
+                    "person": "Home Assistant 中的一个人员，其照片代表此事件——显示在仪表盘卡片和提醒通知中。",
                     "deceased": "此人已去世：这一天会保留并被标记，卡片会显示它本应是什么，自动化也能将其区分开。"
                 }
             },
@@ -217,7 +217,7 @@
                 "title": "编辑单次事件",
                 "description": "修改下方任意字段并提交以更新此事件。\n\n填写结束日期会变成多日事件；清空后又恢复为一天。",
                 "data": {
-                    "name": "姓名",
+                    "name": "名称",
                     "last_name": "姓氏（可选）",
                     "type": "事件类型",
                     "day": "日",
@@ -230,7 +230,7 @@
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "当天开始的时间。日历条目随后带有时间，仪表板卡片也会显示。",
+                    "time": "当天开始的时间。日历条目随后带有时间，仪表盘卡片也会显示。",
                     "end_time": "结束的时间——有结束日期时在结束日期，否则在同一天。需要开始时间；留空则日历条目时长为一小时。"
                 }
             },
@@ -238,7 +238,7 @@
                 "title": "编辑自定义事件",
                 "description": "修改下方任意字段并提交以更新此事件。\n\n它可以按**规则**计算，而不是固定在某一天——*五月的第二个星期日*。填写下面两个字段，上面的**月份**决定规则适用于哪个月，此时**日**不再使用。清空后，事件会回到该日期。",
                 "data": {
-                    "name": "姓名",
+                    "name": "名称",
                     "last_name": "姓氏（可选）",
                     "type": "事件类型",
                     "day": "日",
@@ -259,8 +259,8 @@
             }
         },
         "error": {
-            "name_required": "请输入姓名。",
-            "end_date_one_time_only": "只有一次性事件才能设置结束日期。",
+            "name_required": "请输入名称。",
+            "end_date_one_time_only": "只有单次事件才能设置结束日期。",
             "end_date_before_start": "结束日期必须晚于开始日期。",
             "invalid_date": "此日/月/年组合不是有效日期。",
             "year_required": "单次事件必须填写年份。",
@@ -276,14 +276,14 @@
             "already_configured": "Annuals 中心已存在。",
             "invalid_import_row": "此行无法导入。",
             "reconfigure_successful": "事件已更新。",
-            "holiday_not_reconfigurable": "此条目的日期来自节日数据，无法在此更改。请使用**配置**更改其图标或名称。"
+            "holiday_not_reconfigurable": "此条目的日期来自节假日数据，无法在此更改。请使用**配置**更改其图标或名称。"
         }
     },
     "options": {
         "step": {
             "import_csv": {
                 "title": "从 CSV 导入事件",
-                "description": "列：name、type、day、month、year（可选，单次事件必填）、icon（可选）、vip（可选）、last_name（可选）。“type”必须是以下英文键之一：birthday、anniversary、name_day、wedding_anniversary、memorial、pet_birthday、work_anniversary、custom、one_time（始终使用英文，与语言设置无关）。“vip”接受 1/true/yes/y/x（不区分大小写）；留空或省略该列表示非 VIP 事件。即使某个值为空，也要保留该列 —— 缺少末尾逗号会导致后面的值向左移位。无效行会被跳过并记录到日志中。\n\n示例：\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n家庭度假,one_time,15,7,2026,mdi:airplane,,\n```",
+                "description": "列：name、type、day、month、year（可选，单次事件必填）、icon（可选）、vip（可选）、last_name（可选）。`type`必须是以下英文键之一：birthday、anniversary、name_day、wedding_anniversary、memorial、pet_birthday、work_anniversary、custom、one_time（始终使用英文，与语言设置无关）。`vip`接受 1/true/yes/y/x（不区分大小写）；留空或省略该列表示非 VIP 事件。即使某个值为空，也要保留该列 —— 缺少末尾逗号会导致后面的值向左移位。无效行会被跳过并记录到日志中。\n\n示例：\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\n家庭度假,one_time,15,7,2026,mdi:airplane,,\n```",
                 "data": {
                     "csv_file": "CSV 文件"
                 }
@@ -342,7 +342,7 @@
                 "description": "此前的 vCard 导入创建了 {count} 个事件。点击“确定”删除全部 —— vCard 导入仅更新（而非创建）的条目不受影响，手动添加、CSV 或 ICS 导入的事件也不受影响。"
             },
             "holiday_menu": {
-                "title": "节日",
+                "title": "节假日",
                 "description": "**{name}**\n\n{type} · {date} · {region} · {category}",
                 "menu_options": {
                     "holiday_settings": "⚙️ 设置",
@@ -350,22 +350,22 @@
                 }
             },
             "holiday_settings": {
-                "title": "节日设置",
-                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\n日期、类型和地区来自节日数据库，无法在此修改。",
+                "title": "节假日设置",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\n日期、类型和地区来自节假日数据库，无法在此修改。",
                 "data": {
                     "icon": "图标"
                 }
             },
             "holiday_names": {
                 "title": "名称与翻译",
-                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\n选择你要为该节日填写名称的语言。",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\n选择你要为该节假日填写名称的语言。",
                 "data": {
                     "language": "语言"
                 }
             },
             "holiday_name_edit": {
-                "title": "节日名称",
-                "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\n已预填当前显示的名称。留空则恢复使用节日数据库。",
+                "title": "节假日名称",
+                "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\n已预填当前显示的名称。留空则恢复使用节假日数据库。",
                 "data": {
                     "name": "名称",
                     "reason": "原因"
@@ -461,7 +461,7 @@
                     "language": "节假日名称的语言"
                 },
                 "data_description": {
-                    "break_start": "学校假期只登记上学日，因此假期实际开始得更早——这里会向前推算周末和相邻的公共假日，直到真正放假的第一天。",
+                    "break_start": "学校假期只登记上学日，因此假期实际开始得更早——这里会向前推算周末和相邻的法定节假日，直到真正放假的第一天。",
                     "break_end": "反方向同理：最后一个休息日，而不是登记的最后一天。",
                     "break_days": "假期的每一天各生成一个事件。仅暑假就会超过四十个。",
                     "include_observed": "该国家/地区的节假日在落在周末时有时会顺延到附近的工作日（例如提前到之前的周五或顺延到之后的周一）—— 也将该顺延日期作为独立事件导入。"
@@ -508,10 +508,10 @@
                         }
                     },
                     "todo": {
-                        "name": "📍 待办列表",
-                        "description": "这些列表中未完成的条目会标记事件：每个事件传感器随后会带有一个“todo”属性——只要有至少一个仍未完成的条目与之匹配即为 true，否则为 false——可用于你自己的自动化、模板和仪表板。匹配先按到期日期，再看条目文本是否提到该事件（全名、名字、类型、第几次）；若某个条目同样适合两个事件，则不会被分配。留空即关闭此功能。这与仪表板卡片中的同名设置相互独立。",
+                        "name": "📍 待办事项清单",
+                        "description": "这些清单中未完成的条目会标记事件：每个事件传感器随后会带有一个“todo”属性——只要有至少一个仍未完成的条目与之匹配即为 true，否则为 false——可用于你自己的自动化、模板和仪表盘。匹配先按到期日期，再看条目文本是否提到该事件（全名、名字、类型、第几次）；若某个条目同样适合两个事件，则不会被分配。留空即关闭此功能。这与仪表盘卡片中的同名设置相互独立。",
                         "data": {
-                            "todo_lists": "待办列表"
+                            "todo_lists": "待办事项清单"
                         }
                     }
                 }
@@ -524,7 +524,7 @@
                 "title": "编辑事件",
                 "description": "修改下方任意字段并提交以更新此事件。",
                 "data": {
-                    "name": "姓名",
+                    "name": "名称",
                     "last_name": "姓氏（可选）",
                     "person": "人员（可选）",
                     "type": "事件类型",
@@ -536,7 +536,7 @@
                     "deceased": "已去世"
                 },
                 "data_description": {
-                    "person": "Home Assistant 中的一个人员，其照片代表此事件——显示在仪表板卡片和提醒通知中。",
+                    "person": "Home Assistant 中的一个人员，其照片代表此事件——显示在仪表盘卡片和提醒通知中。",
                     "deceased": "此人已去世：这一天会保留并被标记，卡片会显示它本应是什么，自动化也能将其区分开。"
                 }
             },
@@ -544,7 +544,7 @@
                 "title": "编辑单次事件",
                 "description": "修改下方任意字段并提交以更新此事件。\n\n填写结束日期会变成多日事件；清空后又恢复为一天。",
                 "data": {
-                    "name": "姓名",
+                    "name": "名称",
                     "last_name": "姓氏（可选）",
                     "type": "事件类型",
                     "day": "日",
@@ -557,7 +557,7 @@
                     "vip": "VIP Annual"
                 },
                 "data_description": {
-                    "time": "当天开始的时间。日历条目随后带有时间，仪表板卡片也会显示。",
+                    "time": "当天开始的时间。日历条目随后带有时间，仪表盘卡片也会显示。",
                     "end_time": "结束的时间——有结束日期时在结束日期，否则在同一天。需要开始时间；留空则日历条目时长为一小时。"
                 }
             },
@@ -565,7 +565,7 @@
                 "title": "编辑自定义事件",
                 "description": "修改下方任意字段并提交以更新此事件。\n\n它可以按**规则**计算，而不是固定在某一天——*五月的第二个星期日*。填写下面两个字段，上面的**月份**决定规则适用于哪个月，此时**日**不再使用。清空后，事件会回到该日期。",
                 "data": {
-                    "name": "姓名",
+                    "name": "名称",
                     "last_name": "姓氏（可选）",
                     "type": "事件类型",
                     "day": "日",
@@ -586,8 +586,8 @@
             }
         },
         "error": {
-            "name_required": "请输入姓名。",
-            "end_date_one_time_only": "只有一次性事件才能设置结束日期。",
+            "name_required": "请输入名称。",
+            "end_date_one_time_only": "只有单次事件才能设置结束日期。",
             "end_date_before_start": "结束日期必须晚于开始日期。",
             "invalid_date": "此日/月/年组合不是有效日期。",
             "year_required": "单次事件必须填写年份。",
