@@ -1,0 +1,719 @@
+{
+    "title": "Annuals",
+    "selector": {
+        "holiday_span": {
+            "options": {
+                "start": "開始",
+                "end": "結束",
+                "day": "第 {day} 天"
+            }
+        },
+        "holiday_breaks": {
+            "options": {
+                "note": "連續多日的假期（例如學校假期）會合併還原為完整的一段假期，請在下方選擇要匯入其中的哪些部分。"
+            }
+        },
+        "event_type": {
+            "options": {
+                "birthday": "生日",
+                "anniversary": "週年紀念日",
+                "name_day": "命名日",
+                "wedding_anniversary": "結婚紀念日",
+                "memorial": "追思日",
+                "pet_birthday": "寵物生日",
+                "work_anniversary": "到職週年",
+                "custom": "自訂",
+                "one_time": "一次性事件",
+                "holiday": "假日",
+                "market": "證券交易所"
+            }
+        },
+        "month": {
+            "options": {
+                "1": "1月",
+                "2": "2月",
+                "3": "3月",
+                "4": "4月",
+                "5": "5月",
+                "6": "6月",
+                "7": "7月",
+                "8": "8月",
+                "9": "9月",
+                "10": "10月",
+                "11": "11月",
+                "12": "12月"
+            }
+        },
+        "holiday_category": {
+            "options": {
+                "public": "國定",
+                "bank": "銀行",
+                "government": "政府",
+                "school": "學校",
+                "optional": "選擇性",
+                "optional_women": "選擇性（女性）",
+                "unofficial": "非官方",
+                "half_day": "半天",
+                "armed_forces": "軍隊",
+                "workday": "工作日",
+                "catholic": "天主教",
+                "christian": "基督教",
+                "orthodox": "東正教",
+                "hebrew": "猶太教",
+                "islamic": "伊斯蘭教",
+                "hindu": "印度教",
+                "buddhist": "佛教",
+                "de_facto": "事實上",
+                "protestant": "新教",
+                "sabian": "薩比教",
+                "yazidi": "雅茲迪教",
+                "albanian": "阿爾巴尼亞",
+                "armenian": "亞美尼亞",
+                "bosnian": "波士尼亞",
+                "roma": "羅姆",
+                "serbian": "塞爾維亞",
+                "turkish": "土耳其",
+                "vlach": "弗拉赫"
+            }
+        },
+        "nth": {
+            "options": {
+                "1": "第一個",
+                "2": "第二個",
+                "3": "第三個",
+                "4": "第四個",
+                "last": "最後一個"
+            }
+        },
+        "weekday": {
+            "options": {
+                "0": "星期一",
+                "1": "星期二",
+                "2": "星期三",
+                "3": "星期四",
+                "4": "星期五",
+                "5": "星期六",
+                "6": "星期日"
+            }
+        },
+        "interval_unit": {
+            "options": {
+                "months": "個月",
+                "years": "年"
+            }
+        },
+        "market_category": {
+            "options": {
+                "public": "休市",
+                "half_day": "提早收市",
+                "restricted_settlement": "不交割"
+            }
+        },
+        "market_status": {
+            "options": {
+                "closed": "{market}休市",
+                "closes_at": "{market}於 {time} 收市",
+                "closes_early": "{market}提早收市",
+                "no_settlement": "{market}：不交割"
+            }
+        }
+    },
+    "config": {
+        "step": {
+            "user": {
+                "title": "新增事件",
+                "description": "這是哪一種事件？\n\n**每年**涵蓋生日、週年紀念日、命名日、結婚紀念日、追思日、寵物生日和到職週年。**一次性**是單一日期，結束後會自動刪除。**自訂**是你自己的每年日期，可以落在某一天，或依規則決定。",
+                "menu_options": {
+                    "recurring": "{icon_recurring} 某人的每年日期",
+                    "one_time": "{icon_one_time} 一次性事件",
+                    "custom": "{icon_custom} 自訂事件"
+                }
+            },
+            "recurring": {
+                "title": "新增每年事件",
+                "description": "每個事件都有自己的項目，之後可以到「設定」→「裝置與服務」→ Annuals，搜尋名稱來找到並編輯。",
+                "data": {
+                    "name": "名稱",
+                    "last_name": "姓氏（選填）",
+                    "person": "人員（選填）",
+                    "type": "事件類型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年（不知道就留空）",
+                    "icon": "覆寫圖示（選填）",
+                    "vip": "VIP 年度事件",
+                    "deceased": "已故"
+                },
+                "data_description": {
+                    "person": "Home Assistant 中的某位人員，其照片會代表此事件，顯示在儀表板卡片和提醒通知中。",
+                    "deceased": "生日、命名日、寵物生日與結婚紀念日：當事人已過世，該日期會保留並加上標記，卡片會顯示「本應是」的說法，你的自動化也能區分出來。其他類型會忽略此選項。"
+                }
+            },
+            "one_time": {
+                "title": "新增一次性事件",
+                "description": "倒數計時用的單一日期事件。它不會重複，所以一定要填年份，並會在結束後的午夜自動刪除。\n\n填入結束日期就會變成多日事件，例如旅行、研討會、住宿。",
+                "data": {
+                    "name": "名稱",
+                    "last_name": "姓氏（選填）",
+                    "type": "事件類型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年",
+                    "end_date": "結束日期（選填，填了就會變成多日事件）",
+                    "time": "時間（選填）",
+                    "end_time": "結束時間（選填）",
+                    "icon": "覆寫圖示（選填）",
+                    "vip": "VIP 年度事件"
+                },
+                "data_description": {
+                    "time": "當天的開始時間。行事曆項目會帶有時間，儀表板卡片也會顯示。",
+                    "end_time": "結束時間，有結束日期就在該日，否則為同一天。需要先填開始時間；留空的話，行事曆項目長度為一小時。"
+                }
+            },
+            "custom": {
+                "title": "新增自訂事件",
+                "description": "你自己的每年日期，適用於其他類型無法描述的情況。\n\n它可以依**規則**而非固定日期：母親節是五月的第二個星期日，澳洲的父親節是九月的第一個星期日。填寫底部的兩個欄位，上方的**月**就是規則適用的月份，此時不會使用**日**。留空則為一般的固定日期。",
+                "data": {
+                    "name": "名稱",
+                    "last_name": "姓氏（選填）",
+                    "type": "事件類型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年",
+                    "icon": "覆寫圖示（選填）",
+                    "vip": "VIP 年度事件",
+                    "interval": "重複間隔",
+                    "interval_unit": "…個月或年",
+                    "nth": "重複於每月的",
+                    "weekday": "…星期幾"
+                },
+                "data_description": {
+                    "interval": "搭配旁邊的單位，例如每 6 個月、每 2 年。從上方的日期開始計算，因此該日期需要有年份。兩者都留空代表每年一次。",
+                    "nth": "第一個、第二個、第三個、第四個，或該月的最後一個。",
+                    "weekday": "請與上方欄位一起設定，或兩者都留空。"
+                }
+            },
+            "reconfigure_recurring": {
+                "title": "編輯事件",
+                "description": "修改下方任何欄位並送出，即可更新此事件。",
+                "data": {
+                    "name": "名稱",
+                    "last_name": "姓氏（選填）",
+                    "person": "人員（選填）",
+                    "type": "事件類型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年（不知道就留空）",
+                    "icon": "覆寫圖示（選填）",
+                    "vip": "VIP 年度事件",
+                    "deceased": "已故"
+                },
+                "data_description": {
+                    "person": "Home Assistant 中的某位人員，其照片會代表此事件，顯示在儀表板卡片和提醒通知中。",
+                    "deceased": "當事人已過世：該日期會保留並加上標記，卡片會顯示「本應是」的說法，你的自動化也能區分出來。"
+                }
+            },
+            "reconfigure_one_time": {
+                "title": "編輯一次性事件",
+                "description": "修改下方任何欄位並送出，即可更新此事件。\n\n填入結束日期會變成多日事件；清除後則恢復為單日。",
+                "data": {
+                    "name": "名稱",
+                    "last_name": "姓氏（選填）",
+                    "type": "事件類型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年",
+                    "end_date": "結束日期（選填，填了就會變成多日事件）",
+                    "time": "時間（選填）",
+                    "end_time": "結束時間（選填）",
+                    "icon": "覆寫圖示（選填）",
+                    "vip": "VIP 年度事件"
+                },
+                "data_description": {
+                    "time": "當天的開始時間。行事曆項目會帶有時間，儀表板卡片也會顯示。",
+                    "end_time": "結束時間，有結束日期就在該日，否則為同一天。需要先填開始時間；留空的話，行事曆項目長度為一小時。"
+                }
+            },
+            "reconfigure_custom": {
+                "title": "編輯自訂事件",
+                "description": "修改下方任何欄位並送出，即可更新此事件。\n\n它可以依**規則**而非固定日期，例如*五月的第二個星期日*。填寫底部的兩個欄位，上方的**月**就是規則適用的月份，此時不會使用**日**。清除後事件會回到該固定日期。",
+                "data": {
+                    "name": "名稱",
+                    "last_name": "姓氏（選填）",
+                    "type": "事件類型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年",
+                    "icon": "覆寫圖示（選填）",
+                    "vip": "VIP 年度事件",
+                    "interval": "重複間隔",
+                    "interval_unit": "…個月或年",
+                    "nth": "重複於每月的",
+                    "weekday": "…星期幾"
+                },
+                "data_description": {
+                    "interval": "搭配旁邊的單位，例如每 6 個月、每 2 年。從上方的日期開始計算，因此該日期需要有年份。兩者都留空代表每年一次。",
+                    "nth": "第一個、第二個、第三個、第四個，或該月的最後一個。",
+                    "weekday": "請與上方欄位一起設定，或兩者都留空。"
+                }
+            }
+        },
+        "error": {
+            "name_required": "請輸入名稱。",
+            "end_date_one_time_only": "結束日期只能設定在一次性事件上。",
+            "end_date_before_start": "結束日期必須晚於開始日期。",
+            "invalid_date": "這個日／月／年的組合不是有效的日期。",
+            "year_required": "一次性事件必須填寫年份。",
+            "rule_needs_both": "重複規則需要兩個欄位都填寫，或兩者都留空。",
+            "interval_needs_both": "重複間隔需要兩個欄位都填寫，或兩者都留空。",
+            "interval_needs_year": "重複間隔是從上方的日期開始計算，因此需要填寫年份。",
+            "interval_no_rule": "重複間隔不能與星期規則合併使用。",
+            "end_time_needs_time": "設定結束時間需要先設定開始時間。",
+            "end_time_before_start": "結束時間必須晚於開始時間。"
+        },
+        "abort": {
+            "hub_not_configurable": "Annuals 中樞本身沒有設定，它只負責存放共用的行事曆。",
+            "already_configured": "Annuals 中樞已經存在。",
+            "invalid_import_row": "無法匯入這一列。",
+            "reconfigure_successful": "事件已更新。",
+            "holiday_not_reconfigurable": "此項目的日期來自假日資料，無法在這裡變更。請使用**設定**來更改其圖示或名稱。"
+        }
+    },
+    "options": {
+        "step": {
+            "import_csv": {
+                "title": "從 CSV 匯入事件",
+                "description": "欄位：name、type、day、month、year（選填，one_time 必填）、icon（選填）、vip（選填）、last_name（選填）。`type` 必須是下列其中之一：birthday、anniversary、name_day、wedding_anniversary、memorial、pet_birthday、work_anniversary、custom、one_time（一律使用英文，不受語言設定影響）。`vip` 接受 1/true/yes/y/x（不分大小寫）；非 VIP 事件請留空或省略該欄。即使值為空也請保留每個欄位，結尾少了逗號的列會讓後面的值往左位移。無效的列會被略過並記錄下來。\n\n範例：\n```\nname,type,day,month,year,icon,vip,last_name\nAnna,birthday,12,4,1988,,,Miller\nMax,pet_birthday,3,9,2020,mdi:dog,,\nTest Custom,custom,1,1,,mdi:test-tube,1,\nFamily Vacation,one_time,15,7,2026,mdi:airplane,,\n```",
+                "data": {
+                    "csv_file": "CSV 檔案"
+                }
+            },
+            "import_ics": {
+                "title": "從 ICS 行事曆匯入事件",
+                "description": "上傳 .ics 行事曆檔案，通常是匯出的行事曆。只會讀取全天且不是重複例外的項目，有時間的事件會被略過。接下來的步驟會讓你在匯入前檢視並修正建議的姓名拆分（也可以一次對調所有人的名與姓）。",
+                "data": {
+                    "ics_file": "ICS 檔案"
+                }
+            },
+            "import_vcard_menu": {
+                "title": "從 vCard 匯入事件",
+                "description": "聯絡人的生日與其他日期（週年紀念日、自訂日期）會走不同的流程，因為只有生日能整批共用同一種事件類型，其他日期在檢視時會各自指定類型。",
+                "menu_options": {
+                    "import_vcard": "匯入生日",
+                    "import_vcard_other_dates": "匯入其他日期（週年紀念日等）"
+                }
+            },
+            "import_vcard": {
+                "title": "從 vCard 匯入生日",
+                "description": "上傳 .vcf 檔案，通常是匯出的聯絡人。只會讀取有設定生日的項目。名與姓取自聯絡人的結構化姓名欄位而非猜測，沒有年份的生日（vCard 本身的表示方式）會保留為未知，而不會自行捏造。接下來的步驟會讓你在匯入前檢視並修正所有內容（也可以一次對調所有人的名與姓）。",
+                "data": {
+                    "vcard_file": "vCard 檔案"
+                }
+            },
+            "import_vcard_other_dates": {
+                "title": "從 vCard 匯入其他日期",
+                "description": "上傳 .vcf 檔案。會讀取生日以外的所有日期：標準的「Anniversary」欄位，以及你的聯絡人應用程式允許為每位聯絡人新增的自訂標籤日期（例如「Anniversary」、「Other」，或你自己輸入的標籤）。與生日不同，這些日期不一定是同一種事件，接下來的步驟會讓你逐一檢視，並參考偵測到的標籤，為每個日期個別指定正確的事件類型。",
+                "data": {
+                    "vcard_file": "vCard 檔案"
+                }
+            },
+            "import_options": {
+                "title": "從 {source_label} 匯入：設定",
+                "description": "這些設定適用於檔案中找到的每個項目。接下來你可以檢視並編輯個別項目。",
+                "data": {
+                    "swap_names": "對調所有項目的名與姓",
+                    "use_description_year": "若項目描述中找得到年份，就使用該年份而非開始日期（例如「geb. 1985」）",
+                    "type": "事件類型"
+                }
+            },
+            "import_review": {
+                "title": "從 {source_label} 匯入：檢視（{page}/{total_pages}）",
+                "description": "{legend}\n\n請檢查下方建議的名與姓拆分並修正錯誤之處（生日本身也可以編輯），或取消勾選以完全排除某個項目。可能重複的項目會標示現有項目的名稱；若要更新該項目而不是新增第二個，請不要勾選「建立為新項目」。這裡的欄位標籤只會以英文顯示，不受語言設定影響。",
+                "data": {
+                    "go_back": "返回上一頁"
+                }
+            },
+            "remove_ics_imports": {
+                "title": "移除由 ICS 匯入的事件",
+                "description": "有 {count} 個事件是由先前的 ICS 匯入所建立。按一下「確定」會全部移除；ICS 匯入時只更新（而非建立）的項目、手動新增的事件，以及 CSV 或 vCard 匯入的事件都不受影響。"
+            },
+            "remove_vcard_imports": {
+                "title": "移除由 vCard 匯入的事件",
+                "description": "有 {count} 個事件是由先前的 vCard 匯入所建立。按一下「確定」會全部移除；vCard 匯入時只更新（而非建立）的項目、手動新增的事件，以及 CSV 或 ICS 匯入的事件都不受影響。"
+            },
+            "holiday_menu": {
+                "title": "假日",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}",
+                "menu_options": {
+                    "holiday_settings": "⚙️ 設定",
+                    "holiday_names": "🌐 名稱與翻譯"
+                }
+            },
+            "holiday_settings": {
+                "title": "假日設定",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\n日期、類型和地區來自假日資料庫，無法在這裡編輯。",
+                "data": {
+                    "icon": "圖示"
+                }
+            },
+            "holiday_names": {
+                "title": "名稱與翻譯",
+                "description": "**{name}**\n\n{type} · {date} · {region} · {category}\n\n請選擇要用哪種語言填寫此假日的名稱。",
+                "data": {
+                    "language": "語言"
+                }
+            },
+            "holiday_name_edit": {
+                "title": "假日名稱",
+                "description": "{language}\n\n**{name}**\n\n{type} · {date} · {region} · {category}\n\n已預先填入目前顯示的內容。留空則會退回使用假日資料庫的名稱。",
+                "data": {
+                    "name": "名稱",
+                    "reason": "原因"
+                }
+            },
+            "holiday_translations": {
+                "title": "🌐 假日翻譯",
+                "description": "匯出和匯入你自己撰寫的假日名稱。",
+                "menu_options": {
+                    "export_translations": "📤 匯出翻譯",
+                    "import_translations": "📥 匯入翻譯"
+                }
+            },
+            "import_translations": {
+                "title": "匯入翻譯",
+                "description": "上傳翻譯 CSV。欄位：`country,subdivision,category,holiday_key,observed,language,name,status`。各列依國家、行政區、類別、假日鍵值和是否為補假對應到假日，而不是依項目 ID，因此重新匯入某個國家之前匯出的檔案仍然有效。對應的假日不存在的列會被略過並計數。對於證券交易所的日子，`name` 是其原因、`status` 是其本身的名稱；假日請將 `status` 留空。",
+                "data": {
+                    "csv_file": "CSV"
+                }
+            },
+            "hub_menu": {
+                "title": "Annuals 設定",
+                "menu_options": {
+                    "annual_settings": "{icon_annual_settings} 年度設定",
+                    "import_events": "{icon_import_events} 匯入事件",
+                    "export_csv": "{icon_export_csv} 匯出事件為 CSV",
+                    "holiday_translations": "{icon_holiday_translations} 假日翻譯",
+                    "remove_events": "{icon_remove_events} 移除事件",
+                    "delete_all": "{icon_delete_all} 刪除所有 Annuals 資料"
+                }
+            },
+            "import_events": {
+                "title": "匯入事件",
+                "description": "請選擇要匯入的來源。",
+                "menu_options": {
+                    "import_csv": "CSV",
+                    "import_ics": "ICS 行事曆",
+                    "import_vcard_menu": "vCard",
+                    "import_holidays": "假日",
+                    "import_markets": "證券交易所"
+                }
+            },
+            "remove_events": {
+                "title": "移除事件",
+                "description": "請選擇要移除先前匯入的哪些事件。",
+                "menu_options": {
+                    "remove_ics_imports": "ICS 匯入的",
+                    "remove_vcard_imports": "vCard 匯入的",
+                    "remove_holidays": "假日",
+                    "remove_markets": "證券交易所"
+                }
+            },
+            "import_holidays": {
+                "title": "匯入假日",
+                "description": "選擇一個國家，將其假日匯入為事件。之後對同一個國家（和行政區）再次執行時，會更新現有項目而不會產生重複；匯入之前，你會看到所有假日並可挑選想要的。",
+                "data": {
+                    "country": "國家"
+                }
+            },
+            "import_markets": {
+                "title": "匯入證券交易所假日",
+                "description": "選擇一個證券交易所，匯入其休市的日子；若資料中有，也會匯入提早收市的日子。匯入之前，你會看到所有日子並可挑選想要的。",
+                "data": {
+                    "market": "證券交易所"
+                }
+            },
+            "import_markets_options": {
+                "title": "匯入證券交易所日期：{country}",
+                "description": "要匯入哪些種類的日子，以及名稱使用的語言。",
+                "data": {
+                    "categories": "日子",
+                    "language": "名稱的語言"
+                }
+            },
+            "import_markets_select": {
+                "title": "匯入證券交易所日期：{country}，選擇",
+                "description": "找到 {count} 個日子，每個都附有下一次的日期。只會匯入有勾選的項目。\n\n取消勾選已在 Annuals 中的日子不會有任何變化；若要移除日子，請使用**移除事件 → 證券交易所**。",
+                "data": {
+                    "holidays": "日子"
+                }
+            },
+            "import_holidays_options": {
+                "title": "匯入假日：{country}",
+                "description": "只匯入國定假日請將行政區留空；選擇州／省則會在其上加入該地區的假日。類別與語言取決於該國假日資料所提供的內容。{breaks}",
+                "data": {
+                    "include_actual": "匯入實際日期",
+                    "include_observed": "匯入補假（順延）日期",
+                    "break_start": "匯入連休的第一天",
+                    "break_end": "匯入連休的最後一天",
+                    "break_days": "匯入連休的每一天",
+                    "subdivision": "行政區（州／省，選填）",
+                    "categories": "類別",
+                    "language": "假日名稱的語言"
+                },
+                "data_description": {
+                    "break_start": "學校假期只會列出上課日，所以連休實際上開始得更早：這會往前推算，越過週末和任何國定假日，找到學校真正放假的第一天。",
+                    "break_end": "反過來也一樣：是最後一個放假日，而不是列表中的最後一天。",
+                    "break_days": "連休的每一天各建立一個事件。光是六週的暑假就會變成四十多個事件。",
+                    "include_observed": "該國的假日遇到週末時，有時會順延到附近的平日（例如補假在前一個星期五或後一個星期一）；也一併匯入該順延後的日期，作為獨立的事件。"
+                }
+            },
+            "import_holidays_select": {
+                "title": "匯入假日：{country}，選擇",
+                "description": "找到 {count} 個假日，每個都附有下一次的日期。只會匯入有勾選的項目。\n\n取消勾選已在 Annuals 中的假日不會有任何變化；若要移除假日，請使用**移除事件 → 假日**。",
+                "data": {
+                    "holidays": "假日"
+                }
+            },
+            "remove_holidays": {
+                "title": "移除已匯入的假日",
+                "description": "目前已匯入 {total} 個假日事件。勾選下方的方塊可全部移除，或保持未勾選並改選一個批次。手動新增的事件不受影響。",
+                "data": {
+                    "remove_all": "移除所有已匯入的假日",
+                    "batch": "要移除的批次"
+                }
+            },
+            "remove_markets": {
+                "title": "移除已匯入的證券交易所日期",
+                "description": "目前已匯入 {total} 個證券交易所日期。勾選下方的方塊可全部移除，或保持未勾選並改選一個或多個證券交易所。其他項目不受影響。",
+                "data": {
+                    "remove_all": "移除所有已匯入的證券交易所日期",
+                    "batch": "要移除的證券交易所"
+                }
+            },
+            "annual_settings": {
+                "title": "年度設定",
+                "sections": {
+                    "important_events": {
+                        "name": "❗ 重要事件",
+                        "description": "以逗號分隔的第幾次數字，該事件類型在這些次數時會自動標記為「重要」，例如「18,21,30,40,50」。欄位留空即停用該類型的標記。",
+                        "data": {
+                            "important_thresholds_birthday": "生日",
+                            "important_thresholds_anniversary": "週年紀念日",
+                            "important_thresholds_name_day": "命名日",
+                            "important_thresholds_wedding_anniversary": "結婚紀念日",
+                            "important_thresholds_memorial": "追思日",
+                            "important_thresholds_pet_birthday": "寵物生日",
+                            "important_thresholds_work_anniversary": "到職週年",
+                            "important_thresholds_custom": "自訂"
+                        }
+                    },
+                    "todo": {
+                        "name": "📍 待辦清單",
+                        "description": "這些清單中的未完成項目會標記事件：每個事件感測器都會帶有「todo」屬性，只要至少有一個尚未完成的項目對應到它就為 true，否則為 false，可用於你自己的自動化、範本和儀表板。項目會先依到期日對應，再依其文字是否提到該事件（全名、名稱、類型、第幾次）來對應；若項目同樣符合兩個事件，則不對應。留空即關閉此功能。與儀表板卡片自己的待辦清單設定各自獨立。",
+                        "data": {
+                            "todo_lists": "待辦清單"
+                        }
+                    }
+                }
+            },
+            "delete_all": {
+                "title": "刪除所有 Annuals 資料",
+                "description": "這會永久刪除全部 {count} 個事件、共用行事曆以及 Annuals 中樞本身，也就是整個整合及其建立的所有內容。此動作無法復原。按一下「確定」以確認。"
+            },
+            "edit_recurring": {
+                "title": "編輯事件",
+                "description": "修改下方任何欄位並送出，即可更新此事件。",
+                "data": {
+                    "name": "名稱",
+                    "last_name": "姓氏（選填）",
+                    "person": "人員（選填）",
+                    "type": "事件類型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年（不知道就留空）",
+                    "icon": "覆寫圖示（選填）",
+                    "vip": "VIP 年度事件",
+                    "deceased": "已故"
+                },
+                "data_description": {
+                    "person": "Home Assistant 中的某位人員，其照片會代表此事件，顯示在儀表板卡片和提醒通知中。",
+                    "deceased": "當事人已過世：該日期會保留並加上標記，卡片會顯示「本應是」的說法，你的自動化也能區分出來。"
+                }
+            },
+            "edit_one_time": {
+                "title": "編輯一次性事件",
+                "description": "修改下方任何欄位並送出，即可更新此事件。\n\n填入結束日期會變成多日事件；清除後則恢復為單日。",
+                "data": {
+                    "name": "名稱",
+                    "last_name": "姓氏（選填）",
+                    "type": "事件類型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年",
+                    "end_date": "結束日期（選填，填了就會變成多日事件）",
+                    "time": "時間（選填）",
+                    "end_time": "結束時間（選填）",
+                    "icon": "覆寫圖示（選填）",
+                    "vip": "VIP 年度事件"
+                },
+                "data_description": {
+                    "time": "當天的開始時間。行事曆項目會帶有時間，儀表板卡片也會顯示。",
+                    "end_time": "結束時間，有結束日期就在該日，否則為同一天。需要先填開始時間；留空的話，行事曆項目長度為一小時。"
+                }
+            },
+            "edit_custom": {
+                "title": "編輯自訂事件",
+                "description": "修改下方任何欄位並送出，即可更新此事件。\n\n它可以依**規則**而非固定日期，例如*五月的第二個星期日*。填寫底部的兩個欄位，上方的**月**就是規則適用的月份，此時不會使用**日**。清除後事件會回到該固定日期。",
+                "data": {
+                    "name": "名稱",
+                    "last_name": "姓氏（選填）",
+                    "type": "事件類型",
+                    "day": "日",
+                    "month": "月",
+                    "year": "年",
+                    "icon": "覆寫圖示（選填）",
+                    "vip": "VIP 年度事件",
+                    "interval": "重複間隔",
+                    "interval_unit": "…個月或年",
+                    "nth": "重複於每月的",
+                    "weekday": "…星期幾"
+                },
+                "data_description": {
+                    "interval": "搭配旁邊的單位，例如每 6 個月、每 2 年。從上方的日期開始計算，因此該日期需要有年份。兩者都留空代表每年一次。",
+                    "nth": "第一個、第二個、第三個、第四個，或該月的最後一個。",
+                    "weekday": "請與上方欄位一起設定，或兩者都留空。"
+                }
+            }
+        },
+        "error": {
+            "name_required": "請輸入名稱。",
+            "end_date_one_time_only": "結束日期只能設定在一次性事件上。",
+            "end_date_before_start": "結束日期必須晚於開始日期。",
+            "invalid_date": "這個日／月／年的組合不是有效的日期。",
+            "year_required": "一次性事件必須填寫年份。",
+            "invalid_csv": "無法將此檔案讀取為 CSV。請檢查編碼和格式。",
+            "no_valid_rows": "此檔案中找不到有效的列。請查看記錄檔以了解被略過的列。",
+            "invalid_ics": "無法將此檔案讀取為 ICS 行事曆。請檢查格式。",
+            "no_valid_entries": "此檔案中找不到可用的全天項目。請查看記錄檔以了解被略過的項目。",
+            "invalid_vcard": "無法將此檔案讀取為 vCard。請檢查格式。",
+            "no_valid_vcard_entries": "此檔案中找不到有可用生日的聯絡人。請查看記錄檔以了解被略過的項目。",
+            "no_valid_vcard_dates": "此檔案中找不到週年紀念日或其他日期（生日除外）。請查看記錄檔以了解被略過的項目。",
+            "no_batch_selected": "請勾選「移除所有已匯入的假日」，或選擇要移除的批次。",
+            "rule_needs_both": "重複規則需要兩個欄位都填寫，或兩者都留空。",
+            "interval_needs_both": "重複間隔需要兩個欄位都填寫，或兩者都留空。",
+            "interval_needs_year": "重複間隔是從上方的日期開始計算，因此需要填寫年份。",
+            "interval_no_rule": "重複間隔不能與星期規則合併使用。",
+            "end_time_needs_time": "設定結束時間需要先設定開始時間。",
+            "end_time_before_start": "結束時間必須晚於開始時間。",
+            "no_holiday_selected": "請至少勾選一個假日。",
+            "category_needs_region": "{category}在 {year} 年沒有 {where} 的假日，只有這些地區有：{regions}。請在「行政區」中選擇其一，或不要選 {category}。",
+            "category_empty": "{category}在 {year} 年沒有 {where} 的假日。請不要選它，以匯入其他類別。",
+            "no_market_day_selected": "請至少勾選一個日子。",
+            "market_category_empty": "{category}在 {year} 年沒有 {where} 的日子。請不要選它，以匯入其他類別。",
+            "no_market_batch_selected": "請勾選「移除所有已匯入的證券交易所日期」，或選擇要移除的證券交易所。"
+        },
+        "abort": {
+            "translations_exported": "已匯出 {count} 筆翻譯。[下載 annuals_holiday_translations.csv]({url})（請按住 Ctrl／Cmd 並點擊以下載，直接點擊在這裡無效）\n\n或複製下方的 CSV：\n\n```\n{csv}\n```",
+            "translations_imported": "已更新 {updated} 個假日，略過 {skipped} 列。",
+            "no_translations_to_export": "尚未撰寫任何假日名稱，沒有可匯出的內容。",
+            "import_started": "匯入已開始：{created} 個事件已排入佇列，略過 {skipped} 列（詳情請見記錄檔）。",
+            "ics_import_started": "匯入已開始：已建立 {created} 個事件、更新 {updated} 個，略過或排除 {skipped} 個項目。",
+            "csv_exported": "已匯出 {count} 個事件。[下載 annuals_export.csv]({url})（請按住 Ctrl／Cmd 並點擊以下載，直接點擊在這裡無效）\n\n或複製下方的 CSV：\n\n```\n{csv}\n```",
+            "no_events_to_export": "目前沒有可匯出的事件，請先新增一些。",
+            "deleted_all": "所有 Annuals 事件、行事曆和中樞都已移除。",
+            "holiday_import_started": "匯入已開始：已為 {country} 將 {count} 個假日事件排入佇列（新增 {new} 個、更新 {updated} 個）。",
+            "no_holidays_imported": "尚未匯入任何假日。",
+            "holidays_removed": "已移除 {count} 個假日事件。",
+            "no_ics_imports": "找不到由 ICS 匯入建立的事件。",
+            "ics_imports_removed": "已移除 {count} 個 ICS 匯入的事件。",
+            "no_vcard_imports": "找不到由 vCard 匯入建立的事件。",
+            "vcard_imports_removed": "已移除 {count} 個 vCard 匯入的事件。",
+            "market_import_started": "匯入已開始：已為 {country} 將 {count} 個日子排入佇列（新增 {new} 個、更新 {updated} 個）。",
+            "no_markets_imported": "尚未匯入任何證券交易所日期。",
+            "markets_removed": "已移除 {count} 個證券交易所日期。"
+        }
+    },
+    "entity": {
+        "sensor": {
+            "birthday": {
+                "name": "{name} 生日",
+                "unit_of_measurement": "天"
+            },
+            "anniversary": {
+                "name": "{name} 週年紀念日",
+                "unit_of_measurement": "天"
+            },
+            "name_day": {
+                "name": "{name} 命名日",
+                "unit_of_measurement": "天"
+            },
+            "wedding_anniversary": {
+                "name": "{name} 結婚紀念日",
+                "unit_of_measurement": "天"
+            },
+            "memorial": {
+                "name": "{name} 追思日",
+                "unit_of_measurement": "天"
+            },
+            "pet_birthday": {
+                "name": "{name} 生日",
+                "unit_of_measurement": "天"
+            },
+            "work_anniversary": {
+                "name": "{name} 到職週年",
+                "unit_of_measurement": "天"
+            },
+            "custom": {
+                "name": "{name}",
+                "unit_of_measurement": "天"
+            },
+            "one_time": {
+                "name": "{name}",
+                "unit_of_measurement": "天"
+            },
+            "holiday": {
+                "name": "{name}",
+                "unit_of_measurement": "天"
+            },
+            "market": {
+                "name": "{name}",
+                "unit_of_measurement": "天"
+            }
+        },
+        "calendar": {
+            "birthday": {
+                "name": "生日"
+            },
+            "anniversary": {
+                "name": "週年紀念日"
+            },
+            "name_day": {
+                "name": "命名日"
+            },
+            "wedding_anniversary": {
+                "name": "結婚紀念日"
+            },
+            "memorial": {
+                "name": "追思日"
+            },
+            "pet_birthday": {
+                "name": "寵物生日"
+            },
+            "work_anniversary": {
+                "name": "到職週年"
+            },
+            "custom": {
+                "name": "自訂事件"
+            },
+            "one_time": {
+                "name": "一次性事件"
+            },
+            "holiday": {
+                "name": "假日"
+            },
+            "market": {
+                "name": "證券交易所"
+            }
+        }
+    }
+}
