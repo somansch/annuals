@@ -8,7 +8,7 @@
 [![Version](https://img.shields.io/github/v/release/somansch/annuals?style=for-the-badge&label=Version&color=e83ef7)](https://github.com/somansch/annuals/releases/latest)
 [![Buy me a coffee](https://img.shields.io/badge/-Buy%20me%20a%20%E2%98%95%2F%F0%9F%8D%BA-ff6b6b?style=for-the-badge&logo=buymeacoffee&logoColor=white)](https://buymeacoffee.com/ou4lgpvlju)
 
-**Available languages:** English, Deutsch, Français, Nederlands, Polski, Español, Italiano, Português (Brasil), Русский, Svenska, 简体中文, Čeština, Norsk bokmål, Dansk, Türkçe, Slovenčina, Lietuvių
+**Available languages:** English, Deutsch, Français, Nederlands, Polski, Español, Italiano, Português (Brasil), Русский, Svenska, 简体中文, 繁體中文, Čeština, Norsk bokmål, Dansk, Türkçe, Slovenčina, Lietuvių
 
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-summary.png" alt="Six readings of the same events side by side: the list with its search field, the Timeline, a Compact one-line card, the Minimal row, the to-dos it tracks, and an Agenda whose calendar navigation bar stands over one date block per day" width="45%">
 
@@ -794,9 +794,9 @@ Add it to a dashboard the normal way - search for "Annuals Card" in the card pic
 
 Everything after that is set in the visual editor, no YAML required: which event types to show, the time window, the VIP and Important filters, the appearance of every element in a row, what past, today and soon rows look like, and an optional background image or color. If you imported a holiday's actual *and* observed date, **Prefer observed date** (Settings → Events) folds the pair into one entry - it drops the "(observed)" suffix and hides the duplicate.
 
-The card's own UI text (not the integration's entities/config-flow, which follow your server's language setting) follows **your personal profile language** - Settings → People → your user → Language - and is available in the same 17 languages as the rest of the integration.
+The card's own UI text (not the integration's entities/config-flow, which follow your server's language setting) follows **your personal profile language** - Settings → People → your user → Language - and is available in the same 18 languages as the rest of the integration.
 
-To override that per card, set **Language** (Settings → General) to one of those 16 language codes: the card then reads the same for everyone who sees it, no matter whose profile is looking at it - useful for a wall-mounted tablet, a shared household dashboard, or simply a card you want in a specific language. It covers the card's own text and its date/time formatting together, so the two never end up in different languages. Left on **Automatic**, each viewer keeps seeing their own language, exactly as before. The card *editor* always stays in your own profile language, so pinning a card to a language you don't read never leaves you stuck in a form you can't find your way back out of. Missing a language? The **"Missing your language?"** link right below opens a pre-filled feature request for it.
+To override that per card, set **Language** (Settings → General) to one of those 18 language codes: the card then reads the same for everyone who sees it, no matter whose profile is looking at it - useful for a wall-mounted tablet, a shared household dashboard, or simply a card you want in a specific language. It covers the card's own text and its date/time formatting together, so the two never end up in different languages. Left on **Automatic**, each viewer keeps seeing their own language, exactly as before. The card *editor* always stays in your own profile language, so pinning a card to a language you don't read never leaves you stuck in a form you can't find your way back out of. Missing a language? The **"Missing your language?"** link right below opens a pre-filled feature request for it.
 
 **No events text** (Settings → General) is what the card writes in place of the list when it has nothing to show. Left empty it stays the built-in phrase, translated into whichever language the card is read in - the same way an empty **Card title** keeps the default one. Its own appearance sits in Layout → **Design**, in a block directly under Card title: a color, a size and the four style toggles, like every other element. Both layouts fall back to the same line, so the block is always listed rather than following the row columns.
 
@@ -860,7 +860,7 @@ The floor is **one row**, and **six of twelve columns** in the List layout: belo
 | Weekday only | Wednesday | Mittwoch |
 | Full | Wed, Aug 11, 2027 | Mi., 11. Aug. 2027 |
 
-Day/month order, separators and month spelling come from the browser's own locale data, so every one of the 17 languages gets its own conventions without you configuring anything. The second option adds the year only for dates outside the current year - handy on a card of yearly-recurring events, where the year is noise right up until the one entry it isn't (a [one-time event](#countdown-for-one-time-events) two years out, or an event that just crossed the new year).
+Day/month order, separators and month spelling come from the browser's own locale data, so every one of the 18 languages gets its own conventions without you configuring anything. The second option adds the year only for dates outside the current year - handy on a card of yearly-recurring events, where the year is noise right up until the one entry it isn't (a [one-time event](#countdown-for-one-time-events) two years out, or an event that just crossed the new year).
 
 The same setting drives the `{date}` placeholder in [Custom text columns](#row-columns) and the [Timeline layout](#timeline-layout)'s **Show date**, so one card reads consistently. The full date revealed by tapping a countdown is deliberately left out of it: its job is to spell the day out unambiguously, whatever the columns are set to.
 
@@ -892,7 +892,7 @@ Give the four non-German ones the German name once, and the whole set collapses 
 
 <img src="https://raw.githubusercontent.com/somansch/annuals/main/docs/annuals-card-holiday-joined.png" alt="One holiday observed in five places across four countries, merged into a single row" width="60%">
 
-The same trick handles a country whose language the library doesn't cover at all: whatever it imported under, you can give it a name in each of the 17 languages and the card will use the one matching its own Language setting.
+The same trick handles a country whose language the library doesn't cover at all: whatever it imported under, you can give it a name in each of the 18 languages and the card will use the one matching its own Language setting.
 
 ### To-dos
 

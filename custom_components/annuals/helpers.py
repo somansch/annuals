@@ -62,6 +62,19 @@ from .dates import (
 )
 
 
+# Chinese is one language in two scripts, and neither side names the script
+# the way the other does: the `holidays` library says where it is written
+# ("zh_CN", "zh_TW"), this integration says how ("zh-Hans", "zh-Hant"). A
+# match on "zh" alone would hand Taiwan's names to the Simplified column.
+_CHINESE_SCRIPT = {
+    "zh-cn": "zh-Hans",
+    "zh-sg": "zh-Hans",
+    "zh-tw": "zh-Hant",
+    "zh-hk": "zh-Hant",
+    "zh-mo": "zh-Hant",
+}
+
+
 def ui_language(library_code: str | None) -> str | None:
     """The NAME_TRANSLATION_LANGUAGES entry a `holidays` language code maps to.
 
@@ -79,6 +92,8 @@ def ui_language(library_code: str | None) -> str | None:
     for candidate in NAME_TRANSLATION_LANGUAGES:
         if candidate.lower() == normalised.lower():
             return candidate
+    if script := _CHINESE_SCRIPT.get(normalised.lower()):
+        return script
     base = normalised.split("-")[0].lower()
     for candidate in NAME_TRANSLATION_LANGUAGES:
         if candidate.split("-")[0].lower() == base:
@@ -99,6 +114,13 @@ def library_language(ui_code: str, supported) -> str | None:
     for candidate in supported:
         if candidate.lower() == normalised:
             return candidate
+    if ui_code in _CHINESE_SCRIPT.values():
+        # The country's Chinese in this script, or none: the other script's
+        # names are not this language's.
+        for candidate in supported:
+            if _CHINESE_SCRIPT.get(candidate.replace("_", "-").lower()) == ui_code:
+                return candidate
+        return None
     base = ui_code.split("-")[0].lower()
     for candidate in supported:
         if candidate.split("_")[0].lower() == base:
@@ -533,6 +555,7 @@ _REMINDER_STRINGS: dict[str, dict[str, str]] = {
     "ru": {"today": "Сегодня", "tomorrow": "Завтра", "in_days": "через {days} дн.", "today_deceased": "Было бы сегодня", "tomorrow_deceased": "Было бы завтра", "in_days_deceased": "Было бы через {days} дн."},
     "sv": {"today": "Idag", "tomorrow": "Imorgon", "in_days": "om {days} dagar", "today_deceased": "Skulle ha varit idag", "tomorrow_deceased": "Skulle ha varit imorgon", "in_days_deceased": "Skulle ha varit om {days} dagar"},
     "zh-Hans": {"today": "今天", "tomorrow": "明天", "in_days": "{days} 天后", "today_deceased": "本应是今天", "tomorrow_deceased": "本应是明天", "in_days_deceased": "本应是 {days} 天后"},
+    "zh-Hant": {"today": "今天", "tomorrow": "明天", "in_days": "{days} 天後", "today_deceased": "本應是今天", "tomorrow_deceased": "本應是明天", "in_days_deceased": "本應是 {days} 天後"},
     "cs": {"today": "Dnes", "tomorrow": "Zítra", "in_days": "za {days} dní", "in_days_few": "za {days} dny", "today_deceased": "Bylo by to dnes", "tomorrow_deceased": "Bylo by to zítra", "in_days_deceased": "Bylo by to za {days} dní", "in_days_few_deceased": "Bylo by to za {days} dny", "plural": "few_2_4"},
     "nb": {"today": "I dag", "tomorrow": "I morgen", "in_days": "om {days} dager", "today_deceased": "Ville ha vært i dag", "tomorrow_deceased": "Ville ha vært i morgen", "in_days_deceased": "Ville ha vært om {days} dager"},
     "da": {"today": "I dag", "tomorrow": "I morgen", "in_days": "om {days} dage", "today_deceased": "Ville have været i dag", "tomorrow_deceased": "Ville have været i morgen", "in_days_deceased": "Ville have været om {days} dage"},
@@ -596,6 +619,7 @@ _HUB_TITLE = {
     "ru": "Настройки Annuals",
     "sv": "Annuals-inställningar",
     "zh-Hans": "Annuals 设置",
+    "zh-Hant": "Annuals 設定",
     "cs": "Nastavení Annuals",
     "nb": "Annuals-innstillinger",
     "da": "Annuals Indstillinger",

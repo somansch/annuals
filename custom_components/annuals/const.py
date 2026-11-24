@@ -278,6 +278,7 @@ NAME_TRANSLATION_LANGUAGES = [
     "ru",
     "sv",
     "zh-Hans",
+    "zh-Hant",
     "cs",
     "nb",
     "da",

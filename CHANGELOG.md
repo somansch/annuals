@@ -2,6 +2,11 @@
 
 All notable changes to this integration are documented here.
 
+## v3.6.0
+
+### Added
+- **Traditional Chinese (繁體中文).** The integration and the card are available in `zh-Hant`, translated from English with the wording used in Taiwan - contributed by [@monarchsofchaos004-gif](https://github.com/monarchsofchaos004-gif) ([#19](https://github.com/somansch/annuals/pull/19)). Someone who runs Home Assistant in Traditional Chinese saw Annuals in English until now. Holiday names follow the script too: a country's names in Taiwan's or Hong Kong's Chinese go to Traditional Chinese, those in mainland China's or Singapore's to Simplified.
+
 ## v3.5.3
 
 A release for the translations: every text of the 16 languages besides English was read by a reviewer for that language, and what was found is corrected - about 1,450 texts in the card and the integration.
